@@ -82,7 +82,7 @@ roadmap, skill development, testing harness, automation pipelines, and cron mara
 
 ### Tactical Objectives:
 - [ ] **Objective 4.1 — Expand Universal Quality Pack:**
-  - Continuously enhance the pi-template repo's `scripts/quality-gate.py`, `scripts/dead-code.py`, `scripts/repo-hygiene.py`, and `scripts/check-integrity.py` (at `/home/utopia/work/project/pi-template`):
+  - Continuously enhance the pi-template repo's `scripts/quality-gate.py`, `scripts/dead-code.py`, `scripts/repo-hygiene.py`, and `scripts/check-integrity.py` (at `~/.agents (absorbed from the retired pi-template repo)`):
     - Add detection for circular import dependencies.
     - Add detection for orphaned images, attachments, and scratch files.
     - Add schema validation for all JSON and YAML configs.

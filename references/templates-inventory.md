@@ -5,7 +5,7 @@ Installed globally at:
 - `~/.agents/templates/` — 15 CLI-neutral format templates
 - `~/.agents/essentials/` — the operating baseline docs (8)
 
-Source: the pi-template repo (`/home/utopia/work/project/pi-template`); re-absorb
+Source: the pi-template repo (`~/.agents (absorbed from the retired pi-template repo)`); re-absorb
 from it on demand to keep these current.
 
 ## The 15 format templates

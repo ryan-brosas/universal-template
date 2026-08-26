@@ -4,7 +4,7 @@ This file is the **global agent ruleset** for `~/.agents`, the shared settings
 directory read by every agent CLI on this machine (pi, Claude Code,
 Codex/OpenCode, opencode, agy/veda, subprocess agents). It is the
 CLI-neutral distillation of the pi-template workflow
-(`/home/utopia/work/project/pi-template`) applied globally.
+(`~/.agents (absorbed from the retired pi-template repo)`) applied globally.
 
 ## Golden rule: verify with direct evidence
 

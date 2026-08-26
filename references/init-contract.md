@@ -1,6 +1,6 @@
 # Init contract — the pi-template /init workflow, ported to the global skill
 
-Source of truth: `AGENTS.md` + `.pi/prompts/init.md` in `/home/utopia/work/project/pi-template`.
+Source of truth: `AGENTS.md` + `.pi/prompts/init.md` in `~/.agents (absorbed from the retired pi-template repo)`.
 This capsule is the CLI-neutral distillation that the `pi-template` skill enforces anywhere.
 
 ## When to apply

@@ -139,5 +139,5 @@ Popularity is social proof, not technical evidence:
 - **Group Changes into Cohorts:** Deconstruct large migrations into coherently-themed cohorts
   (e.g., Cohort 1: Types, Cohort 2: Store, Cohort 3: UI). Smaller scopes yield high one-shot pass rates.
 - **Build CLI Tools for Everything:** Instead of pleading with an LLM in a prompt to format
-  code correctly, provide a CLI tool (e.g. the pi-template repo's `scripts/repo-hygiene.py` at `/home/utopia/work/project/pi-template`) that outputs actionable
+  code correctly, provide a CLI tool (e.g. the pi-template repo's `scripts/repo-hygiene.py` at `~/.agents (absorbed from the retired pi-template repo)`) that outputs actionable
   error lines and non-zero exit codes.

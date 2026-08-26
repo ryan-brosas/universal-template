@@ -3,7 +3,7 @@
 This directory is the **global baseline** read by all agent CLIs on this
 machine (pi, Claude Code, Codex/OpenCode, opencode, agy/veda, subprocess
 agents). It is the absorbed, living copy of the **pi-template** repository
-(`/home/utopia/work/project/pi-template`; contract: `references/init-contract.md`)
+(`~/.agents (absorbed from the retired pi-template repo)`; contract: `references/init-contract.md`)
 — the workflow we set up there, made global.
 
 ## Layout
@@ -34,7 +34,7 @@ agents). It is the absorbed, living copy of the **pi-template** repository
 
 ## Source of truth
 
-The pi-template repo at `/home/utopia/work/project/pi-template` is the historical
+The pi-template repo at `~/.agents (absorbed from the retired pi-template repo)` is the historical
 source; this directory is the living global copy of its workflow, templates,
 essentials and skill catalog. Re-absorption is manual and on-demand — review
 changed repo files, then copy the durable assets into `~/.agents` (templates,

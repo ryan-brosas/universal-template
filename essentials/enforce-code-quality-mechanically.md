@@ -60,7 +60,7 @@ Automate detection for these four deterministic defect categories across every p
   called anywhere in the repository.
 * **Why it happens:** AI agents frequently draft speculative helper methods and forget
   to wire them.
-* **Mechanical Solution:** AST dead-code analysis (e.g. the pi-template repo's `scripts/dead-code.py` at `/home/utopia/work/project/pi-template`, `ts-prune`, `vulture`).
+* **Mechanical Solution:** AST dead-code analysis (e.g. the pi-template repo's `scripts/dead-code.py` at `~/.agents (absorbed from the retired pi-template repo)`, `ts-prune`, `vulture`).
 
 ### 2. Broken Contracts & Missing Constants
 * **What it is:** Code referencing deprecated keys, renamed configuration parameters,
@@ -121,7 +121,7 @@ Organize all mechanical enforcement into a two-layer hierarchy:
 ## 6. What This Means for Our Setup
 
 - **Standard Mechanical Suite (pi-template repo `scripts/`):** The repo at
-  `/home/utopia/work/project/pi-template` provides `check-integrity.py`,
+  `~/.agents (absorbed from the retired pi-template repo)` provides `check-integrity.py`,
   `quality-gate.py`, `dead-code.py`, `repo-hygiene.py`, and `conventional-commit.py`.
 - **Zero Prompted Discipline:** The slash-command prompts (`.pi/prompts/`) do not plead
   with the model to be careful; they require executing deterministic commands and inspecting output.
