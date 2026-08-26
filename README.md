@@ -34,9 +34,28 @@ agents). It is the absorbed, living copy of the **pi-template** repository
 
 ## Source of truth
 
-The pi-template repo at `~/.agents (absorbed from the retired pi-template repo)` is the historical
-source; this directory is the living global copy of its workflow, templates,
-essentials and skill catalog. Re-absorption is manual and on-demand — review
-changed repo files, then copy the durable assets into `~/.agents` (templates,
-essentials, improved workflows) while discarding the repo's own `scripts/` layer
-unless a CLI literally needs it.
+The pi-template repo was the historical source; it is retired and fully absorbed
+here. This `~/.agents` tree IS the single global source of truth — git-backed at
+github.com/ryan-brosas/universal-template (private). Updates are checked in here
+directly.
+
+## Host mounts (how every CLI reads this)
+
+| Host | Mount | Points at |
+|---|---|---|
+| pi | native discovery | `~/.agents/skills` (no `.pi/agent/skills` needed) |
+| Claude Code | `~/.claude/skills` → symlink | `~/.agents/skills` |
+| Claude Code | `~/.claude/CLAUDE.md` → symlink | `~/.agents/AGENTS.md` |
+| DSH | `~/.dsh/skills` → symlink | `~/.agents/skills` |
+| Codex | `~/.codex/skills`, `~/.codex/AGENTS.md` → symlinks | `~/.agents/*` |
+| OpenCode | `~/.config/opencode/skills`, `~/.config/opencode/AGENTS.md` → symlinks | `~/.agents/*` |
+| Gemini CLI | `~/.gemini/GEMINI.md` → symlink | `~/.agents/AGENTS.md` |
+
+MCP registry (`mcp/servers.json`, 5 servers: codebase-memory, context7, deepwiki,
+exa, openviking) is merged into: `~/.pi/agent/mcp.json`, `~/.claude.json`,
+`~/.codex/config.toml` (stdio only), `~/.config/opencode/opencode.json`.
+Backups live next to each host config as `*.bak-<timestamp>`.
+
+To reproduce mounts on a fresh machine after cloning this repo to `~/.agents`:
+create the symlinks above, then merge `mcp/servers.json` blocks into each host
+config (additive only, never overwrite unrequested servers).
