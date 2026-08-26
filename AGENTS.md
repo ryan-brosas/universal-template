@@ -96,6 +96,25 @@ graph/source/test/diff evidence.
   `chore`, `refactor`, `test`.
 - When a project's own `AGENTS.md` disagrees, the project wins.
 
+## Global mounts & wiring (this tree is the source)
+
+`~/.agents` is the single global source every CLI reads; host paths are
+symlinks or additive merges, never forks:
+
+| Host | Mount | Points at |
+|---|---|---|
+| pi | native discovery | `~/.agents/skills` |
+| Claude Code | `~/.claude/skills`, `~/.claude/CLAUDE.md` | `~/.agents/skills`, `~/.agents/AGENTS.md` |
+| DSH | `~/.dsh/skills` | `~/.agents/skills` |
+| Codex | `~/.codex/skills`, `~/.codex/AGENTS.md` | `~/.agents/skills`, `~/.agents/AGENTS.md` |
+| OpenCode | `~/.config/opencode/skills`, `~/.config/opencode/AGENTS.md` | `~/.agents/skills`, `~/.agents/AGENTS.md` |
+| Gemini CLI | `~/.gemini/GEMINI.md` | `~/.agents/AGENTS.md` |
+
+MCP: canonical registry is `~/.agents/mcp/servers.json` (codebase-memory, context7, deepwiki,
+exa, openviking) — merged additively into `~/.pi/agent/mcp.json`, `~/.claude.json`,
+`~/.codex/config.toml` (stdio only), `~/.config/opencode/opencode.json`; backups as
+`*.bak-<timestamp>` beside each config. Fix drift in `~/.agents`, never in the mirrors.
+
 ## Verification evidence
 
 A completion claim requires inspected, change-relevant evidence and a clean
