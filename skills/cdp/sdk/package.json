@@ -1,0 +1,16 @@
+{
+  "name": "cdp-sdk",
+  "version": "0.9.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "gen": "node gen.ts",
+    "repl": "node repl.ts",
+    "test": "node --test *.test.ts",
+    "check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "typescript": "^5.5.0"
+  }
+}
