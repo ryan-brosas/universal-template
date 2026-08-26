@@ -1,0 +1,10 @@
+<!-- capsule-v2 -->
+**Source:** teable `record-open-api.service.ts` getRecordHistory @ pin `06a4461e`
+**Question:** How must the history renderer treat cold-truncated values and meta-less rows?
+**Path/Symbol:** `getRecordHistory`, `syntheticHistoryFieldMeta(fieldId, cache)`, coldTruncated guards
+**Signature:** limit fixed 20; allowedFieldIds from fieldIds ∩ projection; per-row JSON.parse of before/after strings.
+**Decisive source:** :243-250 — "a value the cold flush replaced with a 'too large, truncated' marker carries a plain string `data` regardless of the field's real type; never run type-specific processing (e.g. attachment presigning) on it — that would normalize the string as an attachment and fail the response" → `const beforeTruncated = (beforeObj as {coldTruncated?: boolean}).coldTruncated === true` gating both Attachment branches. Meta synthesis :231-238 — "rows written by the raw-SQL import path carry {data} without meta, but the response schema (and the client renderer) require it — synthesize it from the field as it exists today"; syntheticHistoryFieldMeta falls back to a plain-text placeholder when the field row is GONE entirely — "a degraded label beats hiding the entry or crashing the renderer", cached per request.
+**Flow/Invariant:** ALWAYS the merged read — "reading is not part of the migration process ... On a never-migrated instance this costs at most an empty prefix LIST on pages the buffer cannot fill" (:371-378). Truncation flags are checked as `=== true` (programmatic contract set by both JS marker and SQL marker).
+**Probe (direct test):** record-open-api.service.spec.ts mocks collectHistoryRows and asserts the call shape; live: `grep -c 'coldTruncated === true' apps/nestjs-backend/src/features/record/open-api/record-open-api.service.ts` → `2`; `grep -c 'never run type-specific processing' ...` → `1`; `grep -c 'syntheticHistoryFieldMeta(fieldId, syntheticMetaCache)' ...` → `1`.
+**Retrieve:** `echo '{"project":"teable","pattern":"syntheticHistoryFieldMeta","limit":5}' | codebase-memory-mcp cli search_code`
+**Verdict:** adopt — consumer-side contract completes the marker lifecycle.

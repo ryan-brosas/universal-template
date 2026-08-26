@@ -1,0 +1,10 @@
+<!-- capsule-v2 -->
+**Source:** teable `record-history-cold-read.service.ts` collectHistoryRows @ pin `06a4461e`
+**Question:** How do buffer and cold rows merge into ONE ordered page without duplicates?
+**Path/Symbol:** `RecordHistoryColdReadService.collectHistoryRows`, `createBufferSource`, `fillFromCold`, ColdSegmentIterator, IBufferSource {head, advance}
+**Signature:** want = limit+1; drain buffer first (batched raw SQL of 100 rows), then only for the shortfall open the S3 segment from the last emitted row (`s3Boundary inclusive:false`); id-dedup via seenIds Set covers the upload-but-not-yet-deleted overlap window.
+**Decisive source:** :115-119 — "buffer first, cold parts only for the shortfall (the hot 'just edited' pages never touch S3): the buffer always holds every row newer than the flush cutoff, so continuing into S3 from the last emitted row preserves the global order". Field-filter mirror :98-101 — "field filter requested with an empty allowed set matches nothing" (returns empty rows immediately).
+**Flow/Invariant:** Buffer source is a mini keyset paginator: ORDER BY created_time DESC, id COLLATE "C" DESC with boundary predicate; exhausted when batch < 100. Empty-buffer fall-through passes the ORIGINAL boundary to S3. nextCursor emitted on full pages (pop the limit+1-th) OR timed-out partial pages; loud failure when timed out with nothing.
+**Probe (direct test):** spec "merges buffer and cold rows, dedups overlap, and paginates across the seam": 5 buffer + 30 cold with whole-May overlap → exactly 35 unique ids, strictly descending, paged at limit=7 until exhaustion; live: `grep -cF "the hot '" apps/nestjs-backend/src/features/record-history-cold/record-history-cold-read.service.ts || grep -c 'just edited' .../record-history-cold-read.service.ts` → `1`; `grep -oE 'const batchSize = [0-9]+' ...` → `100`.
+**Retrieve:** `echo '{"project":"teable","pattern":"collectHistoryRows","limit":5}' | codebase-memory-mcp cli search_code`
+**Verdict:** adopt — the merged-read choreography is the feature's front door.

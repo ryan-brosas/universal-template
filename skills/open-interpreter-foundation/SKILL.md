@@ -1,0 +1,57 @@
+---
+name: open-interpreter-foundation
+description: "Use when porting open-interpreter's V8 code-action loop (exec tool), sandboxed host process, yield/wait cell lifecycle, or code-mode protocol."
+disable-model-invocation: true
+---
+
+# open-interpreter: Code-Mode Foundation
+
+## Use this for
+Use when building or porting a JavaScript code-action loop: an `exec` freeform tool evaluated in a fresh V8 isolate with nested tools on a `tools` global, a `wait` polling twin for long-running cells, the five-phase cell state machine behind yields/termination, session store/load semantics across cells, a capability-negotiated sandbox host process with admission limits, JSON-schema→TypeScript declaration rendering under DoS budgets, and the three-mode direct/code-mode/code-mode-only fallback ladder. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval.
+
+## Load the matching source dump
+- `references/exec-tool-description-assembly.md` — which prompt sections are static vs derived, and when each appends.
+- `references/exec-pragma-parse.md` — first-line `// @exec:` knob parsing; what fails vs passes.
+- `references/v8-isolate-contract.md` — exact global surface; deleted capabilities; two-part exit sentinel.
+- `references/runtime-command-loop.md` — dedicated-thread V8 command/event loop; completion by promise state.
+- `references/cell-actor-fsm.md` — Running→Terminating→Completed→Claimed→Tombstone; initial-yield race buffer.
+- `references/session-store-commit.md` — when store() writes become visible; cancellation-gated commit.
+- `references/yield-grace-and-missing-cell.md` — 1s grace ladder; missing cell as model-readable data, never error.
+- `references/nested-tool-dispatch-gate.md` — broker→readiness-gate→worker pipeline for JS tool calls.
+- `references/callback-drain-taxonomy.md` — DrainNotifications vs Cancel; panic-to-ToolError promise bridging.
+- `references/exec-output-status-envelope.md` — status headers, post-truncation prepend ordering, hook exemption for wait.
+- `references/schema-to-typescript-budgets.md` — four-budget bounded TS rendering; degrade-to-unknown everywhere.
+- `references/host-handshake-limits.md` — semaphore admission, seen-session-id LRU, cancellable-request classification.
+- `references/process-owned-host-lifecycle.md` — lazy single host, permit-coalesced reconnects, generation-tagged opens.
+- `references/tool-mode-fallback.md` — Direct/CodeMode/CodeModeOnly selection and fail-closed vs graceful degradation.
+- `references/wait-tool-loop-contract.md` — exec+wait pairing; request-carried tool snapshots with stripped schemas.
+- `references/session-runtime-shutdown.md` — deadlock-free drain via close-under-registry-lock.
+- `references/host-peer-bulk-lane.md` — permit-ledger delegate backpressure; control-vs-bulk lane discipline.
+- `references/store-load-helper-contract.md` — in-cell helper validation matrix; event-immediate output emission.
+- `references/session-limits-capability.md` — default-degrade limits negotiation; honest non-enforcement of heap caps.
+- `references/grpc-session-provider.md` — second transport converging on one host handler.
+- `references/module-eval-import-deny.md` — ESM main-module evaluation with universal import rejection.
+- `references/code-mode-wire-messages.md` — tagged camelCase strict wire schema; slash-method requests.
+- `references/exec-cell-observability.md` — once-only terminal close, trace/analytics symmetry, gate-set interrupts.
+- `references/code-mode-crate-topology.md` — protocol/runtime/host/provider/core layer split; single-source domain types.
+
+## Capsule map
+- **Model-facing surface** — `exec-tool-description-assembly`: section ladder with early return unless code_mode_only, once-emitted MCP preamble keyed on structural CallToolResult shape, shared identifier normalizer binding prompt↔runtime. `exec-pragma-parse`: first-line-only pragma with deny-unknown-fields and 2^53 clamps mirrored by the provider grammar. `schema-to-typescript-budgets`: per-path×2 / total×32 ref budgets + 16KB/64KB work-byte metering, always degrading to `unknown`.
+- **V8 runtime kernel** — `v8-isolate-contract`: delete console/Atomics/SAB/WebAssembly before helpers; index-closure tool bindings; exit() = flag + sentinel exception. `runtime-command-loop`: std::mpsc commands in, tokio events out, microtask-checkpoint completion checks, thread-per-timer setTimeout. `module-eval-import-deny`: ESM eval as exec_main.mjs, imports always throw, promise-state-only lifetime. `store-load-helper-contract`: strict helper inputs; notify-empty rejection; serializable-store gate.
+- **Cell lifecycle** — `cell-actor-fsm`: commit/delivery split over a five-phase CellState mutex; pending_initial_yield_items race buffer; biased cancel-first select; restore-on-dropped-receiver buffers. `callback-drain-taxonomy`: notifications drain on completion while tools cancel; panicked tools still resolve their JS promise as ToolError. `session-runtime-shutdown`: tracker.close() while holding the registry lock makes passed-the-check ⇒ registered atomic.
+- **Session semantics** — `session-store-commit`: snapshot-in/delta-out; delta extends session map only at non-cancelled completion. `yield-grace-and-missing-cell`: ≥10s yields get +1s grace on both sides; MissingCell/ClosedCell become successful empty Results so the model self-corrects. `session-limits-capability`: trait default degrades only default limits; heap limit plumbed but deliberately unenforced locally.
+- **Host boundary** — `host-handshake-limits`: try-acquire semaphores (256 req/128 cells) fail fast; session ids are capabilities via 4096 LRU; only Execute|Wait cancellable. `host-peer-bulk-lane`: owned-permit delegate backpressure at 1024; wrong-lane messages hard-reject; frame overflow becomes structured error. `process-owned-host-lifecycle`: process_group(0)+kill_on_drop+scrubbed env; Opening-state-aware shutdown driver. `code-mode-wire-messages`: deny_unknown_fields tagged schema validated at parse time.
+- **Turn integration** — `nested-tool-dispatch-gate`: per-cell watch gates set after execute acceptance; synthetic `exec-{uuid}` call ids; function/freeform payload typing. `tool-mode-fallback`: one-shot degraded warning; CodeModeOnly never degrades. `wait-tool-loop-contract`: grammar mirrors parser; schemas stripped from cell snapshots; terminal close duplicated symmetrically across handlers. `exec-output-status-envelope`: status banner prepended AFTER truncation; wait hook-exempt. `exec-cell-observability`: exactly-once terminal lifecycle across execute+wait observers.
+- **Composition** — `code-mode-crate-topology`: domain types live only in protocol; v8 feature flag contained in runtime; disabled provider = explicit fail-closed object. `grpc-session-provider`: all transports converge on one handle_request.
+
+## Extending the foundation
+Add one `references/<seam>.md` capsule for one graph-selected, source-confirmed porting question. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf.
+
+## Provenance
+open-interpreter (Apache-2.0), `main@5b07159c477920c159d8892d112b480e7307f257`; Codebase Memory project `ext-open-interpreter` (root `/mnt/hdd/utopia/inspo/external/open-interpreter`, FULL mode, 113,523n/742,028e, indexed 2026-08-23T09:11:09Z, generation_matches=true; repo is now a Rust Codex fork — the legacy Python interpreter tree is gone at this HEAD).
+
+## Full view (memory graph)
+Revalidate `ext-open-interpreter` before porting: run `index_status`, `check_index_coverage`, `search_graph`, `trace_path`, and `get_code_snippet`. Record the graph root, branch, commit, mode, node/edge counts, freshness, and any coverage caveats; source and direct tests decide shipped claims. All 18 cited paths returned no_recorded_issue + metadata_match at the pinned HEAD.
+
+## Boundaries
+Adopt the pure contracts: cell FSM phases, store-commit gating, grace ladders, budget-bounded schema rendering, import denial, missing-cell-as-data. Adapt transports (stdio/WebSocket/gRPC are interchangeable behind one trait), helper vocabularies, and numeric constants to your environment. Omit product-specific analytics facts, Kimi/Claude harness emulation surfaces, and install-context path resolution; the sandbox is deny-by-deletion plus V8's sandbox — do not present it as a security boundary equivalent to a OS-level jail.

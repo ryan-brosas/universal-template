@@ -1,0 +1,10 @@
+<!-- capsule-v2 -->
+**Source:** teable `record-history-compactor.service.ts` @ pin `06a4461e`
+**Question:** How does monthly compaction merge day→month parts and repair collation-ordered parts?
+**Path/Symbol:** `RecordHistoryCompactorService.compactTable`, `compactMonth(tableId, yyyymm, {force?})`, `mergeInputs`
+**Signature:** skips the current (hot) month (`yyyymm >= currentMonth` → skip); default skip when zero day parts unless `force`; inputs = dayParts + EXISTING monthParts ("late flushes after a previous compaction fold in"); new keys start past existing month max seq.
+**Decisive source:** :19-28 — "input parts are read sequentially to EOF and NO input ordering is assumed, which also makes compaction the REPAIR TOOL for parts written under a mismatched (db-collation) order. Idempotent: healing removes every key of the month not written by the final run, and the read path dedups by id during any transition window." Stats update deletes exactly consumed input keys; staleKeys = inputs − writtenKeys ("never a key that appeared after the input snapshot. A concurrent backfill or flush may have written it, and it can be the only cold copy of rows whose buffer entries that other run then deletes").
+**Flow/Invariant:** Same never-write-read-keys rule as the feeder (startSeq past max); one sorter per month with a fresh SortMemoryBudget — "a fat-row month can still out-weigh the 50k row cap — the byte budget bounds it"; legacy oversized values healed on merge via truncateColdRow. S3 GET vs same-key overwrite is UNSPECIFIED (:75-77 comment).
+**Probe (direct test):** specs "force-repairs month parts written under a mismatched collation order" (byte order pinned: recACC < recAaa < recaBB, dup set deduped) AND "merges day parts into month parts, dedups, heals and rewrites stats" + idempotent rerun skip; live: `grep -c 'no-day-parts' apps/nestjs-backend/src/features/record-history-cold/record-history-compactor.service.ts` → `2` (skip arm + doc).
+**Retrieve:** `echo '{"project":"teable","pattern":"compactMonth","limit":5}' | codebase-memory-mcp cli search_code`
+**Verdict:** adopt — force-repair mode + snapshot-scoped healing.

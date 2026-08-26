@@ -1,0 +1,11 @@
+<!-- capsule-v2 -->
+**Source:** teable `part-codec.ts` NDJSON splitter + row iterators @ pin `06a4461e`
+**Question:** How do you stream-decode compressed multi-MB-line JSON parts without readline's O(n²)?
+**Path/Symbol:** `iterateNdjsonLines(stream)`, `iteratePartRows(key, compressed)`, `parsePartLine`, `NEWLINE = 0x0a`
+**Signature:** `async function* iterateNdjsonLines(stream: Readable): AsyncGenerator<string>`; partial chunks accumulate in a `Buffer[]` and concat exactly once per line.
+**Data Shape:** yields only NON-EMPTY lines (empty lines dropped); final unterminated line still yielded.
+**Decisive source:** :277-287 doc block — node:readline "flattens its growing internal ConsString and runs a line-ending regex on every chunk, so a single multi-megabyte line ... becomes an O(n^2) rope-flatten storm that OOM'd the 2026-07-08 cold drain (RegExpImpl::IrregexpExec / String::SlowFlatten at the top of the abort stack). Here partial-line chunks accumulate in an array and concatenate exactly once, when the newline arrives". Also :311-316 copies the tail chunk (`Buffer.from`) because the source buffer may be recycled; :322-324 `finally { stream.destroy(); }` so early consumer exit releases handles. `iteratePartRows` names the decompressor's errors (`error.partKey = key` — "a bare zlib error is undebuggable") and destroys the source stream on early return.
+**Flow/Invariant:** download stream → decompressor → line splitter stays O(line) memory regardless of part size; header lines skipped, footer surfaced separately, rows yielded with their raw line (`rowLine`) because verification re-hashes raw bytes.
+**Probe (direct test):** spec "the NDJSON reader splits a multi-MB line without readline" feeds a 2MB middle line in 64KB chunks and asserts intact decode; live: `grep -c 'NEWLINE = 0x0a' apps/nestjs-backend/src/features/record-history-cold/part-codec.ts` → `1`; `grep -c 'node:readline' ...` → `1` — the ONLY occurrence is inside the comment explaining why it is NOT used ("WITHOUT node:readline"), i.e. zero real usage.
+**Retrieve:** `echo '{"project":"teable","pattern":"iterateNdjsonLines","limit":5}' | codebase-memory-mcp cli search_code`
+**Verdict:** adopt — replaces readline wherever single lines can be megabytes.

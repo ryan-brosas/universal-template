@@ -1,0 +1,5 @@
+.pi/
+scripts/
+*.pyc
+__pycache__/
+skills/omarchy

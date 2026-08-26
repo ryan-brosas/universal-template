@@ -1,0 +1,10 @@
+<!-- capsule-v2 -->
+**Source:** teable `record-history-cold-read.service.ts` budget + topK @ pin `06a4461e`
+**Question:** How does the S3 time budget interact with per-part scans and partial pages?
+**Path/Symbol:** `budgetSpent()`, `ensureMonthMetadata`, `scanPartTopK`, `collectMonthOnce`, `pushTopK`, `topKDeduped`
+**Signature:** deadline = `Date.now() + config.s3ReadTimeoutMs` set ONLY when the cold segment starts ("a slow buffer query must not pre-spend it"); metadata awaits count against the budget too.
+**Decisive source:** :436-443 — mid-scan timeout "set here or inside scanPartTopK: a partially scanned month must contribute nothing (its rows would be incomplete)" → return []. Intra-part check :555 `(scanned++ & 1023) === 0 && Date.now() > this.deadline` — "the deadline must hold WITHIN a part too"; breaking marks timedOut and the iterator's finally destroys the stream. `ColdReadDeadlineError` caught as timeout-not-failure (:563-566). Memory: collected compacted via topKDedup once > k*8 rows ("one request consumes at most k rows ... hundreds of parts" would otherwise allocate parts×k); pushTopK keeps a sorted-desc k-array replacing the worst tail element.
+**Flow/Invariant:** Months are scanned ATOMICALLY, so on a partial page the last emitted row is a safe resume point → nextCursor returned; if NOTHING was collected before the budget died, throw ServiceUnavailableException — "an empty page here would read as 'no more history' and silently truncate — fail loudly instead; retries make progress because scanned parts land in the etag cache".
+**Probe (direct test):** spec "fails loudly instead of serving an empty page when the S3 budget expires" (1ms budget + 10ms slow storage proxy → rejects ServiceUnavailableException); live: `grep -c 'a partially scanned' apps/nestjs-backend/src/features/record-history-cold/record-history-cold-read.service.ts` → `1`; `grep -cE 'scanned\+\+ & 1023' ...` → `1`.
+**Retrieve:** `echo '{"project":"teable","pattern":"scanPartTopK","limit":5}' | codebase-memory-mcp cli search_code`
+**Verdict:** adopt — atomic-month semantics under deadlines are subtle and fully pinned here.

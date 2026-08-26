@@ -1,0 +1,11 @@
+<!-- capsule-v2 -->
+**Source:** teable `apps/nestjs-backend/src/features/space/space-data-db-migration.service.ts` @ pin `06a4461e`
+**Question:** How does the migration worker claim a job so two workers can never run the same migration?
+**Path/Symbol:** `claimNextPendingMigrationJob` (:1179-1219), `recoverStaleActiveMigrationJobs` (:1221-1292)
+**Signature:** `claimNextPendingMigrationJob(workerId) → {jobId} | null`
+**Data Shape:** claim = findFirst oldest (`createdTime asc, id asc`) job in `['waiting_worker','pending']` → conditional `updateMany` WHERE `id AND state = seenState` SET `state='preflight'`, stamps `copyStats.worker.{id,previousState,claimedAt}`; success requires `claimed.count === 1`.
+**Decisive source:** :1194-1216 — the CAS: updateMany with `where: { id, state: claimableJob.state }`, then `if (claimed.count !== 1) { return null; }`. Legacy `'pending'` jobs are still claimable (:1183) for pre-worker-era rows.
+**Flow/Invariant:** every poll first runs stale recovery (active states minus pending/waiting_worker, `lastModifiedTime` null or older than BYODB_SPACE_DATA_DB_STALE_ACTIVE_JOB_TIMEOUT_MS default 5 min → mark failed with `staleRecovery{errorCode,workerId,previousState,staleAfterMs,recoveredAt}`, resume source computed pause, cleanup target artifacts if copying/validating), then claims. Staleness detection re-checks state AND lastModifiedTime INSIDE the same updateMany — a job that progressed between scan and mark is never failed. Stale copy failures surface the real cause via `getStaleBaseSchemaCopyFailure` (activeCopy.error / baseSchemas.error / heartbeat stage).
+**Probe (direct test):** specs 'claims the oldest waiting-worker migration job for a worker' (:1895), 'does not claim a migration job when another worker wins the claim update' (:1961), 'recovers stale active migration jobs left behind by interrupted workers' (:1980); live: `grep -c 'claimed.count !== 1' apps/nestjs-backend/src/features/space/space-data-db-migration.service.ts` → `1`.
+**Retrieve:** `echo '{"project":"teable","pattern":"claimNextPendingMigrationJob","limit":4}' | codebase-memory-mcp cli search_code`
+**Verdict:** adopt the count-checked CAS claim + progress-aware staleness window verbatim; omit the legacy `'pending'` alias only if you have no upgrade path to honor.

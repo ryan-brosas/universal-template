@@ -1,0 +1,118 @@
+---
+name: cline-foundation
+description: "Cline agentic-runtime core — context compaction (trigger budget, overflow-recovery ladder, safe cut boundaries, no-LLM fold, budget projection kernel), session-compaction state projection with prefix hashes, runtime safety (loop detection soft/hard verdicts, mistake tracker), the pending-prompt steer/queue turn gate, the local hub-daemon transport plane (discovery record, mkdir-lock mutex, ensure/retire ladders, build-ordering antisymmetry, WS command envelope, subscription refcounts), claim-once env sentinels with supervised-child restart/backoff/adoption, the hub command router (authority/drain gates, degraded-capability replies), monotonic shutdown coordination, disk-truth cron spec reconciliation, team-run waiter-parked continuation, the agenda task persistence kernel (run-admission gate ladder, exactly-once terminal transitions, crash-recovery triage, SQLite revision CAS with DDL-enforced single-active-run, content-hash CAS Markdown spec store, asymmetric file/DB write orderings), and the hub…"
+---
+
+# Cline: agentic coding-agent runtime core
+
+## Use this for
+Use when porting context-window management for LLM agents (compaction triggers from token estimates, summarizer input/output budgeting, deterministic transcript folds, tool-pair-safe cuts), compacted-session persistence and re-projection across restarts, run-safety guards (repeated-tool-call loop verdicts, consecutive-mistake budgets with overridable stop decisions), or typed-ahead prompt queuing with steer semantics. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval.
+
+## Load the matching source dump
+- `references/compaction-trigger-budget.md` — when a request actually crosses the window: three-rung limit ladder + request-level 90% trigger.
+- `references/overflow-recovery-ladder.md` — recovery after provider rejection must never need another successful LLM call.
+- `references/safe-cut-boundary.md` — why assistant messages are safe summary cuts and tool-result-only user messages never are.
+- `references/agentic-summarizer-budget.md` — estimate → project → serialize ordering against the SUMMARIZER's own window.
+- `references/basic-compaction-fold.md` — the deterministic no-LLM funnel with frozen survivors and accumulating stats.
+- `references/budget-projection-kernel.md` — reusable shrink-any-transcript algorithm with protections + full action ledger.
+- `references/compaction-state-projection.md` — persisted prefix-hash sidecars re-projected onto growing transcripts (the id/ts hashing trap).
+- `references/compaction-state-wrapper.md` — projection-first prepareTurn composition keeping auto turns bounded.
+- `references/dropped-work-summaries.md` — re-surfacing deleted tool work as SYSTEM_NOTICE blocks with diff-derived edit ranges.
+- `references/token-estimator-cache.md` — WeakMap-memoized char-based estimation shared by every comparison.
+- `references/summarizer-output-budget.md` — cap-only-lowers output budget; why thinking models return empty summaries.
+- `references/compaction-status-notices.md` — started/completed/skipped event contract + documented telemetry gap.
+- `references/loop-detection-tracker.md` — canonical-signature consecutive-call detector, soft-once/hard-stop verdicts.
+- `references/mistake-tracker.md` — failure counter with forceAtLimit jump, throw-becomes-stop decision resolution.
+- `references/pending-prompt-queue.md` — steer-vs-queue delivery, exact-text dedupe, abort-window durability.
+- `references/hub-discovery-record.md` — schema-gated reads, atomic temp+rename publication, ownership-scoped clears.
+- `references/mkdir-lock-mutex.md` — cross-process mutex from mkdir EEXIST; evidence-gated lock theft; init-window rule.
+- `references/detached-hub-ensure-ladder.md` — attach → defer-busy → repair-discovery → spawn+poll state machine.
+- `references/hub-build-ordering.md` — tiered build compare whose antisymmetry prevents mutual-retire loops.
+- `references/retire-escalation-ladder.md` — drain → shutdown → SIGTERM-at-verified-PID; clear discovery only on confirmed death.
+- `references/ws-command-envelope.md` — requestId correlation, delete-before-reject timeouts, never-throw server routers.
+- `references/subscription-refcount-reconnect.md` — level-triggered counts / edge-triggered frames, jittered backoff, re-registration.
+- `references/env-sentinel-claim.md` — claim-once role markers that cannot leak to spawned grandchildren; propagation-only starting-instance marker.
+- `references/connector-supervisor-restart.md` — detached-child supervisor: per-instance lock tails, exponential give-up ladder, mark-before-signal stops, adoption by pid.
+- `references/dispatch-command-router.md` — authority-before-dispatch, drain-refusal set, degraded-capability reply duality on one envelope router.
+- `references/shutdown-coordinator-monotonic.md` — shared-cleanup-promise shutdown, max() exit escalation, referenced watchdog, deadline-below-retire ordering.
+- `references/cron-reconciler-loop.md` — filesystem-as-startup-truth spec reconciliation: scan→upsert→tombstone→refresh, single overdue catch-up.
+- `references/team-run-wait-ladder.md` — parked-resolver wait ladder for async teammate runs with finishReason-gated auto-continue.
+- `references/agenda-run-admission-gates.md` — ordered fail-closed gate ladder before any session starts; expire-at-admission; claim-before-side-effect.
+- `references/agenda-run-completion-races.md` — closed terminal set + re-read-after-await + loser-becomes-observer + guaranteed session abort.
+- `references/agenda-crash-recovery-triage.md` — restart triage of interrupted runs; which approvals survive; recovery before reconciliation.
+- `references/agenda-store-revision-cas.md` — edit verb (CAS+revision bump+approval revocation) vs lifecycle verb (guarded patch); DDL-carried single-active-run.
+- `references/agenda-spec-contenthash-cas.md` — validate-before-write temp+rename publication with expected-content-hash CAS and symlink/containment refusal.
+- `references/agenda-file-db-write-ordering.md` — create is DB-first with delete-compensation; update is file-first with restore-compensation.
+- `references/agenda-task-command-admission.md` — hub `task.*` commands: identity/scope forced from connection authority after payload spread, existence-hiding scoped lookups.
+- `references/agenda-intent-verification.md` — sync reconcile-then-fail-closed ladder binding approval/execution to current Markdown intent via paired field signatures.
+- `references/agenda-automation-pump.md` — single-flight microtask pump: measured capacity, provenance vetoes, chain-depth cycle ⇒ ∞, generation-counter mid-pump abort.
+- `references/agenda-spec-reconciliation.md` — disk-vs-DB rank table: mint id into file, taskId immutable, defer in_progress, terminal repairs the file, unseen paths archive.
+- `references/schedule-command-scope-isolation.md` — top-of-handler registered-workspace scope; existence-hiding schedule lookup; presence-keyed cwd reset via Object.hasOwn.
+- `references/schedule-event-mapping.md` — ok-gated reply→event table (five mutating commands) + two-entry internal-outcome filter + awaited/detached trigger twins.
+
+## Capsule map
+- **Context compaction (`sdk/packages/core/src/extensions/context/`)**
+  - `compaction-trigger-budget`: trigger on REQUEST-level estimates at 90% of an effective input limit; window-only models get ×0.9 usable input (81% effective).
+  - `overflow-recovery-ladder`: `overflowRecovery` mode bypasses the estimate gate; custom results face non-empty ∧ smaller ∧ ≤target before basic fallback.
+  - `safe-cut-boundary`: cut at assistant-or-typed-user boundaries; never orphan a tool_use/tool_result pair; latest typed turn survives verbatim.
+  - `agentic-summarizer-budget`: budget messages BEFORE serialization; incremental fold past prior summaries; reasoning-only output ⇒ skip with diagnosis.
+  - `basic-compaction-fold`: typed prompts mandatory, attachments only on the latest, kept suffix snaps to an assistant, older finals newest-first, `metadata.compaction:"preserved"` freezes prior output forever.
+  - `budget-projection-kernel`: drop-unsafe → truncate-oldest → closure-drop pipeline over a policy matrix with per-action audit trail and explicit `budget_unachievable_with_protections` failure.
+  - `dropped-work-summaries`: SYSTEM_NOTICE bridges between merged prompts carry files read (with line ranges)/edited (diff-derived ranges)/commands + up to 3 preserved responses.
+  - `token-estimator-cache`: one WeakMap estimator per pipeline; JSON-length ÷ CHARS_PER_TOKEN with prose fallback.
+  - `summarizer-output-budget`: 4096 default cap that model metadata can only lower; thinking off; Codex strips maxOutputTokens.
+  - `compaction-status-notices`: manual = unprefixed, auto = `auto-`, recovery = `overflow-recovery-`; plus budget-adjusted side channel.
+- **Session state (`src/session/models/`)**
+  - `compaction-state-projection`: sha256 prefix hash over persisted shape EXCLUDING volatile id/ts; append-only tail projection; legacy boundary rung for v1 sidecars.
+  - `compaction-state-wrapper`: re-compaction starts from projection+tail; saveState validated against exactly-hashed sourceMessages.
+- **Runtime safety (`src/runtime/safety/`, `src/runtime/turn-queue/`)**
+  - `loop-detection-tracker`: sorted-key signatures; soft fires ONCE at exactly 3; hard ≥5 escalates into a forced-limit mistake record.
+  - `mistake-tracker`: continue resets to 0; telemetry fires before the decision; callback throws become stop decisions.
+  - `pending-prompt-queue`: queue mutates but never drains during abort windows; steer entries unshift and win consume order; error finishes halt draining without requeue.
+
+- **Hub/daemon transport (`src/hub/`: discovery/, daemon/, client/, server/handlers/)**
+  - `hub-discovery-record`: defensive schema-gated reads return undefined on malformation; wx-temp + fsync + same-dir rename publication under a `.mutation` mkdir lock; clears are ownership-checked against `hubId` inside the same lock.
+  - `mkdir-lock-mutex`: mkdir EEXIST as atomic test-and-set; owner.json {pid, acquiredAt}; steal only on dead PID or expired age; empty-dir initialization window is never stolen before the bounded deadline; fail-fast singleton layer throws typed HubLockHeldError.
+  - `detached-hub-ensure-ladder`: discovered+verified ⇒ attach; healthy-but-incompatible ⇒ retire with `deferred_busy` ⇒ attach to busy hubs; reusable hub with missing discovery ⇒ token-candidate loop repairs the record; else spawn detached and poll to a deadline; explicit endpoints skip recoverable-URL memory.
+  - `hub-build-ordering`: equal trimmed buildId > finite epochMs > release version > lexicographic id; reuse gate `compareHubBuilds(self, record) <= 0` — older clients attach to newer daemons, newer replace older; corpus test pins antisymmetry (never two mutual retires).
+  - `retire-escalation-ladder`: drain (liftable) → authenticated shutdown → SIGTERM only at a positively-alive PID at kill time; discovery cleared ONLY by this function and only after confirmed retirement.
+  - `ws-command-envelope`: per-command `hubreq_` requestId in a pendingReplies map; timeout deletes-then-rejects so late replies cannot double-settle; send-failure cleanup; close rejects all pending; server routers convert every throw into okReply/errorReply echoing version+requestId.
+  - `subscription-refcount-reconnect`: refcount map per session key; wire frames fire only on 0↔1 edges while OPEN; zero counts stop the reconnect timer; stale closes ignored via socket identity check; backoff = initial·2^attempt capped within jitter band; post-open `client.register` then re-subscribe of every key.
+  - `dispatch-command-router`: authority resolved before routing (omitted = trusted in-process, null = remote pre-registration); drain gate refuses only work-admitting commands with retryable `hub_draining`; missing durable queue ⇒ `run_queue_unavailable` error for run.enqueue but OK-empty for run.list.
+  - `shutdown-coordinator-monotonic`: all graceful triggers share one cleanup promise; exit code escalates only via max(); 2s watchdog stays referenced and sits BELOW the retire-ladder caller-side wait; forced path exits even when observer hooks throw.
+
+- **Connector supervision (`src/services/connectors/`, `sdk/packages/shared/src/runtime/`)**
+  - `env-sentinel-claim`: daemon/supervised markers are claimed once (latch + delete) at entrypoints because every spawned grandchild inherits env — an inherited sentinel made every `cline --help` under a Slack connector die on EADDRINUSE; explicit-env reads bypass the latch; the starting-instance JSON marker propagates instead so the daemon can tell starter from leftover.
+  - `connector-supervisor-restart`: NUL-joined instance keys under per-key promise-tail locks; restarts 1s·2^n capped 60s with give-up at 5 consecutive but counter reset after a ≥60s run; stops mark-before-signal then TERM(5s)/KILL(2s); exit continuations re-check entry identity post-await; adopted connectors polled by pid with argv recovered from autostart records; dispose leaves children alive for the next hub.
+
+- **Scheduling & teams (`src/cron/specs/`, `src/session/team/`)**
+  - `cron-reconciler-loop`: disk walk (.md, skip reports/) upserts every spec, tombstones unseen DB paths with queued-run cancellation, records invalid parses without aborting; next_run_at resets only on absent/removed/disabled/expr/tz change; catch-up base = max(now, lastRunAt).
+  - `team-run-wait-ladder`: active-run set + pending-update queue + parked resolvers give lossless event-driven waits (abort ⇒ [] immediately); auto-continue needs completed|max_iterations ∧ enableAgentTeams ∧ outstanding work; updates render as mode-formatted system prompts stating remaining-run counts.
+
+- **Agenda task kernel (`src/tasks/`)**
+  - `agenda-run-admission-gates`: ordered fail-closed gate ladder (intent → revision CAS → expiry → availability → status → approval-staleness → active-run) before any session; claim (`currentRunId`) written before the side effect.
+  - `agenda-run-completion-races`: closed TERMINAL_RUN_STATUSES set + re-read-after-await + loser-becomes-observer; finishRun's finally always clears activeRuns and requeues automation.
+  - `agenda-crash-recovery-triage`: restart triage by run status BEFORE reconciliation; a starting run with intact revision+approval restores to approved, everything else degrades to pending_approval/failed.
+  - `agenda-store-revision-cas`: edit verb bumps revision+revokes approval under expectedRevision CAS (typed conflict error); lifecycle verb patches status columns under a WHERE-revision guard without bumping; DDL partial unique index enforces one active run per task.
+  - `agenda-spec-contenthash-cas`: path+symlink+containment refusal, then serialize→re-parse→validate→temp(0600)→hash-CAS→rename publish; createOnly uses hard-link so target races fail atomically.
+  - `agenda-file-db-write-ordering`: create = DB row first then createOnly file write with delete-compensation; update = probe-conflict first, new bytes guarded by old hash, THEN DB bump with restore-compensation.
+  - `agenda-task-command-admission`: every task.* command resolves workspace from connection authority or throws; payload spread happens BEFORE forced scope/root/cwd/actor fields, so spoofed identity cannot survive; approve/cancel/run demand positive-integer expectedRevision at the envelope layer.
+  - `agenda-intent-verification`: refreshAndVerifyTaskIntent awaits a synchronous scope reconcile (closing the watcher debounce window), then fails closed on archived/missing/unparseable/id-mismatch/signature-mismatch — callers are exactly approveTask/pumpAutomation/runTask.
+  - `agenda-automation-pump`: queueMicrotask single-flight pump over queued scopes; capacity = min(concurrency headroom, hourly-start budget); raw file_reconciler intent never self-approves, agent intent gated by applyToAgentCreated, origin-chain cycle ⇒ depth ∞ ⇒ veto; policyGeneration counter aborts an in-flight pump on any policy change.
+  - `agenda-spec-reconciliation`: reconcileFileStore ranks — invalid parse logs on; taskId minted into the file once and immutable (edited foreign id rewritten back); in_progress edits defer; completed/cancelled/expired rewrite the FILE to DB truth; unseen paths archive (in_progress cancelled first); fs.watch root needs realpathSync.native because Windows 8.3 short paths abort libuv.
+
+- **Hub schedule commands (`src/cron/service/`, `src/hub/server/`)**
+  - `schedule-command-scope-isolation`: resolveScope throws before any arm (even list) without clientId+workspaceRoot; requireScopedSchedule hides other workspaces' ids behind "does not exist"; scopedCwd rejects escapes; update cwd is presence-keyed (Object.hasOwn) with explicit null = reset-to-root.
+  - `schedule-event-mapping`: schedule commands are the dispatchCommand DEFAULT branch; events publish only when reply.ok AND the five-name mapping hits (create/update|enable|disable/delete/trigger); reads stay silent; internal outcomes filter through a two-entry dot→underscore table; trigger twins differ in await (awaited returns terminal execution, detached returns the enqueued run).
+
+## Extending the foundation
+Add one `references/<seam>.md` capsule for one graph-selected, source-confirmed porting question. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf.
+
+## Provenance
+Cline (Apache-2.0), `main@4f836ae7d0ed29ece7ef4a2a478deb470fdd056e`; Codebase Memory project `cline` (FULL mode, refresh 2026-08-25T00:16:42+08:00, 40,351 nodes / 170,446 edges, head==base 4f836ae7, verified against checkout HEAD by git rev-parse during passes 2, 3, 5, and 6; parse_partial limited to tests/proto/CSS/ps1 plus a few core files, none cited unverified — cron-reconciler.ts:60 flagged range read directly; skipped 0). Passes 1–15 capsules were mined under the older `ext-cline` index (40,317 nodes) at the same commit; pass 2 added the 7 hub-transport capsules against the live `cline` index; pass 3 added 6 supervision/routing/shutdown/cron/team capsules at the same pin; pass 5 added the 6 agenda-persistence capsules; pass 6 re-mined the lost pass-4 batch as 6 command/intent-plane capsules and repaired loader/map parity to 40==40==40. Upstream vitest suites exist for every mined plane but were runner-BLOCKED here honestly (clone has no node_modules); gate-5 uses live graph retrieves + fixed-string probe batteries + adversarial wrong-project retrievals.
+
+## Full view (memory graph)
+Revalidate project `cline` before porting: run `index_status`, `check_index_coverage`, `search_graph`, `trace_path`, and `get_code_snippet`. Record the graph root, branch, commit, mode, node/edge counts, freshness, and any coverage caveats; source and direct tests decide shipped claims. (Passes 1–15 cite the retired `ext-cline` twin; every capsule since pass 2 cites live project `cline`. Both indexes were pinned to the same checkout commit.)
+
+## Boundaries
+Adopt the pure contracts: budget ladders, boundary rules, selection funnels, policy matrices, counters, and queue invariants. Adapt ratio constants, thresholds (3/5, 20k, 4096), tool names, notice copy, and storage locations to host vocabulary. Omit Cline's transport shells (hub server/daemon/websocket around the runtime), VSCode/webview product surfaces, and telemetry vendor plumbing. Team-session coordination is mined (`team-run-wait-ladder`); AgentTeamsRuntime scheduling internals (busy-suppression, retry backoff, mailbox prepend) remain queued as a distinct porting question.

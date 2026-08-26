@@ -1,0 +1,90 @@
+---
+name: pi-observational-memory-foundation
+description: "Use when building tiered session-memory or compaction for a coding agent: observational memory ledger, coverage anchors, observer/reflector/dropper worker agents, memory-bearing compaction, recall evidence, and drift-honest status surfaces."
+disable-model-invocation: true
+---
+
+# pi-observational-memory: Observational memory foundation
+
+## Use this for
+Building any system where a long-running agent session must survive context compaction without losing provenance: append-only memory ledgers over a host-owned session file, per-stage coverage clocks that know exactly which source span was distilled, LLM worker agents (observer → reflector → dropper) whose outputs are validated before they touch the ledger, compaction hooks that replace summaries with memory-bearing projections, id-based exact-source recall after raw turns are gone, and status/view surfaces that honestly report visible-vs-recorded drift. Source (`/mnt/hdd/utopia/inspo/pi-observational-memory`, MIT) and its direct tests are ground truth; the graph is the retrieval map.
+
+## Load the matching source dump
+- `references/ledger-schema.md` — recording agent memory inside a host session ledger without ever mutating it.
+- `references/coverage-anchors.md` — knowing which part of the session is already distilled via max-covered-position markers.
+- `references/fold-projection.md` — replaying an append-only ledger with duplicates, tombstones, and fullFold snapshots.
+- `references/token-accounting.md` — hybrid real-usage vs raw-estimate progress clocks where undefined means "fall back".
+- `references/source-addressed-serialization.md` — feeding unbounded backlogs to bounded model calls with exact provenance labels.
+- `references/consolidation-pipeline.md` — running three worker stages off session events single-flight with per-phase aborts.
+- `references/observer-agent.md` — collecting provenance-backed observation batches from a tool-calling LLM.
+- `references/reflector-agent.md` — crystallizing durable reflections whose support ids are future pruning evidence.
+- `references/dropper-agent.md` — shrinking the memory pool under a deterministic hard cap with safety ranking.
+- `references/compaction-integration.md` — replacing compaction summaries with projected memory, retry-aware triggering.
+- `references/recall-evidence.md` — recovering exact source entries behind a memory id with honest partial statuses.
+- `references/memory-prompt-doctrine.md` — the truthfulness contract encoded in the three worker system prompts.
+- `references/runtime-config.md` — reusing host model/auth (OAuth-aware) plus layered namespaced config merging.
+- `references/debug-log-plane.md` — ambient AsyncLocalStorage diagnostics partitioned by session, fail-open silence.
+- `references/inspection-surface.md` — drift-reporting status command and content-only view with clipboard ladder.
+- `references/recall-tui-rendering.md` — dual-channel tool results where rendered success cannot hide partial evidence.
+- `references/recall-source-rendering.md` — the second serialization dialect: rendering raw evidence for recall without leaking redacted thinking or unknown entry garbage.
+- `references/record-content-cap.md` — clamping LLM-emitted record content at both worker boundaries pre-hash; sources stay whole by construction.
+- `references/raw-since-compaction-clock.md` — resolving the compaction trigger clock to firstKeptEntryId − 1 so kept turns are never miscounted.
+- `references/resolve-env-threading.md` — forwarding the FULL resolved credential (model+apiKey+headers+env, baseUrl on the type) into every worker LLM call; dropping env 404s silently.
+- `references/request-time-signing-gate.md` — the three-state empty-auth-payload ladder: request-time signing vs expired OAuth vs misconfiguration.
+- `references/stale-snapshot-recheck.md` — bounded, rate-limited live re-check that recovers a stale availability snapshot without per-resolve network cost.
+- `references/valueless-diagnostics.md` — logging auth-gate decision inputs as booleans and counts so outages are diagnosable and credentials never hit disk.
+- `references/empty-summary-decline.md` — returning undefined from a compaction hook hands ownership back to the native summarizer instead of truncating context to "".
+- `references/settled-event-trigger.md` — migrating off mid-retry lifecycle events onto the host's settled event and deleting your own retry heuristic.
+- `references/compaction-summary-doctrine.md` — the reader-side instructions that ride WITH projected memory so a fresh context interprets records correctly.
+- `references/coverage-summary-plane.md` — per-relevance count/token coverage buckets, before→after transitions, and `[coverage: tier]` pool-line tags that never expose ids.
+- `references/consolidation-stage-ladder.md` — which pipeline stage may fire when; dropper runs only downstream of same-run reflections; later stages merge same-run writes over stale folds.
+- `references/chunk-capped-coverage-anchor.md` — coverage advances to the last serialized id, never the backlog tail; truncated input drains incrementally across runs.
+- `references/worker-loop-budget.md` — one bounded AgentLoopConfig shape (32k clamp, capability-gated reasoning, opt-in turn cap) repeated identically across all three workers.
+
+## Capsule map
+- **Ledger schema** — `ledger-schema.md`: three typed custom entries + content-hash 12-hex ids; validate-at-read, never mutate host entries.
+- **Coverage anchors** — `coverage-anchors.md`: independent per-stage clocks anchored to source-entry ids; latest = max covered position, drops anchor to the earlier-of two coverages.
+- **Fold & projection** — `fold-projection.md`: first-valid-wins replay, order-free drop tombstones, three distinct projection boundaries, token-triggered fullFold snapshot carried in compaction details.
+- **Token accounting** — `token-accounting.md`: real provider usage since last compaction/coverage anchor; negative delta or missing baseline ⇒ undefined ⇒ raw estimate, never zero.
+- **Source-addressed serialization** — `source-addressed-serialization.md`: whole-entry-first packing under a chunk cap derived from the memory model's window; one pathological entry becomes a labeled head/tail excerpt, never blocks coverage.
+- **Consolidation pipeline** — `consolidation-pipeline.md`: agent_start/turn_end triggers, fire-and-forget single flight, cached model resolution, deliberate-empty backoff keyed to session+coverage+tokens.
+- **Observer agent** — `observer-agent.md`: record_observations tool as collector, atomic allowlist rejection of invented source ids, clean-empty vs ObserverStreamError split.
+- **Reflector agent** — `reflector-agent.md`: record_reflections with allowlist-validated supporting ids; none/partial/strong coverage tiers feed the dropper.
+- **Dropper agent** — `dropper-agent.md`: propose-then-select; cap = ceil(excess/avg line); rank by reflection coverage → relevance → age → proposal order.
+- **Compaction integration** — `compaction-integration.md`: session_before_compact returns summary+details from buildCompactionProjection with empty-summary decline back to the native summarizer; proactive trigger on agent_settled defers while busy (retry heuristic deleted upstream).
+- **Recall evidence** — `recall-evidence.md`: indexLedger lookup returning found/not_found unions with collision, dropped-still-recallable, and per-source resolution states.
+- **Memory prompt doctrine** — `memory-prompt-doctrine.md`: assertions-authoritative, supersession framing, preservation floors, hard-bound-not-target budgets; prompt↔validator semantic alignment is the invariant.
+- **Runtime & config** — `runtime-config.md`: hasUsableAuth mirrors host acceptance incl. OAuth headers (empty-payload ladder in request-time-signing-gate); global→project→env merge over defaults with target-below-max derivation; carries the observation-channel-scrub ERRATUM.
+- **Debug log plane** — `debug-log-plane.md`: AsyncLocalStorage context merged over parents, sanitized per-session NDJSON, swallow-all-errors writes, 10MB rotation.
+- **Inspection surface** — `inspection-surface.md`: /om:status drift suffixes (+N -N) and dual pool accounting; /om:view clipboard gets clean content, notify channel gets copy status.
+- **Recall TUI rendering** — `recall-tui-rendering.md`: aggregate status precedence partial > source_unavailable > no_source > ok; expanded-gated evidence rows.
+- **Recall source rendering** — `recall-source-rendering.md`: two serialization dialects with distinct timestamp fallbacks (`Unknown time` vs `????-??-?? ??:??`) and label vocabularies; placeholders preserve non-text evidence; redacted thinking dropped; unknown entries → null, silently filtered.
+- **Record content cap** — `record-content-cap.md`: single 10k-char clamp at observer+reflector boundaries BEFORE hash/storage; marker carries exact dropped count; source side has its own budget and is never clamped.
+- **Raw-since-compaction clock** — `raw-since-compaction-clock.md`: boundary = firstKeptEntryId resolved then rewound one index (kept turns stay live); degradation ladder kept-id → compaction-index → whole ledger; source-only token filter.
+- **Resolve-env threading** — `resolve-env-threading.md`: forward model+apiKey+headers+env into EVERY worker LLM call (baseUrl rides the result type); dropping `env` leaves `{CLOUDFLARE_ACCOUNT_ID}` unsubstituted and every call 404s silently.
+- **Request-time-signing gate** — `request-time-signing-gate.md`: empty auth payload is THREE states — host-signed-at-request-time (accept when the provider reports a credential source), expired OAuth (`/login` reason), empty-string-key misconfiguration; never stricter than the host's own gate.
+- **Stale-snapshot recheck** — `stale-snapshot-recheck.md`: second half of the host's two-half auth gate — scoped `refresh({allowNetwork:false, providers:[p]})` raced against a resolving 5s timeout, 60s per-provider re-arm stamped pre-await, snapshot re-read even after error/timeout.
+- **Valueless diagnostics** — `valueless-diagnostics.md`: rejection/acceptance events record decision inputs as booleans and counts (`headerCount` vs `usableHeaderCount`); a test greps the whole log to prove no credential material lands.
+- **Empty-summary decline** — `empty-summary-decline.md`: `{cancel:true}` vs `undefined` (decline ownership, native summarizer keeps pre-cut context) vs full replacement — three outcomes that must not be conflated.
+- **Settled-event trigger** — `settled-event-trigger.md`: compaction moved from mid-retry `agent_end`+regex to `agent_settled`; prefer host lifecycle truth over parallel heuristics of its internals.
+- **Compaction summary doctrine** — `compaction-summary-doctrine.md`: instructions head + id-tagged sections ship as ONE unit; most-recent-observation-wins conflicts, completed-work-do-not-redo, empty input ⇒ "" (decline).
+- **Coverage summary plane** — `coverage-summary-plane.md`: count/token buckets keyed relevance×tier, changed-only transition keys, `[coverage: tier]` tags in reflector AND dropper pool lines; telemetry never carries ids.
+- **Consolidation stage ladder** — `consolidation-stage-ladder.md`: dropper requires SAME-RUN non-empty reflections (pool pressure alone launches nothing); mergeReflections folds same-run writes into stale snapshots; anchors resolve marker ids, not append receipts.
+- **Chunk-capped coverage anchor** — `chunk-capped-coverage-anchor.md`: `coversUpToId = sourceEntryIds.at(-1)`; resolve-model-before-budget ordering; capped runs log chunk_capped and drain next run; oversized first entry still anchors at its own id.
+- **Worker-loop budget** — `worker-loop-budget.md`: boundedMaxTokens(model, 32k) clamp keeps unknown-cap models working; reasoning spreads only on advertised capability ≠ "off"; maxTurns is an opt-in counter closure.
+
+## Extending the foundation
+Add one source-confirmed capsule: loader line, map entry, decisive source, invariant, direct-test probe, and `search_graph` retrieval against project `pi-observational-memory` (root `/mnt/hdd/utopia/inspo/pi-observational-memory`). Pass-4 note: the path-slugged twin project and its `pi-ecosystem/` root are GONE — the short-name project, re-indexed FULL at the pin, now serves post-drift spans (verified: resolveModel :126-220); always verify a served span against checkout bytes before citing.
+
+## Provenance
+pi-observational-memory v3.0.x, MIT, elpapi42; pinned `master@ce9fc982b3a219a7839f07c9f4a3e054e81a2b21`; Codebase Memory project `mnt-hdd-utopia-inspo-pi-ecosystem-pi-observational-memory` (744 nodes / 2,584 edges, FULL mode; parse_partial only `tests/consolidation-trigger.test.ts:10`; nothing skipped except `.git` by design). STALE-TWIN NOTE (pass 3): the short-name project `pi-observational-memory` still serves PRE-DRIFT content (resolveModel :65-89 vs true :126-220) — in-place re-index refreshed only metadata; all Retrieve blocks cite the path-slugged twin adopted by content verification. Pass 1 completed by the tiny-pi dedicated lane after recovering a sibling's 12 orphaned capsules (verified source-accurate, kept); added prompt-doctrine, debug-log, inspection-surface, and recall-TUI capsules from a whole-tree read. Real runner at pass-1 pin: upstream vitest suite 241/241 GREEN across 25 files (Node v26.7.0). Pass 2 (2026-08-24, UNCHANGED pin): symbol-granular citation-vs-inventory sweep exposed four never-cited files (`index.ts`, `model-budget.ts`, `session-ledger/index.ts`, `session-ledger/render-summary.ts`) — first three ruled composition-only — plus symbol gaps inside covered files → +3 capsule-v2: recall-source-rendering, record-content-cap, raw-since-compaction-clock. Pass 3 (drift-lane-pi-extensions e6fc68383979, 2026-08-24, THIS PASS): upstream advanced 221 commits (v3.0.4 line) past 1a50dcd4 → drift re-entry mined WHOLE: runtime.ts resolveModel rebuilt around request-time-signed providers (+212 lines), agents gained env passthrough (:314/:387/:460 consolidation-trigger), compaction hook gained empty-summary decline, trigger moved agent_end+RETRYABLE_ERROR_RE → agent_settled → +5 NEW capsule-v2 (19→24: request-time-signing-gate, stale-snapshot-recheck, valueless-diagnostics, empty-summary-decline, settled-event-trigger) + 2 REWRITES at the new pin (compaction-integration trigger half obsolete-regex removed; runtime-config re-pinned with ERRATUM below). ERRATUM (pass 3): pass-N "RED FLAG" claiming literal `***` scrub artifacts in shipped source was WRONG — byte census shows ZERO `***` in the repo; those expressions appear mangled only in an LLM agent's content-printing observation channel. Membership unchanged: packs.json / router / manifest untouched. PASS-3 INDEPENDENT AUDIT (+1 → 25; concurrent-lane protocol, cron e6fc68383979 second worker): every new capsule's citations re-derived against source at ce9fc982, all grep probes byte-exact GREEN (agent_settled×2 / signsAtRequestTime×3 / hasConfiguredProviderCredential×3 / staleSnapshotFacade×6 / availabilityRecheckedAt×3 / resolve.* ×1 each / Decline ownership :43 / toBeUndefined×3), real runner 47/47 across the four drift test files + runtime.test.ts 11/11, all six Retrieves live-resolved line-exact on the twin; audit caught ONE coverage gap — the env/baseUrl forwarding contract from 6f694e6 (Cloudflare {CLOUDFLARE_ACCOUNT_ID} placeholder) existed only as a type note → authored resolve-env-threading.md.
+
+## Pass 4 (2026-08-25, UNCHANGED pin ce9fc982 — dedicated lane miner-pi-observational-memory)
+
+Work record CREATED at `inspo/pi-observational-memory-work/{state,research,verification}.md`; ledger row repaired from stale pass-0. GRAPH REPAIR: short-name project served PRE-drift spans despite fresh metadata → in-place FULL re-index of `/mnt/hdd/utopia/inspo/pi-observational-memory` (twin project + `pi-ecosystem/` root DELETED upstream of this lane); post-state 744 nodes / 2,585 edges @ head==base==ce9fc982, resolveModel verified :126-220. All Retrieve blocks and Probe `cd` anchors across the leaf re-pointed to the live project/root. +5 NEW capsule-v2 (25→30 refs): compaction-summary-doctrine (render-summary.ts reader contract — supersedes pass-2 "composition-only" for that file), coverage-summary-plane (coverage.ts :44-128 summarizers/transitions/renderers), consolidation-stage-ladder (dropper-needs-same-run-reflection gate; mergeReflections staleness fix), chunk-capped-coverage-anchor (`coversUpToId` = last serialized id), worker-loop-budget (supersedes pass-2 "model-budget.ts composition-only"). Confirmed omits: session-ledger/index.ts barrel; stream-errors.ts covered-in-place by three capsules. Runner live: vitest via npx (see verification.md for per-suite counts).
+
+## Full view (memory graph)
+Revalidate `pi-observational-memory` before porting: run `index_status`, `check_index_coverage`, `search_graph`, `trace_path`, and `get_code_snippet` against THAT project (the only live one; the old path-slugged twin and its root are deleted). Record the graph root `/mnt/hdd/utopia/inspo/pi-observational-memory`, branch `master`, commit `ce9fc982b3a219a7839f07c9f4a3e054e81a2b21`, mode FULL, 744 nodes / 2,585 edges; parse_partial only `tests/consolidation-trigger.test.ts:10`; excluded by design: `.git`, `node_modules`. Verify SERVED SPANS, not just head_sha: at pass 4 start this project's metadata claimed the pin while search_graph still served pre-drift spans (resolveModel :65-89) — a FULL re-index fixed it. All Probe commands are anchored at the repo root unless stated otherwise. Source and direct tests decide shipped claims.
+
+## Boundaries
+Adopt the append-only custom-entry ledger pattern, coverage-anchor semantics, fold/projection boundaries, hybrid token clocks, propose-then-select dropping, and honest partial-failure statuses. Adapt custom-type names, relevance vocabulary, thresholds, and rendering to your host's extension API. Omit pi-host specifics (`@earendil-works/*` packages, pi-tui objects, `getAgentDir()` paths) — port the contracts, not the host bindings.

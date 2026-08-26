@@ -1,0 +1,3 @@
+# Compatibility pointer.
+
+The canonical shared source card is `~/.dsh/template/source.yml`, outside the skill package. Copy it to each source sidecar, then fill every placeholder with a pinned value or an explicit reason.

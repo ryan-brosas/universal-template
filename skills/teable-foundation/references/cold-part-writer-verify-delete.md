@@ -1,0 +1,11 @@
+<!-- capsule-v2 -->
+**Source:** teable `part-writer.ts` @ pin `06a4461e`
+**Question:** How are parts uploaded, size-cut, verified, and failed uploads kept out of the live prefix?
+**Path/Symbol:** `PartWriter`, `IPartStore {upload,download,delete}`, `add(row)`, `finish()`, `closeCurrent()`, `verifyPart(key, expectedRows, expectedSha)`
+**Signature:** streams rows into ~32MB-uncompressed NDJSON parts: open upload on first row via PassThrough→compressor→byte-counter Transform, cut on `partUncompressedBytes`, verify by RE-DOWNLOADING each part after upload resolves.
+**Data Shape:** verification compares FOUR values: local row count vs re-counted remote rows vs footer rows, and local sha256 (rows+`\n` only — header/footer excluded) vs recomputed sha vs footer sha. Metrics accumulate per part (parts/rows/uncompressed/compressed).
+**Decisive source:** :174-188 closeCurrent — `await part.uploadPromise; try { await this.verifyPart(...) } catch { await this.options.store.delete(part.key).catch(() => undefined); throw error; }` with comment "readers and rewrites discover parts by listing keys, so a part that failed verification must not stay under the live prefix". Upload failure surfaces at closeCurrent while unblocking backpressure waiters: `uploadPromise.catch((error) => input.destroy(...))` (:143-145).
+**Flow/Invariant:** header written at open (not hashed); footer appended at close (`input.end(serializeFooter(...))`) then awaited; stats entry (with bloom + sorted field/creator sets) pushed ONLY after verification passes. Backpressure honored manually: `if (!part.input.write(chunk)) await once(part.input, 'drain')`. Memory O(stream buffers) regardless of table size.
+**Probe (direct test):** spec "cuts multiple verified parts and round-trips all rows" (50 rows @2048-byte cap → >1 part, exact round-trip, key minRecordId === stats minRecordId); live: `grep -c 'rows !== expectedRows || sha !== expectedSha' apps/nestjs-backend/src/features/record-history-cold/part-writer.ts` → `1`; `grep -c 'footerRows !== rows || footerSha !== sha' ...` → `1`; `grep -c 'store.delete(part.key).catch(() => undefined)' ...` → `1`.
+**Retrieve:** `echo '{"project":"teable","pattern":"PartWriter","limit":5}' | codebase-memory-mcp cli search_code`
+**Verdict:** adopt — upload→verify→delete-on-fail is the correctness spine of S3 writes.

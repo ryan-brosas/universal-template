@@ -1,0 +1,101 @@
+---
+name: relaticle-foundation
+description: "Relaticle CRM contracts: per-import throwaway SQLite stores, set-based match resolution, resumable import pipelines with withheld-cell semantics, entity-link storage strategies, serialized AI chat turns with classified retries, human-approval pending-action protocol, stream broadcast discipline, failed-turn coherence backfill, anchor-reserved context ledgers, journal-first credit metering, dual-breakpoint Anthropic prompt caching, sysadmin Stripe-customer workspace transfer with refusal halts, cap-exempt onboarding wizards, stale-while-error metric counters, provider-enforced sequential agent writes with batch proposal envelopes, shared label→id custom-field bridges, availability-and-plan-gated model resolution ladders, rename-safe async conversation titling, and key-rewrite orphan reservation sweeps."
+disable-model-invocation: true
+---
+
+# Relaticle: multi-tenant CRM + AI-assistant foundation
+
+## Use this for
+Use when building queued CSV/data import pipelines (match-then-execute with review states), per-unit scratch relational stores, agent assistants that propose writes needing human approval, streamed LLM turns over websockets with billing, custom-field dynamic validation and EAV upserts, or Model Context Protocol (MCP) server endpoints over multi-tenant business data. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval. AGPL-3.0 source: learn patterns and contracts only, never copy code verbatim.
+
+## Load the matching source dump
+- `references/import-store-throwaway-sqlite.md` — how does one import get its own relational store without polluting the app database?
+- `references/import-store-bulk-match-update.md` — how do tens of thousands of resolved matches land without a per-row UPDATE?
+- `references/import-sqlite-row-store.md` — SQLite row storage with ULID traversal guards and payload schema constraints.
+- `references/import-temp-table-bulk-json-update.md` — bulk JSON-extracted match resolution updates via temporary join tables.
+- `references/import-header-auto-mapping.md` — header normalization and fuzzy target field resolution.
+- `references/import-type-inference.md` — statistical column type inference over sampled CSV payloads.
+- `references/import-choice-resolution.md` — single/multi-choice select option validation and dynamic option minting.
+- `references/import-timezone-anchoring.md` — date and timestamp parsing with per-tenant timezone anchoring.
+- `references/match-resolver-set-semantics.md` — how does every imported row get a Create/Update/Skip verdict before execution starts?
+- `references/import-match-resolution-ladder.md` — multi-pass match resolution ladder with fallback strategies.
+- `references/entity-link-resolver-normalization.md` — how do CSV strings become record ids across columns, team members, and custom-field JSON values?
+- `references/import-entity-link-resolver.md` — multi-driver entity link resolution across column, pivot, and custom field boundaries.
+- `references/import-entity-link-validation.md` — tenant-scoped existence and permission validation for referenced entities.
+- `references/import-auto-create-relations.md` — in-pipeline auto-creation and deduplication of referenced relation records.
+- `references/import-intra-run-dedup.md` — intra-run duplicate detection preventing duplicate entity insertion in a single batch.
+- `references/execute-import-resumable-pipeline.md` — how does a 3-try queued import survive crashes without duplicating records or losing counts?
+- `references/import-executor-count-last.md` — count-last transaction execution ensuring metrics reflect committed writes only.
+- `references/withheld-cell-semantics.md` — how does "reviewer skipped this cell" stay different from "the cell was empty"?
+- `references/import-key-presence-semantics.md` — explicit key-presence vs omitted-key update semantics preventing accidental data wiping.
+- `references/custom-field-batch-plane.md` — how do thousands of heterogeneous typed values land exactly-once without N queries?
+- `references/import-customfield-value-upsert.md` — batch upsert pipeline for typed EAV custom field values.
+- `references/entity-link-storage-strategies.md` — how do three relationship kinds share one import-time resolution contract?
+- `references/import-entity-link-storage-strategies.md` — relationship persistence strategies for foreign keys, morph-to-many, and custom links.
+- `references/import-failure-ledger.md` — per-row failure isolation and error reporting without aborting the batch.
+- `references/customfields-definition-write-integrity.md` — custom field schema definition updates with type immutability rules.
+- `references/customfields-dynamic-validation.md` — dynamic validation rule compilation based on custom field configuration.
+- `references/customfields-tag-promotion-activity.md` — promotion of transient tags to first-class metadata with audit logging.
+- `references/customfields-system-field-enums.md` — system vs user-defined field distinction and reserved namespace protection.
+- `references/customfields-date-surface-consistency.md` — date surface formatting and timezone-neutral storage consistency.
+- `references/customfields-model-swap-schema-resources.md` — polymorphic model schema binding and resource projection.
+- `references/chat-turn-serialization-retries.md` — which failures release-and-retry, which fail immediately, and how is single-writer-per-conversation enforced?
+- `references/chat-stream-job-retry-taxonomy.md` — transient vs terminal streaming error classification and backoff policies.
+- `references/pending-action-approval-protocol.md` — what stands between an agent's proposed CRM mutation and the database?
+- `references/chat-proposal-gated-writes.md` — two-phase proposal and execution gate for AI agent write actions.
+- `references/chat-resolved-reinjection.md` — re-injecting human approval/rejection outcomes into active prompt context.
+- `references/stream-event-broadcast-discipline.md` — which agent stream events reach the browser, and in what shape?
+- `references/failed-turn-coherence-backfill.md` — after a mid-stream crash, what gets written so reload still makes sense?
+- `references/chat-failed-turn-backfill.md` — synthetic assistant message backfill maintaining conversation transcript continuity.
+- `references/context-ledger-anchor-reservation.md` — how does bounded recency memory keep the conversation's oldest referenced record from falling off?
+- `references/chat-context-ledger.md` — bounded context sliding window with high-priority record anchor preservation.
+- `references/credit-reservation-ledger.md` — what makes every credit mutation idempotent, mutually exclusive per turn, and orphan-recoverable?
+- `references/chat-credit-reservation-ledger.md` — two-phase credit hold, settlement, and automatic refund on failed turns.
+- `references/mcp-base-tool-family.md` — base tool abstraction, parameter validation, and response envelope formatting for MCP.
+- `references/mcp-token-ability-gating.md` — API token scoping and fine-grained ability checking for MCP endpoints.
+- `references/mcp-customfield-query-plane.md` — querying and filtering custom fields via standardized MCP tool schemas.
+- `references/mcp-crm-summary-resource.md` — aggregated workspace and pipeline summary resource exposure over MCP.
+- `references/mcp-relationship-expansion.md` — depth-bounded entity relation expansion in MCP tool outputs.
+- `references/anthropic-dual-cache-breakpoints.md` — how does a top-level cache_control key add automatic caching of the growing agent-loop transcript on top of the static-prefix breakpoint?
+- `references/sysadmin-billing-transfer.md` — how does a sysadmin move a Stripe customer and every subscription between two owned workspaces without touching the subscription in Stripe?
+- `references/refusal-halt-modal.md` — how do you keep a Filament action modal open after a caught business refusal, with infrastructure failures left to error tracking?
+- `references/member-select-distinct-ordering.md` — how do you pin the acting user to the top of a relationship select without breaking SELECT DISTINCT on Postgres?
+- `references/onboarding-cap-exemption.md` — how does a wizard run survive having pushed its own user to the workspace-ownership cap?
+- `references/onboarding-invite-send-loop.md` — what per-address failure taxonomy and circuit breaker keep N invitation sends from stranding a half-finished registration?
+- `references/invite-join-autoverify.md` — what is the full token-join decision ladder, and how does an invited email skip verification via exact-match?
+- `references/slug-auto-generation.md` — how does a name→handle field pair regenerate until first user edit, with a CJK-safe fallback?
+- `references/llms-txt-agent-index.md` — how is an /llms.txt agent index generated so it cannot drift from the pages it lists?
+- `references/vary-accept-negotiation.md` — why must every content-negotiated variant of a URL declare Vary: Accept, and how is it appended idempotently?
+- `references/dockerhub-stale-while-error.md` — how does a third-party metric counter survive an upstream outage without overstating or dropping to zero?
+- `references/agent-sequential-write-enforcement.md` — how does an approval-gated agent get prevented from firing two write tools in one turn?
+- `references/chat-write-proposal-envelope.md` — what should an LLM write tool return so N mutations land as one reviewable card?
+- `references/llm-customfield-label-bridge.md` — how do assistants speak option labels yet persist typed EAV option ids safely?
+- `references/ai-model-resolution-ladder.md` — which model wins when preference, plan, and provider configuration disagree?
+- `references/conversation-title-pipeline.md` — how are conversations auto-named without clobbering a user rename mid-generation?
+- `references/orphan-reservation-sweeper.md` — how do dead turns release credit holds without refund+settle ever both applying?
+
+## Capsule map
+- **Import scratch storage** — `import-store-throwaway-sqlite`, `import-store-bulk-match-update`, `import-sqlite-row-store`, `import-temp-table-bulk-json-update`: ULID-keyed sqlite file + runtime connection registration, temp-table staging with single join update, payload schema triggers.
+- **Import mapping & resolution** — `import-header-auto-mapping`, `import-type-inference`, `import-choice-resolution`, `import-timezone-anchoring`, `match-resolver-set-semantics`, `import-match-resolution-ladder`, `entity-link-resolver-normalization`, `import-entity-link-resolver`, `import-entity-link-validation`, `import-auto-create-relations`, `import-intra-run-dedup`: header fuzzy matching, type inference, set-based match resolution, multi-driver link resolution, intra-run deduplication.
+- **Import execution & bulk writes** — `execute-import-resumable-pipeline`, `import-executor-count-last`, `withheld-cell-semantics`, `import-key-presence-semantics`, `custom-field-batch-plane`, `import-customfield-value-upsert`, `entity-link-storage-strategies`, `import-entity-link-storage-strategies`, `import-failure-ledger`: resumable pipeline, count-last transaction execution, key-presence cell semantics, 500-chunk EAV upserts, relationship storage strategies, isolated failure ledger.
+- **Custom fields metadata & validation** — `customfields-definition-write-integrity`, `customfields-dynamic-validation`, `customfields-tag-promotion-activity`, `customfields-system-field-enums`, `customfields-date-surface-consistency`, `customfields-model-swap-schema-resources`: schema definition immutability, dynamic validation rules, tag promotion, system field protection, date surface consistency.
+- **AI chat orchestration & safety** — `chat-turn-serialization-retries`, `chat-stream-job-retry-taxonomy`, `pending-action-approval-protocol`, `chat-proposal-gated-writes`, `chat-resolved-reinjection`, `stream-event-broadcast-discipline`, `failed-turn-coherence-backfill`, `chat-failed-turn-backfill`, `context-ledger-anchor-reservation`, `chat-context-ledger`: serialized turns, retry taxonomy, human approval gating for CRM mutations, stream event sanitization, coherence backfilling, anchor-reserved bounded memory.
+- **Billing & MCP tool surface** — `credit-reservation-ledger`, `chat-credit-reservation-ledger`, `mcp-base-tool-family`, `mcp-token-ability-gating`, `mcp-customfield-query-plane`, `mcp-crm-summary-resource`, `mcp-relationship-expansion`: two-phase credit metering, token-gated MCP tools, custom field MCP querying, CRM summary resources, relationship expansion.
+- **Agent-loop economics** — `anthropic-dual-cache-breakpoints`: static-prefix block marker + top-level automatic-cache key so multi-step loops stop re-reading the transcript at full price.
+- **Billing transfer (sysadmin)** — `sysadmin-billing-transfer`, `refusal-halt-modal`: customer-handover-not-subscription-rewrite, narrow TransferRefused exception, halt-after-notification modal semantics.
+- **Team membership UX** — `member-select-distinct-ordering`, `onboarding-cap-exemption`, `onboarding-invite-send-loop`, `invite-join-autoverify`, `slug-auto-generation`: DISTINCT-safe current-user-first pickers, run-scoped cap exemption, classify-never-throw invite fan-out with a one-refusal circuit breaker, token-join ladder with exact-match auto-verification, flag-arbitrated slug generation.
+- **Content negotiation & agent discovery** — `llms-txt-agent-index`, `vary-accept-negotiation`, `dockerhub-stale-while-error`: manifest-generated llms.txt with route-gated sections, symmetric Vary: Accept across variants, dual-key stale-while-error metric counters.
+- **Assistant runtime kernel** — `agent-sequential-write-enforcement`, `chat-write-proposal-envelope`, `llm-customfield-label-bridge`, `ai-model-resolution-ladder`, `conversation-title-pipeline`, `orphan-reservation-sweeper`: provider-enforced sequential writes over a three-layer guard ladder, never-persisting write tools with batch proposal envelopes and skip reporting, one shared case-insensitive label→id custom-field bridge, capability×connectivity×entitlement model resolution with silent-degrade chain and hard terminal error, CAS-guarded cheapest-model conversation titling with multibyte-safe sanitization, and key-rewrite orphan reservation sweeps.
+
+## Extending the foundation
+Add one `references/<seam>.md` capsule for one graph-selected, source-confirmed porting question. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf.
+
+## Provenance
+relaticle (AGPL-3.0), `main@6e3bf8dfb7c5dcc97765fcba6fdf62585c541e1b` (= base_sha after pass-2 drift re-index, 13 upstream commits past the pass-1 pin `2c2a2456`); Codebase Memory project `relaticle` — root `/mnt/hdd/utopia/inspo/relaticle` (canonical worktree `/mnt/hdd/utopia/inspo/platforms/relaticle`, fast-forwarded to origin/main this pass), branch main, full mode, 19,857 nodes / 95,556 edges, parse_partial = 20 files (blade views + compiled CSS only, none cited), skipped = 0, not_indexed = 8 dirs + 84 image/suffix files by design (recounted at pass-3 status check).
+
+## Full view (memory graph)
+Revalidate `relaticle` before porting: run `index_status`, `check_index_coverage`, `search_graph`, `trace_path`, and `get_code_snippet`. Pass 1: `index_status --project relaticle --verbose` confirmed HEAD `2c2a2456…` = base_sha, mode full. stdin-JSON `check_index_coverage` over all cited source paths returned `no_recorded_issue` + `metadata_match`. Direct Pest suites exist and are cited per capsule (`tests/Feature/ImportWizard/**`, `tests/Feature/Chat/**`, `tests/Feature/Mcp/**`). Pass 2 (2026-08-24): re-indexed in place at new HEAD `6e3bf8df…` = base_sha after fast-forward; 13-commit drift mined diff-first into 9 new capsule-v2 (chat caching, billing transfer, onboarding, negotiation planes); no stale twin. AGPL: mine behavior contracts; never lift code verbatim. Pass 3 (2026-08-26): pin unchanged (`6e3bf8df…` == HEAD == base_sha, live-verified; generation 2026-08-24T14:02:51Z, full mode 19,857n/95,556e); ledger row reconciled from stale pass-0; work record created at `inspo/relaticle-work/`; deepen/re-mine batch added the assistant-runtime-kernel group (+6 capsule-v2: sequential-write enforcement, write-proposal envelope, custom-field label bridge, model resolution ladder, title pipeline, orphan reservation sweeper) with all 20 newly-cited source/test paths `no_recorded_issue` + `metadata_match`; Pest runner blocked (no vendor/php on PATH) so Gate 5 used deterministic probe + retrieval evidence.
+
+## Boundaries
+Adopt the pure contracts: throwaway per-unit stores, resolve-then-bulk-apply, total-disposition stamps, checkpointed resumable writers, tri-state cell semantics, strategy-split relationship writing, retry taxonomy with independent ceilings, allowlisted human-approval state machines, journal-first metering with orphan sweepers, anchor-reserved bounded memory, dual-breakpoint prompt caching, customer-handover billing transfer with narrow refusals, run-scoped cap exemptions, classify-never-throw fan-outs, manifest-generated agent indexes. Adapt host mechanics: Laravel queue/broadcast/container idioms to your framework, Reverb to your websocket layer, Filament/Livewire surfaces to your UI, the custom-fields vendor schema to your EAV shape. Omit product surface: marketing routes/pages (mega menu, compare pages, works-with strip beyond the DockerHub pattern), Stripe checkout flows, Scribe API docs, SystemAdmin panels beyond the transfer action, Chat package UI components. Never copy code verbatim (AGPL-3.0) — these capsules document behavior to reimplement independently.

@@ -1,0 +1,49 @@
+{
+  "mcpServers": {
+    "codebase-memory": {
+      "command": "/home/utopia/.local/share/mise/installs/node/26.7.0/bin/codebase-memory-mcp",
+      "args": [],
+      "env": {
+        "CBM_CACHE_DIR": "/mnt/hdd/utopia/.codebase-memory"
+      },
+      "lifecycle": "keep-alive"
+    },
+    "context7": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ],
+      "env": {
+        "CONTEXT7_API_KEY": "${CONTEXT7_API_KEY}"
+      },
+      "lifecycle": "keep-alive"
+    },
+    "deepwiki": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "deepwiki-mcp"
+      ],
+      "lifecycle": "keep-alive"
+    },
+    "exa": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "exa-mcp-server"
+      ],
+      "env": {
+        "EXA_API_KEY": "${EXA_API_KEY}"
+      },
+      "lifecycle": "keep-alive"
+    },
+    "openviking": {
+      "type": "remote",
+      "url": "http://127.0.0.1:1933/mcp"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+<!-- capsule-v2 -->
+**Source:** teable `record-history-flusher.service.ts` healStaleParts/updateStats @ pin `06a4461e`
+**Question:** How does healing delete exactly what a run superseded — never more?
+**Path/Symbol:** `healStaleParts(tableId, touched)`, `updateStats(tableId, touched, entries)`, ITouchedBucket {bucket, writtenKeys, consumedKeys}
+**Signature:** staleKeys = ⋃ over touched buckets of (consumedKeys − writtenKeys); stats: delete entries for consumed keys only, then upsert this run's IPartStatsEntry records.
+**Decisive source:** :928-933 — "deterministic self-healing, scoped to what this run actually superseded: only the pre-existing keys the bucket feeder folded into its rewrite may be deleted. A same-bucket key that appeared after the feeder's listing belongs to a concurrent flush (manual/catch-up overlapping the daily job) and must survive — read-side id-dedup absorbs the temporary duplication." Stats mirror :961-962 "drop only entries for keys this run consumed (their parts are healed away above); a concurrent run's entries stay intact."
+**Flow/Invariant:** consumedKeys is the ONLY delete authorization (feeder's read-back set); run tokens make same-bucket rewrites collision-free so the surviving foreign key is intact; temporary duplication until the other run's rows are re-read is accepted by design. Healing runs BEFORE the buffer delete step in flushTable ordering (upload → verify → heal → stats → reconcile-delete), so no buffer row is dropped while its part is missing.
+**Probe (direct test):** `grep -c 'superseded part(s) for' apps/nestjs-backend/src/features/record-history-cold/record-history-flusher.service.ts` → `1`; `grep -c 'consumedKeys' apps/nestjs-backend/src/features/record-history-cold/record-history-flusher.service.ts` → `6` (interface field :81, feeder wiring :636, heal destructure+iterate :940/:941, stats destructure+iterate :963/:964).
+**Retrieve:** `echo '{"project":"teable","pattern":"healStaleParts","limit":5}' | codebase-memory-mcp cli search_code`
+**Verdict:** adopt — consumed-keys scoping is the safety kernel of rewrite pipelines.
