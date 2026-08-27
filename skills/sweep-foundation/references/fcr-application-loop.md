@@ -41,8 +41,11 @@ for i in range(len(fcrs) * 15):         # :156 — hard budget: 15 tool-call rou
                 ... escalate attempt_count=3, retry once, else SUBMIT_TASK_MOCK "Skipping task N due to too many retries."
 ...
 for file_path, file_data in modify_files_dict.items():   # post-loop formatter guard
-    formatted_contents = format_file(file_path, file_data["contents"], cloned_repo.repo_dir)
-    # only accept the changes if the formatted contents would not revert all changes
+    formatted_contents = format_file(
+        file_path, file_data["contents"], cloned_repo.repo_dir
+    )
+    # formatted_contents can invalidate changes when prettier/formatter is out of sync
+    # only accept the changes if the formatted contents would not reveert all changes
     if file_data["original_contents"] != formatted_contents:
         file_data["contents"] = formatted_contents
 ```

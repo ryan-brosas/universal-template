@@ -21,7 +21,8 @@ if original_code not in file_contents and correct_indent == -1:
     if best_score > 80:                                                                    # :1032
         surrounding_lines_before, surrounding_lines_after = get_surrounding_lines(file_contents, best_match)
         for indentation in range(0, 10):                                                  # best-indent re-search
-            score = rapidfuzz.fuzz.ratio(indent(original_code, indentation), best_match)
+            indented_original_code = indent(original_code, indentation)
+            score = rapidfuzz.fuzz.ratio(indented_original_code, best_match)
         ...
         error_message = f"...Did you mean the following?\n```\n{best_match}\n```...{best_match_diff}\n```" + DID_YOU_MEAN_PROMPT
     else:                                                                                  # CROSS-FILE scan over other FCR files
