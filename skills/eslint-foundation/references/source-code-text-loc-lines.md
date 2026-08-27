@@ -16,7 +16,9 @@
 //  implementation just matches newlines and uses match.index."
 while ((match = lineEndingPattern.exec(this.text))) {   // /
 |[
-  ]/gu
+
+
+]/gu
   this.lines.push(this.text.slice(this.lineStartIndices.at(-1), match.index));
   this.lineStartIndices.push(match.index + match[0].length);
 }

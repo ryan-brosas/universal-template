@@ -32,8 +32,10 @@ agents). It is the absorbed, living copy of the **pi-template** repository
 - **Daily loop**: `skills/workflow-lifecycle/SKILL.md` — init once, AGENTS.md
   is the spine, slice-by-slice with context before code, documents after
   implementation, the learn command closes the loop.
-- **Catalog gate**: `SKILLS_ROOT="$PWD/skills" python3 scripts/skill-validator.py`
-  (exit 0 iff no P0). CI runs the same command via `.github/workflows/pr-quality.yml`.
+- **Catalog gate**: run the commands listed under "Golden rule" in `AGENTS.md`
+  (`skill-validator`, `catalog-integrity`, `catalog-quality`, `repo-hygiene`,
+  `dead-code`, `conventional-commit`, `git diff --check`). CI runs the same suite
+  via `.github/workflows/pr-quality.yml`.
 
 ## Source of truth
 

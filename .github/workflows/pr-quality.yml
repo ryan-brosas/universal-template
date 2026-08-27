@@ -1,7 +1,7 @@
 # Catalog quality CI for universal-template (~/.agents).
 # Shape from templates/github-pr-ci.yml; gate from AGENTS.md.
-# Practices borrowed from codebase-memory-mcp: cancel-in-progress,
-# contents:read, persist-credentials:false, SHA-pinned checkout.
+# Practices: codebase-memory-mcp (concurrency, least privilege, pinned checkout)
+# + absorbed pi-template check/quality-gate suite (practices-to-ci).
 
 name: Project quality
 
@@ -22,6 +22,7 @@ jobs:
   quality:
     name: Coding practice and anti-slop
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -40,9 +41,47 @@ jobs:
             exit 1
           fi
 
-      - name: Run the project gate
+      - name: Install YAML checker
+        run: pip install --user pyyaml
+
+      - name: Skill validator
+        id: validator
         shell: bash
-        run: SKILLS_ROOT="${GITHUB_WORKSPACE}/skills" python3 scripts/skill-validator.py
+        run: SKILLS_ROOT="${GITHUB_WORKSPACE}/skills" python3 scripts/skill-validator.py 2>&1 | tee /tmp/skill-validator.log
+
+      - name: Catalog integrity
+        id: integrity
+        shell: bash
+        run: python3 scripts/catalog-integrity.py 2>&1 | tee /tmp/catalog-integrity.log
+
+      - name: Catalog quality
+        id: catalog
+        shell: bash
+        run: python3 scripts/catalog-quality.py 2>&1 | tee /tmp/catalog-quality.log
+
+      - name: Repo hygiene
+        id: hygiene
+        shell: bash
+        run: python3 scripts/repo-hygiene.py 2>&1 | tee /tmp/repo-hygiene.log
+
+      - name: Dead code
+        id: deadcode
+        shell: bash
+        run: python3 scripts/dead-code.py 2>&1 | tee /tmp/dead-code.log
+
+      - name: Conventional commits
+        id: commits
+        shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
+            export CHECK_RANGE="${BASE_SHA}..${GITHUB_SHA}"
+          else
+            export CHECK_RANGE="${GITHUB_SHA}^..${GITHUB_SHA}"
+          fi
+          python3 scripts/conventional-commit.py 2>&1 | tee /tmp/conventional-commit.log
 
       - name: Check changed lines
         shell: bash
@@ -66,3 +105,17 @@ jobs:
           PR_BODY: ${{ github.event.pull_request.body }}
         run: |
           python3 -c 'import os, sys; body=os.environ["PR_BODY"]; required=("## Summary", "## Changed files", "## Screenshots", "## Verification", "## CI state", "## Codebase observation", "## GitHub metadata", "## Notes for the reviewer"); placeholders=("{type}", "{what the PR does}", "{one or two lines", "{path}:", "{capture name}", "{pr-slug}", "{workflow}", "{run-id}", "{pass, fail, or pending}", "{one line:", "{label names}", "{milestone}", "{assignee logins}", "{reviewer handles}", "{project title}", "{draft or ready}", "{base branch}"); missing=[item for item in required if item not in body]; left=[item for item in placeholders if item in body]; print("missing sections: " + ", ".join(missing) if missing else "required sections: pass"); print("placeholders: " + ", ".join(left) if left else "placeholders: pass"); sys.exit(1 if missing or left else 0)'
+
+      - name: Upload gate logs on failure
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: quality-gate-logs
+          path: |
+            /tmp/skill-validator.log
+            /tmp/catalog-integrity.log
+            /tmp/catalog-quality.log
+            /tmp/repo-hygiene.log
+            /tmp/dead-code.log
+            /tmp/conventional-commit.log
+          retention-days: 2

@@ -30,7 +30,7 @@ const status = patch.status ?? current.status;
 if (status === "in_progress" && approvedRevision !== current.revision) {
     throw new Error("in-progress task must be approved for its current revision");
 }
-// UPDATE agenda_tasks SET status/approved_revision/run/session/error/... 
+// UPDATE agenda_tasks SET status/approved_revision/run/session/error/...
 // WHERE task_id = ? AND revision = ?      (revision unchanged)
 
 // createRun — attempt numbering + DB-enforced single active run:

@@ -22,7 +22,7 @@ const effectiveAuthority =
 // dispatchCommand — gate order matters:
 if (this.draining && isDrainRefusedCommand(envelope.command)) return drainingReply(envelope);
 if (isAgendaTaskCommand(envelope.command)) return await this.taskCommands.handleCommand(envelope, authority);
-switch (envelope.command) { /* client.*, session.*, run.*, hub.drain/status, capability.*, ui.*, connector.* -> handleConnectorCommand */ 
+switch (envelope.command) { /* client.*, session.*, run.*, hub.drain/status, capability.*, ui.*, connector.* -> handleConnectorCommand */
   case "run.enqueue": { if (!this.runQueue || !this.runExecutor) return { ...ok:false, error:{code:"run_queue_unavailable", message:"This hub has no durable run queue; use run.start instead."} }; }
   case "run.list":    { if (!this.runQueue) return okReply(envelope, { runs: [] }); }   // degraded = OK-empty, not error
   case "settings.get": case "settings.patch": return { ...ok:false, error:{code:"not_implemented", message:`${envelope.command} is not implemented yet.`} };
