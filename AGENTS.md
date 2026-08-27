@@ -8,10 +8,18 @@ CLI-neutral distillation of the pi-template workflow
 
 ## Golden rule: verify with direct evidence
 
-There is no repository-local aggregate validator here. Before completing any
-claim, run the named verification command, inspect its exit code and output,
-and cite the artifact (file:line, shasum, or command output). Evidence before
-assertions — "looks right" is not a pass.
+Before completing any claim, run the named verification command, inspect its
+exit code and output, and cite the artifact (file:line, shasum, or command
+output). Evidence before assertions — "looks right" is not a pass.
+
+Canonical catalog gate (also the CI job in `.github/workflows/pr-quality.yml`):
+
+```bash
+SKILLS_ROOT="$PWD/skills" python3 scripts/skill-validator.py
+```
+
+Exit `0` only when P0 count is 0. Pair every completion claim with a clean
+`git diff --check` on the changed range.
 
 ## Global layout (facts, not plans)
 
@@ -119,6 +127,7 @@ exa, openviking) — merged additively into `~/.pi/agent/mcp.json`, `~/.claude.j
 
 ## Verification evidence
 
-A completion claim requires inspected, change-relevant evidence and a clean
-`git diff --check` (in projects). Record only checks you actually executed;
-surface skipped/inapplicable checks honestly.
+A completion claim requires inspected, change-relevant evidence: the catalog
+gate above (exit 0), plus a clean `git diff --check` on the changed range.
+Record only checks you actually executed; surface skipped/inapplicable checks
+honestly. GitHub Actions enforces the same gate on push and pull_request.

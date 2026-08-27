@@ -8,9 +8,9 @@ disable-model-invocation: true
 
 ## Core Principle
 
-One workflow shape serves every project. The shape lives at `~/.agents/templates/github-pr-ci.yml`. Each project gets its own copy with its own gate. The copy fails closed while the gate placeholder stays. The global catalog stores the skill and the template, never an active workflow.
+One workflow shape serves every project. The shape lives at `~/.agents/templates/github-pr-ci.yml`. Each project gets its own copy with its own gate. The copy fails closed while the gate placeholder stays. The global catalog also hosts its own active workflow at `.github/workflows/pr-quality.yml` with the skill-validator gate from `AGENTS.md`; other repos still copy the template.
 
-The shape follows evidence from Codebase Memory graphs. Repos that run their gates for a long time pin actions, disable checkout credentials, cancel stale PR runs, and keep permissions minimal.
+The shape follows evidence from Codebase Memory graphs (for example codebase-memory-mcp). Repos that run their gates for a long time pin actions, disable checkout credentials, cancel stale PR runs, and keep permissions minimal.
 
 ## When to Use / NOT
 
@@ -40,7 +40,7 @@ A failed run or a review comment is a lesson. Do not wait for an external prompt
 
 ## Red Flags
 
-- **HARD-GATE:** Never land a workflow under `~/.agents/.github`. Keep it in projects.
+- **HARD-GATE:** The catalog's own workflow must use the `AGENTS.md` skill-validator gate. Do not copy an unrelated project gate into `~/.agents/.github`.
 - **HARD-GATE:** The file must fail while the gate placeholder stays. Never push a file that still carries it.
 - Do not weaken the permission block or `persist-credentials: false`.
 - Do not give the job write access to labels, pull requests, or milestones. Metadata is set at creation time by the agent, not by the workflow.

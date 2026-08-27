@@ -1,5 +1,10 @@
 .pi/
-scripts/
+# Root catalog gate must be tracked for CI; other root scripts stay local.
+/scripts/*
+!/scripts/skill-validator.py
+# Skill-local helper scripts stay out of the catalog repo.
+skills/*/scripts/
 *.pyc
 __pycache__/
 skills/omarchy
+.idea/
