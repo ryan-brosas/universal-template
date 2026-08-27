@@ -63,6 +63,28 @@ return options?.limit === undefined ? openOperations : openOperations.slice(0, o
 **Invariant:** the tri-state must stay a read-side convention: a backend may make the corruption arm structurally impossible instead of merely detectable, but recovery code must still be written against the `limit: 2` shape because the scan backends genuinely reach it.
 **Probe:** deterministic probes P1/P2 executed this pass (verification.md): a corrupted two-start replay returns both ids from the transcribed index (arm 3 reachable) while the second pointer CAS returns changes=0 (unrepresentable); orphaned-finish no-op verified on both mechanisms. Upstream direct coverage: conformance cases :483–503 ("tracks and enforces one open operation per lane" — runs exactly the `limit: 2` probe shape on every backend fixture) and :505–521.
 
+## Twin pointer: lane leaves are re-validated on EVERY read
+**Path/Symbol:** `storage/lanes.ts:readLanes` (:24–41), `readLaneHead` (:55–68); witness `test/repository.test.ts` "rejects a missing lane leaf when listing lanes and opening" (:225–247).
+**Signature:** `readLanes(db, sessionId): LaneRow[]` — throws on ANY dangling leaf; `readLaneHead(db, sessionId, lane)` — per-lane variant used by the append path.
+
+### Decisive source
+```ts
+// lanes.ts:24-41 — EXISTS subquery per lane, throw if ANY dangles
+(l.leaf_id IS NULL OR EXISTS (
+	SELECT 1 FROM entries AS e WHERE e.session_id = l.session_id AND e.id = l.leaf_id
+)) AS leaf_exists
+…
+for (const row of rows) {
+	if (row.leaf_exists === 0) {
+		throw new SessionError("storage", `Lane ${row.lane} points at missing entry ${row.leaf_id}`);
+	}
+}
+```
+
+**Flow:** the test tampers `UPDATE lanes SET leaf_id = 'missing'` directly in the DB (:237-238 — bypassing every write-path check) → BOTH `session.getLanes()` and `repo.open(metadata)` reject with storage "Lane main points at missing entry missing". `readLaneHead` applies the same check per-lane (message "Entry Y not found") before every append reads the head.
+**Invariant:** the lanes table carries TWO nullable pointers (leaf_id, open_operation_id) and BOTH are referentially validated on read. Write-time target validation (createLane/moveLane reject missing targets) is bypassable — direct DB access or a future unchecked code path — so reads re-prove integrity instead of trusting the write path.
+**Probe:** deterministic probe P6 this pass (verification.md): transcribed the readLanes EXISTS query in node:sqlite — dangling leaf yields leaf_exists=0 with the exact test message; healthy and NULL leaves both pass.
+
 ## Get live surrounding code
 **Retrieve:**
 ```ts
@@ -70,4 +92,4 @@ await mcp.codebase_memory.search_graph({ project: "pi-upstream", name_pattern: "
 ```
 
 ## Verdict
-Adopt: pointer-CAS admission inside the write transaction + pointer-dereferencing recovery reads with referential validation, and keep the recovery read shaped as `limit: 2` even though your pointer can only return 0/1 — the contract docstring is the porting boundary, and scan backends (memory/JSONL both delegate to one SessionState index) genuinely reach the 2+ arm. Adapt to backends without transactions: index over the replayed record stream, where corruption becomes detectable rather than impossible. Omit multi-row "open operation" tables unless you genuinely need concurrent per-lane operations; the single pointer is what makes the corruption state impossible.
+Adopt: pointer-CAS admission inside the write transaction + pointer-dereferencing recovery reads with referential validation, and keep the recovery read shaped as `limit: 2` even though your pointer can only return 0/1 — the contract docstring is the porting boundary, and scan backends (memory/JSONL both delegate to one SessionState index) genuinely reach the 2+ arm. Adapt to backends without transactions: index over the replayed record stream, where corruption becomes detectable rather than impossible. Omit multi-row "open operation" tables unless you genuinely need concurrent per-lane operations; the single pointer is what makes the corruption state impossible. Keep the twin-pointer rule for any pointer column you add to a lane-like table: validate it on every read, never only at write time.
