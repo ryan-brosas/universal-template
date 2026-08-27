@@ -16,10 +16,16 @@ Canonical catalog gate (also the CI job in `.github/workflows/pr-quality.yml`):
 
 ```bash
 SKILLS_ROOT="$PWD/skills" python3 scripts/skill-validator.py
+python3 scripts/catalog-integrity.py
+python3 scripts/catalog-quality.py
+python3 scripts/repo-hygiene.py
+python3 scripts/dead-code.py
+CHECK_RANGE="origin/main..HEAD" python3 scripts/conventional-commit.py
+git diff --check
 ```
 
-Exit `0` only when P0 count is 0. Pair every completion claim with a clean
-`git diff --check` on the changed range.
+Exit `0` only when every command above succeeds (skill-validator: P0 count is 0).
+Pair every completion claim with a clean `git diff --check` on the changed range.
 
 ## Global layout (facts, not plans)
 

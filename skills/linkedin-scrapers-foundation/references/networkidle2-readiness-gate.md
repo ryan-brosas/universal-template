@@ -11,7 +11,7 @@
 ### Decisive source
 ```ts
 await page.goto(profileUrl, {
-  // Use "networkidl2" here and not "domcontentloaded". 
+  // Use "networkidl2" here and not "domcontentloaded".
   // As with "domcontentloaded" some elements might not be loaded correctly, resulting in missing data.
   waitUntil: 'networkidle2',
   timeout: this.options.timeout

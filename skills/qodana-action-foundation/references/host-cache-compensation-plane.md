@@ -17,7 +17,7 @@ if (path.resolve(initialCacheLocation) == path.resolve(cacheDir)) {
 }
 if (fs.existsSync(initialCacheLocation)) {
   fs.cpSync(initialCacheLocation, cacheDir, {recursive: true})                    // before scan
-} 
+}
 // uploadCache:
 fs.cpSync(cacheDir, initialCacheLocation, {recursive: true, force: true})         // after scan, overwrite-mirror
 ```

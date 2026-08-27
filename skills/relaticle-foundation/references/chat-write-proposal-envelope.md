@@ -19,7 +19,7 @@ if ($user->cannot('update', $model)) {    // policy check on the scoped model
 ...
 $pending = resolve(PendingActionService::class)->createProposal(...);
 return json_encode([
-    'type' => 'pending_action', ..., 
+    'type' => 'pending_action', ...,
     'data' => array_diff_key($pending->action_data, array_flip(['_record_id', '_model_class'])),
     'meta' => ['agent_should_stop' => true],
 ]);
