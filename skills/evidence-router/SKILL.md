@@ -10,6 +10,23 @@ Pick one primary route per question, escalate only on a named gap, and stop
 once evidence is sufficient. Keep tool names discoverable and current rather
 than guessing a provider action.
 
+## Core Principle
+
+Pick one primary route per question, escalate only on a named gap, and stop once evidence is sufficient.
+
+## When to Use / NOT
+
+**Use** — choosing a bounded retrieval route for local code, inspiration repositories, GitHub overviews, library docs, or current web facts.
+
+**NOT** — when one primary source already answers the question (stop, don't route further); when the ask is unbounded exploration (each source is capped as shown in the table).
+
+## Workflow
+
+1. Choose the primary route from the Routes table for the need.
+2. Escalate one step in the Escalation Order only after a named gap.
+3. Record each finding in the Evidence Record.
+4. Stop when one primary source answers or two independent sources agree; otherwise report the open evidence gap.
+
 ## Routes
 
 | Need                                          | Tool                                                                                               | Budget                          |
@@ -81,6 +98,16 @@ For each finding record the claim, source tool, exact call, URL or context, date
 and confidence. Unknowns stay `[NEEDS CLARIFICATION: reason]`; no source, no
 claim.
 
+## Red Flags
+
+Guessing a provider action instead of keeping tool names discoverable and current; duplicate retrieval of the same question plus source; unbounded expansion of a source; a GitHub repository treated as authoritative evidence without owner/repo, commit or branch, retrieval date, and license capture; a Codebase Memory graph treated as a truth store for negative or exhaustive claims; a claim with no source.
+
+## Verification
+
+Verify important claims against code, tests, and official documentation. Confirm exact source and inspect coverage metadata before negative or exhaustive claims. Each finding records the claim, source tool, exact call, URL or context, date, and confidence; unknowns stay `[NEEDS CLARIFICATION: reason]`.
+
+## Skill Result Contract
+
 <skill_result>
   <skill>evidence-router</skill>
   <status>success|partial|blocked|failure</status>
@@ -88,3 +115,7 @@ claim.
   <artifacts>Routed evidence ledger</artifacts>
   <risks>Duplicate retrieval, unbounded expansion, unavailable capability, or none</risks>
 </skill_result>
+
+## References
+
+N/A — no reference files; routes, escalation order, and validity rules are inline in this skill.

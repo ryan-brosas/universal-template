@@ -22,6 +22,6 @@ if not _ctx.strip():
     )
 ```
 
-**Flow:** write_report normalizes whatever context shape arrived → whitespace-only counts as empty → refusal short-circuits BEFORE prompt construction, image embedding instructions, or any LLM spend → otherwise proceeds to `generate_report` with subtopic/custom/generic prompt selection and system+user message split (with a single retry collapsing both roles into one user turn on failure).
+**Flow:** write_report normalizes whatever context shape arrived → whitespace-only counts as empty → refusal short-circuits BEFORE prompt construction, image embedding instructions, or any LLM spend → otherwise proceeds to `generate_report` (prompt ladder + role-collapse retry: see report-prompt-ladder-collapse-retry).
 **Invariant:** abstention must fire before cost accrues — moving the check after `generate_report` would still bill the call. The refusal names possible CAUSES (empty/blocked/rate-limited) so operators can diagnose; keep that phrasing when porting.
 **Probe:** battery P15a GREEN (`I could not gather any source material` ×1). Coverage caveat: no dedicated upstream test for this branch.

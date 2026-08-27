@@ -65,3 +65,11 @@ Skipping variants for a design decision; asking 5 questions in one message; "we 
   <risks>Unresolved questions, scope creep, premature commitment, or none</risks>
 </skill_result>
 ```
+
+## Verification
+
+Design approved by the user before any code, plan, or `incremental-implementation`; unknowns classified; 2–4 variants shown for novel or design-heavy work; handoff made to `planning-and-task-breakdown` (or `incremental-implementation` for trivial slices).
+
+## References
+
+N/A — no reference files; this skill is self-contained.

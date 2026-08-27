@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Origin Allowlist Grammar — what does "*.acme.com" match, and which entries are rejected outright?
 
-**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-agents-awaithumans`. **Question:** How must iframe-parent origin parsing and matching behave so a wildcard can never widen past one DNS label?
+**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-awaithumans`. **Question:** How must iframe-parent origin parsing and matching behave so a wildcard can never widen past one DNS label?
 
 ## Validate-at-parse, match-at-request split
 **Path/Symbol:** `packages/python/awaithumans/server/services/embed_token_service.py` — `_LABEL_RE` (:200-205), `_HTTP_ALLOWED_HOSTS` (:205), `InvalidAllowlistEntryError` (:208), `_validate_origin_entry` (:217-299), `_matches_entry` (:302-344), `parse_origin_allowlist` (:347-369), `origin_in_allowlist` (:372-388).
@@ -29,7 +29,7 @@ Ports compare with scheme defaults substituted for omitted ports (`_default_port
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-agents-awaithumans", query: "origin_in_allowlist _matches_entry parse_origin_allowlist", limit: 5 });
+await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-awaithumans", query: "origin_in_allowlist _matches_entry parse_origin_allowlist", limit: 5 });
 ```
 Live rank-1..3 line-exact (:302-344, :347-369, :372-388).
 

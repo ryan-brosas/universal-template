@@ -7,6 +7,10 @@ disable-model-invocation: true
 
 # Improve Codebase Architecture
 
+## Core Principle
+
+Architecture change = behavior-preserving: tests stay green, one axis at a time, each step independently shippable, measured before and after.
+
 ## Iron Laws
 
 <EXTREMELY-IMPORTANT>
@@ -38,7 +42,7 @@ Architecture is fine; "redesign" without a problem; rewrites (different risk); u
 
 Start at the bottom. Don't jump to 5.
 
-## Approach
+## Workflow
 
 1. **Identify the smell.** Don't refactor what isn't broken.
 2. **Measure baseline.** Coupling, complexity, build time. Record.
@@ -89,3 +93,23 @@ Refactor without tests; no baseline; "I think this is better" (no metric); "rewr
 ## Anti-Patterns
 
 **Refactor without tests**; **no baseline**; **"rewrite"**; **multiple axes**; **refactor + feature**; **"I think"**; **"moved it"**; **one PR, many changes**.
+
+## Verification
+
+Tests pass after each step (behavior preserved); the measured metric — cyclomatic complexity, coupling, build time — improved versus the recorded baseline. Stop when tests are easy to write, build time decreased, new features easy, onboarding faster, and AI tools navigate.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill>improve-codebase-architecture</skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>…</evidence>
+  <artifacts>…</artifacts>
+  <risks>…</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no reference files; the ladder, smells table, and patterns are inline in this skill.

@@ -7,6 +7,13 @@ disable-model-invocation: true
 
 # Test-Driven Development
 
+## Core Principle
+
+**No production code without a failing test first.** The failing test is the design
+conversation: write the test first, watch it fail for the right reason, write the
+minimum code to pass, then refactor while keeping tests green. A test asserts observable
+behavior, never implementation details.
+
 ## The Iron Law
 
 <HARD-GATE>
@@ -69,6 +76,29 @@ Did I see RED for the right reason? Minimum code (no extras)? Refactor preserved
 ## Red Flags
 
 Test passes on first run; test asserts implementation details; test breaks on refactor without behavior change; "I'll add tests later"; "obvious code" without test; "manual testing"; mocking the behavior claimed.
+
+## Verification
+
+- You saw RED for the right reason (behavior missing, not a broken test) before writing
+  any production code.
+- The minimum code made it GREEN with no "while I'm here" extras.
+- The full test file — not just the new test — is green after the refactor.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill><name></skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>…</evidence>
+  <artifacts>…</artifacts>
+  <risks>…</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no reference files; the loop and rationalization table are fully specified in this file.
 
 ## Pi Fabric Boundaries
 

@@ -27,6 +27,7 @@ Building any system where a long-running agent session must survive context comp
 - `references/inspection-surface.md` — drift-reporting status command and content-only view with clipboard ladder.
 - `references/recall-tui-rendering.md` — dual-channel tool results where rendered success cannot hide partial evidence.
 - `references/recall-source-rendering.md` — the second serialization dialect: rendering raw evidence for recall without leaking redacted thinking or unknown entry garbage.
+- `references/content-block-fidelity-matrix.md` — which non-text blocks are dropped, shown as evidence, or replaced by a placeholder, per role and dialect.
 - `references/record-content-cap.md` — clamping LLM-emitted record content at both worker boundaries pre-hash; sources stay whole by construction.
 - `references/raw-since-compaction-clock.md` — resolving the compaction trigger clock to firstKeptEntryId − 1 so kept turns are never miscounted.
 - `references/resolve-env-threading.md` — forwarding the FULL resolved credential (model+apiKey+headers+env, baseUrl on the type) into every worker LLM call; dropping env 404s silently.
@@ -59,6 +60,7 @@ Building any system where a long-running agent session must survive context comp
 - **Inspection surface** — `inspection-surface.md`: /om:status drift suffixes (+N -N) and dual pool accounting; /om:view clipboard gets clean content, notify channel gets copy status.
 - **Recall TUI rendering** — `recall-tui-rendering.md`: aggregate status precedence partial > source_unavailable > no_source > ok; expanded-gated evidence rows.
 - **Recall source rendering** — `recall-source-rendering.md`: two serialization dialects with distinct timestamp fallbacks (`Unknown time` vs `????-??-?? ??:??`) and label vocabularies; placeholders preserve non-text evidence; redacted thinking dropped; unknown entries → null, silently filtered.
+- **Content-block fidelity matrix** — `content-block-fidelity-matrix.md`: per-role, per-dialect fate of each block type (text/thinking/redacted thinking/toolCall/garbage) crossing a text-only boundary; option flags select per role; every block field duck-checked, nothing throws.
 - **Record content cap** — `record-content-cap.md`: single 10k-char clamp at observer+reflector boundaries BEFORE hash/storage; marker carries exact dropped count; source side has its own budget and is never clamped.
 - **Raw-since-compaction clock** — `raw-since-compaction-clock.md`: boundary = firstKeptEntryId resolved then rewound one index (kept turns stay live); degradation ladder kept-id → compaction-index → whole ledger; source-only token filter.
 - **Resolve-env threading** — `resolve-env-threading.md`: forward model+apiKey+headers+env into EVERY worker LLM call (baseUrl rides the result type); dropping `env` leaves `{CLOUDFLARE_ACCOUNT_ID}` unsubstituted and every call 404s silently.

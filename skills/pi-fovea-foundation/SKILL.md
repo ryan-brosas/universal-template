@@ -18,6 +18,7 @@ Build a repository-mapping context engine that gives an LLM a whole-repo map ins
 - `references/route-anchor-pack.md` — five port shapes as data: rule pack, $P node capture, class prefixes, verb-in-path/ANY-mounts, file-convention routes, double-hash cache invalidation.
 - `references/discovered-route-rules.md` — statistical autonomy: Jeffreys-smoothed per-argument posteriors, cliff calibration, half-gravity probation.
 - `references/honest-fact-cache.md` — streaming JSONL content-hash cache: stat manifests, bounded prefetch, taint ledger drained exactly twice, atomic persists.
+- `references/file-source-overlay.md` — how do extraction stages reuse bytes the hash pass already read without pinning the whole repo in memory?
 - `references/import-resolution.md` — four language families resolved via suffix indexes with uniqueness gates; cardinality-decayed call edges; builtin wards.
 - `references/anchor-hub-collapse.md` — one feature hub per normalized route across server+client sites; sqrt-decayed site conductance.
 - `references/tui-safe-scheduling.md` — global spawn semaphore + order-preserving maps + in-sweep yields so heavy sweeps never freeze a live UI.
@@ -56,6 +57,7 @@ Build a repository-mapping context engine that gives an LLM a whole-repo map ins
 - **Anchor pack** — `route-anchor-pack.md`: `extractAnchors`/`loadRepoRules` — rules are data; the validated path string is the discriminator, the call shape is flavor; pack-hash invalidates caches on upgrade.
 - **Discovery** — `discovered-route-rules.md`: `harvestFile`/`promote` — p̂=(pathN+.5)/(n+1) ≥ 0.55 with n≥4 sites in ≥2 files promotes implicit half-weight rules; junk band ≈0.27 vs real ≈0.75.
 - **Fact cache** — `honest-fact-cache.md`: `loadFacts`/`refreshFacts` — failed ast-grep facts serve the session but persist ONLY hash markers; unchanged failures aren't retried; reports keep thin graphs honest.
+- **File-source overlay** — `file-source-overlay.md`: pre-seeded path→text overlay from the bounded prefetch window + per-file single-flight reads; `readAll` returns only readable files, reads never throw.
 - **Import/call resolution** — `import-resolution.md`: `resolveImportToFile` — family ladders (NodeNext .js→.ts strip, Go suffix match, Rust mod.rs, TS tail stem); ambiguous = unresolved; call conductance decays with definition cardinality (>48 candidates skipped).
 - **Anchor hubs** — `anchor-hub-collapse.md` — one node per normalized route label; w=(implicit?0.5:1)/√sites; file hoods capped ≤12.
 - **Scheduling** — `tui-safe-scheduling.md`: one global spawn semaphore (default 3), mapLimit preserves input order, forEachChunked yields per batch; adaptive chunk split on maxBuffer breach.
@@ -76,7 +78,12 @@ Build a repository-mapping context engine that gives an LLM a whole-repo map ins
 - **Fact-pass chain** — `fact-pass-chain.md`: `factPass` — 8-line never-rejecting serializer; correctness (failure-ledger misattribution) + survival (spawn pileup) demand it.
 - **Generated skip** — `generated-source-skip.md`: `isGeneratedSource` — name convention OR ≥4k-char line; empty-but-cached facts, own report bucket, not taint; self-heals on content change.
 - **Agent-dir shim** — `agent-dir-shim.md`: `resolveAgentDir` — deliberate duplication of host path resolution to dodge module-graph reload tax; `PI_CODING_AGENT_DIR` override pinned by settings tests.
-
+- **astgrep rule-scan runner** — `astgrep-rule-scan-runner`: how do you evaluate many structural patterns over many files through ONE external CLI without version drift or partial-trust results.
+- **Consolidated fact scan** — `consolidated-fact-scan`: how do imports, calls, and string literals all come out of ONE pattern pass instead of three separate sweeps.
+- **Git porcelain oracle** — `git-porcelain-oracle`: how do you answer "what drifted?" in one cheap probe without ever trusting a partially-parsed result.
+- **Graph project re-registration** — `graph-project-reregistration`: how do you keep a foundation leaf's Retrieve surface alive when the codebase-memory indexer re-registers the same repo under a new path-slugged project name.
+- **Language routing tables** — `language-routing-tables`: which parser tier does a file get, and how does an old extractor version fail honestly.
+- **Literal site harvest** — `literal-site-harvest`: where do joinable literal SITES come from before the join index, and how do non-code config files join the graph.
 ## Extending the foundation
 Add one `references/<seam>.md` capsule for one graph-selected, source-confirmed porting question. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf. Each new capsule must carry Path/Symbol, Signature, Data Shape, a labelled decisive source excerpt, Flow, Invariant, a direct-test Probe, and a `search_graph` Retrieve.
 

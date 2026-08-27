@@ -1,14 +1,27 @@
 ---
 name: veda-deep-plan
-description: >
-  Plan the hardest problems with Veda Deep Thinking — parallel solvers, a judge, and a
-  verifier converge on the best plan. Use when a single planning call is not enough:
-  architectural design, subtle bugs with no obvious cause, decisions with no clear
-  answer. Drives `veda -S deep-TASKNAME -m gpt-5.6-sol deep "..."`; does not execute.
-  Invoke when the user says deep plan, hard problem, multiple approaches, converge, or
-  wants several independent attempts before committing.
+description: "Use when a single planning call is not enough — architectural design, subtle bugs with no obvious cause, decisions with no clear answer: plan the hardest problems with Veda Deep Thinking where parallel solvers, a judge, and a verifier converge on the best plan. Drives `veda -S deep-TASKNAME -m gpt-5.6-sol deep \"...\"`; does not execute. Invoke when the user says deep plan, hard problem, multiple approaches, converge, or wants several independent attempts before committing."
 argument-hint: "[veda-flags]"
 ---
+
+## Core Principle
+
+Converge on the hardest problems with k parallel solvers (default 6), a judge, and a verifier — several independent attempts beat a single planning call when the problem is genuinely hard. This skill plans; it does not execute.
+
+## When to Use / NOT
+
+- **Use when:** architectural design with many tradeoffs, subtle bugs where the cause is opaque, or decisions where you want independent perspectives before committing; when the user says deep plan, hard problem, multiple approaches, converge.
+- **NOT when:** a single planning call is the cheaper default — routine problems where one pass suffices (Deep mode costs k× more tokens); and per Model routing, the final load-bearing architecture decision still comes from claude-opus via `agy --mode plan` — `veda deep` runs on gemini and is only for "N independent attempts".
+
+## Workflow
+
+1. Onboard with veda at `~/.pi/agent/docs/veda.md` before acting (Reminders).
+2. Pick a descriptive session name: `-S deep-TASKNAME` to isolate from concurrent agents (Session Naming).
+3. Build context: `veda -S deep-TASKNAME sel clear`, then `sel add` full files (line-range slices only over the 125k budget); check the token count with `sel ls` — 75k–125k acceptable (Setting Context).
+4. Run `veda -S deep-TASKNAME -m gpt-5.6-sol deep '...'` with an opening message that commits to a position — goal, proposed approach, evidence anchors, constraints, 1–2 specific questions; use single quotes for prompts containing backticks (Running Deep Mode, Escaping Backticks).
+5. Read the output: each solver's candidate → the judge's selection (your plan) → the verifier's verdict if verification ran; read verifier objections before acting (Reading the output).
+6. Confirm alignment with the user; follow up on the same `-S` session with `navigator-chat` (cheaper than re-running deep mode) (Execution).
+7. Do not execute — converge on the plan only; execution happens after alignment, by you with native tools.
 
 ## Model routing (authoritative — do not substitute)
 
@@ -200,3 +213,29 @@ Key commands:
 - Output goes to stdout; use `-o file.md` to save response
 
 Do not execute yet; all we want to do is converge on a solid plan.
+
+## Red Flags
+
+- Double-quoted prompts containing backticks — bash evaluates them as command substitution (Escaping Backticks).
+- Using `agents.run({ runner: "veda", ... })` — broken with veda-ts 0.75.8; use the CLI (Invocation).
+- Sending prompts without `veda sel add` first — solvers and judge see only what you share (Setting Context).
+- Open-ended questions instead of a committed position in the opening message (Running Deep Mode).
+- Re-running deep mode for routine mid-execution questions — use a single `navigator-chat` call (Execution).
+- Substituting the model routing: load-bearing architecture decisions come from claude-opus via agy, not `veda deep` on gemini (Model routing).
+- Generic `-S` session names under multi-agent concurrency (Session Naming).
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill><name></skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>…</evidence>
+  <artifacts>…</artifacts>
+  <risks>…</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no references/ directory; the veda onboarding doc lives at `~/.pi/agent/docs/veda.md` (external to this skill).

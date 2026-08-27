@@ -7,6 +7,10 @@ disable-model-invocation: true
 
 # Cloudflare
 
+## Core Principle
+
+Workers are V8 isolates, not Node.js — the edge runtime is small, fast, cold; secrets via `wrangler secret put`, bindings over fetch.
+
 ## Iron Laws
 
 <EXTREMELY-IMPORTANT>
@@ -24,6 +28,13 @@ Writing Workers; configuring `wrangler.toml`; bindings (KV, D1, R2, Queues); Pag
 ## When NOT to Use
 
 Plain Node.js server (no CF); static without Workers; different platform.
+
+## Workflow
+
+1. Pick the service from the Core Services table.
+2. Write the Worker with a typed `Env` binding contract.
+3. Declare bindings in `wrangler.toml`; put secrets via `wrangler secret put`.
+4. Iterate with `wrangler dev` (`--local` for fast iteration, `--remote` for actual Cloudflare bindings).
 
 ## Core Services
 
@@ -135,3 +146,23 @@ Node.js APIs (`fs`, `Buffer`, `child_process`); large bundles; secrets in toml; 
 ## Anti-Patterns
 
 **Node.js APIs**; **secrets in toml**; **HTTP to own service**; **huge bundle**; **D1 for cache**; **KV for transactions**; **missing `compatibility_date`**.
+
+## Verification
+
+`wrangler dev` runs locally with simulated bindings; bundle stays small (red flag > 1MB); `compatibility_date` set; secrets absent from `wrangler.toml` and git; no Node.js APIs (`fs`, `Buffer`, `child_process`) imported.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill>cloudflare</skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>`wrangler dev` runs with simulated bindings; bundle small; compatibility_date set</evidence>
+  <artifacts>Worker code, wrangler.toml bindings, secrets via CLI</artifacts>
+  <risks>Node.js APIs, secrets in toml, huge bundle, or none</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no reference files; this skill is self-contained.

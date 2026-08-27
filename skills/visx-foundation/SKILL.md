@@ -1,6 +1,6 @@
 ---
 name: visx-foundation
-description: 'Chart-primitive kernel from visx (@visx/*): scale operator pipeline, chart keyboard-nav state machine + ARIA tree, brush extent FSM, zoom matrices, responsive/text/spring primitives.'
+description: "Use when porting or reimplementing visualization primitives from visx (@visx/*) — scale operator pipeline, chart keyboard-nav state machine + ARIA tree, brush extent FSM, zoom matrices, responsive/text/spring primitives: d3-scale config application with correct operator ordering, keyboard-navigable + screen-reader-accessible charts, pixel-to-domain brush selection with ordinal support, cursor-anchored zoom transforms, parent-size responsiveness without layout loops, SVG text measurement/wrapping, animated line enter/exit trajectories, and referentially-stable data/accessor plumbing."
 ---
 # visx: Chart Primitive Kernel Foundation
 

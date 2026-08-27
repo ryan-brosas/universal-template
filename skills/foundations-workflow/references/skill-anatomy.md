@@ -7,10 +7,10 @@ purpose: "Canonical foundation skill anatomy: one leaf template and one capsule-
 A foundation is a lean retrieval surface backed by proven code. The source repo and its direct tests are ground truth; a reference supplies only the code-shaped context needed to reuse a confirmed seam safely.
 
 ## One canonical pair
-Copy the foundation leaf and capsule exactly from `references/foundation-templates.md`. Portable mirrors live at `/home/utopia/.dsh/template/work/project/foundation-skill.md` and `/home/utopia/.dsh/template/work/project/foundation-capsule.md` (template-only library assets, not slash-command render targets). There is no second leaf or reference layout.
+Copy the foundation leaf and capsule exactly from `references/foundation-templates.md`. The canonical shared copies live at `~/.agents/templates/foundation-skill.md` and `~/.agents/templates/foundation-capsule.md` (template-only library assets, not slash-command render targets); host mirrors such as `/home/utopia/.dsh/template/work/project/foundation-*.md` are derived copies. There is no second leaf or reference layout.
 
 ```
-pack-foundations/<repo>-foundation/
+skills/<repo>-foundation/
   SKILL.md                # canonical leaf: loader + map + provenance + boundaries
   references/<seam>.md    # one capsule-v2 per porting question
 ```

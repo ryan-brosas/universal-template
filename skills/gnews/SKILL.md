@@ -1,11 +1,6 @@
 ---
 name: gnews
-description: >-
-  Search Google News through CDP. Returns structured results (title, URL,
-  source, time, snippet) for any query — the publisher's direct URL, no
-  news.google.com redirect wrapper. Use when the user asks for news,
-  headlines, or recent coverage of a topic. Requires browser-harness-js on
-  PATH and a Chromium-based browser with remote debugging enabled.
+description: "Use when the user asks for news, headlines, or recent coverage of a topic — search Google News through CDP. Returns structured results (title, URL, source, time, snippet) for any query — the publisher's direct URL, no news.google.com redirect wrapper. Requires browser-harness-js on PATH and a Chromium-based browser with remote debugging enabled."
 setup: bash <skill-dir>/scripts/setup
 compatibility: >-
   Requires browser-harness-js on PATH and a running Chromium browser with
@@ -20,6 +15,23 @@ news tab (`tbm=nws`) through the user's own browser, so the rendered page — no
 raw fetch — drives the extraction. No external dependencies beyond
 `browser-harness-js` (which provides the CDP session). Each call opens its own
 tab with a per-call `sessionId` — safe for parallel use.
+
+## Core Principle
+
+The rendered page drives extraction: hit Google Search's news tab (`tbm=nws`) through the user's own browser, not a raw fetch. No API key, no account; no external dependencies beyond `browser-harness-js`.
+
+## When to Use / NOT
+
+**Use** — when the user asks for news, headlines, or recent coverage of a topic.
+
+**NOT** — when more than ~10–15 results per query are needed (the news tab does not paginate); when the article body is needed (open the result `url` via the "Following a result link" recipe instead).
+
+## Workflow
+
+1. Run `gnews "<query>" [count]` (pretty) or `gnews --json "<query>" [count]`.
+2. Read `{ title, url, source, snippet, time }` — `url` is the publisher's direct link, not a `news.google.com` redirect wrapper.
+3. Parallelize independent queries — each call attaches to its own tab with a per-call `sessionId`.
+4. To read an article, open its `url` with the "Following a result link" recipe.
 
 ## Quick search
 
@@ -192,7 +204,7 @@ The title is read from `div[role=heading]` (a stable semantic hook). The standal
 
 URI encoding uses `encodeURIComponent()` in JS and output formatting is done via `.map().join()` in the heredoc. The raw query is injected into a **quoted** heredoc as a `__GNEWS_QUERY__` placeholder and rewritten by `node` with `JSON.stringify` — so `&`, `$`, backticks, quotes, and non-ASCII in the query need no manual escaping, and the function-replacement (`c.replace(/__X__/g, () => JSON.stringify(v))`) dodges the `&`/`$` semantics that bash `${var//}` and JS `String.replace` both apply to plain replacement strings. The REPL's `renderResult` passes string returns through raw — no JSON wrapping — so bash just prints.
 
-## Traps
+## Red Flags
 
 - **Tab cleanup uses `try/finally` with fire-and-forget `closeTab`** — `closeTab` does `window.close()` + `Target.closeTarget` for thorough cleanup, wrapped in `finally` so it runs even on errors. The call is not awaited so it doesn't block the response. Under rapid parallel calls the close operations serialize in the session's `closeQueue`, but they don't block results.
 - **`Page.enable()` AND `Page.setLifecycleEventsEnabled({ enabled: true })` must both be called** on each new tab. The latter is required for Chrome to emit any `Page.lifecycleEvent` — without it, the `networkIdle` wait times out every time.
@@ -202,3 +214,23 @@ URI encoding uses `encodeURIComponent()` in JS and output formatting is done via
 - **Google may serve a consent/cookie wall** in some regions — this returns 0 results. Check with a screenshot if results come back empty.
 - **Titles are not `<h3>` on the news tab** — unlike the classic search results (`gsearch`), news results put the title in a `<div role="heading">`. The extraction keys off `role=heading`, not `h3`.
 - **Multi-statement heredocs need `return`** — `browser-harness-js` auto-returns single expressions only.
+
+## Verification
+
+`--json` mode always emits valid JSON — a 0-result query returns `[]`. Confirm each `url` is the publisher's direct link, not a `news.google.com/articles/<id>` wrapper. If results come back empty, check with a screenshot for a consent/cookie wall before concluding there is no coverage.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill>gnews</skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>…</evidence>
+  <artifacts>…</artifacts>
+  <risks>…</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no reference files; the CDP recipes and traps are inline in this skill.

@@ -1,6 +1,6 @@
 ---
 name: chatwoot-foundation
-description: "chatwoot-foundation"
+description: "Use when porting Chatwoot-style multi-tenant SaaS mechanics — account-scoped event fanout to per-account webhook subscriptions, HMAC-signed outbound webhook delivery with retry classification, Redis round-robin agent assignment with row-lock race discipline, API-token tenant resolution with bot endpoint allowlists, bit-packed feature flags, and editor-markdown webhook payload hygiene."
 ---
 # Chatwoot: Multi-Tenant Event Fanout, Webhook Dispatch, and Auto-Assignment Foundation
 

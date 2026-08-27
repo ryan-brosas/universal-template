@@ -6,9 +6,15 @@ disable-model-invocation: true
 
 # Budget-Aware Large-Context Research via Veda/AGY
 
-## Use when
+## Core Principle
+
+Route large-context research through budget-aware Veda AGY Gemini tiers — the smallest tier that can answer the question — while direct AGY Claude is reserved for architecture planning and review.
+
+## When to Use / NOT
 
 Large, multi-file, or project-wide analysis exceeds the local context window: codebase-wide searches, multi-file comparisons, pattern discovery, feature verification across many files, or research that benefits from a second model.
+
+**NOT** — when the question fits the local window; when routing AGY Claude through Veda while the adapter still injects `--effort` (call direct AGY instead); when Veda is asked to edit files.
 
 ## Host-adapted tiers
 
@@ -41,6 +47,10 @@ veda -S <session> -m gemini-mid -p context-curator 'Compress selected findings i
 ## Red flags
 
 Unscoped selections, jumping to `gemini-pro` without a named gap, asking Veda to edit files, treating synthesis as primary evidence, or routing AGY Claude through Veda while the adapter still injects `--effort`.
+
+## Verification
+
+Capture long Veda output with `-o` to disposable `/tmp` storage, or persist to `.pi/work/` only through a Schema transaction. Keep source paths, exact calls, dates, and confidence levels in the final evidence ledger.
 
 ## Skill Result Contract
 

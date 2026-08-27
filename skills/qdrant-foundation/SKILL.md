@@ -1,6 +1,7 @@
 ---
 name: qdrant-foundation
-description: "Vector-engine foundation"
+description: "Use when porting or re-implementing filtered vector-search machinery: filterable HNSW builds, ACORN/graph dispatch decisions, cardinality-driven prefilter-vs-index planning, WAL durability, hybrid RRF fusion, prefetch-tree query planning, or flush-ordered post-optimize cleanup. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
+
 ---
 # Qdrant: vector-engine foundations
 
@@ -58,7 +59,12 @@ Use when porting or re-implementing filtered vector-search machinery: filterable
 - **CoW move** — `cross-segment-cow-move`: proxy/non-appendable sources move via aloha random write + flush dependency (dst durable before src delete), deferred-aware raw retrieval, fused upsert, source deleted only when the copy isn't deferred.
 - **Error latch** — `segment-error-latch-recovery`: failed write stores (version, point_id) and rejects all newer ops until the same point retries clean, which clears the latch.
 - **Apply loop** — `wal-update-worker-loop`: single worker applies WAL ops under the update lock; explicit WAL flush before apply when clients wait; applied-seq waterline advances only on success; deferred-point waits detach per client.
-
+- **Proxy mutation strike + delete buffering** — `proxy-delete-buffering`: how does a segment that must not accept writes still serve deletes during optimization.
+- **Unsynced proxy finalize window** — `proxy-deleted-mask-finalize-window`: when must a wrapper's deleted-mask snapshot be taken so a racing write can't ghost points out of KNN.
+- **Propagate-to-wrapped drain** — `proxy-drain-propagate-ordering`: in what order and under which lock does a proxy replay its buffers into the frozen segment.
+- **Proxy index-change intent buffering** — `proxy-index-change-buffering`: how are payload-index schema changes journaled on a segment that builds nothing.
+- **Stale HasVector read redaction** — `stale-has-vector-redaction`: how do queries naming a deleted/renamed vector match nothing instead of reading wrapped stale bytes.
+- **Vector-rename intent taint** — `vector-rename-intent-taint`: how do you record "delete v then create v with a new schema" so the optimizer cannot keep stale storage.
 ## Extending the foundation
 Add one `references/<seam>.md` capsule for one graph-selected, source-confirmed porting question. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf.
 

@@ -10,6 +10,10 @@ Reusable test patterns farmed from the inspo repos (pydantic-ai, graphrag, mem0)
 so we don't reinvent them. This is "stack your leverage" applied to tests: the
 good test code is already written — reuse it.
 
+## Core Principle
+
+Reuse the farmed harness instead of writing tests from scratch — the good test code is already written. A test is only good if it catches: target the TYPE of bug, and test the un-fixed AND fixed versions.
+
 ## When to Use
 
 When writing tests for code that:
@@ -53,7 +57,7 @@ When writing tests for code that:
 - Expand existing tests, don't create new near-identical ones.
 - Test the un-fixed AND fixed versions (pre-fix fails, post-fix passes).
 
-## How to Use
+## Workflow
 
 1. **HTTP/LLM tests** — use `cassette_utils.py` to record a real response once,
    then replay it in tests (fast, deterministic, no network). Verify the cassette
@@ -77,3 +81,23 @@ When writing tests for code that:
   against the fixed code.
 - Slow tests are gated behind `--run_slow` and don't block CI.
 - The farmed harness is reused, not duplicated.
+
+## Red Flags
+
+Duplicating the farmed harness instead of expanding it; narrow near-identical tests instead of broad assertions; a cassette replayed without verifying it caught what you expect; slow tests ungated behind `--run_slow`, blocking CI.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill>farmed-test-harness</skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>…</evidence>
+  <artifacts>…</artifacts>
+  <risks>…</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no reference files; the farmed assets live in `tests/harness/` and are listed inline above.

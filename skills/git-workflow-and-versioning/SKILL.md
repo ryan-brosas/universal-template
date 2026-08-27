@@ -7,6 +7,10 @@ disable-model-invocation: true
 
 # Git Workflow and Versioning
 
+## Core Principle
+
+Treat commits as verified save points, not dumping grounds — changes stay reviewable, reversible, and shippable.
+
 ## Overview
 
 Git workflow keeps changes reviewable, reversible, and shippable. Treat commits as verified save points, not dumping grounds.
@@ -72,3 +76,7 @@ Before declaring git workflow complete, provide:
   <risks>Unrelated worktree changes, uncommitted files, release risk, or none</risks>
 </skill_result>
 ```
+
+## References
+
+N/A — no reference files; the git commands and process are inline in this skill.

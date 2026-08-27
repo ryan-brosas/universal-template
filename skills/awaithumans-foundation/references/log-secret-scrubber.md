@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Log Secret Scrubber — redact credentials at the handler, not at every call site
 
-**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-agents-awaithumans`. **Question:** How do you guarantee a careless `logger.info("%s", body)` can't leak API keys, and how does the scrubber know which replacement style to use?
+**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-awaithumans`. **Question:** How do you guarantee a careless `logger.info("%s", body)` can't leak API keys, and how does the scrubber know which replacement style to use?
 
 ## Pattern list with group-count-keyed replacement; filter touches msg AND args
 **Path/Symbol:** `packages/python/awaithumans/server/core/logging_config.py` — `request_id_var` (:30), `_LOG_SCRUB_PATTERNS` (:40-55), `scrub_text` (:58-69), `_ScrubFilter.filter` (:81-94), `AwaitHumansFormatter.format` (:100-109), `setup_logging` (:112-134).
@@ -27,7 +27,7 @@ The filter scrubs `record.msg` AND each str arg BEFORE formatting — `%s`-style
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-agents-awaithumans", query: "scrub_text _ScrubFilter _LOG_SCRUB_PATTERNS request_id", limit: 4 });
+await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-awaithumans", query: "scrub_text _ScrubFilter _LOG_SCRUB_PATTERNS request_id", limit: 4 });
 ```
 Live rank-1..3 line-exact (:58-69, :81-94, class :72-94).
 

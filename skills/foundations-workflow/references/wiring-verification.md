@@ -2,15 +2,14 @@
 
 ## Wiring
 
-**Rewrites with unchanged membership:** leave `packs.json`, the router, and the manifest untouched; update only the leaf `SKILL.md`, its references, and the durable work record.
+Catalog discovery is filesystem-based: every directory under the catalog root with a valid `SKILL.md` is discoverable. There is no manifest, router, or packs file to maintain.
+
+**Rewrites:** update only the leaf `SKILL.md`, its references, and the durable work record.
 
 ### New membership
-1. Add the member and trigger-first description to `.pi/skills/packs.json`.
-2. Add the matching router line to `.pi/skills/pack-foundations/SKILL.md`.
-3. Update `.pi/skills/manifest.json` to match the on-disk skill and `packs.json` membership.
-4. Update `README.md` counts only when membership changes.
-
-Check JSON syntax, exact membership parity, router wording, and manifest entries directly before closing. Record the inspected paths and outcome in the work record.
+1. Create the leaf directory under the catalog root (`skills/<repo>-foundation/`) from the canonical template.
+2. Verify discovery: the leaf appears in the host skill list immediately after creation (probe it; do not assume).
+3. Record the inspected path and probe outcome in the work record.
 
 ## Evidence gates
 
@@ -25,9 +24,7 @@ For every rewritten foundation:
 
 | Failure | Fix |
 |---|---|
-| Invalid JSON in `packs.json` | Restore valid commas and quoting, then parse and inspect the edited object. |
-| Router omits a catalog member | Add the matching member line and re-check both lists. |
-| Manifest is stale | Update the entry manually from `packs.json` and the leaf frontmatter, then compare both surfaces. |
+| Leaf not discovered by host | Check folder name == frontmatter `name` and that `SKILL.md` exists at the leaf root; re-probe the skill list. |
 | Unsafe description frontmatter | Wrap descriptions containing `: ` in double quotes. |
 | Leaf has grown into a ledger | Move module status and wave evidence to `.pi/work/`; keep only routing, map, provenance, full graph view, and boundaries. |
 

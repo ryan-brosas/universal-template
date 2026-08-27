@@ -30,7 +30,7 @@ if should_decrement:
 
 **Flow:** ticket success → background thread `$inc`s BOTH month and date counters in one upsert (or only `{month}_gpt3` for degraded-tier tickets) → re-reads count through the class-level cache → if now ≥ cap for the tier, immediately `$inc`s `purchased_tickets: -1` → all Mongo I/O is off-thread so the request path never blocks; threads are parked in `global_threads` for later `PyThreadState_SetAsyncExc` teardown (see latest-wins capsule).
 **Invariant:** The increment and the purchase-spend are two separate updates, not one transaction — a crash between them double-counts or under-spends, accepted by design. `gpt3=True` writes ONLY the gpt3 bucket, so degraded-tier runs never consume the normal monthly counter. Reads after this write hit `_ticket_count_cache`, which is never invalidated per instance — staleness within a process is tolerated because every writer goes through the same class-level cache.
-**Probe:** No offline unit test exists (MongoDB-dependent module; graph TESTS-edge query returned zero rows both directions — coverage caveat). Deterministic probe: `grep -c 'upsert=True' sweepai/utils/chat_logger.py` → 2 at pin; `grep -c '_gpt3' sweepai/utils/chat_logger.py` → 4.
+**Probe:** No offline unit test exists (MongoDB-dependent module; graph TESTS-edge query returned zero rows both directions — coverage caveat). Deterministic probe: `grep -c 'upsert=True' sweepai/utils/chat_logger.py` → 2 at pin; `grep -c '_gpt3' sweepai/utils/chat_logger.py` → 2 (write key + read key).
 
 ## Get live surrounding code
 **Retrieve:**

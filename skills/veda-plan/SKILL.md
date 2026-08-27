@@ -1,8 +1,25 @@
 ---
 name: veda-plan
-description: Big-model planning lane. Produce an implementation-ready Architect plan + program design (design.json), then complete a self-contained HTML design doc (devdocs/designs/) as the durable driver-facing deliverable. Uses navigator-plan for architect inputs. No implementation, no review. Use when the user wants a plan/design produced, not code written.
+description: "Use when the user wants an implementation-ready plan/design produced, not code written — big-model planning lane that produces an Architect plan + program design (design.json), then completes a self-contained HTML design doc (devdocs/designs/) as the durable driver-facing deliverable. Uses navigator-plan for architect inputs. No implementation, no review."
 argument-hint: "[veda-flags]"
 ---
+
+## Core Principle
+
+This lane ends at the plan. Two artifacts come out: `design.json` (the machine contract, unchanged `<program>` schema) and a self-contained HTML design doc at `devdocs/designs/` (the durable driver-facing summary that never replaces `design.json`).
+
+## When to Use / NOT
+
+- Use when the user wants an implementation-ready plan/design produced, not code written.
+- NOT when implementation or review is wanted (use `veda-plan-implement-review` or `veda-worker`).
+
+## Workflow
+
+1. `veda -S plan-TASKNAME sel clear` then `sel add` full files (slice only above 125k).
+2. `veda -S plan-TASKNAME -m gpt-5.6-sol -p navigator-plan '<USER PROMPT verbatim> + your position'` — lead with the user's exact words.
+3. Iterate via `resume` / `-p navigator-chat`; involve the user on scope/cost/direction decisions.
+4. Write `design.json` to `$PROJECT_ROOT/.veda/sessions/<SESSION>/`; complete the self-contained HTML doc at `devdocs/designs/{topic-slug}.html`. Stop when both artifacts exist.
+
 
 ## Model routing (authoritative — do not substitute)
 
@@ -138,3 +155,27 @@ Key commands:
 - `veda -S plan-TASKNAME -m gpt-5.6-sol resume` to continue a conversation (session-scoped)
 - Write `design.json` to `$PROJECT_ROOT/.veda/sessions/<SESSION>/`; complete the HTML design doc at `devdocs/designs/<topic-slug>.html`
 - Output goes to stdout; use `-o file.md` to save response; don't pipe `2>&1`
+
+## Red Flags
+
+Paraphrasing the user's ask instead of quoting it verbatim; using `agents.run({ runner: "veda" })` (broken — stdin vs positionals); backticks inside double-quoted prompts; piping veda with `2>&1`; sending prompts before `sel add`.
+
+## Verification
+
+`design.json` exists at the session path with the `<program>` keys (`intent`, `layout`, `context`, `types`, `signatures`, `callstacks`, `invariants`); the HTML doc is self-contained (inline CSS/SVG, no external stylesheets/JS/fonts) and covers current state, problem, goals/non-goals, mechanism, invariants, verification, tradeoffs, TL;DR.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill>veda-plan</skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>commands run, outputs inspected, artifacts produced</evidence>
+  <artifacts>files written / commands run</artifacts>
+  <risks>known risks, untested paths, or none</risks>
+</skill_result>
+```
+
+## References
+
+No reference capsules — the skill is self-contained.

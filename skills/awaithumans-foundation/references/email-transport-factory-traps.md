@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Email Transport Factory & SMTP Traps — port 465 defaults and the username/user alias
 
-**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-agents-awaithumans`. **Question:** How does one factory serve env-configured AND per-identity DB transports — and which two silent SMTP misconfigurations did it have to make loud?
+**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-awaithumans`. **Question:** How does one factory serve env-configured AND per-identity DB transports — and which two silent SMTP misconfigurations did it have to make loud?
 
 ## resolve_transport(name, config) single entry; None-means-skip at the resolve_* layer
 **Path/Symbol:** `packages/python/awaithumans/server/channels/email/transport/factory.py` — docstring (:1-12), `resolve_transport` (:35-88), `resolve_default_transport` (:91-115), `resolve_identity_transport` (:118-131).
@@ -28,7 +28,7 @@ Explicit keys win over defaults (`test_factory_smtp_explicit_use_tls_overrides_p
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-agents-awaithumans", query: "resolve_transport resolve_default_transport smtp use_tls 465", limit: 4 });
+await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-awaithumans", query: "resolve_transport resolve_default_transport smtp use_tls 465", limit: 4 });
 ```
 Live rank-4 line-exact (:91-115) with the 465/587 default tests ranked above it.
 

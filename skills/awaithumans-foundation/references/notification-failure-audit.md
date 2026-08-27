@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Notification-Failure Audit Trail — persist the bad news on its own commit
 
-**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-agents-awaithumans`. **Question:** How does a best-effort notifier tell the operator the human was never pinged — without rolling back or dying itself?
+**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-awaithumans`. **Question:** How does a best-effort notifier tell the operator the human was never pinged — without rolling back or dying itself?
 
 ## One AuditEntry row, own-commit, swallow-and-log on failure-to-record
 **Path/Symbol:** `packages/python/awaithumans/server/services/notification_audit.py` — rationale docstring (:1-19), `record_notification_failure` (:33-77).
@@ -26,7 +26,7 @@ Docstring: a failure to persist the audit row must not itself silently drop — 
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-agents-awaithumans", query: "record_notification_failure AuditEntry notification_failed", limit: 4 });
+await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-awaithumans", query: "record_notification_failure AuditEntry notification_failed", limit: 4 });
 ```
 Live rank-1 line-exact (:33-77).
 

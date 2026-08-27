@@ -11,15 +11,16 @@ Use when building or porting a multi-agent orchestration layer in Python: a mini
 ## Load the matching source dump
 
 ### Core runtime plane (`autogen-core`)
-- `references/runtime-envelope-dispatch.md` — one queue, three envelope types; task_done-per-envelope keeps `join()` honest.
+- `references/runtime-envelope-dispatch.md` — one queue, three envelope types; delivery paths pay task_done per envelope, intervention early-return arms leak it.
 - `references/intervention-pipeline.md` — on_send/on_publish/on_response interception; None-warn, DropMessage-sentinel, asymmetric failure handling.
 - `references/publish-sender-skip-gather.md` — full-identity sender skip; gather barrier; fail-loud vs fail-latch constructor flag.
 - `references/lazy-agent-instantiation.md` — factory-per-type vs instance-per-id; construction-time context injection.
 - `references/handler-routing-ladder.md` — decorator-stamped target types + router predicates; exact-type first-match dispatch.
 - `references/type-subscription-prefix.md` — source-becomes-key tenancy; colon-prefixed direct-message topics.
-- `references/subscription-registry.md` — rebuild-on-mutation recipient cache; pair-equality duplicate rejection.
+- `references/subscription-registry.md` — rebuild-on-mutation recipient cache; pair-equality duplicate rejection; one unguarded manager shared by three runtimes.
 - `references/run-lifecycle-shutdown.md` — stop vs stop_when_idle vs legacy stop_when; vendored queue shutdown; fresh-queue reset.
 - `references/dequeue-intervention-ordering.md` — enqueue-clean/dequeue-intercepted ordering; Drop precedes recipient resolution; early-return arms skip task_done.
+- `references/serialization-registry-type-dispatch.md` — (type_name, content-type)-keyed serializer registry; deserialize returns UnknownPayload values, serialize raises; bare-name collision hazard.
 
 ### Distributed runtime plane (`autogen-ext` grpc worker/host)
 - `references/grpc-registration-handshake.md` — local-factory-first then host RegisterAgent unary RPC; exclusive type→client claims with INVALID_ARGUMENT abort.
@@ -37,6 +38,7 @@ Use when building or porting a multi-agent orchestration layer in Python: a mini
 - `references/swarm-handoff-state.md` — last-handoff-wins reversed scan; latest-target validation only.
 - `references/graph-activation-groups.md` — (target, activation_group) join countdowns, fire-time re-arm, cycle-without-exit rejection.
 - `references/run-stream-output-plumbing.md` — single output relay, guaranteed GroupChatTermination marker, queue drain in finally.
+- `references/team-pause-resume-rpc.md` — out-of-band empty-marker RPCs to participants+manager; cooperative no-op agent defaults; run loop untouched.
 
 ### Agent, context & memory planes
 - `references/assistant-tool-call-loop.md` — range-bounded model↔tool loop; gather barrier; None-sentinel stream; errors become results.
@@ -48,21 +50,24 @@ Use when building or porting a multi-agent orchestration layer in Python: a mini
 - `references/memory-update-context.md` — stores mutate the context AND return what they added; retrieval strategy stays inside the store.
 - `references/workbench-stream-holdback.md` — hold-back-one stream protocol; terminal ToolResult guaranteed last; error-as-result; ExceptionGroup flattening.
 - `references/buffered-context-view-trim.md` — storage stays complete, only get_messages trims; checkpoints serialize the full list.
+- `references/tool-schema-run-json-gate.md` — declaration-time schema generation; strict violations surface at `.schema` access; model_validate gates execution.
+- `references/model-client-stream-contract.md` — chunks are cosmetic, one terminal CreateResult is authoritative; missing terminal fails loud.
 
 ## Capsule map
 
-### Core runtime plane
-- **Envelope dispatch** — `runtime-envelope-dispatch`: SendMessage/Publish/Response envelopes share one asyncio.Queue; each dequeue spawns a background delivery task; futures resolve only via later Response turns; every path owes exactly one `task_done()`.
+**Core runtime plane**
+- **Envelope dispatch** — `runtime-envelope-dispatch`: SendMessage/Publish/Response envelopes share one asyncio.Queue; each dequeue spawns a background delivery task; futures resolve only via later Response turns; delivery paths pay task_done but intervention early-return arms leak it (join() can hang).
 - **Interventions** — `intervention-pipeline`: mutate-in-place interception at send/publish/response; returning None warns, DropMessage drops, handler exceptions reach the awaiting caller on RPC paths but are logged-and-swallowed on publish.
 - **Fan-out** — `publish-sender-skip-gather`: sender skipped by full `(type, key)` identity; subscriber coroutines gathered; unhandled failures latched into `_background_exception` only when `ignore_unhandled_exceptions=False`.
 - **Instantiation** — `lazy-agent-instantiation`: one factory per type string (dup raises), one cached instance per AgentId, factories invoked under a contextvar context so agents self-discover runtime/id.
 - **Routing** — `handler-routing-ladder`: `@event`/`@rpc` stamp target_types/produces_types/router; dispatch is concrete-type bucket lookup, first matching router wins, no inheritance.
 - **Subscriptions** — `type-subscription-prefix`: TypeSubscription maps `topic.source` → agent key (per-source instances); direct messages ride `"<agent_type>:"` prefix subscriptions — the colon is load-bearing.
-- **Subscription registry** — `subscription-registry`: seen-topic set + full cache rebuild on every add/remove; duplicates rejected by id-or-(agent_type,topic_type) equality.
+- **Subscription registry** — `subscription-registry`: seen-topic set + full cache rebuild on every add/remove; duplicates rejected by id-or-(agent_type,topic_type) equality; zero internal locks — shared by core publish, grpc worker, and host servicer on one loop.
+- **Serialization** — `serialization-registry-type-dispatch`: serializers keyed by (type_name, content-type); deserialize-miss returns an UnknownPayload value while serialize-miss raises; protobufs use descriptor full names, other classes bare names.
 - **Lifecycle** — `run-lifecycle-shutdown`: `stop()` discards pending work, `stop_when_idle()` joins the queue first; every flavor resets to a fresh Queue so runtimes are re-runnable.
 - **Interception order** — `dequeue-intervention-ordering`: publish_message enqueues with no hook; _process_next intercepts after get(); publish-arm failures are logged-and-returned (publisher never learns); early returns skip task_done so join-based shutdown can hang.
 
-### Supervisor plane
+**Supervisor plane**
 - **Topology** — `team-topic-topology`: every team namespacing is suffixed with an instance UUID; participants get self+broadcast subs, the manager gets self+broadcast+output-tap subs.
 - **Turn loop** — `supervisor-turn-loop`: speaker selection returns one-or-many names; outstanding-speaker list gates advancement; termination resets condition+turn counter BEFORE signaling so teams rerun.
 - **Ordering** — `fifo-sequential-lock`: per-agent FIFO grant order for declared sequential message types via Event-queue handoff (never plain asyncio.Lock).
@@ -72,9 +77,10 @@ Use when building or porting a multi-agent orchestration layer in Python: a mini
 - **Handoffs** — `swarm-handoff-state`: reversed thread scan for newest HandoffMessage decides the sole next speaker; only the LATEST handoff's target is validated.
 - **Graph execution** — `graph-activation-groups`: conditional edges decrement (target,group) counters ("all") or enqueue-once ("any"); triggered groups re-arm at dequeue; cycles need a conditional exit edge plus termination/max_turns.
 - **Streaming** — `run-stream-output-plumbing`: manager relays the output topic into a plain asyncio.Queue; a backstop shutdown task synthesizes GroupChatTermination(with error) if the runtime dies; consumer drains the queue in finally.
+- **Pause/resume** — `team-pause-resume-rpc`: pause()/resume() fan empty GroupChatPause/Resume marker RPCs to every participant plus the manager; containers recurse into nested teams; agents cooperate via overridable no-op on_pause/on_resume; run/run_stream never return.
 - **Selector context** — `selector-context-transcript`: the whole (pluggable, default-unbounded) model context is flattened to "source: content" lines inside ONE prompt message; SystemMessage for OpenAI family else UserMessage; _previous_speaker filters candidates but mention checks see all names; selector state persists thread+turn+previous_speaker.
 
-### Agent, context & memory plane
+**Agent, context & memory plane**
 - **Tool loop** — `assistant-tool-call-loop`: exactly max_tool_iterations LLM calls when every turn is function calls; concurrent execution observed via stream events, context mutated only after ALL results; bad JSON args / unknown tool names yield FunctionExecutionResult(is_error=True).
 - **Cancellation** — `rpc-cancellation-ladder`: cancel() is synchronous/idempotent under threading.Lock; link_future AFTER enqueue; both resolution arms guard `not future.cancelled()`; unknown recipient raises at the caller before queuing.
 - **Checkpointing** — `team-state-checkpointing`: {"agent_states": {name: state}} keyed by NAME not AgentId; TeamState validation; _is_running mutex cleared in finally; lazy factory instantiation on load.
@@ -84,8 +90,10 @@ Use when building or porting a multi-agent orchestration layer in Python: a mini
 - **Memory** — `memory-update-context`: update_context mutates the ChatCompletionContext and returns the added memories; List injects one numbered SystemMessage, vector stores derive the query from the last message.
 - **Streamed tools** — `workbench-stream-holdback`: yield previous only when the next arrives so exactly one ToolResult terminates every stream; mid-stream errors flush held chunk then error-result; unknown tools never raise.
 - **Recall contexts** — `buffered-context-view-trim`: tail-n is a per-read view; orphaned leading FunctionExecutionResultMessage dropped from the view; save_state serializes the FULL list.
+- **Tool schemas** — `tool-schema-run-json-gate`: BaseTool generates JSON schemas at declaration (jsonref $defs inlining); strict mode raises at .schema access when defaults exist or additionalProperties is set; run_json model_validates args before run().
+- **Stream contract** — `model-client-stream-contract`: create_stream yields str display chunks then exactly one authoritative CreateResult; AssistantAgent captures the terminal and fails loud if a stream ends without it.
 
-### Distributed runtime plane (grpc)
+**Distributed runtime plane (grpc)**
 - **Registration** — `grpc-registration-handshake`: factory stored locally then unary RegisterAgent; host's locked type→client map rejects duplicates across workers with INVALID_ARGUMENT; subscriptions commit host-first, mirror locally second.
 - **Wire correlation** — `grpc-request-correlation`: monotonic request_ids under an asyncio.Lock park futures before enqueue; replies pop-and-resolve; agent exceptions cross as str(e) and re-raise as generic Exception.
 - **Disconnect** — `grpc-host-disconnect-recovery`: OpenChannel finally deletes the connection, cancels its pending response futures, revokes its types/subscriptions; worker detects nothing (EOF breaks a silent read task) — no reconnect exists, only UNAVAILABLE retryPolicy on unary calls.

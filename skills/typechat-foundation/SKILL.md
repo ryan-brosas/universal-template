@@ -1,6 +1,6 @@
 ---
 name: typechat-foundation
-description: "Canonical foundation leaf template. Copy manually; this library asset is not rendered by a slash command."
+description: "Use when porting natural-language→structured-JSON pipelines — schema-driven prompting, LLM-output validation with one-shot repair, safe JSON program interpretation, retry/timeout/DoS hardening for model endpoints, or Python↔TypeScript schema bridging."
 ---
 # TypeChat: structured-LLM-output foundation
 

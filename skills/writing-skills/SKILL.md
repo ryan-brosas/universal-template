@@ -6,6 +6,24 @@ disable-model-invocation: true
 
 # Writing Skills — The Unified SKILL.md
 
+## Core Principle
+
+One standardized system for every SKILL.md: one canonical template (`~/.agents/templates/skill.md`) plus this grammar — no per-skill format drift, enforced by the validation gate.
+
+## When to Use / NOT
+
+- Use when authoring, editing, or verifying any SKILL.md in the catalog.
+- NOT when writing project documentation, ADRs, or PRDs (other templates own those).
+
+## Workflow
+
+1. Open the template and this grammar together.
+2. Write RED first: a pressure scenario a subagent fails without the skill.
+3. Author the smallest GREEN skill (frontmatter, fixed section order, body under budget).
+4. REFACTOR against advancing adversarial prompts until 4/5 twice.
+5. Run the verification gate below. Stop when it passes clean.
+
+
 ## One System
 
 Every skill is a SKILL.md following one skeleton and one grammar.
@@ -106,3 +124,7 @@ Bible (cannot load) — Tutorial (belongs in docs) — Summarizer (rehashes plat
 - `~/.agents/templates/skill.md` — the canonical skeleton (must stay in lockstep with this grammar).
 - `~/.agents/skills/workflow-lifecycle/references/learn.md` — a new skill is born here (cross-skill).
 - `~/.agents/skills/workflow-lifecycle/references/mcp-context.md` — discovery hooks via codebase-memory / OpenViking (cross-skill).
+
+## References
+
+No reference capsules — the skill is self-contained.

@@ -7,6 +7,10 @@ disable-model-invocation: true
 
 # Documentation & ADRs
 
+## Core Principle
+
+Docs live at one level each and stay in sync with code: doc-as-code, updated in the same PR as the change. Stale doc = no doc; a wrong doc is worse than no doc.
+
 ## When to Use
 
 Project docs (README, contributing, onboarding); real architectural decisions (ADR); API docs; design docs that outlive the conversation; postmortems; runbooks.
@@ -59,6 +63,13 @@ Don't mix levels. A guide is not an ADR. A runbook is not a guide.
 - Easy to reverse (do it; document in code).
 - No real trade-off.
 
+## Workflow
+
+1. Pick the level first (Doc Hierarchy) — a guide is not an ADR, a runbook is not a guide.
+2. Write an ADR only when two+ viable options carry real trade-offs; otherwise document in code or plan.
+3. Update the doc in the same PR as the code change (doc-as-code).
+4. On review, delete or update anything stale — doc rot is 6+ months untouched.
+
 ## Keeping Docs in Sync
 
 - Doc-as-code: docs live in the same repo, same review process.
@@ -102,3 +113,25 @@ Doc rot (> 6 months); ADR without context or consequences; runbook without comma
 ## Anti-Patterns
 
 **ADR for trivial**; **doc without audience**; **stale doc**; **"comprehensive" wall**; **no link to code**; **ADR with no alternatives**.
+
+## Verification
+
+- README has "Why" and tested "Install" commands (tested on a fresh machine).
+- ADR carries Context, Decision, Consequences, and Alternatives considered.
+- Docs link to code; examples run; nothing is 6+ months untouched without delete-or-update.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill>documentation-and-adrs</skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>…</evidence>
+  <artifacts>…</artifacts>
+  <risks>…</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no reference files; all formats and anatomy templates are inline in this skill.

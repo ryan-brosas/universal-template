@@ -1,6 +1,7 @@
 ---
 name: milvus-foundation
-description: "Compaction and segment lifecycle foundation"
+description: "Use when porting Milvus-style background maintenance into your own system: segment allocation/sealing policies, L0 delete-log compaction eligibility, mix/clustering/sort compaction triggers, a hot-swappable prioritized task queue with per-channel type exclusion, crash-safe persisted task state machines, publish-before-retire meta mutations, target-based reconcilers, storage-format migrations under rate limits, or snapshot-protection gating of destructive rewrites. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
+
 ---
 # Milvus: Compaction & Segment Lifecycle Foundation
 

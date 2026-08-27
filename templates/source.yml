@@ -1,0 +1,46 @@
+source:
+  name: example-source
+  url: https://github.com/example/project
+  requested_ref: main
+  resolved_commit: ""
+  license: unknown
+  captured_at: YYYY-MM-DD
+role: inspo # inspo | project
+purpose: "Named DSH question this source can answer"
+destination: "absolute canonical path"
+alias_destination: "absolute alias path or none"
+work_record: "absolute path to work/"
+related_project: "absolute path or none"
+status: queued # queued | cloned | graph-indexed | mapping | studying | translated | verified | promoted | archived
+current_pass: 0
+next_action: ""
+quality_bar:
+  verdict: pending # accept | maybe | skip
+  relevance: pending
+  source_testability: pending
+  provenance_license: pending
+  graph_readiness: pending
+  bounded_scope: pending
+  reason: ""
+graph:
+  project: ""
+  root: ""
+  mode: FULL
+  status: pending # pending | ready | blocked | stale
+  head_sha: ""
+  generation: ""
+  node_count: null
+  edge_count: null
+  coverage_caveats: []
+catalog:
+  index_path: "absolute path to INSPO.md"
+  entry_updated: false
+  entry_status: pending
+evidence:
+  origin_verified: false
+  commit_verified: false
+  license_verified: false
+  tests_verified: false
+  graph_full_verified: false
+  catalog_updated: false
+notes: []

@@ -1,6 +1,6 @@
 ---
 name: agno-foundation
-description: "Port agno's control planes: agent run loop, cancellation, HITL/approvals, time-travel continue/fork, fallback models; team supervisor spine, task FSM, delegation bus."
+description: "Use when building or porting an agent framework runtime — the single-agent run loop with retries/cancellation/HITL pauses/approvals and conversation time-travel (continue/fork/regenerate), model provider fallback and retry-with-guidance, OR the multi-agent layer: a supervisor/team-leader loop over member agents, an autonomous shared-task-list mode, tool routing for the leader model, cooperative run cancellation with cancel-before-start support, and HITL pause propagation from members to teams. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
 ---
 
 # agno: Agent & Team Control-Plane Foundations
@@ -45,20 +45,19 @@ Use when building or porting an agent framework runtime: the single-agent run lo
 
 ## Capsule map
 
-### Team / supervisor plane
+**Team / supervisor plane**
 - **Run spine** — `supervisor-run-spine`: register→session→retry-loop(13 steps)→cleanup/store; guardrail+cancel errors bypass retries; CancelledError persists via detached task.
 - **Plan state** — `task-list-fsm`: five-state TaskList; unknown dep fail-closed; failed dep auto-fails dependents so `all_terminal()` exits the loop.
 - **Autonomy loop** — `task-mode-loop`: `<current_task_state>` injection per iteration; exit on goal_complete OR all-terminal-clean; max_iterations exhaustion is not an error.
-- **Cancellation** — `cancel-before-start-registry`: `cancel_run` stores intent pre-registration; `register_run` setdefaults; 5s-bounded delegate-task drain before persist.
+- **Cancellation** — `cancel-before-start-registry`: `cancel_run` stores intent pre-registration; `register_run` setdefaults (setdefault-vs-blind-write intent); 5s-bounded delegate-task drain before persist; member drain bucket + facade swap mechanism.
 - **Message bus** — `delegate-message-bus`: capture final output, always forward terminal events, suppress ordinary events while draining after cascading cancel into the child.
 - **Backpressure** — `parallel-fanout-backpressure`: deepcopy session_state + media per branch; re-raise RunCancelledException out of `gather(return_exceptions=True)`; pause returns task to pending.
 - **Tool routing** — `tool-routing-table`: user tools → flag-gated built-ins → mode-exclusive delegation XOR task tools; duplicate names keep FIRST registration (documented update_user_memory trap).
 - **Background work** — `background-manager-chaining`: new attempt cancels-and-awaits previous memory/learning tasks; success joins via await_for_open_threads; finally cancels survivors.
 - **Members & HITL** — `member-resolution-hitl`: recursive deep finder vs top-level route finder; pause copies requirements, fills identity blanks, keeps live `_member_run_response`.
 - **Concurrency correctness** — `closure-capture-fanout`: default-arg freeze of loop variables in fan-outs; PR #6067 regression-pinned.
-- **Cancel registry (team)** — `cancel-before-start-registry`: setdefault-vs-blind-write intent + member drain bucket + facade swap mechanism.
 
-### Run-control plane
+**Run-control plane**
 - **Run loop** — `run-loop-retry-ladder`: attempts = retries+1 wrap the whole session-read→cleanup ladder; exponential backoff only between attempts; every exit path funnels through cleanup_and_store.
 - **Dispatch entry** — `dispatch-entry-validation`: sync run rejects async DB loudly; hooks normalized once via `_hooks_normalised`; options precedence explicit args > existing context > resolved defaults.
 - **Cancellation intent** — `cancel-before-start-intent`: dict `setdefault(run_id, False)` so intent stored pre-registration survives; cancel returns was_registered.
@@ -72,7 +71,7 @@ Use when building or porting an agent framework runtime: the single-agent run lo
 - **Lifecycle** — `background-futures-disconnect`: finally cancels memory/learning/culture futures and disconnects connectable tools; client-disconnect persists cancelled runs on detached asyncio tasks.
 - **Tools** — `tool-assembly-pipeline`: flag-gated composition (factories → client → memory/learning defaults → knowledge) then parse + signature-driven CONDITIONAL media injection; async entrypoints raise at resolution time in sync mode.
 
-### Models-core resilience plane
+**Models-core resilience plane**
 - **Model failover** — `model-fallback-ladder`: specific list (rate-limit/context-overflow) beats general on_error; 400-4xx minus {429,529} returns None; primary error re-raised when all fail; appended messages synced back via seed_len diff.
 - **Model failover (agent side)** — `model-fallback-taxonomy`: error-classified list selection + `_clean_kwargs_for_fallback` strips `temporary` guidance messages; per-attempt message copies; `fallback_model_activated` stream event.
 - **Teach-retry** — `retry-with-guidance`: RetryableModelProviderError appends temporary guidance user message and recurses (limit 1); transient errors sleep with optional exponential backoff; non-retryable raises immediately.

@@ -1,6 +1,6 @@
 # gc — workspace hygiene contract
 
-Applies: workflow-lifecycle gc. Source prompt: ~/.agents/prompts/gc.md (when present).
+Applies: workflow-lifecycle gc. This reference is the canonical contract (the retired global prompt file is folded into it).
 
 ## Goal
 Remove workspace cruft without touching user-owned content: temp files, dead references, stale caches, duplicated knowledge — while keeping Agent Rules and Catalogs intact.

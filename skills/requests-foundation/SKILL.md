@@ -1,6 +1,6 @@
 ---
 name: requests-foundation
-description: "Foundation leaf for psf/requests — session orchestration, transport adapter/pool plane, redirect/auth/proxy state machines, prepared-request pipeline, and response consumption contracts."
+description: "Use when porting psf/requests internals — session orchestration, transport adapter/pool plane, redirect/auth/proxy state machines, prepared-request pipeline, and response consumption contracts."
 ---
 
 # requests: Foundation

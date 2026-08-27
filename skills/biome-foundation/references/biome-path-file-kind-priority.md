@@ -10,8 +10,20 @@
 
 ### Decisive source
 ```rust
-// NOTE: The order of the variants is important, the one on the top has the highest priority
-pub enum FileKinds { Config, Manifest, Ignore, #[default] Handleable }
+// crates/biome_fs/src/path.rs :32-44 — variant ORDER is the priority order:
+/// A configuration file has the highest priority. It's usually `biome.json` and `biome.jsonc`
+Config,
+/// It's usually `package.json` and `tsconfig.json`
+Manifest,
+/// An ignore file, like `.gitignore`
+Ignore,
+/// A file to handle has the lowest priority. ...
+#[default]
+Handleable
+
+// :46-48, the BiomePath type doc that consumes this ordinal:
+/// This type has its own [Ord] implementation driven by its [FileKinds], where certain files must be inspected
+/// before others. For example, configuration files and ignore files must have priority over other files.
 
 fn priority(file_name: &str) -> FileKinds {
     if file_name == ConfigName::biome_json() || file_name == ConfigName::biome_jsonc() {

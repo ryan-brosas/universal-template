@@ -1,6 +1,6 @@
 ---
 name: open-seo-foundation
-description: "Metered SEO platform foundation"
+description: "Use when porting a pay-as-you-go SEO platform's reusable machinery: Cloudflare Workflows run orchestration (per-step Postgres scoping, partial-index single-flight guards, stale-run reconciliation), SERP rank-check adapters over a metered third-party API (live vs task-queue vs live-fallback ladders), credit estimation that matches per-call rounding, drift-free schedule anchoring for cron admission control, R2 cache keys that survive schema evolution, URL/domain research-scope grammar, AI-search (LLM mentions) fan-out with cache-only-on-complete, Durable-Object crawl scratchpads, and agent-facing MCP tool registration or in-app agent turn hooks. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
 ---
 # OpenSEO: metered SEO platform foundation
 

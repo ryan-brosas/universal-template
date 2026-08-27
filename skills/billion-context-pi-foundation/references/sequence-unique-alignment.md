@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Unique-longest-run sequence matcher — when is a shared run UNUSABLE as an alignment anchor, and how do you know in O(n log n)?
 
-**Source:** billion-context-pi (MIT) `master@1c87eb5051e0e97bb6ba606dc1c57ec2510f1b41`; Codebase Memory project `mnt-hdd-utopia-inspo-coding-agents-billion-context-pi`. **Question:** Given a persisted message list and a live list (which may contain not-yet-persisted tail messages), what is the contract for finding THE unique alignment between them — and for correctly refusing when none exists?
+**Source:** billion-context-pi (MIT) `master@6a88c5565355baebccfaf27398a6008fe08619ed`; Codebase Memory project `mnt-hdd-utopia-inspo-billion-context-pi`. **Question:** Given a persisted message list and a live list (which may contain not-yet-persisted tail messages), what is the contract for finding THE unique alignment between them — and for correctly refusing when none exists?
 
 ## Suffix-array + LCP over interned keys, with uniqueness counted ACROSS the boundary
 **Path/Symbol:** `src/sequence-match.ts` whole (105L): `findUniqueLongestRun` (:7-70), `buildSuffixArray` (:72-89), `buildLcp` (:91-105); consumers `src/runtime.ts`:107-135 (`mergeLiveEntries` — two independent matchers: persisted-identities vs live, and prior-turn origin identities vs live).
@@ -30,10 +30,10 @@ return pairCount === 1 ? { candidateStart, liveStart, length: bestLength } : und
 ```
 **Flow:** build suffix array of the id sequence (prefix-doubling sort with rank-pair comparison and early exit when final rank == n−1) → Kasai-style LCP → scan adjacent suffix pairs keeping only CROSS-SOURCE pairs (leftSource !== rightSource; middle separator suffix excluded via `undefined`) to find bestLength → group maximal LCP plateaus and count cross pairs → accept iff total pairCount === 1. Consumer semantics (`runtime.ts`): matched live positions adopt the persisted entry's STABLE id (and migrate any refs pointing at the old `live-N` placeholder); unmatched tails get fresh `live-N` ids; two matcher calls cover "persisted branch" and "origins from the previous round" so ids stay stable across rounds even before persistence catches up.
 **Invariant:** (1) The matcher returns `undefined` BOTH for "no common run" AND "ambiguous alignment" — callers must treat undefined as NO MATCH, never retry or guess; a wrong anchor here would attach compressed-block message references to the WRONG messages. (2) Repeated tokens ≠ repeated alignments: a periodic run that occurs once in each source still yields pairCount 1 and matches (test :40); two distinct max-length runs ANYWHERE fail the whole call (tests :21/:26). (3) The separator trick is what makes "longest COMMON subsequence" impossible to fake across sources — without it, LCP grouping could bridge candidate-tail to live-head. (4) Interning by first-seen order makes the algorithm work for ANY hashable key (strings OR symbols — runtime passes `MatchKey = string | symbol`, symbols representing deliberately-unmatchable entries).
-**Probe:** `cd /mnt/hdd/utopia/inspo/coding-agents/billion-context-pi && npx tsx --test tests/sequence-match.test.ts` — GREEN at pin incl. the brute-force cross-check property test (:49).
+**Probe:** `cd /mnt/hdd/utopia/inspo/billion-context-pi && npx tsx --test tests/sequence-match.test.ts` — GREEN at pin incl. the brute-force cross-check property test (:49).
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-coding-agents-billion-context-pi", query: "findUniqueLongestRun MatchRange suffix array mergeLiveEntries", limit: 10 });
+await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-billion-context-pi", query: "findUniqueLongestRun MatchRange suffix array mergeLiveEntries", limit: 10 });
 ```
 
 ## Verdict

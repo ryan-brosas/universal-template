@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Slack OAuth State Nonce — self-verifying CSRF state without a state table
 
-**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-agents-awaithumans`. **Question:** How do you make OAuth `state` verifiable with zero server-side storage — and what does verify check in what order?
+**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-awaithumans`. **Question:** How do you make OAuth `state` verifiable with zero server-side storage — and what does verify check in what order?
 
 ## nonce:ts:hmac → base64url; decode→HMAC→age ladder, False on everything
 **Path/Symbol:** `packages/python/awaithumans/server/channels/slack/oauth_state.py` — design docstring (:1-14), `sign_state` (:30-37), `verify_state` (:40-68).
@@ -33,7 +33,7 @@ if age > SLACK_OAUTH_STATE_MAX_AGE_SECONDS:       # 600s constant
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-agents-awaithumans", query: "sign_state verify_state oauth_state", limit: 5 });
+await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-awaithumans", query: "sign_state verify_state oauth_state", limit: 5 });
 ```
 Live rank-1/2 line-exact (:30-37, :40-68) with direct tests ranked right behind.
 

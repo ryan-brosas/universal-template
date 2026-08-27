@@ -55,3 +55,23 @@ Cleanup before tests pass; "I just want to refactor this"; expanding into unrela
 - Did I re-run the same checks after, and compare to baseline?
 - Are all changes scoped to what was actually noisy?
 - Did I avoid renaming public APIs or restructuring unrelated code?
+
+## Verification
+
+Same tests, typecheck, and lint re-run after cleanup; outputs match the saved "before" baseline; every change is a deletion or simplification scoped to what was noisy.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill>code-cleanup</skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>Before/after baselines match (tests, typecheck, lint); diff scoped to noisy code</evidence>
+  <artifacts>Simplified diff: deletions, renames, extractions, inlines</artifacts>
+  <risks>Scope expansion, unproven behavior, or none</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no reference files; this skill is self-contained.

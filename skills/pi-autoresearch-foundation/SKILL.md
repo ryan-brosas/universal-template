@@ -1,6 +1,7 @@
 ---
 name: pi-autoresearch-foundation
-description: "Autonomous experiment-loop foundation"
+description: "Use when porting an autonomous run→measure→keep/discard optimization loop for an LLM agent — JSONL-as-source-of-truth persistence, MAD noise-floor confidence scoring, git-worktree isolation with keep-commits/revert-discards, benchmark-script run-locking, backpressure checks, deterministic compaction summaries, self-resume gates, or file-backed live dashboards. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
+
 ---
 # pi-autoresearch-harness: autonomous experiment-loop foundation
 

@@ -99,6 +99,15 @@ Do not route AGY Claude through Veda: its current adapter injects unsupported `-
 
 **Discovery** — Pi Fovea focus/impact before text search. **Mutation** — plan writes defer to the Schema mutation guard in AGENTS.md. **Execution** — stations run under `task-scoped-execution` with compaction between stations.
 
+## Verification
+
+- Each station is independently verifiable: its acceptance check is a concrete command
+  or observable check that passes before the station counts as done.
+- Record each station's outcome in the Acceptance Ledger
+  (`.pi/work/$(cat .pi/work/.active)/.progress.md`): status, checks run (command + exit
+  code), findings, rulings, payload passed on. A station without a ledger entry has not
+  happened.
+
 ## Skill Result Contract
 
 ```xml
@@ -110,3 +119,7 @@ Do not route AGY Claude through Veda: its current adapter injects unsupported `-
   <risks>Unresolved open questions, unverified stations, or none</risks>
 </skill_result>
 ```
+
+## References
+
+N/A — no reference files; the plan template and station ledger format are fully specified in this file.

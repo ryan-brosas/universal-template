@@ -1,6 +1,6 @@
 ---
 name: prefect-foundation
-description: Use when building or porting workflow engines - heartbeat liveness past blocked loops, termination-intent dispatch, cancellation ownership across process boundaries, subflow reattach ladders, client-side retry/backoff arithmetic, transactional result caching, crash taxonomies, and supervised-process exit contracts - plus fire-and-forget telemetry batching (singleton queue services on a global loop, byte-budget log upload, context-capturing event workers, websocket resend with checkpoint acks) and event-driven completion waiting (subscriber replay backfill windows, seen-id dedup, clean-vs-abnormal close policy, register-recheck waiter ladders, terminal-event fan-in singletons, heartbeat backoff loops) - capsule-v2 source maps with decisive excerpts and graph retrieval.
+description: Use when building or porting workflow engines - heartbeat liveness past blocked loops, termination-intent dispatch, cancellation ownership across process boundaries, subflow reattach ladders, client-side retry/backoff arithmetic, transactional result caching, crash taxonomies, and supervised-process exit contracts - plus fire-and-forget telemetry batching (singleton queue services on a global loop, byte-budget log upload, context-capturing event workers, websocket resend with checkpoint acks) and event-driven completion waiting (subscriber replay backfill windows, seen-id dedup, clean-vs-abnormal close policy, register-recheck waiter ladders, terminal-event fan-in singletons, heartbeat backoff loops), lossy-tolerant log-stream consumption, dual-stream queue fan-in with sentinel/straggler-drain termination, recency-cached lineage enrichment, and thread-keyed sync/async waiter primitives - capsule-v2 source maps with decisive excerpts and graph retrieval.
 ---
 # prefect: workflow-engine foundations
 
@@ -40,6 +40,11 @@ Use when porting or building a run engine around user functions: keeping livenes
 - `references/terminal-event-waiter-singleton.md` - one terminal-only websocket subscription fans completions to every waiter in the process; restartable singleton.
 - `references/critical-service-heartbeat-backoff.md` - seeded success-window over transport/5xx errors only; interval doubling with reset-on-success; typed exit.
 - `references/flow-runs-watch-single-subscriber.md` - subscribe-before-read single-run watch; events signal, API reads decide; typed timeout.
+- `references/logs-subscriber-live-only-window.md` - lossy-tolerant log stream: fresh now-minus-1min window per reconnect, no cursor, per-yield retry budget, re-raise on exhaustion.
+- `references/logs-subscriber-selection-auth-ladder.md` - config-to-client ladder with raise-last arm for consumers; soft+hard auth denial mapped to one actionable error; falsy tokens valid.
+- `references/flow-run-dual-stream-fanin.md` - two background consumers feed one queue; sentinel counting, exceptions-as-items, unexpected-close-to-error, straggler drain timeout.
+- `references/related-resources-context-cache.md` - context-first lineage resolution, parallel cached reads, recency-evicted module cache, role attached at return time.
+- `references/sync-async-waiter-primitives.md` - thread-keyed weak waiter registry; drain-then-block with cancel-wired callbacks; early-submission parking for loop-owned queues.
 
 ## Capsule map
 - **Liveness** - `heartbeat-thread-context`: daemon OS thread + contextvars.copy_context so SettingsContext survives blocked loops.
@@ -79,6 +84,15 @@ Use when porting or building a run engine around user functions: keeping livenes
 - **Liveness** - `critical-service-heartbeat-backoff`: outage-classified consecutive-failure window with exponential interval doubling and loud typed exit.
 - **Waiting** - `flow-runs-watch-single-subscriber`: per-run subscribe-before-read watch where events signal and authoritative reads decide.
 
+### Log-stream consumption & dual-stream fan-in plane (`logging/clients.py` + `events/subscribers.py`)
+- **Recovery** - `logs-subscriber-live-only-window`: explicit lossy-tolerant contract; fresh now-anchored window per reconnect instead of a delivery-driven cursor.
+- **Selection** - `logs-subscriber-selection-auth-ladder`: consumer ladder raises instead of degrading to null; dual-shape auth denial preserves the server reason.
+- **Merging** - `flow-run-dual-stream-fanin`: queue fan-in where sentinels count stream deaths and premature clean close becomes an error.
+
+### Producer enrichment & cross-thread waiting primitives (`events/related.py` + `_internal/concurrency/waiters.py`)
+- **Enrichment** - `related-resources-context-cache`: context-first + parallel cached lineage reads bounded by recency eviction.
+- **Concurrency** - `sync-async-waiter-primitives`: the send-work-back-to-the-waiter bridge beneath from_async/from_sync.
+
 ## Extending the foundation
 Add one `references/<seam>.md` capsule-v2 for one graph-selected, source-confirmed porting question. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf.
 
@@ -86,7 +100,7 @@ Add one `references/<seam>.md` capsule-v2 for one graph-selected, source-confirm
 prefect (Apache-2.0), `main@ce79dd3d6cfa2b7337265498210dbc4d25bcdc98` (= graph base_sha = live HEAD, zero drift); Codebase Memory project `prefect` (canonical short name; predecessor name `ext-prefect` cited by earlier passes is DEAD — re-established at the identical commit, ready FULL, 66,922 nodes / 374,411 edges @ gen 2026-08-25T19:58:22Z; parse_partial ×18 all Dockerfile/sql/jinja/css/json/mdx/tsx fixtures, none cited; no stale twin; all pass-P1 cited paths no_recorded_issue). Work record: inspo/prefect-work/{state,research,verification}.md.
 
 ## Full view (memory graph)
-Revalidate `prefect` before porting: run `index_status`, `check_index_coverage`, `search_graph`, `trace_path`, and `get_code_snippet`. Record the graph root, branch, commit, mode, node/edge counts, freshness, and any coverage caveats; source and direct tests decide shipped claims. Earlier passes' Retrieve blocks were live-resolved rank-1 line-exact against the same commit under the then-current graph project; pass-P1 (telemetry batching kernel) retrieves were live-resolved against `prefect` via name_pattern searches; pass-P2 (event consumption & run-completion waiting plane) retrieves likewise (`^PrefectEventSubscriber$`, `SEEN_EVENTS_SIZE`, file-scoped `__anext__`, `^wait_for_flow_run$`, `^FlowRunWaiter$`, `^critical_service_loop$`) — annotation-only attributes (`_backfill_since`, `_seen_events`, `_observed_completed_flow_runs`) have NO graph nodes and are cited via class rows plus direct source reads.
+Revalidate `prefect` before porting: run `index_status`, `check_index_coverage`, `search_graph`, `trace_path`, and `get_code_snippet`. Record the graph root, branch, commit, mode, node/edge counts, freshness, and any coverage caveats; source and direct tests decide shipped claims. Earlier passes' Retrieve blocks were live-resolved rank-1 line-exact against the same commit under the then-current graph project; pass-P1 (telemetry batching kernel) retrieves were live-resolved against `prefect` via name_pattern searches; pass-P2 (event consumption & run-completion waiting plane) retrieves likewise (`^PrefectEventSubscriber$`, `SEEN_EVENTS_SIZE`, file-scoped `__anext__`, `^wait_for_flow_run$`, `^FlowRunWaiter$`, `^critical_service_loop$`); pass-P3 (log-stream consumption & dual-stream fan-in plane) was authored under a direct source/test read fallback because the graph was not connected in that session — its Retrieve blocks are expected-rank statements to verify live, not observed results — annotation-only attributes (`_backfill_since`, `_seen_events`, `_observed_completed_flow_runs`) have NO graph nodes and are cited via class rows plus direct source reads.
 
 ## Boundaries
 Adopt pure engine contracts (state machines, retry arithmetic, commit trees, supervision handshakes); adapt transport layers (PrefectClient HTTP, control-channel socket, events pipeline) to your host; omit Prefect product surfaces (server API/UI, deployments/work-pools/workers UX, blocks/filesystems integrations, cloud automation).

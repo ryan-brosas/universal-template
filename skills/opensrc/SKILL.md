@@ -60,6 +60,26 @@ Reading source without a question (drift); assuming docs are right (verify); rea
 
 **Trust the docs**; **skip the tests**; **read wrong version**; **read without a question**; **"I think it works"**; **drift into reading the whole codebase**.
 
+## Verification
+
+- Write a tiny test that exercises the behavior in question and confirm you predicted
+  the output before running it (step 6 of the Investigation Workflow).
+- Run the code while reading; do not rely on reading alone.
+- Check the version (`package.json`, `git log`) so the source you read matches the
+  installed behavior.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill><name></skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>…</evidence>
+  <artifacts>…</artifacts>
+  <risks>…</risks>
+</skill_result>
+```
+
 ## References
 
 Detailed reference material:

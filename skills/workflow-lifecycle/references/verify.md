@@ -1,6 +1,6 @@
 # verify - pre-claim gate contract
 
-Applies: workflow-lifecycle verify. Source prompt: ~/.agents/prompts/verify.md. Read-only until the final artifact write.
+Applies: workflow-lifecycle verify. This reference is the canonical contract (the retired global prompt file is folded into it). Read-only until the final artifact write.
 
 ## Phase 0 - Cache
 Fingerprint = git HEAD + full diff + untracked contents hash. If it equals the last traced stamp, report cached PASS and skip ahead (unless --no-cache / --full).

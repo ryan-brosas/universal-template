@@ -7,6 +7,11 @@ disable-model-invocation: true
 
 # Vercel Deploy
 
+## Core Principle
+
+Deploy through the `$VERCEL_DEPLOY_SCRIPT` helper — resolve its path from the environment or ask; never assume a machine-specific path. Every successful run returns a Preview URL (live site) and a Claim URL (transfer to the user's Vercel account).
+
+
 ## When to Use
 
 - When the user requests deploying a project to Vercel and needs preview/claim links.
@@ -124,3 +129,33 @@ Deployment failed due to network restrictions. To fix this:
 1. Allow the required provider domains in the runtime/network settings
 2. Try deploying again
 ```
+
+## Workflow
+
+1. Resolve the deploy script path from `$VERCEL_DEPLOY_SCRIPT` or ask the user.
+2. Run `bash "$VERCEL_DEPLOY_SCRIPT" [path]` (directory or `.tgz`; defaults to cwd).
+3. Present both URLs to the user. Stop when both are shown.
+
+## Red Flags
+
+Assuming a hardcoded script path; uploading secret files (`.env*`, credentials, keys); mutating the input tree in place; running the helper without showing the exact command first.
+
+## Verification
+
+Output contains a `Preview URL` and a `Claim URL`; the stdout JSON parses with `previewUrl`, `claimUrl`, `deploymentId`.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill>vercel-deploy-claimable</skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>commands run, outputs inspected, artifacts produced</evidence>
+  <artifacts>files written / commands run</artifacts>
+  <risks>known risks, untested paths, or none</risks>
+</skill_result>
+```
+
+## References
+
+No reference capsules — the skill is self-contained.

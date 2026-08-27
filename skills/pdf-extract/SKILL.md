@@ -7,6 +7,13 @@ disable-model-invocation: true
 
 # PDF Extraction
 
+## Core Principle
+
+**Match the extraction library to the PDF's actual structure, and prove it on a small
+sample before scaling up.** Simple text → `pdf-parse`/`pdfjs`; structured data →
+`pdfplumber`/`camelot`; complex layouts → vision model. Tables are not text, scanned
+PDFs need OCR first, and structure must be preserved when it matters.
+
 ## Iron Laws
 
 <EXTREMELY-IMPORTANT>
@@ -73,3 +80,29 @@ No sample test before full run; no verification of output; `pdftotext` on scanne
 ## Anti-Patterns
 
 **Wrong library for the PDF** (text vs scanned vs tables); **no sample test**; **no verification**; **flattening tables** (loses structure); **OCR on text-based PDF**; **batch without error handling**; **"the library supports X"** (test YOUR data); **"I'll fix in post"** (extraction should be right).
+
+## Verification
+
+- Spot-check the extracted output against the source PDF — automated extraction lies
+  silently (a missing column, a merged cell).
+- Confirm the sample test (1–5 pages) produced the expected output before trusting the
+  full run.
+- For tables: verify row/column counts and cell alignment, not just that text came back.
+- For batches: confirm error handling caught encrypted/corrupted files instead of one
+  bad PDF killing the run.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill><name></skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>…</evidence>
+  <artifacts>…</artifacts>
+  <risks>…</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no reference files; library selection is fully covered by the table in this file.

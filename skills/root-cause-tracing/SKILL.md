@@ -9,6 +9,12 @@ disable-model-invocation: true
 
 Companion to `debugging-and-error-recovery`. Use when the symptom is **deep** — a failure surfaces 10+ layers away from its cause. Linear debugging handles shallow failures; this is the loop-back version.
 
+## Core Principle
+
+**Trace backward, not forward.** Start at the symptom and walk up: what input reached
+this function? What called it? What data did THAT receive? Log at the boundary, not the
+middle; one hypothesis per probe; and fix the upstream cause, never the symptom layer.
+
 ## Iron Laws
 
 <EXTREMELY-IMPORTANT>
@@ -25,6 +31,17 @@ Failure surfaces 10+ layers from the cause; the linear `debugging-and-error-reco
 ## When NOT to Use
 
 The cause is already known (use `debugging-and-error-recovery` or `incremental-implementation`); the failure is at the entry point (no tracing needed); you have a stack trace pointing to the line (just read the code).
+
+## Workflow
+
+1. Start at the symptom layer where the failure surfaces.
+2. Walk up one boundary at a time: log the input, log the output, confirm the boundary
+   (see `The Backward Trace`).
+3. Add probes between suspect layers, one hypothesis per probe
+   (`Instrumentation Strategy`).
+4. At the root layer: write a regression test that would have caught the original
+   symptom, fix the upstream invariant, and re-run the trace from symptom to root
+   (`When You Find the Root`).
 
 ## The Backward Trace
 
@@ -76,3 +93,26 @@ Hypothesis-free logging; log lines without structure (strings, not objects); tra
 ## Anti-Patterns
 
 **Trace forward**; **log without hypothesis**; **fix the symptom layer**; **"I think X"** without distinguishing; **no regression test**; **log strings, not objects**; **infinite trace without cap**.
+
+## Verification
+
+- Re-run the trace from symptom to root after the fix: no new issues appear.
+- A regression test that would have caught the original symptom exists and passes.
+- The chain of boundary logs shows the upstream invariant was the cause, not a
+  plausible intermediate layer.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill><name></skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>…</evidence>
+  <artifacts>…</artifacts>
+  <risks>…</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no reference files; the backward-trace loop is fully specified in this file.

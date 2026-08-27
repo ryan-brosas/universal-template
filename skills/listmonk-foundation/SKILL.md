@@ -1,6 +1,6 @@
 ---
 name: listmonk-foundation
-description: "Canonical foundation leaf for listmonk — newsletter/campaign dispatch kernel."
+description: "Use when porting double-opt-in subscriber lifecycles, side-effecting campaign dispatch scans, waitgroup-drained send pipes, multi-provider bounce webhooks, or dry-run-guarded arbitrary-query bulk operations — listmonk newsletter/campaign dispatch kernel."
 ---
 # listmonk: campaign dispatch & subscriber lifecycle foundation
 

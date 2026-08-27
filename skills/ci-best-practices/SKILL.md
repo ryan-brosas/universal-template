@@ -6,6 +6,14 @@ disable-model-invocation: true
 
 # CI Best Practices
 
+## Core Principle
+
+Make CI fast, correct, and debuggable — path-filtered runs, cancelled stale runs, aggregate release gates, lockfile-keyed caches, uploaded failure logs, and workflow annotations.
+
+## Workflow
+
+Apply the practices below when writing or reviewing any GitHub Actions workflow: filter by path, cancel stale runs, gate releases behind an aggregate job, cache on lockfile hash, upload failure logs, bound every job, secure inputs, gate publish on a detected release condition.
+
 Generalizable GitHub Actions / CI best practices farmed from high-quality
 open-source repos (oh-my-pi, aider, and others). These make CI fast, correct,
 and debuggable.
@@ -110,3 +118,31 @@ concurrency:
 Apply these when writing or reviewing any GitHub Actions workflow. They
 complement the `code-discipline` skill (how to write code) and the
 `farmed-test-harness` (how to test it).
+
+## Red Flags
+
+- `inputs.*` interpolated directly into `run:` (shell injection).
+- Publish gated on any push instead of a detected release condition.
+- Jobs without `timeout-minutes`.
+- Secrets or unmasked values in logs.
+- Missing `.github/**` in paths so workflow changes don't re-trigger CI.
+
+## Verification
+
+Workflow changes re-trigger CI (`.github/**` in paths); destructive automation defaults to dry-run and logs what it would do; failure logs upload as artifacts; the release gate passes only when every validation job succeeded.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill>ci-best-practices</skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>Workflow changes re-trigger CI; dry-run logs destructive actions; release gate green</evidence>
+  <artifacts>Reviewed or updated GitHub Actions workflow</artifacts>
+  <risks>Input interpolation, ungated publish, unbounded jobs, or none</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no reference files; this skill is self-contained.

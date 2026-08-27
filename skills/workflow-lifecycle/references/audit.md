@@ -1,6 +1,6 @@
 # audit - pattern audit contract
 
-Applies to workflow-lifecycle command audit. Source prompt: ~/.agents/prompts/audit.md. Read-only.
+Applies to workflow-lifecycle command audit. This reference is the canonical contract (the retired global prompt file is folded into it). Read-only.
 
 ## Goal
 Find every occurrence of a code pattern, grade it for correctness/security/edge cases, then produce a prioritized remediation list.

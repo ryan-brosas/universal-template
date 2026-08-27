@@ -1,6 +1,6 @@
 ---
 name: uvicorn-foundation
-description: "ASGI server kernel foundation: lifecycle, supervision, protocol implementations"
+description: "Use when porting an asyncio request-response server (HTTP/1.x, HTTP/2, WebSocket) or building the supervising shell around one — process lifecycle, graceful shutdown, worker fleets, protocol negotiation, backpressure, and proxy-trust boundaries. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
 ---
 # Uvicorn: ASGI server kernel (lifecycle, supervision, protocol implementations)
 

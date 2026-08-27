@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Embed JWT Lifecycle — how do you sign/verify a short-lived iframe token without letting alg=none or a stale secret through?
 
-**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-agents-awaithumans`. **Question:** Where do the TTL clamp, algorithm pinning, claim requirements, and sortable token-ID generation live in an HS256 embed-token service?
+**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-awaithumans`. **Question:** Where do the TTL clamp, algorithm pinning, claim requirements, and sortable token-ID generation live in an HS256 embed-token service?
 
 ## Clamp-sign-return / decode-pin-raise pair
 **Path/Symbol:** `packages/python/awaithumans/server/services/embed_token_service.py` — `_ALGORITHMS = [_ALGORITHM]` (:37-44), `_token_id` (:71-80), `sign_embed_token` (:86-133), `verify_embed_token` (:136-195), `EmbedClaims` frozen dataclass (:50-65).
@@ -31,7 +31,7 @@ decoded: dict[str, object] = pyjwt.decode(
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-agents-awaithumans", query: "sign_embed_token verify_embed_token EmbedClaims", limit: 5 });
+await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-awaithumans", query: "sign_embed_token verify_embed_token EmbedClaims", limit: 5 });
 ```
 Live-verified rank-1/2 line-exact (:86-133, :136-195).
 

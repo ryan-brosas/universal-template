@@ -1,6 +1,6 @@
 ---
 name: meetily-foundation
-description: "Meetily foundation"
+description: "Use when building local-first meeting-transcription summarizers, multi-provider LLM summary pipelines (chunk → combine → template → translate), English-canonical translation flows with result caching, or SQLite-backed regeneration with backup/restore — Meetily foundation."
 ---
 # Meetily: meetily-foundation
 

@@ -1,18 +1,6 @@
 ---
 name: gmaps
-description: >-
-  Google Maps via CDP — three modes, all keyless (no Google Places or Directions
-  API key, no quota): (1) local business search returning structured results
-  (name, rating, reviews, price, category, address, hours, coords, place ID,
-  URL) — the data the metered Google Places API sells; (2) --route for real
-  directions (total time + distance, current traffic) for an ordered list of
-  places, in any travel mode (--mode driving|transit|walking|cycling|flights|best,
-  default driving); (3) --optimize for a best-effort fastest visiting order
-  (open-path TSP, fixed start) whose edges are virtualized as straight-line
-  distance — N parallel place lookups plus one real directions call. Use when the
-  user asks to find local businesses, get directions/time between places (by any
-  mode), or plan a multi-stop route order. Requires browser-harness-js on PATH
-  and a running Chromium-based browser with remote debugging.
+description: "Use when the user asks to find local businesses, get directions/time between places (by any mode), or plan a multi-stop route order — Google Maps via CDP, three modes, all keyless (no Google Places or Directions API key, no quota): (1) local business search returning structured results (name, rating, reviews, price, category, address, hours, coords, place ID, URL) — the data the metered Google Places API sells; (2) --route for real directions (total time + distance, current traffic) for an ordered list of places, in any travel mode (--mode driving|transit|walking|cycling|flights|best, default driving); (3) --optimize for a best-effort fastest visiting order (open-path TSP, fixed start) whose edges are virtualized as straight-line distance — N parallel place lookups plus one real directions call. Requires browser-harness-js on PATH and a running Chromium-based browser with remote debugging."
 setup: bash <skill-dir>/scripts/setup
 compatibility: >-
   Requires browser-harness-js on PATH and a running Chromium browser with remote
@@ -29,6 +17,23 @@ Free, keyless access to Google Maps through CDP — the same data the metered **
 - **`--optimize`** — best-effort fastest *visiting order* (open-path TSP, fixed start = first place).
 
 Every call opens its own background tab and WebSocket session — safe for parallel use.
+
+## Core Principle
+
+Free, keyless access to Google Maps through CDP — the same data the metered Google Places and Directions APIs sell, sourced directly from the rendered page in your own browser. No API key, no quota, no `jq`.
+
+## When to Use / NOT
+
+**Use** — when the user asks to find local businesses, get directions/time between places (by any mode), or plan a multi-stop route order.
+
+**NOT** — bulk harvest (this is per-query use: one query, one route of ≤25 places, or one TSP of ≤12 places); when per-leg times for an ordered multi-stop route are needed (Maps shows only the total — open `url` for turn-by-turn); when predictive future-departure times are needed (the page gives current traffic, not a traffic model).
+
+## Workflow
+
+1. Search: `gmaps "<query>" [count] [--json]` — local business results, feed scrolled to load more.
+2. Directions: `gmaps --route "<p0>" "<p1>" … [--mode M] [--json]` — real time + distance for the given order (up to 25 places).
+3. Ordering: `gmaps --optimize "<p0>" … [--mode M] [--json]` — best-effort fastest visiting order (open-path TSP, fixed start, ≤12 places), then one real directions call for that order.
+4. Parallelize independent calls — each opens its own background tab.
 
 ## Commands
 
@@ -241,7 +246,7 @@ Per call: search ~2-3 s (feed render + scrolls); route ~2-3 s; optimize ~5-9 s (
 - **A real browser renders the feed and the route panel.** Maps is a heavy SPA: results stream into `div[role=feed]` as it scrolls, and the directions panel renders route durations with class names that are obfuscated and rotate. A single `Runtime.evaluate` extracts every card / the primary route in one CDP call — no HTML fetching, no proxy, no Cloudflare wall (the page is rendered as you, in your own browser).
 - **Per-query use, not bulk harvest.** This is the agent-call shape: one query (or one route of ≤25 / one TSP of ≤12 places), returned as structured JSON or text. It is *not* a bulk scraper (that needs proxy rotation + rate management, which a real-browser-per-call approach doesn't scale to).
 
-## Traps
+## Red Flags
 
 ### Search
 - **`networkIdle` never fires for Maps.** Continuous XHR polling holds the network busy, so the lifecycle-event wait gsearch/findata use would time out every time. `gmaps` polls `a[href*='/maps/place/']` count instead — the actual readiness signal.
@@ -276,3 +281,23 @@ Per call: search ~2-3 s (feed render + scrolls); route ~2-3 s; optimize ~5-9 s (
 ### General
 - **No `jq` dependency** — parsing, TSP, and pretty-printing are done in-page / in JS.
 - **Inputs reach the heredoc by placeholder substitution** (node `JSON.stringify` + function-replacements), immune to `&` / `$` / `\` in place names (e.g. `AT&T Stadium`, `Café du Monde`) — the same mechanism the search query uses.
+
+## Verification
+
+Search results carry `name, rating, review_count, price, category, address, hours, lat, lng, place_id, url` (missing fields are `null`). Route JSON carries `duration`, `distance`, `via`, `tolls`, `waypoints`, and `url`. Optimize reports `straight_line_total_km` plus the real route for the chosen order, with the best-effort note attached. If results come back empty, open the search URL in the browser once to clear a consent/cookie wall.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill>gmaps</skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>…</evidence>
+  <artifacts>…</artifacts>
+  <risks>…</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no reference files; commands, result shapes, and traps are inline in this skill.

@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Verifier Config Helpers & Error Taxonomy — SDK-side config objects vs server-side execution
 
-**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-agents-awaithumans`. **Question:** What do provider helpers like claude_verifier actually DO (and not do), and how are AwaitVerify errors shaped?
+**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-awaithumans`. **Question:** What do provider helpers like claude_verifier actually DO (and not do), and how are AwaitVerify errors shaped?
 
 ## Thin config factories; errors follow what→why→fix→docs with subclassable base
 **Path/Symbol:** `packages/python/awaithumans/verifiers/{claude,openai,gemini,azure_openai}.py` — e.g. `claude_verifier` (:24-48); `awaithumans/errors.py` base `AwaitHumansError` (ServiceError class-attribute taxonomy: code/message/hint/docs_url — see bootstrap-token-error-taxonomy capsule for the handler envelope); `awaitverify/errors.py` — `VerifyError(AwaitHumansError)` (:18) + four concrete subclasses (:22-98).
@@ -28,7 +28,7 @@ class VerifyDocumentTooLargeError(VerifyError):
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-agents-awaithumans", query: "claude_verifier VerifierConfig VerifyError docs_url hint", limit: 5 });
+await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-awaithumans", query: "claude_verifier VerifierConfig VerifyError docs_url hint", limit: 5 });
 ```
 
 ## Verdict

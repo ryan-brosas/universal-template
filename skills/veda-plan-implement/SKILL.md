@@ -1,8 +1,25 @@
 ---
 name: veda-plan-implement
-description: Plan work by collaborating with the Veda Navigator model before implementing. Use for planning a refactor, debugging approach, research, analysis, writing, or any course of action. Drives `veda -S plan-TASKNAME -m gpt-5.6-sol -p navigator-plan` to align on a plan; does not execute. Invoke when the user says plan, discuss, align, or wants to iterate on a plan before coding.
+description: "Use when planning a refactor, debugging approach, research, analysis, writing, or any course of action before implementing — plan work by collaborating with the Veda Navigator model. Drives `veda -S plan-TASKNAME -m gpt-5.6-sol -p navigator-plan` to align on a plan; does not execute. Invoke when the user says plan, discuss, align, or wants to iterate on a plan before coding."
 argument-hint: "[veda-flags]"
 ---
+
+## Core Principle
+
+Align with Navigator before executing: Navigator advises (no tool access), the Driver executes with native tools. Everything Navigator knows comes from `veda sel add` files and the prompt text.
+
+## When to Use / NOT
+
+- Use when planning a refactor, debugging approach, research, analysis, writing, or any course of action before implementing.
+- NOT when the user wants immediate execution without an alignment pass.
+
+## Workflow
+
+1. `veda -S plan-TASKNAME sel clear` + `sel add` (full files first; slice only above 125k).
+2. `veda -S plan-TASKNAME -m gpt-5.6-sol -p navigator-plan` once — commit to a position, carry the user's ask verbatim.
+3. Continue via `resume` / `-p navigator-chat` until aligned; involve the user on scope/cost/direction.
+4. Execute with native tools, checkpointing at plan-step boundaries with evidence. Stop when the task is complete or blocked on input only the user can provide.
+
 
 ## Model routing (authoritative — do not substitute)
 
@@ -169,3 +186,27 @@ Key commands:
 - Output goes to stdout; use `-o file.md` to save response
 
 Do not execute yet; all we want to do is iterate on a solid plan.
+
+## Red Flags
+
+Open-ended opening questions instead of a committed position; paraphrasing the user's ask; a third attempt after two similar failures without a mandatory Navigator consult; backticks in double-quoted prompts; piping veda with `2>&1`.
+
+## Verification
+
+Alignment confirmed before execution starts; every checkpoint cites evidence ("step N done, verified by X"); contradictions are pasted verbatim and asked "repair or switch?".
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill>veda-plan-implement</skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>commands run, outputs inspected, artifacts produced</evidence>
+  <artifacts>files written / commands run</artifacts>
+  <risks>known risks, untested paths, or none</risks>
+</skill_result>
+```
+
+## References
+
+No reference capsules — the skill is self-contained.

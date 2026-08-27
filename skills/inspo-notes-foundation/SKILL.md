@@ -1,6 +1,6 @@
 ---
 name: inspo-notes-foundation
-description: "Canonical foundation leaf template. Copy manually; this library asset is not rendered by a slash command."
+description: "Use when writing INGEST notes that capture one function or subsystem from an indexed inspiration repo — maintaining a capability→candidate discovery cache, or encoding license boundaries for borrowed designs."
 ---
 # inspo-notes: INGEST-note knowledge-capture foundation
 

@@ -7,6 +7,19 @@ disable-model-invocation: true
 
 Code and tests are ground truth. A foundation is a compact retrieval map: it lets a constrained model find a proven primitive, understand the boundary it must preserve, and verify a safe port. It is not a re-description and never vendors modules.
 
+## Core Principle
+
+Code and tests are ground truth; a foundation is a compact retrieval map, not a re-description — it never vendors modules.
+
+## When to Use / NOT
+
+- **Use when:** a proven code pattern, primitive, or integration is worth reusing — recurring, proven (working + tested), and reusable beyond the feature that introduced it.
+- **NOT when:** the implementation is speculative or one-off; never encode those.
+
+## Workflow
+
+Run the code-grounded loop: prewalk (Codebase Memory, or `codegraphcontext` when the repo is FalkorDB-indexed) → confirm (read exact source, pin commit+branch+license) → encode (point to code first, add porting context) → verify (source test or direct probe) → route (leaf only for a new reusable trigger).
+
 ## When to encode
 A primitive is worth a foundation when it is recurring, proven (working + tested), and reusable beyond the feature that introduced it. Never encode a speculative or one-off implementation.
 
@@ -27,3 +40,27 @@ A capsule contract answers one porting question with Path/Symbol, Signature, Dat
 
 ## Verification
 Every public line routes to a tested symbol + a named probe; capsule refs pass direct wiring and loader/map inspection; `git diff --check` is clean.
+
+## Red Flags
+
+- Encoding speculative or one-off implementations.
+- Copying a whole repo into Markdown.
+- A foundation without a behavior boundary or probe.
+- More than one active inspiration repo at a time.
+- Provenance unpinned (commit/branch/license missing).
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill>code-foundations</skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>Every public line routes to a tested symbol + named probe; git diff --check clean</evidence>
+  <artifacts>Foundation leaf with capsules (Path/Symbol, Signature, Data Shape, Flow, Invariant, Probe, Retrieve)</artifacts>
+  <risks>Speculative encoding, missing probe, unpinned provenance, or none</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no reference files; this skill is self-contained.

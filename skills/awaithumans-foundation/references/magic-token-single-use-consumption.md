@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Magic-Token Single-Use Consumption — replay protection must survive the caller's failure
 
-**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-agents-awaithumans`. **Question:** Where exactly is a magic-link token burned, and why does consumption commit independently of task completion?
+**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-awaithumans`. **Question:** Where exactly is a magic-link token burned, and why does consumption commit independently of task completion?
 
 ## Pre-check + PK-conflict INSERT, self-committed before returning
 **Path/Symbol:** `packages/python/awaithumans/server/services/email_token_service.py` — module docstring rationale (:1-17), `try_consume_token` (:31-59); table `server/db/models/consumed_email_token.py` (jti primary key).
@@ -32,7 +32,7 @@ Docstring: leaving the token reusable on completion failure "opens a window wher
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-agents-awaithumans", query: "try_consume_token ConsumedEmailToken IntegrityError", limit: 4 });
+await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-awaithumans", query: "try_consume_token ConsumedEmailToken IntegrityError", limit: 4 });
 ```
 Live rank-1/2 line-exact (:31-59 function, :28-37 model).
 

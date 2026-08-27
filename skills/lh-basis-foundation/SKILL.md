@@ -1,6 +1,6 @@
 ---
 name: lh-basis-foundation
-description: Linked Helper v2 domain-kernel contracts — person/organization/chat/message external-identifier families with hash→memberId decoding, guard-composition data models without classes, property+method-surface aggregate duck-typing, recursive message-template node validators, polymorphic list-payload guards, cross-layer DB collision error mining, source-conditional collect-info schema, interval/credit-limit guards, and presence/absence discriminator pairs for campaign/action/result family splits with postpone-reason tagged unions. Load when porting LinkedIn identity resolution, runtime type-guard kernels, or automation-domain payload validation.
+description: "Use when porting LinkedIn identity resolution, runtime type-guard kernels, or automation-domain payload validation — Linked Helper v2 domain-kernel contracts: person/organization/chat/message external-identifier families with hash→memberId decoding, guard-composition data models without classes, property+method-surface aggregate duck-typing, recursive message-template node validators, polymorphic list-payload guards, cross-layer DB collision error mining, source-conditional collect-info schema, interval/credit-limit guards, presence/absence discriminator pairs for campaign/action/result family splits with postpone-reason tagged unions, positional-trap CSV-import rejection taxonomies, signed result-status domains, and getDay()-compatible week-working schedule maps."
 ---
 
 # LH Basis (Linked Helper v2.130.5 ingest): Domain-Kernel Foundation
@@ -37,6 +37,8 @@ Use when porting or re-deriving LinkedIn-automation domain machinery: multi-surf
 - `references/pas-timestamp-ladder.md` — Which entity sync timestamps must exist as Date instances, and which one may be absent?
 - `references/person-type-group-projection.md` — How do you project identifier TYPE SETS onto groups with a fail-closed public entry over fail-open inner steps?
 - `references/base64url-codec-pair.md` — What does a base64url encode/decode pair hide about padding asymmetry?
+- `references/import-rejection-taxonomies.md` — How do you persist a CSV-import rejection code when the enum is 0-based AND its twin assigns different ordinals to the same name?
+- `references/week-working-schedule.md` — How is a weekly working calendar encoded so day keys, defaults, and minute bounds cannot drift?
 
 ## Capsule map
 - **Identity type algebra** — `external-identifier-type-algebra`: 10 identifier types -> 4 groups (member|hash|public|avatar); group-dispatched validation; `${group}:${externalId}` canonical dedup key; auth-gated sn-/r-/t- variants carry authType/authToken.
@@ -67,6 +69,8 @@ Use when porting or re-deriving LinkedIn-automation domain machinery: multi-surf
 - **PAS timestamp ladder** — `pas-timestamp-ladder`: createdAt/updatedAt/actualAt REQUIRED instanceof Date; sentAtToPAS optional (undefined|Date, wrong type falsifies); flat 4-way conjunction; ISO strings fail — in-process objects only.
 - **Type→group projection** — `person-type-group-projection`: public fromType THROWS `Invalid types argument` on unknown singular OR any bad tuple element; private fromSingleType falls through open; tuple gate = non-empty array, every element Type|TypeGroup; Type.toGroup alias shares the throw.
 - **Base64url codec pair** — `base64url-codec-pair`: decode re-pads `4 - len%4`, encode strips all '='; round-trip NOT symmetric for len%4===1 (over-pad observed) — gate decoding behind strict length/charset validation.
+- **Import rejection taxonomies** — `import-rejection-taxonomies`: person vs campaign reason enums share NAMES at DIFFERENT ordinals (INVALID_CHECK_SUM = 3 vs 1); MISSING_QUOTES=0 is a VALID code, so falsiness corrupts records; both unguarded (porter adds membership checks).
+- **Week working schedule** — `week-working-schedule`: DayOfWeek matches Date#getDay() (sunday=0..saturday=6); MinInDay/MinInWeek arithmetically derived; DEFAULT=all-working vs EMPTY=closed; integer-keyed maps enumerate ordinal-first regardless of insertion order.
 
 ## Extending the foundation
 Add one `references/<seam>.md` capsule for one graph-selected, source-confirmed porting question. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf.
@@ -75,7 +79,7 @@ Add one `references/<seam>.md` capsule for one graph-selected, source-confirmed 
 Linked Helper v2.130.5 ingest (**proprietary commercial product — reuse citations-only, never vendor code**), non-Git curated checkout, pin `?@?`; Codebase Memory project `lh-basis` @ generation 2026-08-23T00:11:49Z (full mode, 1601 nodes / 2833 edges, 0 parse-partial / 0 skipped). Coverage caveat by design: core/local-source/dist, core/models/dist, core/launcher/dist are excluded subtrees — the engine, model dists, and launcher managers are NOT graph-addressable from this project.
 
 ## Full view (memory graph)
-Revalidate `lh-basis` before porting: run `index_status`, `check_index_coverage`, `search_graph`, `trace_path`, and `get_code_snippet`. Record graph root, generation, node/edge counts, freshness, and coverage caveats; source decides shipped claims. No test runner exists in this extracted copy — deterministic node-require probes against real dist modules are the executable evidence (all 28 capsules probe-verified as of pass 5, 2026-08-26).
+Revalidate `lh-basis` before porting: run `index_status`, `check_index_coverage`, `search_graph`, `trace_path`, and `get_code_snippet`. Record graph root, generation, node/edge counts, freshness, and coverage caveats; source decides shipped claims. No test runner exists in this extracted copy — deterministic node-require probes against real dist modules are the executable evidence (all 30 capsules probe-verified as of pass 14, 2026-08-26).
 
 ## Boundaries
 Adopt pure guard/validation contracts, type-group dispatch, dedup-key normalization, error-chain mining, and payload-shape algebras. Adapt path/symbol names and enum values to your host schema. Omit all transport/product behavior (Electron launcher, CDP clients, proxy interception) and any secret-bearing package metadata; those parts are either outside the indexed surface or proprietary.

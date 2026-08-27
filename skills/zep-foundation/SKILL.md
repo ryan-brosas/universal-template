@@ -38,33 +38,32 @@ Porting any system that loads unstructured and structured data into a knowledge/
 - `references/llm-client-adapters.md` — complete(prompt)->str adapters for any provider?
 
 ## Capsule map
-- `episode-validation-contract` — eager collect-all-errors Episode/Destination validation; internal fields never sent.
-- `protocol-extension-surface` — runtime_checkable structural protocols; optional warnings/flush capabilities.
-- `pipeline-warning-lifecycle` — id-keyed baseline deltas make components reusable across preview+run passes.
-- `validated-replay-spool` — spooled pickle validates the whole lazy stream before async submission.
-- `retry-safety-taxonomy` — 429/unsent-transport retryable; 5xx only behind caller-established idempotency; Retry-After capped.
-- `batch-rollover-ladder` — first-create raises (fallback possible), rollover records-and-stops keeping batch ids; 404-only availability signal.
-- `auto-dispatch-probe` — real-call availability probe + chain-back-the-peeked-item.
-- `result-resume-handles` — from_batch_ids/from_task_ids reconstruction; gap-slotted parallel identity lists; untracked ≠ failed.
-- `boundary-splitting-ladder` — paragraph→sentence→hard ladder; JSON pieces stay valid JSON or return None.
-- `limit-guard-safety-net` — post-transform per-type guard; never yield the oversize original.
-- `alias-canonicalizer-rails` — risky-word gate, protected spans, lookaround boundaries, per-alias counts.
-- `chunk-marker-courtesy` — omit-with-warning internal metadata markers; caller domain data always wins.
-- `contextualizer-hardening` — symmetric tag-stripping, data-not-instructions prompt, fail-open default.
-- `slack-roster-resolution` — real_name-first for entity merging; deferred weak-name promotion.
-- `slack-inventory-selection` — marker-based export-root unwrap, dual readers, loud skip accounting, traversal defense.
-- `slack-thread-grouping` — thread-as-unit episodes, original-timestamp stamping, counted duplicate/ts defenses.
-- `transcript-turn-parser` — asymmetric-cost header matching, position-strict VTT identifiers, offset timestamps.
-- `email-text-timestamp-fidelity` — -0000 preserved as UTC; mtime opt-in warned.
-- `json-records-identity-mapping` — original-record field reads, reserved provenance keys, path-naming NaN rejection.
-- `thread-backfill-ownership` — user-must-exist, global-thread-id ownership verification, sentence-boundary splits.
-- `triples-nodes-seeding` — SCREAMING_SNAKE facts, UUID endpoint pinning, None-gap identity alignment.
-- `validation-helpers` — check_*/require_* split; JSON-shape vs C-clock finiteness regimes.
-- `row-schema-gate` — dataclass-derived allowed/required sets, retired-field migration messages.
-- `search-readiness-errors` — poll-until-indexed helper; untracked-as-unknown; partial_result-carrying exceptions.
-- `ontology-prompt-schema` — priority-ordered docstring guidance inside Pydantic schemas.
-- `llm-client-adapters` — one-method protocol, injectable duck-typed clients, type-based response extraction.
-
+- **Alias canonicalizer safety rails** — `alias-canonicalizer-rails`: how do you rewrite names in text without corrupting unrelated prose.
+- **Auto-dispatch probe** — `auto-dispatch-probe`: how do you choose batch vs sequential without losing the first item or misreading a blip.
+- **Batch submitter rollover ladder** — `batch-rollover-ladder`: what happens when batch.create fails at page 40 of 50.
+- **Boundary-aware splitting ladder** — `boundary-splitting-ladder`: how does every data type get split without corrupting its shape.
+- **Chunk metadata marker courtesy** — `chunk-marker-courtesy`: how does an internal diagnostic marker coexist with caller domain data.
+- **Contextualizer untrusted-content hardening** — `contextualizer-hardening`: how do you situate a chunk with an LLM when the chunk may be hostile.
+- **Email & text loader timestamp fidelity** — `email-text-timestamp-fidelity`: how do Date headers and mtimes become created_at without lies.
+- **Episode validation contract** — `episode-validation-contract`: what makes a record submittable, and why validation happens at construction.
+- **JSON records loader identity mapping** — `json-records-identity-mapping`: how do structured records become unified-entity json episodes.
+- **LimitGuard always-on safety net** — `limit-guard-safety-net`: how does an oversized episode NEVER reach the API.
+- **LLM client adapters** — `llm-client-adapters`: how do optional provider SDKs plug into a complete(prompt) -> str protocol.
+- **Ontology prompt-as-schema** — `ontology-prompt-schema`: how do Pydantic classes steer extraction classification.
+- **Pipeline warning lifecycle** — `pipeline-warning-lifecycle`: how do warnings from reused components get collected without duplicates or loss.
+- **Structural protocol extension surface** — `protocol-extension-surface`: how do you add a source, transform, submitter, or LLM without base classes.
+- **IngestResult resume handles** — `result-resume-handles`: how does a caller recover an async bulk import from another process.
+- **Retry safety taxonomy** — `retry-safety-taxonomy`: which failures may be retried, and what makes a retry safe.
+- **Row-file schema gate** — `row-schema-gate`: how do JSONL/JSON inputs get validated against a dataclass without drift.
+- **search_when_ready & error taxonomy** — `search-readiness-errors`: how do callers absorb indexing lag and classify failures.
+- **Slack export inventory & selection** — `slack-inventory-selection`: how are four conversation indexes, wrapper folders, and path traversal handled.
+- **Slack roster resolution** — `slack-roster-resolution`: how do you turn opaque user IDs into mergeable entity names.
+- **Slack thread grouping & episode shaping** — `slack-thread-grouping`: what is the semantic unit, and how do timestamps and duplicates behave.
+- **Thread backfill ownership** — `thread-backfill-ownership`: how do chat histories land on the right user's graph without cross-user writes.
+- **Transcript turn parser** — `transcript-turn-parser`: how do you read speaker turns, WebVTT cues, and header blocks without misclassifying lines.
+- **Fact triples & node seeding** — `triples-nodes-seeding`: how do you assert known facts and canonical entities deterministically.
+- **Validated-replay spool** — `validated-replay-spool`: how does a lazy stream get fully validated before an async submitter consumes it.
+- **Client-side validation helpers** — `validation-helpers`: how do shared field guards produce named errors instead of TypeErrors.
 ## Extending the foundation
 Add one source-confirmed capsule: loader line, map entry, decisive source, invariant, direct-test probe, and `search_graph` retrieval against project `ext-zep`.
 

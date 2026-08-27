@@ -4,7 +4,7 @@ A **squeeze** is the serial, wave-based mining of one indexed inspiration repo i
 
 ## Entry gate
 
-Load `foundations-workflow` and the packed router before touching an indexed repo. The router description decides the entry: mining/re-squeezing/migrating a repo routes to the workflow first; porting a known primitive routes to the matching leaf — never the workflow. When the intent is any foundation-authoring step, a `/skill:pack-foundations squeeze <repo>` invocation is the hard entry.
+Load `foundations-workflow` before touching an indexed repo. The intent decides the entry: mining/re-squeezing/migrating a repo routes to the workflow first; porting a known primitive routes to the matching leaf — never the workflow. When the intent is any foundation-authoring step, a `/skill:foundations-workflow squeeze <repo>` invocation is the hard entry.
 
 ## Preconditions
 - One canonical, ready Codebase Memory project: `list_projects`, then `index_status({ project, verbose: true })` and record project/root/branch/HEAD/mode/node+edge counts/exclusions/freshness in the durable work record.

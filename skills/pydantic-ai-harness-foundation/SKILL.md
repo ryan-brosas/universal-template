@@ -65,6 +65,9 @@ A pydantic-ai agent harness: capability/toolset abstractions, context-window com
 - `references/acp-session-store-contract.md` — ACP session store contract: save fails soft / load fails loud, purpose-built error shapes, pop-then-cancel takeover before restore.
 - `references/acp-editor-native-toolsets.md` — ACP editor-native toolsets: capability-gated fs/terminal routing through the client connection, cwd rooting, cancellation-safe terminal kill/release.
 - `references/acp-model-config-routing.md` — ACP model config routing: stable config-option surface, advertised-id validation, per-run model override that never mutates the shared agent.
+- `references/acp-prompt-content-blocks.md` — how do editor-supplied multimodal prompt blocks become model user-content without downgrading inline data.
+- `references/acp-stop-reason-usage-plane.md` — how does a turn's response encode which exit path fired.
+- `references/acp-tool-call-presentation.md` — how do you render rich editor tool-call cards (kind/locations/diff) without lying about unrecognized tools.
 
 ## Capsule map
 - **Compaction** — `window-resolution.md`, `sliding-window-compaction.md`, `summarizing-compaction-anchor-update.md`, `tiered-compaction-escalation.md`, `zero-cost-compaction-kit.md`, `warn-near-limits-strip-inject.md`, `context-estimator-anchor.md`, `compaction-receipts.md`, `request-model-resolution.md`, `summarizer-instructions-field.md`: resolve a real window per model; trim with pair-safe cutoffs, pin survival, self-reserving receipts, rolling summary anchors, tiered compaction escalation, zero-cost compaction kit, near-limit injection, and a separately overridable system-instruction surface for the nested summarizer agent; anchor budget estimates on provider usage; mark boundaries with deterministic receipts; resolve policies against the request's model.
@@ -83,7 +86,9 @@ A pydantic-ai agent harness: capability/toolset abstractions, context-window com
 - **Runtime authoring & execution** — `capability-store.md`, `monty-exec.md`, `monty-dispatch-refusal-delivery.md`, `dynamic-workflow-resource-limits.md`: disk-backed capability persistence; Monty REPL driving; refusal-as-call-site-exception delivery across the snapshot boundary; workflow sandbox limits strict-key-validated at construction and merged onto backstops with await-exempt duration.
 - **Determinism & telemetry** — `temporal-resource-limit-stripping.md`, `logfire-managed-prompt-baggage-envelope.md`: replay-safe resource limits (timing stripped, memory kept); resolve-once baggage envelopes for remotely-managed prompts.
 - **Editor protocol (ACP)** — `acp-turn-commit-discipline.md`, `acp-approval-scope-ladder.md`, `acp-bounded-stream-serialization.md`, `acp-session-store-contract.md`, `acp-editor-native-toolsets.md`, `acp-model-config-routing.md`: expose a pydantic-ai agent to editors over the Agent Client Protocol — turn-granular commit/rollback with best-effort closeout on every exit path; scoped approval memory keyed by canonical JSON; wire-size-bounded streaming and truncation markers over stdio JSON; an asymmetric save-fails-soft/load-fails-loud session store with atomic live-session takeover; capability-gated editor-native fs/terminal toolsets with cancellation-safe terminal cleanup; stable-surface model switching resolved per-run against a never-mutated shared agent.
-
+- **ACP prompt content blocks** — `acp-prompt-content-blocks`: how do editor-supplied multimodal prompt blocks become model user-content without downgrading inline data.
+- **ACP stop-reason / usage plane** — `acp-stop-reason-usage-plane`: how does a turn's response encode which exit path fired.
+- **ACP tool-call presentation** — `acp-tool-call-presentation`: how do you render rich editor tool-call cards (kind/locations/diff) without lying about unrecognized tools.
 ## Extending the foundation
 Add one `references/<seam>.md` capsule for one graph-selected, source-confirmed porting question. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf.
 

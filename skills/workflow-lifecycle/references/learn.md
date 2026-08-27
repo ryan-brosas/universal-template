@@ -1,6 +1,6 @@
 # learn - skill distillation contract
 
-Applies to workflow-lifecycle command learn. Source prompt: ~/.agents/prompts/learn.md.
+Applies to workflow-lifecycle command learn. This reference is the canonical contract (the retired global prompt file is folded into it).
 
 ## Goal
 Turn a session lesson, edge case, or platform quirk into a permanent, discoverable skill in ~/.agents/skills/.
@@ -14,7 +14,7 @@ Turn a session lesson, edge case, or platform quirk into a permanent, discoverab
 Strip project specifics; generalize to a repeatable pattern; identify future triggers (symptoms → skill). If the lesson is a mechanical rule, prefer a gate/CI check over a prompted rule.
 
 ## Phase 3 - Position + Author
-- Fits a sibling skill? Update in place (e.g. pack-foundations leaves). New knowledge area: new directory under ~/.agents/skills/.
+- Fits a sibling skill? Update in place (e.g. a foundation leaf). New knowledge area: new directory under ~/.agents/skills/.
 - Author with the canonical template ~/.agents/templates/skill.md and the uniform grammar in writing-skills (kebab name, trigger-first description ≤1024 chars, fixed anatomy, reference capsules).
 - Non-router leaves keep disable-model-invocation: true when the catalog requires it.
 

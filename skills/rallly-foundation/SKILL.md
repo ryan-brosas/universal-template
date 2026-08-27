@@ -1,6 +1,6 @@
 ---
 name: rallly-foundation
-description: "Scheduling-poll foundation"
+description: "Use when porting group-scheduling poll machinery — floating vs timezone-pinned option storage, auto-close/reopen ladders, guest edit-token authorization, vote aggregation and scoring, atomic booking with invite dedup, cron housekeeping (inactivity retention + purge), or per-recipient email rendering."
 ---
 # Rallly: scheduling-poll foundation
 
@@ -40,6 +40,11 @@ Use when porting group-scheduling poll machinery — floating vs timezone-pinned
 - `references/update-status-fail-soft-ladder.md` — how do you ask an update server "is anything newer?" so hangs, lies, and outages never break the UI?
 - `references/version-compare-prerelease-blind.md` — how do you compare semver-ish versions without a library, and what must callers guard?
 - `references/asset-swap-persist-then-delete.md` — how do you swap a stored blob reference without orphaning objects or deleting a just-made-current one?
+- `references/oauth-pkce-cookie-state-machine.md` — how do you carry OAuth state across a cross-site redirect without a server-side session?
+- `references/encrypted-oauth-credential-store.md` — how do you keep third-party tokens at rest so a DB leak does not hand out working tokens?
+- `references/provider-calendar-sync-delete-detection.md` — how do you mirror a provider's resource list so deletions propagate but user choices survive?
+- `references/orphaned-anonymous-user-reaper.md` — how do you bulk-delete rows whose blast radius is schema-defined, unattended, without destroying someone's data?
+- `references/license-fetch-failure-classification.md` — how do you tell an operator why an outbound HTTPS call died behind a corporate proxy?
 
 ## Capsule map
 - **Option encoding** — `floating-all-day-options`: falsy poll.timeZone is the single floating flag; date-only options store UTC midnight with duration 0, timed options pin the poll's zone with minute-durations.
@@ -74,13 +79,18 @@ Use when porting group-scheduling poll machinery — floating vs timezone-pinned
 - **Update-status ladder** — `update-status-fail-soft-ladder`: four fail-soft null exits (env precheck, non-ok, schema mismatch, throw) + explicit 3s AbortSignal (Node fetch has none) + client-side within-major guard over an all-nullish response schema, because fleet binaries outlive server assumptions.
 - **Version compare** — `version-compare-prerelease-blind`: strip v/[-+] suffix then numeric zero-padded component walk (4.9 < 4.10); prerelease sorts equal to its release; getMajorVersion returns null on garbage and callers must guard before isOutdated.
 - **Asset swap lifecycle** — `asset-swap-persist-then-delete`: persist DB reference first, after()-delete old object only when different; documented last-write-wins cleanup race accepted until a sign-time Asset table; three features share the one implementation.
+- **OAuth PKCE cookie state** — `oauth-pkce-cookie-state-machine`: state+verifier+redirect-to parked in httpOnly cookies with one 10-min TTL; callback trusts query state only compared against the cookie; redirect validated at write AND read via sentinel-origin WHATWG probe; every failure redirects with `error=`, never renders.
+- **Encrypted credential store** — `encrypted-oauth-credential-store`: version‖salt‖iv‖tag‖ciphertext base64 envelope (AES-256-GCM, PBKDF2-SHA256 @210k); composite-key upsert so re-auth refreshes in place; load path decrypt→JSON.parse→zod parse fail-loud by design (contrast the lenient prefs codec).
+- **Provider sync** — `provider-calendar-sync-delete-detection`: absence from the provider response IS the deletion signal (notIn sweep); dangling default references cleared in the same transaction before rows are marked; upsert create/update field split keeps the user-owned isSelected out of the update arm.
+- **Orphaned-guest reaper** — `orphaned-anonymous-user-reaper`: ONE predicate shared by read and delete (session-TTL-window liveness + `{none:{}}` cascade guards); deleteMany re-applies the full filter onto snapshot ids; CI script buckets every User cascade relation guarded vs ignored-with-reason, stale entries fail.
+- **License fetch failure** — `license-fetch-failure-classification`: thrown fetch classified timeout / tls (cause.code TLS pattern → NODE_EXTRA_CA_CERTS remedy in the message) / network / verbatim rethrow; only the exact "fetch failed" TypeError counts as transport, so config bugs never wear a connectivity costume.
 
 ## Extending the foundation
 Add one `references/<seam>.md` capsule for one graph-selected, source-confirmed porting question. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf.
 
 ## Provenance
 Rallly (AGPL-3.0), `main@1b085700afec1dd5aa0eca419133dcba9bcdc9d6`; Codebase Memory project `rallly` (root `/mnt/hdd/utopia/inspo/rallly`, FULL mode, 26,309 nodes / 48,944 edges, generation 2026-08-25T19:55:51Z, head==base at index time = zero drift; parse_partial ×24 confined to SQL migrations/prisma models/poll-footer.tsx/database client.ts/powered-by.tsx/shared-styles.css — none cited; check_index_coverage on all cited paths: no_recorded_issue + metadata_match).
-Pass history: pass 1 (pre-ledger, 20 refs) indexed under the since-retired project `ext-rallly` @ `/mnt/hdd/utopia/inspo/external/rallly`; pass 2 (2026-08-26, FAC-256 dedicated lane) re-established the graph under `rallly` at the canonical root at the SAME commit, reconciled loader/map/provenance to it, and added the notification-plane + safe-action capsules (26 refs); pass 3 (2026-08-26, FAC-256 continuation) deepened the self-host instance-settings admin plane (+6: footer href gate, footer roundtrip, singleton store, update-status ladder, version compare, asset-swap lifecycle — three upstream test suites read directly), zero pin drift re-verified by git before edits.
+Pass history: pass 1 (pre-ledger, 20 refs) indexed under the since-retired project `ext-rallly` @ `/mnt/hdd/utopia/inspo/external/rallly`; pass 2 (2026-08-26, FAC-256 dedicated lane) re-established the graph under `rallly` at the canonical root at the SAME commit, reconciled loader/map/provenance to it, and added the notification-plane + safe-action capsules (26 refs); pass 3 (2026-08-26, FAC-256 continuation) deepened the self-host instance-settings admin plane (+6: footer href gate, footer roundtrip, singleton store, update-status ladder, version compare, asset-swap lifecycle — three upstream test suites read directly), zero pin drift re-verified by git before edits. Pass 4 (2026-08-27, dedicated deepening lane) mined the calendar-connection plane, the orphaned-guest reaper, and the licensing failure classifier (+5: oauth-pkce-cookie-state-machine, encrypted-oauth-credential-store, provider-calendar-sync-delete-detection, orphaned-anonymous-user-reaper, license-fetch-failure-classification — licensing mutations.test.ts read directly; Codebase Memory MCP not connected this session, direct source/test reading fallback recorded in verification.md), zero pin drift re-verified by git before edits.
 
 ## Full view (memory graph)
 Revalidate `rallly` before porting: run `index_status`, `check_index_coverage`, `search_graph`, `trace_path`, and `get_code_snippet`. Record the graph root, branch, commit, mode, node/edge counts, freshness, and any coverage caveats; source and direct tests decide shipped claims.

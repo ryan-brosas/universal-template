@@ -11,6 +11,10 @@ Deterministic static analysis for TS/JS. Answers: dead code, duplication, comple
 
 **Always `--format json`** for structured output.
 
+## Core Principle
+
+Deterministic static analysis provides evidence, not code. Read the JSON, cite the files and line counts — don't paraphrase; the numbers are the evidence.
+
 ## When to Use
 
 - **Before cleanup**: find unused files, exports, deps
@@ -86,6 +90,22 @@ Reading summary without JSON (loses precision); running fallow but not acting on
 ## Anti-Patterns
 
 **"I know it's bad"** (run Fallow); **"small project, no need"** (even small projects have dead code); **"delete all dead"** (check public API first); **"summary is enough"** (JSON is the contract); **"fallow said so"** (Fallow is evidence, not authority — use judgment).
+
+## Verification
+
+Run typecheck + tests after cleanup, and confirm the diff didn't grow unrelated changes. Compare the re-run JSON to the saved baseline: complexity down, no new dead code, no new dupes.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill>fallow</skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>…</evidence>
+  <artifacts>…</artifacts>
+  <risks>…</risks>
+</skill_result>
+```
 
 ## References
 

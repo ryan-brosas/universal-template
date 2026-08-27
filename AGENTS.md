@@ -20,17 +20,18 @@ assertions — "looks right" is not a pass.
   `name` + `description` frontmatter (description ≤ 1024 chars, trigger-first
   "Use when…"). Authoring grammar: `skills/writing-skills/SKILL.md`; new-skill
   skeleton: `templates/skill.md`.
-- `templates/` — 15 CLI-neutral format templates (adr, agents, design,
-  foundation-capsule, foundation-skill, issue, prd, project, proposal, roadmap,
-  skill, state, tasks, tech-stack, user).
+- `templates/` - 18 CLI-neutral format templates (adr, agents, design,
+  foundation-capsule, foundation-skill, github-pr-ci, issue, prd, project,
+  proposal, pull-request, readme, roadmap, skill, state, tasks, tech-stack,
+  user).
 - `essentials/` — the operating baseline (8 docs + OpenViking source material):
   objectives, operating-philosophy, stack-your-leverage,
   steer-outcomes-not-behavior, guiding-small-model,
   enforce-code-quality-mechanically, how-to-build-good-tests,
   openviking-foundation (live corpus + ingest protocol), README index.
-- `prompts/` — the worldwide workflows: `init.md`, `learn.md`, `audit.md`,
-  `verify.md`, `gc.md` (host-neutral markdown). `/init` renders the project
-  artifacts from `templates/`.
+- `skills/workflow-lifecycle/` — the worldwide workflows (init, learn, audit,
+  verify, gc) as one discoverable skill. `/init` renders the project artifacts
+  from `templates/`.
 - `mcp/` — canonical MCP registry (`servers.json`) + per-CLI wiring notes
   (`catalog.md`). Per-CLI configs are derived copies, never the source.
 - `references/` — contract capsules (init, mcp-catalog, templates-inventory).
@@ -38,12 +39,13 @@ assertions — "looks right" is not a pass.
 
 ## The working loop (mandatory default)
 
-Follow `skills/workflow-lifecycle/SKILL.md`:
+Follow the `workflow-lifecycle` skill:
 
-1. `/init` once per project — render `AGENTS.md` (improve in place, never
-   blindly overwrite), `.pi/project.md`, `.pi/tech-stack.md` (regenerate),
-   `.pi/roadmap.md`, `.pi/state.md`, `.pi/user.md` (skip if exists, ask before
-   overwrite). Unknowns are `[NEEDS CLARIFICATION: reason]`, never invented.
+1. Run the init command once per project — render `AGENTS.md` (improve in
+   place, never overwrite blindly), `.pi/project.md`, `.pi/tech-stack.md`
+   (regenerate), `.pi/roadmap.md`, `.pi/state.md`, `.pi/user.md` (skip if
+   exists, ask before overwrite). Unknowns are
+   `[NEEDS CLARIFICATION: reason]`, never invented.
 2. `AGENTS.md` of the project is the operating spine — each slice starts from
    its canonical completion command and pointers.
 3. Work bit by bit: one slice = one independently verifiable change.
@@ -53,8 +55,8 @@ Follow `skills/workflow-lifecycle/SKILL.md`:
    pointers, not proofs — verify in source before citing; if a server is not
    connected, fall back to the filesystem.
 5. **Documents after implementation**, not as promises: `.pi/state.md`,
-   roadmap ticks, and `/learn` lessons happen after the slice verifies.
-6. `/audit`, `/verify`, `/gc` keep the loop healthy (all read-only until a
+   roadmap ticks, and the learn command happen after the slice verifies.
+6. Audit, verify, and gc keep the loop healthy (all read-only until a
    mutation is approved).
 
 ## Mutation authority

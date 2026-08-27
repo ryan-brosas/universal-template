@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Slack OAuth Install Flow — how do you let operators install workspaces without letting strangers install THEIR workspace?
 
-**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-agents-awaithumans`. **Question:** What gates protect /oauth/start and /oauth/callback, and in what order must callback verification run?
+**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-awaithumans`. **Question:** What gates protect /oauth/start and /oauth/callback, and in what order must callback verification run?
 
 ## Install-token start gate + cookie∧HMAC∧TTL triple on callback
 **Path/Symbol:** `packages/python/awaithumans/server/routes/slack/oauth.py` — module docstring security model (:1-33), `_oauth_cookie_secure` (:72-74), `_error_redirect` (:77-80), `oauth_start` (:84-140), `oauth_callback` (:144-218).
@@ -29,7 +29,7 @@ Success path upserts the installation then DELETES the state cookie ("single-use
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-agents-awaithumans", query: "oauth_start oauth_callback install_token compare_digest", limit: 5 });
+await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-awaithumans", query: "oauth_start oauth_callback install_token compare_digest", limit: 5 });
 ```
 Live rank-1/3 line-exact (:84-140, :144-218).
 

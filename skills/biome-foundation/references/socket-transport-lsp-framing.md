@@ -35,7 +35,7 @@ let response = match (response.result, response.error) {
 ```ts
 await mcp.codebase_memory.search_graph({ project: "biome", query: "Content-Length header transport jsonrpc response read write socket", limit: 10, fields: ["signature", "lines"] });
 ```
-Observed GREEN retrieval at pin: the `Transport.request` TS twin cluster and Rust `SocketTransport.request` resolve; note the framing helpers themselves are free functions surfaced through their caller's neighborhood.
+Observed GREEN retrieval at pin (re-executed pass 18): this query's top page is the `Transport.request` TS twin cluster (`packages/@biomejs/backend-jsonrpc/src/transport.ts` Socket/JsonRpcResponse/processIncomingHeader) — no Rust symbol lands in that page's top-10; the Rust request kernel resolves under the sibling query (`SocketTransport.request` :189-245, see socket-transport-request-ladder), and the framing helpers themselves are free functions surfaced through their caller's neighborhood.
 
 ## Verdict
 Adopt the header/body framing contract (0-byte=closed, required Content-Length, skip-unknown-headers) and the four-way result/error XOR with null synthesis; adapt content-type validation to your protocol versioning; omit the SAFETY null trick only if your deserializer accepts absent fields natively. Coverage: `no_recorded_issue` at pin; source read whole.

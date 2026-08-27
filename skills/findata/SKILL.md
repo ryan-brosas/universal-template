@@ -1,11 +1,6 @@
 ---
 name: findata
-description: >-
-  Free, keyless financial data via CDP. Stock price snapshots and historical
-  OHLCV (Yahoo Finance) plus income / balance-sheet / cash-flow statements
-  (SEC EDGAR XBRL). No API key, no account. Returns structured JSON or
-  pretty-printed tables. Requires browser-harness-js on PATH and a running
-  Chromium-based browser with remote debugging.
+description: "Use when the user asks for stock prices, price history, or financial statements without an API key — free, keyless financial data via CDP: stock price snapshots and historical OHLCV (Yahoo Finance) plus income / balance-sheet / cash-flow statements (SEC EDGAR XBRL). No API key, no account. Returns structured JSON or pretty-printed tables. Requires browser-harness-js on PATH and a running Chromium-based browser with remote debugging."
 setup: bash <skill-dir>/scripts/setup
 compatibility: Requires browser-harness-js on PATH and a running Chromium-based browser with remote debugging (chrome://inspect or --remote-debugging-port). No API key. Statements come from SEC EDGAR (public, free); prices from Yahoo Finance's chart API (rendered through the browser to bypass bot blocks).
 ---
@@ -13,6 +8,23 @@ compatibility: Requires browser-harness-js on PATH and a running Chromium-based 
 # findata — free financial data via CDP
 
 Free, keyless financial data scraped/fetched through a real browser via CDP — the same data the paid `financialdatasets.ai` API sells, but sourced directly from the free public origins (SEC EDGAR for statements, Yahoo Finance for prices). Each call opens its own tab and WebSocket session — safe for parallel use.
+
+## Core Principle
+
+Free, keyless financial data scraped/fetched through a real browser via CDP — sourced directly from the free public origins (SEC EDGAR for statements, Yahoo Finance for prices), the same data the paid `financialdatasets.ai` API sells. Each call opens its own tab and WebSocket session — safe for parallel use.
+
+## When to Use / NOT
+
+**Use** — stock price snapshots, historical OHLCV, or income / balance-sheet / cash-flow statements without an API key or account.
+
+**NOT** — when per-quarter (non-cumulative) statement values are needed (`findata` returns as-reported YTD cumulative values; subtract consecutive periods yourself); when recently listed tickers must appear before a server restart (the ticker map is cached for the process lifetime).
+
+## Workflow
+
+1. `findata price <ticker>` — live/last price snapshot with day-over-day change.
+2. `findata prices <ticker> [--range R | --start S --end E] [--interval R] [--limit N]` — historical OHLCV.
+3. `findata income|balance|cashflow <ticker> [--period annual|quarterly] [--limit N]` — statements.
+4. Add `--json` for raw JSON instead of pretty tables; parallelize — each call uses its own tab.
 
 ## Commands
 
@@ -108,7 +120,7 @@ Per call: `Target.createTarget(about:blank, background)` → `Target.attachToTar
 - **SEC EDGAR for statements**: it is the *source of truth* — `financialdatasets.ai`'s statements are derived from it (their JSON even carries the same SEC `accession_number` and `filing_url`). Free, keyless, structured JSON, both annual (10-K) and quarterly (10-Q). No reason to go anywhere else.
 - **Yahoo Finance v8 chart for prices**: the only free source that returns OHLCV as structured JSON (not an HTML table) and covers snapshot + history + intraday in one endpoint. `curl` is blocked by bot protection on every free price site; the browser bypasses it. (`stockanalysis.com` 403s `curl` and shows a Cloudflare "Just a moment…" wall even to a real browser; Yahoo's quote page is inconsistent due to EU consent redirects — but its JSON chart endpoint works cleanly through the browser.)
 
-## Traps
+## Red Flags
 
 - **Quarterly statements are YTD cumulative, not per-quarter.** SEC 10-Q facts are reported year-to-date within the fiscal year (a Q3 figure is the 9-month cumulative). `findata` returns **as-reported** values — it does not difference them into 3-month stubs. This matches the filing; if you need per-quarter, subtract consecutive periods yourself. Balance-sheet items are point-in-time (not cumulative), as expected.
 - **Cash-flow line-item signs are normalized.** SEC filers are inconsistent: some report `capex`/`dividends_paid`/`share_repurchases`/`debt_repayment` as positive magnitudes, some as negative. These four are always cash outflows, so `findata` normalizes them to negative. The net subtotals (`operating_cf`, `investing_cf`, `financing_cf`) keep their as-reported directional signs. `free_cash_flow` is derived as `operating_cf + capex` (with `capex` normalized negative), which equals `operating_cf − |capex|` regardless of the filer's convention.
@@ -122,3 +134,23 @@ Per call: `Target.createTarget(about:blank, background)` → `Target.attachToTar
 - **Two capture paths.** `Page.frameNavigated` + same-origin `fetch` for prices and the ticker map (skips the JSON-viewer render — fast for small bodies); readiness polling for the multi-MB companyfacts, where the viewer's pre-parse makes the projection nearly free (a cold fetch+parse is slower there). See *How it works*.
 - **No lifecycle events for JSON pages.** Chrome emits neither `Page.loadEventFired` nor `networkIdle` for `application/json` navigations. The fetch path keys off `Page.frameNavigated` (which does fire on commit); the poll path keys off `document.body.innerText` parseability, bailing fast on a non-JSON `content-type` instead of waiting out the timeout.
 - **No `jq` dependency** — JSON is parsed in-page and projected to the exact output shape; pretty-printing is done in JS. Date→unix conversion uses `node` (already required by `browser-harness-js`).
+
+## Verification
+
+Each statement object carries `period_end`, `fiscal_year`, `fiscal_period`, `form`, `filed`, `accession`, and `filing_url` — trace any figure back to the SEC filing. `price` returns `regularMarketPrice` with a true day-over-day `change`. On a Yahoo rate-limit error, back off and retry.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill>findata</skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>…</evidence>
+  <artifacts>…</artifacts>
+  <risks>…</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no reference files; commands, result shapes, and traps are inline in this skill.

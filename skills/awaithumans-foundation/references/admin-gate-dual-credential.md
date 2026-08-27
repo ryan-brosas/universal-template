@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Admin Gate Dual-Credential — operator session OR bearer token, never a third answer
 
-**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-agents-awaithumans`. **Question:** How does one dependency accept both dashboard operators and CI automation without weakening either path?
+**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-awaithumans`. **Question:** How does one dependency accept both dashboard operators and CI automation without weakening either path?
 
 ## token-first short-circuit; 403 (not 503) when unauthenticated
 **Path/Symbol:** `packages/python/awaithumans/server/core/admin_auth.py` — docstring (:1-12), `_has_valid_admin_token` (:27-39), `_is_operator_session` (:42-44), `require_admin` (:47-55).
@@ -28,7 +28,7 @@ Docstring: 403 not 503 because "operators can still reach it via the dashboard l
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-agents-awaithumans", query: "require_admin _has_valid_admin_token _is_operator_session", limit: 4 });
+await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-awaithumans", query: "require_admin _has_valid_admin_token _is_operator_session", limit: 4 });
 ```
 Live rank-1..4 line-exact (note rank-3 is core/auth.py's own twin helper — same name, different module; route by file).
 

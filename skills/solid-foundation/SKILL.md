@@ -41,6 +41,9 @@ Porting the SolidJS reactivity model: signals and memos without VDOM, mark-then-
 - `references/interop-server-twin-drift.md` — what survives SSR compile-out in the bridges; from() loses initialValue; enableExternalSource stubbed.
 - `references/hyperscript-adapter.md` — compiler-free h: six-op DI contract + jsx/jsxs/jsxDEV single-alias runtime.
 - `references/browser-stub-twins.md` — fail-soft browser stubs of renderToString/Async/Stream + empty-shape ssr* helpers.
+- `references/reconcile-array-diff-internals.md` — how does applyState reuse nodes when keys repeat, reorder, appear, and vanish.
+- `references/server-web-entry-twin.md` — what must a solid-js/web server entry provide beyond dom-expressions, and what does it deliberately compile Portal down to.
+- `references/store-unwrap-contract.md` — what does unwrap() guarantee about its input, its output, and itself under SSR.
 
 ## Capsule map
 - **Kernel: read** — `signal-core.md`: bound readSignal registers Listener once per run (tail check) into parallel arrays; serves tValue under transitions. `runtop-pull-ladder.md`: PENDING reads resolve upstream first via owner-walk + epoch guard; each node runs ≤1× per batch.
@@ -59,7 +62,9 @@ Porting the SolidJS reactivity model: signals and memos without VDOM, mark-then-
 - **SSR** — `ssr-shadow-kernel.md`: minimal deletion list preserving owners/context/errors. `ssr-streaming.md`: template-marker fragments + resource data registry + serialize-on-error. `hydration-ids.md`: deterministic pre-order id allocation. `lazy-component.md`: retry-after-reject promise cache shared by all three modes.
 - **Compiler/host surface** — `babel-preset-config.md`: external jsx-dom-expressions configured here; builtIns must not be component-wrapped; getter-props is the laziness contract. `web-layer-surface.md`: Portal/Dynamic sit on dom-expressions; marker-node anchoring; `_$host` delegation link.
 - **Interop & adaptation plane** — `observable-bridge.md` + `from-producer-bridge.md`: accessor↔Observable/producer bridges built only from kernel primitives; `interop-server-twin-drift.md`: the SSR twin keeps observable byte-identical but narrows from() and stubs enableExternalSource; `hyperscript-adapter.md`: six-op DI defines the host for compiler-free templates; `browser-stub-twins.md`: signature-parity fail-soft stubs let SSR render APIs ride in client bundles.
-
+- **Reconcile array-diff internals** — `reconcile-array-diff-internals`: how does applyState reuse nodes when keys repeat, reorder, appear, and vanish.
+- **Server web-entry twin** — `server-web-entry-twin`: what must a solid-js/web server entry provide beyond dom-expressions, and what does it deliberately compile Portal down to.
+- **Store unwrap contract** — `store-unwrap-contract`: what does unwrap() guarantee about its input, its output, and itself under SSR.
 ## Extending the foundation
 Add one `references/<seam>.md` capsule for one graph-selected, source-confirmed porting question. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf.
 

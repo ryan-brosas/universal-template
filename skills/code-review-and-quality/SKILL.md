@@ -11,6 +11,11 @@ disable-model-invocation: true
 
 **Bloat is the default failure mode.** Code grows; review subtracts. The goal is a tight, minimal change that solves the stated problem — nothing more. A review that lists nits without identifying deletion candidates has missed the point.
 
+## When to Use / NOT
+
+- **Use when:** reviewing code or PRs before merge, after subagent work, or when a review is requested.
+- **NOT when:** style-only review — run the linter instead (see Anti-Patterns).
+
 ## Two Review Modes
 
 ### 1. Standard Review
@@ -61,6 +66,10 @@ LGTM-by-default (review passes when nothing flagged); style nits as review (run 
 
 Did I find at least one `[delete]` / `[simplify]`? (If not, the review was shallow.) Are all `[blocker]`s named with the violated invariant? Did I run the verification command and see it pass? Are unrelated fixes `[NOTICED BUT NOT TOUCHING]`, not silently merged?
 
+## Verification
+
+Typecheck + lint + relevant test pass in one pass; every `[blocker]` names the violated invariant and the smallest fix; Bloat Review produced at least one `[delete]` or `[simplify]`.
+
 ## Skill Result Contract
 
 ```
@@ -72,3 +81,7 @@ Did I find at least one `[delete]` / `[simplify]`? (If not, the review was shall
   <risks>Untested claims, scope creep, LGTM-by-default, none</risks>
 </skill_result>
 ```
+
+## References
+
+N/A — no reference files; this skill is self-contained.

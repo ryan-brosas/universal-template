@@ -1,6 +1,6 @@
 ---
 name: starlette-foundation
-description: "Python ASGI toolkit foundation"
+description: "Use when porting Starlette's ASGI kernel — the router match loop and `{param:convertor}` path grammar, mount child-scope rewriting (`root_path`/`app_root_path`), lifespan state machine, exception-handler plumbing with response-started latching, `BaseHTTPMiddleware`'s memory-stream bridge, single-consumption request body/form contracts, multipart callback state machine, streaming disconnect ladder + Range/multipart-byteranges engine, WebSocket dual state machines, signed-cookie sessions, static-file containment, CORS preflight algebra, scope-data plane (ImmutableMultiDict/MultiDict/QueryParams/FormData repeated-key algebra, Headers first-match byte store vs MutableHeaders live-list kernel, lifespan↔request State write-through), URL construction/mutation plane (tri-form constructor with lazy SplitResult cache, replace() netloc reassembly with IPv6 guard), HTTPConnection derivation plane (identity-equality Mapping façade, snapshot memoization ladder, assert-guided session/auth/user facades, client Address)"
 ---
 # Starlette: Python ASGI toolkit foundation
 

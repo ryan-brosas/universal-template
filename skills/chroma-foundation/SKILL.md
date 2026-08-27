@@ -1,6 +1,6 @@
 ---
 name: chroma-foundation
-description: 'Chroma embedded vector database: HNSW segment engine, layered brute-force batches, SQL metadata filter planner, SQLite WAL queue, and the Rust MaxScore/SPANN/HNSW-provider engine.'
+description: 'Use when porting Chroma embedded vector database internals — HNSW segment engine, layered brute-force batches, SQL metadata filter planner, SQLite WAL queue, and the Rust MaxScore/SPANN/HNSW-provider engine.'
 license: Apache-2.0
 metadata:
   hermes:

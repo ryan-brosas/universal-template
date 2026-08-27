@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Handoff URL Builder & Task-Bound Expiry — one helper so notifier code never thinks about HMACs
 
-**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-agents-awaithumans`. **Question:** When should a Slack-visible dashboard link be a SIGNED login handshake vs a plain task URL, and when does the signed one stop working?
+**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-awaithumans`. **Question:** When should a Slack-visible dashboard link be a SIGNED login handshake vs a plain task URL, and when does the signed one stop working?
 
 ## params-or-unsigned dispatch; expiry = the task's own deadline
 **Path/Symbol:** `packages/python/awaithumans/server/channels/slack/handoff_url.py` — `_unsigned_url` (:27-28), `build_review_url` (:31-43), `task_handoff_expiry` (:46-52); types twin `handoff_url_types.py` (`HandoffParams` frozen dataclass :13-25, kept separate so importers don't pull in `cryptography`).
@@ -25,7 +25,7 @@ def task_handoff_expiry(timeout_at: datetime) -> int:
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-agents-awaithumans", query: "build_review_url task_handoff_expiry HandoffParams", limit: 4 });
+await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-awaithumans", query: "build_review_url task_handoff_expiry HandoffParams", limit: 4 });
 ```
 
 ## Verdict

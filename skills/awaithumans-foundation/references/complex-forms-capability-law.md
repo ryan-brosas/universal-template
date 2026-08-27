@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Complex Form Primitives & Capability Matrix — Table/Subform and the link-out law
 
-**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-agents-awaithumans`. **Question:** How are nested/tabular form fields modeled, and how does ONE capability table decide whole-form fallback per channel?
+**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-awaithumans`. **Question:** How are nested/tabular form fields modeled, and how does ONE capability table decide whole-form fallback per channel?
 
 ## kind-discriminated complex fields + recursive unsupported_fields walk
 **Path/Symbol:** `packages/python/awaithumans/forms/fields/complex.py` — `TableColumnKind` Literal (:27-36), `TableColumn` (:39-51), `Table` (:57-66), `Subform` (:69-78), DSL helpers `table()`/`subform()` (:84-133); capability matrix `forms/capabilities.py` — `CAPABILITIES` dict (:34-70), `field_renders_in` (:73), `form_renders_in` (:78), `unsupported_fields` (:83-107).
@@ -30,12 +30,13 @@ Docstring law: if ANY field forces link-out in a channel, the WHOLE form falls b
 
 **Flow:** developer builds definition (DSL helpers normalize TableColumn dicts) → renderers consult CAPABILITIES before building output → native channels render; degraded channels emit link-out with offender names available for UI hints.
 **Invariant:** the matrix is the SINGLE SOURCE OF TRUTH and must cover every primitive × channel (`test_capabilities_cover_every_primitive_and_channel`:58 asserts exact-set equality both axes) — adding a primitive without a row breaks the test, not production.
+**Enforcement point:** the predicate is backed by a LOUD build-time backstop — `surfaces._field_to_blocks` (:341-406) ends in `raise UnrenderableInSlackError(f"Primitive '{field.kind}' has no native Slack renderer. Check form_renders_in(form, 'slack') before calling form_to_modal().")` (:403-405), i.e. bypassing the pre-check fails loud instead of rendering garbage; the card side mirrors it by OMITTING the Open-in-Slack button when `unsupported_fields` is non-empty (pinned by `test_blocks.py::test_open_review_message_with_unsupported_fields_omits_open_button` :277-287). Signature/Ranking are pinned unrenderable by tests :239-258.
 **Probe:** `packages/python/tests/forms/test_capabilities.py` (`test_recursive_children_are_checked`:80, `test_section_collapse_children_checked`:92) + `tests/forms/test_primitives.py` roundtrip including table/subform (:95-118) and `test_recursive_subform`:174. Suites green at pin.
 
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-agents-awaithumans", query: "Table Subform TableColumn table subform complex fields", limit: 5 });
+await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-awaithumans", query: "Table Subform TableColumn table subform complex fields", limit: 5 });
 ```
 Live rank-1..5 line-exact across complex.py; capability functions rank-1/2 on their own query.
 

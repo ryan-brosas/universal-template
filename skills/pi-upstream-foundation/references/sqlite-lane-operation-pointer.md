@@ -32,6 +32,37 @@ return [record];
 **Invariant:** admission control is atomic with the record append (same transaction), and recovery state is O(1) derived data — never re-derived by scanning records for unmatched starts.
 **Probe:** deterministic SQL probe P4 executed this pass (verification.md): second `startLaneOperation` on a claimed lane returns changes=0 → error path; `finishLaneOperation` with wrong runId leaves the pointer set. Upstream direct coverage rides the shared conformance suite (`conformance.ts` open-operation groups).
 
+## The same contract, two derivations — scan index vs nullable pointer
+**Path/Symbol:** contract docstring `packages/agent/src/harness/session/types.ts:findOpenOperations` (:311–317); scan side `state.ts:SessionState.applyMutation` record case (:126–141) + `SessionState.findOpenOperations` (:229–234), delegated by `memory.ts:112-114` and `jsonl/storage.ts:215-216`; pointer side `storage/records.ts:readOpenOperationRows` (:73–95).
+**Signature:** both sides implement the same `findOpenOperations(lane, { limit? }): OperationStartedRecord[]`.
+
+### Decisive source
+```ts
+// types.ts:311-317 — the tri-state is a READ-SIDE convention, not a storage guarantee
+/**
+ * Returns unfinished operation starts newest first. Recovery uses `limit: 2`:
+ * zero results mean the lane is idle, one means it is suspended, and two
+ * mean at least two operations are open, which is corruption. Further
+ * results provide no additional recovery state.
+ */
+findOpenOperations(lane: string, options?: { limit?: number }): Promise<OperationStartedRecord[]>;
+```
+```ts
+// state.ts:132-141 — scan side: index maintained from the persisted record stream
+if (mutation.record.type === "operation_started") {
+	…openOperations.set(mutation.record.id, mutation.record);
+} else if (mutation.record.type === "operation_finished") {
+	this.openOperationsByLane.get(mutation.record.lane)?.delete(mutation.record.runId);
+}
+// state.ts:229-234 — newest-first reversal + limit slice
+const openOperations = openOperationsById ? [...openOperationsById.values()].reverse() : [];
+return options?.limit === undefined ? openOperations : openOperations.slice(0, options.limit);
+```
+
+**Flow:** the 0/1/2+ tri-state lives in the CONTRACT's reading convention (recovery asks with `limit: 2`), not in any storage guarantee. The scan side derives its answer from the record stream: the per-lane id map CAN hold 2+ entries, so a replayed log with two unmatched starts yields `[a, b]` and the corruption arm is REACHABLE — detectable, and classified downstream as `multiple_open_operations`. The pointer side dereferences one nullable column and returns [] or [record] with referential validation: 2+ is unrepresentable, so the same arm is ELIMINATED rather than detected. Orphaned finishes are inert on both sides — index `delete(runId)` on a missing key is a no-op; the pointer's `UPDATE … WHERE open_operation_id = runId` matches zero rows (no-throw) — pinned cross-backend by conformance case "does not let an earlier finish close a later start" (:505–521). Write-time admission (memory.ts:75-79 / jsonl/storage.ts:175-181 throw; the CAS above throws) is what keeps both derivations honest.
+**Invariant:** the tri-state must stay a read-side convention: a backend may make the corruption arm structurally impossible instead of merely detectable, but recovery code must still be written against the `limit: 2` shape because the scan backends genuinely reach it.
+**Probe:** deterministic probes P1/P2 executed this pass (verification.md): a corrupted two-start replay returns both ids from the transcribed index (arm 3 reachable) while the second pointer CAS returns changes=0 (unrepresentable); orphaned-finish no-op verified on both mechanisms. Upstream direct coverage: conformance cases :483–503 ("tracks and enforces one open operation per lane" — runs exactly the `limit: 2` probe shape on every backend fixture) and :505–521.
+
 ## Get live surrounding code
 **Retrieve:**
 ```ts
@@ -39,4 +70,4 @@ await mcp.codebase_memory.search_graph({ project: "pi-upstream", name_pattern: "
 ```
 
 ## Verdict
-Adopt: pointer-CAS admission inside the write transaction + pointer-dereferencing recovery reads with referential validation. Adapt to backends without transactions (the leaf's JSONL capsules scan for unmatched starts instead — same contract, scan-derived answer). Omit multi-row "open operation" tables unless you genuinely need concurrent per-lane operations; the single pointer is what makes the corruption state impossible.
+Adopt: pointer-CAS admission inside the write transaction + pointer-dereferencing recovery reads with referential validation, and keep the recovery read shaped as `limit: 2` even though your pointer can only return 0/1 — the contract docstring is the porting boundary, and scan backends (memory/JSONL both delegate to one SessionState index) genuinely reach the 2+ arm. Adapt to backends without transactions: index over the replayed record stream, where corruption becomes detectable rather than impossible. Omit multi-row "open operation" tables unless you genuinely need concurrent per-lane operations; the single pointer is what makes the corruption state impossible.

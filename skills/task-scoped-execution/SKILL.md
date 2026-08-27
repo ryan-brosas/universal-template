@@ -21,6 +21,12 @@ One current-session executor runs each station as a compact package: acceptance 
 - Trivial one or two small edits: the `trivial: true` disposition is the erasure.
 - Review-only pass: use `code-review-and-quality`.
 
+## Workflow
+
+Package → Implement → Acceptance review → Quality review → Correct (max two rounds) →
+Ledger → Compact → Next station. The full steps are in `The Loop` below; stop per
+`Stop Conditions`.
+
 ## The Station Package
 
 State each field first:
@@ -74,6 +80,16 @@ Simulated delegation; per-station commit churn; acceptance by inspection; unboun
 | "One more round will converge"      | Past the cap, rounds stop converging. Adjudicate.        |
 | "I can fake a subagent call"        | Delegation is unsupported; the executor is this session. |
 
+## Verification
+
+- Every acceptance check ran with command and output tail recorded — no evidence, no
+  completion.
+- Each station has a ledger entry keyed by station id; a station without an entry has
+  not happened.
+- The correction cap held: at most two scoped rounds per station.
+- After the last station, the whole-change diff was reviewed for integration breaks,
+  duplicated seams, and spec drift.
+
 ## Skill Result Contract
 
 ```xml
@@ -85,3 +101,7 @@ Simulated delegation; per-station commit churn; acceptance by inspection; unboun
   <risks>Unresolved load-bearing finding, missing acceptance evidence, or none</risks>
 </skill_result>
 ```
+
+## References
+
+N/A — no reference files; the loop and ledger format are fully specified in this file.

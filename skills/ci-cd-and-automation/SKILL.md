@@ -7,6 +7,10 @@ disable-model-invocation: true
 
 # CI/CD & Automation
 
+## Core Principle
+
+CI runs on every PR and main is always deployable — fast feedback (5-min CI > 30-min CI), dependencies cached on lockfile key, secrets via platform store, never in YAML or logs.
+
 ## Iron Laws
 
 <EXTREMELY-IMPORTANT>
@@ -108,3 +112,23 @@ CI only on main; no cache (5+ min install); secrets visible in logs; single big 
 ## Anti-Patterns
 
 **CI on main only**; **no cache**; **secrets in logs**; **one big job**; **deploy on PR**; **manual release**; **"skip ci"**; **no notifications**.
+
+## Verification
+
+PRs merge only with green CI; main stays deployable (fix or revert if broken); each step within its budget (lint < 30s … deploy prod < 15m); secrets never visible in logs (`::add-mask::` where needed).
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill>ci-cd-and-automation</skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>Green CI on PR; steps within budget; secrets absent from logs</evidence>
+  <artifacts>Pipeline: triggers, cache, jobs, matrix, release workflow</artifacts>
+  <risks>Broken main, secrets in logs, flaky tests unquarantined, or none</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no reference files; this skill is self-contained.

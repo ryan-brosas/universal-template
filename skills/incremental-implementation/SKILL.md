@@ -13,6 +13,12 @@ disable-model-invocation: true
 
 **Rule of smallest:** if you cannot describe the next test in one sentence, you are about to write a large patch. Stop and break it down.
 
+## When to Use / NOT
+
+**Use** — implementing any feature, refactor, or change touching more than one file, or when tempted to write a large patch before testing.
+
+**NOT** — novel / design-heavy / unclear work before its pre-flight pass (blindspot pass, 2–4 cheap variants, interview, point at a reference) — do those before editing.
+
 ## The Slice Loop
 
 ```
@@ -50,6 +56,10 @@ Big-bang patch (write everything, test at the end); premature abstraction (DRYin
 
 **Mutation** — each slice defers to the Schema mutation guard in AGENTS.md. **Verification** — direct behavioral probes; name the check before editing.
 
+## Verification
+
+Run the named check (typecheck, lint, test, build, probe) and record the result. Pass the Self-Quiz Before "Done": name what changed and why in one sentence, no unrelated changes in the diff.
+
 ## Skill Result Contract
 
 ```xml
@@ -61,3 +71,7 @@ Big-bang patch (write everything, test at the end); premature abstraction (DRYin
   <risks>Untested code paths, deferred work, unrelated changes, or none</risks>
 </skill_result>
 ```
+
+## References
+
+N/A — no reference files; the slice loop, deferred-work format, and self-quiz are inline in this skill.

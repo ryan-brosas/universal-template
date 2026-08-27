@@ -5,6 +5,21 @@ description: "Use when auditing for security vulnerabilities, implementing auth 
 
 # Security & Hardening
 
+## Core Principle
+
+**Validate at every boundary and trust the types inside; deny by default and allow
+explicitly.** Secrets never in code, logs, or git; authn ≠ authz; least privilege by
+default; and every security event gets logged — never the secrets themselves.
+
+## When to Use / NOT
+
+- **Use when:** auditing for security vulnerabilities, implementing auth or authz,
+  handling secrets, or hardening against OWASP Top 10 — input validation,
+  authentication, dependency auditing, and secure defaults.
+- **NOT when:** the change touches no external input, no authentication/authorization,
+  no secrets, no dependencies, and no response headers — there is no security surface
+  for this skill to apply.
+
 ## Iron Laws
 
 <EXTREMELY-IMPORTANT>
@@ -29,6 +44,18 @@ description: "Use when auditing for security vulnerabilities, implementing auth 
 | Deserialization | Schema-validate, no eval on untrusted              |
 | Vulns (deps)    | `npm audit`, Dependabot, lockfile pinning          |
 | Logging         | Auth events, anomalies, access denials             |
+
+## Workflow
+
+1. Map the surface against the OWASP Top 10 quick map above.
+2. Validate all external input at the boundary (schema, reject unknown fields).
+3. Implement authentication (hashing, rate limit, MFA, sessions) and authorization
+   (check on every request; test the negative).
+4. Handle secrets (env vars locally, CI secret store, vault for prod; rotate; scrub
+   logs).
+5. Audit dependencies (`npm audit`, lockfile pinning, advisories).
+6. Set secure headers.
+7. Verify per `Verification` below.
 
 ## Input Validation
 
@@ -65,3 +92,27 @@ Plain-text passwords; md5/sha1; SQL string concat; "trust the frontend" authz; s
 ## Anti-Patterns
 
 **"Auth later"**; **bcrypt-less**; **client-trusted IDs**; **no rate limit**; **secrets in code**; **"we're internal"**; **security by obscurity**.
+
+## Verification
+
+- Test the negative: "user A accesses user B's resource" must fail.
+- Confirm no `.env` or secret material in git, logs, or error messages.
+- Run `npm audit` and confirm lockfile pinning; confirm rate limiting on auth endpoints.
+- Confirm secure headers are present in responses and security events (failed logins,
+  denials) are logged without secret values.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill><name></skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>…</evidence>
+  <artifacts>…</artifacts>
+  <risks>…</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no reference files; defenses are fully covered by the tables and sections in this file.

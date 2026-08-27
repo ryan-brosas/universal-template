@@ -1,6 +1,6 @@
 ---
 name: railway-nexus3-foundation
-description: "Railway deployment template foundation: first-boot credential rotation, anonymous-access hardening, EULA consent gating in automation, slow-boot healthcheck budgets, signal relay, and static template tests."
+description: "Use when porting Railway deployment template machinery — first-boot credential rotation, anonymous-access hardening, EULA consent gating in automation, slow-boot healthcheck budgets, signal relay, and static template tests."
 disable-model-invocation: true
 ---
 

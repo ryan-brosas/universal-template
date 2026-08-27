@@ -1,39 +1,61 @@
 ---
 name: memory-graph-skill-miner
-description: Mine indexed Codebase Memory repositories into verified foundation skills.
+description: "Use when mining an indexed Codebase Memory repository into a verified foundation skill — the autonomous learn → note → capsule → OpenViking sync → close loop. Host-neutral: runs from any agent CLI (DSH Factory lane, pi recurring task, or manual invocation)."
 ---
 
 # Memory-Graph Skill Miner
 
-This is the DSH adapter for the proven Hermes memory-graph mining process. It turns
-one already-organized, indexed inspiration repository into a reusable foundation
-leaf made of source-confirmed capsule references. The graph is the map; source and
-direct tests are the authority. Do not invent a parallel note format or copy a
-repository into the skill.
+Host-neutral autonomous repo-learning loop. It turns one already-organized, indexed
+inspiration repository into a reusable foundation leaf made of source-confirmed
+capsule references, pushes every pass to OpenViking, and closes the repository when
+nothing new remains to note. The graph is the map; source and direct tests are the
+authority. Do not invent a parallel note format or copy a repository into the skill.
 
-## When to Use
+## Core Principle
 
-- Turn one ready Codebase Memory project into a foundation leaf.
-- Re-enter an existing foundation for a deeper pass and new capsules.
-- Run one dedicated Factory learning lane with a pinned target repository.
-- Repair a foundation's capsule, loader, map, provenance, or verification parity.
+The graph is the map; source and direct tests are the authority. One invocation owns
+exactly ONE source row, writes the learning note FIRST, produces 5–8 source-confirmed
+capsule-v2 outcomes per pass (target six), syncs every pass to OpenViking, and updates
+the ledger row AND Status board line in the same write — closing only when no uncited
+reusable seam remains.
 
-Do not use for organizing or cloning inspo folders; use repo-inspo-organizer. Do not
-use for batch graph reindexing, active DSH implementation, generic skill authoring,
-or porting a known primitive; use the matching foundation leaf instead.
+## When to Use / NOT
+
+- **Use when:** turning one ready Codebase Memory project into a foundation leaf;
+  re-entering an existing foundation for a deeper pass; running a scheduled learning
+  lane with a pinned target; repairing a foundation's capsule, loader, map,
+  provenance, or verification parity.
+- **NOT when:** organizing or cloning inspo folders (use repo-inspo-organizer); batch
+  graph reindexing; generic skill authoring; porting a known primitive (load the
+  matching foundation leaf instead).
+
+## Workflow
+
+One invocation runs the loop described in `The Loop` through the seven-gate `Procedure`
+below: load the canonical workflow → establish one lane → Gate 1 live graph → Gate 2
+graph-led seam selection → Gate 3 source and test confirmation → Gate 4 author the
+production batch (with the depth-first squeeze before selection) → Gate 5 behavior
+pressure test → Gate 6 wire only when membership is new → Gate 7 verify and persist.
+Each gate has an explicit completion condition; the run ends with the ledger row,
+Status board line, and work record updated — or an explicit blocked record.
 
 ## Prerequisites
 
-- The source checkout already exists in the established work/inspo library and is
-  not a newly-created Git worktree.
+- The source checkout already exists in the established inspo library and is not a
+  newly-created Git worktree.
 - The target source, graph project, foundation leaf, and current pin are explicit.
-  On-demand runs may select one target from the learning ledger, but never a script.
-- The canonical workflow is available at
-  /home/utopia/.dsh/skills/foundations-workflow/SKILL.md. Load it first, then load
-  only the runbook references needed for the current gate.
-- The canonical leaf and capsule templates are available at
-  /home/utopia/.dsh/template/work/project/foundation-skill.md and
-  /home/utopia/.dsh/template/work/project/foundation-capsule.md.
+  On-demand runs may select one target from the learning ledger, but never by script.
+- The canonical workflow is `~/.agents/skills/foundations-workflow/SKILL.md`. Load it
+  first, then load only the runbook references needed for the current gate.
+- The canonical templates are `~/.agents/templates/foundation-skill.md` and
+  `~/.agents/templates/foundation-capsule.md`. Host mirrors (e.g.
+  `/home/utopia/.dsh/template/work/project/foundation-*.md`) are derived copies; fix
+  drift in `~/.agents`, never in a mirror.
+- `~/.dsh/skills` is a **symlink** to `~/.agents/skills` — one physical catalog, not a
+  copy. Writing to the canonical `~/.agents/skills/<slug>-foundation/` path IS the
+  `.dsh` view; there is no separate skills mirror to keep in sync or copy back. If your
+  capsule count differs from an earlier reading, that is your own cross-pass growth, NOT
+  a "mirror divergence" — there is no second copy to drift from.
 - A direct source check or test path is known, or its absence is recorded as a
   blocker. A missing runner is never a passing runner.
 
@@ -46,6 +68,22 @@ is complete; legacy `<source-slug>-work` siblings are not canonical and must not
 Collision-preserving originals are archived under `/mnt/hdd/utopia/archive/skill-mining-legacy-20260826/`.
 Never create new sibling work directories beside source checkouts.
 
+## The Loop (one invocation, any host)
+
+1. Read the ledger, its Status board, and the source work record; own exactly ONE
+   source row for this invocation.
+2. Write the learning note FIRST (research.md): mental model, covered/partial/uncited
+   seams, porter questions.
+3. Run the seven-gate procedure below over one connected subsystem → 5–8
+   source-confirmed capsule-v2 outcomes (target six), or an evidenced fewer-than-five
+   closure/blocker.
+4. OpenViking sync phase (below).
+5. Update the ledger row AND the Status board line in the same write; persist concrete
+   next-pass targets.
+6. Closure: no uncited reusable seam left ⇒ status `complete` with closure evidence.
+   Any HEAD advance past the pin ⇒ reopen to `active` with FULL re-index + diff-first
+   re-adjudication before new citations.
+
 ## How to Run
 
 ### On demand
@@ -57,67 +95,75 @@ Never create new sibling work directories beside source checkouts.
 3. Persist the capsule, leaf map, verification evidence, and next-pass targets before
    yielding. Do not start a second repository in the same run.
 
-### Factory continuation
+### Scheduled continuation (any host)
 
-Use a DSH Factory lane for autonomous continuation, but make each invocation a
-Hermes-style learning-and-production batch rather than a one-seam tick. Configure
-mining tasks with the native `standard` Agent preset, never `fabric` or `code`:
-code-mode's generated `run_code` programs encourage batched shortcuts instead of
-manual evidence-by-evidence study. Do not delegate mining to subagents or workflows.
-The task prompt must include one dedicated lane, one target checkout, one graph
-project, one target leaf, the inspected pin, current capsule counts, coverage caveats,
-and an explicit allowed-file list. Use references/factory-lane-prompt.md as the prompt
-skeleton. A batch must first write a durable learning note, then produce 5–8
-distinct source-confirmed capsule-v2 outcomes (target six), refactor overlapping or
-stale leaf material when warranted, run the gates, and update the ledger/work record
-before it reports success. Never pad the batch with invented or duplicate capsules;
-if fewer than five genuinely uncited/refactorable seams remain, prove closure or
-record the blocker and remaining targets.
+Each scheduled invocation is a learning-and-production batch, never a one-seam tick.
+Do not delegate mining to subagents or workflows; the assigned model inspects, reasons
+about, and authors every seam itself. The task prompt must include one dedicated lane,
+one target checkout, one graph project, one target leaf, the inspected pin, current
+capsule counts, coverage caveats, and an explicit allowed-file list.
+
+Per-host drivers:
+
+- **DSH Factory:** native `standard` Agent preset only (never `fabric`/`code` — code
+  mode's generated programs enable exactly the batching shortcuts this lane forbids);
+  prompt skeleton, deployment guard, and fleet bindings in
+  `references/dsh-factory-lane.md`.
+- **pi / other CLIs:** any recurring-task mechanism that can run this skill with the
+  same prompt contract. Keep the writer topology of the driving host: one lane owns
+  one repo, and shared-file writes follow the ledger discipline below.
+
+Hard rule: a lane may write only its owned row/board line and owned files. Concurrent
+lanes without a working lease surface cause lost updates on shared rows (documented
+repeatedly in ledger history); if the host has no lease mechanism, serialize the lanes.
 
 ## Quick Reference
 
 - Canonical process: foundations-workflow, then its graph-rules, quality-bar,
   squeeze-process, and wiring-verification references as needed.
-- Graph discovery: mcp__codebase-memory__list_projects,
-  mcp__codebase-memory__index_status, mcp__codebase-memory__get_architecture,
-  mcp__codebase-memory__search_graph, mcp__codebase-memory__trace_path,
-  mcp__codebase-memory__get_code_snippet, and
-  mcp__codebase-memory__check_index_coverage.
-- Complex graph queries: mcp__codebase-memory__query_graph only when search and
-  traces cannot answer the question.
-- Durable records: .skill-mining-work/source-slug/state.md, research.md, verification.md, and
-  the local inspo/.skill-mining-work/llm-repo-learning.md ledger.
-- Output: the target foundation leaf's SKILL.md and references/*.md only, plus the
-  leaf's new-membership wiring when it is genuinely new.
+- Graph discovery: Codebase Memory MCP tools — list_projects, index_status,
+  get_architecture, search_graph, trace_path, get_code_snippet, check_index_coverage.
+- Complex graph queries: query_graph only when search and traces cannot answer.
+- Durable records: .skill-mining-work/<slug>/{state,research,verification}.md plus the
+  llm-repo-learning.md ledger and its Status board.
+- Output: the target foundation leaf's SKILL.md and references/*.md only. Catalog
+  discovery is filesystem-based; no router or manifest wiring exists.
 - Core loop: graph map -> source/test confirmation -> capsule-v2 -> pressure test ->
-  leaf/map parity -> durable state.
-
-## DSH Translation of the Hermes Process
-
-Hermes used OpenViking as a second learning ledger and committed from a shared
-Pi-template checkout. DSH replaces those surfaces as follows:
-
-| Hermes surface | DSH surface |
-|---|---|
-| OpenViking llm-repo-learning resource | inspo/.skill-mining-work/llm-repo-learning.md plus each source work record |
-| foundations-workflow in Pi-template | /home/utopia/.dsh/skills/foundations-workflow |
-| Pi foundation templates | /home/utopia/.dsh/template/foundation-*.md |
-| codebase-memory CLI | native, individual Codebase Memory MCP tool calls |
-| Hermes cron | DSH Factory recurring task |
-| skill_manage / Pi file tools | DSH write, edit, read, grep, bash, and the target skill path |
-| shared Pi checkout commit | explicit DSH file writes; commit only if the target is actually Git-managed |
-
-Do not call OpenViking, write Pi-specific paths, or create a second inspo tree from
-this skill. The local learning ledger is the durable scheduling surface: if it is
-not updated, the pass is incomplete.
+  leaf/map parity -> OpenViking sync -> durable state.
 
 ## Durable State Contract
 
-The local ledger is the DSH analogue of Hermes llm-repo-learning. Keep one row per
-source with, at minimum:
+The local ledger is the scheduling and resume surface. Keep one row per source with,
+at minimum:
 
     source | foundation leaf | graph project | pin | pass | refs | v2 refs |
     last pass | next-pass targets | blockers
+
+Keep the ledger's Status board in sync in the same write: one line per source with
+status `active` / `complete` / `blocked`. `complete` only when next-pass targets are
+empty AND the coverage matrix shows 0 uncited reusable seams (every omission recorded
+with a reason); `blocked` when a standing blocker prevents closure; any HEAD advance
+past the pin reopens a `complete` row to `active` with FULL re-index + diff-first
+re-adjudication before new citations.
+
+### OpenViking sync phase (once per pass, after production writes, before ledger update)
+
+1. Push the pass's learning note, verification record, and new capsule files into
+   `viking://resources/llm-repo-learning-passN-<slug>/` (stable repo slug, one
+   resource dir per pass). Use whichever surface exists in this session, in order:
+   - MCP tools `memadd`/`memfind`/`memread` if connected;
+   - otherwise the `ov` CLI. It is NOT on the default PATH of subagent sessions —
+     full path: `/home/utopia/.hermes/hermes-agent/venv/bin/ov`. Pattern:
+     `ov add-resource <leaf>/references -p viking://resources/llm-repo-learning-passN-<slug> --wait --include "*.md"`
+     then `ov add-resource <work-record>.md --to viking://resources/llm-repo-learning-passN-<slug>/<name>.md --wait`.
+2. Verify with `memfind` or `ov find -n 10 "<a newly cited symbol>"` that at least one
+   newly cited symbol is retrievable; record the probe in the work record. Hits are
+   pointers, not proofs.
+3. Both surfaces unreachable ⇒ record the degraded path in the work record and
+   continue; the local ledger stays authoritative. Never block the pass on OpenViking.
+
+OpenViking is the semantic search surface, never the scheduling surface: the local
+ledger decides what happens next.
 
 Every run must also leave a source work-record entry containing a learning note
 written before production edits, followed by the production outcome:
@@ -132,7 +178,7 @@ written before production edits, followed by the production outcome:
 
 Read the ledger and work record immediately before editing. Compose shared-ledger
 changes in a scratch value, then re-read the target before writing. If a side effect
-or write result is uncertain, inspect the file and Factory/Fabric state before
+or write result is uncertain, inspect the file and host scheduler state before
 retrying. Never rely on conversational memory for the resume position.
 
 ## Procedure
@@ -144,8 +190,8 @@ retrying. Never rely on conversational memory for the resume position.
 
 2. **Establish one lane.** Resolve the source's canonical checkout and user-facing
    alias, confirm it is the existing inspo checkout, and read its source card and
-   work record. Read the learning-ledger row. A dedicated Factory lane owns only its
-   named source, leaf, work-record row, and explicitly allowed wiring lines.
+   work record. Read the learning-ledger row and Status board line. A dedicated lane
+   owns only its named source, leaf, work-record row, and board line.
    Completion: sibling lanes and forbidden paths are recorded.
 
 3. **Gate 1 — live graph.** Call list_projects, then index_status for the named
@@ -168,9 +214,9 @@ retrying. Never rely on conversational memory for the resume position.
 5. **Gate 3 — source and test confirmation.** Resolve the exact qualified symbol with
    search_graph, trace its smallest useful neighborhood, fetch it with
    get_code_snippet, and call check_index_coverage for every source and test path to
-   cite. Read the decisive source range and direct test with DSH file tools. Source
-   wins over graph output. Inspect error, recovery, configuration, shutdown, and
-   test-fixture paths when they define the invariant.
+   cite. Read the decisive source range and direct test with the host's file tools.
+   Source wins over graph output. Inspect error, recovery, configuration, shutdown,
+   and test-fixture paths when they define the invariant.
    Completion: the claim has a path/symbol anchor, coverage status, and named probe.
 
 6. **Gate 4 — author the production batch.** Copy the canonical shape from
@@ -206,19 +252,20 @@ retrying. Never rely on conversational memory for the resume position.
    and run deterministic retrieval/content/probe checks; never fabricate a pass.
    Completion: observed pass evidence or an explicit blocked result.
 
-9. **Gate 6 — wire only when membership is new.** For an existing leaf, do not touch
-   the pack router or catalog membership. For a genuinely new DSH foundation leaf,
-   add it under /home/utopia/.dsh/skills/<leaf>/ and verify the filesystem catalog
-   discovers it. DSH has
-   no Pi packs.json or manifest surface here; do not invent or edit those files.
-   Completion: membership is unchanged or the new leaf/router line is parity-checked.
+9. **Gate 6 — wire only when membership is new.** For an existing leaf, touch nothing
+   else in the catalog. For a genuinely new leaf, create it under the shared catalog
+   (`~/.agents/skills/<leaf>/`, or the host's catalog root when the deployment keeps
+   leaves elsewhere) and verify filesystem discovery. No manifest or router files
+   exist; do not invent or edit them.
+   Completion: membership is unchanged or the new leaf is discovered by the host.
 
 10. **Gate 7 — verify and persist.** Re-run the capsule/map/disk parity checks, every
     cited graph retrieval, source/test probe, and coverage check. Inspect the final
     diff and ensure no forbidden path changed. Update the leaf provenance and full
-    graph view when source pin or counts changed. Update the source work record and
-    llm-repo-learning.md row with pass, refs, v2 count, modules, blockers, and concrete
-    NEXT-PASS TARGETS. The ledger update is part of the deliverable, not housekeeping.
+    graph view when source pin or counts changed. Update the source work record, the
+    llm-repo-learning.md row, and the Status board line with pass, refs, v2 count,
+    modules, blockers, and concrete NEXT-PASS TARGETS. The ledger update is part of
+    the deliverable, not housekeeping.
     Completion: direct graph, source, test, coverage, parity, diff, and durable-state
     evidence are recorded.
 
@@ -228,23 +275,23 @@ A scheduled mining lane may modify only:
 
 - the named foundation leaf and its references;
 - the named source's work/state.md, research.md, and verification.md;
-- the named source row and next-pass text in inspo/.skill-mining-work/llm-repo-learning.md;
-- its own new-membership leaf under ~/.dsh/skills/, only when needed.
+- the named source row and Status board line in inspo/.skill-mining-work/llm-repo-learning.md;
+- its own genuinely-new leaf under the shared catalog, only when needed.
 
 Everything else is read-only. Never edit the source checkout, repo-inspo-organizer,
-INSPO.md, QUEUE.md, another leaf, another lane's ledger row, or an active DSH project
-from a mining lane. If the current files use a different established layout, record
-the resolved paths in the lane prompt before writing; do not silently create aliases.
+INSPO.md, QUEUE.md, another leaf, another lane's ledger row or board line, or an
+active project of the driving CLI from a mining lane. If the current files use a
+different established layout, record the resolved paths in the lane prompt before
+writing; do not silently create aliases.
 
-## Doubled Manual-Learning Enforcement
+## Manual-Learning Enforcement
 
-This rule exists in both this skill and every Factory task prompt. Neither copy may
+This rule exists in both this skill and every scheduled task prompt. Neither copy may
 weaken the other. A run must pass both checkpoints:
 
-1. **Preflight:** confirm the Agent preset is `standard`, name exactly one repository
-   and connected subsystem, and state that discovery will use native individual
-   Codebase Memory MCP calls. If the preset exposes only code-mode/`run_code`, stop
-   blocked instead of beginning exploration.
+1. **Preflight:** name exactly one repository and connected subsystem, and state that
+   discovery will use individual Codebase Memory MCP calls. If the host preset exposes
+   only code-generation mode, stop blocked instead of beginning exploration.
 2. **Completion:** enumerate each seam's explicit graph search, trace, snippet,
    coverage check, decisive source read, direct test read, and manually authored file.
    Certify that no forbidden shortcut or delegation occurred. Any shortcut-tainted
@@ -253,11 +300,11 @@ weaken the other. A run must pass both checkpoints:
 
 ## No-Script and Parallel-Lane Rules
 
-- Never use `run_code`/code-mode programs, helper or generated scripts,
-  Python/Node/Ruby/Perl one-liners, shell loops, heredocs, xargs/find pipelines,
-  awk/sed/jq transforms, temporary automation, generated arrays of tool calls, or
-  template-filled prose for selection, discovery, extraction, counting, probing,
-  parity, batch editing, authoring, or verification.
+- Never use code-generation-mode programs (e.g. `run_code`), helper or generated
+  scripts, Python/Node/Ruby/Perl one-liners, shell loops, heredocs, xargs/find
+  pipelines, awk/sed/jq transforms, temporary automation, generated arrays of tool
+  calls, or template-filled prose for selection, discovery, extraction, counting,
+  probing, parity, batch editing, authoring, or verification.
 - Do not delegate repository learning or capsule authoring to subagents or workflows.
   The assigned model must inspect, reason about, and author every seam itself.
 - Use native individual MCP/file calls and manually write or edit each durable artifact.
@@ -289,8 +336,16 @@ weaken the other. A run must pass both checkpoints:
   work record.
 - Marking a license, test, or runner as approved because the package metadata or graph
   says so. Preserve the blocker and keep reuse citations-only when necessary.
-- Running a Factory lane without a target pin, allowed-file list, or next-pass target.
+- Running a scheduled lane without a target pin, allowed-file list, or next-pass target.
 - Calling the current source complete because a capsule count target was reached.
+
+## Red Flags
+
+The full list is in `Pitfalls` above; the hard ones: treating a graph result, ready
+status, or missing runner as behavioral proof; writing a plausible Probe or Retrieve
+command without executing it byte-for-byte; updating a shared ledger row with a stale
+whole-file replacement that deletes a sibling's entry; expanding the leaf into a ledger;
+and calling the current source complete because a capsule count target was reached.
 
 ## Verification
 
@@ -302,15 +357,27 @@ Before reporting a successful run, confirm all of the following:
 - leaf loader, Capsule map, and reference files are bidirectionally parity-equal;
 - RED/GREEN evidence is observed or the block is explicitly recorded;
 - only lane-owned paths changed;
-- the source work record and local learning-ledger row contain the pass, evidence,
-  blockers, and concrete NEXT-PASS TARGETS.
+- the source work record, local learning-ledger row, and Status board line contain the
+  pass, evidence, blockers, and concrete NEXT-PASS TARGETS.
 
 A missing evidence item means the run is partial or blocked, not complete.
 
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill><name></skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>…</evidence>
+  <artifacts>…</artifacts>
+  <risks>…</risks>
+</skill_result>
+```
+
 ## References
 
-- /home/utopia/.dsh/skills/foundations-workflow/SKILL.md — canonical seven-gate process.
-- /home/utopia/.dsh/template/work/project/foundation-skill.md — canonical leaf structure.
-- /home/utopia/.dsh/template/work/project/foundation-capsule.md — canonical capsule-v2 structure.
-- references/factory-lane-prompt.md — dedicated Factory prompt and file boundary.
-- references/durable-learning-ledger.md — local ledger row and resume contract.
+- `~/.agents/skills/foundations-workflow/SKILL.md` — canonical seven-gate process.
+- `~/.agents/templates/foundation-skill.md` — canonical leaf structure.
+- `~/.agents/templates/foundation-capsule.md` — canonical capsule-v2 structure.
+- `references/durable-learning-ledger.md` — ledger row, Status board, and resume contract.
+- `references/dsh-factory-lane.md` — DSH Factory host adapter: preset rules, prompt skeleton, deployment guard, fleet bindings.

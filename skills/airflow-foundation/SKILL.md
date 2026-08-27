@@ -1,6 +1,6 @@
 ---
 name: airflow-foundation
-description: "Airflow scheduler and triggerer foundation: HA task queueing, executor reconciliation, retry/timeout ladders, orphan adoption, deferred-task lifecycle"
+description: "Use when porting Airflow scheduler and triggerer foundation — HA task queueing, executor reconciliation, retry/timeout ladders, orphan adoption, deferred-task lifecycle."
 ---
 # Apache Airflow: Airflow Scheduler & Triggerer Foundation
 

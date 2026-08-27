@@ -1,11 +1,6 @@
 ---
 name: gsearch
-description: >-
-  Search the web via Google through CDP. Returns structured results (title, URL,
-  snippet) in under 1 second. Use when the user asks to search the web, look
-  something up, find a link, or research a topic. Requires browser-harness-js
-  on PATH and a Chromium-based browser with remote debugging enabled.
-  Also opens a result link with `follow <url>` to read its page text or JSON.
+description: "Use when the user asks to search the web, look something up, find a link, or research a topic — search the web via Google through CDP. Returns structured results (title, URL, snippet) in under 1 second. Also opens a result link with `follow <url>` to read its page text or JSON. Requires browser-harness-js on PATH and a Chromium-based browser with remote debugging enabled."
 setup: bash <skill-dir>/scripts/setup
 compatibility: Requires browser-harness-js on PATH and a running Chromium browser with remote debugging (chrome://inspect or --remote-debugging-port).
 ---
@@ -13,6 +8,22 @@ compatibility: Requires browser-harness-js on PATH and a running Chromium browse
 # Google Search
 
 Search Google and extract structured results via CDP. No external dependencies beyond `browser-harness-js` (which provides the CDP session). Each call opens its own tab and WebSocket session — safe for parallel use.
+
+## Core Principle
+
+Search Google and extract structured results via CDP through the user's own browser — no API key, no external dependencies beyond `browser-harness-js`. Each call opens its own tab and WebSocket session — safe for parallel use.
+
+## When to Use / NOT
+
+**Use** — when the user asks to search the web, look something up, find a link, or research a topic; also to open a result link with `follow <url>` and read its page text or JSON.
+
+**NOT** — when the target page is behind a login wall or anti-bot challenge the browser session cannot pass (`follow --json` bails early on a `text/html` response); when a guaranteed result count is required (Google may return fewer than requested).
+
+## Workflow
+
+1. Run `gsearch "<query>" [count]` (pretty) or `gsearch --json "<query>" [count]`.
+2. Pick a result and read it with `gsearch follow <url>` — `--selector` for a custom CSS selector, `--settle` for lazy/SPA content, `--wait` to pick the readiness event, `--json` for JSON endpoints.
+3. Parallelize independent queries — each call attaches to its own tab with a per-call `sessionId`.
 
 ## Quick search
 
@@ -160,7 +171,7 @@ Google's AX tree for a search page has 1300+ nodes — walking it requires per-n
 
 URI encoding uses `encodeURIComponent()` in JS and output formatting is done via `.map().join()` in the heredoc. The raw query is escaped for JS string interpolation with `sed` (backslashes, `$`, backticks for bash; single quotes for JS). The REPL's `renderResult` passes string returns through raw — no JSON wrapping — so bash just prints.
 
-## Traps
+## Red Flags
 
 - **Tab cleanup uses `try/finally` with fire-and-forget `closeTab`** — `closeTab` does `window.close()` + `Target.closeTarget` for thorough cleanup, wrapped in `finally` so it runs even on errors. The call is not awaited so it doesn't block the response. Under rapid parallel calls the close operations serialize in the session's `closeQueue`, but they don't block results.
 - **`Page.enable()` AND `Page.setLifecycleEventsEnabled({ enabled: true })` must both be called** on each new tab. The latter is required for Chrome to emit any `Page.lifecycleEvent` — without it, the `networkIdle` wait times out every time.
@@ -168,3 +179,23 @@ URI encoding uses `encodeURIComponent()` in JS and output formatting is done via
 - **Result count may be less than `num=`** — Google sometimes returns fewer results than requested.
 - **Google may serve a consent/cookie wall** in some regions — this returns 0 results, same as the old approach. Check with a screenshot if results come back empty.
 - **Multi-statement heredocs need `return`** — `browser-harness-js` auto-returns single expressions only.
+
+## Verification
+
+Results parse as `{ title, url, snippet }`; `--json` emits valid JSON. If results come back empty, check with a screenshot for a consent/cookie wall before concluding there are no hits.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill>gsearch</skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>…</evidence>
+  <artifacts>…</artifacts>
+  <risks>…</risks>
+</skill_result>
+```
+
+## References
+
+- Cross-skill pointer: the `cdp` skill's `json-navigation.md` (`../cdp/interaction-skills/json-navigation.md`) — raw recipes and the anti-bot `fetch()` trap for `application/json` navigations.

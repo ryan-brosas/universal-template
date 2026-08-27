@@ -15,6 +15,9 @@ Use when porting Tailwind CSS v4 compiler mechanics — the `compile()`/`compile
 - `references/theme-namespace-reset.md` — How do `--ns-*: initial`, `default`, and user overrides interact when folding many `@theme` blocks into one Theme?
 - `references/theme-resolve-var-inline.md` — When does theme resolution emit `var(--key)` versus an inline value, and what does REFERENCE mode imply?
 - `references/at-theme-ingestion.md` — How is `@theme` CSS folded into one output `:root, :host` rule while keyframes survive hoisting?
+- `references/candidate-parse-pipeline.md` — how does one candidate string become zero or more structured Candidates without throwing.
+- `references/find-roots-permutation-ladder.md` — how is the root/value split of `bg-red-500` discovered without a registry of full class names.
+- `references/modifier-shape-algebra.md` — when does `/50` parse, and what exactly does an unparsable modifier invalidate.
 
 ## Capsule map
 - **Incremental build kernel** — `incremental-build-kernel`: accumulate-only candidate set; rebuild only when the set grows or a used external variable flips; splice nodes into the `@tailwind utilities` node and re-optimize.
@@ -24,7 +27,9 @@ Use when porting Tailwind CSS v4 compiler mechanics — the `compile()`/`compile
 - **Theme namespace reset** — `theme-namespace-reset`: `initial` deletes keys, `-*: initial` clears namespaces minus protected sub-namespaces, `default` never beats existing user values.
 - **Theme resolve var/inline** — `theme-resolve-var-inline`: INLINE emits raw values, otherwise escaped prefixed `var()` with a fallback only under REFERENCE; `markUsedVariable` returns first-use to gate rebuilds.
 - **@theme ingestion** — `at-theme-ingestion`: all `@theme` blocks merge into one Theme; the first becomes the `:root, :host` output rule at that position; non-custom-property children hard-error.
-
+- **Candidate parse pipeline** — `candidate-parse-pipeline`: how does one candidate string become zero or more structured Candidates without throwing.
+- **findRoots permutation ladder** — `find-roots-permutation-ladder`: how is the root/value split of `bg-red-500` discovered without a registry of full class names.
+- **Modifier shape algebra** — `modifier-shape-algebra`: when does `/50` parse, and what exactly does an unparsable modifier invalidate.
 ## Extending the foundation
 Add one `references/<seam>.md` capsule for one graph-selected, source-confirmed porting question. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf.
 

@@ -28,6 +28,30 @@ return this.operations.enqueue(() => {
 **Invariant:** ownership is verified by the same transaction that commits the data — there is no window where a check-then-write straddles two transactions. The 10s heartbeat (`setTimeout` with `.unref()`, transient failures retried silently) only keeps the TTL fresh while idle; it is never the correctness mechanism.
 **Probe:** `packages/session-backends/sqlite-node/test/writer-leases.test.ts:190-216` — fake timers advance 10s and the stored `expires_at_ms` grows by exactly 10_000; plus :127-173 where the stale writer's next append after takeover rejects with "writer lease was lost" (the sticky-poison behavior).
 
+## Failure classes: an aborted operation is NOT a lost lease
+**Path/Symbol:** witness `test/repository.test.ts` "does not publish connection state when an append transaction fails" (:379–409); mechanism `repo.ts:getDatabase` memoization (:931–935) with `close()` as the only clearer (:916).
+**Signature:** same `enqueueWrite`; failure shape = the raw operation error, rethrown by the transaction wrapper.
+
+### Decisive source
+```ts
+// repository.test.ts:388-409 — abort the branch_tips insert mid-append
+CREATE TRIGGER fail_branch_tip_insert BEFORE INSERT ON branch_tips
+BEGIN SELECT RAISE(ABORT, 'branch insert failed'); END;
+await expect(session.appendMessage(createUserMessage("root"))).rejects.toThrow("branch insert failed");
+// zero partial state:
+expect(lane?.leaf_id).toBeNull();
+expect(await db.prepare("SELECT id FROM entries WHERE session_id = ?").all("session-1")).toEqual([]);
+expect(await session.getStats()).toMatchObject({ messageCount: 0 });
+await db.exec("DROP TRIGGER fail_branch_tip_insert");
+// SAME instance, SAME connection: the next append succeeds
+const entryId = await session.appendMessage(createUserMessage("root"));
+expect(await session.getStats()).toMatchObject({ messageCount: 1 });
+```
+
+**Flow:** trigger aborts the branch_tips insert inside the append's lease-renewed transaction → ROLLBACK preserves the original error → lane leaf stays NULL, no entries, stats untouched → the memoized `databasePromise` is never touched by the failure (only `close()` clears it) → the very next append on the same instance succeeds on the same connection.
+**Invariant:** there are exactly two writer failure classes: OPERATION failure (roll back own transaction, keep the connection, instance stays writable) and LEASE-RENEWAL failure (sticky poison, never retry). Porters who close/reopen the connection or re-acquire the lease after an ordinary failed write add a recovery path the design deliberately does not have.
+**Probe:** deterministic probe P5 this pass (verification.md): transcribed trigger-abort + rollback + retry in node:sqlite — leaf NULL, entries [], messageCount 0, retry commits on the same handle.
+
 ## Get live surrounding code
 **Retrieve:**
 ```ts
@@ -35,4 +59,4 @@ await mcp.codebase_memory.get_code_snippet({ project: "pi-upstream", qualified_n
 ```
 
 ## Verdict
-Adopt renew-before-commit inside the write transaction and the sticky lost-lease poison (fail fast forever after eviction — do not attempt transparent reacquire). Adapt the serial-queue to your host's concurrency primitive; keep the property that its stored tail ignores errors. Omit node-specifics (`.unref()`) where irrelevant. Caveat: behavioral evidence here is upstream vitest source + deterministic SQL probes; the repo's own runner could not execute this pass (no node_modules — recorded block).
+Adopt renew-before-commit inside the write transaction and the sticky lost-lease poison (fail fast forever after eviction — do not attempt transparent reacquire), keeping the failure-class split explicit: an aborted OPERATION rolls back and leaves the instance writable on the retained connection; only renewal loss poisons. Adapt the serial-queue to your host's concurrency primitive; keep the property that its stored tail ignores errors. Omit node-specifics (`.unref()`) where irrelevant. Caveat: behavioral evidence here is upstream vitest source + deterministic SQL probes; the repo's own runner could not execute this pass (no node_modules — recorded block).

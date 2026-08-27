@@ -23,7 +23,7 @@ One skeleton for every lifecycle workflow: verify capability, retrieve context, 
 | audit | A graded, prioritized pattern report | references/audit.md |
 | verify | A gate-backed READY / NEEDS-WORK verdict | references/verify.md |
 | gc | Workspace hygiene cleanup | references/gc.md |
-| dev loop | the daily working loop — init once, AGENTS.md as spine, slice-by-slice development, documents AFTER implementation, lessons distilled via /learn | references/dev-loop.md |
+| dev loop | the daily working loop — init once, AGENTS.md as spine, slice-by-slice development, documents AFTER implementation, lessons distilled via the learn command | references/dev-loop.md |
 
 ## Shared context plane (five sources)
 
@@ -56,10 +56,18 @@ Which sources actually exist depends on what MCP servers the host registered. Pr
 
 ## References
 
-- references/init.md - init phases, idempotency matrix, quality contract
-- references/learn.md - lesson distillation and catalog path
-- references/audit.md - pattern discovery and severity grading
-- references/verify.md - cache, completeness, gates
-- references/gc.md - hygiene contract
-- references/mcp-context.md - five-source retrieval recipes (graph, corpus, library docs, web, wiki)
-- references/dev-loop.md - the default daily working loop (init once, slice by slice, documents after implementation, essentials enforced)
+- `references/init.md` - init phases, idempotency matrix, quality contract
+- `references/learn.md` - lesson distillation and catalog path
+- `references/audit.md` - pattern discovery and severity grading
+- `references/verify.md` - cache, completeness, gates
+- `references/gc.md` - hygiene contract
+- `references/mcp-context.md` - five-source retrieval recipes (graph, corpus, library docs, web, wiki)
+- `references/dev-loop.md` - the default daily working loop (init once, slice by slice, documents after implementation, essentials enforced)
+
+## Red Flags
+
+Citing a graph that was not verified to cover the code; fabricating a retrieval hit because a source is missing; mutating before the Schema loop (or explicit approval) completes; treating prose review as verification.
+
+## Verification
+
+Each command's named deliverable exists on disk (artifact paths in the skill result); capability probes show which of the five sources are actually registered; mutation postconditions from `schema.commit` hold.

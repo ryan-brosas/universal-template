@@ -39,6 +39,27 @@ Mass-applications with no job reference; inventing experience, start dates, clie
 
 Any experience, start date, credential, client name, or URL not provided by the user; a proposal that could apply to any job; more than a few short paragraphs.
 
+## Verification
+
+- Every claim in the draft traces to the user's stated words; anything unknown is a [BRACKETED PLACEHOLDER] or one focused question (Workflow step 5).
+- Run the Pressure Test scenario and pass its rubric twice, including the no-details run that returns placeholders or one question.
+
 ## Pressure Test (maintainers)
 
 Scenario: a client needs a virtual assistant who can start Monday and handle email triage. Rubric: client need named; energy present; every claim traces to user facts; no invented link; under 150 words. Must pass twice, including one run with no details supplied, which returns placeholders or one question.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill><name></skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>…</evidence>
+  <artifacts>…</artifacts>
+  <risks>…</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no references/ directory; the skill is a self-contained prompt corpus.

@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # CLI Command Surface & Session Helper — thin argparse shells over service calls
 
-**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-agents-awaithumans`. **Question:** What is the shape of each operator command so future passes can adjudicate them as product-shell without re-mining?
+**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-awaithumans`. **Question:** What is the shape of each operator command so future passes can adjudicate them as product-shell without re-mining?
 
 ## One module per command; _session owns connection resolution + AsyncSession lifecycle
 **Path/Symbol:** `packages/python/awaithumans/cli/commands/` — add_user, bootstrap_operator, create_service_key, list_service_keys, revoke_service_key, list_users, remove_user, set_password, doctor, serve, version, dev, `_session.py` (:1-35); entry `cli/main.py` subcommand registry.
@@ -23,7 +23,7 @@
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-agents-awaithumans", query: "cli commands with_session doctor serve bootstrap_operator", limit: 6 });
+await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-awaithumans", query: "cli commands with_session doctor serve bootstrap_operator", limit: 6 });
 ```
 
 ## Verdict
