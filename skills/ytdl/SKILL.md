@@ -1,14 +1,6 @@
 ---
 name: ytdl
-description: >-
-  Download YouTube videos browser-natively — no `yt-dlp`, no client impersonation,
-  no n-signature solver. The browser plays the video (auth, poToken, n-solving,
-  SABR demux all done by the page itself); ytdl records the demuxed media the
-  player feeds to MediaSource via a `SourceBuffer.appendBuffer` hook and muxes
-  to MP4 with ffmpeg. If the user can watch the video, it's downloadable —
-  made-for-kids, age-gated, and members-only work as long as a logged-in tab
-  can play them. Use when the user wants to download, save, or fetch a YouTube
-  video (audio or video) to disk.
+description: "Use when the user wants to download, save, or fetch a YouTube video (audio or video) to disk — browser-native capture with no yt-dlp, no client impersonation, no n-signature solver: the page plays the video (auth, poToken, n-solving, SABR demux), ytdl records the demuxed media the player feeds to MediaSource via a SourceBuffer.appendBuffer hook and muxes to MP4 with ffmpeg. Made-for-kids, age-gated, and members-only work as long as a logged-in tab can play them."
 setup: bash <skill-dir>/scripts/setup
 compatibility: Requires `browser-harness-js` on PATH + a Chromium browser with remote debugging (see the `cdp` skill) and a logged-in YouTube tab for gated content. `ffmpeg` on PATH to mux video+audio into MP4.
 ---
@@ -30,6 +22,22 @@ ytdl "https://www.youtube.com/watch?v=..." -q audio   # audio only
 ytdl "https://www.youtube.com/watch?v=..." --info      # title / duration / qualities
 ytdl "https://www.youtube.com/watch?v=..." -o Name -d ~/Videos
 ```
+
+## Core Principle
+
+The page plays the video; ytdl records the demuxed media the player feeds to MediaSource via a `SourceBuffer.appendBuffer` hook and muxes with ffmpeg (`-c copy`). No yt-dlp, no client impersonation, no n-signature solver — if a logged-in tab can play it, it is downloadable.
+
+## When to Use / NOT
+
+- Use when the user wants to download, save, or fetch a YouTube video or audio to disk.
+- NOT for non-YouTube sources, or when the tab cannot play the video (gated content without a logged-in session).
+
+## Workflow
+
+1. Optionally `ytdl URL --info` for title/duration/qualities.
+2. `ytdl URL [-q 360p|720p|1080p|best|audio] [-o Name -d dir]`.
+3. Confirm the MP4 landed at the output path. Stop when the file exists with the expected streams.
+
 
 ## Quality targets
 
@@ -145,3 +153,27 @@ All paths relative to `<skill-dir>`.
 - **ffmpeg runs with `-y` (overwrite).** Re-running the same video overwrites the prior output instead of hitting ffmpeg's interactive `Overwrite? [y/N]` prompt, which fails non-interactively and silently leaves a stale file. Don't drop `-y`.
 - **YouTube Shorts (`/shorts/<id>`) are normalized to `watch?v=<id>`.** A Short is just a video; the Shorts page is a different UI shell around the same `#movie_player`, so `extract_id` pulls the 11-char id from `youtube.com/shorts/<id>` and the rest of the pipeline captures it in the regular watch player — the autonav toggle, quality forcing, and MSE-hook selectors all target the watch page. Don't try to drive the Shorts shell directly: its swipe-to-next autonav is a different control (`.ytp-autonav-toggle` is absent) and its layout hides the controls ytdl relies on.
 - **Live / Premiere uses HLS**, not MediaSource segments — not supported by this skill.
+
+## Red Flags
+
+Background tabs (flaky autoplay — the player must start in foreground or MediaSource is never fed); reassigning `SourceBuffer.prototype.appendBuffer` (non-writable native method — silently no-ops; must define an OWN property); letting autonav stay on (player autoplays into the next video); expecting ffmpeg to re-encode (it is a muxer only — re-encode yourself for iOS/QuickTime).
+
+## Verification
+
+Output file exists at the target path; `ffprobe` shows the expected streams (video+audio unless `-q audio`) and a duration matching `--info`.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill>ytdl</skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>commands run, outputs inspected, artifacts produced</evidence>
+  <artifacts>files written / commands run</artifacts>
+  <risks>known risks, untested paths, or none</risks>
+</skill_result>
+```
+
+## References
+
+No reference capsules — the skill is self-contained.

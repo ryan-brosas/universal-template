@@ -28,9 +28,9 @@ for renames_dict, user_facing_message, file_change_requests in get_files_to_chan
 edit_sweep_comment(user_facing_message + planning_markdown, 2)
 ```
 
-**Flow:** the same function object has two invocation modes — plain `f(...)` silently iterates every yield (discarding progress messages) and returns `StopIteration.value`, falling back to the LAST yield when the producer has no return; `.stream()` hands back the raw generator so interactive callers can render each yield. `fetch_relevant_files` exploits this fully: it yields `(message, RepoContextManager)` snapshots for the comment feed while its return value is only the final manager. Note `__call__` passes kwargs positionally as a single dict (`self.stream(*args, kwargs)`) — a quirk producers tolerate because they take positional args.
+**Flow:** the same function object has two invocation modes — plain `f(...)` silently iterates every yield (discarding progress messages) and returns `StopIteration.value`, falling back to the LAST yield when the producer has no return; `.stream()` hands back the raw generator so interactive callers can render each yield. `fetch_relevant_files` exploits this fully: it yields `(message, RepoContextManager)` snapshots for the comment feed while its return value is only the final manager. `__call__` forwards arguments normally (`self.stream(*args, **kwargs)`); producers that want to self-compose (e.g. `get_top_k_snippets` draining `multi_get_top_k_snippets.stream`) call `.stream()` explicitly and re-yield.
 **Invariant:** The RETURN value is the contract; yields are advisory. Any caller that needs the final artifact must use `__call__` semantics (or drain the generator's StopIteration.value) — iterating `.stream()` alone loses the return unless the last yield carries it. Mid-stream consumers must treat each yield as a complete consistent snapshot (Sweep rebuilds the whole RepoContextManager per yield).
-**Probe:** No unit test exists for streamable_functions itself (coverage caveat); its `__main__` block documents the dual contract (`return -1` vs yielding 0..9). Deterministic probe at pin: `grep -c 'StopIteration' sweepai/utils/streamable_functions.py` → 1; `grep -rn '\.stream(' sweepai/utils/ticket_utils.py | wc -l` → 4 self-consumption sites.
+**Probe:** No unit test exists for streamable_functions itself (coverage caveat); its `__main__` block documents the dual contract (`return -1` vs yielding 0..9). Deterministic probes at pin: `grep -c 'StopIteration' sweepai/utils/streamable_functions.py` → 1; `grep -c '\*\*kwargs' sweepai/utils/streamable_functions.py` → 2 (signature + forward, no positional-kwargs quirk); `grep -rn '\.stream(' sweepai/utils/ticket_utils.py | wc -l` → 6 self-consumption sites (:157/:216/:313/:329/:437/:526).
 
 ## Get live surrounding code
 **Retrieve:**
@@ -41,4 +41,4 @@ await mcp.codebase_memory.search_graph({ project: "sweep", query: "StreamableFun
 ```
 
 ## Verdict
-Adopt the wrap-a-generator decorator that preserves normal call syntax while exposing `.stream()`, and the rule that returns are authoritative with yields as disposable progress. Adapt the tuple shapes to your UI events. Omit the positional-kwargs quirk (pass `**kwargs` properly in your port).
+Adopt the wrap-a-generator decorator that preserves normal call syntax while exposing `.stream()`, and the rule that returns are authoritative with yields as disposable progress. Adapt the tuple shapes to your UI events. Omit nothing structural — the wrapper is ~15 lines and the only porting decision is your yield-tuple contract.

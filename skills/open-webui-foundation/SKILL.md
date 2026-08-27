@@ -1,12 +1,12 @@
 ---
 name: open-webui-foundation
-description: "Use when porting open-webui's runtime-mutable config store, typed event bus, socket event emitter/caller pair, hybrid RAG retrieval ladder, DB-stored plugin loader, filter inlet/outlet/stream pipeline, agentic tool-call loop with streamed tool calls, incremental stream tag scanner, socket delta coalescing, mid-stream cancellation persistence, mirrored built-in-tool authz gates, the access-grants ACL plane, or the outbound provider-proxy plane (shared aiohttp session pool, timeout env ladders, Ollama send_request error ladder, multi-backend model routing/resolution, OpenAI/Azure/Responses payload normalization, credential header ladder, fan-out model aggregation). Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
+description: "Use when porting open-webui's runtime-mutable config store, typed event bus, socket event emitter/caller pair, hybrid RAG retrieval ladder, DB-stored plugin loader, filter inlet/outlet/stream pipeline, agentic tool-call loop with streamed tool calls, incremental stream tag scanner, socket delta coalescing, mid-stream cancellation persistence, mirrored built-in-tool authz gates, access-grants ACL plane, outbound provider-proxy plane (timeout env ladders, Ollama error ladder, multi-backend model routing/resolution, OpenAI/Azure/Responses payload normalization), or the file-to-knowledge-collection ingest plane (upload admission with post-storage size cap, process bridge with knowledge auto-link, three-arm /process/file ladder, hash-dedup chunking kernel with embedding_config stamping, embed-first/bind-later collection binding, transitive file ACL with write-conferment ownership rule). Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
 ---
 
 # open-webui: Extension Runtime & Realtime Services Foundation
 
 ## Use this for
-Use when porting open-webui's runtime-mutable config store, typed event bus, socket event emitter/caller pair, hybrid RAG retrieval ladder, DB-stored plugin loader, or filter inlet/outlet/stream pipeline. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval.
+Use when porting open-webui's runtime-mutable config store, typed event bus, socket event emitter/caller pair, hybrid RAG retrieval ladder, DB-stored plugin loader, filter inlet/outlet/stream pipeline, the chat-stream machinery (agentic tool loop, tag scanner, delta coalescing, cancellation), the access-grants ACL plane, the outbound provider-proxy plane, or the file→knowledge-collection ingest plane (upload → process → status → bind → ACL). Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval.
 
 ## Load the matching source dump
 - `references/config-store.md` — How does app config persist to DB while env-seeded defaults never override persisted values?
@@ -28,6 +28,12 @@ Use when porting open-webui's runtime-mutable config store, typed event bus, soc
 - `references/openai-completion-proxy.md` — How do you normalize one OpenAI-ish payload across vanilla, Azure (v1 + legacy deployment), and Responses dialects in a single entry point?
 - `references/proxy-auth-header-ladder.md` — How do you send credentials upstream (bearer/session/OAuth/Entra) without leaking your own transport headers back to clients?
 - `references/ollama-model-aggregation.md` — How do you fan out a model census across N backends so failures and disabled entries never corrupt per-index post-processing?
+- `references/upload-process-status-pipeline.md` — How does a browser upload become processed content with live SSE progress, and why must client-supplied linkage metadata be re-gated server-side?
+- `references/process-file-ingest-ladder.md` — How does one endpoint turn a stored file into embedded chunks without holding DB connections across slow embedding calls?
+- `references/save-docs-vector-db-kernel.md` — What makes landing chunks into a vector collection safe: hash dedup scoped by file, splitter validation, embedding_config stamping, overwrite/add lifecycle?
+- `references/knowledge-file-binding-lifecycle.md` — In what order do embed, bind-row, and destructive cleanup run when attaching, refreshing, or removing a file from a shared collection?
+- `references/kb-metadata-embedding-maintenance.md` — How do you upsert fail-soft self-description embeddings into one fixed catalog collection without exhausting the pool during admin reindex?
+- `references/transitive-file-access-resolver.md` — How do you resolve read/write on a file that arrives transitively via collections/channels/chats/models without read access laundering into write?
 
 ## Capsule map
 - **Config store** — `config-store`: per-key dotted DB rows over a DEFAULTS dict; seeding is insert-if-absent so DB wins after first boot; oauth.* stays ephemeral unless explicitly enabled.
@@ -42,6 +48,19 @@ Use when porting open-webui's runtime-mutable config store, typed event bus, soc
 - **Cancellation ladder** — `cancellation-ladder`: shielded body_iterator.aclose() -> shielded done+output persist (touch=False under realtime save) -> unconditional re-raise.
 - **Builtin authz gates** — `builtin-authz-gates`: five-factor mirror gate documented at the legacy XML-tag entrance; internal callers get narrower tool surfaces; spec-level param stripping.
 - **Access grants ACL** — `access-grants-acl`: three-arm limit(1) existence check, correlated-EXISTS list filter with owner arm, delete-all-then-insert bridge, anyone-capped-at-read normalization, NULL-semantics-aware boot backfill.
+- **Shared session pool** — `shared-session-pool`: one lazily-created module-global ClientSession; streaming adds only a sock_read idle cap; `cleanup_response` closes only responses (version-tolerant); `stream_wrapper` try/finally cleanup; passthrough vs NDJSON line modes.
+- **Provider timeout ladder** — `provider-timeout-ladder`: unset ⇒ None = unlimited (not a default); garbage ⇒ safe fallbacks; stream idle cap separate from total; per-purpose overrides with legacy env-name fallbacks.
+- **Ollama send-request ladder** — `ollama-send-request-ladder`: header precedence base→forwarded→custom-LAST; upstream errors parsed/published/re-raised status-preserving on both JSON-decode arms; streaming flips response ownership to StreamingResponse.
+- **Provider backend resolution** — `provider-backend-resolution`: caller url_idx validated against the model's backend allow-list (admin/bypass exempt); random.choice load-balancing; str(idx)-then-base-url config/key fallback; refetch-on-cache-miss before NOT_FOUND.
+- **OpenAI completion proxy** — `openai-completion-proxy`: ordered normalization ladder across vanilla/Azure-v1/deployment/Responses dialects; request.state-only bypass flags; SSE-error-as-JSON gate.
+- **Proxy auth header ladder** — `proxy-auth-header-ladder`: auth_type ladder bearer/session/system_oauth/azure_ad; HS256 user-info JWT mint with plain-header fallback; hop-by-hop response headers stripped (aiohttp#4462); custom headers applied LAST.
+- **Ollama model aggregation** — `ollama-model-aggregation`: gather over per-backend futures with no-op sleep(0) placeholders keeping index alignment for disabled backends; failed_idxs skip-list; prefix_id/tags/connection stamping.
+- **Upload-process-status pipeline** — `upload-process-status-pipeline`: dict-vs-model response encodes processing mode; post-storage size cap with compensating blob delete; ENAMETOOLONG rename retry; fresh-session-per-second SSE status ladder; server-side CWE-862/863 re-gate of client-supplied knowledge auto-link.
+- **File ingest ladder** — `process-file-ingest-ladder`: three content arms (form-content / knowledge copy-reuse / loader); commit-before-embed + fresh-session completion writes; failure = failed-status + hash-clear pairing so retries pass the dedup gate.
+- **Vector-DB landing kernel** — `save-docs-vector-db-kernel`: hash-dedup scoped by file_id; splitter validation order; sanitize + embedding_config stamping per row; overwrite/silent-no-op/append collection lifecycle; main-loop embed bridge with timeout.
+- **Knowledge binding lifecycle** — `knowledge-file-binding-lifecycle`: dual gate (KB-write ∧ file-read); embed-then-bind on add; has_file-validate-then-mutate on update; unbind-then-purge with ownership-gated destructive cleanup on remove.
+- **KB metadata embeddings** — `kb-metadata-embedding-maintenance`: fixed 'knowledge-bases' catalog; stable-id upsert; fail-soft bool returns; session-free admin reindex with counted partial success.
+- **Transitive file ACL** — `transitive-file-access-resolver`: five containment arms; write/delete conferred ONLY when the containing object's owner owns the file (CWE-863 rule); batched existence checks; group-set threading.
 
 ## Extending the foundation
 Add one `references/<seam>.md` capsule for one graph-selected, source-confirmed porting question. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf.
@@ -53,4 +72,4 @@ open-webui ("Open WebUI License" — BSD-3-Clause base plus branding condition; 
 Revalidate `open-webui` before porting: run `index_status`, `check_index_coverage`, `search_graph`, `trace_path`, and `get_code_snippet`. Record the graph root, branch, commit, mode, node/edge counts, freshness, and any coverage caveats; source and direct tests decide shipped claims.
 
 ## Boundaries
-Adopt pure contracts (config precedence algebra, sink dispatch loop, retrieval result shape, module-exec hygiene, param filtering); adapt host-specific integration (SQLAlchemy models, socket.io rooms, LangChain retrievers, FastAPI state); omit product behavior (branding/license terms, specific provider routers, Svelte frontend).
+Adopt pure contracts (config precedence algebra, sink dispatch loop, retrieval result shape, module-exec hygiene, param filtering); adapt host-specific integration (SQLAlchemy models, socket.io rooms, LangChain retrievers, FastAPI state); omit product behavior (branding/license terms, product UI chrome beyond the mined client planes).

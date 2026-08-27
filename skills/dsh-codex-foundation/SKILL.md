@@ -1,6 +1,6 @@
 ---
 name: dsh-codex-foundation
-description: "Use when porting ChatGPT-OAuth Codex provider machinery — provider-native auth adapters, single-flight browser login, cancellation and status recovery, exact-origin Web OAuth routes, CLI device-code selection, bounded Fast Mode state, quota parsing, credential persistence, search, image tools, Responses API policy, model-catalog settings, exact-origin trust persistence, SSRF-guarded public HTTP loading, provider service facades, durable search-request session events, boot-free CLI JSON diagnostics, replay-state migration, terminal /codex command internals (background login controller, headless-aware browser launch, bilingual completion tree, redaction-bounded handler), the client UI plane (slot-injected browser entry, settings OAuth lifecycle, fail-soft quota projection, session fast-mode toggle, imagegen tool view), the binary publication plane (sandbox-checked local byte writes, atomic temp-file publish under per-path promise locks), server-side settings/Fast-Mode route gates over one bounded-body kernel,…"
+description: "Use when porting ChatGPT-OAuth Codex provider machinery — provider-native auth adapters, single-flight browser login, cancellation and status recovery, exact-origin Web OAuth routes, CLI device-code selection, bounded Fast Mode state, quota parsing, search, image tools, Responses API policy, model-catalog settings, SSRF-guarded public HTTP loading, durable search-request session events, boot-free CLI JSON diagnostics, terminal /codex command internals (background login controller, headless-aware browser launch, redaction-bounded handler), client UI plane (slot-injected browser entry, settings OAuth lifecycle, fail-soft quota projection, fast-mode toggle, imagegen tool view), binary publication plane (sandbox-checked byte writes, atomic temp-file publish under per-path promise locks), server-side settings/Fast-Mode route gates over one bounded-body kernel, OAuth-bearer/factory/catalog adapter assembly, search config-overlay defaults, version-injection/composition-patch/release-provenance build plumbing."
 ---
 # dsh-codex: OpenAI Codex Subscription Provider Foundation
 
@@ -20,6 +20,7 @@ Use when building a ChatGPT-subscription-backed LLM provider adapter: provider-n
 - `references/usage-quota-parsing.md` — one porting question: secret-free projection of a provider quota/usage response with fail-closed numeric validation and fixed reauthorization error.
 - `references/credential-store.md` — one porting question: owner-only file-backed OAuth persistence with strict validation, cross-instance write serialization, and detached copies.
 - `references/search-provider.md` — one porting question: fixed-endpoint OAuth search with secret-free record-before-dispatch, abortable auth, JWT-derived account id, and citeable source normalization.
+- `references/search-config-overlay.md` — one porting question: two-layer defaulting of standalone-search knobs from one constant source with parse-time vocabulary validation.
 - `references/tool-policy.md` — one porting question: live settings-backed image/Responses/model-catalog policy with migration and cross-provider execution gates.
 - `references/image-client.md` — one porting question: generation/edit endpoint selection, OAuth/account headers, cancellation, and fail-closed image-response decoding.
 - `references/imagegen-workspace-refs.md` — one porting question: bounded, content-classified workspace paths converted to ordered provider data URLs.
@@ -41,6 +42,9 @@ Use when building a ChatGPT-subscription-backed LLM provider adapter: provider-n
 - `references/search-event-ledger.md` — one porting question: registering a plugin-owned secret-free session event in a guarded host vocabulary and appending the exact request strictly before dispatch.
 - `references/cli-doctor-json.md` — one porting question: versioned single-line doctor/status JSON documents that structurally omit secrets, strict flag matrices, and exit codes encoding actionable failure.
 - `references/adapter-replay-models.md` — one porting question: read-time identity-preserving replay-state lifting, advertise-versus-resolve model visibility splitting, and a bounded extended retry policy for proxy-blip-prone traffic.
+- `references/oauth-bearer-provider-auth.md` — one porting question: projecting a subscription OAuth token into the generic adapter's apiKey slot with zero environment discovery and fail-the-request-on-empty semantics.
+- `references/single-profile-adapter-factory.md` — one porting question: assembling one provider profile through layered wrappers and late-bound closures without forking the generic adapter.
+- `references/detached-model-catalog-projection.md` — one porting question: exposing the full provider catalog as fresh minimal copies that policy, settings, and UI can never mutate through.
 - `references/client-slot-injection.md` — one porting question: a browser plugin entry that mounts settings/tool-view/composer surfaces into host slots with injectable dependencies and effect-owned resource reclamation.
 - `references/settings-account-lifecycle.md` — one porting question: a seven-state OAuth account page with popup-before-await sign-in, state-specific poll intervals, and named untrusted-origin remediation.
 - `references/client-json-request.md` — one porting question: one same-origin JSON route client with conditional serialization, server-message-first errors, and a single typed error.
@@ -57,9 +61,12 @@ Use when building a ChatGPT-subscription-backed LLM provider adapter: provider-n
 - `references/plugin-assembly-order.md` — one porting question: conflict-assert-before-register wiring with an ascending inject ladder and closure-based late binding of request-time state.
 - `references/noop-invariant-companion.md` — one porting question: registering an explicit empty invariant installer whose comment names which owning operation validates each risk.
 - `references/settings-route-gates.md` — one porting question: browser-writable Fast Mode and preference-patch routes failing closed through one bounded-body kernel with exact-shape validators and secret-free refusals.
+- `references/version-injection-bridge.md` — one porting question: embedding the package version at runtime through an ambient-declare bridge defined identically by every build/test surface from one package.json read.
+- `references/profile-composition-patch.md` — one porting question: shipping composition defaults as repo-owned patch rows that saved user settings override, with a dependency-scoped optional terminal door.
+- `references/release-provenance-gate.md` — one porting question: gating npm releases on tag-version parity before install and publishing keylessly via OIDC provenance.
 
 ## Capsule map
-### OAuth and Web route control plane
+**OAuth and Web route control plane**
 - **Provider auth adapter** — `auth-provider-adapter`: bind one provider-native OAuth flow to one credential store and expose only authenticated/expiry status.
 - **Browser challenge lifecycle** — `web-auth-challenge`: single-flight login, HTTPS-only challenge validation, waiter fan-out, and timeout settlement.
 - **Cancellation and teardown** — `web-auth-cancellation`: abort, reject waiters, await quiescence, then delete on sign-out while preserving credentials on disposal.
@@ -69,15 +76,19 @@ Use when building a ChatGPT-subscription-backed LLM provider adapter: provider-n
 - **Auth route contract** — `auth-route-contract`: exact paths/methods, authorize-before-side-effect JSON handlers, and effect-owned cleanup.
 - **CLI auth modes** — `cli-auth-device-code`: browser/device-code prompt selection, event rendering, option rejection, and signal-safe cleanup.
 
-### Provider state and transport
+**Provider state and transport**
 - **Per-session state** — `fast-mode-registry`: positive-only `Map<string, true>` with validated opaque session ids, bounded capacity, LRU eviction with touch-on-read retention, and a provider decorator that injects `service_tier: 'priority'` by merge without clobbering an existing `onPayload` replacement.
 - **Quota/usage parsing** — `usage-quota-parsing`: fail-closed `parseOpenAICodexUsage` projecting rate-limit buckets, credits, and spend-control into a secret-free object, plus a fixed reauth error.
 - **Owner-only credential store** — `credential-store`: strict versioned document validation, POSIX mode gate, file-lock-serialized atomic writes, detached reads, and foreign-provider refusal.
 - **Standalone web-search provider** — `search-provider`: fixed endpoint, JWT-derived account id, secret-free request record before dispatch, abortable auth, and deduplicated citeable sources.
+- **Search config overlay** — `search-config-overlay`: schema-default plus `??`-ladder defaulting of model/mode/context/budget from one constant source with closed vocabularies validated at parse time.
 - **Live settings-backed policy** — `tool-policy`: detached live projections, Responses migration, provider-ordered model intersection, watcher discipline, and execution-time cross-provider imagegen gate.
 - **Adapter assembly policy** — `adapter-replay-models`: read-time identity-preserving legacy replay-state lift inside `stream`, `listModels` advertisement filter that leaves hidden models resolvable, and a bounded 5-attempt/1s–30s retry policy sized for proxy blips.
+- **OAuth bearer auth plane** — `oauth-bearer-provider-auth`: decorate-then-override resolver projecting the subscription token into apiKey shape, never discovering environment credentials, failing the request on empty.
+- **Single-profile factory** — `single-profile-adapter-factory`: one-entry profiles map layering transport wrap → OAuth/fast-mode decoration → vendored provider through three zero-arg closures; two token paths over one store.
+- **Detached catalog projection** — `detached-model-catalog-projection`: call-fresh `{id,name}`-only catalog copies seeding policy intersection and settings snapshots while advertisement narrows independently.
 
-### Image tooling plane
+**Image tooling plane**
 - **Codex image client** — `image-client`: signal-first generation/edit endpoint selection, OAuth/account headers, bounded provider diagnostics, and base64 image decoding.
 - **Workspace image references** — `imagegen-workspace-refs`: active-cwd resolution, regular-file/byte/media gates, attachment validation, observation, and ordered data URLs.
 - **Conversation image references** — `imagegen-conversation-refs`: recursive attachment flattening, newest-suffix selection, exact cardinality, and store-mediated reads.
@@ -86,7 +97,7 @@ Use when building a ChatGPT-subscription-backed LLM provider adapter: provider-n
 - **HTTP read_image enhancement** — `read-image-http-input`: exact-one-source dispatch, local delegation, public HTTP byte/media gates, and attachment projection.
 - **Read-image shadow lifecycle** — `read-image-sync-lifecycle`: identity-keyed per-agent registration, event resynchronization, re-entrancy suppression, and effect cleanup.
 
-### Responses runtime and diagnostics plane
+**Responses runtime and diagnostics plane**
 - **Transport choice** — `responses-transport-choice`: per-call preference read picks `websocket-cached` or `sse`; refcounted purpose marks force plain SSE for housekeeping streams without retaining plugin continuation state.
 - **Compaction marker codec** — `compaction-marker-codec`: validate-on-write/read versioned tags frame opaque native output as assistant text and expand back through whole-message replacement.
 - **Compaction SSE parse** — `compaction-sse-parse`: boundary-safe buffering splitter collecting exactly one compaction item behind a required terminal event with bounded failure details.
@@ -96,13 +107,13 @@ Use when building a ChatGPT-subscription-backed LLM provider adapter: provider-n
 - **Doctor diagnostics** — `doctor-diagnostics`: five-state lstat credential ladder, embedded-secret report discipline, fail-before-registry conflict assert, advisory-only hints.
 - **Compatibility contract** — `compatibility-contract`: exact-equality package checks, incompatible>unknown>compatible aggregation, strict node range parsing, injectable version-reader seam, depth-bounded manifest walk.
 
-### Service facade, public network, event ledger, and CLI planes
+**Service facade, public network, event ledger, and CLI planes**
 - **Provider service facade** — `service-facade`: one credentials store + one live policy behind a typed context slot; pure delegation so optional front doors share state without host-default changes; quota reads never issue model requests.
 - **Public HTTP guard** — `public-http-guard`: every resolved address must be public, checked addresses are pinned into sockets, redirects re-resolve and re-validate up to five hops, and bodies obey declared plus streamed ceilings under a per-hop timeout.
 - **Search event ledger** — `search-event-ledger`: guarded registration of a plugin-owned session event into an extensible-only vocabulary, with record-before-dispatch appends to the initiating agent's session and no log outside agent turns.
 - **CLI doctor JSON** — `cli-doctor-json`: schemaVersion-stamped single-line documents, structural omission of credential paths/tokens, strict flag matrix, redacted stderr, exit codes for fatal states only.
 
-### Client UI plane
+**Client UI plane**
 - **Slot-injected browser entry** — `client-slot-injection`: one `name`/`inject`/`apply` triad registering four surfaces; per-session promise-cached object URLs revoked via paired effects; locale dictionaries type-checked for en/zh parity.
 - **Settings account lifecycle** — `settings-account-lifecycle`: closed seven-state account union, popup opened before the first await, 1 s signing-in / 60 s signed-in poll ladder, trust-origin remediation card with clipboard copy.
 - **Client JSON route client** — `client-json-request`: same-origin credentials, body-conditional content-type, lenient parse, `AccountRequestError` with server-message extraction; schema trust stays at consumers.
@@ -110,7 +121,7 @@ Use when building a ChatGPT-subscription-backed LLM provider adapter: provider-n
 - **Fast Mode session toggle** — `fast-mode-toggle-contract`: optimistic busy-ness only, server response authoritative, prior state restored on failure, controllerRef identity checks across GET/POST/unmount races.
 - **Imagegen tool view** — `imagegen-tool-view`: first-image-wins parsing, output_path/output_error marker scan, prompt-summary fallbacks, portal preview with Escape/focus restoration, saved-path openFile row.
 
-### Terminal command and binary publication planes
+**Terminal command and binary publication planes**
 - **TUI login controller** — `tui-login-controller`: single-flight background login whose fast challenge promise is settled by the first auth_url event; select prompts answered synchronously, others wait on abort only; logout cancels+drains+deletes while dispose cancels+drains and preserves credentials.
 - **Headless browser launch** — `tui-headless-browser-launch`: URL-parsed HTTPS refusal, fixed per-platform command table as argv elements, detached fire-and-forget spawn, linux DISPLAY/WAYLAND probe returning false so the caller embeds the manual-open URL.
 - **Command tree completion** — `tui-command-tree-completion`: independent commands/tuiCommandTrees injections, total canonical-path responder over three depths returning [] otherwise, structurally paired en/zh descriptions, openAICodexTui marker present only with a tree runtime.
@@ -118,11 +129,16 @@ Use when building a ChatGPT-subscription-backed LLM provider adapter: provider-n
 - **Local byte-write contract** — `binary-local-write-contract`: sandbox ladder (undefined→passthrough, missing policy fail-closed, read-only/danger modes, workspace-write fresh resolve + contains), intent gates inside the lock, lstat-preserved mode, create/update outcome from re-stat.
 - **Atomic publish + promise lock** — `binary-atomic-publish-lock`: pid+UUID exclusive temp in the destination directory, write/fsync/chmod/close, abort re-check before commit, link-vs-rename by intent with EEXIST→FS_NOT_OBSERVED, finally cleanup, self-cleaning tail-chained lock map.
 
-### Assembly, vision gate, and settings route planes
+**Assembly, vision gate, and settings route planes**
 - **Shared image vision gate** — `image-vision-gate`: header-config-first model-route resolution, fail-closed modality check (`undefined` modalities ≠ image-capable), signal-forwarded capability lookup, one error grammar for both consuming tools.
 - **Composite plugin assembly** — `plugin-assembly-order`: search-event vocabulary first, conflict assert before any registry mutation, provide-one-slot composition, ascending per-surface inject ladders, zero-arg closures keeping snapshots/attachments request-time fresh.
 - **No-op invariant companion** — `noop-invariant-companion`: second plugin entry registering an empty installer under the package id with the ownership rationale in source; separate build entry keeps the declaration independently loadable.
 - **Settings route gates** — `settings-route-gates`: 4096-byte declared+streamed body ceiling with running-total enforcement, strict digits-only content-length, exact-two-key toggle payloads, allow-listed patch validators naming rejected keys, RangeError→413 mapping, secret-free 403 bodies, disable-by-deletion.
+
+**Build, composition, and release plumbing planes**
+- **Version injection bridge** — `version-injection-bridge`: ambient declare bridged to an export, defined identically by tsdown ESM/CJS and vitest from one package.json read; any surface missing its define fails loudly at import.
+- **Profile composition patch** — `profile-composition-patch`: repo-owned patch rows defaulting agent model and search provider plus an insert block adding the bundle and an inject-scoped dormant terminal door; saved user settings still win.
+- **Release provenance gate** — `release-provenance-gate`: v*-tag workflow serializing releases under one concurrency group, checking tag↔package.json parity before install, publishing keylessly under contents:read + id-token:write only.
 
 ## Extending the foundation
 Add one `references/<seam>.md` capsule for one graph-selected, source-confirmed porting question against project `dsh-codex`. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf. Candidate seams for future passes live in the dsh-codex-work record next-pass targets.

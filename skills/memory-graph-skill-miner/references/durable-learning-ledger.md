@@ -1,8 +1,10 @@
 # Durable learning ledger for memory-graph-skill-miner
 
-This file is the DSH-local analogue of Hermes OpenViking llm-repo-learning. Keep it
-under the resolved inspiration root. It is a scheduling and resume index, not a
-replacement for source work records or foundation capsules.
+This reference documents the durable learning ledger — the host-neutral scheduling
+and resume index of the mining loop (the successor of Hermes' OpenViking
+llm-repo-learning resource). Keep it under the resolved inspiration root. It is a
+scheduling and resume index, not a replacement for source work records or foundation
+capsules.
 
 Canonical storage is `/mnt/hdd/utopia/inspo/.skill-mining-work/llm-repo-learning.md`;
 per-source records live under `/mnt/hdd/utopia/inspo/.skill-mining-work/<source-slug>/`.
@@ -18,6 +20,20 @@ Keep one row per mined source:
 |---|---|---|---|---:|---:|---:|---|---|---|
 | repo-slug | leaf-name | project-name | branch@commit | 0 | 0 | 0 | never | concrete paths or seams | unresolved items |
 
+## Status board
+
+The ledger carries a machine-readable `## Status board` section: one line per source
+with status `active` / `complete` / `blocked`. The scheduler picks the oldest `last
+pass` among `active` rows; `complete` rows are re-verified only (pin/counts/parity)
+and return [REPO-COMPLETE]; `blocked` rows stay parked until the blocker clears.
+
+- `complete` only when next-pass targets are empty AND the coverage matrix shows 0
+  uncited reusable seams (every omission recorded with a reason).
+- Any HEAD advance past the pin reopens a `complete` row to `active` with FULL
+  re-index + diff-first re-adjudication before new citations.
+- A lane updates its own board line in the same write as its row; it never rewrites
+  sibling lines.
+
 ## Update protocol
 
 1. Read the entire current ledger before selecting or updating a row.
@@ -31,7 +47,7 @@ Keep one row per mined source:
 
 ## Hermes-style batch contract
 
-For an autonomous Factory invocation, the work record must show this order:
+For an autonomous scheduled invocation (any host), the work record must show this order:
 
 1. **Learning note first:** mental model, architecture/boundaries, invariants,
    selected connected subsystem, prior covered/partial/uncited seams, and porter

@@ -1,6 +1,6 @@
 ---
 name: penpot-foundation
-description: "Portable document-model foundations from penpot's common library: change ledgers, lazy object maps, transform op logs, bounded undo."
+description: "Use when building or porting a collaborative visual editor's core data model: accumulating undoable edits against a large shape/document map, applying transforms as ordered op logs, persisting huge maps field-by-field, or keeping geometry math identical across two language runtimes (JVM/JS). Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
 ---
 # penpot: document-model foundations
 

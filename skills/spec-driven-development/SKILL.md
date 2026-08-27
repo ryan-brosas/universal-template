@@ -8,6 +8,13 @@ disable-model-invocation: true
 
 The gated exception, not the default. The default is codebase-driven-development: code is the ground truth, the session is the artifact, and 1-2 examples one-shot the work.
 
+## Core Principle
+
+The gated exception, not the default: **spec after code inspection.** Read the codebase
+and its foundations first; then a 200-word spec prevents a 2000-line rewrite. The spec
+is the contract — implementation matches the spec, not "what I imagined" — and tests
+derive from it.
+
 ## Gate: escalate here ONLY when
 
 - The run is expected to last 4-10 days or span multiple sessions.
@@ -85,6 +92,31 @@ No goal; no non-goals; no acceptance criteria; "make it good" (not specific); sp
 ## Anti-Patterns
 
 **Spec after code**; **spec before code**; **vague goal**; **no non-goals**; **no criteria**; **wishlist**; **no questions**; **verbal changes**; **drift**; **"I'll know it"**; **spec = the code**.
+
+## Verification
+
+- Each acceptance criterion has one or more tests derived from the spec; a requirement
+  without a test isn't a requirement.
+- The locked spec (goal, non-goals, acceptance criteria) is in the file, user-approved,
+  and versioned.
+- Spec changes are tracked as commit message lines, not verbal "btw".
+- Implementation matches the spec, not "what I imagined".
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill><name></skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>…</evidence>
+  <artifacts>…</artifacts>
+  <risks>…</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no reference files; the spec anatomy and workflow are fully specified in this file.
 
 ## Pi Fabric Boundaries
 

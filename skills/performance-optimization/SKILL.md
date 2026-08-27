@@ -7,6 +7,12 @@ disable-model-invocation: true
 
 # Performance Optimization
 
+## Core Principle
+
+**Measure first, change one thing at a time, and let the profile — not intuition — pick
+the target.** The slowest thing is usually not where you think; algorithmic wins beat
+micro-optimizations; and speed never justifies breaking correctness.
+
 ## Iron Laws
 
 <EXTREMELY-IMPORTANT>
@@ -80,3 +86,27 @@ No measurement; "I think this is slow" (no); no baseline; multiple changes at on
 ## Self-Quiz
 
 Did I define a number? Measure baseline? Make ONE change then re-measure? Target the trace's bottleneck? Preserve correctness? Regression test?
+
+## Verification
+
+- Re-measure after every single change and compare to the recorded baseline; keep or
+  revert on the number.
+- Confirm the target number (e.g. p99 < 200ms, LCP < 2.5s) is met, not "feels faster."
+- Confirm correctness is preserved: tests still pass and no behavior changed.
+- Add a regression test so the optimization cannot silently regress.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill><name></skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>…</evidence>
+  <artifacts>…</artifacts>
+  <risks>…</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no reference files; tools, targets, and bottlenecks are fully covered by the tables in this file.

@@ -1,14 +1,15 @@
 ---
 name: agentic-seo-skill-foundation
-description: "LLM-first SEO audit evidence-collector foundation plus GitHub repository-trust audit machinery"
+description: "Use when porting deterministic SEO/AEO/GEO audit machinery — SSRF-safe fetchers, robots/llms.txt evaluation, JSON-LD schema validation and generation, snippet-format scanning, E-E-A-T/freshness/citation content scoring, GSC decay/striking-distance tracking, AI-crawler policy matrices, authenticated GitHub repository-trust audits (provider fallback, rate-limit-aware retries, release/file-inventory scoring), the standalone-script runtime plane (non-raising fetch envelope, stdlib dotenv ladder, CLI output contract), or the orchestration pattern of an 88-script evidence layer under an LLM-first router."
 ---
 # Agentic-SEO-Skill: LLM-first SEO audit evidence-collector foundation
 
 ## Use this for
-Use when porting deterministic SEO/AEO/GEO audit machinery — SSRF-safe fetchers, robots/llms.txt evaluation, JSON-LD schema validation and generation, snippet-format scanning, E-E-A-T/freshness/citation content scoring, GSC decay/striking-distance tracking, AI-crawler policy matrices, authenticated GitHub repository-trust audits (provider fallback, rate-limit-aware retries, release/file-inventory scoring), or the orchestration pattern of an 88-script evidence layer under an LLM-first router. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval.
+Use when porting deterministic SEO/AEO/GEO audit machinery — SSRF-safe fetchers, robots/llms.txt evaluation, JSON-LD schema validation and generation, snippet-format scanning, E-E-A-T/freshness/citation content scoring, GSC decay/striking-distance tracking, AI-crawler policy matrices, authenticated GitHub repository-trust audits (provider fallback, rate-limit-aware retries, release/file-inventory scoring), the standalone-script runtime plane (non-raising fetch envelope, stdlib dotenv ladder, CLI output contract), or the orchestration pattern of an 88-script evidence layer under an LLM-first router. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval.
 
 ## Load the matching source dump
 - `references/safe-http-ssrf-guard.md` — hardened request primitive with per-hop redirect revalidation.
+- `references/seo-common-fetch-envelope.md` — `fetch_url` non-raising result dict over the SSRF-safe primitive; 38 call sites.
 - `references/dual-parser-html-kernel.md` — canonical page dict every collector agrees on.
 - `references/robots-longest-match.md` — allow/disallow evaluator with allow-wins tiebreak.
 - `references/finding-verifier-dedupe.md` — severity-ranked dedupe + counter-evidence suppression gate.
@@ -24,6 +25,8 @@ Use when porting deterministic SEO/AEO/GEO audit machinery — SSRF-safe fetcher
 - `references/decay-striking-distance.md` — median-split rank tracker from GSC CSVs.
 - `references/report-weighted-aggregation.md` — None-excluding weighted composite score.
 - `references/skill-orchestration-contract.md` — scripts-as-evidence pipeline doctrine + CI inventory gates.
+- `references/env-loader-dotenv-ladder.md` — `load_env`/`get_env` stdlib-only cwd→SKILL_DIR→home .env ladder; real env always wins.
+- `references/seo-common-cli-contract.md` — `issue()` 4-key finding row, `print_json_or_text` dict+lines duality, exit(1) dep guards.
 - `references/github-fetch-provider-ladder.md` — unified REST/gh-CLI accessor with auth-shaped attempt ordering.
 - `references/rest-json-retry-ratelimit-ladder.md` — 429/5xx backoff vs rate-reset wait; response envelope.
 - `references/gh-auth-exit-zero-trap.md` — text-parsed `gh auth status`; token→env→dotenv ladder; mode trichotomy.
@@ -31,9 +34,12 @@ Use when porting deterministic SEO/AEO/GEO audit machinery — SSRF-safe fetcher
 - `references/repo-audit-finding-contract.md` — confidence-carrying findings envelope + severity-weighted score.
 - `references/release-seo-local-fallback.md` — releases→git-tags degradation with per-row provenance markers.
 - `references/repo-file-inventory-scoring.md` — five-section trust inventory with warning-only score penalty.
+- `references/title-strategy-keyword-seeding.md` — `analyze_title_strategy` name→topics→description seed order with forced-"seo" slug promotion.
+- `references/topic-suggester-canonical-scoring.md` — `suggest_topics` phrase-table + word-floor + competitor scoring with limitations degradation.
 
 ## Capsule map
 - **Transport kernel** — `safe-http-ssrf-guard`: per-hop SSRF revalidation; forced TLS; byte cap; 303 downgrade.
+- **Transport kernel** — `seo-common-fetch-envelope`: `fetch_url` sentinel-initialized result dict, single `error` string, lowercased headers, redirect chain, HEAD body skip; `load_html` URL-vs-file heuristic.
 - **Parsing kernel** — `dual-parser-html-kernel`: one canonical page dict; invalid-JSON sentinels; decompose-before-text.
 - **Crawl policy** — `robots-longest-match`: longest pattern wins, equal length ⇒ allow; empty-disallow skip.
 - **Report gate** — `finding-verifier-dedupe`: suppress-on-counter-evidence before dedupe; stronger severity wins merges.
@@ -49,6 +55,8 @@ Use when porting deterministic SEO/AEO/GEO audit machinery — SSRF-safe fetcher
 - **Rank tracking** — `decay-striking-distance`: median-split periods; weighted avg position window [4,20]; cap 200.
 - **Scoring core** — `report-weighted-aggregation`: hreflang None = exclusion not zero; weight denominator renormalizes.
 - **Orchestration** — `skill-orchestration-contract`: bounded retries, artifact-first deliverables, CI-counted inventory.
+- **Script runtime** — `env-loader-dotenv-ladder`: `load_env`/`get_env` cwd→SKILL_DIR→home .env order; per-key live-env no-overwrite makes real env + earlier file win; idempotent flag; multi-name fallback.
+- **Script runtime** — `seo-common-cli-contract`: `issue()` `{severity,message,url,evidence}` row; `print_json_or_text` insertion-order JSON vs text lines; None-sentinel optional imports + exit(1) pip-hint guards.
 - **Repo intelligence** — `github-fetch-provider-ladder`: auth-shaped attempt order [api(token)→gh→api(public)]; labeled error merge on total failure.
 - **Repo intelligence** — `rest-json-retry-ratelimit-ladder`: 429/5xx capped exp backoff; 403+`Remaining:0` waits until `X-RateLimit-Reset`; `{data,status,rate_limit}` envelope.
 - **Repo intelligence** — `gh-auth-exit-zero-trap`: exit 0 ≠ valid token — parse stdout+stderr for success phrase minus three failure phrases; cached module-global.
@@ -56,15 +64,17 @@ Use when porting deterministic SEO/AEO/GEO audit machinery — SSRF-safe fetcher
 - **Repo intelligence** — `repo-audit-finding-contract`: Confirmed→Likely downgrade when endpoints fail; origin-gated local checks; score `100−20C−8W`; Pass sentinel scores zero.
 - **Repo intelligence** — `release-seo-local-fallback`: releases→`git for-each-ref` tags fallback; per-row `source` marker; additive penalties −20/−15/−10.
 - **Repo intelligence** — `repo-file-inventory-scoring`: five CHECKS sections; presence-ratio×100 minus 2×warnings (errors never double-counted); install-CTA heuristic.
+- **Repo intelligence** — `title-strategy-keyword-seeding`: `analyze_title_strategy` name→topics→desc-top15 seed order, first-occurrence dedupe; "seo" force-promoted to slug slot 0; acronym display map; title drops only for/and/the, cap 7 tokens.
+- **Repo intelligence** — `topic-suggester-canonical-scoring`: `suggest_topics` phrase hits ×(20+12·extra words); raw-word +1 floor; competitor topics ×5; every failed source → `limitations`, never an exception.
 
 ## Extending the foundation
 Add one `references/<seam>.md` capsule for one graph-selected, source-confirmed porting question. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf.
 
 ## Provenance
-Agentic-SEO-Skill (MIT, pyproject `license = {text = "MIT"}`), `main@69199160e18372bc5cdf9ddec20ccb9fb1b509f1`; Codebase Memory project `aeo-agentic-seo-skill` (2,283 nodes / 7,604 edges, FULL mode, ready @ same pin, head=base zero drift, generation 2026-08-25T08:35:20Z generation_matches; parse_partial ×1 = install.ps1 only, none cited). The pre-existing leaf's 16 references were authored under the since-deleted project name `ext-aeo-agentic-seo-skill` (same HEAD; edge delta 7430→7604 is indexer-version drift) — all pass-2 capsules cite the live project name. Gate-5 real runner: upstream pytest suite 34/34 GREEN at pin (`PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q -p no:cacheprovider`, clean tree); pass 1 probe battery 80/80 deterministic assertions green; pass 2 added the repo-auditee plane (7 capsule-v2 refs below, all Retrieves executed live on the graph; family subset tests/test_link_and_github_depth_scripts.py 4/4).
+Agentic-SEO-Skill (MIT, pyproject `license = {text = "MIT"}`), `main@69199160e18372bc5cdf9ddec20ccb9fb1b509f1`; Codebase Memory project `aeo-agentic-seo-skill` (2,283 nodes / 7,604 edges, FULL mode, ready @ same pin, head=base zero drift, generation 2026-08-25T08:35:20Z generation_matches; parse_partial ×1 = install.ps1 only, none cited). The pre-existing leaf's 16 references were authored under the since-deleted project name `ext-aeo-agentic-seo-skill` (same HEAD; edge delta 7430→7604 is indexer-version drift) — all pass-2 capsules cite the live project name. Gate-5 real runner: upstream pytest suite 34/34 GREEN at pin (`PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q -p no:cacheprovider`, clean tree); pass 1 probe battery 80/80 deterministic assertions green; pass 2 added the repo-auditee plane (7 capsule-v2 refs below, all Retrieves executed live on the graph; family subset tests/test_link_and_github_depth_scripts.py 4/4); pass 3 added the standalone-script runtime plane (5 capsule-v2 refs: seo-common-fetch-envelope, seo-common-cli-contract, env-loader-dotenv-ladder, title-strategy-keyword-seeding, topic-suggester-canonical-scoring) — Codebase Memory MCP was absent in that session, so pass-3 seams were selected and confirmed by direct source+test reads at the same pin (their Retrieve calls are marked not-executed; revalidate on the graph before relying on them).
 
 ## Full view (memory graph)
 Revalidate `aeo-agentic-seo-skill` before porting: run `index_status`, `check_index_coverage`, `search_graph`, `trace_path`, and `get_code_snippet`. Record the graph root, branch, commit, mode, node/edge counts, freshness, and any coverage caveats; source and direct tests decide shipped claims.
 
 ## Boundaries
-Adopt pure scoring/evaluation contracts (scorers, evaluators, verifiers are dependency-light and directly portable); adapt network-touching collectors to host HTTP policy and the SKILL.md prose doctrine to your agent runtime's conventions; omit IDE installer matrix (`install.sh`/`install.ps1`), report HTML rendering (`github_seo_report.py`, `generate_report.py` — separate seam), and dated-fact constants as-is without re-verifying against current search-engine reality at port time. The GitHub repo-auditee family is mined as of pass 2; `analyze_title_strategy` (github_repo_audit :136-192), `seo_common.py` remainder, `env_loader.py`, and the sibling consumers (`github_community_health`, `github_readme_lint`, `github_weekly_scorecard`, …) remain uncited seams for later passes.
+Adopt pure scoring/evaluation contracts (scorers, evaluators, verifiers are dependency-light and directly portable); adapt network-touching collectors to host HTTP policy and the SKILL.md prose doctrine to your agent runtime's conventions; omit IDE installer matrix (`install.sh`/`install.ps1`), report HTML rendering (`github_seo_report.py`, `generate_report.py` — separate seam), and dated-fact constants as-is without re-verifying against current search-engine reality at port time. The GitHub repo-auditee family is mined as of pass 2; the standalone-script runtime plane (`env_loader.py`, `seo_common.py` fetch/output/guard helpers, `analyze_title_strategy`, `repo_topic_suggester`) is mined as of pass 3. Remaining uncited seams: the `seo_common.py` sitemap tail (`discover_sitemap_urls` :330-344, `parse_sitemap_xml` :347-381 — gzip-magic + namespace-local-tag handling), and the sibling consumers behind the shared client (`github_community_health`, `github_readme_lint`, `github_weekly_scorecard`, `repo_social_preview_checker`, `repo_docs_site_checker`, `github_traffic_archiver`, `github_search_benchmark`, `github_competitor_research`).

@@ -26,7 +26,7 @@ yield "source", self.source
 
 **Flow:** every retrieved snippet gets exactly one type (first matching category wins, dict order matters) → later funnel stages look up that type in four parallel tuning dicts: percentile floor (.15 source vs .3 others), absolute score floor (0.0 source, .2 docs), result count (30/15/5), and rerank budget (50 source … 10 tools/deps) — so cheap heuristics decide how much reranker spend each category earns.
 **Invariant:** Junk is excluded STRUCTURALLY by `__iter__` never yielding it, not by deletion. Consequence: the guard at `multi_prep_snippets:337–338` (`if "junk" in separated_snippets: override_list("junk", [])`) is dead code — `"junk" in obj` falls back to iteration-comparison against `(name, list)` tuples and can never be True. A port that "fixes" this by yielding junk would start feeding lockfiles/node_modules to the LLM.
-**Probe:** No offline unit test covers the separation (coverage caveat). Deterministic probes at pin: `grep -c 'yield "' sweepai/dataclasses/separatedsnippets.py` → 5 (six lists, five yields); `grep -c '"junk"' sweepai/utils/ticket_utils.py` → 2 (dead guard only).
+**Probe:** No offline unit test covers the separation (coverage caveat). Deterministic probes at pin: `grep -c 'yield "' sweepai/dataclasses/separatedsnippets.py` → 6 (five live yields + the commented-out junk yield); `grep -c '"junk"' sweepai/utils/ticket_utils.py` → 3 (taxonomy key + dead guard ×2).
 
 ## Get live surrounding code
 **Retrieve:**

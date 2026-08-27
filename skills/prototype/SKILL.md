@@ -9,6 +9,32 @@ disable-model-invocation: true
 
 A prototype is **throwaway code that answers a question**. The question decides the shape.
 
+## Core Principle
+
+The question being answered decides the shape of the prototype. It is throwaway from day
+one and clearly marked as such; one command to run; no persistence by default; skip the
+polish; surface the state after every action or variant switch; and delete or absorb it
+when done. The _answer_ is the only thing worth keeping.
+
+## When to Use / NOT
+
+- **Use when:** the user wants to prototype, sanity-check a data model or state machine,
+  mock up a UI, explore design options, or says "prototype this", "let me play with it",
+  "try a few designs".
+- **NOT when:** the work is production code with real requirements — a prototype is
+  throwaway by definition: no tests, no error handling beyond what makes it runnable,
+  no abstractions.
+
+## Workflow
+
+1. Pick a branch: identify which question is being answered — logic/state model →
+   `LOGIC.md`; look/feel → `UI.md`. If genuinely ambiguous and the user isn't reachable,
+   default to the branch matching the surrounding code and state the assumption.
+2. Build per the branch doc under the shared rules below.
+3. Let the user play with it until the question is answered.
+4. When done: capture the answer somewhere durable, then delete the prototype or fold
+   the validated decision into the real code.
+
 ## Pick a branch
 
 Identify which question is being answered — from the user's prompt, the surrounding code, or by asking if the user is around:
@@ -30,3 +56,39 @@ The two branches produce very different artifacts — getting this wrong wastes 
 ## When done
 
 The _answer_ is the only thing worth keeping from a prototype. Capture it somewhere durable (commit message, ADR, issue, or a `NOTES.md` next to the prototype) along with the question it was answering. If the user is around, that capture is a quick conversation; if not, leave the placeholder so they (or you, on the next pass) can fill in the verdict before deleting the prototype.
+
+## Red Flags
+
+- Picking the wrong branch — the two branches produce very different artifacts; getting
+  this wrong wastes the whole prototype.
+- Naming the prototype so a casual reader mistakes it for production.
+- Adding persistence, tests, error handling, or abstractions the prototype doesn't need
+  to run.
+- Inventing a new top-level routing structure for throwaway UI routes.
+- Leaving the prototype rotting in the repo after its question is answered.
+
+## Verification
+
+- The prototype starts with one command using the project's existing task runner,
+  without thinking.
+- After every action (logic) or on every variant switch (UI), the full relevant state is
+  printed or rendered, so the user can see what changed.
+- The answer to the question is captured somewhere durable (commit message, ADR, issue,
+  or `NOTES.md`) before the prototype is deleted or absorbed.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill><name></skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>…</evidence>
+  <artifacts>…</artifacts>
+  <risks>…</risks>
+</skill_result>
+```
+
+## References
+
+- [LOGIC.md](LOGIC.md) — logic/state-machine branch: a tiny interactive terminal app that pushes the state machine through cases hard to reason about on paper.
+- [UI.md](UI.md) — UI branch: several radically different UI variations on a single route, switchable via a URL search param and a floating bottom bar.

@@ -6,7 +6,7 @@
 ## Shared outcome core + asymmetric family keys
 **Path/Symbol:** `core/public-methods/models/actions/ActionResult/guards.js` — `commonProperties` (9–17), `isIActionResult` (18–20), `isIOrganizationsActionResult` (21–25).
 **Signature:** `isIActionResult(data): boolean`; `isIOrganizationsActionResult(data): boolean`.
-**Data Shape:** dbItem (`id>0`) ∧ 7 common properties (`actionVersionId, actionIterationId, liAccountId, result, createdAt, flags, targetPlatform`). People adds `personId, messages`; Organizations adds `organizationId` and forbids `invitedPlatform, messagedPlatform`.
+**Data Shape:** dbItem (`id>0`) ∧ 7 common properties (`actionVersionId, actionIterationId, liAccountId, result, createdAt, flags, targetPlatform`), where `result` is an `ActionResultStatus` code — a SIGNED value domain, see section below. People adds `personId, messages`; Organizations adds `organizationId` and forbids `invitedPlatform, messagedPlatform`.
 
 ### Decisive source
 ```js
@@ -27,6 +27,29 @@ function isIOrganizationsActionResult(data) {
 node -e "const g=require('/mnt/hdd/utopia/inspo/lh-basis/core/public-methods/models/actions/ActionResult/guards.js');const core=['actionVersionId','actionIterationId','liAccountId','result','createdAt','flags','targetPlatform'].reduce((o,k)=>(o[k]=1,o),{id:3});const pr={...core,personId:11,messages:[]};const or_={...core,organizationId:5};const bad={...or_,invitedPlatform:'linkedin'};console.log(g.isIActionResult(pr),g.isIOrganizationsActionResult(pr),g.isIOrganizationsActionResult(or_),g.isIOrganizationsActionResult(bad))"
 ```
 → expect `true false true false` (org result with organizationId passes; adding invitedPlatform breaks it; people-shaped object fails the org guard via missing organizationId).
+
+## The signed value domain of `result`
+**Path/Symbol:** `core/public-methods/models/actions/ActionResult/enums.js` — `ActionResultStatus` (6–14).
+**Signature:** reverse-keyed TS enum: `Skipped=-3, Excluded=-2, Failed=-1, Successful=1, Replied=2, PendingReview=3`.
+**Data Shape:** six statuses on a signed axis with **no zero**.
+
+### Decisive source
+```js
+ActionResultStatus[ActionResultStatus["Skipped"] = -3] = "Skipped";
+ActionResultStatus[ActionResultStatus["Excluded"] = -2] = "Excluded";
+ActionResultStatus[ActionResultStatus["Failed"] = -1] = "Failed";
+ActionResultStatus[ActionResultStatus["Successful"] = 1] = "Successful";
+ActionResultStatus[ActionResultStatus["Replied"] = 2] = "Replied";
+ActionResultStatus[ActionResultStatus["PendingReview"] = 3] = "PendingReview";
+```
+
+**Invariant:** sign carries semantics. Negatives are NON-OUTCOME dispositions (skipped / excluded / failed); positives are real outcomes; zero is not a status at all. Consequences a porter must honor: truthiness on raw codes never classifies anything (`Failed = -1` is truthy), and `result > 0` is the correct outcome filter. This repeats a kernel-wide convention — `ActionTargetState.Removed = -1` (source-scoped-domain-enums) uses negative-means-not-an-outcome too.
+
+**Probe (executed pass 14):**
+```bash
+node -e "const E=require('/mnt/hdd/utopia/inspo/lh-basis/core/public-methods/models/actions/ActionResult/enums.js').ActionResultStatus;console.log(Object.values(E).filter(v=>typeof v==='number').sort((a,b)=>a-b).join(' '),E.Successful>0,E.Failed>0)"
+```
+→ observed `-3 -2 -1 1 2 3 true false` (numeric domain exact, no zero; sign filter separates outcomes from dispositions).
 
 ## Get live surrounding code
 **Retrieve:**

@@ -1,6 +1,6 @@
 ---
 name: rsbuild-foundation
-description: "Rsbuild bundler-framework kernel + built-in plugin suite + create-rsbuild scaffolder plane: instance assembly, plugin ordering, hook engine, config pipeline, CSS/asset/entry/target planes, chunk splitting, dev server + HMR socket protocol, HTML/manifest/resource-hint pipelines, stack symbolication, SSR bundle runner, template wiring + textual config-rewrite kernel, generic transform-loader registry, query-gated web workers w/ inline child-compiler builds, native-addon/WASM asset handling, env-gated diagnostics (progress/Rsdoctor/profile tracing), and the shadow-DOM browser error overlay plane."
+description: "Use when porting Rsbuild's bundler-framework kernel + built-in plugin suite + create-rsbuild scaffolder plane — instance assembly, plugin ordering, hook engine, config pipeline, CSS/asset/entry/target planes, chunk splitting, dev server + HMR socket protocol, HTML/manifest/resource-hint pipelines, stack symbolication, SSR bundle runner, template wiring + textual config-rewrite kernel, generic transform-loader registry, query-gated web workers w/ inline child-compiler builds, native-addon/WASM asset handling, env-gated diagnostics (progress/Rsdoctor/profile tracing), and the shadow-DOM browser error overlay plane."
 ---
 
 # Rsbuild: bundler-framework kernel foundation

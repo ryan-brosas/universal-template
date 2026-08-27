@@ -7,6 +7,10 @@ disable-model-invocation: true
 
 # Git Worktrees
 
+## Core Principle
+
+Isolation without duplication: a worktree is a separate working directory for the same git repo — its own branch, shared `.git`, cheap to create, instant to switch between.
+
 ## When to Use
 
 Starting a feature that needs isolation from current workspace; multi-agent work in same repo; long-running branch that doesn't conflict with main; need to test a PR without disrupting the working copy; switching between contexts without `git stash`; running CI / tests in parallel.
@@ -14,6 +18,13 @@ Starting a feature that needs isolation from current workspace; multi-agent work
 ## When NOT to Use
 
 Trivial change on main; one-line fix; the branch is already on a worktree; you need to commit and move on quickly.
+
+## Workflow
+
+1. Run the safety checks first: `git worktree list` (is the branch already on a worktree?), `git status` (commit or stash if dirty), target directory empty, absolute path (Safety Checks).
+2. Create with a sibling directory, not nested: `git worktree add -b <branch> ../myapp-<branch> main` (Create a Worktree, Smart Directory Selection).
+3. Do the work in the worktree; commit before switching contexts.
+4. Clean up when done: `git worktree remove ../X && git worktree prune` (Common Patterns).
 
 ## What a Worktree Is
 
@@ -84,3 +95,24 @@ Worktree inside the repo; same branch in two worktrees; dead worktrees not prune
 ## Anti-Patterns
 
 **Nested worktrees** (sibling); **same branch twice**; **dead worktrees** (prune); **uncommitted switch** (lost work); **"which dir"** (single-purpose worktree, finish or prune); **worktree for one-liner**; **5 worktrees** (focus, prune).
+
+## Verification
+
+- `git worktree list` shows the new worktree on the intended branch; `pwd` confirms you are in the sibling directory, not nested inside the repo.
+- `git status` is clean in both copies before any switch; no uncommitted work remains in a worktree before removal (Safety Checks, Common Mistakes).
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill><name></skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>…</evidence>
+  <artifacts>…</artifacts>
+  <risks>…</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no references/ directory; the skill is a self-contained prompt corpus.

@@ -6,6 +6,17 @@ disable-model-invocation: true
 
 # Code Discipline
 
+## Core Principle
+
+Gather context first, stay scoped to the problem, and earn conclusions from real failures — steer outcomes, not behavior.
+
+## Workflow
+
+1. Gather context: read the issue/PR, align on scope and shape, research relevant docs/APIs/patterns.
+2. Make the narrowest change that resolves the reproduced behavior; stop.
+3. Verify: attempt operations and quote real errors; work is done when CI is green and comments are resolved.
+4. Commit: don't leave work uncommitted unless the user says otherwise.
+
 General, language-agnostic code-discipline principles farmed from high-quality
 open-source repos. These guide HOW to write code well, without over-restricting
 behavior (steer outcomes, not behavior).
@@ -68,3 +79,27 @@ behavior (steer outcomes, not behavior).
 Apply these when implementing, reviewing, or committing code. They complement
 the `agent-code-quality-gate` (the 5-check gate) and `quality-gate-methodology`
 (how to write tests that catch).
+
+## Red Flags
+
+- Widening a fix to sibling fields/providers/models on a hunch ("others might also be affected") without reproducing the shared defect.
+- Reporting an operation as blocked based on a metadata flag instead of attempting it and quoting the real error.
+- Ending a turn with unstaged or uncommitted changes.
+- The same fact stored in two places.
+- Business logic inlined in controllers, tools, or components.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill>code-discipline</skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>CI green, comments resolved, work committed; operations attempted with quoted errors</evidence>
+  <artifacts>Scoped change with regression test and verification output</artifacts>
+  <risks>Scope widening, uncommitted work, duplicated facts, or none</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no reference files; this skill is self-contained.

@@ -15,6 +15,10 @@ You have a plan, spec, ADR, or architecture that you want to stress-test before 
 
 **A plan that survives a good grilling is a plan worth implementing.** A plan that falls apart under questions would have fallen apart during implementation, costing more.
 
+## Workflow
+
+Ask one question at a time; let the person answer fully before asking another. Walk the Common Targets as needed. Stop when the grillee has a concrete, specific answer to each question, or when the questions are repeating (same shape, different topic).
+
 ## How to Grill
 
 Ask:
@@ -68,3 +72,23 @@ No assumptions stated; "I'll figure it out later" as a crutch; "everyone agrees"
 ## Anti-Patterns
 
 **5 questions at once**; **"I know better"** (stifles); **stop too early** (first 2 are easy); **grill the trivial**; **no doc**; **attack mode**.
+
+## Verification
+
+After 10–15 questions, the plan is either stronger or abandoned, and the answers are documented — not left in chat.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill>grill-me</skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>…</evidence>
+  <artifacts>…</artifacts>
+  <risks>…</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no reference files; the question banks and targets are inline in this skill.

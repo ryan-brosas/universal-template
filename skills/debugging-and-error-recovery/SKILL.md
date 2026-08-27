@@ -65,3 +65,7 @@ Original failure reproduced or documented as non-reproducible; root cause stated
   <risks>Non-reproducible behavior, missing regression test, or none</risks>
 </skill_result>
 ```
+
+## References
+
+N/A — no reference files; this skill is self-contained.

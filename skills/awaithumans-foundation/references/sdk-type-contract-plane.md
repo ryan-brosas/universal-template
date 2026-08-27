@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # SDK Type Contract Plane — TaskStatus ladder, AssignTo union, VerifierConfig envelope
 
-**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-agents-awaithumans`. **Question:** Which cross-runtime type contracts must stay byte-stable between Python SDK, TS adapters, server, and human-facing UIs?
+**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-awaithumans`. **Question:** Which cross-runtime type contracts must stay byte-stable between Python SDK, TS adapters, server, and human-facing UIs?
 
 ## types/{task,routing,verification}.py — the vocabulary every plane shares
 **Path/Symbol:** `packages/python/awaithumans/types/task.py` — `TaskStatus` 11-member str-Enum (:15-26), `AwaitHumanOptions` (:29-58), `TaskRecord` (:61-79); `types/routing.py` — `AssignTo` union + `HumanIdentity` (:10-42); `types/verification.py` — `VerifierConfig/VerifierResult/VerificationContext` (:10-48).
@@ -25,7 +25,7 @@ idempotency_key docstring pins the retry contract: same key returns the STORED r
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-agents-awaithumans", query: "TaskStatus AwaitHumanOptions AssignTo VerifierConfig", limit: 6 });
+await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-awaithumans", query: "TaskStatus AwaitHumanOptions AssignTo VerifierConfig", limit: 6 });
 ```
 
 ## Verdict

@@ -10,6 +10,15 @@ Use the `codebase-memory` MCP as the primary structural code-discovery surface.
 Its graph is an index, not source of truth: confirm exact code in the JetBrains IDE
 or direct source before editing or making exhaustive claims.
 
+## Core Principle
+
+The graph is an index, not source of truth — confirm exact code in the JetBrains IDE or direct source before editing or making exhaustive claims.
+
+## When to Use / NOT
+
+- **Use when:** navigating, indexing, tracing, or comparing local and inspiration repositories through the Codebase Memory MCP knowledge graph.
+- **NOT when:** N/A — no explicit exclusion stated; never call `codebase-memory_delete_project` without explicit user approval, and do not write ADRs or ingest traces unless requested (see Boundaries).
+
 ## Workflow
 
 1. Connect to the `codebase-memory` MCP and read its server instructions.
@@ -45,6 +54,21 @@ closed.
 - Coverage metadata is best-effort, never proof of completeness.
 - Check truncation fields and paginate; do not treat the first page as complete.
 
+## Red Flags
+
+- Treating the graph as source of truth.
+- Calling `codebase-memory_delete_project` without approval.
+- Treating the first page as complete (truncation fields unchecked).
+- Negative or exhaustive claims without `codebase-memory_check_index_coverage`.
+- Cloning or re-indexing another repository after the evidence gap is closed.
+
+## Verification
+
+Exact source confirmation before editing; coverage checked for cited paths/scopes before negative or exhaustive claims; blast radius identified before editing; after editing, trust source, IDE diagnostics, and behavioral checks over stale graph output.
+
+## Skill Result Contract
+
+```
 <skill_result>
   <skill>codebase-memory</skill>
   <status>success|partial|blocked|failure</status>
@@ -52,3 +76,8 @@ closed.
   <artifacts>Architecture map, trace, blast-radius report, or capability matrix</artifacts>
   <risks>Stale index, partial coverage, truncated graph, or none</risks>
 </skill_result>
+```
+
+## References
+
+N/A — no reference files; this skill is self-contained.

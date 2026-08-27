@@ -1,6 +1,6 @@
 ---
 name: semantic-kernel-foundation
-description: Use when porting Semantic Kernel's Python kernel-core machinery — the function-invocation pipeline, filter call-stack onion, corrective tool-call feedback into chat history, bounded auto-invoke loop with parallel gather and final tool-less call, streaming exception smuggling, OTel-gated invocation telemetry, decorator-time tool metadata extraction, argument coercion, copy-on-add plugin registries, the {{...}} prompt-template block engine with quote-aware lexing and positional call grammar, and the two HTML-encoding trust gates over substituted arguments and function output.
+description: Use when porting Semantic Kernel's Python kernel-core machinery — the filter call-stack onion, corrective tool-call feedback into chat history, bounded auto-invoke loop, streaming exception smuggling, OTel-gated invocation telemetry, decorator-time tool metadata extraction, argument coercion, copy-on-add plugin registries, the {{...}} prompt-template block engine with quote-aware lexing and positional call grammar, the two HTML-encoding trust gates over substituted arguments and function output, the AI service selection/registration plane (first-come-first-served selection ladder, default-as-first-match registry, extension_data settings conversion, render→select→dispatch ordering), tool-view generation (metadata filters + JSON-Schema tool projection), prompt-config parsing ladders, the Jinja2/Handlebars helper-binding/sandbox plane, the streaming auto-invoke twin with per-round result merging, and the .NET method-function/filter cross-language mirrors.
 ---
 
 # Semantic Kernel: kernel-core invocation foundation
@@ -32,6 +32,19 @@ code and direct tests are ground truth; references carry decisive excerpts and g
 - `references/argument-enrichment-type-preservation.md` — do arguments passed from a prompt to a template-invoked function keep their Python types?
 - `references/trusted-arguments-encoding-gate.md` — which argument values get HTML-escaped before a template sees them, and who can opt out?
 - `references/function-output-encoding-gate.md` — when is a template function's return value escaped, and why can't quick_render execute code?
+- `references/ai-service-selection-ladder.md` — when several services are registered and settings name several of them, which one wins?
+- `references/service-registry-default-fallback.md` — how does a service_id resolve to one service, and what does "default" really mean?
+- `references/prompt-execution-settings-conversion.md` — how does one generic settings bag become each provider's typed settings?
+- `references/prompt-invoke-service-dispatch.md` — after a prompt renders, how does the function pick which client method to call?
+- `references/tool-view-metadata-dispatch.md` — how does a caller restrict which kernel functions the model may see, and how does that restriction reach the request?
+- `references/function-call-schema-projection.md` — how do parameter metadata become a provider tool schema, and where is it installed?
+- `references/prompt-config-parsing-ladders.md` — in what order do prompt/config/settings sources win when building a prompt function, and what is validated at load time?
+- `references/template-helper-binding.md` — how do kernel functions become callable helpers inside Jinja2/Handlebars templates, and how do async tools work under a synchronous engine?
+- `references/non-kernel-engine-sandbox-trust.md` — what safety and lifecycle differences should a porter expect between the Jinja2 and Handlebars engines?
+- `references/streaming-auto-invoke-loop.md` — how does the streaming tool loop yield, fold chunks, and terminate differently from the non-streaming loop?
+- `references/function-result-merge-rules.md` — how do N parallel tool results collapse into one message, and what stamps make streaming results addable?
+- `references/dotnet-method-function-mirror.md` — which method-binding invariants are language-universal, and where does the .NET twin diverge from Python?
+- `references/dotnet-filter-onion-mirror.md` — how does the .NET filter chain register and dispatch, and which ordering invariants match the Python onion?
 
 ## Capsule map
 - **Filter onion** — `filter-call-stack`: `(id, filter)` tuples inserted at index 0, folded over the inner function; insertion order = pre-`next` order, reverse = post-`next` order.
@@ -54,6 +67,19 @@ code and direct tests are ground truth; references carry decisive excerpts and g
 - **Typed enrichment** — `argument-enrichment-type-preservation`: variable-sourced args keep raw Python types via `get_value()` while prompt text uses stringifying `render()`; slot-1 non-named arg binds positionally to parameters[0].
 - **Argument trust gate** — `trusted-arguments-encoding-gate`: template-level flag short-circuits; else per-variable exemption; strings HTML-escaped; fixed safe-type set passes; complex objects raise — auto-discovered variables default to encode-by-default.
 - **Output trust gate** — `function-output-encoding-gate`: function output escaped unless template OR config trust flag set (all-or-nothing); static text never escaped; quick_render refuses code blocks entirely.
+- **Service selection ladder** — `ai-service-selection-ladder`: argument settings override function settings per service_id; merged dict scanned in insertion order; unregistered ids skipped, exhaustion is the only hard error; `type_=None` default tuple excludes bare AIServiceClientBase.
+- **Registry default fallback** — `service-registry-default-fallback`: type filter before id lookup; missing/empty id becomes "default" which means FIRST service of that type, not a literal key; duplicate add raises (reused function exception); live clients make the kernel non-serializable.
+- **Settings conversion** — `prompt-execution-settings-conversion`: extension_data is the neutral bag; pack-before-merge so explicitly-set typed fields travel; unpack skips None (unset ≠ null); merge is config-into-self with config winning per key.
+- **Prompt dispatch** — `prompt-invoke-service-dispatch`: render inside the PROMPT_RENDERING filter onion, then select with a mode-dependent type tuple (streaming = Text+Chat only), then isinstance-dispatch; provider failures wrapped as FunctionExecutionException carrying the function name.
+- **Tool-view dispatch** — `tool-view-metadata-dispatch`: singledispatchmethod over bool (include_prompt/include_native) and dict (four filter keys, included/excluded mutually exclusive per level, FQN matching); FunctionChoiceBehavior.configure no-ops when disabled, else hands filtered-or-full metadata to the settings callback; from_dict converts dots to hyphens and unions filters.
+- **Schema projection** — `function-call-schema-projection`: schema_data frozen at metadata construction (concrete types → builder, type-name strings → TYPE_MAPPING, unknown → "object", defaults folded into description text); projection keeps only include_in_function_choices params with required = is_required AND included; install is duck-typed on tool_choice+tools attributes.
+- **Prompt-config ladders** — `prompt-config-parsing-ladders`: config beats explicit prompt (warning, not error); from_directory requires both skprompt.txt and config.json and names the function after the directory; input-variable defaults must be strings; falsy defaults {None,"",False,0} are never applied to arguments.
+- **Helper binding** — `template-helper-binding`: sync helpers bridge asyncio.run under a once-per-process nest_asyncio patch; async helpers are Jinja2-only; Handlebars `this` context stripped; kwargs beat base arguments; results HTML-escaped unless trusted.
+- **Engine sandbox & trust** — `non-kernel-engine-sandbox-trust`: Jinja2 = ImmutableSandboxedEnvironment, parse at render time, FQN hyphens→underscores, plugins can shadow system helpers; Handlebars = compile at construction, hyphens kept, system helpers win; both reuse the base-class argument trust gate.
+- **Streaming auto-invoke** — `streaming-auto-invoke-loop`: chunks yielded as they arrive while accumulating; tool-call latch; fold via `__add__` (identity guards on choice/model/encoding/role); merged result yielded EVERY round; terminate breaks; exhaustion ends silently — no tool-less finale like the non-streaming twin.
+- **Result merge rules** — `function-result-merge-rules`: one TOOL-role message per round holding all FunctionResultContent items in call order (other items dropped); streaming variant stamps choice_index=0 + ai_model_id + function_invoke_attempt so later `__add__` identity checks pass; non-streaming merge runs only on terminate.
+- **.NET method-function mirror** — `dotnet-method-function-mirror`: reserved params are type-driven (8 types + FromKernelServicesAttribute) and invisible in metadata; satisfaction ladder is arguments→INJECTED C# default→KernelException; coercion is assignable→culture converter→JSON-string numeric parse→full deserialization→passthrough; null async results are hard errors.
+- **.NET filter onion mirror** — `dotnet-filter-onion-mirror`: filters captured from DI at construction into a live list; recursive forward-index onion; first-registered = outermost (same invariant as Python index-0 insertion); context pre-seeded with FunctionResult so filters can override without invoking; mid-pipeline Insert reorders correctly.
 
 ## Extending the foundation
 Add one `references/<seam>.md` capsule for one graph-selected, source-confirmed porting question.
@@ -73,7 +99,8 @@ node/edge counts, freshness, and any coverage caveats; source and direct tests d
 ## Boundaries
 Adopt the pure contracts: filter-onion ordering, chat-history corrective feedback, bounded retry
 loop shape, exception-smuggling metadata key, telemetry wrapper skeleton, quote-aware block lexing,
-construction-time call-arity validation, and encode-by-default trust gates. Adapt service selection,
-provider-specific settings conversion, and the escape function's target markup to your host. Omit
-Azure/OpenAI connector internals, agent/process frameworks, the Jinja2/Handlebars engine family,
-and the .NET/Java planes — they are separate seams.
+construction-time call-arity validation, encode-by-default trust gates, tool-view mutual-exclusion
+filters with FQN matching, and construction-time schema freezing. Adapt service selection,
+provider-specific settings conversion, the escape function's target markup, and per-engine helper
+precedence to your host. Omit Azure/OpenAI connector internals, agent/process frameworks, and the Java plane;
+the .NET plane is covered only by the two mirror capsules (method-function binding, filter onion).

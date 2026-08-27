@@ -8,6 +8,15 @@ disable-model-invocation: true
 
 The main discipline. Code is ground truth; markdown is post-code. A spec written before reading the code is a guess.
 
+## Core Principle
+
+Code is ground truth; markdown is post-code — a spec written before reading the code is a guess.
+
+## When to Use / NOT
+
+- **Use when:** starting any implementation work — one-shot with examples from the codebase.
+- **NOT when:** N/A — no explicit exclusion stated; escalate to a spec (spec-driven-development) only when the run outlives the session.
+
 ## Rules
 
 1. **Code is ground truth.** Read the code that does the closest thing to what you want; it defines the real contract.
@@ -49,3 +58,7 @@ The main discipline. Code is ground truth; markdown is post-code. A spec written
   <risks>Spec drift, re-derived foundations, unverified claims, or none</risks>
 </skill_result>
 ```
+
+## References
+
+N/A — no reference files; this skill is self-contained.

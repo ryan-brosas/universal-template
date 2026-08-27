@@ -8,6 +8,10 @@ metadata: '{"source":"synthesis; close adaptation: browserbase/skills ui-test (M
 
 # App Experience Mapping
 
+## Core Principle
+
+Treat the app as a black box: map product intent and observed behavior, never implementation details; mark every cell hypothesis (H) or observed (O) — unmarked cells are hypotheses, not facts.
+
 ## When to Use
 
 Use when planning an app build, change, or launch and the team needs to see the
@@ -20,6 +24,16 @@ another system.
 - Executing the review itself -> black-box-experience-review
 - Screen-level UI review -> ux-review
 - Visual styling or design tokens -> design-taste-frontend / design-system-audit
+
+## Workflow
+
+1. Collect black-box inputs: app name and platform, primary user and goal, channels, entry point, expected outcome.
+2. Produce the journey map (stage, user action, touchpoint, channel, feeling, pain points, opportunity).
+3. Produce the experience map across all touchpoints and channels; mark seam candidates.
+4. Produce the service blueprint: frontstage, backstage, supporting systems, handoffs.
+5. Inventory seams: two systems, failure modes, user-visible signal of success or failure.
+6. Turn the map into research questions.
+7. Deliver outputs labeled hypothesis/observed/verified, each hypothesis with a measurable outcome.
 
 ## Black-box input contract
 
@@ -73,3 +87,30 @@ Deliver the journey map, experience map, blueprint, seam inventory, and a
 prioritized list of hypotheses. Label every output with its evidence status:
 hypothesis, observed, or verified. Each hypothesis needs a measurable outcome
 so the later review can test it.
+
+## Red Flags
+
+- Unmarked cells reported as fact (default is hypothesis).
+- Map built from implementation details instead of observed behavior.
+- Hypotheses without a measurable outcome.
+- Seam entries missing failure modes or the user-visible signal.
+
+## Verification
+
+Every cell marked H or O; every output labeled hypothesis, observed, or verified; deliverables present: journey map, experience map, service blueprint, seam inventory, prioritized hypotheses.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill>app-experience-mapping</skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>Every cell marked H/O; every output labeled hypothesis, observed, or verified</evidence>
+  <artifacts>Journey map, experience map, service blueprint, seam inventory, prioritized hypotheses</artifacts>
+  <risks>Hypotheses reported as fact, seams missed, or none</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no reference files; this skill is self-contained.

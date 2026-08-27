@@ -1,6 +1,6 @@
 ---
 name: coolify-foundation
-description: "Self-hosted deploy orchestrator foundation"
+description: "Use when porting a self-hosted deploy orchestrator (Coolify, PaaS-style) — a DB-backed deployment queue with admission control, a 5k-line build-pack state machine that drives remote Docker hosts over SSH, rolling updates with health-gated cutover, and cron-dedup scheduled jobs. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
 ---
 # Coolify: Self-hosted deploy orchestrator foundation
 

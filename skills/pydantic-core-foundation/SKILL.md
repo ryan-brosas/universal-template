@@ -1,6 +1,6 @@
 ---
 name: pydantic-core-foundation
-description: "pydantic-core-foundation"
+description: "Use when porting schema-driven validation/serialization machinery, embedding pydantic-style validators in another runtime, or answering what pydantic-core guarantees about unions, recursion, defaults, error locations, and field serialization. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
 ---
 # pydantic-core: validation & serialization engine foundation
 
@@ -30,6 +30,14 @@ Use when porting schema-driven validation/serialization machinery, embedding pyd
 - `references/allow-partial-last-element.md` — one-item lookahead marks last element; its errors drop, earlier errors raise; works over python AND json.
 - `references/borrow-input-collection-gats.md` — BorrowInput owned/borrowed duality, per-backend GAT views, ConsumeIterator consumers, Never filler.
 - `references/json-duplicate-key-dedup.md` — jiter keeps duplicates; lookup last-wins free, as_kwargs dedups backwards keeping document order.
+- `references/cache-strings-config-plane.md` — where does string interning get configured, and which producers opt OUT.
+- `references/datetime-numeric-twins.md` — how do int/float timestamps become datetimes vs times-of-day, and where does `val_temporal_unit` apply.
+- `references/generic-py-mapping-tri-dispatch.md` — how do dict / Mapping / from-attributes inputs share one field-lookup path, and what does `last_key` do when it can't.
+- `references/model-instance-fast-path-revalidate.md` — what happens when you validate an EXISTING model instance, and why does constructing a new one floor exactness to Strict.
+- `references/self-instance-validate-init.md` — how does validation populate a CALLER-CONSTRUCTED model instance instead of building one.
+- `references/string-mode-mapping-duality.md` — what IS an input under `validate_strings`.
+- `references/val-json-bytes-ladder.md` — how does a bytes field decode from JSON text, and why does base64 accept BOTH alphabets.
+- `references/validate-strings-funnel.md` — does `strict=True` stop string→scalar coercion in string mode.
 
 ## Capsule map
 - **Build & dispatch** — `schema-dispatch-buildvalidator`: macro match on EXPECTED_TYPE consts; base-vs-nested entry points gate prebuilt reuse; build failures are SchemaError with type prefix.
@@ -44,7 +52,14 @@ Use when porting schema-driven validation/serialization machinery, embedding pyd
 - **Serialization** — `schema-serializer-mirror`: CombinedSerializer tree over shared Definitions; warnings accumulate to a terminal final_check; expected_json_size AtomicUsize caches buffer hint; __reduce__ rebuilds from original schema. `general-fields-serialization-order`: output follows INPUT order; None serializer = exclude; strict required-count check suppressed whenever exclusions active. `infer-serialization-obtype`: ObType dispatch with subclass upcasting; cycles raise in Json mode but return-as-is in Python mode.
 - **Alias plumbing** — `lookup-key-alias-resolution`: Simple/Choice/PathChoices grammar resolved identically over dict.get, mapping.get, getattr chains, and reversed jiter scans (last-dup-wins).
 - **Input & ingestion** — `input-type-triad-dual-dispatch`: one generic `Input` trait over `InputType{Python,Json,String}`; validators request backend-typed views, never downcast; exactness-labeled matches feed union ranking. `validate-json-funnel-error-mapping`: str/bytes/bytearray → single jiter parse → JsonInvalid carries jiter line/col text but points at the caller's input. `json-validator-text-contract`: `"json"` means "parse one MORE layer of text from here" — top-level json schemas need double encoding under validate_json (json_type rejection of parsed values); Any-inner returns raw parsed object with inf/nan allowed and dup keys kept. `json-value-coercion-ladder`: JSON str is strict-not-exact ("string is a converting input"), Int→float strict-not-exact, arrays serve tuple/set/frozenset as strict-never-exact, decimal from float is string-mediated. `allow-partial-last-element`: per-element flag flip via one-item lookahead; last-element LineErrors silently dropped, earlier errors raise; input-kind independent. `borrow-input-collection-gats`: BorrowInput re-borrows owned-or-borrowed iterator items; ValidatedDict/List/Tuple/Set GAT views + ConsumeIterator consumers + uninhabited Never filler. `json-duplicate-key-dedup`: parser keeps duplicates — field lookup last-wins naturally, kwargs conversion dedups backwards preserving document order.
-
+- **cache_strings plane** — `cache-strings-config-plane`: where does string interning get configured, and which producers opt OUT.
+- **datetime numeric twins** — `datetime-numeric-twins`: how do int/float timestamps become datetimes vs times-of-day, and where does `val_temporal_unit` apply.
+- **GenericPyMapping tri-dispatch** — `generic-py-mapping-tri-dispatch`: how do dict / Mapping / from-attributes inputs share one field-lookup path, and what does `last_key` do when it can't.
+- **Model instance fast path** — `model-instance-fast-path-revalidate`: what happens when you validate an EXISTING model instance, and why does constructing a new one floor exactness to Strict.
+- **self_instance / validate_init** — `self-instance-validate-init`: how does validation populate a CALLER-CONSTRUCTED model instance instead of building one.
+- **String-mode mapping duality** — `string-mode-mapping-duality`: what IS an input under `validate_strings`.
+- **val_json_bytes ladder** — `val-json-bytes-ladder`: how does a bytes field decode from JSON text, and why does base64 accept BOTH alphabets.
+- **validate_strings funnel** — `validate-strings-funnel`: does `strict=True` stop string→scalar coercion in string mode.
 ## Extending the foundation
 Add one `references/<seam>.md` capsule for one graph-selected, source-confirmed porting question. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf.
 

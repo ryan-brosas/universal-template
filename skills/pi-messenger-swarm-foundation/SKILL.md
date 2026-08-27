@@ -1,6 +1,7 @@
 ---
 name: pi-messenger-swarm-foundation
-description: "Canonical foundation leaf template. Copy manually; this library asset is not rendered by a slash command."
+description: "Use when building multi-agent coordination WITHOUT a central database or orchestrator process — durable agent registries with lockless name claiming, append-only event-sourced task queues with claim/dependency/cascade semantics, kafka-like feed messaging that tolerates offline recipients, subagent spawning with concurrency ceilings and crash-reconciled lifecycle tracking, or any port of the pi-messenger-swarm mesh to another agent host. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
+
 ---
 # pi-messenger-swarm: file-based multi-agent swarm coordination foundation
 

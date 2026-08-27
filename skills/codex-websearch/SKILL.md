@@ -10,6 +10,15 @@ Use the installed Pi Fabric extension `extensions.openai_websearch` for bounded
 live-web discovery. It uses the host's OpenAI subscription authentication; it
 does not require a project API key, package install, or browser automation.
 
+## Core Principle
+
+Bounded live-web discovery through the host's OpenAI subscription authentication — no project API key, package install, or browser automation; search output is a shortlist or cited answer, not permission to invent an unsupported claim.
+
+## When to Use / NOT
+
+- **Use when:** current web facts, documentation discovery, or cited search results through the installed Codex web-search extension.
+- **NOT when:** N/A — no explicit exclusion stated; under Pi Fabric Schema `enforce`, report the capability gap and keep research read-only (see Boundaries).
+
 ## Workflow
 
 1. Search with the user's information need stated plainly.
@@ -39,6 +48,20 @@ extensions and network providers, so report the capability gap and keep the
 research read-only when the guard is active. Do not fall back to Brave API keys,
 local npm dependencies, or obsolete provider names.
 
+## Red Flags
+
+- Inventing a fetch action instead of a separately discovered read-only capability.
+- Falling back to Brave API keys, local npm dependencies, or obsolete provider names.
+- Dropping citations, access date, or exact query from the evidence ledger.
+- Chasing more than 3–5 results.
+
+## Verification
+
+Evidence ledger holds the exact query, cited results, access date, and confidence; official, dated, versioned sources preferred.
+
+## Skill Result Contract
+
+```
 <skill_result>
   <skill>codex-websearch</skill>
   <status>success|partial|blocked|failure</status>
@@ -46,3 +69,8 @@ local npm dependencies, or obsolete provider names.
   <artifacts>Compact evidence ledger</artifacts>
   <risks>Unavailable host extension, stale source, or none</risks>
 </skill_result>
+```
+
+## References
+
+N/A — no reference files; this skill is self-contained.

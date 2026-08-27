@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Next.js Static-Export URL Shim — clean URLs against a flat .html export
 
-**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-agents-awaithumans`. **Question:** Why does stock StaticFiles 404 on `/setup` when `setup.html` exists, and what is the minimal override?
+**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-awaithumans`. **Question:** Why does stock StaticFiles 404 on `/setup` when `setup.html` exists, and what is the minimal override?
 
 ## Try `<path>.html` FIRST for extensionless paths, then fall through to stock
 **Path/Symbol:** `packages/python/awaithumans/server/core/dashboard_static.py` — failure-mode docstring (:1-23), `DashboardStaticFiles.lookup_path` (:41-56).
@@ -25,7 +25,7 @@ return super().lookup_path(path)                       # assets + real dirs unch
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-agents-awaithumans", query: "DashboardStaticFiles lookup_path html", limit: 4 });
+await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-awaithumans", query: "DashboardStaticFiles lookup_path html", limit: 4 });
 ```
 Live rank-1 line-exact (:41-56).
 

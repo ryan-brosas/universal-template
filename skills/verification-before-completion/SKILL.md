@@ -5,6 +5,10 @@ description: "Use when about to claim work is complete, fixed, or passing, befor
 
 # Verification Before Completion
 
+## Core Principle
+
+No completion claim without evidence: "done" means the named verification command ran, exited 0, and its output was inspected. Evidence before assertion, always.
+
 ## The Iron Law
 
 <EXTREMELY-IMPORTANT>
@@ -60,7 +64,7 @@ Lower levels (prose, code review) are inspection, not verification.
 
 "It should work" (run it); "I've tested it" (show the run); "tests pass" (paste output, count); LGTM without a verification run; "made the changes" (show diff); truncating output that hides an error.
 
-## Completion Pattern
+## Skill Result Contract
 
 ```
 <skill_result>

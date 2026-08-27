@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Encrypted-Config List Deferral — decrypting every row just to list them is how listing dies
 
-**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-agents-awaithumans`. **Question:** How do you list rows whose config column is AES-encrypted when one stale-key row would otherwise 500 the whole endpoint?
+**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-awaithumans`. **Question:** How do you list rows whose config column is AES-encrypted when one stale-key row would otherwise 500 the whole endpoint?
 
 ## defer(raiseload=True) forces per-row loads through the loud path
 **Path/Symbol:** `packages/python/awaithumans/server/services/email_identity_service.py` — rationale docstring inside `list_identities` (:81-103), `upsert_identity` (:22-71), `get_identity` (:74-78), `identity_config` (:114-116). JSON encoding handled HERE (`json.dumps(..., sort_keys=True, separators=(",", ":"))`) so callers see dicts.
@@ -23,7 +23,7 @@ Docstring: letting SQLAlchemy materialize the column runs AES-GCM decrypt on EVE
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-agents-awaithumans", query: "upsert_identity defer raiseload EncryptedString transport_config", limit: 4 });
+await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-awaithumans", query: "upsert_identity defer raiseload EncryptedString transport_config", limit: 4 });
 ```
 Live rank-1 line-exact (:22-71) + encryption tests.
 

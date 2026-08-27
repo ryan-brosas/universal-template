@@ -1,9 +1,6 @@
 ---
 name: xsearch
-description: >-
-  Search X (Twitter) via CDP. Returns structured results (author, handle, text,
-  URL, timestamp) for any query. Requires browser-harness-js on PATH, a
-  Chromium-based browser with remote debugging, and an active X session (logged in).
+description: "Use when the user asks to search X (Twitter) for posts, discussions, or an author — search X via CDP and return structured results (author, handle, text, URL, timestamp) for any query. Requires browser-harness-js on PATH, a Chromium-based browser with remote debugging, and an active logged-in X session."
 setup: bash <skill-dir>/scripts/setup
 compatibility: Requires browser-harness-js on PATH, a running Chromium browser with remote debugging (chrome://inspect or --remote-debugging-port), and an active X (Twitter) login in the browser.
 ---
@@ -13,6 +10,22 @@ compatibility: Requires browser-harness-js on PATH, a running Chromium browser w
 > ⚠️ **You must be logged in to X in the browser.** X's search page does not show results to logged-out visitors — it redirects to a login wall. The browser session used by `browser-harness-js` must have an active X login.
 
 Search X (Twitter) and extract structured results via CDP. No external dependencies beyond `browser-harness-js` (which provides the CDP session). Each call opens its own tab and WebSocket session — safe for parallel use.
+
+## Core Principle
+
+Browser-native search via CDP: the logged-in browser does the auth, `xsearch` only drives a tab and reads the DOM. Each call owns its own tab + per-call `sessionId`, so calls are safe to parallelize.
+
+## When to Use / NOT
+
+- Use when the user asks to search X (Twitter) for posts, discussions, or an author, or to read a post by permalink.
+- NOT when the browser has no active X login (the search page redirects to a login wall) or when plain web search suffices.
+
+## Workflow
+
+1. Run `xsearch "query" [n]` (pretty) or `xsearch --json "query" [n]`.
+2. For a permalink, open it through the `browser-harness-js` flow: arm the `networkIdle` wait BEFORE `Page.navigate`, settle ~4s for React hydration, read `[data-testid="tweet"]`.
+3. Return structured results `{author, handle, text, url, time}`. Stop when results are returned.
+
 
 ## Quick search
 
@@ -154,3 +167,27 @@ X's search page uses stable `data-testid` attributes:
 - **Result count may be less than requested** — X may not have enough matching tweets, or the scroll loop may not load them in time.
 - **Tweet text may be truncated** — X renders "Show more" buttons for long tweets. The extracted `text` is what's visible without clicking "Show more".
 - **No `jq` dependency** — URI encoding uses `encodeURIComponent()` in JS and output formatting is done via `.map().join()` in the heredoc.
+
+## Red Flags
+
+Running without an X login (login wall, zero results); skipping `Page.setLifecycleEventsEnabled` (Chrome then emits zero lifecycle events and `networkIdle` never fires); arming the networkIdle wait after `Page.navigate` (fast loads fire it before the listener subscribes); reading the DOM before React hydration settles.
+
+## Verification
+
+Results parse as JSON with the five fields per item; count ≤ requested; permalinks return the focus tweet's author/handle/text/time.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill>xsearch</skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>commands run, outputs inspected, artifacts produced</evidence>
+  <artifacts>files written / commands run</artifacts>
+  <risks>known risks, untested paths, or none</risks>
+</skill_result>
+```
+
+## References
+
+No reference capsules — the skill is self-contained.

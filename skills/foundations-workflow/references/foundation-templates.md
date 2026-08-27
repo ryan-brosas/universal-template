@@ -1,11 +1,11 @@
 # Canonical foundation templates
 
-The canonical, copyable structures for every foundation leaf and every new or substantively rewritten reference (the modern `capsule-v2` evidence form). The authoritative bodies live ONCE, as tracked library assets — do not smith a second copy:
+The canonical, copyable structures for every foundation leaf and every new or substantively rewritten reference (the modern `capsule-v2` evidence form). The authoritative bodies live ONCE in the shared catalog, as tracked library assets — do not smith a second copy:
 
-- `/home/utopia/.dsh/template/work/project/foundation-skill.md` — canonical foundation leaf template.
-- `/home/utopia/.dsh/template/work/project/foundation-capsule.md` — canonical `capsule-v2` reference template.
+- `~/.agents/templates/foundation-skill.md` — canonical foundation leaf template.
+- `~/.agents/templates/foundation-capsule.md` — canonical `capsule-v2` reference template.
 
-Load those files and copy from them directly. They are template-only library assets, not slash-command render targets.
+Load those files and copy from them directly. They are template-only library assets, not slash-command render targets. Host mirrors such as `/home/utopia/.dsh/template/work/project/foundation-*.md` are derived copies of the same files — fix drift in `~/.agents`, never in a mirror.
 
 ## Fixed leaf order
 The leaf routes, catalogs, maps, identifies the index, and bounds adoption. The order below is fixed (see the canonical file):

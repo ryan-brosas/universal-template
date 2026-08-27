@@ -1,6 +1,6 @@
 ---
 name: dify-foundation
-description: "Workflow app-execution spine foundation"
+description: "Use when porting Dify's workflow app-execution spine — long-running LLM workflow execution with cancellation, pause/resume, event streaming to clients, or engine-layer persistence hooks. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
 ---
 # Dify: Workflow app-execution spine foundations
 

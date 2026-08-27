@@ -8,6 +8,10 @@ metadata: '{"source":"close adaptation: browserbase/skills ui-test (MIT, verifie
 
 # Black-Box Experience Review
 
+## Core Principle
+
+The app is a black box: evidence comes from observable behavior, never from source-code assumptions.
+
 ## When to Use
 
 Use when an app must be checked before shipping or after changes, and the
@@ -20,6 +24,16 @@ never from source-code assumptions.
 - Mapping journeys and seams first -> app-experience-mapping
 - Screen-level UI review -> ux-review
 - Visual styling or design tokens -> design-taste-frontend / design-system-audit
+
+## Workflow
+
+1. Functional round: walk each core journey end to end; the next action must be discoverable at every step.
+2. Adversarial round: break each seam (unauthorized access, expired sessions, offline start, network loss mid-task, partial input, destructive actions without confirmation).
+3. Coverage gaps: sweep every journey at narrow viewport and across channels.
+4. State checks at every seam: loading, empty, partial, error, success.
+5. Persistence and resumability: interrupted tasks resume where they stopped.
+6. Handoffs and channels: return path works, partial failures recover, no state lost in transit.
+7. Rate severity (Critical/Major/Minor/Enhancement) and issue the verdict: Pass, Needs Improvement, or Fail.
 
 ## Source-code independence
 
@@ -68,3 +82,31 @@ release), Minor (polish), Enhancement (backlog). Every finding carries
 evidence: screen, control, step, observed behavior, console or runtime
 output, viewport width, exact copy, and the user blocked. Verdict: Pass,
 Needs Improvement, or Fail. Any Critical finding makes the verdict Fail.
+
+## Red Flags
+
+- Failures that lose user input.
+- Technical errors exposed to users.
+- Silent success or layout shift on loading.
+- Findings without evidence.
+- Any Critical finding with a verdict other than Fail.
+
+## Verification
+
+Every finding carries evidence: screen, control, step, observed behavior, console or runtime output, viewport width, exact copy, and the user blocked. Verdict Pass/Needs Improvement/Fail; any Critical finding makes the verdict Fail.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill>black-box-experience-review</skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>Findings with screen, step, observed behavior, runtime output, viewport, exact copy</evidence>
+  <artifacts>Severity-rated findings and verdict: Pass, Needs Improvement, or Fail</artifacts>
+  <risks>Critical finding under-rated, coverage gaps, or none</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no reference files; this skill is self-contained.

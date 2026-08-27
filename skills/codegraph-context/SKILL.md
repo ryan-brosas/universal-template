@@ -9,6 +9,15 @@ disable-model-invocation: true
 Use the `codegraphcontext` MCP to navigate and analyze a local FalkorDB code graph.
 The graph is a structural index — confirm exact code in the source file before editing or making exhaustive claims.
 
+## Core Principle
+
+The graph is a structural index — confirm exact code in the source file before editing or making exhaustive claims.
+
+## When to Use / NOT
+
+- **Use when:** navigating, searching, tracing callers/callees, analyzing complexity, or simulating blast radius in a locally-indexed repository through the codegraphcontext MCP graph.
+- **NOT when:** N/A — no explicit exclusion stated; never call `codegraphcontext_delete_repository` without explicit user approval (see Boundaries).
+
 ## Workflow
 
 1. **Orient.** Call `codegraphcontext_list_graphs` then `codegraphcontext_list_indexed_repositories` to confirm the repo is indexed. If not, call `codegraphcontext_add_code_to_graph` with the repo path; monitor with `codegraphcontext_check_job_status`.
@@ -38,6 +47,20 @@ The graph is a structural index — confirm exact code in the source file before
 - Graph output is structural, not semantic — verify behavior in source before shipping.
 - Watch files with `codegraphcontext_watch_directory` only when the user wants live auto-reindex.
 
+## Red Flags
+
+- Guessing Cypher property names instead of using the documented schema.
+- Calling `codegraphcontext_delete_repository` without approval.
+- Treating structural graph output as semantic proof.
+- Watching directories when the user does not want live auto-reindex.
+
+## Verification
+
+Repo confirmed indexed (`codegraphcontext_list_graphs` / `codegraphcontext_list_indexed_repositories`); job status checked for index jobs; blast radius simulated before editing; source confirmation for key claims.
+
+## Skill Result Contract
+
+```
 <skill_result>
   <skill>codegraph-context</skill>
   <status>success|partial|blocked|failure</status>
@@ -45,3 +68,8 @@ The graph is a structural index — confirm exact code in the source file before
   <artifacts>Caller tree, call chain, blast-radius simulation, complexity report, or dead-code list</artifacts>
   <risks>Stale index (re-index needed), partial coverage, unresolved job — confirm with check_job_status</risks>
 </skill_result>
+```
+
+## References
+
+N/A — no reference files; this skill is self-contained.

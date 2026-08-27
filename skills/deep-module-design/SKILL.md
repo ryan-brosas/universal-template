@@ -7,6 +7,10 @@ disable-model-invocation: true
 
 # Deep Module Design
 
+## Core Principle
+
+Interface is the design — push complexity down, expose simplicity up; small interface, deep implementation.
+
 ## Iron Laws
 
 <EXTREMELY-IMPORTANT>
@@ -24,6 +28,13 @@ Designing a new module; reviewing structure; refactoring shallow modules; "this 
 ## When NOT to Use
 
 Trivial one-function helpers; structure is fine and change is in body; "design" without a real module.
+
+## Workflow
+
+1. Measure depth: impl size / interface size.
+2. Read the interface tells and design tells tables.
+3. Refactor toward depth: find the shallowest surface, combine methods, hide helpers, move config inside, return less.
+4. Test the interface, not internals — if a test mocks an internal call, the internal is leaking.
 
 ## The Depth Metric
 
@@ -91,3 +102,23 @@ Shallow modules; exposed state; config in args (env); "two ways to do it"; tests
 ## Anti-Patterns
 
 **Shallow module**; **public state**; **config in args**; **two ways to do it**; **tests mock internals**; **addX/addY/addZ**; **pass-through**; **complex return types**.
+
+## Verification
+
+Depth improved (smaller interface, larger impl); no public state; config moved inside with sensible defaults; tests exercise the interface, not mocked internals; one way to do each thing.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill>deep-module-design</skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>Depth metric improved; interface tells cleared; tests exercise the interface</evidence>
+  <artifacts>Module design or refactor toward a smaller interface</artifacts>
+  <risks>Shallow module, public state, mocked internals, or none</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no reference files; this skill is self-contained.

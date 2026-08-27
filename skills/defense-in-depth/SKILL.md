@@ -21,6 +21,12 @@ Single boundary (one validation point is enough); internal data flow; perf-criti
 
 Don't trust upstream to validate. Don't trust downstream to be robust. Validate at the boundary you're crossing.
 
+## Workflow
+
+1. Map the layers data passes through (Layer Map).
+2. Decide per boundary whether to validate (When to Validate table).
+3. Apply the defense patterns: schema at the boundary, domain validation, DB constraints, type narrowing, errors as data.
+
 ## Layer Map
 
 ```
@@ -77,3 +83,23 @@ Validation only at network (deep code trusts the type, gets garbage); validation
 ## Anti-Patterns
 
 **Validation only at network**; **validation only at DB**; **`as any` to skip**; **no env validation**; **validation in business logic**; **try/catch for validation**; **"we trust this"**; **no DB constraints**.
+
+## Verification
+
+Each boundary has a schema or constraint; anything from outside the type system (network, queue, file, env, DB) is validated; DB constraints exist as a safety net; failed validation is a typed error, not an exception.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill>defense-in-depth</skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>Each boundary validated; DB constraints present; validation failures are typed errors</evidence>
+  <artifacts>Layer map with schemas/constraints per boundary</artifacts>
+  <risks>Single-point validation, `as any` skips, missing env/queue validation, or none</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no reference files; this skill is self-contained.

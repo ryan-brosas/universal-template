@@ -17,6 +17,31 @@ For any non-trivial external API, framework, or version decision:
 
 No citation and no unverified label → the claim does not ship.
 
+## Core Principle
+
+This is a delivery-time gate, not a research workflow: non-trivial external decisions
+are not shipped on a guess. Cite the authoritative source (URL, docs, or local
+precedent), or mark the decision `[UNVERIFIED: reason]` explicitly — no citation and no
+unverified label means the claim does not ship.
+
+## When to Use / NOT
+
+- **Use when:** shipping code that depends on unfamiliar libraries, external APIs, or
+  framework behavior — any non-trivial external API, framework, or version decision.
+- **NOT when:** doing the discovery itself — discovery belongs to the research leaves
+  (`evidence-router`, `codex-websearch`, `opensrc`, `grill-with-docs`); this skill only
+  enforces the rule at delivery time.
+
+## Workflow
+
+1. Identify every non-trivial external API, framework, or version decision in the
+   change.
+2. Route discovery to the matching research leaf (table below) instead of re-deriving a
+   retrieval workflow here.
+3. Run the Gate Checklist: version-check → behavioral probe → cite or mark unverified →
+   conflict resolution.
+4. Ship only claims that carry a citation or an explicit `[UNVERIFIED: reason]` label.
+
 ## Route Discovery to research leaves
 
 Do not re-derive a retrieval workflow here. Load the matching leaf:
@@ -62,3 +87,7 @@ Do not re-derive a retrieval workflow here. Load the matching leaf:
   <risks>Unverified claims, stale docs, conflicting sources, or none</risks>
 </skill_result>
 ```
+
+## References
+
+N/A — no reference files; routing and the gate checklist are fully specified in this file.

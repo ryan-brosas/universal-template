@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Post-Completion Message Update — stale interactive Slack buttons are a trust bug, not a papercut
 
-**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-agents-awaithumans`. **Question:** How do you retire every action-button message once its task reaches a terminal state without ever failing the task lifecycle?
+**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-awaithumans`. **Question:** How do you retire every action-button message once its task reaches a terminal state without ever failing the task lifecycle?
 
 ## Snapshot-in, fan-out chat.update, swallow everything but import errors
 **Path/Symbol:** `packages/python/awaithumans/server/channels/slack/post_completion.py` — module docstring contract (:1-21), `_handoff_for_task` (:119-125), `_resolve_client` (:128-137), `update_slack_messages_for_task` (:50-116).
@@ -31,7 +31,7 @@ if client is None:
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-agents-awaithumans", query: "update_slack_messages_for_task terminal_message_blocks chat_update", limit: 5 });
+await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-awaithumans", query: "update_slack_messages_for_task terminal_message_blocks chat_update", limit: 5 });
 ```
 Live rank-2 line-exact (:50-116); rank-1 resolves the block builder it calls.
 

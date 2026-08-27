@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Slack Message Ledger — record-then-update needs no uniqueness constraint
 
-**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-agents-awaithumans`. **Question:** What does the persistence layer for "Slack messages we posted about a task" need — and deliberately NOT need?
+**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-awaithumans`. **Question:** What does the persistence layer for "Slack messages we posted about a task" need — and deliberately NOT need?
 
 ## Tiny DAL beside the model; duplicate row = harmless double chat.update
 **Path/Symbol:** `packages/python/awaithumans/server/channels/slack/message_log.py` — design docstring incl no-unique-constraint ruling (:1-12), `record_posted_message` (:29-52), `list_messages_for_task` (:55-66); model `server/db/models/slack_task_message.py`.
@@ -27,7 +27,7 @@ Best-effort insert: if the task was deleted between post and write, log and move
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-agents-awaithumans", query: "record_posted_message list_messages_for_task SlackTaskMessage", limit: 4 });
+await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-awaithumans", query: "record_posted_message list_messages_for_task SlackTaskMessage", limit: 4 });
 ```
 
 ## Verdict

@@ -7,6 +7,10 @@ disable-model-invocation: true
 
 # Development Lifecycle
 
+## Core Principle
+
+The session's state lives in the canonical artifact files under `.pi/work/<id>/`, not in chat. Every phase names its artifact, and every "done" claim cites `/verify` evidence.
+
 ## Canonical Artifact Files
 
 At the active work record `.pi/work/$(cat .pi/work/.active)/`, maintained in the working copy:
@@ -75,6 +79,10 @@ Codebase-driven records (default) skip spec.md; the session is the artifact.
 
 **Discovery** — Pi Fovea before text search. **Mutation** — file writes defer to the Schema mutation guard in AGENTS.md. **Verification** — direct behavioral probes with recorded output.
 
+## Verification
+
+`/verify` is non-negotiable: every "done" claim cites evidence recorded in `verification.md` / `.verify.log`, produced by direct behavioral probes with recorded output.
+
 ## Skill Result Contract
 
 ```xml
@@ -86,3 +94,7 @@ Codebase-driven records (default) skip spec.md; the session is the artifact.
   <risks>Skipped phases, stale entries, or none</risks>
 </skill_result>
 ```
+
+## References
+
+N/A — no reference files; the lifecycle hooks and artifact formats are inline in this skill.

@@ -10,6 +10,12 @@ disable-model-invocation: true
 
 Optimize for useful merged work, not counts. Discovery is read-only. Never comment, request assignment, fork, branch, push, or open a PR without approval for that exact action.
 
+## When to Use / NOT
+
+**Use** — finding and qualifying legitimate GitHub pull-request contribution opportunities in open-source repositories before claiming or implementing work.
+
+**NOT** — executing mutations: commenting, requesting assignment, forking, branching, pushing, or opening a PR without approval for that exact action; optimizing for counts instead of useful merged work.
+
 ## Workflow
 
 ### 1. Define the search
@@ -65,6 +71,16 @@ Stop after one READY candidate, three fully qualified candidates, or two evidenc
 
 For every claim: claim, source tool, exact call, URL or context, date, confidence. No source, no claim.
 
+## Red Flags
+
+A label alone treated as permission; sparse maintainer history turned into a probability claim; commit metadata used to prove account ownership or PR attribution; empty commits, typo farming, generated noise, dependency churn, or unsolicited refactors pursued; disposition READY without reproduction and a named verification command; discovery expanded past five repositories or ten issues without the user expanding it.
+
+## Verification
+
+Every claim carries claim, source tool, exact call, URL or context, date, and confidence — no source, no claim. Disposition READY requires wanted, collision-free, reproducible, bounded, and verifiable, with the smallest testable change and its test command confirmed.
+
+## Skill Result Contract
+
 <skill_result>
   <skill>github-contribution-opportunities</skill>
   <status>success|partial|blocked|failure</status>
@@ -73,3 +89,7 @@ For every claim: claim, source tool, exact call, URL or context, date, confidenc
   <risks>Collisions, attribution, policy gaps, spam risk, or none</risks>
   <next_action>One read-only step or one exact mutation awaiting approval</next_action>
 </skill_result>
+
+## References
+
+N/A — no reference files; scoring weights, dispositions, and stop conditions are inline in this skill.

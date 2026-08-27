@@ -31,6 +31,9 @@ Use when porting a mail-transfer-agent delivery engine or any DB-as-queue backgr
 - `references/data-dot-termination.md` — handler-swap body mode: dot-unstuffing, folded header index, two-line CR terminator gate.
 - `references/finished-terminal-gates.md` — size → self-hop loop → From-identity gates, then per-recipient persistence; reject-and-reset keeps sessions hot.
 - `references/nio-event-loop.md` — single-selector forked server: monitor-carried clients, STARTTLS socket swap, empty-selector process exit.
+- `references/dkim-header-canonicalization.md` — how do you produce a relaxed/relaxed DKIM-Signature for arbitrary raw mail without a DKIM library.
+- `references/dkim-signing-wiring.md` — where in the send pipeline does signing attach, and what key/signer object does it use.
+- `references/spam-inspector-fleet.md` — how do you fan a message out to rspamd/spamassassin + ClamAV without letting a scanner outage block delivery.
 
 ## Capsule map
 - **Queue claim plane** — `db-claim-locking`: `locked_by/locked_at/retry_after/attempts` columns + `HasLocking`; claim = one `UPDATE … WHERE unlocked AND ready LIMIT 1` stamped with `(locker, lock_time)` then read back by that exact pair; batch siblings co-claimed under the same stamp keyed by `batch_key + ip_address_id`; `ready_with_delayed_retry` debounces retries 30 s; `TidyQueuedMessagesTask` destroys days-stale locks.
@@ -54,7 +57,9 @@ Use when porting a mail-transfer-agent delivery engine or any DB-as-queue backgr
 - **Body capture** — `data-dot-termination`: swap dispatcher for a body proc; un-stuff leading `..`; fold headers into downcased name→values until blank line; terminator requires `.` with CR on current AND previous line; injected Received header seeds loop evidence.
 - **Terminal gates** — `finished-terminal-gates`: bytesize vs config MB → >4 self-hostname Received hops ⇒ 550 → credential's From-domain must resolve ⇒ 530 → persist per recipient type into MessageDB; all paths end `transaction_reset; @state = :welcomed`.
 - **Server runtime** — `nio-event-loop`: nio4r selector; client rides `monitor.value` through a STARTTLS socket swap that drops plaintext buffers; handshakes resume nonblock; empty-selector ⇒ `Process.exit(0)` graceful drain.
-
+- **DKIM header canonicalization** — `dkim-header-canonicalization`: how do you produce a relaxed/relaxed DKIM-Signature for arbitrary raw mail without a DKIM library.
+- **DKIM signing wiring** — `dkim-signing-wiring`: where in the send pipeline does signing attach, and what key/signer object does it use.
+- **Spam/virus inspector fleet** — `spam-inspector-fleet`: how do you fan a message out to rspamd/spamassassin + ClamAV without letting a scanner outage block delivery.
 ## Extending the foundation
 Add one `references/<seam>.md` capsule per new porting question. Mined pass 2 candidates still open: DKIM signing via `lib/postal/signer.rb`, click/open tracking middleware, spam inspector trio, inbound-server rate limiting (`Postal::Ratel`), FastServer SSL cert loading. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf.
 

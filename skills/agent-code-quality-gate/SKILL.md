@@ -7,6 +7,10 @@ disable-model-invocation: true
 
 # Agent Code Quality Gate
 
+## Core Principle
+
+Code-changed-this-session → review required. Scope = diff scope, and behavior tests, duplication check, and verification evidence are all mandatory — no "trust me, it works."
+
 ## Iron Laws
 
 <EXTREMELY-IMPORTANT>
@@ -82,3 +86,23 @@ Skipping the gate; "I checked, it's fine" (no evidence); scope creep unmarked; t
 ## Anti-Patterns
 
 **"I checked"** (no evidence); **"should work"**; **truncated output**; **"tests later"**; **.skip on new**; **removed unmarked**; **"while I'm here" unmarked**; **blockers unmarked**.
+
+## Verification
+
+Run the 5 checks against the diff: scope, duplication, behavior tests, verification evidence (named command ran, exit 0, output captured), regressions. Any failed check means the work is not done.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill>agent-code-quality-gate</skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>5-check gate run on the diff; named verification command exit 0 with captured output</evidence>
+  <artifacts>Gate result: pass, or tagged findings ([blocker]/[should-fix]/[nit]/[question])</artifacts>
+  <risks>Skipped checks, truncated output, undocumented overrides, or none</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no reference files; this skill is self-contained.

@@ -11,17 +11,18 @@ agents). It is the absorbed, living copy of the **pi-template** repository
 | Path | Contents |
 |---|---|
 | `skills/` | the full skill catalog (foundations + practice skills + pack routers) |
-| `templates/` | 15 CLI-neutral format templates (adr, agents, design, foundation-capsule, foundation-skill, issue, prd, project, proposal, roadmap, skill, state, tasks, tech-stack, user) |
+| `templates/` | 18 CLI-neutral format templates (adr, agents, design, foundation-capsule, foundation-skill, github-pr-ci, issue, prd, project, proposal, pull-request, readme, roadmap, skill, state, tasks, tech-stack, user) |
 | `essentials/` | the operating baseline (objectives, operating-philosophy, stack-your-leverage, steer-outcomes-not-behavior, guiding-small-model, enforce-code-quality-mechanically, how-to-build-good-tests) |
-| `prompts/` | the worldwide workflows (init, learn, audit, verify, gc) — host-neutral markdown |
+| `skills/workflow-lifecycle/` | the worldwide workflows (init, learn, audit, verify, gc) as one skill |
 | `mcp/servers.json` | the **canonical** MCP registry — per-CLI configs are derived copies |
 | `references/` | distilled contract capsules (init, mcp-catalog, templates-inventory) |
 | `AGENTS.md` | the distilled pi-template agent rules, globalized |
+| `.github/workflows/pr-quality.yml` | catalog quality CI (skill-validator + diff check + PR body contract) |
 
 ## How to use
 
-- **Init a project**: follow the `/init` workflow in `prompts/init.md` — use the
-  templates from `templates/`.
+- **Init a project**: run the `workflow-lifecycle` skill's init command (`skills/workflow-lifecycle/SKILL.md`,
+  details in `skills/workflow-lifecycle/references/init.md`) — use the templates from `templates/`.
 - **MCP**: the canonical registry is `mcp/servers.json`; wire servers into
   whichever CLIs are configured, one requested server at a time (merging into
   each CLI's own config rather than overwriting it).
@@ -30,7 +31,9 @@ agents). It is the absorbed, living copy of the **pi-template** repository
   uniform grammar — `skills/writing-skills/SKILL.md` + `templates/skill.md`.
 - **Daily loop**: `skills/workflow-lifecycle/SKILL.md` — init once, AGENTS.md
   is the spine, slice-by-slice with context before code, documents after
-  implementation, `/learn` closes the loop.
+  implementation, the learn command closes the loop.
+- **Catalog gate**: `SKILLS_ROOT="$PWD/skills" python3 scripts/skill-validator.py`
+  (exit 0 iff no P0). CI runs the same command via `.github/workflows/pr-quality.yml`.
 
 ## Source of truth
 

@@ -6,6 +6,23 @@ disable-model-invocation: true
 
 # Testing Anti-Patterns
 
+## Core Principle
+
+Test behavior, not mocks: assert observable outcomes through public seams, and keep production code free of test-only surface.
+
+## When to Use / NOT
+
+- **Use when:** writing or changing tests, adding mocks, or tempted to add test-only methods to production code.
+- **NOT when:** choosing a test framework or configuring a runner — this skill governs what tests assert and where they mock, not tooling.
+
+## Workflow
+
+1. Pick the mode: black-box by default; gray-box for stateful services, adapter contracts, durable state; white-box only where the branch IS the proof (Test Modes).
+2. Before mocking a dependency, write a contract test against the real dependency; pair mocked tests with at least one live boundary probe for external-system behavior (Test Modes).
+3. Mock at owned interfaces only — one adapter is a hypothetical seam; two adapters make it real (Seam rule).
+4. Assert observable outcomes, not mock calls; one intent per test (Direct Behavioral Probes, Iron Laws).
+5. Check Red Flags before shipping: no tautologies, no mock-only assertions, no shared state, no private-via-cast.
+
 ## Iron Laws
 
 <EXTREMELY-IMPORTANT>
@@ -52,3 +69,24 @@ Test passes when body is empty; test asserts only `toHaveBeenCalled`; `_method` 
 ## Anti-Patterns
 
 **Tautology**; **mock test**; **test-only method**; **mock everything**; **no contract**; **shared state**; **private testing**.
+
+## Verification
+
+- A test must fail for the right reason: break the code in the way the test targets and confirm the failure names that cause — a test that passes with an empty body, or only asserts `toHaveBeenCalled`, is a tautology (Iron Laws, Red Flags).
+- Scan for the red-flag shapes before shipping: `_method` in prod, unscoped `jest.mock`, shared `beforeEach` mutation, tests depending on each other, snapshot of a snapshot, private testing via cast.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill><name></skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>…</evidence>
+  <artifacts>…</artifacts>
+  <risks>…</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no references/ directory; the skill is a self-contained prompt corpus.

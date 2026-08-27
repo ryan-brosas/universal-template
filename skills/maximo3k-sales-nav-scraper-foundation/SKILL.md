@@ -34,27 +34,24 @@ Scrape a LinkedIn Sales Navigator saved-search people list into a CSV using Sele
 - `references/module-entry-no-main-guard.md` — flat top-level program with no `__main__` guard: importing launches Chrome and runs the entire scrape; `driver.quit()` (:164) is a best-effort last statement with no `finally` anywhere.
 
 ## Capsule map
-| Capsule | File | One-line contract |
-|---|---|---|
-| Config contract | `references/config-contract-unvalidated-load.md` | three-key `config.json` parsed once, zero validation; missing key ⇒ tier-C KeyError after Chrome launch |
-| Console telemetry | `references/console-telemetry-leads-ledger.md` | 9 print sites lead the CSV by ≤1 page; stdout carries raw profile URLs/names (:82/:98) |
-| Driver bootstrap | `references/driver-bootstrap.md` | single session, no user-data-dir; quit once at run end |
-| Login flow | `references/login-flow.md` | fill by NAME locators → RETURN → blind 15 s challenge window → explicit start-url nav |
-| Extraction | `references/extraction.md` | scroll → visibility → five data-anonymize reads; exception ⇒ all-NA row, run continues |
-| Stale-element re-find | `references/stale-refind.md` | scroll ORIGINAL element, read RE-FOUND element at same index |
-| Page-settle timing | `references/page-settle-timing.md` | waits gate existence, sleeps gate completeness/rate; never collapse them |
-| CSV output | `references/csv-output.md` | `'a'` mode + `newline=''` + UTF-8; header iff `file.tell() == 0` |
-| CSV ledger durability | `references/csv-ledger-durability.md` | one bulk append per PAGE = commit unit; append-only across pages, no dedup |
-| Pagination | `references/pagination.md` | click-if-enabled Next loop; three break paths never over-run the last page |
-| Failure topology | `references/failure-topology.md` | card error ⇒ NA row + continue; page-nav error ⇒ break; login/config ⇒ uncaught crash |
-| Parent-anchor link | `references/parent-anchor-link.md` | profile URL = `href` of the name span's PARENT anchor (`By.XPATH, ".."`) |
-| Stale-wait boundary | `references/stale-wait-boundary.md` | :72 visibility wait raises StaleElementReferenceException pre-heal; staleness contained to one NA row |
-| Index coupling | `references/index-coupling-failure-modes.md` | positional match between two find_elements lists: shrink=IndexError, reorder=silent wrong card, stale=NA row |
-| Mid-run authwall death | `references/mid-run-authwall-death.md` | unprotected :129 artdeco-list wait crashes the run mid-pagination; quit() never runs |
-| Manifest-less dependencies | `references/manifestless-dependency-contract.md` | import block :1-12 is the sole dep surface; unpinned selenium+webdriver-manager; network chromedriver fetch at :20 |
-| No-main-guard entrypoint | `references/module-entry-no-main-guard.md` | import == full run (driver at :20 precedes every def); quit() best-effort, zero finally |
-| Row-projection partiality | `references/csv-row-projection-partiality.md` | direct five-key indexing = latent KeyError; exception persists prefix, process death loses page buffer |
-
+- **Config contract** — `config-contract-unvalidated-load`: an unvalidated three-key `config.json` load whose missing keys crash tier C.
+- **Console telemetry leads the ledger** — `console-telemetry-leads-ledger`: nine print sites are the ONLY progress channel, and stdout carries PII.
+- **CSV ledger durability** — `csv-ledger-durability`: one write call per page, append-only, no dedup: crash loses exactly the current page.
+- **CSV output** — `csv-output`: append five-field rows and write the header only on first write.
+- **Row-projection partiality** — `csv-row-projection-partiality`: direct five-key indexing makes schema violations latent tier-C crashes, and an exception persists the page prefix while process death loses it.
+- **Driver bootstrap** — `driver-bootstrap`: one Chrome session via webdriver-manager with no profile reuse.
+- **Extraction** — `extraction`: scroll each card into view and pull the five data-anonymize fields with NA defaults.
+- **Failure topology** — `failure-topology`: card errors degrade to NA rows, pagination errors end the run, login errors crash it.
+- **Index-coupling** — `index-coupling-failure-modes`: two independent `find_elements` calls over one mutable list: the failure modes of matching by position.
+- **Login flow** — `login-flow`: authenticate through a possible captcha and land on the saved-search URL.
+- **Manifest-less dependency contract** — `manifestless-dependency-contract`: the import block is the ONLY dependency declaration.
+- **Mid-run authwall death** — `mid-run-authwall-death`: the page-level presence wait sits OUTSIDE every try tier.
+- **No-main-guard entrypoint** — `module-entry-no-main-guard`: importing the module launches Chrome and runs the whole scrape; quit() is best-effort.
+- **Page-settle ladder** — `page-settle-timing`: explicit sleeps stacked on top of every explicit wait.
+- **Pagination** — `pagination`: page through Sales Navigator results on the enabled Next button.
+- **Parent-anchor link extraction** — `parent-anchor-link`: the profile URL lives on the PARENT of the name span, not the span itself.
+- **Stale-element re-find** — `stale-refind`: re-locate each card by index before touching its fields.
+- **Stale-wait boundary** — `stale-wait-boundary`: the visibility wait itself raises StaleElementReferenceException before the re-find can heal.
 ## Extending the foundation
 Add one graph-selected, source-confirmed capsule per new porting seam (e.g. a challenge-classification seam or a different result-card layout). Add exactly one loader line under the matching subsystem group and one map row; retain decisive source, an invariant, a direct-test probe (or an explicit no-test caveat), and a live-verified `search_graph` retrieval in the capsule rather than expanding this leaf.
 

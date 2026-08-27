@@ -1,16 +1,6 @@
 ---
 name: ttdl
-description: >-
-  Download TikTok videos browser-natively — no `yt-dlp`, no signature solver, no
-  watermark. The browser plays the video (URL signing, CDN tokens, quality
-  selection all done by the page itself); ttdl records the demuxed media the
-  player feeds to MediaSource via a `SourceBuffer.appendBuffer` hook and muxes
-  to MP4 with ffmpeg. If the user can watch the video, it's downloadable —
-  region-locked and age-gated content work as long as a logged-in tab can play
-  them. The capture is the clean, unwatermarked playback stream (TikTok's own
-  Download button serves a separately-rendered watermarked file). Use when the
-  user wants to download, save, or fetch a TikTok video (with or without audio)
-  to disk.
+description: "Use when the user wants to download, save, or fetch a TikTok video (with or without audio) to disk — browser-native capture with no yt-dlp, no signature solver, no watermark: the page plays the video (URL signing, CDN tokens, quality selection), ttdl records the demuxed media the player feeds to MediaSource via a SourceBuffer.appendBuffer hook and muxes to MP4 with ffmpeg. Region-locked and age-gated content work as long as a logged-in tab can play them; the capture is the clean unwatermarked playback stream."
 setup: bash <skill-dir>/scripts/setup
 compatibility: Requires `browser-harness-js` on PATH + a Chromium browser with remote debugging (see the `cdp` skill) and a logged-in TikTok tab for gated/region-locked content. `ffmpeg` on PATH (always — mux + trim + faststart).
 ---
@@ -24,6 +14,25 @@ quality ramp, the edit list — the page already does for playback. ttdl just
 records the result. The capture is the **clean, unwatermarked** playback stream:
 TikTok's in-app/Download button serves a *separately rendered* watermarked file,
 while recording MediaSource gets exactly what the player shows the viewer.
+
+## Core Principle
+
+The page plays the video — URL signing, CDN tokens, quality selection are all done by TikTok's own player; ttdl just records the demuxed media the player feeds to MediaSource via a `SourceBuffer.appendBuffer` hook and muxes it to MP4 with ffmpeg. No yt-dlp, no signature solver, no HTTP client impersonation.
+
+## When to Use / NOT
+
+- **Use when:** the user wants to download, save, or fetch a TikTok video (with or without audio) to disk — full watch URL, short link (`vm.tiktok.com/…`), or bare numeric ID. Region-locked and age-gated content work as long as a logged-in tab can play them.
+- **NOT when:** no Chromium-based browser with remote debugging is running or `ffmpeg` is not on PATH (the CLI refuses to run); or the target is YouTube (that is the `ytdl` skill's domain); or the user wants the watermarked in-app Download file (this skill captures the clean playback stream instead).
+
+## Workflow
+
+1. Prerequisites: `browser-harness-js` on PATH, a Chromium browser with remote debugging, `ffmpeg` on PATH (always required); run `bash <skill-dir>/scripts/setup` if not set up.
+2. Invoke: `ttdl "<url-or-id>" [-q best|audio] [-o Name] [-d dir]`, or `--info` for title/author/duration/resolution only.
+3. The script connects to the shared CDP session and injects the MSE hook via `Page.addScriptToEvaluateOnNewDocument` before any page JS runs (How it works, step 2).
+4. It opens the watch URL in a foreground tab, waits for `networkIdle`, polls for `<video>`, and bails on a verify/captcha interstitial (step 3).
+5. It plays muted from 0 and waits until the watched portion is buffered AND append activity quiesces, then freezes capture + pauses atomically (steps 5–6).
+6. It picks the largest video + largest audio buffer (the quality ramp creates two MediaSources) and pulls each to disk in 256 KB base64 chunks (steps 7–8).
+7. ffmpeg muxes `-c copy -t <duration> -movflags +faststart`; the tab closes in `try/finally` (steps 9–10).
 
 ```bash
 ttdl "https://www.tiktok.com/@user/video/7642721752497310989"   # best → ~/Downloads
@@ -166,3 +175,37 @@ All paths relative to `<skill-dir>`.
 - **Bytes cross the CDP boundary as base64** in 256 KB (3-aligned) slices via `Runtime.evaluate` `returnByValue`, decoded with `Buffer.from(b64,'base64')` and appended. The slice size is divisible by 3 so each slice's base64 is independently decodable (no interior `=` padding). Don't slice at a non-multiple-of-3 offset or the concatenation decodes to garbage. **256 KB, NOT 4 MB:** a single `returnByValue` frame carrying base64 of a 4 MB slice is ~5.6 MB of JSON on one CDP frame, which **closes Dia's debug WebSocket on the first call** (reproduced in ytdl — a 256 KB slice from the same buffer survives, the 4 MB slice drops `rs→3` instantly). This was latent in ttdl because TikTok buffers are usually <4 MB, but any longer/higher-quality HEVC TikTok exceeds it and the first pull slice kills the socket. Keep slices small; throughput is a non-issue at these sizes.
 - **Output is HEVC + AAC, which is QuickTime/iOS-friendly as-is.** TikTok typically serves HEVC (`hvc1`) video + AAC (`mp4a`) audio; `-c copy` preserves those and iOS/macOS play them natively (no re-encode needed, unlike ytdl's AV1/Opus). If a video comes back as AV1/VP9+Opus and you need QuickTime/iOS, re-encode in one step: `ffmpeg -y -i "out.mp4" -c:v libx264 -crf 18 -preset veryfast -pix_fmt yuv420p -c:a aac -b:a 192k "out-qt.mp4"`.
 - **No backticks anywhere in the heredoc body.** In an unquoted `<<EOF`, a lone backtick opens bash command substitution and trips an EOF parse error. Use string concatenation (`'...' + var + '...'`) and double-quoted JS strings, never template literals. Likewise avoid `$` in JS (only intentional `${bash_var}` interpolations belong) and avoid backslash-regex for URL parsing (use `indexOf`/`slice`) so the unquoted heredoc passes it through untouched.
+
+## Red Flags
+
+- Classifying SourceBuffers by container mime instead of the `codecs=` fourcc — TikTok puts audio in a `video/mp4` buffer; mime-based classification yields a silent capture (Traps).
+- Post-load hook injection (`Runtime.evaluate`) instead of `Page.addScriptToEvaluateOnNewDocument`; patching `appendBuffer` on the prototype — a non-writable native method that silently no-ops.
+- Background tabs: flaky autoplay means MediaSource is never fed and capture is empty.
+- Skipping the trim to `<video>.duration` (raw MSE media is longer than what was played); latching on `buffered.end` alone or on `ended` (the auto-loop re-feeds MSE).
+- Assuming one buffer per kind — the quality ramp re-inits MediaSource, yielding 4 buffers (2 video, 2 audio).
+- One-shot `muted = true` (the player un-mutes on a quality switch); reading `document.title` before hydration (generic title).
+- Hammering a captcha interstitial; slicing base64 at a non-multiple-of-3 offset or in 4 MB slices (closes the debug WebSocket); dropping `-y` from ffmpeg.
+- Backticks or template literals anywhere in the unquoted heredoc body.
+
+## Verification
+
+- The output file exists at the expected path (`~/Downloads` default, or `-d`) with the `-o` name.
+- The muxed output's duration equals `<video>.duration` (the trim applied), not the raw MSE length.
+- Audio is present and not silent (codec classification worked); `--info` reports the expected title/author/duration/resolution.
+- The output stays pure HEVC + AAC (`-c copy`, no re-encode), QuickTime/iOS-friendly as-is.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill><name></skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>…</evidence>
+  <artifacts>…</artifacts>
+  <risks>…</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no references/ directory; the skill ships `scripts/ttdl` + `scripts/setup` (see Files).

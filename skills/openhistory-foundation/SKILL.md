@@ -28,6 +28,7 @@ excerpts and graph retrieval.
 - `references/pending-episode-admission-gate.md` — when is an episode ready to be summarized exactly once, and which inference failures skip one item vs abort the batch?
 - `references/claim-ceiling-evidence-packet.md` — how do you convert telemetry into LLM briefs whose title verbs can never exceed the observed evidence?
 - `references/derived-store-privacy-reconciliation.md` — after purging protected raw records, how do you cascade deletion through tiered derived stores by reproducing provenance?
+- `references/owned-data-directory.md` — how do I claim, adopt, and delete an on-disk data directory without ever touching one we don't own.
 
 ## Capsule map
 - **Parse gate** — `event-parse-gate`: zod-bounded line parse; protected events and malformed lines are both just `undefined`, so privacy filtering is unconditional at ingestion.
@@ -43,7 +44,7 @@ excerpts and graph retrieval.
 - **Admission gate** — `pending-episode-admission-gate`: single-flight batch (cap 8), pending = unstored membership OR changed sourceEventIds, ≥8 min window + 60 s end quiet (or not-newest/sleep-ended); item-scoped inference errors skip one episode into a public lastError.
 - **Claim ceiling** — `claim-ceiling-evidence-packet`: work units grouped by (app, durable object), additive priority weights (+80 draft/+120 submit/+1000 displayed result), claim-ceiling ladder with safe lead verbs and anti-overstatement boundary sentences; snapshot supersede by payload containment.
 - **Reconciliation** — `derived-store-privacy-reconciliation`: scrub → re-segment once → keep only items whose provenance reproduces exactly (timeline ids+event ids; hours via sorted revision equality; rollups via revision-set membership); replaceAll unlinks orphan markdown and rewrites indexes atomically.
-
+- **Owned data directory** — `owned-data-directory`: how do I claim, adopt, and delete an on-disk data directory without ever touching one we don't own.
 ## Extending the foundation
 Add one `references/<seam>.md` capsule for one graph-selected, source-confirmed porting question. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf.
 

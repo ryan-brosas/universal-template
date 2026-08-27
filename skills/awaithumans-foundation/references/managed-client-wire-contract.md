@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # AwaitVerify Managed Client — signed-URL uploads with an omit-means-no-document contract
 
-**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-agents-awaithumans`. **Question:** How does the SDK talk to the managed backend so DEKs stay client-side and "no document" is unambiguous?
+**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-awaithumans`. **Question:** How does the SDK talk to the managed backend so DEKs stay client-side and "no document" is unambiguous?
 
 ## Three control-plane calls + one raw PUT; explicit-null vs omitted distinction
 **Path/Symbol:** `packages/python/awaithumans/awaitverify/_managed_client.py` — frozen dataclasses `FragmentSlot/UploadSession/CreatedTask/PolledTask` (:32-61), `ManagedBackendError` (:64-79), `create_upload_session` (:82-114), `upload_fragment` (:117-137), `create_task` (:140-188), `poll_task` (:191-213), `_post_json` (:216-228). Errors taxonomy in `awaitverify/errors.py` (what→why→fix→docs pattern; `VerifyDepsMissingError` :60-78).
@@ -26,7 +26,7 @@ ManagedBackendError.hint maps status classes for the caller: 401/403 → check a
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-agents-awaithumans", query: "create_upload_session upload_fragment poll_task ManagedBackendError FragmentSlot", limit: 5 });
+await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-awaithumans", query: "create_upload_session upload_fragment poll_task ManagedBackendError FragmentSlot", limit: 5 });
 ```
 Live rank-1..3+5 line-exact (:117-137, :82-114, :191-213, error class :67-79).
 

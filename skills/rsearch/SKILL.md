@@ -1,14 +1,6 @@
 ---
 name: rsearch
-description: >-
-  Search Reddit posts through the browser via CDP. Returns structured results
-  (title, subreddit, author, score, comments, permalink URL, selftext, media
-  URLs) for any query, with optional subreddit restriction and sort/time
-  filters. Use when the user asks to search Reddit, find discussions or posts,
-  or gauge community sentiment on a topic. Requires browser-harness-js on PATH
-  and a Chromium-based browser with remote debugging; no Reddit API key —
-  works logged-out, and a logged-in reddit session is used automatically if
-  present.
+description: "Use when the user asks to search Reddit, find discussions or posts, or gauge community sentiment on a topic — search Reddit posts through the browser via CDP. Returns structured results (title, subreddit, author, score, comments, permalink URL, selftext, media URLs) for any query, with optional subreddit restriction and sort/time filters. Requires browser-harness-js on PATH and a Chromium-based browser with remote debugging; no Reddit API key — works logged-out, and a logged-in reddit session is used automatically if present."
 setup: bash <skill-dir>/scripts/setup
 compatibility: >-
   Requires browser-harness-js on PATH and a running Chromium browser with
@@ -20,6 +12,36 @@ compatibility: >-
 # Reddit Search
 
 Search Reddit posts through the browser: a background tab opens `www.reddit.com`, then a **same-origin** `fetch('/search.json?…', { credentials: 'include' })` hits reddit's own JSON listing endpoint with the browser's cookies, UA, and referer. Adapted from [opencli](https://github.com/jackwener/opencli)'s `clis/reddit/search.js`. No Reddit API key, no OAuth app, no scraping selectors — the response is reddit's canonical listing JSON. Each call opens its own tab and WebSocket session — safe for parallel use.
+
+## Core Principle
+
+Ask via the page, not from Node: a background tab opens `www.reddit.com`, then a
+**same-origin** `fetch('/search.json?…', { credentials: 'include' })` hits reddit's own
+JSON listing endpoint with the browser's cookies, UA, and referer. No Reddit API key,
+no OAuth app, no scraping selectors — the response is reddit's canonical listing JSON.
+
+## When to Use / NOT
+
+- **Use when:** the user asks to search Reddit, find discussions or posts, or gauge
+  community sentiment on a topic — any query, with optional subreddit restriction and
+  sort/time filters. Works logged-out; a logged-in reddit session is used automatically
+  if present.
+- **NOT when:** the task is anything other than searching (posting, commenting, etc.),
+  or no Chromium-based browser with remote debugging is running — the in-page fetch
+  needs a committed `reddit.com` origin.
+
+## Workflow
+
+1. Ensure prerequisites: `browser-harness-js` on PATH and a running Chromium-based
+   browser with remote debugging (`chrome://inspect` or `--remote-debugging-port`); run
+   `bash <skill-dir>/scripts/setup` if not set up.
+2. Run `rsearch "<query>" [count]` with flags before the query: `--json`,
+   `--subreddit NAME`, `--sort S`, `--time T`.
+3. Read the structured results (title, subreddit, author, score, comments, permalink
+   URL, selftext, media URLs); link posts carry the external target in
+   `url_overridden_by_dest`.
+4. On persistent failure after the built-in retries, wait a bit or check the login
+   state — it means real rate-limiting.
 
 ## Usage
 
@@ -77,3 +99,42 @@ Link posts carry the external target in `url_overridden_by_dest` (pretty output 
 - **Non-JSON or non-200 responses surface as errors**, not empty results — e.g. `HTTP 403: Blocked` or a "non-JSON response … block or login wall" message. This fires only after the CLI has already retried twice with backoff: a fresh cookie jar's first `/search.json` hit gets a 403 interstitial whose response sets the cookies that make the retry pass, so a persistent failure means real rate-limiting — wait a bit or check the login state.
 - **Result count can be below `count`.** Reddit caps `limit` at 100 (the CLI clamps too) and often returns fewer, especially inside small subreddits.
 - **Multi-flag ordering:** flags go before the query (`rsearch --sort top --time week "query"`), matching `gmaps`.
+
+## Red Flags
+
+- Server-side `fetch`/`curl` of `reddit.com/search.json` instead of the in-page fetch —
+  bot-walled or cookie-less default results.
+- `waitFor('networkIdle')` on reddit — the SPA polls continuously, so the quiet window
+  may never open.
+- An unbounded page-side fetch — CDP calls have no built-in timeout; the eval must be
+  raced against the 20 s node-side timeout.
+- Treating an empty result as success when the response was non-JSON or non-200 — those
+  surface as errors, not empty results.
+- Expecting exactly `count` results — reddit caps `limit` at 100 and often returns
+  fewer, especially inside small subreddits.
+- Flags after the query — flags go before the query.
+
+## Verification
+
+- The command exits 0 and prints results (pretty text, or a raw JSON array with
+  `--json`).
+- Each result carries the expected fields: title, subreddit, author, score, comments,
+  permalink URL, selftext, media URLs.
+- A persistent error after the built-in retries means real rate-limiting — wait a bit or
+  check the login state before retrying.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill><name></skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>…</evidence>
+  <artifacts>…</artifacts>
+  <risks>…</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no reference files; usage, result shape, and traps are fully covered in this file.

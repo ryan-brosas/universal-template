@@ -1,6 +1,6 @@
 ---
 name: pi-mono-foundation
-description: Use when porting agent-loop, event-stream, provider-retry, context-compaction, branch-summarization, tool-batch-execution, auto-compaction wiring, Anthropic wire-compat/message normalization, session-storage backends, or extension tool-wrapping machinery from badlogic/pi-mono — capsule-v2 source maps with decisive excerpts and graph retrieval.
+description: Use when porting agent-loop, event-stream, provider-retry, context-compaction, branch-summarization, tool-batch-execution, auto-compaction wiring, Anthropic wire-compat/message normalization, session-storage backends, extension tool-wrapping, Vertex AI auth/ADC ladders, Azure OpenAI Responses twin deltas, Codex WebSocket resume transports, provider OAuth refresh contracts, or cross-model message-history preshaping from badlogic/pi-mono — capsule-v2 source maps with decisive excerpts and graph retrieval.
 ---
 
 # pi-mono: agent-runtime foundation
@@ -21,6 +21,11 @@ Use when porting the request-lifecycle spine of a coding agent: typed single-con
 - `references/auto-compaction-activation.md` — the session-level gate ladder that fires compaction, retries overflow exactly once, and never re-fires on stale usage.
 - `references/sqlite-session-backend.md` — the pluggable SessionStorage contract, serialized write path, and shared conformance battery that proves backend equivalence.
 - `references/extension-tool-wrapping.md` — interconvert extension ToolDefinitions and kernel AgentTools and announce dynamically added tools as data on results.
+- `references/google-vertex-auth-adc.md` — fork Vertex requests between API-key and ADC/service-account clients without misrouting placeholder credentials, and resolve project/location/baseUrl safely.
+- `references/azure-responses-twin-deltas.md` — port an Azure-hosted OpenAI Responses endpoint: deployment-name indirection, base-url normalization, and exactly which shared-kernel planes the twin drops.
+- `references/codex-ws-session-resume-lane.md` — bridge a WebSocket Responses transport into the shared stream kernel with sticky SSE fallback, bounded retries, connection reuse, and delta continuations.
+- `references/provider-oauth-refresh-plane.md` — structure provider OAuth login/refresh/toAuth over a credential store whose serialized modify path makes concurrent token rotation safe.
+- `references/transform-messages-preshaper.md` — pre-shape a cross-model message history (thinking signatures, tool-call ids, orphaned calls, image downgrade) before any provider converter.
 
 ## Capsule map
 - **EventStream kernel** — `event-stream`: queue+waiter dual surface; push-after-done dropped; `result()` independent of iteration; error events resolve (not reject) the final promise.
@@ -35,6 +40,11 @@ Use when porting the request-lifecycle spine of a coding agent: typed single-con
 - **Auto-compaction activation** — `auto-compaction-activation`: `_checkCompaction` gate ladder (enabled → aborted → same-model → stale-timestamp guard) around overflow compact-and-retry-once latch and threshold firing with zero-usage estimate fallback; resolves the leaf's recorded graph blind spot.
 - **SQLite session backend** — `sqlite-session-backend`: SessionStorage contract with storage-assigned parentId/seq/timestamp under a single write queue; equivalence proven by the shared `createSessionBackendConformance` battery (30/30 live).
 - **Extension tool wrapping** — `extension-tool-wrapping`: ToolDefinition↔AgentTool interconversion with closure-injected context; `addedToolNames` diffed across execute feeds Anthropic `tool_reference` deferred loading as replayable data.
+- **Vertex auth fork** — `google-vertex-auth-adc`: marker (`gcp-vertex-credentials`) and `<placeholder>` keys fall through to the ADC client (project/location env ladders, actionable throws); real keys build a project-less client; custom baseUrl ⇒ COLLECTION scope + apiVersion suppression when the URL already versions.
+- **Azure Responses twin deltas** — `azure-responses-twin-deltas`: model = deployment (option → `AZURE_OPENAI_DEPLOYMENT_NAME_MAP` → id); base-url ladder rewrites Azure-host paths to `/openai/v1`; drops deferred-tools and prompt-cache-retention planes; keeps shared id grammar, reasoning block, min-16 token floor, samplingParams-last.
+- **Codex WS resume lane** — `codex-ws-session-resume-lane`: sticky per-session WS→SSE fallback; ≤1 retry each for missing-continuation and pre-start connection-limit; never downgrade after events emitted; connection cache keyed session→account with busy-bypass + TTL/age reapers; exact-prefix delta continuations via CONNECTION-scoped `previous_response_id`.
+- **Provider OAuth refresh plane** — `provider-oauth-refresh-plane`: CredentialStore.modify is the only write path; getAuth refreshes INSIDE that lock so concurrent requests cannot double-refresh; OAuthAuth splits network refresh from side-effect-free toAuth derivation (copilot per-credential baseUrl).
+- **Message-list preshaper** — `transform-messages-preshaper`: same-model triple gate (provider+api+model) governs thinking-signature survival and tool-call id remaps; errored/aborted turns skipped; synthetic error toolResults close orphaned calls at assistant/user/end boundaries; consecutive images collapse to one placeholder.
 
 ## Extending the foundation
 Add one `references/<seam>.md` capsule for one graph-selected, source-confirmed porting question. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf.
@@ -46,4 +56,4 @@ pi-mono (MIT, © Mario Zechner), `main@80e62761f7251a104f1b21d9c73920c720f0ec00`
 Revalidate `pi-mono` before porting: run `index_status`, `check_index_coverage`, `search_graph`, `trace_path`, and `get_code_snippet`. Record the graph root, branch, commit, mode, node/edge counts, freshness, and any coverage caveats; source and direct tests decide shipped claims. Known graph blind spots: `compact()`/`shouldCompact()`/`generateBranchSummary()` show zero inbound CALLS edges — activation is dynamic wiring in `coding-agent/src/core/agent-session.ts` (:2150 threshold check, :2166 `_runAutoCompaction`, :3056/:3122 branch switch).
 
 ## Boundaries
-Adopt pure kernels: EventStream, retry ladder, loop semantics, compaction pipeline, branch summarization, tool-batch execution, compaction gate ladder, SessionStorage contract, wrapper interconversion. Adapt message-model boundaries (`convertToLlm`, AgentMessage roles) and compat flag sets to your host vocabulary; adapt the coding-agent fork's auth-bearing summarizer options if your host owns auth outside the model registry. Omit product planes: tui component kit and server/client/protocol RPC remain unmined seams; the sqlite-node FTS search-backend plane is deferred behind the storage contract.
+Adopt pure kernels: EventStream, retry ladder, loop semantics, compaction pipeline, branch summarization, tool-batch execution, compaction gate ladder, SessionStorage contract, wrapper interconversion, Vertex auth fork, Azure twin config ladders, Codex WS transport FSM, OAuth credential contract, message preshaper. Adapt message-model boundaries (`convertToLlm`, AgentMessage roles), compat flag sets, and credential storage to your host vocabulary; adapt the coding-agent fork's auth-bearing summarizer options if your host owns auth outside the model registry. Omit product planes: tui component kit and server/client/protocol RPC remain unmined seams; the sqlite-node FTS search-backend plane is deferred behind the storage contract.

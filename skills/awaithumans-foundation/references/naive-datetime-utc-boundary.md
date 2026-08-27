@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Naive-Datetime UTC Boundary — SQLite drops tzinfo and local time lies
 
-**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-agents-awaithumans`. **Question:** Where must DB-loaded datetimes be coerced before crossing a channel boundary, and what breaks if they aren't?
+**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-awaithumans`. **Question:** Where must DB-loaded datetimes be coerced before crossing a channel boundary, and what breaks if they aren't?
 
 ## Write-path pair: utils/time.to_utc_unix (epoch out) + schemas/_datetime.utc_iso (string out)
 **Path/Symbol:** `packages/python/awaithumans/utils/time.py` — trap docstring (:1-17), `to_utc_unix` (:24-33); twin `server/schemas/_datetime.py` — `utc_iso` (:21-34); consumers: handoff expiry (`handoff_url.task_handoff_expiry`), response serializers (`schemas/task.py:131,:142`, `schemas/audit.py:29`).
@@ -29,7 +29,7 @@ return dt.isoformat().replace("+00:00", "Z")
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-agents-awaithumans", query: "to_utc_unix naive datetime timestamp", limit: 4 });
+await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-awaithumans", query: "to_utc_unix naive datetime timestamp", limit: 4 });
 ```
 Live rank-3 line-exact (:24-33); rank-1 shows the Postgres-side `_patch_naive_timestamp_columns` sibling in db/connection.py.
 

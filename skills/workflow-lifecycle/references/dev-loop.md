@@ -25,7 +25,7 @@ init (once)  →  AGENTS.md is the operating spine
  documents AFTER implementation ──┐                  │
       · update .pi/state.md        │                 │
       · tick roadmap item          │                 │
-      · /learn if a lesson emerged │                 │
+      · learn if a lesson emerged │                 │
       └────────────────────────────┴─────────────────┘
 ```
 
@@ -46,8 +46,8 @@ init (once)  →  AGENTS.md is the operating spine
 5. **Follow the essentials** (`~/.agents/essentials/`): objectives, operating
    philosophy, steer outcomes not behavior, guiding-small-model, stack your
    leverage, enforce code quality mechanically, how to build good tests.
-6. **Close the loop.** If a step taught something reusable, distill via
-   `/learn` into a skill (use `~/.agents/templates/skill.md`).
+6. **Close the loop.** If a step taught something reusable, distill via the
+   learn command into a skill (use `~/.agents/templates/skill.md`).
 
 ## Per-phase context map
 

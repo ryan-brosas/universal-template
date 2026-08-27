@@ -7,6 +7,16 @@ disable-model-invocation: true
 
 # Deprecation & Migration
 
+## Core Principle
+
+Deprecate first, remove later, and document the migration path. "Deprecated" without "do this instead" is a wall, not a path; keep both working during deprecation, until the removal version.
+
+## When to Use / NOT
+
+**Use** — deprecating APIs, migrating between library versions, removing legacy code, or planning breaking changes.
+
+**NOT** — when nothing is being removed or replaced: there is no deprecation period, migration path, or codemod to design.
+
 ## Iron Laws
 
 <EXTREMELY-IMPORTANT>
@@ -17,7 +27,7 @@ disable-model-invocation: true
 - **Communicate in changelog, docs, runtime warnings.** All three.
 </EXTREMELY-IMPORTANT>
 
-## Deprecation Lifecycle
+## Workflow — Deprecation Lifecycle
 
 ```
 [1] Add @deprecated notice + runtime warning
@@ -105,3 +115,26 @@ Removal without notice; `@deprecated` without runtime warning; no migration guid
 ## Anti-Patterns
 
 **Remove without deprecating**; **deprecate without migration path**; **silent deprecation**; **codemod that breaks real code**; **bundled breaking changes**; **no changelog entry**; **"forever deprecated"** (commit to the timeline).
+
+## Verification
+
+- Changelog entry present: "Removed X. Use Y. Migration: <link>".
+- Runtime warning fires (rate-limited `console.warn`) alongside the `@deprecated` JSDoc.
+- Migration guide ships with a codemod tested on real code, not just samples.
+- Both old and new paths still work during the deprecation period.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill>deprecation-and-migration</skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>…</evidence>
+  <artifacts>…</artifacts>
+  <risks>…</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no reference files; all templates and examples are inline in this skill.

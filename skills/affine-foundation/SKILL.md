@@ -1,6 +1,6 @@
 ---
 name: affine-foundation
-description: "AFFiNE local-first collaboration stack — Yjs sync engine (DocEngine/SyncPeer), reactive block store (stash/pop, flat Y.Map proxies, schema globs), and production doc-sync job kernel with clock-map dedup. Load when porting CRDT sync loops, offline-first storage ladders, or block-editor data layers."
+description: "Use when porting CRDT sync loops, offline-first storage ladders, or block-editor data layers — AFFiNE local-first collaboration stack: Yjs sync engine (DocEngine/SyncPeer), reactive block store (stash/pop, flat Y.Map proxies, schema globs), and production doc-sync job kernel with clock-map dedup."
 ---
 
 # AFFiNE: local-first collaborative block editor

@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Secret Lookup Funnel — one Settings.get_secret instead of scattered os.environ reads
 
-**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-agents-awaithumans`. **Question:** Why must verifier API keys be read through Settings even when their env-var name arrives at runtime in task config?
+**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-awaithumans`. **Question:** Why must verifier API keys be read through Settings even when their env-var name arrives at runtime in task config?
 
 ## Declared-field first, os.environ fallback for undeclared names
 **Path/Symbol:** `packages/python/awaithumans/server/core/config.py` — `Settings.get_secret` (:100-130).
@@ -30,7 +30,7 @@ return _os.environ.get(env_name) or None
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-agents-awaithumans", query: "get_secret Settings undeclared env var verifier api key", limit: 4 });
+await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-awaithumans", query: "get_secret Settings undeclared env var verifier api key", limit: 4 });
 ```
 Live rank-1/2 resolve the direct tests; the method itself sits in config.py :100-130.
 

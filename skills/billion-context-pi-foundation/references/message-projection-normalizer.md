@@ -1,25 +1,29 @@
 <!-- capsule-v2 -->
 # Message projection normalizer — which session entries become LLM messages, and what must be dropped to keep providers happy?
 
-**Source:** billion-context-pi (MIT) `master@558a83a9db69`; Codebase Memory project `billion-context-pi`. **Question:** How do heterogeneous host session entries map into clean CoreMessages without triggering provider 400s?
+**Source:** billion-context-pi (MIT) `master@6a88c5565355baebccfaf27398a6008fe08619ed`; Codebase Memory project `mnt-hdd-utopia-inspo-billion-context-pi`. **Question:** How do heterogeneous host session entries map into clean CoreMessages without triggering provider 400s?
 
 ## Role ladder + thinking-only drop + custom_message passthrough + safe stringify
-**Path/Symbol:** `src/messages.ts`: `entriesToCoreMessages` (:18-36), `projectMessage` (:38-86), `fallbackText` (:88-95), `extractText` (:103-114).
+**Path/Symbol:** `src/messages.ts`: `entriesToCoreMessages` (:21-39), `projectMessage` (:41-89), `fallbackText` (:91-98), `extractText` (:107-116).
 **Signature:** `entriesToCoreMessages(entries: SessionEntry[]) -> CoreMessage[]`; roles projected: user → user, toolResult → tool, assistant → assistant/tool-call, everything else → user text or [].
 **Data Shape:** multi-tool-call assistant turns split into one CoreMessage per call with id `<entryId>#<callId>`; single-call turns merge text + args.
 
 ### Decisive source
 ```ts
-// messages.ts:77-79 — the drop that prevents provider 400s:
+// messages.ts:80-82 — the drop that prevents provider 400s:
 // "Drop thinking-only turns: empty assistant text makes OpenAI-compatible
 //  providers (e.g. GLM) return 400 (no body), which Pi misreads as overflow."
 if (!text.trim()) return [];
 ```
 
 ```ts
-// :22-29 — non-message entries still in LLM context get a user projection:
-// custom_message participates in LLM context per Pi native semantics —
-// project it as a user message (empty content dropped).
+// :24-32 — non-message entries still in LLM context get a user projection:
+// "custom_message participates in LLM context per Pi native semantics
+//  (session-manager.d.ts) — project it as a user message."
+if (entry.type === "custom_message") {
+  const text = extractText(entry.content);
+  if (text.length > 0) out.push({ id: entry.id, role: "user", contentType: "text", text });
+}
 ```
 
 **Flow:** iterate entries → skip non-message types except `custom_message` (→ user text) → per role: user/toolResult project directly; assistant first extracts ALL toolCall blocks (splitting when >1, joining text+args when exactly 1), else emits text and DROPS whitespace-only turns. Unmatched roles (omp's bashExecution etc.) fall back to `$ <command>` + output + summary joined as user text. All stringification guarded (`safeStringify`), all tag stripping via the anchored REF_TAG.
@@ -29,7 +33,7 @@ if (!text.trim()) return [];
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "billion-context-pi", query: "entriesToCoreMessages projectMessage fallbackText", limit: 10, fields: ["signature", "name", "file"] });
+await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-billion-context-pi", query: "entriesToCoreMessages projectMessage fallbackText", limit: 10, fields: ["signature", "name", "file"] });
 ```
 
 ## Verdict

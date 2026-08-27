@@ -4,7 +4,7 @@
 **Source:** biome MIT `main@88f805e19b67ab4c876e4fc4a8b4018bd03df20b`; Codebase Memory `biome`. **Question:** Where should the protocol handshake live so callers can never fire a request into an uninitialized server?
 
 ## Constructor-gated handshake + consuming shutdown
-**Path/Symbol:** `crates/biome_service/src/workspace/client.rs:` `new` (:61-87), `InitializeResult` (:49-55), `shutdown` (:102-105).
+**Path/Symbol:** `crates/biome_service/src/workspace/client.rs:` `new` (:61-87), `InitializeResult` (:51-55), `shutdown` (:102-104).
 **Signature:** `pub fn new(transport: T, fs: Box<dyn FsWithResolverProxy>) -> Result<Self, WorkspaceError> where T: WorkspaceTransport + RefUnwindSafe + Send + Sync`.
 **Data Shape:** handshake sends `json!({"capabilities": {}, "clientInfo": {"name": env!("CARGO_PKG_NAME"), "version": biome_configuration::VERSION}})` and stores the returned `server_info` in the client; `shutdown()` takes `self` by value and sends unit (`()`) params.
 
@@ -27,7 +27,7 @@ client.server_info = value.server_info;
 ```ts
 await mcp.codebase_memory.search_graph({ project: "biome", query: "initialize ServerInfo InitializeResult shutdown client", limit: 10, fields: ["signature", "lines"] });
 ```
-Observed GREEN retrieval at pin: `InitializeResult` Struct client.rs :49-55 and the `WorkspaceClient.new` cluster resolve line-exact.
+Observed GREEN retrieval at pin (re-executed pass 18): `InitializeResult` Struct client.rs :51-55, `WorkspaceClient.shutdown` :102-104, and the `WorkspaceClient.new` cluster resolve line-exact.
 
 ## Verdict
 Adopt constructor-fallible handshake + consuming shutdown as the lifecycle pair; adapt the exact capability payload/version stamp to your protocol; omit the tower-lsp-specific constraint comment once your transport lifts it (the TODO shows upstream considers it incidental, not essential). Coverage: `no_recorded_issue` at pin; source read whole.

@@ -7,6 +7,12 @@ disable-model-invocation: true
 
 # Shipping & Launch
 
+## Core Principle
+
+Do not ship work that cannot be verified, explained, or rolled back. Shipping should be
+boring because risk was removed earlier: the ship phase verifies readiness, documents
+what changed, and makes rollback possible.
+
 ## Overview
 
 Shipping should be boring because risk was removed earlier. The ship phase verifies readiness, documents what changed, and makes rollback possible.
@@ -94,3 +100,7 @@ Core principle: do not ship work that cannot be verified, explained, or rolled b
 ## Pi Fabric Boundaries
 
 **Verification** — cite direct behavioral probes and recorded outputs. Any fix defers to the Schema mutation guard in AGENTS.md.
+
+## References
+
+N/A — no reference files; the checklist and workflow are fully specified in this file.

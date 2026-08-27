@@ -37,32 +37,31 @@ Porting any assistant backend that lets an LLM read/write user documents safely:
 - `references/read-pipeline-extraction-ladder.md` — one reader for PDF/DOCX/XLSX/PPTX?
 
 ## Capsule map
-- `download-token-signing` — HMAC over base64url payload; verify BEFORE decode; timing-safe compare on encoded form.
-- `shared-access-ladder` — owner → direct share list → project share; email compare lowercased; isOwner returned separately.
-- `audit-turn-mining` — try/catch-swallowed inserts; title clamped 300; doc_replicated fans out per copy.
-- `ssrf-ip-classifier` — BlockList ranges; IPv6 global-unicist gate 2000::/3; NAT64 re-classified by embedded v4.
-- `citation-tolerant-normalizer` — ref-or-[N]-marker, quote/text alias, camelCase ids, ≤3 quotes, junk page→1.
-- `citations-diagnostics-triple-state` — hasBlock/rawLength/error distinguates absent, malformed, and empty blocks.
-- `streaming-partial-citations` — string-aware brace scanner emits complete objects mid-stream; count-monotonic snapshots.
-- `spotlight-nonce-fence` — 32-hex nonce on BOTH tags; echoed nonce redacted; smuggled tags HTML-escaped.
-- `workflow-fence-semi-trusted` — <workflow-instructions> follows but never overrides policy; same neutralization.
-- `prior-turn-event-recap` — last assistant events replayed as tool-activity lines, filenames fenced.
-- `doc-context-sweeps` — attachments ∪ prior doc_created/edited/replicated UUIDs; ready-only; stable doc-N slugs.
-- `workflow-store-overlay` — catalog listed:false under user listed:true; best-effort defaults; reference files attached.
-- `route-stream-reservation` — pre-insert null row skips crashes AND concurrent streams; 3-attempt updater.
-- `stream-citations-gate` — tail buffer holds back tag-length−1 chars; post-marker deltas go to hidden parser only.
-- `sse-error-sanitizer` — error events whitlisted via safe_to_display; per-event error strings replaced wholesale.
-- `model-allowlist-choke-point` — single resolveRequestedModel(throw) inside try so blips become stream errors.
-- `tool-dispatch-contract` — results keyed by tool_call_id; missing result synthesized so Claude gets N-of-N.
-- `replicate-upload-first` — client UUIDs, parallel uploads, bulk inserts, compensating delete, failed_copies reported.
-- `immutable-source-guard` — template/asset edits vetoed with UI-shaped failure; replicate requires new_filename.
-- `turn-read-edit-lifecycle` — dedup key documentId:versionId; edit invalidates reads; label repointed to new version.
-- `quote-verification-ladder` — 3-tier tolerant locate with index-map back-mapping; drift swapped to exact excerpt; fabricated preserved-but-unverified.
-- `auth-mfa-assurance-ladder` — aal2 step-up gate; missing-column read fails open, assurance lookup fails closed; bootstrap route carve-out.
-- `courtlistener-turn-cache` — first-field-wins upsert, refreshable non-empty opinions; text server-side only; multi-opinion reads demand explicit ids.
-- `ask-input-normalization` — clamp-with-default picker items; persist-then-pause exception; strict response parsing with skipped flags.
-- `read-pipeline-extraction-ladder` — version-first bytes; docx shares the edit matcher's flattener; sentinel strings never throw.
-
+- **Ask inputs normalization** — `ask-input-normalization`: how does a user-input picker tool survive malformed model arguments and pause the turn.
+- **Audit turn mining** — `audit-turn-mining`: how do you record one chat row plus its artifact rows without ever breaking the chat.
+- **Auth MFA assurance ladder** — `auth-mfa-assurance-ladder`: when must a valid bearer token still be rejected for step-up verification.
+- **Citation tolerant normalizer** — `citation-tolerant-normalizer`: how do you survive LLM-shaped citation JSON without dropping valid entries.
+- **Citations diagnostics triple-state** — `citations-diagnostics-triple-state`: was the CITATIONS block absent, broken, or empty.
+- **CourtListener turn cache** — `courtlistener-turn-cache`: how does opinion text get cached per turn so find/read/verify never re-fetch.
+- **Doc context sweeps** — `doc-context-sweeps`: which documents exist for this chat, including ones never attached to a user message.
+- **Download token signing** — `download-token-signing`: how do persistent file links survive without signed-URL expiry.
+- **Immutable source guard** — `immutable-source-guard`: how do library templates get protected from in-place edits while staying readable.
+- **Model allowlist choke point** — `model-allowlist-choke-point`: how do router-prefixed model ids get validated exactly once per request.
+- **Prior-turn event recap** — `prior-turn-event-recap`: how does the model learn what its last turn produced without re-reading raw events.
+- **Quote verification ladder** — `quote-verification-ladder`: how does the server prove (or correct) a model quote against real document text.
+- **Read pipeline extraction ladder** — `read-pipeline-extraction-ladder`: how does one reader serve PDF/DOCX/XLSX/PPTX and mislabeled legacy files.
+- **Replicate upload-first** — `replicate-upload-first`: how do you create N document copies with zero half-created rows.
+- **Route stream reservation** — `route-stream-reservation`: how does SSE persistence survive crashes and concurrent streams.
+- **Shared-project access ladder** — `shared-access-ladder`: who may read a document once projects can be shared.
+- **Spotlight nonce fence** — `spotlight-nonce-fence`: how does untrusted user text get shown to an LLM without becoming instructions.
+- **SSE error sanitizer** — `sse-error-sanitizer`: how do internal errors stream to a browser without leaking internals.
+- **SSRF IP classifier** — `ssrf-ip-classifier`: which address literals must an outbound-fetch guard reject, fail-closed.
+- **Stream citations gate** — `stream-citations-gate`: how do you hide the CITATIONS block from visible deltas while still streaming it to the parser.
+- **Streaming partial citations** — `streaming-partial-citations`: how do citation cards appear while the JSON is still streaming.
+- **Tool dispatch contract** — `tool-dispatch-contract`: how does every tool_use get exactly one tool_result even when a branch fails or is unknown.
+- **Turn read/edit lifecycle** — `turn-read-edit-lifecycle`: how does read-once-per-turn dedup stay correct when edits change the bytes.
+- **Workflow fence semi-trusted** — `workflow-fence-semi-trusted`: how do you let the model FOLLOW installed instructions without letting them override policy.
+- **Workflow store overlay** — `workflow-store-overlay`: how do catalog workflows coexist with user workflows without crashing the chat.
 ## Extending the foundation
 Add one source-confirmed capsule: loader line, map entry, decisive source excerpt, invariant, byte-exact Probe against the repo checkout (`cd /mnt/hdd/utopia/inspo/external/mike/backend`), and `search_graph` Retrieve against project `ext-mike`. Keep the canonical pinned commit; never vendor modules.
 

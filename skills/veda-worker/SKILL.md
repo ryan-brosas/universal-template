@@ -1,8 +1,26 @@
 ---
 name: veda-worker
-description: "Orchestrate a full plan → implement → verify cycle with Veda, from the caller's point of view. YOU are the orchestrator AND the planner: you author the plan and the design.json yourself (you NEVER delegate planning to navigator-plan), hand the WHOLE design to one worker run (the worker is the driver, executes with write access), read its report.yaml, then run the reviewer against the design. You NEVER implement — every edit and every fix is delegated to the worker agent. Branches on report.yaml (completed → verify; blocked → answer needs + resume, cap 3, then escalate; failed → revise the plan yourself and re-delegate). Exit 0 = the delegation succeeded even when the report's status is failed/blocked; non-zero = protocol failure. Use when you want the implementation DELEGATED to the worker agent, not done by you."
+description: "Use when you want a full plan → implement → verify cycle with Veda DELEGATED to the worker agent, not done by you — orchestrate from the caller's point of view: YOU are the orchestrator AND the planner (you author the plan and design.json yourself, NEVER delegate planning to navigator-plan), hand the WHOLE design to one worker run (the worker is the driver, executes with write access), read its report.yaml, then run the reviewer against the design. You NEVER implement — every edit and fix is delegated to the worker agent. Branches on report.yaml (completed → verify; blocked → answer needs + resume, cap 3, then escalate; failed → revise the plan yourself and re-delegate). Exit 0 = delegation succeeded even when report status is failed/blocked; non-zero = protocol failure."
 argument-hint: "[veda-flags]"
 ---
+
+## Core Principle
+
+You orchestrate AND you plan; the worker implements. Two hard rules: you never implement (every edit goes to a `-p worker` run) and you never delegate planning (you author `design.json` yourself, never via `navigator-plan`).
+
+## When to Use / NOT
+
+- Use when you want the full plan → implement → verify cycle delegated to the worker agent, with you as orchestrator.
+- NOT when you intend to implement yourself (use `veda-plan-implement-review`).
+
+## Workflow
+
+1. Scope: `veda -S task-TASKNAME sel add` the context the worker needs.
+2. Author `design.json` yourself in `$PROJECT_ROOT/.veda/sessions/task-TASKNAME/`; re-read it before delegating (cap 1–2 revisions).
+3. One worker run for the whole design: `-p worker '…FIRST read <abs path>/design.json…'`.
+4. Branch on `report.yaml`: `completed` → review; `blocked` → answer `needs` + resume (cap 3); `failed` → revise your design, re-delegate (cap 1 replan per design).
+5. Reviewer pass on the diff vs `design.json`; route P0/P1 fixes back to the worker. Stop at `review: pass`.
+
 
 ## Model routing (authoritative — do not substitute)
 
@@ -214,3 +232,27 @@ Key commands:
 - Worker is write-capable by default; `--sandbox read-only` runs it as a dry-run planner
 - `-m flash` (if you set `MODEL_ALIASES` in `~/.config/veda/config`) is a fast/cheap worker default
 - Output goes to stdout; use `-o file.md` to save response. **Never pipe veda with `2>&1`** — the response is on stdout, the progress header/trace on stderr, so merging them puts the header into the response and garbles it.
+
+## Red Flags
+
+Reaching for an editor or a patch (that work belongs in a worker delegation); calling `-p navigator-plan` to produce the design; trusting narration over `verification.commandsRun`/`evidence`; treating a non-zero exit as normal (it is a protocol failure — do not trust partial work); telling the worker to restart shared infra it did not start.
+
+## Verification
+
+Exit 0 with a well-formed `report.yaml` (`status`, `whatWasImplemented`, `verification`, `needs`); evidence entries name real commands/flags/artifacts; the closing reviewer ends with `review: pass` against `design.json`.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill>veda-worker</skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>commands run, outputs inspected, artifacts produced</evidence>
+  <artifacts>files written / commands run</artifacts>
+  <risks>known risks, untested paths, or none</risks>
+</skill_result>
+```
+
+## References
+
+No reference capsules — the skill is self-contained.

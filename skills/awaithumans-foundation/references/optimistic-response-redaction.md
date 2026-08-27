@@ -27,10 +27,34 @@ return {
 // submitted-response.tsx — redacted path takes PRIORITY over content:
 if (responseRedactedAt) return <DeliveredPlaceholder timestamp={responseRedactedAt} />;
 ```
+Reload half (`app/(dashboard)/task/page.tsx`) — the overlay must survive F5 while the dispatcher lags (:116–127):
+```ts
+// Carry forward client-side optimistic redaction. The
+// server's response_redacted_at is the source of truth
+// when it arrives, but until the webhook dispatcher fires
+// the callback (which can lag the submit by seconds) the
+// server still has the typed response. Re-apply the
+// overlay so the reviewer never sees the content come
+// back between submit and the dispatcher's tick.
+const displayTask =
+    submittedWithRedaction.current && !taskData.response_redacted_at
+        ? applyOptimisticRedaction(taskData)
+        : taskData;
+```
+Submit half (:172–181) — latch the ref AND wipe local copies:
+```ts
+if (task.redact_response_after_submit) {
+    submittedWithRedaction.current = true;
+    setTask((prev) => (prev ? applyOptimisticRedaction(prev) : prev));
+    // Clear the typed values from local state so no
+    // sibling component holds a copy in memory. ...
+    setFormData({});
+}
+```
 
-**Flow:** submit succeeds on a `redact_response_after_submit=true` task → page applies the overlay in the same tick → typed inputs leave the DOM (status flip unmounts the form via `canSubmitResponse`) and the "Response delivered" placeholder shows the synthesized time → next `loadTask` fetch returns the server truth and replaces the synthesized stamp. Server side: after successful callback delivery `_record_outcome` calls the twin, which nulls the column and stamps `response_redacted_at=now`.
-**Invariant:** the status flip is load-bearing — without it the form renders alongside the placeholder and the guarantee is void. The overlay must not drop sibling-read fields (spread, never destructure-rebuild). Server twin is idempotent by skipping non-null `response_redacted_at`, keeping the FIRST successful-delivery stamp and avoiding a redundant write. Placeholder renders the timestamp in viewer-local timezone via Intl formatting with a raw-string fallback instead of crashing.
-**Probe:** `optimistic-redact.test.ts` (:69–72 response nulled; :74–81 injectable clock stamps exactly; :98–106 status flip pins form-unmount behavior; :108–125 unrelated fields preserved verbatim). Deterministic source probe (vitest runner blocked): `grep -n 'status: "completed"' 'packages/dashboard/app/(dashboard)/task/optimistic-redact.ts'` → :40.
+**Flow:** submit succeeds on a `redact_response_after_submit=true` task → page applies the overlay in the same tick AND sets the sticky `submittedWithRedaction` ref → every subsequent `loadTask` re-applies the overlay UNTIL the server's own `response_redacted_at` lands (the condition checks both), so the submit-ACK→dispatcher-tick window survives refreshes and poll cycles → once server truth arrives the raw fetch wins and the overlay retires itself. Typed inputs leave the DOM (status flip unmounts the form via `canSubmitResponse`) and the "Response delivered" placeholder shows the synthesized time. Server side: after successful callback delivery `_record_outcome` calls the twin, which nulls the column and stamps `response_redacted_at=now`.
+**Invariant:** the status flip is load-bearing — without it the form renders alongside the placeholder and the guarantee is void. The overlay is STICKY across reloads: a one-way ref (`submittedWithRedaction`, :84) re-applies it on every fetch until server truth lands, closing the reload-shaped hole a pure per-submit overlay leaves. Post-submit memory hygiene wipes form state (`setFormData({})`) so no sibling component holds typed values after unmount. The overlay must not drop sibling-read fields (spread, never destructure-rebuild). Server twin is idempotent by skipping non-null `response_redacted_at`, keeping the FIRST successful-delivery stamp and avoiding a redundant write. Placeholder renders the timestamp in viewer-local timezone via Intl formatting with a raw-string fallback instead of crashing.
+**Probe:** `optimistic-redact.test.ts` (:69–72 response nulled; :74–81 injectable clock stamps exactly; :98–106 status flip pins form-unmount behavior; :108–125 unrelated fields preserved verbatim). Page half line-checked at pin: sticky ref declared `task/page.tsx:84`, re-apply condition :123–126, latch+wipe :172–181. Deterministic source probe (vitest runner blocked): `grep -n 'status: "completed"' 'packages/dashboard/app/(dashboard)/task/optimistic-redact.ts'` → :40.
 
 ## Get live surrounding code
 **Retrieve:**

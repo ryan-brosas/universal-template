@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Embed Auth Passthrough Gates — when must a bearer middleware NOT touch the token?
 
-**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-agents-awaithumans`. **Question:** How does one ASGI middleware verify embed JWTs while leaving service keys, session cookies' bearer twins, and disabled-feature requests completely alone?
+**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-awaithumans`. **Question:** How does one ASGI middleware verify embed JWTs while leaving service keys, session cookies' bearer twins, and disabled-feature requests completely alone?
 
 ## Default-None state + four pass-through arms before verify
 **Path/Symbol:** `packages/python/awaithumans/server/core/embed_auth.py` — `SecretProvider` alias (:27), `EmbedAuthMiddleware.__init__` (:53-55), `.dispatch` (:57-102), `get_embed_ctx` (:108-115).
@@ -37,7 +37,7 @@ return await call_next(request)
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-agents-awaithumans", query: "EmbedAuthMiddleware dispatch secret_provider embed_ctx", limit: 4 });
+await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-awaithumans", query: "EmbedAuthMiddleware dispatch secret_provider embed_ctx", limit: 4 });
 ```
 Live rank-1/2 line-exact (:57-102 dispatch, :108-115 accessor).
 

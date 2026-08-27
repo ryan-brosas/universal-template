@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Boot-Time Channel Config Validator — catch half-configured channels before the first silent drop
 
-**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-agents-awaithumans`. **Question:** What does a server check at startup so an operator's forgotten credential becomes one WARNING instead of a mystery delivery failure?
+**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-awaithumans`. **Question:** What does a server check at startup so an operator's forgotten credential becomes one WARNING instead of a mystery delivery failure?
 
 ## Per-channel required-var census; never raises; unknown transport surfaces too
 **Path/Symbol:** `packages/python/awaithumans/server/core/channel_config_validator.py` — rationale (:1-15), `validate_channel_config` (:26-34), `_validate_email` (:37-82), `_validate_slack` (:85-110). Called once from `create_app()` after `setup_logging()`.
@@ -28,7 +28,7 @@ Slack static-mode warning names the CONSEQUENCE precisely: "Outbound messages wi
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-agents-awaithumans", query: "validate_channel_config _validate_email _validate_slack", limit: 4 });
+await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-awaithumans", query: "validate_channel_config _validate_email _validate_slack", limit: 4 });
 ```
 Live rank-1..3 line-exact.
 

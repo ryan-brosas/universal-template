@@ -1,6 +1,6 @@
 ---
 name: cognee-foundation
-description: "Knowledge-pipeline memory engine foundation"
+description: "Use when building or porting cognee-style knowledge-pipeline memory engines — dataset-scale task-run engines with rollback, deterministic DataPoint identity, exact-reconstruction chunkers, ontology-canonicalized graph construction, provenance-folded writes, vector-to-graph triplet ranking, hybrid RRF retrieval lanes, and additive contradiction handling. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
 ---
 # cognee: Knowledge-Pipeline Memory Engine Foundation
 

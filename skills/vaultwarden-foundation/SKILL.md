@@ -1,6 +1,6 @@
 ---
 name: vaultwarden-foundation
-description: "Canonical foundation leaf. Follows .pi/templates/foundation-skill.md structure exactly."
+description: "Use when porting E2E-encrypted vault server machinery — master-password verification kernels, issuer-partitioned JWT realms, refresh/stamp session invalidation, type-driven RBAC guards, trusted-proxy client IP, 2FA challenge protocols with anti-replay, Send one-time links, SSRF-guarded egress, layered config engines, and org key-escrow recovery."
 ---
 # vaultwarden: self-hosted Bitwarden-compatible vault server
 

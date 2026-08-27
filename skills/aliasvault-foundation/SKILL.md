@@ -1,6 +1,6 @@
 ---
 name: aliasvault-foundation
-description: Port AliasVault's E2E-encrypted vault patterns — SRP wire-format auth, LWW merge-to-SQL core, append-only vault revisions, and zero-knowledge client planes.
+description: Use when porting AliasVault's E2E-encrypted vault patterns — SRP wire-format auth, LWW merge-to-SQL core, append-only vault revisions, and zero-knowledge client planes.
 ---
 
 # AliasVault: E2E vault crypto & sync foundation

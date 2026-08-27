@@ -65,32 +65,23 @@ Repo at `/mnt/hdd/utopia/inspo/external/weaviate` @ `main@adcffc54`. Graph proje
 - `references/lsmkv-bucket-lifecycle-locks.md` — registry claim before IO, lifetimeLock drain-before-free (no timeout ⇒ no SEGFAULT), claim released only on clean shutdown.
 
 ## Capsule map
-
-**HNSW filtered search**
-- `hnsw-filtered-search-strategy-selection` — SWEEPING/ACORN/RRE decision gates + entrypoint-neighborhood ratio test.
-- `hnsw-sweeping-filter-at-results` — traverse everything, filter only result insertion; MaxFloat32 empty-results fallback.
-- `hnsw-acorn-two-hop-expansion` — ε-neighborhood BFS (2 hops, 8×M0 cap, dual visited sets).
-- `hnsw-flat-search-cutoff` — allow-list < cutoff ⇒ parallel brute force instead of graph walk.
-- `hnsw-ef-resolution-ladder` — explicit ef → floor k; dynamic efWindow factor→clamp→floor-k.
-
-**HNSW mutation & repair**
-- `hnsw-addone-insert-path` — first-insert sync.Once, maintenance flag window, double-checked entrypoint promotion.
-- `hnsw-tombstone-lifecycle` — delete locks stack, min/max-per-cycle caps, alloc-checker abort, reassign-before-remove ordering.
-- `hnsw-dead-entrypoint-self-repair` — termination-guaranteed EP probe loop; CAS-guarded global EP replacement.
-- `hnsw-neighbor-selection-heuristic` — diversity filter; in-place queue mutation contract; compressed-bag pairwise path.
-
-**Multi-vector**
-- `hnsw-multivector-docid-mapping` — contiguous vec-id blocks, `_mv_mappings` bucket, purge stale docs before retry, budgeted sum-of-min scoring.
-
-**Persistence & recovery**
-- `hnsw-commitlog-rotation` — fresh-file startup, open-before-close rotation, old-name-derived burst-safe naming, fsync only on rotate.
-- `hnsw-search-by-vector-distance-recursion` — ×10 growing-window rescan for "everything within distance d" queries.
-- `lsmkv-flush-and-switch` — four-phase non-blocking flush; serializer mutex; leftover-flushing drain; inverted-tombstone fan-out race acceptance.
-- `lsmkv-compaction-candidate-selection` — newest same-level pair, descending-level invariant, size-limit escape hatches, lazy level-order healing.
-- `lsmkv-replace-strategy-compaction` — c1 older/c2 newer merge, root-only tombstone cleanup, key arena vs cursor buffer reuse.
-- `lsmkv-wal-recovery` — sort WALs chronologically; last healthy = active memtable, rest flush to segments; torn tails tolerated.
-- `lsmkv-bucket-lifecycle-locks` — registry claim before IO, lifetimeLock drain-before-free (no timeout ⇒ no SEGFAULT), claim released only on clean shutdown.
-
+- **ACORN two-hop neighbor expansion** — `hnsw-acorn-two-hop-expansion`: how a filtered graph walk escapes filtered-out dead zones.
+- **addOne insert path** — `hnsw-addone-insert-path`: first-insert Once, maintenance flag, entrypoint promotion double-check.
+- **Commit-log rotation** — `hnsw-commitlog-rotation`: never reuse a file, open-before-close, name derived from the old name.
+- **Dead-entrypoint self-repair** — `hnsw-dead-entrypoint-self-repair`: entrypointDistWithRepair / repairGlobalEntrypoint termination ladder.
+- **ef resolution ladder** — `hnsw-ef-resolution-ladder`: explicit ef, dynamic efWindow, and the k floor.
+- **HNSW filtered-search strategy FSM** — `hnsw-filtered-search-strategy-selection`: which filter algorithm runs, and why a naive port picks the wrong one.
+- **Flat-search cutoff** — `hnsw-flat-search-cutoff`: tiny allow-lists bypass the graph entirely.
+- **Multivector doc-id mapping** — `hnsw-multivector-docid-mapping`: vec-id vs doc-id id spaces, purge-before-retry, late-interaction scoring.
+- **Neighbor selection heuristic** — `hnsw-neighbor-selection-heuristic`: diversity filter with compressed-bag fast path.
+- **SearchByVectorDistance geometric-threshold recursion** — `hnsw-search-by-vector-distance-recursion`: growing-window rescan with offset arithmetic.
+- **SWEEPING filtered layer search** — `hnsw-sweeping-filter-at-results`: filter at result-insert, never at traversal (except RRE).
+- **Tombstone lifecycle** — `hnsw-tombstone-lifecycle`: lazy delete marks, cycle-capped cleanup, memory-pressure abort.
+- **Bucket lifecycle locks** — `lsmkv-bucket-lifecycle-locks`: double-open refusal, lifetimeLock drain-before-free, shutdown ordering.
+- **Level-pair compaction candidate selection** — `lsmkv-compaction-candidate-selection`: descending-level invariant, size limits, level-order repair.
+- **FlushAndSwitch four-phase non-blocking flush** — `lsmkv-flush-and-switch`: leftover-drain, writer drain, tombstone fan-out race.
+- **Replace-strategy segment merge** — `lsmkv-replace-strategy-compaction`: c2 wins conflicts, tombstone cleanup at root, arena-stable keys.
+- **WAL crash recovery** — `lsmkv-wal-recovery`: newest WAL becomes the memtable, older WALs flush to segments, corruption is tolerated.
 ## Extending the foundation
 
 1. Pick one seam (one porting question) from the source tree above.

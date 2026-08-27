@@ -1,6 +1,6 @@
 ---
 name: flask-foundation
-description: "Micro-framework foundation (WSGI request lifecycle)"
+description: "Use when porting Flask's micro-framework (WSGI request lifecycle) — blueprint registration, session/cookie machinery, config loading, or context/proxy architecture — into another framework or a WSGI-compatible reimplementation. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
 ---
 # Flask: micro-framework foundation (WSGI request lifecycle)
 

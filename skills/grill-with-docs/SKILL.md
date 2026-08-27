@@ -5,6 +5,22 @@ disable-model-invocation: true
 ---
 
 
+# Grill With Docs
+
+## Core Principle
+
+Stress-test the plan against the project's own language and documented decisions: interview relentlessly, one question at a time, until shared understanding is reached. Read-only by default — writing `CONTEXT.md`, `docs/adr/`, or any other file is a mutation behind the Schema loop or explicit approval.
+
+## When to Use / NOT
+
+**Use** — the user wants to stress-test a plan against their project's language and documented decisions.
+
+**NOT** — when file writes are needed without the Schema loop or explicit approval (this skill is read-only by default); when a question can be answered by exploring the codebase (explore the codebase instead).
+
+## Workflow
+
+Interview one question at a time, walking down each branch of the design tree and resolving dependencies between decisions one-by-one, with a recommended answer for each. Challenge terms against the `CONTEXT.md` glossary, sharpen fuzzy language, discuss concrete scenarios, and cross-reference claims with the code. Update `CONTEXT.md` inline as each term resolves; offer ADRs sparingly — only when hard to reverse, surprising without context, and the result of a real trade-off.
+
 ## Read-only default and mutation boundary
 
 This skill is a research/interview workflow. Writing `CONTEXT.md`, `docs/adr/`, or any other file is a mutation: in this repository it requires the Schema loop (`schema.hypothesize → verify → commit`) or explicit user approval of the exact files before writing. ADR format follows the `documentation-and-adrs` skill (structured ADR); the minimal form in `ADR-FORMAT.md` is only for small, low-stakes entries.
@@ -92,3 +108,29 @@ Only offer to create an ADR when all three are true:
 If any of the three is missing, skip the ADR. Use the format in [ADR-FORMAT.md](./ADR-FORMAT.md).
 
 </supporting-info>
+
+## Red Flags
+
+A glossary conflict in `CONTEXT.md` not called out immediately; vague or overloaded terms left unsharpened; a contradiction between stated behavior and the code not surfaced; `CONTEXT.md` accumulating implementation details (it is a glossary and nothing else); CONTEXT.md updates batched instead of captured inline; an ADR offered without all three conditions true.
+
+## Verification
+
+Shared understanding reached — each branch of the design tree resolved one-by-one; `CONTEXT.md` updated inline with every resolved term; any ADR created satisfies all three conditions (hard to reverse, surprising without context, real trade-off).
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill>grill-with-docs</skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>…</evidence>
+  <artifacts>…</artifacts>
+  <risks>…</risks>
+</skill_result>
+```
+
+## References
+
+Format references at the skill root:
+- `CONTEXT-FORMAT.md` — the `CONTEXT.md` glossary format used for inline updates
+- `ADR-FORMAT.md` — the minimal ADR form for small, low-stakes entries

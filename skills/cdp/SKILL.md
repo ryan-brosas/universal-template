@@ -1,14 +1,6 @@
 ---
 name: cdp
-description: >-
-  Drive any Chromium-based browser via the DevTools Protocol from JavaScript.
-  Run JS snippets through the `browser-harness-js` CLI — it auto-spawns a
-  long-lived Node HTTP server holding a fully-typed CDP `Session`, and every call
-  (`browser-harness-js 'await session.Page.navigate(...)'`) executes against the
-  same persistent connection. Session, active target, and globals survive across
-  calls. Use when the user wants to automate, script, or inspect a
-  Chromium-based browser via CDP — single tab or multi-tab, attach to an
-  existing browser or launch a new one with --remote-debugging-port.
+description: "Use when the user wants to automate, script, or inspect a Chromium-based browser via CDP — drive any Chromium-based browser through the DevTools Protocol from JavaScript: run JS snippets through the `browser-harness-js` CLI, which auto-spawns a long-lived Node HTTP server holding a fully-typed CDP `Session`, and every call executes against the same persistent connection; session, active target, and globals survive across calls — single tab or multi-tab, attach to an existing browser or launch a new one with --remote-debugging-port."
 setup: bash /Users/monotykamary/VCS/working-remote/open-source/browser-harness-js/skills/cdp/scripts/setup
 compatibility: >-
   Requires `node` on PATH (the REPL server is Node-native — TypeScript type stripping from Node 23.6) and a Chromium-based browser with remote debugging (chrome://inspect or --remote-debugging-port).
@@ -19,6 +11,23 @@ compatibility: >-
 Custom codegen'd CDP SDK (every method from browser_protocol.json + js_protocol.json gets a typed wrapper) plus a tiny HTTP server that holds one persistent CDP `Session`. The `browser-harness-js` CLI auto-starts the server on first use and forwards JS snippets to it.
 
 The SDK lives in the skill's `sdk/` directory. In the rest of this doc, `/Users/monotykamary/VCS/working-remote/open-source/browser-harness-js/skills/cdp` refers to wherever `npx skills add` installed the skill (Claude Code: `~/.claude/skills/cdp`; Cursor: `~/.cursor/skills/cdp`; other agents vary). The CLI should be on PATH as `browser-harness-js`.
+
+## Core Principle
+
+One persistent CDP `Session` held by a long-lived Node HTTP server — every `browser-harness-js` call executes against the same connection, so session, active target, and globals survive across calls.
+
+## When to Use / NOT
+
+- **Use when:** automating, scripting, or inspecting a Chromium-based browser via CDP — single tab or multi-tab, attach to an existing browser or launch a new one with --remote-debugging-port.
+- **NOT when:** N/A — no explicit exclusion stated; requires `node` on PATH and a Chromium-based browser with remote debugging (see compatibility).
+
+## Workflow
+
+1. Run `browser-harness-js '<JS>'` — the first call spawns the server; subsequent calls reuse the same session, WebSocket, and globals.
+2. Connect with `session.connect()` (auto-detects a running browser) or resolve a WS URL explicitly.
+3. Pick a target (tab) and call typed CDP methods (`session.Page.navigate(...)`, `session.Runtime.evaluate(...)`).
+4. For multi-statement snippets, pass them via stdin heredoc and write `return X` explicitly.
+5. Check exit code and stderr for errors; use `--status` for health.
 
 ## How to use
 
@@ -339,3 +348,32 @@ All paths are relative to `/Users/monotykamary/VCS/working-remote/open-source/br
 - `sdk/gen.ts` — codegen script
 - `sdk/{browser,js}_protocol.json` — upstream protocol (vendored)
 - `interaction-skills/` — CDP how-to guides (screenshots, tabs, network requests, lifecycle readiness, JSON navigation, media capture, etc.)
+
+## Red Flags
+
+- Multi-statement snippet without an explicit `return X` (the last expression is not auto-returned).
+- Treating stdout as an `{ok,result}` envelope — output is raw result content.
+- Ignoring stderr / exit code 1 for CDP errors.
+- Starting recording without consent (fresh installs do not record).
+- Reenacting a completed task to manufacture missing footage.
+- Running video review/export in the user's interactive browser instead of a fresh detached profile.
+
+## Verification
+
+`browser-harness-js --status` prints health JSON (version, uptime, connected, sessionId) or exits 1 if down; errors go to stderr with exit code 1 — detect failure with `$?`; for recordings, retain the exact returned directory and stop only after verifying the outcome.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill>cdp</skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>--status health JSON; raw result content on stdout; errors on stderr with exit 1</evidence>
+  <artifacts>CDP session state, screenshots/traces, recordings, or exported video</artifacts>
+  <risks>Server down between calls, stale target, unconsented recording, or none</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no `references/` directory; recipes live in `interaction-skills/` and `learnings/` beside this file.

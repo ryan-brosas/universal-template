@@ -1,6 +1,6 @@
 ---
 name: copilotkit-foundation
-description: "Multi-channel agent & UI runtime foundation: dynamic subscriber proxies, symbol-branded terminal delivery errors, durable action registry rehydration, sentinel-based mrkdwn pipelines, per-platform transport planes (Discord ack-race chunking, Teams proactive turns + Adaptive Cards, WhatsApp signed webhooks), core RunHandler run-loop contracts, realtime-gateway connection-health machinery, and the channel-delivery packet transport stack."
+description: "Use when building a multi-platform chat/channel agent runtime (Slack, Teams, Discord, Telegram, WhatsApp) or cross-platform UI bridge — dynamic Proxy subscriber fanouts, isolated error boundaries between runners and renderers, symbol-branded terminal delivery errors, durable action registry rehydration with payload-limited value caching, thread promise conversion boundaries, stream null-string sanitization for LangGraph tool interrupts, sentinel-based Markdown-to-mrkdwn pipelines, per-platform transport planes (Discord ack-race chunking, Teams proactive turns + Adaptive Cards, WhatsApp signed webhooks), core RunHandler run-loop contracts, realtime-gateway connection-health machinery, channel-delivery packet transport stack, and universal UI Intermediate Representation (IR) AST expanders. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
 disable-model-invocation: true
 ---
 

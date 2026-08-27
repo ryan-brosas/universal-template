@@ -1,6 +1,6 @@
 ---
 name: gpt-engineer-foundation
-description: "Minimal codegen-agent foundation"
+description: "Use when porting gpt-engineer's minimal codegen-agent foundations — prompt→code→execute→repair agent loops, LLM unified-diff application with self-correction, or minimal injectable-step agent skeletons. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
 ---
 # gpt-engineer: Minimal codegen-agent foundations
 

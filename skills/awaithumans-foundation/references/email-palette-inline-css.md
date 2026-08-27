@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Email Palette & Inline-CSS Constraint — why brand colors are duplicated, not shared
 
-**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-agents-awaithumans`. **Question:** How do you keep email chrome consistent with a web dashboard when email clients strip stylesheets?
+**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-awaithumans`. **Question:** How do you keep email chrome consistent with a web dashboard when email clients strip stylesheets?
 
 ## Convention-synced token twins; inline CSS strings only
 **Path/Symbol:** `packages/python/awaithumans/server/channels/email/templates/palette.py` — constraint docstring (:1-15), `_BRAND/_BG_DARK/_TEXT_LIGHT` (:24-26), `LIGHT_PALETTE` (:30-36), `DARK_PALETTE` (:40+); consumers in `templates/renderers.py` (notification_html :40-76).
@@ -25,7 +25,7 @@
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-agents-awaithumans", query: "LIGHT_PALETTE DARK_PALETTE notification_html renderers palette", limit: 5 });
+await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-awaithumans", query: "LIGHT_PALETTE DARK_PALETTE notification_html renderers palette", limit: 5 });
 ```
 (rank-3 on the dashboard_static query resolves notification_html line-exact; palette module itself is constants-shaped — search_code/grep is the reliable primitive here.)
 

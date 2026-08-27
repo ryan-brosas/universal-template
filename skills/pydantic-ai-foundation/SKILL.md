@@ -1,6 +1,7 @@
 ---
 name: pydantic-ai-foundation
-description: "Canonical foundation leaf. Copy manually; this library asset is not rendered by a slash command."
+description: "Use when porting or building an agent runtime's core machinery — deferred/external tool calls, human-in-the-loop approval, pause/resume envelopes, barrier-segmented parallel execution, structured-output schema resolution, capability middleware with ordering constraints, toolset composition (wrapper/combined/prefixed/renamed/prepared/filtered/dynamic/approval/external), streaming partial→final validation, the durable-execution shared kernel (string-only model round-trip with credential-leak rejection, replay-unit enqueue/cancel guards, live-vs-replay event-stream split), the durability-engine adapter plane (anyio-shielded cancel forwarding, boundary-guarded context rehydration, sequence-keyed cache keys, legacy-replay dual paths), static tool-choice deadlock gates, transport-level tenacity retries honoring Retry-After, session cancellation as typed resumable exceptions, and replayed-history hardening for partially-rejected provider turns. Source code and direct tests are ground truth."
+
 ---
 # pydantic-ai: Agent Runtime Foundation
 

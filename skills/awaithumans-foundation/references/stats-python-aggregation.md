@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Stats Python-Side Aggregation — pull the window, group in code, zero-fill the axis
 
-**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-agents-awaithumans`. **Question:** What does a pragmatic analytics service look like before SQL GROUP BY earns its keep — and which numbers are windowed vs all-time?
+**Source:** awaithumans Apache-2.0 `main@bc05b8e7`; Codebase Memory `mnt-hdd-utopia-inspo-awaithumans`. **Question:** What does a pragmatic analytics service look like before SQL GROUP BY earns its keep — and which numbers are windowed vs all-time?
 
 ## Two queries + pure-function buckets; completion rate over ALL-TIME terminal counts
 **Path/Symbol:** `packages/python/awaithumans/server/services/stats_service.py` — scale docstring (:1-11), `get_task_stats` (:28-53), `_totals` (:59-66), `_window_rows` (:69-85), `_bucket_by_day` (:91-121), `_bucket_by_channel` (:124-133), `_avg_completion_seconds` (:136-153); route clamps `window_days ∈ [1, 365]` (`routes/stats.py:21-22`).
@@ -29,7 +29,7 @@ for offset in range(window_days - 1, -1, -1):     # exactly window_days entries 
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-agents-awaithumans", query: "get_task_stats _bucket_by_day completion_rate TERMINAL_STATUSES_SET", limit: 4 });
+await mcp.codebase_memory.search_graph({ project: "mnt-hdd-utopia-inspo-awaithumans", query: "get_task_stats _bucket_by_day completion_rate TERMINAL_STATUSES_SET", limit: 4 });
 ```
 Live rank-1/2 line-exact (:28-53, :91-121) plus the direct tests.
 

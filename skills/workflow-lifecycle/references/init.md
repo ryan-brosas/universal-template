@@ -1,6 +1,6 @@
 # init - workspace bootstrap contract
 
-Applies to workflow-lifecycle command init. Source prompt: ~/.agents/prompts/init.md.
+Applies to workflow-lifecycle command init. This reference is the canonical content (the retired global prompt file was folded into it).
 
 ## When to apply
 First-time project bootstrap or a re-govern pass, once per project.
@@ -37,7 +37,7 @@ Render the detection table and ask Yes / Adjust / Cancel. Nothing is written bef
 | .pi/roadmap.md / .pi/state.md | skip if exists; keep before overwrite |
 | .pi/user.md | skip if exists; keep before overwrite |
 
-Templates come from ~/.agents/templates/ (agents.md, project.md, tech-stack.md, roadmap.md, state.md, user.md).
+Templates come from ~/.agents/templates/ (agents.md, project.md, tech-stack.md, roadmap.md, state.md, user.md; readme.md for a new repository README).
 
 ## Artifact quality contract
 1. By-default minimum content per artifact; empty sections become `[NEEDS CLARIFICATION: reason]`, never dropped silently.

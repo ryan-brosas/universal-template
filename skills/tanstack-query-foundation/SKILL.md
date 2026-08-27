@@ -1,6 +1,6 @@
 ---
 name: tanstack-query-foundation
-description: Async-state cache kernel (@tanstack/query-core v5) — pause/resume retryer machine, fetch dedup/revert ladder, dispatch reducers, canonical-JSON key hashing, structural sharing, transaction-batched notifications, GC refcounting, lazy environment listeners, observer select/placeholder memoization, tracked-prop notification gate, mutation callback ledger, scoped mutation serialization, directional infinite paging, newer-wins hydration with pending promises, streamed query refetch modes, and the render-phase optimistic binding contract.
+description: "Use when porting @tanstack/query-core v5's async-state cache kernel — pause/resume retryer machine, fetch dedup/revert ladder, dispatch reducers, canonical-JSON key hashing, structural sharing, transaction-batched notifications, GC refcounting, lazy environment listeners, observer select/placeholder memoization, tracked-prop notification gate, mutation callback ledger, scoped mutation serialization, directional infinite paging, newer-wins hydration with pending promises, streamed query refetch modes, and the render-phase optimistic binding contract."
 ---
 
 # TanStack Query: async-state cache kernel foundation

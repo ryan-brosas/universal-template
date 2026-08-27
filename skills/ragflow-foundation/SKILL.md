@@ -1,6 +1,6 @@
 ---
 name: ragflow-foundation
-description: "ragflow RAG retrieval engine — hybrid search orchestration, citation attach, ingestion task kernel, resumable GraphRAG indexing pipeline, query-side KG retrieval with Go twin."
+description: "Use when porting ragflow's RAG retrieval engine — hybrid search orchestration, citation attach, ingestion task kernel, resumable GraphRAG indexing pipeline, query-side KG retrieval with Go twin."
 ---
 
 # ragflow: Retrieval & Ingestion Foundation

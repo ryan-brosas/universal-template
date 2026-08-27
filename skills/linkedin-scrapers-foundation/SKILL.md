@@ -1,6 +1,6 @@
 ---
 name: linkedin-scrapers-foundation
-description: "linkedin-scrapers-foundation — cross-repo patterns mined from 13 LinkedIn scraper/bot repos into ONE suite foundation."
+description: "Use when building or repairing a LinkedIn scraper, Sales Navigator harvester, or Easy Apply bot — cross-repo patterns mined from 13 LinkedIn scraper/bot repos into ONE suite foundation: session/auth handling, rate-limit evasion and detection, pagination and lazy-load walking, profile/job data normalization, application-form automation, and run-level orchestration with crash-safe logging."
 ---
 # linkedin-scrapers-combined: LinkedIn scraping & Easy Apply automation patterns
 

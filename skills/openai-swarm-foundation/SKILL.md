@@ -1,6 +1,6 @@
 ---
 name: openai-swarm-foundation
-description: "Minimal-agent foundation"
+description: "Use when porting or building a minimal agent runtime (tool-call loop, agent handoffs, shared context), designing a triage/router multi-agent topology, generating OpenAI tools schemas from Python functions, reassembling streamed chat-completion deltas, or testing agent loops without a live model. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
 ---
 # openai-swarm: minimal-agent foundation
 

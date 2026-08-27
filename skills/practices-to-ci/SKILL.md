@@ -10,6 +10,12 @@ Turn code practices and discipline into mechanically-enforced CI checks. This
 is the "steer outcomes, not behavior" principle (Pillar 2) made concrete: don't
 prompt for behavior, enforce it with checks.
 
+## Core Principle
+
+**Anything mechanical, predictable, or deterministic becomes a CI check — prompting
+for something mechanically enforceable is useless.** A restriction is a conclusion you
+earn from a real failure; the CI check proves the practice holds.
+
 ## The principle
 
 - **Anything mechanical/predictable/deterministic → a CI check.** (Pillar 4)
@@ -33,6 +39,15 @@ From the pre-commit configs of high-quality repos:
 | No direct commits to main | `no-commit-to-branch` |
 | No secrets committed | scan for key patterns / use gitleaks |
 | No dead/unused code | lint (ruff/knip/eslint) |
+
+## Workflow
+
+Identify the practice → write a check script (`scripts/*.py`) that mechanically
+verifies it and exits non-zero on failure → wire it into CI
+(`.github/workflows/*.yml`) so it runs on PRs/pushes → upload failure logs as
+artifacts so failures are debuggable → fix what it catches, first verifying the check
+catches a real violation on the un-fixed version. The full steps are in `How to apply`
+below.
 
 ## How to apply
 
@@ -81,3 +96,34 @@ Use when a repo has a practice that "should be followed" but isn't enforced —
 turn it into a check rather than adding a prose rule. This complements
 `ci-best-practices` (how to write good workflows) and `code-discipline` (the
 practices themselves).
+
+## Red Flags
+
+- Adding a prose rule or prompt for something mechanically enforceable — write the
+  check instead.
+- A check that finds nothing in the repo — it is untested; verify it catches a real
+  violation (test the un-fixed version).
+- A restriction not earned from a real failure.
+
+## Verification
+
+- Run the check script locally and confirm it exits non-zero on a planted violation and
+  zero on clean input.
+- Confirm the CI workflow runs on PRs/pushes and uploads failure logs as artifacts so
+  failures are debuggable.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill><name></skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>…</evidence>
+  <artifacts>…</artifacts>
+  <risks>…</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no reference files; the check catalog and pi-template inventory are fully listed in this file.

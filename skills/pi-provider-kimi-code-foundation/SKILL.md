@@ -20,6 +20,14 @@ retrieval.
 - `references/tool-schema-dedup.md` — how do you fit large tool schemas under a per-tool byte limit without paying dedup cost every request?
 - `references/empty-response-filter.md` — how do you hide vendor-synthesized "(Empty response…)" text blocks without corrupting session content indices?
 - `references/stream-auth-retry.md` — how do you retry an auth-failed stream before any real event leaks into session history?
+- `references/layered-config-merge-ladder.md` — how do you layer defaults/home/project/env/runtime config without mutating shared defaults or persisting ad-hoc overrides?
+- `references/config-source-attribution.md` — how do you tell users which layer produced each effective config value?
+- `references/config-pointer-validation-projection.md` — how do you fail loudly on bad user config AND silently drop unknown keys in the same pass?
+- `references/env-patch-tolerance-asymmetry.md` — which environment-variable mistakes are fatal and which are silently ignored?
+- `references/quiet-vs-loud-config-reads.md` — should a malformed JSON config file crash the provider or degrade to defaults, and can both behaviors coexist legitimately?
+- `references/runtime-override-trio.md` — how do you give embedded hosts ephemeral config control without touching disk, and who actually uses it?
+- `references/resolved-store-overlay.md` — how does a stream function get resolved config it wasn't handed, without stale geometry?
+- `references/window-cap-tracking-sentinel.md` — how do you keep an unset maxTokens tracking contextWindow until the user sets it explicitly?
 
 ## Capsule map
 - **Payload mutation pipeline** — `payload-mutation-pipeline`: one async in-place function, pure given its context; side effects enter via ctx.upload; ordering (extra_body → caps → thinking → tool_choice) is the contract.
@@ -29,6 +37,14 @@ retrieval.
 - **Tool schema dedup** — `tool-schema-dedup`: only >14 KB schemas; serialized-equality fragment collection; positive-savings $defs replacement; structural fingerprint cache with cycle/function/symbol/-0 handling.
 - **Empty-response filter** — `empty-response-filter`: buffer while accumulated text is a prefix of the marker; suppress confirmed blocks; flush on divergence; clean content only at done; never splice mid-stream.
 - **Stream auth retry** — `stream-auth-retry`: buffer synthetic start events until proof of life; one refresh+retry on first auth error (event or thrown); `$KIMI_API_KEY` passthrough expansion; null-preserving header merge.
+- **Layered config merge ladder** — `layered-config-merge-ladder`: layer defaults/home/project/env/runtime config without mutating shared defaults or persisting ad-hoc overrides.
+- **Config source attribution** — `config-source-attribution`: tell users which layer produced each effective config value.
+- **Pointer validation projection** — `config-pointer-validation-projection`: fail loudly on bad user config AND silently drop unknown keys in the same pass.
+- **Env patch tolerance asymmetry** — `env-patch-tolerance-asymmetry`: which environment-variable mistakes are fatal and which are silently ignored.
+- **Quiet vs loud config reads** — `quiet-vs-loud-config-reads`: the request path dies on corrupt config; the settings UI falls back to defaults.
+- **Runtime override trio** — `runtime-override-trio`: give embedded hosts ephemeral config control without touching disk, and who actually uses it.
+- **Resolved-config store with live overlay** — `resolved-store-overlay`: a stream function gets config it wasn't handed, without stale geometry.
+- **Window-cap tracking sentinel** — `window-cap-tracking-sentinel`: make maxTokens follow contextWindow until the user sets it explicitly.
 
 ## Extending the foundation
 Add one `references/<seam>.md` capsule for one graph-selected, source-confirmed

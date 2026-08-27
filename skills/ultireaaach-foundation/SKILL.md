@@ -1,6 +1,6 @@
 ---
 name: ultireaaach-foundation
-description: Local-first LinkedIn lead collector kernel — loopback control plane with origin gating, SSRF-fenced rewrite proxy for framing foreign pages, vendored-SPA cloud mock (decodable fake JWT, envelope contracts, name-heuristic total defaults), guarded run FSM over SQLite runs, dedup-or-merge lead store, token-authenticated single-socket extension WS bridge. Load when porting local tool dashboards, browser-extension control planes, or offline-first collector stores.
+description: "Use when porting a local-first control plane that drives a real browser via an unpacked extension, mocks a SaaS backend so a vendored SPA boots offline, or needs deterministic collect/merge storage with run lifecycle records — local-first LinkedIn lead collector kernel: loopback control plane with origin gating, SSRF-fenced rewrite proxy for framing foreign pages, vendored-SPA cloud mock (decodable fake JWT, envelope contracts, name-heuristic total defaults), guarded run FSM over SQLite runs, dedup-or-merge lead store, token-authenticated single-socket extension WS bridge."
 ---
 
 # Ultireaaach: local LinkedIn lead-collector foundation

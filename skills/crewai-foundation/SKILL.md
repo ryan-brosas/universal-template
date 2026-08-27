@@ -1,6 +1,6 @@
 ---
 name: crewai-foundation
-description: "Foundation leaf for crewAI's Flow runtime kernel: event-driven method graph execution, HITL pause/resume, checkpoint lineage, and the pluggable-infra patterns they share."
+description: "Use when porting crewAI's Flow runtime kernel — event-driven method graph execution, HITL pause/resume, checkpoint lineage, and the pluggable-infra patterns they share."
 ---
 
 # crewAI: flow-runtime & event-bus foundation
@@ -48,6 +48,46 @@ Use when porting an event/listener workflow engine (or_ / and_ / router graphs),
 - `references/xrepo-event-scope-pairing.md` — CROSS-REPO vs autogen: context-local start/end frames validated at pop time.
 - `references/xrepo-pause-as-return-hitl.md` — CROSS-REPO vs agno/agency-swarm: pause is persisted data crossing an API boundary, never an escaped exception.
 - `references/xrepo-copycontext-thread-hop.md` — CROSS-REPO vs agno: snapshot context/state BEFORE crossing any async/sync seam.
+- `references/flow-runtime-dag-engine.md` — how do @start/@listen/@router methods become an executed DAG with cyclic re-entry and resume?
+- `references/flow-engine-loop-safety.md` — how does the event runtime bound infinite listener cycles and dedupe or_() triggers?
+- `references/or-listener-fire-once-rearm-racing.md` — fire-once latch, router-loop re-arm, and first-wins racing for multi-event or() listeners.
+- `references/flow-hooks-ladder.md` — EXECUTION_START/INPUT/PRE_STEP/POST_STEP/OUTPUT/EXECUTION_END interception ladder with payload rewrite.
+- `references/flow-kickoff-dual-mode-entry.md` — nested-loop escape, restore/fork, and the exactly-once failure pairing ladder.
+- `references/flow-ask-blocking-input.md` — contextvar-named steps, auto-checkpoint before blocking, timeout-None contract.
+- `references/plan-execute-flow-graph.md` — how do @start/@router labels wire a supervisor loop that cannot fall through?
+- `references/sqlite-flow-persistence.md` — append-only snapshots, latest-row restore, and the cross-process file lock.
+- `references/checkpoint-config-coercion.md` — True→config BeforeValidator with handler-registration side effect.
+- `references/human-feedback-pause-resume.md` — exception-as-control-flow with persisted pending context.
+- `references/human-feedback-rerun.md` — how does feedback loop the WHOLE flow while preserving conversation, and skip re-planning?
+- `references/crew-kickoff-scheduling.md` — how does the crew-level engine order tasks, fan out async ones, and clean up?
+- `references/crew-task-pipeline.md` — async-fence batching, conditional-task barrier, and replay-aware start index.
+- `references/task-agent-handoff.md` — how does a Task drive the executor, collect tool failures, and apply guardrails?
+- `references/todo-dependency-scheduler.md` — when do steps run sequentially vs in parallel, and what unblocks a failed dependency?
+- `references/deterministic-fingerprints.md` — uuid5-seeded stable IDs for agents/crews/tasks.
+- `references/executor-flow-state.md` — how does one AgentExecutor instance reset between runs without losing its identity?
+- `references/step-executor-worker.md` — how does one plan step run in isolation with its own multi-turn tool loop and no shared state?
+- `references/react-parser.md` — how is free LLM text turned into Action/Finish, and what does json_repair fix without inventing data?
+- `references/finalize-synthesis.md` — how does the run end with a guaranteed AgentFinish even when no LLM ever produced one?
+- `references/context-recovery-ladder.md` — how does the executor survive context-length errors, and what does summarization preserve?
+- `references/reasoning-effort-ladder.md` — how much observation/replan machinery runs per step at low/medium/high?
+- `references/replan-machinery.md` — when does the plan regenerate, what does it preserve, and why is the counter incremented by the caller?
+- `references/planning-llm-contract.md` — how is the initial plan produced, refined until "ready", and kept out of task descriptions?
+- `references/planner-observation-parsing.md` — how are four different LLM response shapes coerced into one StepObservation without silent defaults?
+- `references/rpm-and-force-finish.md` — how are provider rate limits and runaway loops bounded?
+- `references/provider-tool-call-normalization.md` — how do five LLM provider shapes collapse into one (call_id, name, args) tuple?
+- `references/llm-stop-param-recovery.md` — string-sniffed capability ladder with persistent drop_params memory for unsupported 'stop'.
+- `references/prompt-cache-breakpoints.md` — where are cache_control markers placed so ReAct loops hit the provider prompt cache?
+- `references/native-tool-batch.md` — when do parallel calls run, and how do result_as_answer and failures short-circuit?
+- `references/multimodal-file-injection.md` — how do crew/task files and inputs reach the model as real attachments on the last user message?
+- `references/stream-frame-pipeline.md` — contextvar sinks, channel taxonomy, and thread-bridge generators.
+- `references/tool-cache-and-limits.md` — when is a repeated tool call served from cache, and how is a per-tool call budget enforced?
+- `references/tool-cache-opt-in.md` — crew-level cache handler offered to agents, default re-execution.
+- `references/tool-failure-protocol.md` — run-but-failed tools with policy ladder.
+- `references/tool-failure-taxonomy.md` — how does a tool say "I ran but failed", and what do ignore/warn/raise mean at each call site?
+- `references/state-copy-discipline.md` — deep-copy-with-fallback for unpickleable objects and model-construct rescue.
+- `references/event-bus-dispatch.md` — background-loop emit, future tracking, stream-chunk sync bypass, and replay-without-mutation.
+- `references/event-handler-dependency-graph.md` — Kahn levels with cached execution plans and aemit bypass.
+- `references/usage-aggregation-ownership.md` — reentrant-safe listener attach/detach around kickoff ownership.
 
 ## Capsule map
 - **Listener dispatch** — `or-listener-fired-ledger`: fire-once ledger + trigger-scoped re-arm for multi-event or_().
@@ -84,6 +124,46 @@ Use when porting an event/listener workflow engine (or_ / and_ / router graphs),
 - **Runtime plumbing** — `usage-aggregation-reentrancy`: owner-latched token accumulation across nested kickoffs.
 - **Runtime plumbing** — `memory-drain-before-finished`: ordering guarantee for post-finish memory visibility.
 - **Cross-repo patterns** — `xrepo-processwide-backend-setter`, `xrepo-first-wins-racing`, `xrepo-appendonly-snapshot-ledger`, `xrepo-event-scope-pairing`, `xrepo-pause-as-return-hitl`, `xrepo-copycontext-thread-hop`.
+- **Flow runtime** — `flow-runtime-dag-engine`: @start/@listen/@router methods become an executed DAG with cyclic re-entry and resume.
+- **Flow runtime** — `flow-engine-loop-safety`: bounds infinite listener cycles and dedupes or_() triggers.
+- **Flow runtime** — `or-listener-fire-once-rearm-racing`: fire-once latch, router-loop re-arm, first-wins racing for multi-event or() listeners.
+- **Flow runtime** — `flow-hooks-ladder`: EXECUTION_START/INPUT/PRE_STEP/POST_STEP/OUTPUT/EXECUTION_END interception with payload rewrite.
+- **Flow runtime** — `flow-kickoff-dual-mode-entry`: nested-loop escape, restore/fork, exactly-once failure pairing ladder.
+- **Flow runtime** — `flow-ask-blocking-input`: contextvar-named steps, auto-checkpoint before blocking, timeout-None contract.
+- **Flow runtime** — `plan-execute-flow-graph`: @start/@router labels wire a supervisor loop that cannot fall through.
+- **Flow persistence & HITL** — `sqlite-flow-persistence`: append-only snapshots, latest-row restore, cross-process file lock.
+- **Flow persistence & HITL** — `checkpoint-config-coercion`: True→config BeforeValidator with handler-registration side effect.
+- **Flow persistence & HITL** — `human-feedback-pause-resume`: exception-as-control-flow with persisted pending context.
+- **Flow persistence & HITL** — `human-feedback-rerun`: feedback loops the WHOLE flow while preserving conversation, skips re-planning.
+- **Crew engine** — `crew-kickoff-scheduling`: crew-level task ordering, async fan-out, cleanup.
+- **Crew engine** — `crew-task-pipeline`: async-fence batching, conditional-task barrier, replay-aware start index.
+- **Crew engine** — `task-agent-handoff`: a Task drives the executor, collects tool failures, applies guardrails.
+- **Crew engine** — `todo-dependency-scheduler`: sequential-vs-parallel step scheduling; what unblocks a failed dependency.
+- **Crew engine** — `deterministic-fingerprints`: uuid5-seeded stable IDs for agents/crews/tasks.
+- **Executor & ReAct loop** — `executor-flow-state`: one AgentExecutor instance resets between runs without losing its identity.
+- **Executor & ReAct loop** — `step-executor-worker`: one plan step runs in isolation with its own multi-turn tool loop and no shared state.
+- **Executor & ReAct loop** — `react-parser`: free LLM text → Action/Finish; json_repair fixes without inventing data.
+- **Executor & ReAct loop** — `finalize-synthesis`: the run ends with a guaranteed AgentFinish even when no LLM ever produced one.
+- **Executor & ReAct loop** — `context-recovery-ladder`: surviving context-length errors; what summarization preserves.
+- **Executor & ReAct loop** — `reasoning-effort-ladder`: how much observation/replan machinery runs per step at low/medium/high.
+- **Executor & ReAct loop** — `replan-machinery`: when the plan regenerates, what it preserves, caller-incremented counter.
+- **Executor & ReAct loop** — `planning-llm-contract`: initial plan produced, refined until "ready", kept out of task descriptions.
+- **Executor & ReAct loop** — `planner-observation-parsing`: four LLM response shapes coerced into one StepObservation without silent defaults.
+- **Executor & ReAct loop** — `rpm-and-force-finish`: provider rate limits and runaway loops bounded.
+- **LLM/provider plane** — `provider-tool-call-normalization`: five LLM provider shapes collapse into one (call_id, name, args) tuple.
+- **LLM/provider plane** — `llm-stop-param-recovery`: string-sniffed capability ladder with persistent drop_params memory for unsupported 'stop'.
+- **LLM/provider plane** — `prompt-cache-breakpoints`: cache_control marker placement so ReAct loops hit the provider prompt cache.
+- **LLM/provider plane** — `native-tool-batch`: when parallel calls run; result_as_answer and failure short-circuits.
+- **LLM/provider plane** — `multimodal-file-injection`: crew/task files and inputs reach the model as real attachments on the last user message.
+- **LLM/provider plane** — `stream-frame-pipeline`: contextvar sinks, channel taxonomy, thread-bridge generators.
+- **Tools & state** — `tool-cache-and-limits`: when repeated tool calls are served from cache; per-tool call budget enforcement.
+- **Tools & state** — `tool-cache-opt-in`: crew-level cache handler offered to agents, default re-execution.
+- **Tools & state** — `tool-failure-protocol`: run-but-failed tools with policy ladder.
+- **Tools & state** — `tool-failure-taxonomy`: how a tool says "I ran but failed"; ignore/warn/raise at each call site.
+- **Tools & state** — `state-copy-discipline`: deep-copy-with-fallback for unpickleable objects and model-construct rescue.
+- **Event bus & usage** — `event-bus-dispatch`: background-loop emit, future tracking, stream-chunk sync bypass, replay-without-mutation.
+- **Event bus & usage** — `event-handler-dependency-graph`: Kahn levels with cached execution plans and aemit bypass.
+- **Event bus & usage** — `usage-aggregation-ownership`: reentrant-safe listener attach/detach around kickoff ownership.
 
 ## Extending the foundation
 Add one `references/<seam>.md` capsule for one graph-selected, source-confirmed porting question against project `ext-crewAI`. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf. Re-run probes byte-exact from the repo root (`/mnt/hdd/utopia/inspo/external/crewAI`, runner `.venv/bin/python -m pytest`) before shipping.

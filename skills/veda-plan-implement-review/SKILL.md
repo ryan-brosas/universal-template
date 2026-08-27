@@ -1,8 +1,25 @@
 ---
 name: veda-plan-implement-review
-description: Plan AND implement with the Veda Navigator model, then review the result. Align on an approach with Navigator, carry it out, then close with a reviewer pass (fix P0/P1, re-review until pass). Use when you need to plan an approach, execute it, and review the outcome. Drives `veda -S impl-TASKNAME -m gpt-5.6-sol -p navigator-plan` to align, implements with native tools, then `-p reviewer`. Navigator has read-only tools only.
+description: "Use when you need to plan an approach, execute it, and review the outcome — plan AND implement with the Veda Navigator model, then review the result: align on an approach with Navigator, carry it out, then close with a reviewer pass (fix P0/P1, re-review until pass). Drives `veda -S impl-TASKNAME -m gpt-5.6-sol -p navigator-plan` to align, implements with native tools, then `-p reviewer`. Navigator has read-only tools only."
 argument-hint: "[veda-flags]"
 ---
+
+## Core Principle
+
+Align → implement → close with a reviewer loop until `review: pass`. Navigator has read-only tools and advises; you implement; the reviewer persona grades the diff against the session's `design.json`.
+
+## When to Use / NOT
+
+- Use when you need to plan an approach, execute it, and review the outcome in one lane.
+- NOT when only planning is wanted (`veda-plan`) or when the whole cycle should be delegated to the worker agent (`veda-worker`).
+
+## Workflow
+
+1. Align: `veda -S impl-TASKNAME sel add` + `-p navigator-plan` (user ask verbatim, committed position); iterate via `resume`/`navigator-chat`.
+2. Implement with native tools, checkpointing with evidence.
+3. Capture the diff into selection, run `-p reviewer` against the auto-attached `design.json`.
+4. Fix P0/P1 yourself, regenerate the diff, re-review. Stop at `review: pass` (P2 stays open, non-blocking).
+
 
 ## Model routing (authoritative — do not substitute)
 
@@ -197,3 +214,27 @@ Key commands:
 - `veda -S impl-TASKNAME -m gpt-5.6-sol resume` to continue a conversation (session-scoped)
 - `veda -S impl-TASKNAME -m gpt-5.6-sol -p reviewer` for the closing review pass (P0/P1/P2, fix + re-review until `review: pass`)
 - Output goes to stdout; use `-o file.md` to save response; don't pipe `2>&1`
+
+## Red Flags
+
+Letting the reviewer persona fix code (it has no tools); skipping the re-review after a fix; patching over a design-ground error instead of revising the design with Navigator; piping veda with `2>&1`.
+
+## Verification
+
+The diff is in selection (`sel ls` shows it); the reviewer ends with `review: pass` (no P0/P1 findings) against the session's `design.json`.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill>veda-plan-implement-review</skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>commands run, outputs inspected, artifacts produced</evidence>
+  <artifacts>files written / commands run</artifacts>
+  <risks>known risks, untested paths, or none</risks>
+</skill_result>
+```
+
+## References
+
+No reference capsules — the skill is self-contained.

@@ -7,6 +7,23 @@ disable-model-invocation: true
 
 # API & Interface Design
 
+## Core Principle
+
+Contract first, implementation second — the API is the contract; internal code can change freely, the contract cannot.
+
+## When to Use / NOT
+
+- **Use when:** designing REST/GraphQL APIs, SDK interfaces, or public module boundaries — contract-first design, versioning, error shapes, backward compatibility.
+- **NOT when:** N/A — no explicit exclusion stated in this skill.
+
+## Workflow
+
+1. Write the schema (OpenAPI, GraphQL SDL, Protobuf, JSON Schema).
+2. Generate types from the schema (client + server).
+3. Validate at the boundary (decode unknown → typed value).
+4. Implement against the types, never raw input.
+5. Choose a versioning strategy; shape errors (code, message, details, traceId); add idempotency, pagination, and rate-limit headers.
+
 ## Iron Laws
 
 <EXTREMELY-IMPORTANT>
@@ -81,3 +98,23 @@ Schema after impl (backwards); no version; generic errors; no idempotency; no pa
 ## Anti-Patterns
 
 **Schema after impl**; **no version**; **generic errors**; **breaking without bump**; **hand-written docs**; **no idempotency**; **no pagination**; **silent breaking**.
+
+## Verification
+
+Generated docs from the schema match what you ship; every error carries machine-readable `code`, human-readable `message`, `details`, and `traceId`; version is explicit; rate limits visible via headers; no stack traces, internal paths, or secrets in responses.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill>api-and-interface-design</skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>Schema written, types generated, boundary validation in place; generated docs match shipped API</evidence>
+  <artifacts>API contract: schema, versioning strategy, error shape, idempotency, pagination, rate limits</artifacts>
+  <risks>Unversioned breaks, generic errors, hand-written docs, or none</risks>
+</skill_result>
+```
+
+## References
+
+N/A — no reference files; this skill is self-contained.
