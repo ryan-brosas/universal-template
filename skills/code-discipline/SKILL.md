@@ -76,8 +76,10 @@ behavior (steer outcomes, not behavior).
 
 ## When to use
 
-Apply these when implementing, reviewing, or committing code. They complement
-the `agent-code-quality-gate` (the 5-check gate) and `quality-gate-methodology`
+Apply these when implementing, reviewing, or committing code. For a **topic
+index** (naming, docs, Git, AI, performance) load `coding-best-practices` first,
+then return here for scope and verification. They complement
+`agent-code-quality-gate` (the 5-check gate) and `quality-gate-methodology`
 (how to write tests that catch).
 
 ## Red Flags
@@ -102,4 +104,4 @@ the `agent-code-quality-gate` (the 5-check gate) and `quality-gate-methodology`
 
 ## References
 
-N/A — no reference files; this skill is self-contained.
+- `coding-best-practices` — topic router (naming, docs, Git, AI, performance) when the question is broader than discipline alone.

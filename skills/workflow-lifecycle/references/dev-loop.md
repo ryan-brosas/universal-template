@@ -15,7 +15,8 @@ init (once)  →  AGENTS.md is the operating spine
  retrieve context (context plane, see mcp-context)   │
       │                                             │
       ▼                                             │
- implement the slice (bit by bit, reversible)        │
+ implement the slice (bit by bit, reversible;
+      load `coding-best-practices` for topic routing, `code-discipline` for scope)        │
       │                                             │
       ▼                                             │
  verify (project's own gates; AGENTS.md leads with   │
@@ -43,9 +44,10 @@ init (once)  →  AGENTS.md is the operating spine
 4. **Documents after implementation, not promises.** state/roadmap/user updates
    happen after the slice verifies; docs describe what IS. Exception: design
    docs for genuinely new architecture.
-5. **Follow the essentials** (`~/.agents/essentials/`): objectives, operating
-   philosophy, steer outcomes not behavior, guiding-small-model, stack your
-   leverage, enforce code quality mechanically, how to build good tests.
+5. **Follow the essentials** (`~/.agents/essentials/`) and the coding practice
+   router (`coding-best-practices`) for topic-specific leaves: objectives,
+   operating philosophy, steer outcomes not behavior, guiding-small-model,
+   stack your leverage, enforce code quality mechanically, how to build good tests.
 6. **Close the loop.** If a step taught something reusable, distill via the
    learn command into a skill (use `~/.agents/templates/skill.md`).
 
