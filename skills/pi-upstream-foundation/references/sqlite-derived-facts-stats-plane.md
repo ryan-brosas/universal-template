@@ -58,13 +58,13 @@ if (typeof parsed !== "string") throw new SessionError("storage", `…: name mus
 **Probe:** `repository.test.ts:306-324` (setName(undefined) ⇒ getMetadata() and list()[0] have no `name` property), `:277-304` (stored `"not json"` / `"{}"` name ⇒ list() AND getMetadata() reject "name is not valid JSON" / "name must be a string"), `:253-275` (metadata twin: "metadata is not valid JSON" / "metadata must be an object"). Deterministic probe P3 this pass (verification.md) — first transcription wrongly attributed the omission to the JOIN flag; corrected to the source's null-first branch, then GREEN including both loudness arms.
 
 ## Usage stats derive from usage RECORDS, not entries
-**Path/Symbol:** `storage/session-stats.ts:addUsageToStats` (:41–50), `incrementMessageCount` (:33–38); call sites `repo.ts:appendEntry` message case (:480), `appendRecord` usage case (:511); schema `session_stats` (`001_initial.sql:32-39`, WITHOUT ROWID).
+**Path/Symbol:** `storage/session-stats.ts:addUsageToStats` (:42–51), `incrementMessageCount` (:35–40); call sites `repo.ts:appendEntry` message case (:480), `appendRecord` usage case (:511); schema `session_stats` (`001_initial.sql:32-39`, WITHOUT ROWID).
 **Signature:** `addUsageToStats(db, sessionId, usage: Usage): void` — one UPDATE per usage record, inside the record's write transaction.
 **Data Shape:** `session_stats(session_id PK, message_count, cached_tokens, uncached_tokens, total_tokens, cost_total)`; seeded at create/fork, mutated only inside lease-renewed write transactions.
 
 ### Decisive source
 ```ts
-// session-stats.ts:41-50 — the accounting convention
+// session-stats.ts:42-51 — the accounting convention
 sql`UPDATE session_stats
 	SET cached_tokens = cached_tokens + ${usage.cacheRead},
 		uncached_tokens = uncached_tokens + ${usage.input + usage.cacheWrite},

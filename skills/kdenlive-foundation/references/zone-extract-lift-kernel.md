@@ -107,7 +107,7 @@ pCore->pushUndo(undo, redo, i18n("Extract zone"));
 ```bash
 $ grep -n 'breakAffectedGroups\|extractZoneWithUndo\|liftZone' src/timeline2/model/timelinefunctions.cpp
 668:                    liftOk = liftOk && TimelineFunctions::liftZone(timeline, target_track, QPoint(endPosition, startPosition), undo, redo);
-673:            liftOk = liftOk && TimelineFunctions::liftZone(timeline, affectedTrack, QPoint(endPosition, startPosition), undo, redo);
+673:            liftOk = TimelineFunctions::liftZone(timeline, affectedTrack, QPoint(endPosition, startPosition), undo, redo);
 751:bool TimelineFunctions::breakAffectedGroups(const std::shared_ptr<TimelineItemModel> &timeline, const QVector<int> &tracks, QPoint zone, Fun &undo, Fun &redo)
 782:    bool res = extractZoneWithUndo(timeline, tracks, zone, liftOnly, clipToUnGroup, clipsToRegroup, undo, redo);
 787:bool TimelineFunctions::extractZoneWithUndo(const std::shared_ptr<TimelineItemModel> &timeline, const QVector<int> &tracks, QPoint zone, bool liftOnly,
