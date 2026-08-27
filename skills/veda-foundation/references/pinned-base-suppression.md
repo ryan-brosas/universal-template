@@ -29,16 +29,16 @@ function isBasePinned(source: ResolutionSource): boolean {
   const judgeModelAlias = judgeModel ? resolveModelAlias(judgeModel, globalConfig?.modelAliases) : undefined;
 
   // Judge backend: CLI > alias-inferred > (pinned base | config) > base
-  const effectiveBackend = flags.judgeBackend 
+  const effectiveBackend = flags.judgeBackend
     ?? (judgeModelAlias ? judgeModelAlias.backend : undefined)
     ?? (basePinned ? base.backend : deepConfig?.judgeBackend);
 // Revision — inherits verifier's choice when nothing else is set:
-  const effectiveBackend = flags.revisionBackend 
+  const effectiveBackend = flags.revisionBackend
     ?? (revisionModelAlias ? revisionModelAlias.backend : undefined)
     ?? (basePinned ? base.backend : (deepConfig?.revisionBackend ?? flags.verifierBackend ?? deepConfig?.verifierBackend));
 
   // For model fallback: when base is pinned, use flags.model; otherwise use config/verifier cascade
-  const modelFallback = basePinned 
+  const modelFallback = basePinned
     ? flags.model
     : (revisionModel ?? flags.verifierModel ?? deepConfig?.verifierModel ?? flags.model);
 ```

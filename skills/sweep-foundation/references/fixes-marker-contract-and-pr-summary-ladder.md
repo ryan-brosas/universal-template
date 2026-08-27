@@ -28,7 +28,7 @@ Fixes"
 if pr.user.login == CURRENT_USERNAME and f"Fixes #{issue_number}.
 " in pr.body:
 
-# READER 2 — regex, trailing dot is ANY char, no 
+# READER 2 — regex, trailing dot is ANY char, no
  anchor (on_comment.py :95)
 issue_number_match = re.search(r"Fixes #(?P<issue_number>\d+).", pr_body or "")
 
