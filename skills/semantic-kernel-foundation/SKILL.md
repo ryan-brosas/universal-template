@@ -56,6 +56,12 @@ code and direct tests are ground truth; references carry decisive excerpts and g
 - `references/orchestration-result-future.md` — how does an orchestration expose a non-blocking invoke whose actor-driven result, exceptions, and cancellation all converge on one awaitable handle?
 - `references/handoff-turn-taking-kernel-functions.md` — how does a multi-agent handoff group express turn-taking without a manager model — and why does each actor get a cloned kernel?
 - `references/function-choice-behavior-dotnet-twin.md` — what does the experimental settings-prep wrapper actually do, and which FunctionChoiceBehavior invariants are shared between the Python and .NET twins?
+- `references/sequential-vs-concurrent-collection-topology.md` — how do the sequential and concurrent orchestration patterns wire message topology and result collection, and why does sequential register actors in reverse?
+- `references/group-chat-manager-state-ladder.md` — who owns the group-chat history, how does the manager decide user-input vs terminate vs next-speaker, and where does the round counter live?
+- `references/magentic-progress-ledger-loop.md` — how does the Magentic-One manager detect stalling through a structured progress ledger, and what exactly happens on a stall (replan, reset, limits)?
+- `references/azure-tool-content-generators.md` — how does each Azure AI tool type map to FunctionCallContent/FunctionResultContent items, and what is THREAD_MESSAGE_ID for?
+- `references/responses-reasoning-intermediate-plane.md` — how does the Responses agent surface model reasoning (text and summary) to observers without polluting chat history, and how is reasoning configured?
+- `references/dotnet-connector-autoinvoke-budget.md` — where does the .NET auto-invoke budget live, and does the Python streaming exhaustion asymmetry hold in .NET?
 
 ## Capsule map
 - **Filter onion** — `filter-call-stack`: `(id, filter)` tuples inserted at index 0, folded over the inner function; insertion order = pre-`next` order, reverse = post-`next` order.
@@ -102,6 +108,12 @@ code and direct tests are ground truth; references carry decisive excerpts and g
 - **Orchestration result future** — `orchestration-result-future`: event + value + exception + cancellation token converge via three event.set paths; get() resolves value, then cancelled, then exception in priority order; cancel() is guarded both ways and wakes blocked getters; uuid4 topic type isolates concurrent runs.
 - **Handoff turn-taking** — `handoff-turn-taking-kernel-functions`: handoffs become transfer_to_* kernel functions in a cloned per-actor kernel plus a terminate-on-handoff auto-invoke filter; start messages fan to all members before the first request; first member is the entry agent.
 - **FCB .NET twin** — `function-choice-behavior-dotnet-twin`: deepcopy, convert, configure-only-if-behavior wrapper; both twins share fail-early "never advertise what you cannot invoke" and null=everything/empty=nothing selection semantics; Python filters are dicts, .NET selection takes function instances.
+- **Sequential vs concurrent topology** — `sequential-vs-concurrent-collection-topology`: sequential registers actors in REVERSE so each constructor resolves its successor type, chains point-to-point send_message with zero subscriptions, and the last hop is a CollectionActor whose handler is just the result callback; concurrent is one publish_message fan-out with one TypeSubscription per member and a lock-guarded count-gated collector (result = list of len(members)).
+- **Group chat manager ladder** — `group-chat-manager-state-ladder`: the manager actor owns the only authoritative ChatHistory; every decision (user-input → terminate → select-next) runs on a model_copy(deep=True) snapshot; non-USER responses get a synthetic "Transferred to <name>" USER marker; current_round increments inside should_terminate so max_rounds=3 gives exactly 3 responses; termination reason stamped onto the result message metadata.
+- **Magentic ledger loop** — `magentic-progress-ledger-loop`: five-field structured ProgressLedger per round (satisfied ⇒ final answer); symmetric stall counter (increment on no-progress/in-loop, floored decrement on progress); stall_count > max ⇒ replan (2 extra LLM calls) + MagenticResetMessage (clears actor caches AND deletes threads) + outer-loop restart; limit exhaustion returns the latest ASSISTANT message as a partial result; response_format injected per-call on a settings clone.
+- **Azure tool content generators** — `azure-tool-content-generators`: per-tool pure folds — Bing grounding emits call-only with the whole details dict as arguments; Azure AI Search and Deep Research emit call+result pairs (None when both empty); Deep Research appends a markdown ## Citations section from order-preserved unique URLs; MCP result keeps the raw SDK call as inner_content, MCP call carries server_label; THREAD_MESSAGE_ID metadata correlates streaming deltas to thread messages.
+- **Responses reasoning plane** — `responses-reasoning-intermediate-plane`: reasoning is observer-only — yielded (False, msg) before the tool ladder non-streaming, delivered only via on_intermediate_message streaming (Delta→StreamingReasoningContent, Done→ReasoningContent); never enters chat history or output_messages; content+summary text joined with newlines, provider fields (id, encrypted_content, status, is_summary) preserved in metadata; per-invocation reasoning overrides constructor's, explicit None removes the key.
+- **.NET connector auto-invoke budget** — `dotnet-connector-autoinvoke-budget`: the loop is an unbounded for(requestIndex) whose budget lives in FunctionCallsProcessor.GetConfiguration — AutoInvoke disabled at requestIndex >= 128 or AsyncLocal in-flight >= 128; exhausted config still supplies the s_nonInvocableFunctionTool placeholder so the finale IS a tool-less model call on BOTH .NET paths; the Python streaming no-finale asymmetry is Python-only, not a cross-language invariant.
 
 ## Extending the foundation
 Add one `references/<seam>.md` capsule for one graph-selected, source-confirmed porting question.
@@ -125,8 +137,9 @@ construction-time call-arity validation, encode-by-default trust gates, tool-vie
 filters with FQN matching, and construction-time schema freezing. Adapt service selection,
 provider-specific settings conversion, the escape function's target markup, and per-engine helper
 precedence to your host. Omit Azure/OpenAI connector internals and the Java plane;
-the agents and orchestration planes are covered by the eleven agents/orchestration capsules
+the agents and orchestration planes are covered by the fourteen agents/orchestration capsules
 (Assistant lifecycle, requires-action handoff, Responses loop, merge twins, function-choice gate,
 Azure AI run lifecycle, Azure AI streaming events, Responses request-prep, orchestration result
-future, handoff turn-taking, FCB .NET twin); the .NET plane by the two mirror capsules plus the
-FCB twin.
+future, handoff turn-taking, FCB .NET twin, sequential/concurrent topology, group-chat manager
+ladder, Magentic ledger loop); the .NET plane by the two mirror capsules plus the FCB twin and
+the connector auto-invoke budget.
