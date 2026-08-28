@@ -40,6 +40,37 @@ if (!updateBranchTip(db, sessionId, branchId, parentId, entryId)) {
 **Probe:** `packages/session-backends/sqlite-node/test/branch-cache.test.ts:120-148` — raw SQL deletes `branch_tips` + `branch_entries`; `getSqliteBranch` rejects `invalid_entry`; `repo.repairBranchCache(metadata)` restores the exact `[rootId, childId]` path. Deterministic probe P2 this pass (verification.md) reproduces the leaf-derivation query.
 **Probe:** `packages/session-backends/sqlite-node/test/branch-cache.test.ts:15-42` — after compaction + lane move + re-append, raw SQL over `branch_entries` shows the branched child's branch contains exactly `[rootId, keptId, compactionId, branchedId]` (full root path); :83-115 proves missing cache fails BOTH read and write with `invalid_entry` ("has no branch containing parent entry").
 
+## Cache-build-time loudness: the materialized custom_type column is re-validated, never trusted
+**Path/Symbol:** `packages/session-backends/sqlite-node/src/sqlite/storage/branch-entries.ts:customTypeFromPayload` (:114–131) called from `insertBranchEntriesForPath` (:133–152).
+**Signature:** `customTypeFromPayload(row: BranchPathEntryRow): string | null` — non-custom rows return `null` without parsing; custom rows MUST parse.
+**Data Shape:** during any cache build (append path build, fork per-tip rebuild, full rebuild), every custom-type row's payload is JSON-parsed and its `customType` field validated: payload must be a non-null non-array object and `customType` must be a string.
+
+### Decisive source
+```ts
+function customTypeFromPayload(row: BranchPathEntryRow): string | null {
+	if (row.type !== "custom") return null;
+	try {
+		const payload = JSON.parse(row.payload) as unknown;
+		if (typeof payload !== "object" || payload === null || Array.isArray(payload)) {
+			throw new Error("Payload is not an object");
+		}
+		const customType = (payload as { customType?: unknown }).customType;
+		if (typeof customType !== "string") throw new Error("Invalid custom payload");
+		return customType;
+	} catch (error) {
+		throw new SessionError("invalid_entry", `Invalid SQLite session entry ${row.id}: failed to decode entry ${row.id}`, …);
+	}
+}
+// insertBranchEntriesForPath: leaf→root walk with cycle guard, then reversed insert
+for (const row of path.reverse()) {
+	insertBranchEntry(db, sessionId, branchId, row.id, row.seq, row.type, customTypeFromPayload(row));
+}
+```
+
+**Flow:** the path walk itself fails loud before any insert — a repeated id throws `invalid_entry` "Entry parent cycle at X" (the `seen` set) and a missing canonical row throws "Entry X not found". Then EVERY custom row is decoded: a malformed payload throws `invalid_entry` and the surrounding SAVEPOINT (`build_branch_cache`) rolls the whole path build back. This is the write-time twin of the read-plane decode loudness (sqlite-compaction-stop-window / sqlite-derived-facts-stats-plane): a corrupt custom payload cannot slip into `branch_entries.custom_type` as a NULL or wrong value, so the materialized column that powers SQL-side `customType` filtering (001_initial.sql :49/:56) stays trustworthy.
+**Invariant:** derived columns are re-derived through validation, not copied from untrusted input — if you materialize a decoded field into an index, the indexer must re-run the decoder, or the index becomes a corruption amplifier (a bad value would be served by fast SQL filters that never touch the payload).
+**Probe:** deterministic probe P1 this pass (verification.md) — transcribed the validation chain in node:sqlite: valid custom payload → column set; payload "not json" → invalid_entry, zero cache rows; payload `[]` → invalid_entry; non-string customType → invalid_entry.
+
 ## Get live surrounding code
 **Retrieve:**
 ```ts
