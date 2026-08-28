@@ -1,6 +1,6 @@
 ---
 name: langgraph-foundation
-description: "Use when building agent orchestration engines, step graphs, or durable resumable runtimes — reusable contracts from LangGraph (MIT): the Pregel execution kernel — channel semantics (LastValue/Topic/BinOp/Ephemeral/Barrier/Delta), BSP superstep loop with version-based triggering, deterministic task IDs, interrupt/resume scratchpad protocol, runner panic/cancel semantics, retry ladder with ParentCommand routing, durability modes, exit-mode delta persistence, stream-mode output projection with custom-writer injection, branch/Command navigation grammar, Send fan-out guards, per-node input projection, managed values, functional-API call reuse on resume, messages-mode callback propagation, subgraph checkpoint addressing, write caching, and idle-timeout guards."
+description: "Use when building agent orchestration engines, step graphs, or durable resumable runtimes — reusable contracts from LangGraph (MIT): the Pregel execution kernel — channel semantics (LastValue/Topic/BinOp/Ephemeral/Barrier/Delta), BSP superstep loop with version-based triggering, deterministic task IDs, interrupt/resume scratchpad protocol, runner panic/cancel semantics, retry ladder with ParentCommand routing, durability modes, exit-mode delta persistence, stream-mode output projection with custom-writer injection, branch/Command navigation grammar, Send fan-out guards, per-node input projection, managed values, functional-API call reuse on resume, messages-mode callback propagation (incl. v2 content-block streaming), subgraph checkpoint addressing, write caching, idle-timeout guards with attempt-observer contract, parent-config checkpoint chains, and runtime override/merge algebra."
 ---
 
 # LangGraph: Pregel Execution Kernel Foundation
@@ -35,6 +35,10 @@ Use when porting LangGraph's engine — not its API surface: channel/reducer sta
 - `references/subgraph-checkpoint-addressing.md` — CONFIG_KEY_CHECKPOINT_MAP ancestor entries pin nested graphs to their own checkpoint; own-entry ⇒ time-travel ⇒ drop RESUME writes.
 - `references/cache-policy-keying.md` — CacheKey (ns, xxh3(key_func(args)), ttl); per-superstep match pre-fills writes so cached tasks never execute.
 - `references/timeout-idle-guard.md` — async-only watchdog race; sliding idle window on progress touches; kill path clears partial writes.
+- `references/v2-content-block-streaming.md` — marker base class flips provider routing to protocol events; run_id correlation; streamed-run registry for exactly-once.
+- `references/timed-attempt-observer-contract.md` — frozen per-attempt context + small event wrappers; fail-open dispatch; rate-limited progress at idle/4.
+- `references/parent-config-checkpoint-chain.md` — parent id stored at put, config rebuilt at get; history walks follow parent_config, never list(before=).
+- `references/runtime-override-merge-algebra.md` — frozen Runtime dataclass; merge (sentinel-identity writer/heartbeat) vs override (exact replace); lock-free drain.
 
 ## Capsule map
 - **Driver loop** — `bsp-superstep-driver`: `while loop.tick()` + runner.tick + after_tick; single waiter invariant; recursion-limit and drain exits.
@@ -63,12 +67,16 @@ Use when porting LangGraph's engine — not its API surface: channel/reducer sta
 - **Addressing** — `subgraph-checkpoint-addressing`: ancestor-only map = normal resume; own-named entry = deliberate replay with RESUME writes dropped.
 - **Caching** — `cache-policy-keying`: keys per function+node over user key_func; values are write lists; hits pre-fill writes before execution.
 - **Timeouts** — `timeout-idle-guard`: FIRST_COMPLETED race vs idle/run watchdogs; progress touches slide the window; killed attempts leave zero writes.
+- **Streaming** — `v2-content-block-streaming`: one representation per message (streamed events OR final); v1 chunks never reach a v2 stream; v1 streams strip V2 handlers.
+- **Observability** — `timed-attempt-observer-contract`: observer failure never changes the attempt; context immutable and shared; finish precedes backoff/error-handler/final raise.
+- **History** — `parent-config-checkpoint-chain`: linked list by parent id, not time series; fork-safe walks follow parent_config; missing seed = start empty.
+- **Composition** — `runtime-override-merge-algebra`: no-op sentinels checked by identity in merge; override is exact replace; drain is one lock-free write.
 
 ## Extending the foundation
 Add one `references/<seam>.md` capsule for one graph-selected, source-confirmed porting question. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf.
 
 ## Provenance
-LangGraph (MIT), `main@f09cfe8ffc1eeffd68f4b628ed69c30f7cad229f`; Codebase Memory project `langgraph` (FULL mode, ready, head==base_sha zero drift; pass 2 generation 2026-08-24T16:12:21Z, 10,003n/68,108e, parse_partial ×1 = libs/checkpoint-postgres/Makefile — none cited). Pass 1 mined the Pregel core under this checkout's predecessor index (`ext-langgraph`, same pin); the live project is `langgraph`. Pass 3 (same pin) added the functional-call-reuse, messages-mode, subgraph-addressing, cache-keying, and timeout-idle-guard planes; all 26 references are capsule-v2.
+LangGraph (MIT), `main@f09cfe8ffc1eeffd68f4b628ed69c30f7cad229f`; Codebase Memory project `langgraph` (FULL mode, ready, head==base_sha zero drift; pass 2 generation 2026-08-24T16:12:21Z, 10,003n/68,108e, parse_partial ×1 = libs/checkpoint-postgres/Makefile — none cited). Pass 1 mined the Pregel core under this checkout's predecessor index (`ext-langgraph`, same pin); the live project is `langgraph`. Pass 3 (same pin) added the functional-call-reuse, messages-mode, subgraph-addressing, cache-keying, and timeout-idle-guard planes; pass 4 (same pin) added the v2-content-block-streaming, timed-attempt-observer-contract, parent-config-checkpoint-chain, and runtime-override-merge-algebra planes; all 30 references are capsule-v2.
 
 ## Full view (memory graph)
 Revalidate `ext-langgraph` before porting: run `index_status`, `check_index_coverage`, `search_graph`, `trace_path`, and `get_code_snippet`. Record the graph root, branch, commit, mode, node/edge counts, freshness, and any coverage caveats; source and direct tests decide shipped claims. Coverage check (pass 1): all cited paths resolve line-exact via search_graph BM25 rank-1. Behavior evidence (pass 1): probe battery executed byte-exact against source BEFORE capsule authoring; direct tests pinned from `tests/test_channels.py`, `tests/test_pregel.py` (9,668L), `tests/test_retry.py`, `tests/test_delta_channel_exit_mode.py`.
