@@ -43,6 +43,8 @@ Use when porting a dashboard-style typed API client layer: openapi-fetch client 
 - `references/table-editor-prefetch-parse-plane.md` — how do you prefetch a table editor page and keep grid state consistent across URL, localStorage, and react-query?
 - `references/table-rows-count-consumer-gate.md` — how do you consume an exact-vs-estimate row count without caching transient permission state?
 - `references/table-editor-sensitive-column-masking-plane.md` — how do you mask sensitive columns by default while letting users persistently override without losing toggles across table updates?
+- `references/grid-operation-queue-batch-save.md` — how does a multi-row grid batch its cell edits into one atomic save?
+- `references/pg-meta-routine-mutation-plane.md` — how do trigger/function DDL builders handle enable modes, rename ordering, saved-signature reuse, and config-param grammar?
 
 ## Capsule map
 
