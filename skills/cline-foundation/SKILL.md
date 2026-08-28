@@ -69,6 +69,8 @@ Use when porting context-window management for LLM agents (compaction triggers f
 - `references/connector-session-reuse-recovery.md` — fail-open on missing hub status, terminal-status rejection, at-most-once stale-mapping retry, expected-id CAS on every mapping clear.
 - `references/connector-active-turn-steering.md` — silent steer into the active session (two-rung lookup incl. cross-key); stale steer deletes only the attempted entry and enqueues queue-routed recovery so racers serialize.
 - `references/connector-statefile-claim-guard-cas.md` — O_EXCL state-file claim, generation-keyed hard-link guard chain with successor guards, processStartToken pid-reuse defense, content CAS before rm+recreate; poll-ready detached launch with exit-75 and best-effort log tail.
+- `references/connector-runtime-event-projection.md` — push/pull bridge converting hub stream events into an async reply iterator: single-slot notify, accumulated-vs-delta rewind keeps text monotonic, failed-latch first-wins, tool status/media/approvals as side channels never entering the text.
+- `references/telegram-format-entity-chunking.md` — markdown→entities with NO parse_mode (malformed markdown degrades to raw, not a 400); 4096 chunking with overlap-rebased entity offsets; sent-count-tracked raw fallback resending only the unsent remainder.
 
 ## Capsule map
 - **Context compaction (`sdk/packages/core/src/extensions/context/`)**
@@ -150,6 +152,8 @@ Use when porting context-window management for LLM agents (compaction triggers f
   - `connector-session-reuse-recovery`: fail-open on missing hub status with send-time session_not_found backstop; terminal-status rejection; at-most-once stale-mapping retry latch; expected-id CAS so an older failure never clears a newer session.
   - `connector-active-turn-steering`: silent steer into the active session via two-rung lookup (exact key, then sessionId+threadId); stale steer deletes only the attempted entry and enqueues recovery through the per-thread queue so racing messages serialize into one replacement session.
   - `connector-statefile-claim-guard-cas`: O_EXCL state-file claim; generation-keyed hard-link guard chain with successor guards (never deleted by contenders); processStartToken pid-reuse defense; content CAS before rm+recreate; poll-ready detached launch, exit-75 already-running, best-effort ANSI-stripped log tail.
+  - `connector-runtime-event-projection`: push/pull bridge over a single-slot notify queue; accumulated-vs-delta rewind keeps streamed text monotonic (server shrink ⇒ delta ""); failed-latch makes the first failure win both paths; queued turn is non-error completion; tool status/media/approvals are fire-and-forget side channels; timeoutMs:null.
+  - `telegram-format-entity-chunking`: markdown→entities with no parse_mode so malformed markdown degrades to raw instead of a 400; 4096-slice chunking re-bases overlapping entity offsets per chunk; sentPayloadCount-tracked fallback resends only the unsent remainder as raw chunks.
 
 
 ## Extending the foundation
