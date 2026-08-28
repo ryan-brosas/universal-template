@@ -56,6 +56,10 @@ Use when porting context-window management for LLM agents (compaction triggers f
 - `references/agenda-agent-todo-tool-scope-gate.md` — reduced-verb zod projection over session-derived authority; scope checked on payload AND fetched rows before expected_revision.
 - `references/workspace-file-index-ttl-worker.md` — module-level TTL cache whose module IS its worker thread; null-on-timeout same-thread fallback; lone-workspace immortal cache.
 - `references/mention-token-extraction-budget.md` — whitespace-anchored @token extraction, linear punctuation trim, prompt-immutability, maxTotalBytes ladder charging the cap constant (maxFiles gate is dead code at pin).
+- `references/cron-watcher-debounce-escalate.md` — trailing-edge per-path fs.watch debounce whose filter set mirrors the reconciler walk; deletion escalates to a full reconcile because the single-path handler cannot tombstone.
+- `references/event-ingress-suppression-ladder.md` — persist-first replay detection (INSERT OR IGNORE), recursive filter resolution, and the debounce-pushout / dedupe-window / spec-wide-cooldown ladder with a race-guarded UPDATE that falls through to a fresh enqueue.
+- `references/acp-stdio-connection-bootstrap.md` — stdout-is-protocol stdio bridge: stderr-only diagnostics, lazy dual import, per-connection agent factory, park on connection.closed, headless-constrained OAuth.
+- `references/acp-permission-roundtrip-fail-closed.md` — pending-frame-then-request approval round-trip; cancelled/throw/unknown-option all deny; decision frame always echoed; allow_always is a dead affordance (collapses to allow-once).
 
 ## Capsule map
 - **Context compaction (`sdk/packages/core/src/extensions/context/`)**
@@ -120,6 +124,13 @@ Use when porting context-window management for LLM agents (compaction triggers f
 - **Workspace file services (`sdk/packages/core/src/services/workspace/`)**
   - `workspace-file-index-ttl-worker`: 15s TTL hits require fresh ∧ non-empty; pending join single-flights rebuilds behind interim stale entries; eviction only when CACHE.size>1; module doubles as its own unref'd worker with 1s null-on-timeout same-thread fallback; EACCES/EPERM/ENOENT skip-not-fail; fan-in 16 consumers.
   - `mention-token-extraction-budget`: `(^|\s)@token` extraction defeats emails; linear trailing-punct trim regression-pinned vs backtracking; prompt returned unchanged always; maxTotalBytes ladder charges maxFileBytes per admission — the maxFiles gate compares against a never-appended array (dead at pin).
+
+- **Cron watcher & event ingress (`sdk/packages/core/src/cron/specs/cron-watcher.ts`, `sdk/packages/core/src/cron/events/cron-event-ingress.ts`)**
+  - `cron-watcher-debounce-escalate`: clear-and-rearm per-path timers (250ms) behind a filter set that mirrors the walk skip set; existsSync=false fires reconcileAll (never reconcileFile, which cannot tombstone); mkdir-before-watch, restartable stop, dispose latch throws.
+  - `event-ingress-suppression-ladder`: duplicate eventId short-circuits at the INSERT OR IGNORE before any matching; filters resolve attributes→payload→dot-paths with ANY-of/SOME/recursive-records semantics; debounce UPDATEs a queued run (max push-out, latest triggerEventId) and falls through on race; cooldown is spec-wide regardless of dedupeKey; suppressedCount excludes filter_mismatch.
+- **ACP bridge (`apps/cli/src/acp/`)**
+  - `acp-stdio-connection-bootstrap`: runAcpMode lazily imports the ACP SDK + AcpAgent, wraps stdin/stdout as an NDJSON stream, writes diagnostics to stderr only (never "error:"-labeled — test-pinned byte-exact), and parks on connection.closed; OAuth runs headless (stderr output, non-blocking browser, reject undefaulted prompts).
+  - `acp-permission-roundtrip-fail-closed`: requestAcpToolApproval emits a pending tool_call frame, awaits requestPermission, and maps every outcome through a closed deny-default table; the decision frame is always echoed (in_progress/failed); auto-approve bypasses via a capability closure over the connection; allow_always persists nothing (dead affordance).
 
 ## Extending the foundation
 Add one `references/<seam>.md` capsule for one graph-selected, source-confirmed porting question. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf.
