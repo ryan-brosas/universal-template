@@ -73,6 +73,10 @@ code and direct tests are ground truth; references carry decisive excerpts and g
 - `references/runtime-trace-block-span-ladder.md` — where do runtime spans attach, what names/kinds do they get, and why are consumer spans linked instead of parented?
 - `references/responses-streaming-item-mapping.md` — in the Responses streaming loop, which events yield, which buffer, and which route to the reasoning observer?
 - `references/agent-channel-protocol-azure-delegation.md` — what contract must a channel satisfy to plug an agent into AgentChat, and what does the thinnest real channel look like?
+- `references/agentchat-channel-registry-plane.md` — how does AgentChat map an agent object to a channel, keep one channel per agent identity, and stop two agents from acting at once?
+- `references/chathistory-channel-content-gates.md` — which content survives the channel boundary, which messages become user-visible, and how are agent-side history writes deduped against returned messages?
+- `references/runtime-serialization-consumers.md` — where do registered message serializers actually meet the message path, and what happens to a message type nobody registered?
+- `references/vendored-queue-shutdown-clone.md` — why does the runtime vendor its own asyncio.Queue, and which deviations from the stdlib can bite a porter?
 
 ## Capsule map
 - **Filter onion** — `filter-call-stack`: `(id, filter)` tuples inserted at index 0, folded over the inner function; insertion order = pre-`next` order, reverse = post-`next` order.
@@ -136,6 +140,10 @@ code and direct tests are ground truth; references carry decisive excerpts and g
 - **Trace-block span ladder** — `runtime-trace-block-span-ladder`: one generic TracingConfig derives span name/kind/attributes (create/send/publish→PRODUCER, receive/intercept/process/ack→CONSUMER); provider ladder param → global → NoOp keeps tracing always safe.
 - **Responses streaming item mapping** — `responses-streaming-item-mapping`: three-way event router — text deltas yield, tool-call events buffer into all_messages, reasoning events go observer-only to on_intermediate_message; OutputItemDone is the only finished-message producer; per-attempt reduce-fold.
 - **AgentChannel protocol** — `agent-channel-protocol-azure-delegation`: five abstract methods, transport-state-only constructor, isinstance gate raising AgentChatException, one-hop delegation to thread actions with a lazy agent import.
+- **AgentChat channel registry** — `agentchat-channel-registry-plane`: channel identity = sha256 of colon-joined channel keys memoized per agent object; one active agent per chat via a lock-guarded flag released in `finally`; broadcast failures stored per channel and re-raised at the next sync; new channels back-filled with the whole shared history once.
+- **Channel content gates** — `chathistory-channel-content-gates`: whitelist+deepcopy inbound filter drops empty-after-filter messages; the last message of any invoke is always user-visible even when tool-only; dedupe between agent history writes and returned messages is identity-based.
+- **Serialization consumers** — `runtime-serialization-consumers`: `@handles` fails loud at decoration when no serializer resolves; `_try_serialize` feeds ONLY the event log and degrades to a literal string on ValueError — in-process delivery never serializes.
+- **Vendored queue** — `vendored-queue-shutdown-clone`: pre-3.13 asyncio.Queue clone for shutdown()/QueueShutDown; local exception type (not asyncio's), immediate shutdown unblocks join() by accounting drained items, module-level loop-binding lock.
 
 ## Extending the foundation
 Add one `references/<seam>.md` capsule for one graph-selected, source-confirmed porting question.
@@ -159,11 +167,11 @@ construction-time call-arity validation, encode-by-default trust gates, tool-vie
 filters with FQN matching, and construction-time schema freezing. Adapt service selection,
 provider-specific settings conversion, the escape function's target markup, and per-engine helper
 precedence to your host. Omit Azure/OpenAI connector internals and the Java plane;
-the agents, runtime, and orchestration planes are covered by the twenty-six agents/runtime/orchestration capsules
+the agents, runtime, and orchestration planes are covered by the thirty agents/runtime/orchestration capsules
 (Assistant lifecycle, requires-action handoff, Responses loop, merge twins, function-choice gate,
 Azure AI run lifecycle, Azure AI streaming events, Responses request-prep, orchestration result
 future, handoff turn-taking, FCB .NET twin, sequential/concurrent topology, group-chat manager
 ladder, Magentic ledger loop, runtime envelope queue, intervention drop gate, routed handler
 dispatch, subscription routing, instantiation context, structured-outputs transform, serialization
-registry, telemetry propagation, trace-block ladder, streaming item mapping, AgentChannel protocol); the .NET
+registry, telemetry propagation, trace-block ladder, streaming item mapping, AgentChannel protocol, AgentChat channel registry, channel content gates, serialization consumers, vendored queue); the .NET
 plane by the two mirror capsules plus the FCB twin and the connector auto-invoke budget.
