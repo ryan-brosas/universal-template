@@ -1,10 +1,10 @@
 <!-- capsule-v2 -->
 # Alias parsing — colon-safe reasoning suffix via validated-tail check, user-over-builtin precedence
 
-**Source:** Veda (`veda-ts`, MIT, `master@f050518c99fa54a5a0af4a04918aaf01d1ed94e1`); Codebase Memory `veda`. **Question:** How do I parse `name=model[:reasoning]` alias entries when model ids themselves contain colons?
+**Source:** Veda (`veda-ts`, MIT, `master@c3c69f2c340ec81ada8ea974076ce5bbaf5ccbc6` (pass-9 re-adjudication: `git diff f050518c..c3c69f2 -- src/agent/model-aliases.ts` shows ONE additive alias-table row (`daybreak-blue`); parsing functions byte-identical, line anchors re-verified at pin); Codebase Memory `veda`. **Question:** How do I parse `name=model[:reasoning]` alias entries when model ids themselves contain colons?
 
 ## MODEL_ALIASES config grammar + prefix→backend inference
-**Path/Symbol:** `src/agent/model-aliases.ts:parseModelAliases` (:43–77), `inferAliasBackend` (:80–95), `resolveModelAlias` (:101–106) — line ranges re-verified at pin c3c69f2 (B-lane pass 4).
+**Path/Symbol:** `src/agent/model-aliases.ts:parseModelAliases` (:43–77), `inferAliasBackend` (:76–90), `resolveModelAlias` (:96–101) — line ranges re-verified at pin c3c69f2 (pass 9).
 **Signature:** `function parseModelAliases(value: string): UserAliases`; `function resolveModelAlias(model: string, extraAliases?: UserAliases): ModelAliasTarget | undefined`.
 **Data Shape:** Entries comma-separated; `REASONING_LEVELS = Set('minimal','low','medium','high','xhigh','max')`; built-in table maps friendly names (`opus`, `sol`, `gemini-pro`, …) to `{ backend, model, reasoning? }`.
 

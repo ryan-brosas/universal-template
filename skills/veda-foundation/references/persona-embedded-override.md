@@ -1,10 +1,10 @@
 <!-- capsule-v2 -->
 # Persona resolution — embedded-defaults + user-override ladder with frontmatter tool/sandbox metadata
 
-**Source:** Veda (`veda-ts`, MIT, `master@f050518c99fa54a5a0af4a04918aaf01d1ed94e1`); Codebase Memory `veda`. **Question:** How do I ship batteries-included agent personas yet let users override any of them by dropping a file in a config dir — and how do per-persona tool policies resolve?
+**Source:** Veda (`veda-ts`, MIT, `master@c3c69f2c340ec81ada8ea974076ce5bbaf5ccbc6` (pass-9 re-adjudication: `git diff f050518c..c3c69f2 -- src/agent/persona.ts` is a comment-only change (documented worker sandbox default); code byte-identical, line anchors re-verified at pin); Codebase Memory `veda`. **Question:** How do I ship batteries-included agent personas yet let users override any of them by dropping a file in a config dir — and how do per-persona tool policies resolve?
 
 ## Config-dir-first load over Bun-embedded AGENTS.md files
-**Path/Symbol:** `src/agent/persona.ts:loadPersona` (:119–158), `parsePersonaMetadata` (:70–111), `listPersonas` (:160–183), `resolveAgentConfig` (:206–280).
+**Path/Symbol:** `src/agent/persona.ts:loadPersona` (:119–158), `parsePersonaMetadata` (:70–111), `listPersonas` (:160–183), `resolveAgentConfig` (:206–280) — line anchors re-verified at pin c3c69f2 (pass 9).
 **Signature:** `async function loadPersona(name: string, optionsOrBaseDir?: LoadPersonaOptions | string): Promise<Persona>`; `function parsePersonaMetadata(content: string): PersonaMetadata`.
 **Data Shape:** Persona = `{ name, systemPrompt, path, tools?: string[]|'all', defaultSandbox?, metadata? }`; frontmatter is a scalar-only YAML subset (`key: value`, `#` comments skipped); `tools:` accepts `none`→`[]`, `all`→`'all'`, or csv list.
 
