@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Weighted RRF fusion — how are heterogeneous prefetch result lists merged into one ranking?
 
-**Source:** Qdrant Apache-2.0 `master@74f3e85b`; Codebase Memory `ext-qdrant`. **Question:** What is the exact per-position score formula, how do weights act, and what happens to input scores and ties?
+**Source:** Qdrant Apache-2.0 `master@74f3e85b`; Codebase Memory `qdrant`. **Question:** What is the exact per-position score formula, how do weights act, and what happens to input scores and ties?
 
 ## Weighted Reciprocal Rank Fusion
 **Path/Symbol:** `lib/segment/src/common/reciprocal_rank_fusion.rs`: `DEFAULT_RRF_K=2` (:14), `position_score` (:32-39), `rrf_scoring` (:54-99); request-side enum `FusionInternal::Rrf{k, weights}` + `Dbsf` in `lib/shard/src/query/mod.rs` (:192-203).
@@ -32,7 +32,7 @@ scores.sort_unstable_by(|a,b| OrderedFloat(b.score).cmp(&OrderedFloat(a.score)))
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "ext-qdrant", query: "rrf_scoring position_score DEFAULT_RRF_K FusionInternal weights", limit: 10, fields: ["signature", "name", "file"] });
+await mcp.codebase_memory.search_graph({ project: "qdrant", query: "rrf_scoring position_score DEFAULT_RRF_K FusionInternal weights", limit: 10, fields: ["signature", "name", "file"] });
 ```
 
 ## Verdict

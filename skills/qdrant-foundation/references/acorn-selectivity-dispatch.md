@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # ACORN selectivity dispatch — when does a filtered query switch from HNSW traversal to ACORN?
 
-**Source:** Qdrant Apache-2.0 `master@74f3e85b`; Codebase Memory `ext-qdrant`. **Question:** How is the ACORN-vs-HNSW decision made per segment before any graph work starts?
+**Source:** Qdrant Apache-2.0 `master@74f3e85b`; Codebase Memory `qdrant`. **Question:** How is the ACORN-vs-HNSW decision made per segment before any graph work starts?
 
 ## Selectivity-gated algorithm enum
 **Path/Symbol:** `lib/segment/src/index/hnsw_index/hnsw/read_view/search.rs`: `search_with_graph` (:30-179), ACORN block (:59-86); enum `SearchAlgorithm::{Hnsw, Acorn}` in `graph_layers.rs`; default `ACORN_MAX_SELECTIVITY_DEFAULT` in `types.rs`.
@@ -36,7 +36,7 @@ if acorn_enabled && self.config.m0 != 0 && let Some(filter) = filter {
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "ext-qdrant", query: "SearchAlgorithm Acorn selectivity adjust_to_available_vectors acorn enable", limit: 10, fields: ["signature", "name", "file"] });
+await mcp.codebase_memory.search_graph({ project: "qdrant", query: "SearchAlgorithm Acorn selectivity adjust_to_available_vectors acorn enable", limit: 10, fields: ["signature", "name", "file"] });
 ```
 
 ## Verdict

@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # HNSW memory residency ladder — how do graph links choose between cold mmap, page-cache, and pinned RAM?
 
-**Source:** Qdrant Apache-2.0 `master@74f3e85b`; Codebase Memory `ext-qdrant`. **Question:** How does `HnswConfig.memory` (and the deprecated `on_disk` flag) map to link residency at open time, and what does each level guarantee?
+**Source:** Qdrant Apache-2.0 `master@74f3e85b`; Codebase Memory `qdrant`. **Question:** How does `HnswConfig.memory` (and the deprecated `on_disk` flag) map to link residency at open time, and what does each level guarantee?
 
 ## Cold / Cached / Pinned residency selection
 **Path/Symbol:** `lib/segment/src/index/hnsw_index/hnsw.rs`: `HNSWIndex::open` memory mapping (:103-119), `links_heap_size_bytes` doc (:138-145), `populate`/`clear_cache` (:157-176); enum `GraphLinksResidency::{Cold, Cached, Pinned}` in `graph_links.rs`.
@@ -37,7 +37,7 @@ pub fn links_heap_size_bytes(&self) -> usize
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "ext-qdrant", query: "GraphLinksResidency Cold Cached Pinned memory_placement populate clear_cache", limit: 10, fields: ["signature", "name", "file"] });
+await mcp.codebase_memory.search_graph({ project: "qdrant", query: "GraphLinksResidency GraphLayers load links_heap_size_bytes memory_placement clamp_to_low_memory", limit: 10, fields: ["signature", "name", "file"] });
 ```
 
 ## Verdict

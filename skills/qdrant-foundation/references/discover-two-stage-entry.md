@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Discover search two-stage entry — how does a Discover query bootstrap its own HNSW entry points?
 
-**Source:** Qdrant Apache-2.0 `master@74f3e85b`; Codebase Memory `ext-qdrant`. **Question:** How does a Discover (pairs-based constrained) query get entry points into the HNSW graph before its real traversal?
+**Source:** Qdrant Apache-2.0 `master@74f3e85b`; Codebase Memory `qdrant`. **Question:** How does a Discover (pairs-based constrained) query get entry points into the HNSW graph before its real traversal?
 
 ## Context-search warmup feeding discover traversal
 **Path/Symbol:** `lib/segment/src/index/hnsw_index/hnsw/read_view/search.rs`: `discover_search_with_graph` (:314-349); batch router `search_vectors_with_graph` (:181-208) maps `QueryVector::Discover` here.
@@ -29,7 +29,7 @@ self.search_with_graph(&QueryVector::Discover(discover_query), filter, top, para
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "ext-qdrant", query: "discover_search_with_graph custom_entry_points QueryVector Context pairs", limit: 10, fields: ["signature", "name", "file"] });
+await mcp.codebase_memory.search_graph({ project: "qdrant", query: "discover_search_with_graph custom_entry_points QueryVector Context pairs", limit: 10, fields: ["signature", "name", "file"] });
 ```
 
 ## Verdict

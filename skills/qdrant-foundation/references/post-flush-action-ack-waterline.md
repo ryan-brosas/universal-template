@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Post-flush action queue — how does optimizer cleanup run without letting the WAL acknowledge pass unflushed data?
 
-**Source:** Qdrant Apache-2.0 `master@74f3e85b`; Codebase Memory `ext-qdrant`. **Question:** After a flush, which deferred actions (proxy teardown, drop_data) may run, in what order, and how is the WAL acknowledge capped while their file effects are pending?
+**Source:** Qdrant Apache-2.0 `master@74f3e85b`; Codebase Memory `qdrant`. **Question:** After a flush, which deferred actions (proxy teardown, drop_data) may run, in what order, and how is the WAL acknowledge capped while their file effects are pending?
 
 ## Waterline-gated, ready_at-ordered drain with ack pins
 **Path/Symbol:** `lib/shard/src/segment_holder/mod.rs`: `register_post_flush_action` (:462), `pending_post_flush_ack_cap` (:507), `run_ready_post_flush_actions` (:542-606); caller `segment_holder/flush.rs` :139-141; waterline rationale comment :530-541.
@@ -42,7 +42,7 @@ ready.retain_mut(|action| {
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "ext-qdrant", query: "run_ready_post_flush_actions register_post_flush_action pending_post_flush_ack_cap in_flight_ack_floor", limit: 10, fields: ["signature", "name", "file"] });
+await mcp.codebase_memory.search_graph({ project: "qdrant", query: "run_ready_post_flush_actions register_post_flush_action pending_post_flush_ack_cap in_flight_ack_floor", limit: 10, fields: ["signature", "name", "file"] });
 ```
 
 ## Verdict
