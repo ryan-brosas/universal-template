@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # JSONL torn-tail repair — when may a loader rewrite a damaged session file, and when must it refuse?
 
-**Source:** pi-upstream MIT `main@a470b121bf683b4c2b9fc0b3a7c807de7e0cfe9c`; Codebase Memory `pi-upstream`. **Question:** A porter loading an append-only session log after a crash must decide which trailing garbage is safe to truncate versus corruption to surface — what is the exact rule?
+**Source:** pi-upstream MIT `main@4af9d21d3b4d` (authored at `main@a470b121`; load-path ranges re-verified unchanged at the current pin). Codebase Memory `pi-upstream`. **Question:** A porter loading an append-only session log after a crash must decide which trailing garbage is safe to truncate versus corruption to surface — what is the exact rule?
 
 ## Load-time triage in JsonlSessionStorage.load
 **Path/Symbol:** `packages/agent/src/harness/session/jsonl/storage.ts:69-108` (`JsonlSessionStorage.load`), `:33-46` (`publishFileAtomically`).
@@ -37,4 +37,4 @@ await mcp.codebase_memory.search_graph({ project: "pi-upstream", query: "JsonlSe
 (Resolves `JsonlSessionStorage.load` at `storage.ts:69-108` rank #1.)
 
 ## Verdict
-Adopt the three-way triage (syntax-final-line = truncate atomically; schema-invalid anywhere = refuse loudly; missing final newline = append repair) and tmp+rename publication for every log rewrite. Adapt the decode taxonomy to your serializer's error kinds. Omit the shared `.tmp` caller-serialization contract only if your host has no concurrent publishers of the same destination. Coverage: direct tests exist for truncate/reject/newline-repair paths at this pin; no test covers rename failure mid-repair (staging-failure tests cover fork instead).
+Adopt the three-way triage (syntax-final-line = truncate atomically; schema-invalid anywhere = refuse loudly; missing final newline = append repair) and tmp+rename publication for every log rewrite. Adapt the decode taxonomy to your serializer's error kinds (the taxonomy is manufactured by the codec — see jsonl-v4-codec-decode-taxonomy). Omit the shared `.tmp` caller-serialization contract only if your host has no concurrent publishers of the same destination. Coverage: direct tests exist for truncate/reject/newline-repair paths at this pin, AND the repair failure arms are failure-tested: `jsonl.test.ts:720-744` injects a writeFile failure during staging (open rejects `storage`, session byte-identical, no `.tmp` left behind) and `:746-765` injects a renameFile failure (same guarantees) — a crash mid-repair provably leaves either the old file or the repaired file, never a half-written one. (Pass-11 correction: the earlier "no test covers rename failure mid-repair" caveat was stale — those tests exist at the current pin.)
