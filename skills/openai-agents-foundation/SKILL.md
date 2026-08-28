@@ -105,6 +105,10 @@ A multi-agent framework: guardrail tripwires racing generation, typed handoffs w
 - `references/sandbox-session-lifecycle-resume.md` — reconnect-first/probe-policy-aware/recreate-fallback resume; signature-introspected create kwargs; unconditional state-clearing best-effort shutdown.
 - `references/sandbox-workspace-snapshot-persistence.md` — magic-prefix snapshot envelopes riding a tar-typed API; expressiveness-gated tar fallback; corruption-first remount>unmount>snapshot error precedence.
 - `references/sandbox-cloud-bucket-mounts-rclone.md` — delegated FUSE mounts with credential-boundary re-validation vs declared-at-create native mounts; pinned-checksummed-atomic rclone bootstrap, never curl|bash.
+- `references/advanced-sqlite-structure-table-ownership.md` — side-table schemas over configurable base tables: foreign-key ownership claim, verify-on-open ladder, SQLite-delegated identifier comparison.
+- `references/advanced-sqlite-branch-id-tombstones.md` — permanently reserved durable identifiers: INSERT OR IGNORE + rowcount arbiter, lazy legacy backfill before every destructive op, BEGIN IMMEDIATE cross-process serialization.
+- `references/advanced-sqlite-clear-generation-guard.md` — durable generation counter guarding multi-step async pointer commits against a concurrent clear; read-side refresh never initializes.
+- `references/advanced-sqlite-write-path-discipline.md` — same-transaction side-table metadata, DELETE RETURNING claim-on-pop, monotonic-id usage anchor defeating the ABA case, cancellation-tolerant mutation awaiting.
 
 ## Capsule map
 - **Guardrails & handoffs** — `guardrail-tripwires`, `typed-handoffs`, `handoff-history-summary-nesting`, `handoff-history-parser-tail`, `nested-history-ownership-rebase`: tripwire halting, typed delegation, session/model split, summary-nested handoff input, round-trippable summary transcript parsing, mutation-proof forwarded-item ownership.
@@ -134,6 +138,7 @@ A multi-agent framework: guardrail tripwires racing generation, typed handoffs w
 - **Codex extension** — `codex-subprocess-transport`, `codex-tool-wrapper`: JSONL subprocess transport with idle/cancel/oversized-line discipline; agent-as-tool wrapper with recoverable thread identity and non-blocking stream observers.
 - **Handoff input filters** — `handoff-remove-all-tools-filter`: four-lane tool-noise stripping that composes safely after history nesting.
 - **Sandbox providers** — `sandbox-provider-exec-error-mapping`, `sandbox-session-lifecycle-resume`, `sandbox-workspace-snapshot-persistence`, `sandbox-cloud-bucket-mounts-rclone`: provider exec-error taxonomy with retry classification, reconnect-first resume with recreate fallback, native-snapshot envelopes through a tar-typed persistence API, and cloud-bucket mounts with safe toolchain bootstrap.
+- **Advanced session layering** — `advanced-sqlite-structure-table-ownership`, `advanced-sqlite-branch-id-tombstones`, `advanced-sqlite-clear-generation-guard`, `advanced-sqlite-write-path-discipline`: side-table ownership claim/verify over configurable base tables, permanent branch-ID tombstones with lazy backfill, durable clear-generation pointer guards, and atomic claim-on-pop + anchored usage writes.
 - **Durable record process** — `ledger-reconciliation-protocol`: missed-pass ledger recovery with disk-truth verification and scoped own-row edits.
 
 ## Extending the foundation
