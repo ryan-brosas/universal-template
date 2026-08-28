@@ -1,6 +1,6 @@
 ---
 name: semantic-kernel-foundation
-description: Use when porting Semantic Kernel's Python kernel-core machinery — filter call-stack onion, corrective tool-call feedback, bounded auto-invoke loop, streaming exception smuggling, OTel-gated telemetry, decorator-time tool metadata, argument coercion, copy-on-add plugin registries, the {{...}} prompt-template block engine, HTML-encoding trust gates, AI service selection/registration, tool-view generation, prompt-config parsing ladders, Jinja2/Handlebars helper-binding/sandbox, streaming auto-invoke twin, .NET method-function/filter mirrors, and the agents plane (Assistant run lifecycle, requires-action handoff, Responses auto-invoke loop, agent merge twins, function-choice gate, Azure AI run lifecycle + MCP approval gate, Azure AI streaming event plane, Responses request-prep flattening, orchestration result future, handoff turn-taking via kernel functions, .NET FunctionChoiceBehavior twin, and the AutoGen-style actor runtime (envelope queue, intervention gate, routed handlers, subscriptions)).
+description: Use when porting Semantic Kernel's Python kernel-core machinery — filter call-stack onion, corrective tool-call feedback, bounded auto-invoke loop, exception smuggling, OTel-gated telemetry, decorator-time metadata, argument coercion, copy-on-add plugin registries, the {{...}} prompt-template block engine, HTML trust gates, AI service selection/registration, tool-view generation, prompt-config parsing ladders, Jinja2/Handlebars helper-binding/sandbox, streaming auto-invoke twin, .NET method-function/filter mirrors, and the agents plane (Assistant run lifecycle, requires-action handoff, Responses auto-invoke loop, agent merge twins, function-choice gate, Azure AI run lifecycle + approval gate, Azure streaming event plane, request-prep flattening, handoff turn-taking, .NET FunctionChoiceBehavior twin, the AutoGen-style actor runtime (envelope queue, intervention gate, routed handlers, subscriptions, serialization registry, telemetry links), Responses streaming item mapping, and the AgentChannel protocol).
 ---
 
 # Semantic Kernel: kernel-core invocation foundation
@@ -68,6 +68,11 @@ code and direct tests are ground truth; references carry decisive excerpts and g
 - `references/runtime-subscription-routing-plane.md` — how do topics map to agent instances, why does every registered agent get a colon-suffixed prefix subscription, and how does DefaultSubscription resolve its agent type?
 - `references/runtime-agent-instantiation-context.md` — why does constructing an agent outside a runtime raise, and what exactly does BaseAgent.register wire beyond the factory?
 - `references/orchestration-structured-outputs-transform.md` — how does an orchestration turn a free-form final message into a typed pydantic model without mutating the caller's settings object?
+- `references/runtime-serialization-registry-unknown-payload.md` — how do runtime messages become bytes, and what happens when a payload arrives that no serializer claims?
+- `references/runtime-telemetry-context-propagation.md` — how does a trace context travel inside a runtime envelope without coupling consumer spans to producer parents?
+- `references/runtime-trace-block-span-ladder.md` — where do runtime spans attach, what names/kinds do they get, and why are consumer spans linked instead of parented?
+- `references/responses-streaming-item-mapping.md` — in the Responses streaming loop, which events yield, which buffer, and which route to the reasoning observer?
+- `references/agent-channel-protocol-azure-delegation.md` — what contract must a channel satisfy to plug an agent into AgentChat, and what does the thinnest real channel look like?
 
 ## Capsule map
 - **Filter onion** — `filter-call-stack`: `(id, filter)` tuples inserted at index 0, folded over the inner function; insertion order = pre-`next` order, reverse = post-`next` order.
@@ -126,6 +131,11 @@ code and direct tests are ground truth; references carry decisive excerpts and g
 - **Subscription routing** — `runtime-subscription-routing-plane`: TypeSubscription matches exact topic type and maps topic.source to the agent instance KEY (per-source state isolation); TypePrefixSubscription (auto-added by register with prefix agent_type+':') is the direct-send channel; DefaultSubscription/DefaultTopicId resolve missing fields from contextvars so in-handler republishes cascade; SubscriptionManager caches recipients per seen TopicId and rebuilds on any change.
 - **Instantiation context** — `runtime-agent-instantiation-context`: BaseAgent.__init__ pulls runtime+id from a contextvar populated only by _invoke_agent_factory, so direct construction raises; register() wires factory (expected_class checked at instantiation) + class subscriptions under SubscriptionInstantiationContext + the prefix subscription + serializers; _get_agent lazily instantiates, memoized per AgentId.
 - **Structured outputs transform** — `orchestration-structured-outputs-transform`: fresh private Kernel per transform, settings pulled from the service and merged via update_from_prompt_execution_settings (caller object never mutated), hasattr(response_format) gate fails at construction, JSON schema baked into a system message, closure accepts one ChatMessageContent or a list and model_validate_json's the reply.
+- **Serialization registry** — `runtime-serialization-registry-unknown-payload`: (type_name, data_content_type)-keyed registry; deserialize miss → UnknownPayload(raw bytes), serialize miss → ValueError; dataclass serializers reject unions/nesting at construction — pydantic is the nested-type escape hatch.
+- **Telemetry propagation** — `runtime-telemetry-context-propagation`: W3C traceparent/tracestate injected into the envelope at creation, extracted on the consumer into OTel LINKS (never parents) — queue boundaries do not extend the producer trace.
+- **Trace-block span ladder** — `runtime-trace-block-span-ladder`: one generic TracingConfig derives span name/kind/attributes (create/send/publish→PRODUCER, receive/intercept/process/ack→CONSUMER); provider ladder param → global → NoOp keeps tracing always safe.
+- **Responses streaming item mapping** — `responses-streaming-item-mapping`: three-way event router — text deltas yield, tool-call events buffer into all_messages, reasoning events go observer-only to on_intermediate_message; OutputItemDone is the only finished-message producer; per-attempt reduce-fold.
+- **AgentChannel protocol** — `agent-channel-protocol-azure-delegation`: five abstract methods, transport-state-only constructor, isinstance gate raising AgentChatException, one-hop delegation to thread actions with a lazy agent import.
 
 ## Extending the foundation
 Add one `references/<seam>.md` capsule for one graph-selected, source-confirmed porting question.
@@ -149,10 +159,11 @@ construction-time call-arity validation, encode-by-default trust gates, tool-vie
 filters with FQN matching, and construction-time schema freezing. Adapt service selection,
 provider-specific settings conversion, the escape function's target markup, and per-engine helper
 precedence to your host. Omit Azure/OpenAI connector internals and the Java plane;
-the agents and orchestration planes are covered by the twenty agents/orchestration capsules
+the agents, runtime, and orchestration planes are covered by the twenty-six agents/runtime/orchestration capsules
 (Assistant lifecycle, requires-action handoff, Responses loop, merge twins, function-choice gate,
 Azure AI run lifecycle, Azure AI streaming events, Responses request-prep, orchestration result
 future, handoff turn-taking, FCB .NET twin, sequential/concurrent topology, group-chat manager
 ladder, Magentic ledger loop, runtime envelope queue, intervention drop gate, routed handler
-dispatch, subscription routing, instantiation context, structured-outputs transform); the .NET
+dispatch, subscription routing, instantiation context, structured-outputs transform, serialization
+registry, telemetry propagation, trace-block ladder, streaming item mapping, AgentChannel protocol); the .NET
 plane by the two mirror capsules plus the FCB twin and the connector auto-invoke budget.
