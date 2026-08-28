@@ -64,6 +64,11 @@ Use when porting context-window management for LLM agents (compaction triggers f
 - `references/acp-session-replay-hygiene.md` — awaited in-order conversation replay: strip user wrappers, replay assistant verbatim, drop synthetic prompts, pending-then-settled historical tool pairing.
 - `references/acp-session-manager-lifecycle.md` — lazy idempotent manager persisting the core session under the client-held id; save-before-teardown continuity; one-AbortController cancel; cancelled never surfaces as error.
 - `references/acp-config-option-plane.md` — env-pinned provider immutability, teardown-then-re-resolve against the new catalog, single-flight token refresh, rebuild-and-broadcast-all config options.
+- `references/connector-thread-binding-kernel.md` — one JSON binding store with control bindings (mutes) in the conversation namespace, skip-on-lookup, DM channel fallback, read-time identity self-heal, delete-don't-tombstone mutes, three-place sessionId scrub.
+- `references/connector-thread-turn-queue-key.md` — the queue key mirrors the binding identity (DMs collapse to `dm:{channelId}`); promise-chained Map with catch barrier and identity-checked self-deletion.
+- `references/connector-session-reuse-recovery.md` — fail-open on missing hub status, terminal-status rejection, at-most-once stale-mapping retry, expected-id CAS on every mapping clear.
+- `references/connector-active-turn-steering.md` — silent steer into the active session (two-rung lookup incl. cross-key); stale steer deletes only the attempted entry and enqueues queue-routed recovery so racers serialize.
+- `references/connector-statefile-claim-guard-cas.md` — O_EXCL state-file claim, generation-keyed hard-link guard chain with successor guards, processStartToken pid-reuse defense, content CAS before rm+recreate; poll-ready detached launch with exit-75 and best-effort log tail.
 
 ## Capsule map
 - **Context compaction (`sdk/packages/core/src/extensions/context/`)**
@@ -139,6 +144,13 @@ Use when porting context-window management for LLM agents (compaction triggers f
   - `acp-session-replay-hygiene`: awaited in-order replay; display projection first; user wrappers stripped, assistant verbatim; synthetic prompts dropped; tool_use pending until its tool_result settles.
   - `acp-session-manager-lifecycle`: lazy idempotent manager persisting the core session under the client-held id; save-before-teardown continuity; one-AbortController cancel; empty resume fails closed.
   - `acp-config-option-plane`: env-pinned provider immutability; teardown-then-re-resolve against the new catalog; single-flight token refresh; rebuild-and-broadcast-all options.
+- **Connector turn plane (`apps/cli/src/connectors/`)**
+  - `connector-thread-binding-kernel`: one JSON binding store; control bindings (mutes) share the conversation namespace and are skipped by every conversation lookup; DM channel fallback; read-time identity self-heal; delete-don't-tombstone mutes; stop scrubs sessionId from root, state, and serializedThread.
+  - `connector-thread-turn-queue-key`: the queue key mirrors the binding identity — DMs collapse to `dm:{channelId}` so two messages can never run one session concurrently; promise-chained Map with catch barrier and identity-checked self-deletion.
+  - `connector-session-reuse-recovery`: fail-open on missing hub status with send-time session_not_found backstop; terminal-status rejection; at-most-once stale-mapping retry latch; expected-id CAS so an older failure never clears a newer session.
+  - `connector-active-turn-steering`: silent steer into the active session via two-rung lookup (exact key, then sessionId+threadId); stale steer deletes only the attempted entry and enqueues recovery through the per-thread queue so racing messages serialize into one replacement session.
+  - `connector-statefile-claim-guard-cas`: O_EXCL state-file claim; generation-keyed hard-link guard chain with successor guards (never deleted by contenders); processStartToken pid-reuse defense; content CAS before rm+recreate; poll-ready detached launch, exit-75 already-running, best-effort ANSI-stripped log tail.
+
 
 ## Extending the foundation
 Add one `references/<seam>.md` capsule for one graph-selected, source-confirmed porting question. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf.
