@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Autofix loop — how do you apply rule fixes safely, converge, and detect circular fix cycles?
 
-**Source:** ESLint MIT `main@dc1e7a8416937edefe04cf836ee202a6fc03bedd`; Codebase Memory project `eslint`. **Question:** How do you merge overlapping fixes from independent rules into one new text without corruption or infinite loops?
+**Source:** ESLint MIT `main@c27bc926e496985eb7911c09eb60914b2e4b5d0f` (tag v10.9.0; re-based from dc1e7a84 in pass 14 with claims re-verified at the current pin; direct source+test fallback — Codebase Memory MCP not connected). **Question:** How do you merge overlapping fixes from independent rules into one new text without corruption or infinite loops?
 
 ## SourceCodeFixer.applyFixes
 **Path/Symbol:** `lib/linter/source-code-fixer.js:SourceCodeFixer.applyFixes` (:61–152).
@@ -26,7 +26,7 @@ if (lastPos >= start || start > end) { remainingMessages.push(problem); return f
 
 **Flow:** partition messages into fixable/unfixable → sort fixes by range start → sweep once, emitting text up to each accepted fix and advancing `lastPos` past its range → overlaps/negative ranges fall back to `remainingMessages` → return unfixed messages re-sorted by line/column.
 **Invariant:** one pass applies only non-overlapping fixes — an overlapped fix is deferred, never merged; the next verify+apply iteration may land it. `fixed:true` even when the single attempted fix conflicted, so callers keep looping.
-**Probe:** `tests/lib/linter/source-code-fixer.js` (overlap deferral, BOM handling, sort order).
+**Probe:** `tests/lib/linter/source-code-fixer.js` (overlap deferral, BOM handling, sort order) — 58 passing at the current pin. Line anchors re-verified at c27bc926: applyFixes :61-152, verifyAndFix :1488-1625 (tail `fixedResult.fixed`/`output` assignment :1620-1622).
 
 ## verifyAndFix convergence
 **Path/Symbol:** `lib/linter/linter.js:Linter.verifyAndFix` (:1488–1625).
