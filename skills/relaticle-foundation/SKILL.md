@@ -90,6 +90,11 @@ Use when building queued CSV/data import pipelines (match-then-execute with revi
 - `references/user-side-deletion-surface.md` — how does a user schedule account deletion, and what blocks it when they still own staffed workspaces?
 - `references/webhook-listener-fanout.md` — how should webhook and ESP listeners fail, and how do they avoid emitting for rolled-back transactions?
 - `references/crm-model-concern-stack.md` — how are five CRM entities composed so tenancy, EAV, logging, and ordering stay uniform, and what does the activity log exclude?
+- `references/notification-preferences-override-matrix.md` — how does a per-cell notification preference UI stay in sync with the gates that consume it while storing only overrides?
+- `references/tenant-fk-write-guards.md` — how do write actions reject cross-tenant id arrays and partial custom-field patches without trusting the client?
+- `references/plan-sync-downgrade-ladder.md` — when a Stripe subscription changes, when may the team's plan go down, and why must billing side-effects never block lifecycle operations?
+- `references/token-bound-team-context.md` — how does an OAuth-chosen team ride on the access token, survive refresh grants, and become the authoritative tenant scope for API calls?
+- `references/event-suppressed-demo-seeding.md` — how do you seed demo data through models whose observers, sort ordering, and EAV writers you deliberately switched off?
 
 ## Capsule map
 - **Import scratch storage** — `import-store-throwaway-sqlite`, `import-store-bulk-match-update`, `import-sqlite-row-store`, `import-temp-table-bulk-json-update`: ULID-keyed sqlite file + runtime connection registration, temp-table staging with single join update, payload schema triggers.
@@ -108,6 +113,7 @@ Use when building queued CSV/data import pipelines (match-then-execute with revi
 - **Digest & notification plane** — `task-digest-timezone-banding`, `deferred-assignee-notification`: indexed timezone-band recipient filtering with a per-user triple gate over a local-midnight EAV window, and diff-gated response-deferred assignee fan-out with per-channel preference gates.
 - **Board & domain-model plane** — `kanban-eav-board-move`, `crm-model-concern-stack`: left-joined EAV column values with transactional position+column moves and date-string vs zone-converted badge disciplines, over a uniform five-entity concern stack with fail-closed tenancy and EAV-excluding activity logs.
 - **Account deletion & listener fan-out** — `scheduled-deletion-interstitial`, `user-side-deletion-surface`, `webhook-listener-fanout`: a both-directions-agreeing interstitial gate with an always-open exit, ownership-refused user deletion stamping user + personal team together, and webhook/ESP listeners with silent early-returns, release-not-drop retries, and afterCommit dispatch.
+- **Preferences, write-guards & API context** — `notification-preferences-override-matrix`, `tenant-fk-write-guards`, `plan-sync-downgrade-ladder`, `token-bound-team-context`, `event-suppressed-demo-seeding`: overrides-only preference storage behind one shared predicate, count-equality tenant-FK guards with merge-before-save EAV patches, provenance-gated plan downgrades with log-never-throw billing cancellation, consent-time team binding carried on tokens through refresh grants with memory-only request scoping, and event-suppressed fixture seeding with hand-reimplemented sort ordering.
 
 ## Extending the foundation
 Add one `references/<seam>.md` capsule for one graph-selected, source-confirmed porting question. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf.
