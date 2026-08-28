@@ -1,6 +1,6 @@
 ---
 name: semantic-kernel-foundation
-description: Use when porting Semantic Kernel's Python kernel-core machinery — the filter call-stack onion, corrective tool-call feedback into chat history, bounded auto-invoke loop, streaming exception smuggling, OTel-gated invocation telemetry, decorator-time tool metadata extraction, argument coercion, copy-on-add plugin registries, the {{...}} prompt-template block engine (quote-aware lexing, positional grammar), the two HTML-encoding trust gates over arguments and output, the AI service selection/registration plane (FCFS ladder, default-as-first-match registry, extension_data conversion, render→select→dispatch ordering), tool-view generation (metadata filters + JSON-Schema projection), prompt-config parsing ladders, the Jinja2/Handlebars helper-binding/sandbox plane, streaming auto-invoke twin (per-round result merging), .NET method-function/filter cross-language mirrors, and the agents plane (Assistant run lifecycle, requires-action handoff, Responses auto-invoke loop, agent merge twins, function-choice gate).
+description: Use when porting Semantic Kernel's Python kernel-core machinery — filter call-stack onion, corrective tool-call feedback, bounded auto-invoke loop, streaming exception smuggling, OTel-gated telemetry, decorator-time tool metadata, argument coercion, copy-on-add plugin registries, the {{...}} prompt-template block engine, HTML-encoding trust gates over arguments and output, AI service selection/registration plane, tool-view generation (metadata filters + JSON-Schema projection), prompt-config parsing ladders, Jinja2/Handlebars helper-binding/sandbox plane, streaming auto-invoke twin, .NET method-function/filter mirrors, and the agents plane (Assistant run lifecycle, requires-action handoff, Responses auto-invoke loop, agent merge twins, function-choice gate, Azure AI run lifecycle + MCP approval gate, Azure AI streaming event plane, Responses request-prep flattening, orchestration result future, handoff turn-taking via kernel functions, .NET FunctionChoiceBehavior twin).
 ---
 
 # Semantic Kernel: kernel-core invocation foundation
@@ -50,6 +50,12 @@ code and direct tests are ground truth; references carry decisive excerpts and g
 - `references/responses-agent-auto-invoke-loop.md` — how does the Responses agent run its own bounded tool loop, and does the kernel's streaming/non-streaming exhaustion asymmetry survive the transplant?
 - `references/agents-merge-twins.md` — how do the agent-plane merge helpers differ from the kernel's `function_calling_utils` twins, and which return shape does each caller rely on?
 - `references/agent-function-choice-gate.md` — which function-choice behaviors may an agent accept, and how is the provider tool view assembled when the run loop — not the connector — owns invocation?
+- `references/azure-ai-run-lifecycle-and-tool-replay.md` — how does the Azure AI agent family drive a server-owned run to completion, and what does its second required-action branch (MCP tool approval) add to the Assistant loop it mirrors?
+- `references/azure-ai-streaming-event-plane.md` — how does an event-driven agent stream execute tools mid-stream and still deliver the final assistant messages?
+- `references/responses-request-prep-flattening.md` — which history items survive the Responses API request-prep pass, in what wire shape, and why do multiple images in one message not duplicate?
+- `references/orchestration-result-future.md` — how does an orchestration expose a non-blocking invoke whose actor-driven result, exceptions, and cancellation all converge on one awaitable handle?
+- `references/handoff-turn-taking-kernel-functions.md` — how does a multi-agent handoff group express turn-taking without a manager model — and why does each actor get a cloned kernel?
+- `references/function-choice-behavior-dotnet-twin.md` — what does the experimental settings-prep wrapper actually do, and which FunctionChoiceBehavior invariants are shared between the Python and .NET twins?
 
 ## Capsule map
 - **Filter onion** — `filter-call-stack`: `(id, filter)` tuples inserted at index 0, folded over the inner function; insertion order = pre-`next` order, reverse = post-`next` order.
@@ -90,6 +96,12 @@ code and direct tests are ground truth; references carry decisive excerpts and g
 - **Responses auto-invoke loop** — `responses-agent-auto-invoke-loop`: client-side bounded loop transplanted from the kernel; for/else NoneInvoke tool-less finale on exhaustion NON-STREAMING ONLY (streaming ends silently — kernel-core asymmetry preserved); previous_response_id chaining when store_enabled; one-time thread+caller history merge (override_history) when not; narrower error set {failed,incomplete}; _poll_until_completed has no internal timeout — the caller's wait_for owns it.
 - **Agents merge twins** — `agents-merge-twins`: three parallel copies of the kernel FunctionResultContent-only merge rule; Assistant family returns BARE messages (docstring wrongly claims list), Responses family + kernel return one-element lists; streaming stamps (choice_index=0, ai_model_id, function_invoke_attempt) enable downstream __add__ folding; NO direct unit tests at pin — patched-out usage only.
 - **Agent function-choice gate** — `agent-function-choice-gate`: only Auto(auto_invoke=True) legal for agents — run loop owns invocation so auto_invoke=False/Required/NoneInvoke rejected up front (fail-fast before run creation, gate at invoke:198 / invoke_stream:433); empty/unknown filter keys rejected against the exact 4-key set; tool view = SDK tools (tools_override REPLACES definition.tools) + filtered-or-full kernel metadata via kernel_function_metadata_to_function_call_format; Assistant-family specific — Responses family skips the gate.
+- **Azure AI run lifecycle** — `azure-ai-run-lifecycle-and-tool-replay`: Assistant-shaped poll/error/replay loop with a two-branch requires-action gate (tool outputs; MCP approvals resolved fail-closed — deny on missing callback, exception, or non-True); steps replayed exactly once via processed_step_ids; agent-defined function tools validated against the kernel before the run starts.
+- **Azure AI streaming events** — `azure-ai-streaming-event-plane`: tool outputs submitted THROUGH a stream (submit_tool_outputs_stream) and the handler becomes the new stream; function call/result contents travel only through output_messages; final messages re-retrieved from active_messages at THREAD_RUN_COMPLETED, never folded client-side.
+- **Responses request-prep** — `responses-request-prep-flattening`: one-pass flattening — annotations dropped, TOOL-to-ASSISTANT rewrite, text typed by original role, function calls re-sent only when store_enabled is false, results always as function_call_output; exactly one output message per surviving history message.
+- **Orchestration result future** — `orchestration-result-future`: event + value + exception + cancellation token converge via three event.set paths; get() resolves value, then cancelled, then exception in priority order; cancel() is guarded both ways and wakes blocked getters; uuid4 topic type isolates concurrent runs.
+- **Handoff turn-taking** — `handoff-turn-taking-kernel-functions`: handoffs become transfer_to_* kernel functions in a cloned per-actor kernel plus a terminate-on-handoff auto-invoke filter; start messages fan to all members before the first request; first member is the entry agent.
+- **FCB .NET twin** — `function-choice-behavior-dotnet-twin`: deepcopy, convert, configure-only-if-behavior wrapper; both twins share fail-early "never advertise what you cannot invoke" and null=everything/empty=nothing selection semantics; Python filters are dicts, .NET selection takes function instances.
 
 ## Extending the foundation
 Add one `references/<seam>.md` capsule for one graph-selected, source-confirmed porting question.
@@ -112,6 +124,9 @@ loop shape, exception-smuggling metadata key, telemetry wrapper skeleton, quote-
 construction-time call-arity validation, encode-by-default trust gates, tool-view mutual-exclusion
 filters with FQN matching, and construction-time schema freezing. Adapt service selection,
 provider-specific settings conversion, the escape function's target markup, and per-engine helper
-precedence to your host. Omit Azure/OpenAI connector internals, the orchestration/runtime agent planes, and the Java plane;
-the agents plane is covered by the five agents capsules (Assistant lifecycle, requires-action handoff,
-Responses loop, merge twins, function-choice gate); the .NET plane only by the two mirror capsules.
+precedence to your host. Omit Azure/OpenAI connector internals and the Java plane;
+the agents and orchestration planes are covered by the eleven agents/orchestration capsules
+(Assistant lifecycle, requires-action handoff, Responses loop, merge twins, function-choice gate,
+Azure AI run lifecycle, Azure AI streaming events, Responses request-prep, orchestration result
+future, handoff turn-taking, FCB .NET twin); the .NET plane by the two mirror capsules plus the
+FCB twin.
