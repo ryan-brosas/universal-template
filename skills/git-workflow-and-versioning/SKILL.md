@@ -34,6 +34,12 @@ Treat commits as verified save points with **communicative messages** — histor
 7. **Release** — classify change against public API (`semver-public-api-and-bumps.md`); bump manifest; move `[Unreleased]` → `[x.y.z] - ISO-date` in CHANGELOG (`changelog-human-curation.md`); annotated tag; pre-release precedence if applicable (`semver-precedence-and-prerelease.md`).
 8. **Evidence** — status, diff summary, gates run, version/changelog/tag action or explicit skip.
 
+## Recovery & non-interactive continuation
+
+- **Lost work or history:** `git reflog` → identify the pre-damage commit → restore additively (`git branch rescue <sha>`, cherry-pick, or a new commit of the recovered tree). Recover without destroying more history; reflog is a recovery mechanism, not a license for destructive operations.
+- **Ceremonial editors:** when the message/content is already decided, suppress only the editor — `GIT_EDITOR=true git rebase --continue`, `GIT_SEQUENCE_EDITOR=true …`, `git commit --no-edit`. Never override a prompt that represents a real decision (interactive-rebase TODO, conflict resolution choice, credential or confirmation prompt).
+- **Generated or multi-line commit messages:** write to a securely created temporary file (`mktemp`) and commit with `git commit -F <file>` — never interpolate generated text into the command line. Short, simple subjects may pass as ordinary quoted arguments.
+
 ## Common Rationalizations
 
 | Rationalization | Rebuttal |

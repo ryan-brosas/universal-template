@@ -58,6 +58,17 @@ user in the same session) is for genuinely dangerous actions only:
 Never expose, invent, or commit credentials or secret material. Tokens stay
 in env vars, referenced only by name.
 
+**Universal execution invariants** — the complete constitution (work
+preservation, unrelated-change preservation, additive recovery, artifact
+inspection, bounded filesystem discovery, non-interactive safety, external
+write boundary, review-thread continuity, commit-convention precedence,
+shell-text handling, reversible-operation preference, separator style,
+project precedence) lives in `APPEND_SYSTEM.md`. Hosts wired to append it
+load all invariants every session; the safety-critical core above is kept
+here because not every documented host loads `APPEND_SYSTEM.md` yet. Machine
+wiring stays in this file: MCP tokens live in env vars (`~/.profile`,
+`~/.dsh/.env`), referenced only by name.
+
 ## Finish line
 
 Before claiming completion, run the project's relevant

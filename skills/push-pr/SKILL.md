@@ -1,6 +1,6 @@
 ---
 name: push-pr
-description: "Use when a verified branch needs a repeatable GitHub pull request with local quality gates, CI evidence, screenshots, Codebase Memory observation, GitHub metadata (labels, milestone, assignees, reviewers, project, draft), and a learn handoff. The github-actions-engineering skill authors the workflow file."
+description: "Use when a verified branch needs a repeatable GitHub pull request with local quality gates, CI evidence, screenshots, Codebase Memory observation, GitHub metadata (labels, milestone, assignees, reviewers, project, draft), a learn handoff, or PR review feedback must be addressed in-thread and resolved. The github-actions-engineering skill authors the workflow file."
 disable-model-invocation: true
 ---
 
@@ -26,12 +26,25 @@ Use one evidence path for every pull request. The local gate checks the branch. 
 4. Observe the change with Codebase Memory. Probe index status and coverage for every touched path. Search or trace the touched symbols. Record the project, coverage caveat, and blast radius. Record a skipped reason when the server is unavailable.
 5. Capture a before and after screenshot for each visual change. Save images under `docs/screenshots/`. Write `No visual result.` for a text-only change.
 6. Commit with the project convention and push the branch. Find the push run with `gh run list --branch <branch> --workflow pr-quality.yml`. Watch the run to its final state.
-7. Copy `~/.agents/templates/pull-request.md`. Fill every section. Add the exact run link, commit, state, observation, and check output. Remove every placeholder.
+7. Discover the repository's own PR template first — `.github/PULL_REQUEST_TEMPLATE.md`, `PULL_REQUEST_TEMPLATE/` directory, `docs/`, or the repository root (GitHub-supported locations; re-verify when GitHub changes them). Use the repository's template when one exists; fall back to `~/.agents/templates/pull-request.md` otherwise. Fill every section from the actual diff, implementation, and verification — never fabricate completed checks. Write the body to a securely created temporary file (`mktemp`), not a predictable path.
 8. Create the PR with `gh pr create --title "..." --body-file <file>` plus the metadata flags. Always pass `--base <base>`. Repeat `--label <name>` and `--reviewer <handle>` for each value. Add `--milestone <name>`, `--assignee <login>`, and `--project <title>` when the project defines them. Add `--draft` while the run is pending or the project policy requires a draft. Mark an absent value as `None` in the body, never invent one.
 9. Watch the pull request run to its final state. Confirm the metadata with `gh pr view <number>`. Add what is missing with `gh pr edit --add-label <name> --milestone <name>` when the project policy requires it. Update the body when the run state changes.
 10. When a CI failure or a review comment gives a reusable rule, distill it in place. Workflow rules go through `github-actions-engineering`. Other rules update a skill file and pass the skill validator. Keep one-off facts in the PR notes.
 
 Stop when the PR exists, the body is complete, the metadata matches the project, the CI state is current, the observation has evidence or a skip reason, and the lesson is recorded as a rule.
+
+## Review feedback (in-thread)
+
+"Address the PR review comments" authorizes exactly the review workflow — read the threads, implement fixes, reply in-thread, resolve addressed threads — and no other GitHub writes (no unrelated comments, deletions, metadata changes).
+
+1. **Enumerate threads.** REST: `gh api repos/OWNER/REPO/pulls/NUMBER/comments` (review comments). GraphQL: `repository.pullRequest.reviewThreads` for thread state.
+2. **Distinguish ids.** A top-level review comment has `in_reply_to_id: null`; its **database id** is what replies anchor to. Thread state lives on the GraphQL **review-thread node id** (`PRRT_…`) — a different identifier from the REST comment id. Never conflate them.
+3. **Implement and verify** the feedback locally (project gates) before replying.
+4. **Reply in-thread**, never as a new top-level comment: `POST /repos/OWNER/REPO/pulls/NUMBER/comments` with `in_reply_to` = the top-level comment's database id. Pass the body through a file/stdin — `gh api --input <file>` with the payload JSON (put GraphQL query AND variables inside the JSON body; `-f`/`-F` fields do not bind GraphQL variables when `--input` is used — verified live 2026-08-30).
+5. **Resolve** with GraphQL `mutation { resolveReviewThread(input: {threadId: "PRRT_…"}) { thread { isResolved } } }` — only when the feedback is actually addressed or deliberately dispositioned AND the requested workflow authorizes resolution. Feedback needing reviewer confirmation stays unresolved; posting a reply is never resolution.
+6. **Reply format:** `Updated in <sha>.` + what changed + verification when relevant. No invented SHAs; no social filler ("great catch", "thanks").
+
+Verified live on this repository (PR #10, 2026-08-30): REST list returned `{id, in_reply_to_id: null, pull_request_review_id}`; GraphQL reviewThreads returned `PRRT_…` node ids whose `comments.nodes[].databaseId` map to the REST ids. Re-verify endpoint shapes before relying on them — do not freeze these recipes.
 
 ## Red Flags
 
@@ -42,6 +55,9 @@ Stop when the PR exists, the body is complete, the metadata matches the project,
 - Keep `--draft` whole while the PR run is still open.
 - Do not use `pull_request_target` for untrusted branch code.
 - Keep the workflow permission set at the smallest required scope.
+- Resolving a review thread merely because a reply was posted. HARD-GATE.
+- Replying to review feedback as a new top-level comment instead of in-thread.
+- Confusing the REST review-comment id with the GraphQL thread node id. HARD-GATE.
 
 ## Verification
 
