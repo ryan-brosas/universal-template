@@ -7,11 +7,12 @@ operating philosophy. Treat as an essential.
 
 > *"A small model lacks knowledge, not capacity. Give it ground truth to work from."*
 
-Small models fail from missing knowledge, not missing intelligence. The fix is
-not a longer prompt — it is putting the exact ground truth (code, tests, typed
-examples, a proven procedure) into context where the model can copy it. This
-is an observed working pattern, not a proven equivalence: treat it as a
-testable bet per task.
+Many smaller-model failures come from missing context or implementation
+evidence rather than reasoning alone. The fix is often not a longer prompt —
+it is putting the exact ground truth (code, tests, typed examples, a proven
+procedure) into context where the model can copy it. High-quality ground
+truth materially narrows the gap, but capability remains task-specific:
+this is an observed working pattern and a testable bet, not a theorem.
 
 ### What ground truth looks like
 
@@ -40,6 +41,6 @@ testable bet per task.
 ## 3. Where the mechanics live now
 
 How skills are authored, how prior art is grounded, and how execution happens
-are documented in their own surfaces (`codebase-driven-development`,
+are documented in their own surfaces (`reference-driven-development`,
 `writing-skills`, `fabric-native-execution`) — not here. This file keeps only
 the heuristic.

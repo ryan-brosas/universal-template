@@ -1,4 +1,5 @@
 ---
+x-manual-only: true
 name: tom-deepseek-harness
 description: "Use when working on Tom's DeepSeek Harness source checkout: update from Tom's remote, edit safely, build, run the source web app, and keep the installed DSH separate."
 disable-model-invocation: true

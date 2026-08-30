@@ -13,7 +13,7 @@ roadmap, skill development, testing harness, automation pipelines, and cron mara
 | **Pillar 1: Ground Truth** | Reference-driven prior art; foundation freeze (no mass ingestion) | Every active project grounds claims in actual source, tests, and runtime probes |
 | **Pillar 2: Steer Outcomes** | Frictionless Conclusive PR Loop with Mechanical Gate Boundaries | Sub-30s CI checks, zero behavioral prompt bloat |
 | **Pillar 3: Stack Leverage** | Automated Post-Session Skill Capture & Tripled-Layer Viking Memory | Autonomous `/learn` workflow and OpenViking sync |
-| **Pillar 4: Mechanical Quality** | Universal + Language-Specific Quality Gates with Unbypassable Walls | Zero-defect automated gating across all projects |
+| **Pillar 4: Mechanical Quality** | Gates for demonstrated deterministic regressions, where value exceeds false-positive cost | Known regression classes are mechanically defended where practical |
 | **Test Methodology** | Catch-First Verification Standard (Un-fixed RED $\to$ Fixed GREEN) | Mandatory pre-fix failure proofs on all bugfixes |
 
 ---
@@ -47,11 +47,9 @@ roadmap, skill development, testing harness, automation pipelines, and cron mara
 - [ ] **Objective 2.2 — Fast Conclusive PR Loop:**
   - Keep this repo's CI jobs (`catalog gates`, `repo hygiene`, `policy consistency`, `pr-title`) fast and conclusive.
   - Provide machine-readable annotations and auto-fix triggers on all pull requests.
-- [ ] **Objective 2.3 — Quantitative Code Taste Enforcement:**
-  - Replace vague "clean code" instructions with deterministic AST metrics:
-    - Enforce maximum cyclomatic complexity thresholds via linters.
-    - Ban single-caller utility wrappers and restating comments via AST rules.
-    - Require strict type validation (`any` ban) across all TypeScript/Python assets.
+- [ ] **Objective 2.3 — Demonstrated-Regression Gates:**
+  - Promote deterministic regression classes into low-false-positive gates when correctness/maintenance value exceeds the cost.
+  - Aesthetic preference is not automatically a valid mechanical gate — a gate needs a demonstrated failure class and an acceptable false-positive rate.
 
 ---
 
@@ -98,10 +96,9 @@ roadmap, skill development, testing harness, automation pipelines, and cron mara
 > *"A test is only a good test if it can properly CATCH — a passing test means nothing."*
 
 ### Tactical Objectives:
-- [ ] **Objective 5.1 — Catch-First Enforcement in Project Command Suites:**
-  - Enforce the 5-Step Catch-First Protocol in the project's fix/ship command suites:
-    - Require pre-fix **RED** test output evidence before code edits are permitted.
-    - Require post-fix **GREEN** test output evidence before completion claims.
+- [ ] **Objective 5.1 — Catch-First Verification (reproducible defects):**
+  - Reproducible defect → RED (pre-fix failure) → fix → GREEN (post-fix pass) in the project's fix/ship suites.
+  - Non-reproducible defect → strongest available failure evidence → closest meaningful regression boundary → fix → strongest available deterministic verification. Never fabricate a failing test to satisfy process.
 - [ ] **Objective 5.2 — Active Test Inventory Ledger:**
   - Maintain an indexed test catalog (`tests/README.md` and `tests/harness/README.md`) tracking which invariant categories and bug classes are defended by each test fixture.
   - Expand existing broad tests whenever an uncaught defect surfaces, rather than creating duplicate test suites.
@@ -113,6 +110,6 @@ roadmap, skill development, testing harness, automation pipelines, and cron mara
 ## 🔄 Tracking & Execution Cadence
 
 These objectives are reviewed and updated during each major development milestone:
-1. **Continuous Execution:** Automated cron marathons (e.g. `memory-graph-drain-marathon`) autonomously drive Pillar 1 & 3 objectives.
+1. **Continuous Execution:** recurring objectives are driven by explicit scheduled work the user actually requested — no autonomous marathons by default.
 2. **Interactive Sessions:** Developers and coding agents use these objectives to prioritize prompt refinements, skill authoring, and PR conclusive loops.
-3. **Durable Ledger:** Progress is recorded in `.pi/work/` ledgers and reconciled against `.pi/roadmap.md`.
+3. **Durable Ledger:** progress for significant multi-session work is recorded in the goal artifact (`goal-setup`) and reconciled against Git and the project's tracker — no global state file.

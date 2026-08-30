@@ -22,8 +22,9 @@ specific trap that automation cannot express.
 6. Merge verified user-authored constraints. Remove stale generated guidance
    only with user approval.
 7. Preview material changes before writing.
-8. Keep the rendered file short. Put detailed architecture in `.pi/project.md`
-   and link to it.
+8. Keep the rendered file short. Durable non-obvious context lives in the
+   project's context file (e.g. `docs/project-context.md`) when one exists —
+   link to it; never recreate global routing or tool ownership here.
 
 Do not copy generic coding doctrine, research philosophy, prose rules, planning
 rituals, or examples from another repository. Do not invent commands.
@@ -45,17 +46,12 @@ build or restart is required.]
 
 - [What this repository ships and who uses it.]
 - [Runtime, language, and package manager facts proven by manifests or config.]
-- [Where the durable architecture record lives.]
-- Optional host-side tools (like the Codebase Memory MCP, `codegraphcontext`
-  MCP, JetBrains IDE/ACP tools) are never clone
-  dependencies. When verified, state which structural discovery, inspiration
-  adoption, IDE mutation, diagnostics, run, and review operations they own;
-  document installation only in README. Use Codebase Memory for graph orientation,
-  traces, and inspiration adoption; use `codegraphcontext` for local code search,
-  caller/callee tracing, dead-code, complexity, and blast-radius simulation on the
-  active project.
+- [Where the durable context record lives, if one exists.]
 
 Evidence: [paths or command output]
+
+Do not restate global routing, tool ownership, or model policy here — the
+user's global `AGENTS.md` owns those. This file adds LOCAL information only.
 
 ## Safety boundaries
 
@@ -91,16 +87,12 @@ Evidence: [validator, test, workflow, manifest, or config]
 
 Omit this section when no verified trap exists.
 
-## Product map
+## Product map (only when non-obvious)
 
 - `[path]`: [responsibility]
-- `[path]`: [responsibility]
-- `.pi/essentials/`: the operating philosophy (mentor Tom) — code is ground
-  truth, steer outcomes not behavior, stack your leverage. Read these when
-  deciding how to approach work; they guide *how* we work without over-
-  restricting behavior. See `operating-philosophy.md` for the synthesis.
 
-Keep this map compact. Link to `.pi/project.md` for architecture details.
+Omit when the layout is self-explanatory from the tree. Never copy global
+philosophy into a project file — point to the global essentials instead.
 
 ## Conventions
 

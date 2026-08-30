@@ -2,7 +2,7 @@
 
 ## README (project root)
 
-Use `~/.agents/templates/readme.md` when bootstrapping via `workflow-lifecycle` init. A reader should learn:
+Use `~/.agents/templates/readme.md` when bootstrapping via `project-bootstrap`. A reader should learn:
 
 - What the project does and who it is for
 - How to install/run/test (exact commands)
@@ -25,7 +25,7 @@ Update README **after** behavior works — documents describe what IS, not promi
 
 - No README that only restates the repo name.
 - No docstring that duplicates the function name (`"""Gets the user."""`).
-- No architecture essay in README when `AGENTS.md` + `.pi/project.md` already own the spine — link instead.
+- No architecture essay in README when `AGENTS.md` (+ a project-context file, if the repo keeps one) already own the spine — link instead.
 
 ## Mechanical gates
 
@@ -34,5 +34,5 @@ Update README **after** behavior works — documents describe what IS, not promi
 
 ## Leaf skills
 
-- Init/render templates: `workflow-lifecycle` → `references/init.md`
+- Init/render templates: `project-bootstrap` (templates applied selectively)
 - Review doc bloat: `code-review-and-quality` (bloat review mode)

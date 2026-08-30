@@ -114,20 +114,29 @@ pull_request.
   direct mutations and disables Fabric Prewalk — do not activate it silently as a
   universal prerequisite.
 
-## Workflow-lifecycle is opt-in
+## Entry architecture
 
 The normal loop is: task → inspect current code/evidence → implement → run
-relevant verification → finish. No lifecycle artifacts are required.
+relevant verification → finish. No lifecycle machinery is required for
+ordinary work.
 
-`skills/workflow-lifecycle/` serves explicit governance work: workspace
-initialization, long-running/multi-session context, lesson capture
-(`learn`), cross-cutting audits, pre-claim verification, workspace GC.
+Entry skills, each earning its own trigger:
 
-`.pi/` artifacts (`project.md`, `tech-stack.md`, `roadmap.md`, `state.md`,
-`user.md`) fit persistent or governed workspaces — multi-day/multi-agent work
-or an explicit user request. Do not generate project-management markdown just
-because a repository exists; the session itself is the artifact for ordinary
-work.
+- `project-bootstrap` — entering an unfamiliar repository (read-only
+  onboarding by default), greenfield setup, or intentional lightweight
+  project governance. Idempotent; never generates `.pi/` artifact packs or a
+  user profile.
+- `brainstorming` — ambiguous direction: ground in the repo, frame, explore
+  real alternatives, decide. No planning files by default.
+- `goal-setup` — durable execution contract for significant/multi-session
+  work: ONE goal artifact with verifiable done-criteria.
+- `prototype` — cheap runnable learning; verification follows the question.
+- `leverage-capture` — post-work classification (code/reference/gate/skill/
+  memory/not-worth-saving); capture is threshold-driven, never automatic.
+
+Persistent project artifacts need a promotion test: only intent, decisions,
+constraints, and traps that are expensive to reconstruct from source, Git,
+manifests, or CI. The session is the artifact for ordinary work.
 
 ## Conventions (defaults; the project wins)
 

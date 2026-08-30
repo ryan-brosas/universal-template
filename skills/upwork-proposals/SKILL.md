@@ -1,7 +1,6 @@
 ---
 name: upwork-proposals
 description: Use when writing an Upwork application or job proposal - concise, energetic, client-focused copy that leads with action and keeps every claim truthful
-disable-model-invocation: true
 ---
 
 # Upwork Proposals

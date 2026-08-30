@@ -28,14 +28,16 @@ POLICY_FILES = [
     "AGENTS.md",
     "README.md",
     "skills/evidence-router/SKILL.md",
-    "skills/codebase-driven-development/SKILL.md",
+    "skills/reference-driven-development/SKILL.md",
+    "skills/project-bootstrap/SKILL.md",
+    "skills/goal-setup/SKILL.md",
+    "skills/leverage-capture/SKILL.md",
     "skills/code-foundations/SKILL.md",
     "skills/codebase-memory/SKILL.md",
     "skills/fabric-native-execution/SKILL.md",
     "skills/veda-lane/SKILL.md",
     "skills/execution-router/SKILL.md",
     "skills/model-resolution/SKILL.md",
-    "skills/workflow-lifecycle/SKILL.md",
     "skills/foundations-workflow/SKILL.md",
     "skills/github-repo-setup/SKILL.md",
     "skills/leverage-playbook/references/session-principles.md",
@@ -93,14 +95,14 @@ def check_prewalk_reserved() -> None:
 
 
 def check_lifecycle_optional() -> None:
-    """workflow-lifecycle is opt-in; never a mandatory default loop."""
+    """Entry flow is opt-in; ordinary work never requires lifecycle machinery."""
     for rel in ("AGENTS.md", "README.md"):
         text = read(rel) or ""
         for i, line in enumerate(text.splitlines(), 1):
             if re.search(r"mandatory default", line, re.I):
                 check_fail("LIFECYCLE-OPTIONAL", rel, i, "'mandatory default' loop language")
-    require_phrase("LIFECYCLE-OPTIONAL", "AGENTS.md", "Workflow-lifecycle is opt-in")
-    require_phrase("LIFECYCLE-OPTIONAL", "skills/workflow-lifecycle/SKILL.md", "one-off")
+    require_phrase("LIFECYCLE-OPTIONAL", "AGENTS.md", "No lifecycle machinery is required for ordinary work")
+    require_phrase("LIFECYCLE-OPTIONAL", "skills/project-bootstrap/SKILL.md", "No persistent files")
 
 
 def check_schema_mode_gated() -> None:
@@ -417,6 +419,121 @@ def check_agents_safety_core() -> None:
 
 
 
+def check_stale_agents_template() -> None:
+    """The generated project AGENTS template must not re-infect projects with retired architecture."""
+    rel = "templates/agents.md"
+    text = read(rel)
+    if text is None:
+        fails.append("[STALE-AGENTS-TEMPLATE] templates/agents.md: file missing")
+        return
+    banned = re.compile(r"codegraphcontext|\.pi/essentials|\.pi/project\.md|Codebase Memory for graph orientation", re.I)
+    for i, line in enumerate(text.splitlines(), 1):
+        if banned.search(line):
+            check_fail("STALE-AGENTS-TEMPLATE", rel, i, "retired architecture in the project AGENTS template")
+
+
+def check_init_routing() -> None:
+    """Project bootstrap routes evidence need-driven — never CodeMemory-first."""
+    rel = "skills/project-bootstrap/SKILL.md"
+    text = read(rel)
+    if text is None:
+        fails.append("[INIT-ROUTING] skills/project-bootstrap/SKILL.md: file missing")
+        return
+    if re.search(r"codebase memory first|search_graph on the covered project|run through the context layer first", text, re.I):
+        check_fail("INIT-ROUTING", rel, 1, "bootstrap mandates a CodeMemory-first ritual instead of need-driven routing")
+    flat = re.sub(r"\s+", " ", text)
+    if "evidence-router" not in flat:
+        check_fail("INIT-ROUTING", rel, 1, "bootstrap must reference need-driven evidence routing")
+
+
+def check_no_user_profile() -> None:
+    """Project bootstrap/init must never create a user-profile artifact."""
+    for rel in ("skills/project-bootstrap/SKILL.md", "AGENTS.md"):
+        text = read(rel)
+        if text is None:
+            continue
+        if re.search(r"\buser\.md\b", text):
+            for i, line in enumerate(text.splitlines(), 1):
+                if re.search(r"\buser\.md\b", line):
+                    check_fail("NO-USER-PROFILE", rel, i, "user-profile artifact is retired from project state")
+
+
+def check_no_artifact_pack() -> None:
+    """Bootstrap must not generate the .pi artifact pack (project/tech-stack/roadmap/state/user)."""
+    rel = "skills/project-bootstrap/SKILL.md"
+    text = read(rel)
+    if text is None:
+        return
+    banned = re.compile(r"\.pi/(project|tech-stack|roadmap|state|user)\.md", re.I)
+    for i, line in enumerate(text.splitlines(), 1):
+        if banned.search(line):
+            check_fail("NO-ARTIFACT-PACK", rel, i, "default .pi artifact pack is retired; persistent context is selective")
+
+
+def check_objective_drift() -> None:
+    """Essentials never promise zero defects, universal code-taste metrics, or automatic per-session capture."""
+    for rel in ("essentials/objectives.md", "essentials/operating-philosophy.md"):
+        text = read(rel)
+        if text is None:
+            continue
+        banned = re.compile(r"zero-?defect|convert aesthetic principles into deterministic AST metrics|mandatory skill capture|capture into skills after (a|every) session", re.I)
+        for i, line in enumerate(text.splitlines(), 1):
+            if banned.search(line):
+                check_fail("OBJECTIVE-DRIFT", rel, i, "obsolete quality/capture objective resurfaced")
+
+
+def check_hidden_reachability() -> None:
+    """Every hidden skill (disable-model-invocation) must be referenced outside its own directory — else it is dead."""
+    skills_dir = BASE / "skills"
+    if not skills_dir.is_dir():
+        return
+    for d in sorted(skills_dir.iterdir()):
+        if not d.is_dir():
+            continue
+        skill_file = d / "SKILL.md"
+        if not skill_file.is_file():
+            continue
+        try:
+            text = skill_file.read_text(encoding="utf-8")
+        except OSError:
+            continue
+        if not re.search(r"^disable-model-invocation:\s*true", text, re.M):
+            continue
+        if re.search(r"^x-manual-only:\s*true", text, re.M):
+            continue  # explicitly designated manual-only
+        # Foundation leaves are retrieval capsules (OpenViking-indexed corpus),
+        # not routed procedures — reachability does not apply to them.
+        if d.name.endswith("-foundation") or d.name.startswith("."):
+            continue
+        needle = d.name
+        hits = 0
+        for f in list(BASE.rglob("*.md")) + list((BASE / "scripts").glob("*.py")):
+            sp = str(f)
+            if ".git/" in sp or sp.startswith(str(d)):
+                continue
+            if any(x in sp for x in ("node_modules", "/.system/")):
+                continue
+            try:
+                if needle in f.read_text(encoding="utf-8", errors="ignore"):
+                    hits += 1
+                    break
+            except OSError:
+                continue
+        if hits == 0:
+            check_fail("HIDDEN-REACHABILITY", f"skills/{needle}/SKILL.md", 1, "hidden skill has no incoming reference — add a route or make it visible")
+
+
+def check_pr_ownership() -> None:
+    """github-repo-setup must not claim general PR-creation ownership — push-pr owns the PR lifecycle."""
+    rel = "skills/github-repo-setup/SKILL.md"
+    text = read(rel)
+    if text is None:
+        return
+    if re.search(r"evidence-based PR", text, re.I):
+        check_fail("PR-OWNERSHIP", rel, 1, "general PR creation belongs to push-pr, not repo-setup")
+
+
+
 CHECKS = [
     ("PREWALK-RESERVED", check_prewalk_reserved),
     ("LIFECYCLE-OPTIONAL", check_lifecycle_optional),
@@ -446,6 +563,13 @@ CHECKS = [
     ("APPEND-COMPACT", check_append_compact),
     ("APPEND-BOUNDED-SEARCH", check_append_bounded_search),
     ("AGENTS-SAFETY-CORE", check_agents_safety_core),
+    ("STALE-AGENTS-TEMPLATE", check_stale_agents_template),
+    ("INIT-ROUTING", check_init_routing),
+    ("NO-USER-PROFILE", check_no_user_profile),
+    ("NO-ARTIFACT-PACK", check_no_artifact_pack),
+    ("OBJECTIVE-DRIFT", check_objective_drift),
+    ("HIDDEN-REACHABILITY", check_hidden_reachability),
+    ("PR-OWNERSHIP", check_pr_ownership),
 ]
 
 

@@ -37,7 +37,7 @@ retrieval chain; if direct source already answers the question, stop.
 | Orient the active Pi repository (feature location, neighborhoods, symbols, impact, changed-code context) | **Fovea** (`fovea_sketch` → `fovea_focus` → `fovea_dwell`) | the exact source windows it names | navigation/context, not correctness proof; skip when direct reading is cheaper |
 | Exact semantic/type/call information (usages, inheritance, refactor safety, inspections) | **MCP Steroid / JetBrains** (`steroid_*`) | source | also the runtime lane: debugger, test runner, expression evaluation |
 | Runtime behavior | tests / debugger / runtime evidence | — | the only proof of behavior |
-| One selected inspiration repository | project-local `<project>/reference/<repo>/` | Fovea on that root, then source + tests | see `codebase-driven-development` for the workflow |
+| One selected inspiration repository | project-local `<project>/reference/<repo>/` | Fovea on that root, then source + tests | see `reference-driven-development` for the workflow |
 | Find which past/indexed project contains a pattern (cross-repo, cross-session) | **Codebase Memory** (`list_projects` → `search_graph` / `trace_path`) | activate the candidate under `reference/` and inspect with Fovea/source | persistent library, cold path; the graph is an index, not truth |
 | Past decisions, failed attempts, lessons, recurring edge cases | **OpenViking** (`memsearch` / `memgrep` / `memread`) | durable notes | experience memory — not a second copy of local source |
 | Current library/API docs | official docs / **Context7** (`resolve-library-id` → `query-docs`) | vendored source | only when the question depends on current docs |

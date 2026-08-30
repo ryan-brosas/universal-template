@@ -15,7 +15,7 @@ Test, lint, typecheck, build, or runtime failure; user-reported bug or unexpecte
 
 ## When NOT to Use
 
-Feature work with no failure signal (`codebase-driven-development`); pure research (`source-driven-development`).
+Feature work with no failure signal (source-first implementation); pure research (`source-driven-development`).
 
 ## Workflow
 

@@ -1,7 +1,6 @@
 ---
 name: grill-me
 description: Use when you have a rough idea, ADR, PRD, or spec that needs to survive scrutiny before code is written.
-disable-model-invocation: true
 ---
 
 

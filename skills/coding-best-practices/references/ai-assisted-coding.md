@@ -9,7 +9,7 @@
 
 - Scope the task clearly — agree on outcome and boundaries before large diffs (`leverage-playbook`: code is ground truth, stack skills).
 - Give context pointers (files, skills, graph hits) and let the agent retrieve; do not hand-script every step.
-- Maintain project spine: `AGENTS.md`, `.pi/state.md` — context files beat repeating rules in chat.
+- Maintain the project spine: `AGENTS.md` (plus a durable goal artifact for multi-session work) — context files beat repeating rules in chat.
 
 ## Verification over self-report
 

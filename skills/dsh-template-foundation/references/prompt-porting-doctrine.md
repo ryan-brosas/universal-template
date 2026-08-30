@@ -5,7 +5,7 @@
 
 ## pi→DSH prompt-porting table with per-command surface mapping
 **Path/Symbol:** `.dsh/prompts/README.md` (whole file, 52 lines) — the nine-row porting table (`| pi command | DSH-native prompt | Primary DSH surfaces |`), "How it is wired" doc-citation block, "Activating in a project" mount section; each `.dsh/prompts/<name>.md` frontmatter carries only `name` + `description`.
-**Signature:** row shape `<old-command> → <new-file.md> → <surface list>`; e.g. `/plan → .dsh/prompts/plan.md → codebase-driven-development, evidence-router, fovea_focus/impact, fabric_mesh`; `/research → .dsh/prompts/research.md → evidence-router, codebase-memory + context7 + exa + deepwiki MCP`.
+**Signature:** row shape `<old-command> → <new-file.md> → <surface list>`; e.g. `/plan → .dsh/prompts/plan.md → source-first implementation, evidence-router, fovea_focus/impact, fabric_mesh`; `/research → .dsh/prompts/research.md → evidence-router, codebase-memory + context7 + exa + deepwiki MCP`.
 **Data Shape:** prompts are plain durable markdown (no executable); activation is EXPLICIT — "DSH does not auto-scan `.dsh/prompts/` for commands (only `.dsh/skills/` is auto-scanned by `dsh-skill-filesystem`)" — so a plugin/config mount is required; every behavioral claim cites harness docs (capability-seams, cordis-tutorial 03/05/07).
 
 ### Decisive source
