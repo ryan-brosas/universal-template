@@ -78,6 +78,8 @@ else:
     probe("pi-fabric", False, f"not found at {fab_pkg}")
 
 # --- Veda model discovery (runtime, never hard-coded) -------------------------
+rc, out = run(["veda", "personas"], timeout=60)
+probe("veda personas", rc == 0, first_line(out))
 rc, out = run(["veda", "models"], timeout=60)
 if rc == 0:
     backends = [l.strip() for l in out.splitlines() if l.strip().endswith("(installed)")]
@@ -87,6 +89,25 @@ else:
 if (HOME / ".local/bin/agy").exists() or run(["which", "agy"])[0] == 0:
     rc2, out2 = run(["agy", "models"], timeout=60)
     probe("agy models", rc2 == 0, first_line(out2) if rc2 == 0 else "no output")
+
+# --- Harness model/discovery inventory -----------------------------------------
+rc, out = run(["pi", "--list-models"], timeout=60)
+if rc == 0:
+    counts = {}
+    for line in out.splitlines()[1:]:
+        parts = line.split()
+        if parts:
+            counts[parts[0]] = counts.get(parts[0], 0) + 1
+    total = sum(counts.values())
+    top = ", ".join(f"{k}({v})" for k, v in sorted(counts.items(), key=lambda kv: -kv[1])[:8])
+    probe("pi model inventory", True, f"{total} models across {len(counts)} providers: {top}")
+else:
+    probe("pi model inventory", False, first_line(out))
+for backend in ("claude", "codex", "gemini", "droid"):
+    rc, out = run(["which", backend])
+    probe(f"backend CLI: {backend}", rc == 0, "on PATH" if rc == 0 else "absent (unavailable as a direct/Veda backend)")
+rc, out = run(["which", "fabric"])
+probe("fabric native runners", True, "probed in-session via agents.models()/agents.list() — often empty; do not assume")
 
 # --- MCP registry state -------------------------------------------------------
 reg = HOME / ".agents/mcp/servers.json"

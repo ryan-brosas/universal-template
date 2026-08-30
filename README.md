@@ -69,6 +69,8 @@ policy invariants live in `scripts/policy-consistency.py` (CI-enforced).
 |---|---|
 | Global invariants, safety boundaries, routing summary | `AGENTS.md` |
 | Evidence and tool routing (NEED + HOST) | `skills/evidence-router` |
+| Effort/mechanism selection (Main/child/parallel/oracle/actor) | `skills/effort-router` |
+| Backend/model resolution (capability-driven, runtime-discovered) | `skills/model-router` |
 | Normal development procedure | `skills/codebase-driven-development` |
 | Reference-repository rules | `references/reference-contract.md` |
 | Fabric execution, Schema modes, agents/Veda escalation | `skills/fabric-native-execution` |
