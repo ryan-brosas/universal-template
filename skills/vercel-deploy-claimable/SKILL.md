@@ -9,7 +9,7 @@ disable-model-invocation: true
 
 ## Core Principle
 
-Deploy through the `$VERCEL_DEPLOY_SCRIPT` helper — resolve its path from the environment or ask; never assume a machine-specific path. Every successful run returns a Preview URL (live site) and a Claim URL (transfer to the user's Vercel account).
+Deploy through the `$VERCEL_DEPLOY_SCRIPT` helper, resolve its path from the environment or ask; never assume a machine-specific path. Every successful run returns a Preview URL (live site) and a Claim URL (transfer to the user's Vercel account).
 
 
 ## When to Use
@@ -23,7 +23,7 @@ Deploy through the `$VERCEL_DEPLOY_SCRIPT` helper — resolve its path from the 
 
 ## Prerequisite
 
-This skill needs a local deploy helper script. Resolve its path from `$VERCEL_DEPLOY_SCRIPT` or ask the user — never assume a machine-specific path (for example `/mnt/skills/...`). The helper must:
+This skill needs a local deploy helper script. Resolve its path from `$VERCEL_DEPLOY_SCRIPT` or ask the user, never assume a machine-specific path (for example `/mnt/skills/...`). The helper must:
 - Exclude secret files (`.env*`, credentials, key files) from the upload in addition to `node_modules` and `.git`.
 - Never mutate the input tree in place (stage a temporary copy if it needs to rename or transform files).
 - Show the exact command it runs before executing.
@@ -158,4 +158,4 @@ Output contains a `Preview URL` and a `Claim URL`; the stdout JSON parses with `
 
 ## References
 
-No reference capsules — the skill is self-contained.
+No reference capsules, the skill is self-contained.

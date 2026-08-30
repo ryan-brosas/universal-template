@@ -1,6 +1,6 @@
 ---
 name: haskell-coding-practices
-description: "Use when authoring or reviewing Haskell — 4-space/80-col layout, Haddock, explicit imports, type signatures, avoid partial functions, strict data, IO separation, and stylish-haskell/HLint/cabal test in CI."
+description: "Use when authoring or reviewing Haskell, 4-space/80-col layout, Haddock, explicit imports, type signatures, avoid partial functions, strict data, IO separation, and stylish-haskell/HLint/cabal test in CI."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for Haskell style learning (from the archived `awesome-guideli
 
 ## Core Principle
 
-Haskell quality is **explicit equational modules** — typed total functions in pure core, strict data by default, IO pushed to the rim.
+Haskell quality is **explicit equational modules**, typed total functions in pure core, strict data by default, IO pushed to the rim.
 
 ## When to Use / NOT
 
@@ -19,16 +19,16 @@ Haskell quality is **explicit equational modules** — typed total functions in 
 
 **NOT when:**
 
-- Pure FFI C fragments — use C practice skills for foreign code.
-- TH/splice-generated-only modules — validate generators.
+- Pure FFI C fragments, use C practice skills for foreign code.
+- TH/splice-generated-only modules, validate generators.
 
 ## Workflow
 
-1. **Layout** — indent, cols, case (`haskell-style-formatting-layout.md`).
-2. **Modules** — names, imports, Haddock (`haskell-style-naming-imports.md`).
-3. **Functions** — sigs, totality, guards (`haskell-style-functions-control.md`).
-4. **Types/IO** — strict data, boundaries (`haskell-style-types-io.md`).
-5. **Verify** — formatter, HLint, `cabal build`/`stack test`, Haddock on changed modules.
+1. **Layout**, indent, cols, case (`haskell-style-formatting-layout.md`).
+2. **Modules**, names, imports, Haddock (`haskell-style-naming-imports.md`).
+3. **Functions**, sigs, totality, guards (`haskell-style-functions-control.md`).
+4. **Types/IO**, strict data, boundaries (`haskell-style-types-io.md`).
+5. **Verify**, formatter, HLint, `cabal build`/`stack test`, Haddock on changed modules.
 
 ## Red Flags
 

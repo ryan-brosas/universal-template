@@ -1,16 +1,16 @@
 ---
 name: python-coding-practices
-description: "Use when authoring or reviewing Python — PEP 8 layout, Google import and exception rules, naming matrix, mutable-default traps, type-annotated public APIs, and import-safe main guards."
+description: "Use when authoring or reviewing Python, PEP 8 layout, Google import and exception rules, naming matrix, mutable-default traps, type-annotated public APIs, and import-safe main guards."
 disable-model-invocation: true
 ---
 
 # Python Coding Practices
 
-Application skill for Python style learning (from the archived `awesome-guidelines` style capsules). For framework-specific patterns, load the stack foundation.
+Application skill for Python style learning (from the archived `awesome-guidelines` style capsules). For framework-specific patterns, load the stack capsules in `foundation-pack/`.
 
 ## Core Principle
 
-Python readability is **enforced consistency plus semantic footgun avoidance** — format mechanically, import modules explicitly, never mutable defaults, validate with exceptions not assert.
+Python readability is **enforced consistency plus semantic footgun avoidance**, format mechanically, import modules explicitly, never mutable defaults, validate with exceptions not assert.
 
 ## When to Use / NOT
 
@@ -19,16 +19,16 @@ Python readability is **enforced consistency plus semantic footgun avoidance** �
 
 **NOT when:**
 
-- Stack-specific rules dominate (Django ORM, Pydantic models, etc.) — load `*-foundation`.
+- Stack-specific rules dominate (Django ORM, Pydantic models, etc.), load `foundation-pack/*-foundation`.
 - Non-Python code.
 
 ## Workflow
 
-1. **Format** — 4 spaces, grouped imports, project line length (`python-style-layout-imports.md`).
-2. **Name** — public vs `_` internal; `CapWords` classes; `.py` filenames (`python-style-naming-modules.md`).
-3. **Errors** — narrow `raise`/`except`; debug-only `assert`; idiomatic `is None`/empty seq (`python-style-exceptions-truthiness.md`).
-4. **API surface** — no mutable defaults; type public functions; `main()` guard (`python-style-defaults-types-main.md`).
-5. **Verify** — ruff/black + typecheck on changed paths.
+1. **Format**, 4 spaces, grouped imports, project line length (`python-style-layout-imports.md`).
+2. **Name**, public vs `_` internal; `CapWords` classes; `.py` filenames (`python-style-naming-modules.md`).
+3. **Errors**, narrow `raise`/`except`; debug-only `assert`; idiomatic `is None`/empty seq (`python-style-exceptions-truthiness.md`).
+4. **API surface**, no mutable defaults; type public functions; `main()` guard (`python-style-defaults-types-main.md`).
+5. **Verify**, ruff/black + typecheck on changed paths.
 
 ## Red Flags
 

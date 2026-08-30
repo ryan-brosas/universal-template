@@ -41,19 +41,19 @@ One question at a time. Let the person answer fully before asking another.
 - The griller is curious, not confrontational.
 - The grillee answers in "I think" and "I'm assuming", not "it's obvious".
 - After 10-15 questions, the plan is either stronger or abandoned.
-- The griller doesn't need to "win" — they need to find the hole.
+- The griller doesn't need to "win", they need to find the hole.
 
 ## Common Targets
 
-| Target            | Question                                        |
+| Target | Question |
 |-------------------|-------------------------------------------------|
-| Cost estimate     | "What if it takes 3x as long?"                  |
-| Scale estimate    | "What if traffic grows 10x this month?"         |
-| One-vendor risk   | "What if vendor shuts down?"                    |
-| "Just use X"      | "What does X not do?"                           |
-| "We'll iterate"   | "What's the first working version look like?"   |
-| "It's simple"     | "Define simple. How many moving parts?"         |
-| "Everyone agrees" | "Who did you not ask?"                          |
+| Cost estimate | "What if it takes 3x as long?" |
+| Scale estimate | "What if traffic grows 10x this month?" |
+| One-vendor risk | "What if vendor shuts down?" |
+| "Just use X" | "What does X not do?" |
+| "We'll iterate" | "What's the first working version look like?" |
+| "It's simple" | "Define simple. How many moving parts?" |
+| "Everyone agrees" | "Who did you not ask?" |
 | "No dependencies" | "What do you depend on that you don't control?" |
 
 ## When to Stop Grilling
@@ -66,7 +66,7 @@ Asking 5 questions in one message; grilling from a position of "I know better" (
 
 ## Red Flags
 
-No assumptions stated; "I'll figure it out later" as a crutch; "everyone agrees" without asking everyone; cost estimate without a range; "it's simple" without definition; no rollback plan; "we'll iterate" before v1 is defined; "no dependencies" without checking; vulnerability mentioned, dismissed; "I'm not worried about X" (X is the thing to worry about).
+No assumptions stated. "I'll figure it out later" as a crutch. "everyone agrees" without asking everyone. cost estimate without a range. "it's simple" without definition. no rollback plan. "we'll iterate" before v1 is defined. "no dependencies" without checking. vulnerability mentioned, dismissed. "I'm not worried about X" (X is the thing to worry about).
 
 ## Anti-Patterns
 
@@ -74,7 +74,7 @@ No assumptions stated; "I'll figure it out later" as a crutch; "everyone agrees"
 
 ## Verification
 
-After 10–15 questions, the plan is either stronger or abandoned, and the answers are documented — not left in chat.
+After 10–15 questions, the plan is either stronger or abandoned, and the answers are documented, not left in chat.
 
 ## Skill Result Contract
 
@@ -90,4 +90,4 @@ After 10–15 questions, the plan is either stronger or abandoned, and the answe
 
 ## References
 
-N/A — no reference files; the question banks and targets are inline in this skill.
+N/A, no reference files; the question banks and targets are inline in this skill.

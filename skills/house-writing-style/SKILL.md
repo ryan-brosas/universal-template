@@ -15,9 +15,9 @@ natural-language prose. Protected content stays byte-exact.
 ## When to Use / NOT
 
 - **Use when:** rewriting or polishing prose; drafting docs, release notes, or
-  PR and issue text; auditing style; explaining a violation.
+ PR and issue text; auditing style; explaining a violation.
 - **NOT when:** the user requested a different style for that artifact (the
-  user's choice wins); the content is protected (see below).
+ user's choice wins); the content is protected (see below).
 
 ## Protected content (never rewrite)
 
@@ -31,9 +31,9 @@ matters, and structured machine output.
 - **L0** kernel only (the AGENTS.md writing-style section): normal chat.
 - **L1** kernel + `scripts/style-lint.py`: important generated prose and files.
 - **L2** kernel + lint + this skill's review: public docs, release notes,
-  important PR and issue text.
+ important PR and issue text.
 - **L3** optional Pi output guard: audit mode first; rewrite only after
-  false-positive testing, one pass maximum.
+ false-positive testing, one pass maximum.
 
 ## Hard rules (lint reports ERROR)
 
@@ -45,28 +45,28 @@ sentences ("in conclusion"). Decorative separator lines.
 
 ## Soft rules (lint reports WARN; judgment applies)
 
-Antithesis used as rhetoric. Corrective negation. Negative parallelism and
-negative anaphora. Formulaic rule-of-three. Setup and payoff beats.
-Repetitive parallel sentence syntax. Stacked noun phrases. Nominalization.
+Antithesis; corrective negation; `not only... but also` phrasing; the rule of
+three; setup and payoff beats; repetitive parallel sentence syntax; stacked
+noun phrases; nominalization.
 Unnecessary hedging. Performed enthusiasm. Long sentences. Uniform cadence.
-Corporate-register verbs (leverage, underscore) in vague business use.
+Corporate-register verbs (`leverage`, `underscore`) in vague business use.
 
 ## Exceptions (encoded, not negotiable by taste)
 
 - Technical contrast stays: "Use the thread ID, not the comment ID." is good
-  writing.
+ writing.
 - Parallel structure stays for lists, schemas, and technical sequences.
 - Quotes stay exact even when they violate every rule above.
 - Domain terminology stays when precision requires it; plain English applies
-  to the explanation, never to the terms.
+ to the explanation, never to the terms.
 
 ## Workflow
 
 1. Draft in the kernel voice (AGENTS.md, writing-style section).
 2. For important prose: run `python3 scripts/style-lint.py <file>`; fix ERRORs,
-   judge WARNs.
+ judge WARNs.
 3. For audits: lint, then apply the semantic checks in
-   `references/rules.md`.
+ `references/rules.md`.
 4. Never loop: one rewrite pass maximum, re-lint, then send or report.
 
 ## Verification

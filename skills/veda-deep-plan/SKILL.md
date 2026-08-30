@@ -1,36 +1,36 @@
 ---
 name: veda-deep-plan
-description: "Use when a single planning call is not enough — architectural design, subtle bugs with no obvious cause, decisions with no clear answer: plan the hardest problems with Veda Deep Thinking where parallel solvers, a judge, and a verifier converge on the best plan. Drives `veda -S deep-TASKNAME -m flash deep \"...\"`; does not execute. Invoke when the user says deep plan, hard problem, multiple approaches, converge, or wants several independent attempts before committing."
+description: "Use when a single planning call is not enough, architectural design, subtle bugs with no obvious cause, decisions with no clear answer: plan the hardest problems with Veda Deep Thinking where parallel solvers, a judge, and a verifier converge on the best plan. Drives `veda -S deep-TASKNAME -m flash deep`; does not execute."
 argument-hint: "[veda-flags]"
 ---
 
 ## Core Principle
 
-Converge on the hardest problems with k parallel solvers (default 6), a judge, and a verifier — several independent attempts beat a single planning call when the problem is genuinely hard. This skill plans; it does not execute.
+Converge on the hardest problems with k parallel solvers (default 6), a judge, and a verifier, several independent attempts beat a single planning call when the problem is hard. This skill plans; it does not execute.
 
 ## When to Use / NOT
 
 - **Use when:** architectural design with many tradeoffs, subtle bugs where the cause is opaque, or decisions where you want independent perspectives before committing; when the user says deep plan, hard problem, multiple approaches, converge.
-- **NOT when:** a single planning call is the cheaper default — routine problems where one pass suffices (Deep mode costs k× more tokens); and per Model routing, the final load-bearing architecture decision still comes from claude-opus via `agy --mode plan` — `veda deep` runs on gemini and is only for "N independent attempts".
+- **NOT when:** a single planning call is the cheaper default, routine problems where one pass suffices (Deep mode costs k× more tokens). and per Model routing, the final load-bearing architecture decision still comes from claude-opus via `agy --mode plan`, `veda deep` runs on gemini and is only for "N independent attempts".
 
 ## Workflow
 
 1. Onboard with veda at `~/.pi/agent/docs/veda.md` before acting (Reminders).
 2. Pick a descriptive session name: `-S deep-TASKNAME` to isolate from concurrent agents (Session Naming).
-3. Build context: `veda -S deep-TASKNAME sel clear`, then `sel add` full files (line-range slices only over the 125k budget); check the token count with `sel ls` — 75k–125k acceptable (Setting Context).
-4. Run `veda -S deep-TASKNAME -m flash deep '...'` with an opening message that commits to a position — goal, proposed approach, evidence anchors, constraints, 1–2 specific questions; use single quotes for prompts containing backticks (Running Deep Mode, Escaping Backticks).
+3. Build context: `veda -S deep-TASKNAME sel clear`, then `sel add` full files (line-range slices only over the 125k budget); check the token count with `sel ls`, 75k–125k acceptable (Setting Context).
+4. Run `veda -S deep-TASKNAME -m flash deep '...'` with an opening message that commits to a position, goal, proposed approach, evidence anchors, constraints, 1–2 specific questions; use single quotes for prompts containing backticks (Running Deep Mode, Escaping Backticks).
 5. Read the output: each solver's candidate → the judge's selection (your plan) → the verifier's verdict if verification ran; read verifier objections before acting (Reading the output).
 6. Confirm alignment with the user; follow up on the same `-S` session with `navigator-chat` (cheaper than re-running deep mode) (Execution).
-7. Do not execute — converge on the plan only; execution happens after alignment, by you with native tools.
+7. Do not execute, converge on the plan only; execution happens after alignment, by you with native tools.
 
-## Model routing (authoritative — do not substitute)
+## Model routing (authoritative, do not substitute)
 
 - Load-bearing planning / architecture / high-risk review → `agy --model claude-opus-4-6-thinking --mode plan` (direct `agy` CLI, NOT veda/gemini).
 - Critique / follow-up → `agy --model claude-sonnet-4-6 --mode plan`.
 - Cheap discovery / context curation → `veda` + gemini (`gemini-3.7-flash-*`, `gemini-3.1-pro-low`).
 - `veda deep` (parallel solvers) runs on gemini and is only for "N independent attempts"; the final architecture decision still comes from claude-opus.
 
-## Invocation — veda deep (confirmed working)
+## Invocation, veda deep (confirmed working)
 
 `deep` is a veda CLI subcommand, not a persona. Default backend/model now fixed in `~/.config/veda/config` (`BACKEND="agy"`, `MODEL="gemini-3.7-flash-high"`):
 
@@ -41,21 +41,21 @@ veda -S deep-<task> deep '<problem — inline ALL relevant file contents; veda s
 - Pin explicitly with `-b agy -m gemini-3.7-flash-high` if you ever need to override.
 - Reuse `-S deep-<task>` for follow-ups (`resume` / `navigator-chat`).
 
-**Do NOT use `agents.run({ runner: "veda", ... })`:** broken with veda-ts 0.75.8 — pi-fabric pipes the prompt to stdin, but veda reads positionals only (`src/cli/validate.ts` throws "No prompt provided"). Use the CLI until pi-fabric fixes the runner.
+**Do NOT use `agents.run({ runner: "veda", ... })`:** broken with veda-ts 0.75.8, pi-fabric pipes the prompt to stdin, but veda reads positionals only (`src/cli/validate.ts` throws "No prompt provided"). Use the CLI until pi-fabric fixes the runner.
 
 ## Your Task
 
-Plan the hardest problems using Veda's Deep Thinking mode: `veda -S deep-TASKNAME -m flash deep "..."`. This is for problems where a single planning call is not enough — you want several independent attempts that converge on the right answer.
+Plan the hardest problems using Veda's Deep Thinking mode: `veda -S deep-TASKNAME -m flash deep "..."`. This is for problems where a single planning call is not enough, you want several independent attempts that converge on the right answer.
 
 Deep mode runs **k parallel solvers** (default 6), each using a different reasoning strategy. A **judge** picks the best answer. A **verifier** kicks in when confidence is low. This is a homegrown Deepthink, inspired by Self-Consistency, Universal Self-Consistency, and Chain-of-Verification.
 
-**When to use this:** a single planning call is the cheaper default. Reach for Deep Thinking only when the problem is genuinely hard — architectural design with many tradeoffs, subtle bugs where the cause is opaque, or decisions where you want independent perspectives before committing. Deep mode costs k× more tokens than a single call; reserve it for when that cost earns its keep.
+**When to use this:** a single planning call is the cheaper default. Reach for Deep Thinking only when the problem is hard, architectural design with many tradeoffs, subtle bugs where the cause is opaque, or decisions where you want independent perspectives before committing. Deep mode costs k× more tokens than a single call; reserve it for when that cost earns its keep.
 
 **Model:** `flash` is auto-detected by `veda init` from your installed harnesses. If a `-m`/`-b` (or other veda flags) was passed when this skill was invoked, use those instead of `-m flash` in every `veda` command below.
 
 **Reuse the same `-S` session name** across deep runs and follow-up `resume`/`navigator-chat` so the conversation continues rather than restarting.
 
-**Involve the user when the work genuinely requires them.** Use your `ask_user` tool (or plain questions if unavailable) when the goal is ambiguous, a decision would change scope, cost, or direction, or input only the user can provide. The judge picks the best plan; the user decides whether to act on it. Otherwise, when you have enough information to act, act.
+**Involve the user when the work requires them.** Use your `ask_user` tool (or plain questions if unavailable) when the goal is ambiguous, a decision would change scope, cost, or direction, or input only the user can provide. The judge picks the best plan; the user decides whether to act on it. Otherwise, when you have enough information to act, act.
 
 ### Escaping Backticks in Prompts (Critical)
 
@@ -89,7 +89,7 @@ veda -S deep-sync-arch -m flash deep ...         # Designing a real-time sync ar
 
 ## Setting Context (Critical)
 
-**You must run `veda sel add` before sending prompts.** The solvers and judge see only what you share — source code, specs, error logs, data, research documents. Any text file works.
+**You must run `veda sel add` before sending prompts.** The solvers and judge see only what you share, source code, specs, error logs, data, research documents. Any text file works.
 
 ```bash
 # Clear and build selection (use your session name)
@@ -115,11 +115,11 @@ veda -S deep-auth-refactor sel add config.ts:25       # Single line 25
 veda -S deep-auth-refactor sel add "src/*.c:1-80"     # First 80 lines of each file
 ```
 
-| Syntax | Description |
-|--------|-------------|
-| `file.c:10-20` | Lines 10 to 20 (inclusive) |
-| `file.c:15-` | Line 15 to end of file |
-| `file.c:8` | Single line 8 |
+| Syntax           | Description                         |
+| ---------------- | ----------------------------------- |
+| `file.c:10-20`   | Lines 10 to 20 (inclusive)          |
+| `file.c:15-`     | Line 15 to end of file              |
+| `file.c:8`       | Single line 8                       |
 | `"src/*.c:1-50"` | First 50 lines of each matched file |
 
 ---
@@ -132,7 +132,7 @@ Deep mode runs k solvers in parallel, a judge picks the best, and a verifier che
 - State the goal and your proposed approach (take a stance; the solvers stress-test it)
 - Provide evidence anchors: file and section references for your key claims
 - Name constraints and non-goals
-- Ask 1-2 specific questions where you are genuinely uncertain
+- Ask 1-2 specific questions where you are uncertain
 
 Example flow:
 ```bash
@@ -157,7 +157,7 @@ veda -S deep-sync-arch -m flash deep --trace /tmp/deep-sync-trace.yaml '...'
 veda -S deep-sync-arch -m flash -p navigator-chat "The judge picked approach B. What about edge case X?"
 ```
 
-**Per-stage model overrides** let you mix providers — e.g., cheap solvers and an expensive judge:
+**Per-stage model overrides** let you mix providers, e.g., cheap solvers and an expensive judge:
 
 ```bash
 # Solvers on K3, judge on Sol, verifier on Opus
@@ -174,7 +174,7 @@ veda -S deep-sync-arch --solver-models sol,k3,fable deep '...'
 
 ### Reading the output
 
-Deep mode prints each solver's candidate, then the judge's selection, then (if verification ran) the verifier's verdict. The **judge's selected answer** is your plan. If the verifier flagged the result, read its objections before acting — they are the "second opinion" that earns the token cost.
+Deep mode prints each solver's candidate, then the judge's selection, then (if verification ran) the verifier's verdict. The **judge's selected answer** is your plan. If the verifier flagged the result, read its objections before acting, they are the "second opinion" that earns the token cost.
 
 Confirm alignment before you start executing. **Once aligned, you (the Driver) proceed to execution.** The solvers, judge, and verifier do not execute; you do.
 
@@ -188,7 +188,7 @@ After deep mode converges on a plan:
   ```bash
   veda -S deep-sync-arch -m flash -p navigator-chat "Quick question: should X handle Y this way?"
   ```
-- Re-run deep mode only if a mid-execution surprise genuinely changes the approach (not for routine questions)
+- Re-run deep mode only if a mid-execution surprise changes the approach (not for routine questions)
 - Escalate to the user (via `ask_user`) per the rule above: scope, cost, or direction changes, or input only they can provide
 
 Before ending your turn, check your last paragraph. If it is a plan, a list of next steps, or a promise about work you have not done ("I'll...", "let me know when..."), do that work now. End your turn only when the task is complete or you are blocked on input only the user can provide.
@@ -216,11 +216,11 @@ Do not execute yet; all we want to do is converge on a solid plan.
 
 ## Red Flags
 
-- Double-quoted prompts containing backticks — bash evaluates them as command substitution (Escaping Backticks).
-- Using `agents.run({ runner: "veda", ... })` — broken with veda-ts 0.75.8; use the CLI (Invocation).
-- Sending prompts without `veda sel add` first — solvers and judge see only what you share (Setting Context).
+- Double-quoted prompts containing backticks, bash evaluates them as command substitution (Escaping Backticks).
+- Using `agents.run({ runner: "veda", ... })`, broken with veda-ts 0.75.8; use the CLI (Invocation).
+- Sending prompts without `veda sel add` first, solvers and judge see only what you share (Setting Context).
 - Open-ended questions instead of a committed position in the opening message (Running Deep Mode).
-- Re-running deep mode for routine mid-execution questions — use a single `navigator-chat` call (Execution).
+- Re-running deep mode for routine mid-execution questions, use a single `navigator-chat` call (Execution).
 - Substituting the model routing: load-bearing architecture decisions come from claude-opus via agy, not `veda deep` on gemini (Model routing).
 - Generic `-S` session names under multi-agent concurrency (Session Naming).
 
@@ -238,4 +238,4 @@ Do not execute yet; all we want to do is converge on a solid plan.
 
 ## References
 
-N/A — no references/ directory; the veda onboarding doc lives at `~/.pi/agent/docs/veda.md` (external to this skill).
+N/A, no references/ directory; the veda onboarding doc lives at `~/.pi/agent/docs/veda.md` (external to this skill).

@@ -1,6 +1,6 @@
 ---
 name: nim-coding-practices
-description: "Use when authoring or reviewing Nim — NEP-1 2-space/80-col layout, PascalCase/camelCase naming, init/new and abbrev API vocabulary, result-first procs, std/ imports, and --styleCheck plus tests in CI."
+description: "Use when authoring or reviewing Nim, NEP-1 2-space/80-col layout, PascalCase/camelCase naming, init/new and abbrev API vocabulary, result-first procs, std/ imports, and --styleCheck plus tests in CI."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for NEP-1 style learning (from the archived `awesome-guideline
 
 ## Core Principle
 
-Nim library quality is **guessable names + mechanical layout** — PascalCase types, camelCase API, `result` assignments, compiler styleCheck in CI.
+Nim library quality is **guessable names + mechanical layout**, PascalCase types, camelCase API, `result` assignments, compiler styleCheck in CI.
 
 ## When to Use / NOT
 
@@ -19,16 +19,16 @@ Nim library quality is **guessable names + mechanical layout** — PascalCase ty
 
 **NOT when:**
 
-- Generated Nim from c2nim/other translators — validate generators.
-- One-off scripts with local conventions — apply layout/naming lightly.
+- Generated Nim from c2nim/other translators, validate generators.
+- One-off scripts with local conventions, apply layout/naming lightly.
 
 ## Workflow
 
-1. **Layout** — 2-space, 80 cols, multiline breaks (`nim-style-formatting-layout.md`).
-2. **Naming/types** — PascalCase, enums, init/new (`nim-style-naming-types.md`).
-3. **Procedures** — result, let, API verbs (`nim-style-procedures-api.md`).
-4. **Modules/verify** — std imports, styleCheck (`nim-style-modules-verify.md`).
-5. **Verify** — `nim c --styleCheck:error`, tests on changed modules.
+1. **Layout**, 2-space, 80 cols, multiline breaks (`nim-style-formatting-layout.md`).
+2. **Naming/types**, PascalCase, enums, init/new (`nim-style-naming-types.md`).
+3. **Procedures**, result, let, API verbs (`nim-style-procedures-api.md`).
+4. **Modules/verify**, std imports, styleCheck (`nim-style-modules-verify.md`).
+5. **Verify**, `nim c --styleCheck:error`, tests on changed modules.
 
 ## Red Flags
 

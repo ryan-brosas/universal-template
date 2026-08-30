@@ -1,6 +1,6 @@
 ---
 name: javascript-project-practices
-description: "Use when bootstrapping or reviewing JavaScript/Node projects — elsewhen git/PR workflow, README template, env config, lockfiles, feature folders, ESLint/Prettier, REST API conventions, and lighthouse/axe from day one."
+description: "Use when bootstrapping or reviewing JavaScript/Node projects, elsewhen git/PR workflow, README template, env config, lockfiles, feature folders, ESLint/Prettier, REST API conventions, and lighthouse/axe from day one."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for elsewhencode/project-guidelines ingest (`awesome-guideline
 
 ## Core Principle
 
-Maintainable JS projects combine **feature-branch discipline**, **env-driven config**, **feature-folder structure**, **mechanical lint/test gates**, and **REST + a11y conventions from day one** — not bolted on after launch.
+Maintainable JS projects combine **feature-branch discipline**, **env-driven config**, **feature-folder structure**, **mechanical lint/test gates**, and **REST + a11y conventions from day one**, not bolted on after launch.
 
 ## When to Use / NOT
 
@@ -20,16 +20,16 @@ Maintainable JS projects combine **feature-branch discipline**, **env-driven con
 
 **NOT when:**
 
-- Single-file script — minimal `node-coding-practices` only.
-- Non-JS stack — use language-specific practice skill.
-- Deep WCAG audit only — `wcag-accessibility-practices` primary.
+- Single-file script, minimal `node-coding-practices` only.
+- Non-JS stack, use language-specific practice skill.
+- Deep WCAG audit only, `wcag-accessibility-practices` primary.
 
 ## Workflow
 
-1. **Git/docs** — branches, commits, README (`js-project-git-docs.md`).
-2. **Env/deps/test** — secrets, lockfile, colocated tests (`js-project-env-deps-test.md`).
-3. **Structure/style** — folders, ESLint, logging (`js-project-structure-style.md`).
-4. **API/a11y/verify** — REST, security, axe/lighthouse (`js-project-api-a11y-verify.md`).
+1. **Git/docs**, branches, commits, README (`js-project-git-docs.md`).
+2. **Env/deps/test**, secrets, lockfile, colocated tests (`js-project-env-deps-test.md`).
+3. **Structure/style**, folders, ESLint, logging (`js-project-structure-style.md`).
+4. **API/a11y/verify**, REST, security, axe/lighthouse (`js-project-api-a11y-verify.md`).
 
 ## Red Flags
 
@@ -82,7 +82,7 @@ Maintainable JS projects combine **feature-branch discipline**, **env-driven con
 
 ## Related skills
 
-- `git-workflow-and-versioning` — commit/branch conventions
-- `api-design-practices` — REST contract patterns
-- `webappsec-coding-practices` — web security depth
-- `wcag-accessibility-practices` — WCAG 2.1 AA
+- `git-workflow-and-versioning`, commit/branch conventions
+- `api-design-practices`, REST contract patterns
+- `webappsec-coding-practices`, web security depth
+- `wcag-accessibility-practices`, WCAG 2.1 AA

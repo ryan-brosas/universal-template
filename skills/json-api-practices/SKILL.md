@@ -1,6 +1,6 @@
 ---
 name: json-api-practices
-description: "Use when authoring or reviewing JSON API payloads — strict JSON syntax, camelCase properties, string enums, RFC3339 dates, Google-style data/error envelope, and paging reserved names."
+description: "Use when authoring or reviewing JSON API payloads, strict JSON syntax, camelCase properties, string enums, RFC3339 dates, Google-style data/error envelope, and paging reserved names."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for JSON style learning (from the archived `awesome-guidelines
 
 ## Core Principle
 
-JSON APIs are **strict JSON with predictable names and envelopes** — camelCase properties, standard string formats, and a consistent success/error shape when using the Google pattern.
+JSON APIs are **strict JSON with predictable names and envelopes**, camelCase properties, standard string formats, and a consistent success/error shape when using the Google pattern.
 
 ## When to Use / NOT
 
@@ -19,16 +19,16 @@ JSON APIs are **strict JSON with predictable names and envelopes** — camelCase
 
 **NOT when:**
 
-- Non-JSON serialization (Protobuf, MessagePack) — use stack conventions.
-- Internal-only config JSON with project-specific rules — document divergence.
+- Non-JSON serialization (Protobuf, MessagePack), use stack conventions.
+- Internal-only config JSON with project-specific rules, document divergence.
 
 ## Workflow
 
-1. **Syntax** — quotes, camelCase, plural arrays, omit null (`json-style-syntax-properties.md`).
-2. **Types** — enums, dates, durations, geo (`json-style-types-formats.md`).
-3. **Envelope** — apiVersion, data/error, kind/items ordering (`json-style-envelope-errors.md`).
-4. **Maps & paging** — map docs, paging links, ordering (`json-style-maps-paging.md`).
-5. **Verify** — JSON parse + schema/OpenAPI validation on fixtures and samples.
+1. **Syntax**, quotes, camelCase, plural arrays, omit null (`json-style-syntax-properties.md`).
+2. **Types**, enums, dates, durations, geo (`json-style-types-formats.md`).
+3. **Envelope**, apiVersion, data/error, kind/items ordering (`json-style-envelope-errors.md`).
+4. **Maps & paging**, map docs, paging links, ordering (`json-style-maps-paging.md`).
+5. **Verify**, JSON parse + schema/OpenAPI validation on fixtures and samples.
 
 ## Red Flags
 

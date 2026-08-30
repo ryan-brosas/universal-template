@@ -45,8 +45,8 @@ recorded in the PR's Reference / Prior Art section.
 References are normally read-only, local, and disposable. Prefer
 `.git/info/exclude` for local-only references instead of the shared
 `.gitignore`. A reference is never automatically promoted into a skill,
-foundation, index, or corpus — the `code-foundations` promotion rule and
-`foundations-workflow` own the frozen exception path.
+foundation, index, or corpus; the legacy `*-foundation` leaves are frozen in
+`foundation-pack/` and retired over time, and no new foundations are created.
 
 ## License
 

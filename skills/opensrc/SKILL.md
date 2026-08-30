@@ -35,14 +35,14 @@ OpenSrc's first-use setup may edit `.gitignore`, `tsconfig.json`, and `AGENTS.md
 
 ## Common Targets
 
-| Question                | Where                          |
+| Question | Where |
 |-------------------------|--------------------------------|
-| "How does X work?"      | The function's source file     |
-| "Why is X slow?"        | The function + callers + trace |
-| "What is Y's behavior?" | Types + tests + source         |
-| "Is X safe?"            | Audit (eval, exec, fs.write)   |
-| "When was X added?"     | `git log` on the file          |
-| "Known bug?"            | GitHub issues                  |
+| "How does X work?" | The function's source file |
+| "Why is X slow?" | The function + callers + trace |
+| "What is Y's behavior?" | Types + tests + source |
+| "Is X safe?" | Audit (eval, exec, fs.write) |
+| "When was X added?" | `git log` on the file |
+| "Known bug?" | GitHub issues |
 
 ## Red Flags While Reading
 
@@ -63,10 +63,10 @@ Reading source without a question (drift); assuming docs are right (verify); rea
 ## Verification
 
 - Write a tiny test that exercises the behavior in question and confirm you predicted
-  the output before running it (step 6 of the Investigation Workflow).
+ the output before running it (step 6 of the Investigation Workflow).
 - Run the code while reading; do not rely on reading alone.
 - Check the version (`package.json`, `git log`) so the source you read matches the
-  installed behavior.
+ installed behavior.
 
 ## Skill Result Contract
 

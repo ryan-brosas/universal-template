@@ -1,6 +1,6 @@
 ---
 name: october-coding-practices
-description: "Use when authoring or reviewing October CMS plugins/themes — PSR-1/2/4, camelCase/snake_case split, marketplace naming, Rain exceptions, composer -plugin/-theme packages, and semver publish verification."
+description: "Use when authoring or reviewing October CMS plugins/themes, PSR-1/2/4, camelCase/snake_case split, marketplace naming, Rain exceptions, composer -plugin/-theme packages, and semver publish verification."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for October CMS developer guidelines ingest (`awesome-guidelin
 
 ## Core Principle
 
-October maintainability is **PSR layout plus marketplace naming discipline** — camelCase PHP with snake_case at persistence/UI boundaries, consistent plugin codes and table prefixes, Rain exception types, and semver-backed composer packages.
+October maintainability is **PSR layout plus marketplace naming discipline**, camelCase PHP with snake_case at persistence/UI boundaries, consistent plugin codes and table prefixes, Rain exception types, and semver-backed composer packages.
 
 ## When to Use / NOT
 
@@ -20,24 +20,24 @@ October maintainability is **PSR layout plus marketplace naming discipline** —
 
 **NOT when:**
 
-- Non-October PHP — `php-coding-practices`.
-- Other CMS stacks — sibling CMS practice skills.
+- Non-October PHP, `php-coding-practices`.
+- Other CMS stacks, sibling CMS practice skills.
 - Pure Laravel apps without October plugin structure.
-- Client-hosted legacy October 1.x without composer plugins — adapt naming; publishing rules may differ.
+- Client-hosted legacy October 1.x without composer plugins, adapt naming; publishing rules may differ.
 
 ## Workflow
 
-1. **PHP/PSR** — PSR base, camelCase/snake_case, AJAX carve-outs (`october-style-php-psr.md`).
-2. **Naming** — vendor, DB, MVC, views, events (`october-style-naming-patterns.md`).
-3. **Classes/exceptions** — visibility, Rain exceptions (`october-style-class-exceptions.md`).
-4. **Packages/verify** — composer, semver, MySQL strict (`october-style-packages-verify.md`).
+1. **PHP/PSR**, PSR base, camelCase/snake_case, AJAX carve-outs (`october-style-php-psr.md`).
+2. **Naming**, vendor, DB, MVC, views, events (`october-style-naming-patterns.md`).
+3. **Classes/exceptions**, visibility, Rain exceptions (`october-style-class-exceptions.md`).
+4. **Packages/verify**, composer, semver, MySQL strict (`october-style-packages-verify.md`).
 
 ## Red Flags
 
 - Lowercase or dashed vendor/plugin code (`acme.blog`)
 - camelCase DB column conflicting with model property names
 - Boolean DB column without `is_` prefix when clash risk exists
-- Partial view missing leading underscore
+- Partial view missing the leading `_`
 - View not using `.htm` extension
 - Component name colliding with model/controller
 - Event named with `onSomething` instead of before/after semantics
@@ -79,8 +79,8 @@ October maintainability is **PSR layout plus marketplace naming discipline** —
 
 ## Related skills
 
-- `php-coding-practices` — PSR baseline outside October
-- `git-workflow-and-versioning` — semver for published packages
-- `magento-coding-practices` — sibling commerce CMS conventions
-- `drupal-coding-practices` — sibling CMS conventions
-- `wordpress-coding-practices` — sibling CMS conventions
+- `php-coding-practices`, PSR baseline outside October
+- `git-workflow-and-versioning`, semver for published packages
+- `magento-coding-practices`, sibling commerce CMS conventions
+- `drupal-coding-practices`, sibling CMS conventions
+- `wordpress-coding-practices`, sibling CMS conventions

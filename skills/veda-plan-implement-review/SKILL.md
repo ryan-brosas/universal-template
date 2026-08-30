@@ -1,6 +1,6 @@
 ---
 name: veda-plan-implement-review
-description: "Use when you need to plan an approach, execute it, and review the outcome — plan AND implement with the Veda Navigator model, then review the result: align on an approach with Navigator, carry it out, then close with a reviewer pass (fix P0/P1, re-review until pass). Drives `veda -S impl-TASKNAME -m flash -p navigator-plan` to align, implements with native tools, then `-p reviewer`. Navigator has read-only tools only."
+description: "Use when you need to plan an approach, execute it, and review the outcome, plan AND implement with the Veda Navigator model, then review the result: align on an approach with Navigator, carry it out, then close with a reviewer pass (fix P0/P1, re-review until pass). Drives `veda -S impl-TASKNAME -m flash -p navigator-plan` to align, implements with native tools, then `-p reviewer`. Navigator has read-only tools only."
 argument-hint: "[veda-flags]"
 ---
 
@@ -21,14 +21,14 @@ Align → implement → close with a reviewer loop until `review: pass`. Navigat
 4. Fix P0/P1 yourself, regenerate the diff, re-review. Stop at `review: pass` (P2 stays open, non-blocking).
 
 
-## Model routing (authoritative — do not substitute)
+## Model routing (authoritative, do not substitute)
 
 - Load-bearing planning / architecture / high-risk review → `agy --model claude-opus-4-6-thinking --mode plan` (direct `agy` CLI, NOT veda/gemini).
 - Critique / follow-up → `agy --model claude-sonnet-4-6 --mode plan`.
 - Cheap discovery / context curation → `veda` + gemini (`gemini-3.7-flash-*`, `gemini-3.1-pro-low`).
 - `veda deep` (parallel solvers) runs on gemini and is only for "N independent attempts"; the final architecture decision still comes from claude-opus.
 
-## Invocation — veda CLI (confirmed working)
+## Invocation, veda CLI (confirmed working)
 
 Use the veda CLI with **positional** prompts. Default backend/model now fixed in `~/.config/veda/config` (`BACKEND="agy"`, `MODEL="gemini-3.7-flash-high"`):
 
@@ -40,11 +40,11 @@ veda -S impl-<task> -p reviewer '<diff + design contract>'   # review pass (fix 
 
 - Pin explicitly with `-b agy -m gemini-3.7-flash-high` if you ever need to override.
 
-**Do NOT use `agents.run({ runner: "veda", ... })`:** broken with veda-ts 0.75.8 — pi-fabric pipes the prompt to stdin, but veda reads positionals only (`src/cli/validate.ts` throws "No prompt provided"). Use the CLI until pi-fabric fixes the runner.
+**Do NOT use `agents.run({ runner: "veda", ... })`:** broken with veda-ts 0.75.8, pi-fabric pipes the prompt to stdin, but veda reads positionals only (`src/cli/validate.ts` throws "No prompt provided"). Use the CLI until pi-fabric fixes the runner.
 
 ## Your Task
 
-Collaborate, discuss, align, implement, and review with the Navigator model using `veda -S impl-TASKNAME -m flash -p navigator-plan`. First align on the plan with Navigator, then execute it, then close with a reviewer pass. The Navigator has **read-only tools** (`Read`, `Grep`, `Glob`, `LS`, `git status/log/diff`) but cannot edit or run mutating commands — it advises, you implement. You still provide curated context via `veda sel add` so the Navigator can verify your claims against the actual code; selection focuses attention and controls token cost.
+Collaborate, discuss, align, implement, and review with the Navigator model using `veda -S impl-TASKNAME -m flash -p navigator-plan`. First align on the plan with Navigator, then execute it, then close with a reviewer pass. The Navigator has **read-only tools** (`Read`, `Grep`, `Glob`, `LS`, `git status/log/diff`) but cannot edit or run mutating commands, it advises, you implement. You still provide curated context via `veda sel add` so the Navigator can verify your claims against the actual code; selection focuses attention and controls token cost.
 
 **Model:** `flash` is auto-detected by `veda init` from your installed harnesses. If a `-m`/`-b` (or other veda flags) was passed when this skill was invoked, use those instead of `-m flash` in every `veda` command below.
 
@@ -52,7 +52,7 @@ Collaborate, discuss, align, implement, and review with the Navigator model usin
 
 Use `-p navigator-plan` to start, then switch to `-p navigator-chat` for follow-up discussion. Only use `navigator-plan` once per task unless the user instructs otherwise.
 
-**Involve the user when the work genuinely requires them.** Use your `ask_user` tool (or plain questions if unavailable) when the goal is ambiguous, a decision would change scope, cost, or direction, or input only the user can provide. Navigator advises; the user decides. Otherwise, when you have enough information to act, act.
+**Involve the user when the work requires them.** Use your `ask_user` tool (or plain questions if unavailable) when the goal is ambiguous, a decision would change scope, cost, or direction, or input only the user can provide. Navigator advises; the user decides. Otherwise, when you have enough information to act, act.
 
 ### Escaping Backticks in Prompts (Critical)
 
@@ -129,7 +129,7 @@ Think of Navigator as a senior collaborator you're pairing with. Your opening me
 - State the goal and your proposed approach (take a stance; Navigator stress-tests it)
 - Provide evidence anchors: file and section references for your key claims
 - Name constraints and non-goals
-- Ask 1-2 specific questions where you are genuinely uncertain
+- Ask 1-2 specific questions where you are uncertain
 - Invite Navigator to help in any way, especially if you're stuck; a fresh perspective on a dead end is often the breakthrough
 
 Example flow:
@@ -178,7 +178,7 @@ When you write your final summary, write it for a reader who did not see any of 
 ## Review the Result (closing reviewer pass)
 
 After execution, close with a **review-fix loop** using the `-p reviewer`
-persona (no tools — it reviews the diff + selected context + the session's
+persona (no tools, it reviews the diff + selected context + the session's
 `design.json`, auto-attached). Capture the diff into selection, then review
 against the same design Navigator aligned on:
 
@@ -195,12 +195,12 @@ findings and ends with `review: pass` (no P0/P1) or `review: needs-fix`
 (P0/P1 present).
 
 - **`review: needs-fix` with P0/P1 findings** → fix them yourself (you are the
-  implementer in this lane), regenerate the diff, and re-run the reviewer.
+ implementer in this lane), regenerate the diff, and re-run the reviewer.
 - **Review errors on design grounds** → go back to Navigator to revise the
-  design, then re-implement.
+ design, then re-implement.
 - Loop until `review: pass`. P2 findings stay open but do not block.
-- **Don't pipe veda with `2>&1`** — the response goes to stdout, progress to
-  stderr.
+- **Don't pipe veda with `2>&1`**, the response goes to stdout, progress to
+ stderr.
 
 ## Reminders
 
@@ -237,4 +237,4 @@ The diff is in selection (`sel ls` shows it); the reviewer ends with `review: pa
 
 ## References
 
-No reference capsules — the skill is self-contained.
+No reference capsules, the skill is self-contained.

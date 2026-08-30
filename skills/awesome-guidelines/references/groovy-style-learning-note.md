@@ -9,7 +9,7 @@
 | [Apache Groovy style guide](https://groovy-lang.org/style-guide.html) (primary) | no semicolons; optional return; no redundant `def`+type; omit `public`; parenless calls; POGO properties; named ctor params; `with`/`tap`; `==` vs `is()`; GStrings; native list/map/range/regex; GDK iterators; switch power; safe nav `?.`; Groovy truth; Elvis; assert; public API strong typing |
 | [CodeNarc convention rules](https://codenarc.org/codenarc-rules-convention.html) (secondary) | `@CompileStatic` in performance libs; require method/field types in strict trees; no tab; ordering public-before-private |
 
-**Not duplicated here:** Full Grails CodeNarc ruleset — enable project-relevant rules. Gradle plugin wiring — follow stack foundations.
+**Not duplicated here:** Full Grails CodeNarc ruleset — enable project-relevant rules. Gradle plugin wiring — follow stack capsules in `foundation-pack/`.
 
 ## Mental model
 

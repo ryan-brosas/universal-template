@@ -4,18 +4,18 @@ disable-model-invocation: true
 description: "Use when the user asks for news, headlines, or recent coverage of a topic. Google News via CDP returns title, URL, source, time, and snippet, linking the publisher direct URL. Requires browser-harness-js on PATH and a Chromium browser with remote debugging."
 setup: bash <skill-dir>/scripts/setup
 compatibility: >-
-  Requires browser-harness-js on PATH and a running Chromium browser with
-  remote debugging (chrome://inspect or --remote-debugging-port). No API key,
-  no account.
+ Requires browser-harness-js on PATH and a running Chromium browser with
+ remote debugging (chrome://inspect or --remote-debugging-port). No API key,
+ no account.
 ---
 
 # Google News
 
 Search Google News and extract structured results via CDP. Hits Google Search's
-news tab (`tbm=nws`) through the user's own browser, so the rendered page — not a
-raw fetch — drives the extraction. No external dependencies beyond
+news tab (`tbm=nws`) through the user's own browser, so the rendered page, not a
+raw fetch, drives the extraction. No external dependencies beyond
 `browser-harness-js` (which provides the CDP session). Each call opens its own
-tab with a per-call `sessionId` — safe for parallel use.
+tab with a per-call `sessionId`, safe for parallel use.
 
 ## Core Principle
 
@@ -23,15 +23,15 @@ The rendered page drives extraction: hit Google Search's news tab (`tbm=nws`) th
 
 ## When to Use / NOT
 
-**Use** — when the user asks for news, headlines, or recent coverage of a topic.
+**Use**, when the user asks for news, headlines, or recent coverage of a topic.
 
-**NOT** — when more than ~10–15 results per query are needed (the news tab does not paginate); when the article body is needed (open the result `url` via the "Following a result link" recipe instead).
+**NOT**, when more than ~10–15 results per query are needed (the news tab does not paginate); when the article body is needed (open the result `url` via the "Following a result link" recipe instead).
 
 ## Workflow
 
 1. Run `gnews "<query>" [count]` (pretty) or `gnews --json "<query>" [count]`.
-2. Read `{ title, url, source, snippet, time }` — `url` is the publisher's direct link, not a `news.google.com` redirect wrapper.
-3. Parallelize independent queries — each call attaches to its own tab with a per-call `sessionId`.
+2. Read `{ title, url, source, snippet, time }`, `url` is the publisher's direct link, not a `news.google.com` redirect wrapper.
+3. Parallelize independent queries, each call attaches to its own tab with a per-call `sessionId`.
 4. To read an article, open its `url` with the "Following a result link" recipe.
 
 ## Quick search
@@ -44,7 +44,7 @@ gnews --json "your query" 3   # raw JSON
 
 ## Parallel use
 
-Each `gnews` call reuses the shared WebSocket but attaches to its own tab with a per-call `sessionId`. Tab-specific CDP calls go through `cdp(sessionId, method, params)`. Multiple calls can run concurrently without interfering — no `activeSessionId` clobbering, no tab trampling, no event cross-fire. Tabs are closed fire-and-forget via `Target.closeTarget` so the caller isn't blocked waiting for cleanup.
+Each `gnews` call reuses the shared WebSocket but attaches to its own tab with a per-call `sessionId`. Tab-specific CDP calls go through `cdp(sessionId, method, params)`. Multiple calls can run concurrently without interfering, no `activeSessionId` clobbering, no tab trampling, no event cross-fire. Tabs are closed fire-and-forget via `Target.closeTarget` so the caller isn't blocked waiting for cleanup.
 
 ```bash
 gnews "rust async" 3 &
@@ -68,13 +68,13 @@ Each result is `{ title, url, source, snippet, time }`:
 ]
 ```
 
-The `url` is the **publisher's direct link** — `tbm=nws` returns the real article URL, not a `news.google.com/articles/<id>` redirect wrapper. `snippet` is empty on cards Google renders without a description; `time` is Google's relative-time string (e.g. `2 hours ago`), in the browser's UI locale.
+The `url` is the **publisher's direct link**, `tbm=nws` returns the real article URL, not a `news.google.com/articles/<id>` redirect wrapper. `snippet` is empty on cards Google renders without a description; `time` is Google's relative-time string (e.g. `2 hours ago`), in the browser's UI locale.
 
 `--json` mode always emits valid JSON: a 0-result query returns `[]` (the script stringifies the array itself rather than returning it, so the REPL's empty-array-to-`''` rendering can't produce a non-JSON payload for `jq` / `JSON.parse` callers).
 
 ## Following a result link
 
-Open a result `url` directly through `browser-harness-js` — no need to re-search. Same connect/create-tab/evaluate flow as ad-hoc search, but navigate to the article and extract page text:
+Open a result `url` directly through `browser-harness-js`, no need to re-search. Same connect/create-tab/evaluate flow as ad-hoc search, but navigate to the article and extract page text:
 
 ```bash
 browser-harness-js <<'EOF'
@@ -108,10 +108,10 @@ EOF
 ```
 
 - `article, main` skips nav/footer chrome; `document.body.innerText` is the fallback.
-- **Wait strategy.** The example waits for `networkIdle` (500ms of no in-flight network requests) — the right default for content pages: it fires after `load` so it returns at least as much content, and it isn't blocked by hanging ad/analytics beacons the way `loadEventFired` is. Alternatives for specific page types:
-  - `networkAlmostIdle` (250ms quiet window) — for pages with continuous XHR polling that never reach the full 500ms.
-  - `loadEventFired` — when you genuinely need every subresource loaded (rare for text extraction).
-  - A short post-ready `await new Promise(r => setTimeout(r, 1000))` before the evaluate — for pages that lazy-render content *after* `networkIdle` (e.g. SPA hydration, lazy image packs). Many publisher sites lazy-load the article body, so this 1s pad is often worth adding here.
+- **Wait strategy.** The example waits for `networkIdle` (500ms of no in-flight network requests), the right default for content pages: it fires after `load` so it returns at least as much content, and it isn't blocked by hanging ad/analytics beacons the way `loadEventFired` is. Alternatives for specific page types:
+ - `networkAlmostIdle` (250ms quiet window), for pages with continuous XHR polling that never reach the full 500ms.
+ - `loadEventFired`, when you need every subresource loaded (rare for text extraction).
+ - A short post-ready `await new Promise(r => setTimeout(r, 1000))` before the evaluate, for pages that lazy-render content *after* `networkIdle` (e.g. SPA hydration, lazy image packs). Many publisher sites lazy-load the article body, so this 1s pad is often worth adding here.
 
 ## Ad-hoc search without the script
 
@@ -172,20 +172,20 @@ EOF
 | 2 | `Target.createTarget({ background: true })` | Create an isolated background tab |
 | 3 | `Target.attachToTarget` | Get per-call `sessionId` for tab-scoped routing |
 | 4 | `cdp(sessionId, "Page.enable", …)` | Subscribe to page events |
-| 5 | `cdp(sessionId, "Page.setLifecycleEventsEnabled", …)` | Enable lifecycle events — `networkIdle` won't fire without this |
+| 5 | `cdp(sessionId, "Page.setLifecycleEventsEnabled", …)` | Enable lifecycle events, `networkIdle` won't fire without this |
 | 6 | `session.waitFor('Page.lifecycleEvent' networkIdle)` armed BEFORE `cdp(sessionId, "Page.navigate", …)` | Race fix: arm the `networkIdle` wait before navigate (kills the load-already-fired race), then go to `google.com/search?q=…&tbm=nws&num=N` (URI-encoded via `encodeURIComponent` in JS) |
 | 7 | `cdp(sessionId, "Runtime.evaluate", …)` | Single DOM query extracts all results |
 | 8 | `closeTab` (fire-and-forget) | Tear down tab without blocking the response |
 
-Each call takes ~2–3s (dominated by the `networkIdle` wait). The shared WebSocket means no repeated permission popups. URI encoding and output formatting happen in JS — no `jq` dependency.
+Each call takes ~2–3s (dominated by the `networkIdle` wait). The shared WebSocket means no repeated permission popups. URI encoding and output formatting happen in JS, no `jq` dependency.
 
 ## Why `tbm=nws` (the news tab) over `news.google.com`
 
-The dedicated Google News app (`news.google.com/search?q=…`) is a heavy React SPA whose result links are wrapped in a `news.google.com/articles/<id>` redirect — to get the real publisher URL you must follow each redirect. Google Search's news tab (`google.com/search?…&tbm=nws`) is the *same* Google News vertical but served from the classic results host: it renders with the same lifecycle as a normal search (so `networkIdle` works the same way gsearch uses it), and each result's `href` is the **publisher's direct URL**. That is why `gnews` targets `tbm=nws`: less SPA hydration, no redirect wrapper, and the same navigate-and-wait shape as `gsearch`.
+The dedicated Google News app (`news.google.com/search?q=…`) is a heavy React SPA whose result links are wrapped in a `news.google.com/articles/<id>` redirect, to get the real publisher URL you must follow each redirect. Google Search's news tab (`google.com/search?…&tbm=nws`) is the *same* Google News vertical but served from the classic results host: it renders with the same lifecycle as a normal search (so `networkIdle` works the same way gsearch uses it), and each result's `href` is the **publisher's direct URL**. That is why `gnews` targets `tbm=nws`: less SPA hydration, no redirect wrapper, and the same navigate-and-wait shape as `gsearch`.
 
 ## Why `Runtime.evaluate` over the accessibility tree
 
-Like `gsearch`, a single `Runtime.evaluate` with `querySelectorAll` returns all results in one CDP call (~5ms), far cheaper than walking Google's 1000+ node AX tree with per-node parent lookups. The extraction deliberately avoids Google's obfuscated class names (`WlydOe`, `sjVJQd`, …), which churn: it keeps `<a>` anchors that (a) contain a `div[role=heading]` and (b) link off-Google — both structural, not class-based, so a class rename won't break it.
+Like `gsearch`, a single `Runtime.evaluate` with `querySelectorAll` returns all results in one CDP call (~5ms), far cheaper than walking Google's 1000+ node AX tree with per-node parent lookups. The extraction deliberately avoids Google's obfuscated class names (`WlydOe`, `sjVJQd`, …), which churn: it keeps `<a>` anchors that (a) contain a `div[role=heading]` and (b) link off-Google, both structural, not class-based, so a class rename won't break it.
 
 ## Parsing the card text
 
@@ -199,26 +199,26 @@ Each result card's `innerText` reads, line by line:
 <time>
 ```
 
-The title is read from `div[role=heading]` (a stable semantic hook). The standalone `.` line is Google's separator between the snippet and the trailing relative time — it's present only when the card has a snippet, so the parser splits on it: text before it is the snippet, text after is the time. Cards with no snippet are just `source / title / time`.
+The title is read from `div[role=heading]` (a stable semantic hook). The standalone `.` line is Google's separator between the snippet and the trailing relative time, it's present only when the card has a snippet, so the parser splits on it: text before it is the snippet, text after is the time. Cards with no snippet are just `source / title / time`.
 
 ## No `jq` dependency
 
-URI encoding uses `encodeURIComponent()` in JS and output formatting is done via `.map().join()` in the heredoc. The raw query is injected into a **quoted** heredoc as a `__GNEWS_QUERY__` placeholder and rewritten by `node` with `JSON.stringify` — so `&`, `$`, backticks, quotes, and non-ASCII in the query need no manual escaping, and the function-replacement (`c.replace(/__X__/g, () => JSON.stringify(v))`) dodges the `&`/`$` semantics that bash `${var//}` and JS `String.replace` both apply to plain replacement strings. The REPL's `renderResult` passes string returns through raw — no JSON wrapping — so bash just prints.
+URI encoding uses `encodeURIComponent()` in JS and output formatting is done via `.map().join()` in the heredoc. The raw query is injected into a **quoted** heredoc as a `__GNEWS_QUERY__` placeholder and rewritten by `node` with `JSON.stringify`. Nothing in the query needs manual escaping then: `&`, `$`, backticks, quotes, and non-ASCII are safe. The function-replacement (`c.replace(/__X__/g, () => JSON.stringify(v))`) dodges the `&`/`$` semantics that bash `${var//}` and JS `String.replace` both apply to plain replacement strings. The REPL's `renderResult` passes string returns through raw, no JSON wrapping, so bash just prints.
 
 ## Red Flags
 
-- **Tab cleanup uses `try/finally` with fire-and-forget `closeTab`** — `closeTab` does `window.close()` + `Target.closeTarget` for thorough cleanup, wrapped in `finally` so it runs even on errors. The call is not awaited so it doesn't block the response. Under rapid parallel calls the close operations serialize in the session's `closeQueue`, but they don't block results.
-- **`Page.enable()` AND `Page.setLifecycleEventsEnabled({ enabled: true })` must both be called** on each new tab. The latter is required for Chrome to emit any `Page.lifecycleEvent` — without it, the `networkIdle` wait times out every time.
-- **`networkIdle` wait has a 30s timeout** — uses `session.waitFor()` instead of a raw promise, so a hung page doesn't leak the tab. The news tab is plain server-rendered HTML, so `networkIdle` fires reliably; if a regional variant polls forever, see `networkAlmostIdle` under "Following a result link".
-- **The news tab does not paginate.** It returns roughly 10–15 results per page and ignores `num=` above that. Requesting `gnews "q" 30` returns whatever the page loaded (capped at your `count` in JS), not 30 — there is no next-page fetch.
-- **Result count may be less than requested** — Google sometimes returns fewer results than `num=`, and breaking-news queries can return 0 on a slow cycle.
-- **Google may serve a consent/cookie wall** in some regions — this returns 0 results. Check with a screenshot if results come back empty.
-- **Titles are not `<h3>` on the news tab** — unlike the classic search results (`gsearch`), news results put the title in a `<div role="heading">`. The extraction keys off `role=heading`, not `h3`.
-- **Multi-statement heredocs need `return`** — `browser-harness-js` auto-returns single expressions only.
+- **Tab cleanup uses `try/finally` with fire-and-forget `closeTab`**, `closeTab` does `window.close()` + `Target.closeTarget` for thorough cleanup, wrapped in `finally` so it runs even on errors. The call is not awaited so it doesn't block the response. Under rapid parallel calls the close operations serialize in the session's `closeQueue`, but they don't block results.
+- **`Page.enable()` AND `Page.setLifecycleEventsEnabled({ enabled: true })` must both be called** on each new tab. The latter is required for Chrome to emit any `Page.lifecycleEvent`, without it, the `networkIdle` wait times out every time.
+- **`networkIdle` wait has a 30s timeout**, uses `session.waitFor()` instead of a raw promise, so a hung page doesn't leak the tab. The news tab is plain server-rendered HTML, so `networkIdle` fires reliably; if a regional variant polls forever, see `networkAlmostIdle` under "Following a result link".
+- **The news tab does not paginate.** It returns roughly 10–15 results per page and ignores `num=` above that. Requesting `gnews "q" 30` returns whatever the page loaded (capped at your `count` in JS), not 30, there is no next-page fetch.
+- **Result count may be less than requested**, Google sometimes returns fewer results than `num=`, and breaking-news queries can return 0 on a slow cycle.
+- **Google may serve a consent/cookie wall** in some regions, this returns 0 results. Check with a screenshot if results come back empty.
+- **Titles are not `<h3>` on the news tab**, unlike the classic search results (`gsearch`), news results put the title in a `<div role="heading">`. The extraction keys off `role=heading`, not `h3`.
+- **Multi-statement heredocs need `return`**, `browser-harness-js` auto-returns single expressions only.
 
 ## Verification
 
-`--json` mode always emits valid JSON — a 0-result query returns `[]`. Confirm each `url` is the publisher's direct link, not a `news.google.com/articles/<id>` wrapper. If results come back empty, check with a screenshot for a consent/cookie wall before concluding there is no coverage.
+`--json` mode always emits valid JSON, a 0-result query returns `[]`. Confirm each `url` is the publisher's direct link, not a `news.google.com/articles/<id>` wrapper. If results come back empty, check with a screenshot for a consent/cookie wall before concluding there is no coverage.
 
 ## Skill Result Contract
 
@@ -234,4 +234,4 @@ URI encoding uses `encodeURIComponent()` in JS and output formatting is done via
 
 ## References
 
-N/A — no reference files; the CDP recipes and traps are inline in this skill.
+N/A, no reference files; the CDP recipes and traps are inline in this skill.

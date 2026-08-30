@@ -1,16 +1,16 @@
 ---
 name: swift-coding-practices
-description: "Use when authoring or reviewing Swift — let/guard/optionals, explicit access, struct/final defaults, API naming fluency, argument labels, defaulted parameters, and documentation summaries."
+description: "Use when authoring or reviewing Swift, let/guard/optionals, explicit access, struct/final defaults, API naming fluency, argument labels, defaulted parameters, and documentation summaries."
 disable-model-invocation: true
 ---
 
 # Swift Coding Practices
 
-Application skill for Swift style learning (from the archived `awesome-guidelines` style capsules). For SwiftUI/UIKit/SPM layout, load stack foundations.
+Application skill for Swift style learning (from the archived `awesome-guidelines` style capsules). For SwiftUI/UIKit/SPM layout, load stack capsules in `foundation-pack/`.
 
 ## Core Principle
 
-Swift readability is **clarity at the point of use** — safe bindings, fluent names, grammatical argument labels, documented declarations.
+Swift readability is **clarity at the point of use**, safe bindings, fluent names, grammatical argument labels, documented declarations.
 
 ## When to Use / NOT
 
@@ -20,16 +20,16 @@ Swift readability is **clarity at the point of use** — safe bindings, fluent n
 **NOT when:**
 
 - Non-Swift code.
-- Generated Xcode project stubs — validate generators instead.
-- Apple platform HIG-only UI — use platform foundation.
+- Generated Xcode project stubs, validate generators instead.
+- Apple platform HIG-only UI, use platform foundation.
 
 ## Workflow
 
-1. **Safety & access** — let, guard, optionals, struct/final (`swift-style-formatting-safety.md`).
-2. **Naming** — roles, fluency, mutating pairs (`swift-style-naming-api.md`).
-3. **Labels** — argument labels, defaults (`swift-style-argument-labels.md`).
-4. **Docs & types** — summaries, methods vs functions (`swift-style-documentation-types.md`).
-5. **Verify** — SwiftLint/SwiftFormat + `swift build` / `xcodebuild test` on changed targets.
+1. **Safety & access**, let, guard, optionals, struct/final (`swift-style-formatting-safety.md`).
+2. **Naming**, roles, fluency, mutating pairs (`swift-style-naming-api.md`).
+3. **Labels**, argument labels, defaults (`swift-style-argument-labels.md`).
+4. **Docs & types**, summaries, methods vs functions (`swift-style-documentation-types.md`).
+5. **Verify**, SwiftLint/SwiftFormat + `swift build` / `xcodebuild test` on changed targets.
 
 ## Red Flags
 

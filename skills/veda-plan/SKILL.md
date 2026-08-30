@@ -1,28 +1,41 @@
 ---
 name: veda-plan
-description: Big-model planning lane. Produce an implementation-ready Architect plan + program design (design.json), then complete a self-contained HTML design doc (devdocs/designs/) as the durable driver-facing deliverable. Uses navigator-plan for architect inputs. No implementation, no review. Use when the user wants a plan/design produced, not code written.
+description: Use when the user wants a plan/design produced, not code written: an implementation-ready Architect plan + program design (design.json), then a self-contained HTML design doc (designs/) as the driver-facing deliverable. Uses navigator-plan for architect inputs. No implementation, no review.
 argument-hint: "[veda-flags]"
 ---
 
-## Your Task
+## Core Principle
+
+Produce the best plan, not the code: the deliverable is the design and the
+decision. Driver-facing output only; do not start implementing.
+
+## When to Use / NOT
+
+- **Use when:** the user asks for a plan or design (a produce-plan request).
+- **NOT when:** the request is execution, which routes to the normal
+  development loop, not this plan lane.
+
+## Workflow
+
+Your task:
 
 Produce a planning deliverable and persist it as a durable design artifact.
-You do **not** implement, patch, or review code — this lane ends at the plan.
+You do **not** implement, patch, or review code, this lane ends at the plan.
 
 Two artifacts come out of this lane:
 
-1. **`design.json` — the machine contract (unchanged).** The structured
-   program design the worker implements and the reviewer auto-attaches. Write
-   it to the session dir (project-local `.veda/sessions/<SESSION>/design.json`
-   inside a git repo, else `~/.config/veda/sessions/`). Its shape is the veda
-   `<program>` schema: `intent`, `layout`, `context`, `types`, `signatures`,
-   `callstacks`, `invariants`.
-2. **A self-contained HTML design doc — the durable, driver-facing summary.**
-   Fuse the plan + design into one antirez-style HTML doc and write it to
-   `devdocs/designs/{topic-slug}.html`. This is what the driver re-reads,
-   hands to an agent, and uses to reason about the design without reading
-   code. It is a summary artifact the **driver completes**; it never replaces
-   `design.json`, which stays the machine contract.
+1. **`design.json`, the machine contract (unchanged).** The structured
+ program design the worker implements and the reviewer auto-attaches. Write
+ it to the session dir (project-local `.veda/sessions/<SESSION>/design.json`
+ inside a git repo, else `~/.config/veda/sessions/`). Its shape is the veda
+ `<program>` schema: `intent`, `layout`, `context`, `types`, `signatures`,
+ `callstacks`, `invariants`.
+2. **A self-contained HTML design doc, the durable, driver-facing summary.**
+ Fuse the plan + design into one antirez-style HTML doc and write it to
+ `devdocs/designs/{topic-slug}.html`. This is what the driver re-reads,
+ hands to an agent, and uses to reason about the design without reading
+ code. It is a summary artifact the **driver completes**; it never replaces
+ `design.json`, which stays the machine contract.
 
 Get the architect inputs from the Navigator model: it carries the Architect
 plan + program-design persona. Drive it (or plan yourself and validate with
@@ -50,7 +63,7 @@ veda -S plan-launch-doc -m gpt-5.6-sol ...       # Drafting a launch document
 
 ## Setting Context (Critical)
 
-You must run `veda sel add` before sending prompts — this is how Navigator
+You must run `veda sel add` before sending prompts, this is how Navigator
 sees the code and materials. Any text file works.
 
 ```bash
@@ -66,8 +79,8 @@ causal timeline, data you collected.
 ## Collaborating with Navigator (Architect)
 
 Commit to a position, don't ask open-ended. The Navigator produces the
-Architect-style output — Summary, Current-state analysis, Design, File-by-file
-impact, Risks, Implementation order — **plus** the `<program>` design block.
+Architect-style output, Summary, Current-state analysis, Design, File-by-file
+impact, Risks, Implementation order, **plus** the `<program>` design block.
 
 ```bash
 # 1. Set the context
@@ -94,18 +107,36 @@ veda -S plan-auth-refactor -m gpt-5.6-sol resume "What about edge case X?"
 veda -S plan-auth-refactor -m gpt-5.6-sol -p navigator-chat "What about edge case X?"
 ```
 
-**Involve the user when the work genuinely requires them** (`ask_user`):
+**Involve the user when the work requires them** (`ask_user`):
 ambiguous goal, a decision that changes scope/cost/direction, or input only
 the user can provide. Navigator advises; the user decides.
+
+## Red Flags
+
+- Executing the plan instead of delivering it: this lane produces a
+  design and a decision, not code.
+- Drifting from the user's ask: the prompt must carry the original\
+  wording, not a paraphrase.
+
+## Verification
+
+- The plan answers the user's ask verbatim, with explicit decisions, and
+  the design sanitizer covers the routes it names.
+- The HTML design doc renders standalone; no unresolved TODOs or drift
+  between plan and doc.
+
+## References
+
+- `~/.pi/agent/docs/veda.md`: Veda CLI and session docs (external).
 
 ## Deliver
 
 When the plan + design are aligned:
 
-1. **Write `design.json`** to the session dir (`$PROJECT_ROOT/.veda/sessions/<SESSION>/design.json`, create the dir if needed). `PROJECT_ROOT="$(git rev-parse --show-toplevel)"`. This is the machine contract — keep it exactly per the `<program>` schema, unchanged in purpose.
+1. **Write `design.json`** to the session dir (`$PROJECT_ROOT/.veda/sessions/<SESSION>/design.json`, create the dir if needed). `PROJECT_ROOT="$(git rev-parse --show-toplevel)"`. This is the machine contract, keep it exactly per the `<program>` schema, unchanged in purpose.
 2. **Complete the HTML design doc** at `devdocs/designs/{topic-slug}.html` (create `devdocs/designs/` if absent). Make it self-contained (inline CSS, inline SVG diagrams, no external stylesheets/JS/fonts/CDN) and cover: how things work today, the problem/failure mode, goals/non-goals, the design mechanism, primitives & data model, invariants, verification (executable "done"), tradeoffs, and a TL;DR. The driver completes and owns this doc; the doc summarizes the design, and `design.json` remains the source the worker/reviewer use.
 
-Escaping backticks: use single quotes for prompts containing backticks — double quotes let bash evaluate them as command substitution. **Don't pipe veda with `2>&1`** — the response goes to stdout, progress/trace to stderr; capture stdout alone or `-o file.md`.
+Escaping backticks: use single quotes for prompts containing backticks, double quotes let bash evaluate them as command substitution. **Don't pipe veda with `2>&1`**, the response goes to stdout, progress/trace to stderr; capture stdout alone or `-o file.md`.
 
 ## Reminders
 

@@ -9,7 +9,7 @@
 | [Google JavaScript Style Guide](https://google.github.io/styleguide/jsguide.html) | 2-space indent, 80 cols, semicolons, `const`/`let`, named exports only, `.js` in import paths, no mutable exports, `===` (+ `== null`), no `eval`/`with`, JSDoc on public API, K&R braces |
 | [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript) | ESLint-aligned rules: `prefer-const`, `eqeqeq`, no mutable exports, trailing commas, object spread, explicit string/number comparisons vs boolean shortcuts, semicolons/ASI hazards, no `var` |
 
-**Not duplicated here:** TypeScript domain modeling — `typescript-coding-standards`. React/component patterns — `react-foundation`. HTML/CSS — `frontend-markup-practices`.
+**Not duplicated here:** TypeScript domain modeling — `typescript-coding-standards`. React/component patterns — `foundation-pack/react-foundation`. HTML/CSS — `frontend-markup-practices`.
 
 ## Mental model
 

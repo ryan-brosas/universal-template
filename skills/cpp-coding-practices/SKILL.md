@@ -1,6 +1,6 @@
 ---
 name: cpp-coding-practices
-description: "Use when authoring or reviewing C++ — self-contained headers, IWYU, PascalCase/snake_case naming, unique_ptr ownership, RAII, explicit conversions, and clang-format/cpplint in CI."
+description: "Use when authoring or reviewing C++, self-contained headers, IWYU, PascalCase/snake_case naming, unique_ptr ownership, RAII, explicit conversions, and clang-format/cpplint in CI."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for C++ style learning (from the archived `awesome-guidelines`
 
 ## Core Principle
 
-C++ quality is **header discipline + explicit ownership + readable names** — power features only when the call site stays obvious to the next reader.
+C++ quality is **header discipline + explicit ownership + readable names**, power features only when the call site stays obvious to the next reader.
 
 ## When to Use / NOT
 
@@ -19,16 +19,16 @@ C++ quality is **header discipline + explicit ownership + readable names** — p
 
 **NOT when:**
 
-- C code — use C-specific guides when ingested.
-- Generated protobuf/grpc stubs — validate generators, not hand-edits.
+- C code, use C-specific guides when ingested.
+- Generated protobuf/grpc stubs, validate generators, not hand-edits.
 
 ## Workflow
 
-1. **Headers & format** — guards, IWYU, 2-space layout (`cpp-style-formatting-headers.md`).
-2. **Naming** — PascalCase types/functions, snake_case data, `k` constants (`cpp-style-naming-types.md`).
-3. **Ownership** — `unique_ptr`, RAII, no naked new/delete (`cpp-style-ownership-raii.md`).
-4. **Classes/API** — explicit ctors, struct vs class, short functions (`cpp-style-classes-api.md`).
-5. **Verify** — clang-format, IWYU, cpplint/clang-tidy on changed translation units.
+1. **Headers & format**, guards, IWYU, 2-space layout (`cpp-style-formatting-headers.md`).
+2. **Naming**, PascalCase types/functions, snake_case data, `k` constants (`cpp-style-naming-types.md`).
+3. **Ownership**, `unique_ptr`, RAII, no naked new/delete (`cpp-style-ownership-raii.md`).
+4. **Classes/API**, explicit ctors, struct vs class, short functions (`cpp-style-classes-api.md`).
+5. **Verify**, clang-format, IWYU, cpplint/clang-tidy on changed translation units.
 
 ## Red Flags
 

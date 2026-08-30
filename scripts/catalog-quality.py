@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
-"""Catalog quality gate - anti-slop structure plus the context-budget report.
+# noinspection LSPLocalInspectionTool
+"""Catalog quality gate: structure checks and the context-budget report.
 
-Checks (hard failures exit 1):
-- every skill dir has SKILL.md; name matches folder; no duplicate names
-- essentials present and indexed in essentials/README.md
-- templates inventory matches templates/ on disk
-- visibility policy: *-foundation hidden by default, entry skills visible,
-  internal helpers hidden (invocation-ownership model)
-- context budget: visible skill metadata vs the recorded baseline; growth is a
-  warning, growth beyond GROWTH_FAIL is an error until the baseline is updated
-  deliberately via --update-baseline
+These checks fail (exit 1) when:
+- a skill directory lacks `SKILL.md`, the name does not match, or names repeat;
+- the essentials are missing or not indexed in `essentials/README.md`;
+- the templates inventory does not match `templates/` on disk;
+- a visible skill stays unclassified;
+- visible metadata grows beyond the recorded baseline; a deliberate
+  refresh with the update-baseline flag resets it.
 
-Warnings print but do not fail.
+Warnings print without failing.
 """
 from __future__ import annotations
 
@@ -20,6 +19,7 @@ import re
 import sys
 from datetime import date
 from pathlib import Path
+from typing import Dict, List, Optional, Set
 
 BASE = Path(__file__).resolve().parents[1]
 SKILLS = BASE / "skills"
@@ -35,15 +35,15 @@ TOKEN_CHARS = 4            # documented rough estimator; trend metric only
 # Invocation-ownership classification (validator-side policy; hosts only read
 # disable-model-invocation). Every visible skill must carry an explicit class:
 # entry (a user request selects it directly), router (automatic dispatch point),
-# or vendor (externally managed). Hidden skills default to cold (searchable
+# or vendor (externally managed). Hidden skills are cold by default (searchable
 # specialist knowledge) unless listed as internal (another skill/system invokes
-# them) — foundations are always cold.
+# them).
 ENTRY_SKILLS = {
     # flow entries
     "project-bootstrap", "brainstorming", "goal-setup", "prototype",
     "leverage-capture", "reference-driven-development",
     "using-git-worktrees", "zoom-out",
-    # github / delivery
+    # GitHub / delivery
     "github-repo-setup", "github-actions-engineering", "push-pr",
     "git-workflow-and-versioning", "github-contribution-opportunities",
     # engineering procedures
@@ -56,8 +56,8 @@ ENTRY_SKILLS = {
     # discovery
     "skill-catalog",
     # tool / runtime capabilities (frequent-in-coding tools only; rare
-    # utilities stay cold and searchable: findata, gmaps, gnews, rsearch,
-    # xsearch, ttdl, ytdl, gemini-large-context)
+    # utilities stay cold and searchable: `findata`, `gmaps`, `gnews`,
+    # `rsearch`, `xsearch`, `ttdl`, `ytdl`, `gemini-large-context`)
     "cdp", "gsearch", "web-reference",
     "upwork-proposals", "omarchy", "math-schema",
     "mcp-steroid",
@@ -66,10 +66,9 @@ ENTRY_SKILLS = {
 ROUTER_SKILLS = {
     "evidence-router", "execution-router",
 }
-# Internally invoked mechanics: never startup metadata.
+# Internally invoked mechanics: never in model start-up metadata.
 INTERNAL_SKILLS = {
     "model-resolution", "veda-lane", "fabric-native-execution",
-    "code-foundations", "foundations-workflow",
     "code-discipline", "agent-code-quality-gate",
     "code-review-and-quality", "quality-gate-methodology",
     "test-driven-development", "source-driven-development",
@@ -85,10 +84,8 @@ VENDOR_SKILLS = {
 }
 
 
-def classify(folder: str, hidden: bool) -> str | None:
+def classify(folder: str, hidden: bool) -> Optional[str]:
     """Mechanical class for a skill (None = unclassified)."""
-    if folder.endswith("-foundation"):
-        return "cold"
     if folder in VENDOR_SKILLS:
         return "vendor"
     if not hidden:
@@ -98,11 +95,9 @@ def classify(folder: str, hidden: bool) -> str | None:
             return "entry"
         return None
     return "internal" if folder in INTERNAL_SKILLS else "cold"
-# Foundations are cold prior-art capsules: hidden unless explicitly allowlisted.
-FOUNDATION_ALLOWLIST: set[str] = set()
 
-errors: list[str] = []
-warnings: list[str] = []
+errors: List[str] = []
+warnings: List[str] = []
 
 ESSENTIAL_FILES = [
     "operating-philosophy.md",
@@ -116,14 +111,14 @@ ESSENTIAL_FILES = [
 ]
 
 
-def parse_frontmatter(text: str) -> dict[str, str]:
+def parse_frontmatter(text: str) -> Dict[str, str]:
     if not text.startswith("---"):
         return {}
     end = text.find("\n---", 3)
     if end == -1:
         return {}
     raw = text[4:end] if text.startswith("---\n") else text[3:end]
-    fm: dict[str, str] = {}
+    fm: Dict[str, str] = {}
     lines = raw.splitlines()
     i = 0
     while i < len(lines):
@@ -133,7 +128,7 @@ def parse_frontmatter(text: str) -> dict[str, str]:
             continue
         key, val = m.group(1), m.group(2).strip()
         j = i + 1
-        extra: list[str] = []
+        extra: List[str] = []
         while j < len(lines) and not re.match(r"^[A-Za-z0-9_-]+:\s*", lines[j]):
             extra.append(lines[j])
             j += 1
@@ -145,8 +140,8 @@ def parse_frontmatter(text: str) -> dict[str, str]:
     return fm
 
 
-def git_ignored_dirs(root: Path) -> set[str]:
-    """Skill dirs ignored by git on this machine (machine-local skills).
+def git_ignored_dirs(root: Path) -> Set[str]:
+    """Skill directories ignored by git on this machine (machine-local skills).
 
     The budget, the baseline, and the generated catalogs must all measure the
     tracked set: a clean CI checkout has to reproduce every number. Local
@@ -167,8 +162,8 @@ def git_ignored_dirs(root: Path) -> set[str]:
         return set()
 
 
-def collect_skills(skills_dir: Path = SKILLS) -> dict[str, dict]:
-    skills: dict[str, dict] = {}
+def collect_skills(skills_dir: Path = SKILLS) -> Dict[str, dict]:
+    skills: Dict[str, dict] = {}
     if not skills_dir.is_dir():
         errors.append("skills/ missing")
         return skills
@@ -197,7 +192,7 @@ def collect_skills(skills_dir: Path = SKILLS) -> dict[str, dict]:
 
 
 def check_essentials_inventory() -> None:
-    """templates-inventory.md essentials list must match essentials/ on disk."""
+    """The templates-inventory essentials list must match the essentials directory."""
     if not INVENTORY.is_file():
         return
     inv = INVENTORY.read_text(encoding="utf-8")
@@ -235,8 +230,8 @@ def check_templates_inventory() -> None:
         if p.is_file() and not p.name.startswith(".")
     )
     for name in on_disk:
-        # source.yml is an inspo ledger template; inventory may list it or omit --
-        # require every non-source template to be named in the inventory body.
+        # The `source.yml` ledger template may be listed or omitted by the inventory;
+        # every other template must be named in the inventory body.
         if name == "source.yml":
             continue
         if name not in inv:
@@ -252,20 +247,10 @@ def check_templates_inventory() -> None:
             )
 
 
-def is_foundation(folder: str) -> bool:
-    return folder.endswith("-foundation")
-
-
-
-
-def check_visibility_policy(skills: dict[str, dict]) -> None:
+def check_visibility_policy(skills: Dict[str, dict]) -> None:
     """Visibility follows invocation ownership, not leaf-vs-router shape."""
     for name, info in sorted(skills.items()):
         folder, hidden = info["dir"], info["hidden"]
-        if is_foundation(folder) and not hidden and folder not in FOUNDATION_ALLOWLIST:
-            errors.append(
-                f"visible foundation (add disable-model-invocation: true or allowlist): {folder}"
-            )
         if folder in ENTRY_SKILLS and hidden:
             errors.append(f"entry skill must stay model-visible: {folder}")
         if folder in INTERNAL_SKILLS and not hidden:
@@ -277,11 +262,11 @@ def check_visibility_policy(skills: dict[str, dict]) -> None:
             )
 
 
-def budget_report(skills: dict[str, dict]) -> dict:
+def budget_report(skills: Dict[str, dict]) -> dict:
     visible = {n: i for n, i in skills.items() if not i["hidden"]}
     vis_chars = sum(len(n) + len(i["desc"]) for n, i in visible.items())
-    classes: dict[str, list[str]] = {}
-    unclassified_visible: list[str] = []
+    classes: Dict[str, List[str]] = {}
+    unclassified_visible: List[str] = []
     for n, i in sorted(skills.items()):
         c = classify(i["dir"], i["hidden"])
         if c is None:
@@ -314,7 +299,7 @@ def print_budget(rep: dict) -> None:
     print("  Classification (entry / router / internal / cold / vendor):")
     for c in ("entry", "router", "internal", "cold", "vendor"):
         members = rep["class_members"].get(c, [])
-        print(f"    {c:9} {len(members):4}  " + ", ".join(m for m in members if not is_foundation(m)))
+        print(f"    {c:9} {len(members):4}  " + ", ".join(members))
     if rep["unclassified_visible"]:
         print("  UNCLASSIFIED VISIBLE (cleanup queue):")
         for n in rep["unclassified_visible"]:
@@ -359,7 +344,7 @@ def check_budget_baseline(rep: dict, default_root: bool) -> None:
         )
 
 
-def near_duplicate_warnings(skills: dict[str, dict]) -> None:
+def near_duplicate_warnings(skills: Dict[str, dict]) -> None:
     descs = [(n, i["desc"].lower()) for n, i in skills.items() if i["desc"]]
     for i in range(len(descs)):
         for j in range(i + 1, len(descs)):
@@ -379,9 +364,9 @@ def near_duplicate_warnings(skills: dict[str, dict]) -> None:
 
 
 def check_generated_catalogs() -> None:
-    """docs/skill-catalog.md and docs/foundation-catalog.md must be current.
+    """The generated `docs/skill-catalog.md` must be current.
 
-    Generated views are derived from skills/*/SKILL.md + classify(); they are
+    Generated views are derived from `skills/*/SKILL.md` plus `classify()`; they are
     validated here so catalog-quality is the one required catalog gate.
     """
     import importlib.util
@@ -409,7 +394,7 @@ def check_generated_catalogs() -> None:
 
 def main() -> int:
     update_baseline = "--update-baseline" in sys.argv
-    root_arg: str | None = None
+    root_arg: Optional[str] = None
     if "--root" in sys.argv:
         root_arg = sys.argv[sys.argv.index("--root") + 1]
     skills_dir = Path(root_arg) if root_arg else SKILLS

@@ -1,6 +1,6 @@
 ---
 name: mdn-code-examples-practices
-description: "Use when authoring MDN/Mozilla doc code examples — Prettier, 15–25 line vanilla snippets, JS const/let/textContent, HTML5 lowercase kebab markup, modern vanilla CSS, and example-good/bad fences."
+description: "Use when authoring MDN/Mozilla doc code examples, Prettier, 15–25 line vanilla snippets, JS const/let/textContent, HTML5 lowercase kebab markup, modern vanilla CSS, and example-good/bad fences."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for MDN Web Docs code style hub (archived `awesome-guidelines`
 
 ## Core Principle
 
-MDN example quality is **copy-paste-safe teaching code** — short vanilla snippets, Prettier-formatted, Baseline-modern, with correct fence languages and MDN-specific DOM/CSS rules.
+MDN example quality is **copy-paste-safe teaching code**, short vanilla snippets, Prettier-formatted, Baseline-modern, with correct fence languages and MDN-specific DOM/CSS rules.
 
 ## When to Use / NOT
 
@@ -19,17 +19,17 @@ MDN example quality is **copy-paste-safe teaching code** — short vanilla snipp
 
 **NOT when:**
 
-- Full application codebase — stack-specific practice skills.
-- Prose/voice only — MDN Writing style guide + `mailchimp-content-practices`-adjacent tone docs.
-- Shell session transcripts — MDN shell prompt guide (separate).
+- Full application codebase, stack-specific practice skills.
+- Prose/voice only, MDN Writing style guide + `mailchimp-content-practices`-adjacent tone docs.
+- Shell session transcripts, MDN shell prompt guide (separate).
 
 ## Workflow
 
-1. **Principles** — size, vanilla, fences, Prettier (`mdn-style-examples-principles.md`).
-2. **JavaScript** — const/let, loops, DOM, comments (`mdn-style-javascript-examples.md`).
-3. **HTML** — doctype, attrs, casing (`mdn-style-html-examples.md`).
-4. **CSS** — vanilla, selectors, color/media (`mdn-style-css-examples.md`).
-5. **Verify** — Prettier MDN config; correct fence language; `example-good`/`example-bad` when contrasting.
+1. **Principles**, size, vanilla, fences, Prettier (`mdn-style-examples-principles.md`).
+2. **JavaScript**, const/let, loops, DOM, comments (`mdn-style-javascript-examples.md`).
+3. **HTML**, doctype, attrs, casing (`mdn-style-html-examples.md`).
+4. **CSS**, vanilla, selectors, color/media (`mdn-style-css-examples.md`).
+5. **Verify**, Prettier MDN config; correct fence language; `example-good`/`example-bad` when contrasting.
 
 ## Red Flags
 
@@ -80,6 +80,6 @@ MDN example quality is **copy-paste-safe teaching code** — short vanilla snipp
 
 ## Related skills
 
-- `javascript-coding-practices` — app JS style
-- `frontend-markup-practices` — semantic HTML/CSS in apps
-- `markdown-writing-practices` — doc Markdown mechanics
+- `javascript-coding-practices`, app JS style
+- `frontend-markup-practices`, semantic HTML/CSS in apps
+- `markdown-writing-practices`, doc Markdown mechanics

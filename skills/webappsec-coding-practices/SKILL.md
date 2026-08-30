@@ -1,6 +1,6 @@
 ---
 name: webappsec-coding-practices
-description: "Use when building or reviewing web apps — Mozilla WebAppSec auth/sessions, whitelist input, output encoding, CSRF/TLS/CSP, safe uploads, generic errors, and QA checklist verification."
+description: "Use when building or reviewing web apps, Mozilla WebAppSec auth/sessions, whitelist input, output encoding, CSRF/TLS/CSP, safe uploads, generic errors, and QA checklist verification."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for Mozilla WebAppSec Secure Coding Guidelines + QA checklist 
 
 ## Core Principle
 
-Secure web apps **validate all request data**, **encode at output boundaries**, **protect sessions on HTTPS**, and **authorize every action on every object** — with generic user errors and QA probes to prove it.
+Secure web apps **validate all request data**, **encode at output boundaries**, **protect sessions on HTTPS**, and **authorize every action on every object**, with generic user errors and QA probes to prove it.
 
 ## When to Use / NOT
 
@@ -19,17 +19,17 @@ Secure web apps **validate all request data**, **encode at output boundaries**, 
 
 **NOT when:**
 
-- Non-HTTP backend with no web surface — `security-and-hardening` primary.
-- WCAG conformance audit — `wcag-accessibility-practices` (pair for CAPTCHA/error UX).
-- Pure static markup — `frontend-markup-practices` + this for deployment headers.
+- Non-HTTP backend with no web surface, `security-and-hardening` primary.
+- WCAG conformance audit, `wcag-accessibility-practices` (pair for CAPTCHA/error UX).
+- Pure static markup, `frontend-markup-practices` + this for deployment headers.
 
 ## Workflow
 
-1. **Quick wins** — HttpOnly+Secure cookies; HTTPS auth pages; validate all user data.
-2. **Auth/session/access** — passwords, sessions, IDOR (`webappsec-auth-session.md`).
-3. **Input/output** — whitelist + encoding + parameterized SQL (`webappsec-input-output.md`).
-4. **Cross-domain/transport** — CSRF, framing, TLS, CSP (`webappsec-cross-domain-transport.md`).
-5. **Uploads/errors/verify** — files, errors, QA checklist (`webappsec-uploads-errors-verify.md`).
+1. **Quick wins**, HttpOnly+Secure cookies; HTTPS auth pages; validate all user data.
+2. **Auth/session/access**, passwords, sessions, IDOR (`webappsec-auth-session.md`).
+3. **Input/output**, whitelist + encoding + parameterized SQL (`webappsec-input-output.md`).
+4. **Cross-domain/transport**, CSRF, framing, TLS, CSP (`webappsec-cross-domain-transport.md`).
+5. **Uploads/errors/verify**, files, errors, QA checklist (`webappsec-uploads-errors-verify.md`).
 
 ## Red Flags
 
@@ -83,6 +83,6 @@ Secure web apps **validate all request data**, **encode at output boundaries**, 
 
 ## Related skills
 
-- `security-and-hardening` — OWASP, secrets, dependencies, headers
-- `wcag-accessibility-practices` — accessible error messages and forms
-- `json-api-practices` — API contract security adjacent to CSRF/CORS
+- `security-and-hardening`, OWASP, secrets, dependencies, headers
+- `wcag-accessibility-practices`, accessible error messages and forms
+- `json-api-practices`, API contract security adjacent to CSRF/CORS

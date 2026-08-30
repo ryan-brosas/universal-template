@@ -1,6 +1,6 @@
 ---
 name: emacs-lisp-coding-practices
-description: "Use when authoring or reviewing Emacs Lisp — lexical-binding, lisp-case prefixes, when/unless idioms, sharp quotes, provide/require/autoload, docstrings, and checkdoc/package-lint/byte-compile in CI."
+description: "Use when authoring or reviewing Emacs Lisp, lexical-binding, lisp-case prefixes, when/unless idioms, sharp quotes, provide/require/autoload, docstrings, and checkdoc/package-lint/byte-compile in CI."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for Emacs Lisp style learning (from the archived `awesome-guid
 
 ## Core Principle
 
-Emacs Lisp quality is **namespace-safe, load-safe regularity** — lexical scoping, prefixed globals, Emacs indent, and docstrings that survive `checkdoc`.
+Emacs Lisp quality is **namespace-safe, load-safe regularity**, lexical scoping, prefixed globals, Emacs indent, and docstrings that survive `checkdoc`.
 
 ## When to Use / NOT
 
@@ -24,11 +24,11 @@ Emacs Lisp quality is **namespace-safe, load-safe regularity** — lexical scopi
 
 ## Workflow
 
-1. **Layout** — lexical-binding, indent, parens (`emacs-lisp-style-formatting-layout.md`).
-2. **Names** — prefixes, private `--`, predicates (`emacs-lisp-style-naming-prefixes.md`).
-3. **Functions** — when/unless, quotes, macros (`emacs-lisp-style-functions-macros.md`).
-4. **Packages** — header, require/provide/autoload, docs (`emacs-lisp-style-packages-docs.md`).
-5. **Verify** — `checkdoc-file`, `package-lint`, `byte-compile-file` on changed `.el` files.
+1. **Layout**, lexical-binding, indent, parens (`emacs-lisp-style-formatting-layout.md`).
+2. **Names**, prefixes, private `--`, predicates (`emacs-lisp-style-naming-prefixes.md`).
+3. **Functions**, when/unless, quotes, macros (`emacs-lisp-style-functions-macros.md`).
+4. **Packages**, header, require/provide/autoload, docs (`emacs-lisp-style-packages-docs.md`).
+5. **Verify**, `checkdoc-file`, `package-lint`, `byte-compile-file` on changed `.el` files.
 
 ## Red Flags
 

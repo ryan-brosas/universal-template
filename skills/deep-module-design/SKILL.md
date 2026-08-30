@@ -9,7 +9,7 @@ disable-model-invocation: true
 
 ## Core Principle
 
-Interface is the design — push complexity down, expose simplicity up; small interface, deep implementation.
+Interface is the design, push complexity down, expose simplicity up; small interface, deep implementation.
 
 ## Design rules (heuristics, not laws)
 
@@ -34,7 +34,7 @@ Trivial one-function helpers; structure is fine and change is in body; "design" 
 1. Measure depth: impl size / interface size.
 2. Read the interface tells and design tells tables.
 3. Refactor toward depth: find the shallowest surface, combine methods, hide helpers, move config inside, return less.
-4. Test the interface, not internals — if a test mocks an internal call, the internal is leaking.
+4. Test the interface, not internals, if a test mocks an internal call, the internal is leaking.
 
 ## The Depth Metric
 
@@ -49,24 +49,24 @@ Depth = (impl size) / (interface size)
 
 ## Interface Tells
 
-| Sign                            | Meaning                     |
+| Sign | Meaning |
 |---------------------------------|-----------------------------|
-| Many public methods             | Module is doing too much    |
-| Methods with complex args       | Caller knows too much       |
-| Methods returning complex types | Caller handles too much     |
-| Public state                    | Caller can break invariants |
-| Config that requires docs       | Hide defaults               |
-| `addX`/`addY`/`addZ`            | One method, options         |
+| Many public methods | Module is doing too much |
+| Methods with complex args | Caller knows too much |
+| Methods returning complex types | Caller handles too much |
+| Public state | Caller can break invariants |
+| Config that requires docs | Hide defaults |
+| `addX`/`addY`/`addZ` | One method, options |
 
 ## Design Tells
 
-| Sign                      | Meaning                     |
+| Sign | Meaning |
 |---------------------------|-----------------------------|
-| Impl bigger than expected | Caller reads the impl       |
-| Two ways to do the same   | Pick one, hide the other    |
-| Caller calls 3+ methods   | One method, the right thing |
-| "Don't call from outside" | Should be private           |
-| Tests mock internals      | Internals leaking           |
+| Impl bigger than expected | Caller reads the impl |
+| Two ways to do the same | Pick one, hide the other |
+| Caller calls 3+ methods | One method, the right thing |
+| "Don't call from outside" | Should be private |
+| Tests mock internals | Internals leaking |
 
 ## Refactoring Toward Depth
 
@@ -110,4 +110,4 @@ Depth improved (smaller interface, larger impl); no public state; config moved i
 
 ## References
 
-N/A — no reference files; this skill is self-contained.
+N/A, no reference files; this skill is self-contained.

@@ -1,6 +1,6 @@
 ---
 name: pascal-coding-practices
-description: "Use when authoring or reviewing Free Pascal/GNU Pascal — 2-space/no-tab layout, lowercase keywords, PascalCase T/P types, unit block order, brace comments, result returns, and fpc -Wall or fpsonar in CI."
+description: "Use when authoring or reviewing Free Pascal/GNU Pascal, 2-space/no-tab layout, lowercase keywords, PascalCase T/P types, unit block order, brace comments, result returns, and fpc -Wall or fpsonar in CI."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for classic Pascal style learning (from the archived `awesome-
 
 ## Core Principle
 
-Pascal library quality is **dialect-picked layout + ordered units** — declare FPC-tight or GPC-spaced style once, mirror interface in implementation, compile warning-clean.
+Pascal library quality is **dialect-picked layout + ordered units**, declare FPC-tight or GPC-spaced style once, mirror interface in implementation, compile warning-clean.
 
 ## When to Use / NOT
 
@@ -19,16 +19,16 @@ Pascal library quality is **dialect-picked layout + ordered units** — declare 
 
 **NOT when:**
 
-- Lazarus LCL components or Delphi IDE projects — use `delphi-coding-practices`.
-- Generated `.pas` — validate generators.
+- Lazarus LCL components or Delphi IDE projects, use `delphi-coding-practices`.
+- Generated `.pas`, validate generators.
 
 ## Workflow
 
-1. **Layout** — indent, begin/end, spacing profile (`pascal-style-formatting-layout.md`).
-2. **Naming** — keywords, T/P types (`pascal-style-naming-types.md`).
-3. **Units** — files, order, uses (`pascal-style-units-structure.md`).
-4. **Comments/control** — braces, flow, CI (`pascal-style-comments-control.md`).
-5. **Verify** — `fpc -Wall`, fpsonar optional, tests on changed units.
+1. **Layout**, indent, begin/end, spacing profile (`pascal-style-formatting-layout.md`).
+2. **Naming**, keywords, T/P types (`pascal-style-naming-types.md`).
+3. **Units**, files, order, uses (`pascal-style-units-structure.md`).
+4. **Comments/control**, braces, flow, CI (`pascal-style-comments-control.md`).
+5. **Verify**, `fpc -Wall`, fpsonar optional, tests on changed units.
 
 ## Red Flags
 

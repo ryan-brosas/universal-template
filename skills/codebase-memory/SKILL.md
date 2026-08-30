@@ -8,39 +8,39 @@ disable-model-invocation: true
 
 Codebase Memory is the **persistent structural / cross-project discovery
 surface**: a long-lived library of indexed repositories for cross-session and
-cross-repository questions. It is not a prerequisite for normal Pi work —
+cross-repository questions. It is not a prerequisite for normal Pi work,
 Fovea owns the active working-set map, and direct source owns truth. Its
 graph is an index, not source of truth: confirm exact code in the JetBrains
 IDE or direct source before editing or making exhaustive claims.
 
 ## Core Principle
 
-A persistent cross-project library, not a default step: the graph is an index, not source of truth — confirm exact code in the JetBrains IDE or direct source before editing or making exhaustive claims.
+A persistent cross-project library, not a default step: the graph is an index, not source of truth, confirm exact code in the JetBrains IDE or direct source before editing or making exhaustive claims.
 
 ## When to Use / NOT
 
-- **Use when:** the question spans repositories or sessions — finding which indexed project holds a pattern, comparing a reference candidate, cross-service structure, or non-Pi environments where Fovea is unavailable.
-- **NOT when:** the active project just needs orientation (use Fovea or direct source). Do not index every current project merely because the MCP is connected — index when the user asks or to grow the persistent reference library. Never call `codebase-memory_delete_project` without explicit user approval, and do not write ADRs or ingest traces unless requested (see Boundaries).
+- **Use when:** the question spans repositories or sessions, finding which indexed project holds a pattern, comparing a reference candidate, cross-service structure, or non-Pi environments where Fovea is unavailable.
+- **NOT when:** the active project just needs orientation (use Fovea or direct source). Do not index every current project merely because the MCP is connected, index when the user asks or to grow the persistent reference library. Never call `codebase-memory_delete_project` without explicit user approval, and do not write ADRs or ingest traces unless requested (see Boundaries).
 
 ## Workflow
 
 1. Connect to the `codebase-memory` MCP and read its server instructions.
 2. Call `codebase-memory_list_projects` before first use. Index only when the
-   repository is absent or after a named large external update.
+ repository is absent or after a named large external update.
 3. Orient with `codebase-memory_get_architecture`; request only needed aspects.
 4. Find definitions with `codebase-memory_search_graph`. Use natural-language,
-   regex-name, or semantic search; narrow before paginating `has_more` results.
+ regex-name, or semantic search; narrow before paginating `has_more` results.
 5. Trace callers, callees, data flow, or cross-service paths with
-   `codebase-memory_trace_path`; follow its cursor until the bounded question is
-   answered.
+ `codebase-memory_trace_path`; follow its cursor until the bounded question is
+ answered.
 6. Read an exact symbol with `codebase-memory_get_code_snippet` only after
-   resolving its qualified name. Use `codebase-memory_search_code` for literals.
+ resolving its qualified name. Use `codebase-memory_search_code` for literals.
 7. Before negative or exhaustive claims, call
-   `codebase-memory_check_index_coverage` for cited paths/scopes. Fall back to
-   JetBrains search or direct source for skipped and partially parsed ranges.
+ `codebase-memory_check_index_coverage` for cited paths/scopes. Fall back to
+ JetBrains search or direct source for skipped and partially parsed ranges.
 8. Before editing, use `codebase-memory_detect_changes` or a bounded graph trace
-   to identify blast radius. After editing, trust source, IDE diagnostics, and
-   behavioral checks over stale graph output.
+ to identify blast radius. After editing, trust source, IDE diagnostics, and
+ behavioral checks over stale graph output.
 
 ## Inspiration Repositories
 
@@ -83,4 +83,4 @@ Exact source confirmation before editing; coverage checked for cited paths/scope
 
 ## References
 
-N/A — no reference files; this skill is self-contained.
+N/A, no reference files; this skill is self-contained.

@@ -48,28 +48,28 @@ If your test breaks on refactor without behavior change, you wrote an implementa
 
 ## The RED Step
 
-The test must fail for the **right reason** — the behavior is missing, not the test is broken. A test that doesn't compile is not RED. A test that passes on first run is not testing anything. Stop and rewrite.
+The test must fail for the **right reason**, the behavior is missing, not the test is broken. A test that doesn't compile is not RED. A test that passes on first run is not testing anything. Stop and rewrite.
 
 ## Common Rationalizations
 
-| Rationalization           | Counter                                    |
+| Rationalization | Counter |
 |---------------------------|--------------------------------------------|
-| "It's obvious"            | If trivial, RED is trivial. Write it.      |
-| "Tests after"             | There is no after.                         |
-| "One-line change"         | One-liners break builds. Test takes 30s.   |
-| "API stabilizes first"    | Test IS the API design.                    |
-| "Tested manually"         | Not reproducible, not automatable.         |
-| "Mocking is faster"       | Mocks test your assumptions, not behavior. |
-| "Existing tests cover it" | Run them. Cite the output.                 |
+| "It's obvious" | If trivial, RED is trivial. Write it. |
+| "Tests after" | There is no after. |
+| "One-line change" | One-liners break builds. Test takes 30s. |
+| "API stabilizes first" | Test IS the API design. |
+| "Tested manually" | Not reproducible, not automatable. |
+| "Mocking is faster" | Mocks test your assumptions, not behavior. |
+| "Existing tests cover it" | Run them. Cite the output. |
 
 ## Workflow
 
-1. **Read the requirement** — user-observable behavior + success criterion.
-2. **Write failing test** — smallest capturing the behavior. Run. Confirm RED.
-3. **Minimum code** — smallest change to pass. No "while I'm here" extras.
-4. **Run** — confirm GREEN. If fails, debug — don't change the test.
-5. **Refactor** — names, structure, duplication. No new behavior. Tests stay green.
-6. **Verify** — full test file, not just the new test.
+1. **Read the requirement**, user-observable behavior + success criterion.
+2. **Write failing test**, smallest capturing the behavior. Run. Confirm RED.
+3. **Minimum code**, smallest change to pass. No "while I'm here" extras.
+4. **Run**, confirm GREEN. If fails, debug, don't change the test.
+5. **Refactor**, names, structure, duplication. No new behavior. Tests stay green.
+6. **Verify**, full test file, not just the new test.
 
 
 ## Red Flags
@@ -79,14 +79,14 @@ Test passes on first run; test asserts implementation details; test breaks on re
 ## Verification
 
 - You saw RED for the right reason (behavior missing, not a broken test) before writing
-  any production code.
+ any production code.
 - The minimum code made it GREEN with no "while I'm here" extras.
-- The full test file — not just the new test — is green after the refactor.
+- The full test file, not just the new test, is green after the refactor.
 
 
 ## References
 
-N/A — no reference files; the loop and rationalization table are fully specified in this file.
+N/A, no reference files; the loop and rationalization table are fully specified in this file.
 
 ## Pi Fabric Boundaries
 

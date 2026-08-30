@@ -1,16 +1,16 @@
 ---
 name: lua-coding-practices
-description: "Use when authoring or reviewing Lua — local-first modules, 2–4 space layout, snake_case/CamelCase naming, return-M pattern, guard returns, table/LDoc idioms, and luacheck/LDoc in CI."
+description: "Use when authoring or reviewing Lua, local-first modules, 2–4 space layout, snake_case/CamelCase naming, return-M pattern, guard returns, table/LDoc idioms, and luacheck/LDoc in CI."
 disable-model-invocation: true
 ---
 
 # Lua Coding Practices
 
-Application skill for Lua style learning (from the archived `awesome-guidelines` style capsules). For Luau/Roblox or OpenResty-specific rules, follow stack foundations first.
+Application skill for Lua style learning (from the archived `awesome-guidelines` style capsules). For Luau/Roblox or OpenResty-specific rules, follow stack capsules in `foundation-pack/` first.
 
 ## Core Principle
 
-Lua quality is **local scope + explicit modules** — return a table, require into locals, document the exported surface.
+Lua quality is **local scope + explicit modules**, return a table, require into locals, document the exported surface.
 
 ## When to Use / NOT
 
@@ -19,16 +19,16 @@ Lua quality is **local scope + explicit modules** — return a table, require in
 
 **NOT when:**
 
-- Luau-typed Roblox code — use project Luau guide.
-- Generated `.lua` stubs — validate generators.
+- Luau-typed Roblox code, use project Luau guide.
+- Generated `.lua` stubs, validate generators.
 
 ## Workflow
 
-1. **Layout** — indent, spacing, blocks (`lua-style-formatting-layout.md`).
-2. **Modules** — names, return M (`lua-style-naming-modules.md`).
-3. **Functions** — local, guards, calls (`lua-style-functions-scope.md`).
-4. **Tables/docs** — literals, LDoc (`lua-style-tables-docs.md`).
-5. **Verify** — luacheck, LDoc (if applicable), tests on changed modules.
+1. **Layout**, indent, spacing, blocks (`lua-style-formatting-layout.md`).
+2. **Modules**, names, return M (`lua-style-naming-modules.md`).
+3. **Functions**, local, guards, calls (`lua-style-functions-scope.md`).
+4. **Tables/docs**, literals, LDoc (`lua-style-tables-docs.md`).
+5. **Verify**, luacheck, LDoc (if applicable), tests on changed modules.
 
 ## Red Flags
 

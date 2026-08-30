@@ -1,6 +1,6 @@
 ---
 name: racket-coding-practices
-description: "Use when authoring or reviewing Racket — DrRacket indent, kebab-case naming, define/cond/for idioms, provide/contract-out modules, rackunit tests, and raco test in CI."
+description: "Use when authoring or reviewing Racket, DrRacket indent, kebab-case naming, define/cond/for idioms, provide/contract-out modules, rackunit tests, and raco test in CI."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for official Racket style learning (from the archived `awesome
 
 ## Core Principle
 
-Racket quality is **DrRacket-readable text + explicit module contracts** — kebab-case names, top-down provide sections, rackunit-guarded changes.
+Racket quality is **DrRacket-readable text + explicit module contracts**, kebab-case names, top-down provide sections, rackunit-guarded changes.
 
 ## When to Use / NOT
 
@@ -19,16 +19,16 @@ Racket quality is **DrRacket-readable text + explicit module contracts** — keb
 
 **NOT when:**
 
-- Generated `.rkt` from macros/tools — validate generators.
-- Scribble-only layout rules — see Scribble exceptions in official guide.
+- Generated `.rkt` from macros/tools, validate generators.
+- Scribble-only layout rules, see Scribble exceptions in official guide.
 
 ## Workflow
 
-1. **Textual** — indent, parens, width (`racket-style-formatting-textual.md`).
-2. **Naming/constructs** — kebab-case, define/cond/for (`racket-style-naming-constructs.md`).
-3. **Modules** — provide, contracts, size (`racket-style-modules-contracts.md`).
-4. **Testing** — rackunit, handlers (`racket-style-testing-verify.md`).
-5. **Verify** — DrRacket indent-all, `raco test` on changed files.
+1. **Textual**, indent, parens, width (`racket-style-formatting-textual.md`).
+2. **Naming/constructs**, kebab-case, define/cond/for (`racket-style-naming-constructs.md`).
+3. **Modules**, provide, contracts, size (`racket-style-modules-contracts.md`).
+4. **Testing**, rackunit, handlers (`racket-style-testing-verify.md`).
+5. **Verify**, DrRacket indent-all, `raco test` on changed files.
 
 ## Red Flags
 

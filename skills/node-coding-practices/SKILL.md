@@ -1,6 +1,6 @@
 ---
 name: node-coding-practices
-description: "Use when authoring or reviewing Node.js — felixge 2-space semicolons, camelCase/===, small early-return functions, top requires, npm/package.json, PORT env, and cross-platform Windows path hygiene."
+description: "Use when authoring or reviewing Node.js, felixge 2-space semicolons, camelCase/===, small early-return functions, top requires, npm/package.json, PORT env, and cross-platform Windows path hygiene."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for felixge Node style + Microsoft nodejs-guidelines platform 
 
 ## Core Principle
 
-Node quality is **small modules with strict style and reproducible npm packaging** — felixge layout habits, top-level requires, no prototype hacks, env-aware servers, cross-platform deps.
+Node quality is **small modules with strict style and reproducible npm packaging**, felixge layout habits, top-level requires, no prototype hacks, env-aware servers, cross-platform deps.
 
 ## When to Use / NOT
 
@@ -19,17 +19,17 @@ Node quality is **small modules with strict style and reproducible npm packaging
 
 **NOT when:**
 
-- Browser-only bundles — `javascript-coding-practices`.
-- Pure TypeScript without JS overlap — `typescript-coding-standards` primary.
-- MDN documentation examples — `mdn-code-examples-practices`.
+- Browser-only bundles, `javascript-coding-practices`.
+- Pure TypeScript without JS overlap, `typescript-coding-standards` primary.
+- MDN documentation examples, `mdn-code-examples-practices`.
 
 ## Workflow
 
-1. **Format** — 2-space, semicolons, quotes, braces (`node-style-formatting-layout.md`).
-2. **Functions/modules** — size, closures, requires (`node-style-functions-modules.md`).
-3. **Naming/conditionals** — ===, predicates, camelCase (`node-style-conditionals-naming.md`).
-4. **Platform** — npm, PORT, Windows, native (`node-style-platform-verify.md`).
-5. **Verify** — ESLint/EditorConfig + `npm test` + platform notes for native deps.
+1. **Format**, 2-space, semicolons, quotes, braces (`node-style-formatting-layout.md`).
+2. **Functions/modules**, size, closures, requires (`node-style-functions-modules.md`).
+3. **Naming/conditionals**, ===, predicates, camelCase (`node-style-conditionals-naming.md`).
+4. **Platform**, npm, PORT, Windows, native (`node-style-platform-verify.md`).
+5. **Verify**, ESLint/EditorConfig + `npm test` + platform notes for native deps.
 
 ## Red Flags
 
@@ -85,6 +85,6 @@ Node quality is **small modules with strict style and reproducible npm packaging
 
 ## Related skills
 
-- `javascript-coding-practices` — modern const/let, ES modules
-- `powershell-scripting-practices` — Windows shell glue adjacent to Node on Windows
-- `shell-scripting-practices` — Unix deploy scripts
+- `javascript-coding-practices`, modern const/let, ES modules
+- `powershell-scripting-practices`, Windows shell glue adjacent to Node on Windows
+- `shell-scripting-practices`, Unix deploy scripts

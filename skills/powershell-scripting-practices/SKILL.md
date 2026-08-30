@@ -1,16 +1,16 @@
 ---
 name: powershell-scripting-practices
-description: "Use when authoring or reviewing PowerShell — PoshCode OTBS layout, Verb-Noun CmdletBinding functions, pipeline tool patterns, try/catch with -ErrorAction Stop, PSCredential security, and PSScriptAnalyzer in CI."
+description: "Use when authoring or reviewing PowerShell, PoshCode OTBS layout, Verb-Noun CmdletBinding functions, pipeline tool patterns, try/catch with -ErrorAction Stop, PSCredential security, and PSScriptAnalyzer in CI."
 disable-model-invocation: true
 ---
 
 # PowerShell Scripting Practices
 
-Application skill for PoshCode PowerShellPracticeAndStyle (archived `awesome-guidelines` capsules). For bash glue, use `shell-scripting-practices`. For .NET library API naming, use `dotnet-coding-practices`.
+Application skill for PoshCode PowerShellPracticeAndStyle (archived `awesome-guidelines` capsules). For bash glue, use `shell-scripting-practices`. For.NET library API naming, use `dotnet-coding-practices`.
 
 ## Core Principle
 
-PowerShell quality is **advanced functions emitting pipeline objects with explicit, trappable errors** — not Write-Host scripts with alias cmdlets.
+PowerShell quality is **advanced functions emitting pipeline objects with explicit, trappable errors**, not Write-Host scripts with alias cmdlets.
 
 ## When to Use / NOT
 
@@ -19,17 +19,17 @@ PowerShell quality is **advanced functions emitting pipeline objects with explic
 
 **NOT when:**
 
-- Bash/sh only environments — `shell-scripting-practices`.
-- C#/VB syntax — language practice skills.
-- Generated Pester stub files — validate generators.
+- Bash/sh only environments, `shell-scripting-practices`.
+- C#/VB syntax, language practice skills.
+- Generated Pester stub files, validate generators.
 
 ## Workflow
 
-1. **Formatting** — OTBS, blocks, splatting (`powershell-style-formatting-layout.md`).
-2. **Naming** — Verb-Noun, full cmdlets, paths (`powershell-style-naming-commands.md`).
-3. **Functions/tools** — process output, raw objects (`powershell-style-functions-tools.md`).
-4. **Errors/security** — Stop, try/catch, PSCredential (`powershell-style-errors-security.md`).
-5. **Verify** — PSScriptAnalyzer + `Invoke-Formatter` on changed scripts.
+1. **Formatting**, OTBS, blocks, splatting (`powershell-style-formatting-layout.md`).
+2. **Naming**, Verb-Noun, full cmdlets, paths (`powershell-style-naming-commands.md`).
+3. **Functions/tools**, process output, raw objects (`powershell-style-functions-tools.md`).
+4. **Errors/security**, Stop, try/catch, PSCredential (`powershell-style-errors-security.md`).
+5. **Verify**, PSScriptAnalyzer + `Invoke-Formatter` on changed scripts.
 
 ## Red Flags
 

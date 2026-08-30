@@ -37,7 +37,6 @@ LARGE_EXEMPT_SUFFIXES = (
 )
 
 def is_vendored_path(rel: str) -> bool:
-    parts = rel.split("/")
     return (
         "/sdk/" in f"/{rel}/"
         or "/learnings/" in f"/{rel}/"
@@ -151,11 +150,11 @@ def check_file(path: Path) -> None:
                 errors.append(f"{label} in {rel}")
                 break
 
-    # Typos: top-level docs + practice SKILL.md only (foundation corpus is source-faithful).
+    # Typos: top-level docs + practice SKILL.md only.
     typo_target = False
     if rel in {"AGENTS.md", "README.md"} or rel.startswith("essentials/") or rel.startswith("references/"):
         typo_target = True
-    if rel.startswith("skills/") and rel.endswith("/SKILL.md") and "-foundation/" not in rel:
+    if rel.startswith("skills/") and rel.endswith("/SKILL.md"):
         typo_target = True
     if typo_target and ext == ".md":
         for word, fix in TYPO_MAP.items():

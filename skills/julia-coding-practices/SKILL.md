@@ -1,6 +1,6 @@
 ---
 name: julia-coding-practices
-description: "Use when authoring or reviewing Julia — BlueStyle/JuliaFormatter 4-space/92-col layout, explicit using/exports, typed methods with return, kwargs semicolon, docstrings, and formatter/test in CI."
+description: "Use when authoring or reviewing Julia, BlueStyle/JuliaFormatter 4-space/92-col layout, explicit using/exports, typed methods with return, kwargs semicolon, docstrings, and formatter/test in CI."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for Julia BlueStyle learning (from the archived `awesome-guide
 
 ## Core Principle
 
-Julia package quality is **formatter-enforced consistency + explicit module APIs** — typed exported methods, qualified extensions, documented surface.
+Julia package quality is **formatter-enforced consistency + explicit module APIs**, typed exported methods, qualified extensions, documented surface.
 
 ## When to Use / NOT
 
@@ -19,16 +19,16 @@ Julia package quality is **formatter-enforced consistency + explicit module APIs
 
 **NOT when:**
 
-- Generated Julia code — validate generators.
-- One-off scripts with no package boundary — apply layout/docs lightly.
+- Generated Julia code, validate generators.
+- One-off scripts with no package boundary, apply layout/docs lightly.
 
 ## Workflow
 
-1. **Layout** — JuliaFormatter blue, 92 cols (`julia-style-formatting-layout.md`).
-2. **Modules** — using, exports (`julia-style-modules-imports.md`).
-3. **Methods** — return, kwargs, types (`julia-style-functions-methods.md`).
-4. **Docs/tests** — docstrings, testset (`julia-style-docs-tests.md`).
-5. **Verify** — `JuliaFormatter.format`, `Pkg.test()`, docstring audit on exports.
+1. **Layout**, JuliaFormatter blue, 92 cols (`julia-style-formatting-layout.md`).
+2. **Modules**, using, exports (`julia-style-modules-imports.md`).
+3. **Methods**, return, kwargs, types (`julia-style-functions-methods.md`).
+4. **Docs/tests**, docstrings, testset (`julia-style-docs-tests.md`).
+5. **Verify**, `JuliaFormatter.format`, `Pkg.test()`, docstring audit on exports.
 
 ## Red Flags
 

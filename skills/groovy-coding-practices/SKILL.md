@@ -1,16 +1,16 @@
 ---
 name: groovy-coding-practices
-description: "Use when authoring or reviewing Groovy — idiomatic syntax (no semicolons, POGOs, GDK, GStrings), with/tap, Groovy truth and safe nav, strong public typing, and CodeNarc/npm-groovy-lint in CI."
+description: "Use when authoring or reviewing Groovy, idiomatic syntax (no semicolons, POGOs, GDK, GStrings), with/tap, Groovy truth and safe nav, strong public typing, and CodeNarc/npm-groovy-lint in CI."
 disable-model-invocation: true
 ---
 
 # Groovy Coding Practices
 
-Application skill for Groovy style learning (from the archived `awesome-guidelines` style capsules). For Grails-specific conventions, combine with stack foundations and project CodeNarc rulesets.
+Application skill for Groovy style learning (from the archived `awesome-guidelines` style capsules). For Grails-specific conventions, combine with stack capsules in `foundation-pack/` and project CodeNarc rulesets.
 
 ## Core Principle
 
-Groovy quality is **idiomatic expressiveness with typed public seams** — GDK and property syntax internally, explicit types on shared API.
+Groovy quality is **idiomatic expressiveness with typed public seams**, GDK and property syntax internally, explicit types on shared API.
 
 ## When to Use / NOT
 
@@ -19,16 +19,16 @@ Groovy quality is **idiomatic expressiveness with typed public seams** — GDK a
 
 **NOT when:**
 
-- Pure Java/Kotlin modules — use language-specific practice skills.
-- Generated AST/transform output — validate generators.
+- Pure Java/Kotlin modules, use language-specific practice skills.
+- Generated AST/transform output, validate generators.
 
 ## Workflow
 
-1. **Syntax** — semicolons, def, parens, strings (`groovy-style-syntax-idioms.md`).
-2. **Objects** — POGOs, with/tap, equality (`groovy-style-objects-properties.md`).
-3. **Collections** — GDK, truth, nav (`groovy-style-collections-gdk.md`).
-4. **API** — public typing, assert (`groovy-style-typing-api.md`).
-5. **Verify** — CodeNarc/npm-groovy-lint, compile, tests on changed sources.
+1. **Syntax**, semicolons, def, parens, strings (`groovy-style-syntax-idioms.md`).
+2. **Objects**, POGOs, with/tap, equality (`groovy-style-objects-properties.md`).
+3. **Collections**, GDK, truth, nav (`groovy-style-collections-gdk.md`).
+4. **API**, public typing, assert (`groovy-style-typing-api.md`).
+5. **Verify**, CodeNarc/npm-groovy-lint, compile, tests on changed sources.
 
 ## Red Flags
 

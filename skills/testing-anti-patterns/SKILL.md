@@ -13,13 +13,13 @@ Test behavior, not mocks: assert observable outcomes through public seams, and k
 ## When to Use / NOT
 
 - **Use when:** writing or changing tests, adding mocks, or tempted to add test-only methods to production code.
-- **NOT when:** choosing a test framework or configuring a runner — this skill governs what tests assert and where they mock, not tooling.
+- **NOT when:** choosing a test framework or configuring a runner, this skill governs what tests assert and where they mock, not tooling.
 
 ## Workflow
 
 1. Pick the mode: black-box by default; gray-box for stateful services, adapter contracts, durable state; white-box only where the branch IS the proof (Test Modes).
 2. Before mocking a dependency, write a contract test against the real dependency; pair mocked tests with at least one live boundary probe for external-system behavior (Test Modes).
-3. Mock at owned interfaces only — one adapter is a hypothetical seam; two adapters make it real (Seam rule).
+3. Mock at owned interfaces only, one adapter is a hypothetical seam; two adapters make it real (Seam rule).
 4. Assert observable outcomes, not mock calls; one intent per test (Direct Behavioral Probes, Iron Laws).
 5. Check Red Flags before shipping: no tautologies, no mock-only assertions, no shared state, no private-via-cast.
 
@@ -35,11 +35,11 @@ Test behavior, not mocks: assert observable outcomes through public seams, and k
 
 ## Test Modes
 
-| Mode                    | Use when                                                | Bound                                                          |
+| Mode | Use when | Bound |
 |-------------------------|---------------------------------------------------------|----------------------------------------------------------------|
-| **Black-box** (default) | Public APIs, CLI output, HTTP contracts, UI behavior    | A test needing internals means the interface or seam is wrong  |
-| **Gray-box**            | Stateful services, adapter contracts, durable state     | Setup and assertions still cross the public interface          |
-| **White-box**           | Algorithms and invariants where the branch IS the proof | Heavy internal reach means a missing seam; restructure instead |
+| **Black-box** (default) | Public APIs, CLI output, HTTP contracts, UI behavior | A test needing internals means the interface or seam is wrong |
+| **Gray-box** | Stateful services, adapter contracts, durable state | Setup and assertions still cross the public interface |
+| **White-box** | Algorithms and invariants where the branch IS the proof | Heavy internal reach means a missing seam; restructure instead |
 
 - **contract test**: assert the real dependency's behavior (real DB, real API) before mocking it. If you cannot explain what the real dependency does, write this first.
 - **live boundary probe**: production behavior that depends on an external system pairs its mocked test with at least one live probe, so a mock cannot hide a contract break.
@@ -72,7 +72,7 @@ Test passes when body is empty; test asserts only `toHaveBeenCalled`; `_method` 
 
 ## Verification
 
-- A test must fail for the right reason: break the code in the way the test targets and confirm the failure names that cause — a test that passes with an empty body, or only asserts `toHaveBeenCalled`, is a tautology (Iron Laws, Red Flags).
+- A test must fail for the right reason: break the code in the way the test targets and confirm the failure names that cause, a test that passes with an empty body, or only asserts `toHaveBeenCalled`, is a tautology (Iron Laws, Red Flags).
 - Scan for the red-flag shapes before shipping: `_method` in prod, unscoped `jest.mock`, shared `beforeEach` mutation, tests depending on each other, snapshot of a snapshot, private testing via cast.
 
 ## Skill Result Contract
@@ -89,4 +89,4 @@ Test passes when body is empty; test asserts only `toHaveBeenCalled`; `_method` 
 
 ## References
 
-N/A — no references/ directory; the skill is a self-contained prompt corpus.
+N/A, no references/ directory; the skill is a self-contained prompt corpus.

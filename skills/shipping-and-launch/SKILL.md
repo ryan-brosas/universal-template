@@ -56,12 +56,12 @@ Core principle: do not ship work that cannot be verified, explained, or rolled b
 
 ## Common Rationalizations
 
-| Rationalization               | Rebuttal                                                               |
+| Rationalization | Rebuttal |
 |-------------------------------|------------------------------------------------------------------------|
-| "Tests passed earlier"        | Fresh changes require fresh evidence or a valid unchanged-state stamp. |
-| "Rollback is just git revert" | Migrations, flags, queues, and external state may need more.           |
-| "Docs can wait"               | Shipped behavior without docs becomes support debt.                    |
-| "Small release, no checklist" | Small releases still leak secrets and break config.                    |
+| "Tests passed earlier" | Fresh changes require fresh evidence or a valid unchanged-state stamp. |
+| "Rollback is just git revert" | Migrations, flags, queues, and external state may need more. |
+| "Docs can wait" | Shipped behavior without docs becomes support debt. |
+| "Small release, no checklist" | Small releases still leak secrets and break config. |
 
 ## Red Flags
 
@@ -99,8 +99,8 @@ Core principle: do not ship work that cannot be verified, explained, or rolled b
 
 ## Pi Fabric Boundaries
 
-**Verification** — cite direct behavioral probes and recorded outputs. Pi Fabric Schema transactional mutation is opt-in (enforce mode or explicit request); ordinary fixes need only the project verification.
+**Verification**, cite direct behavioral probes and recorded outputs. Pi Fabric Schema transactional mutation is opt-in (enforce mode or explicit request); ordinary fixes need only the project verification.
 
 ## References
 
-N/A — no reference files; the checklist and workflow are fully specified in this file.
+N/A, no reference files; the checklist and workflow are fully specified in this file.

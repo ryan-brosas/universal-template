@@ -1,6 +1,6 @@
 ---
 name: arduino-coding-practices
-description: "Use when authoring or reviewing Arduino libraries/sketches — camelCase read/write/begin API, .h/.cpp structure, setup/loop lifecycle, Stream-aware serial, keywords/examples, and arduino-cli compile verify."
+description: "Use when authoring or reviewing Arduino libraries/sketches, camelCase read/write/begin API,.h/.cpp structure, setup/loop lifecycle, Stream-aware serial, keywords/examples, and arduino-cli compile verify."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for Arduino library + sketch guides (archived `awesome-guideli
 
 ## Core Principle
 
-Arduino quality is **beginner-first APIs and compile-ready packaging** — camelCase high-level methods, hardware init in `begin()` not constructors, guarded `.h`/`.cpp` pairs, examples that build.
+Arduino quality is **beginner-first APIs and compile-ready packaging**, camelCase high-level methods, hardware init in `begin()` not constructors, guarded `.h`/`.cpp` pairs, examples that build.
 
 ## When to Use / NOT
 
@@ -19,17 +19,17 @@ Arduino quality is **beginner-first APIs and compile-ready packaging** — camel
 
 **NOT when:**
 
-- Generic C++ desktop/server code — `cpp-coding-practices`.
+- Generic C++ desktop/server code, `cpp-coding-practices`.
 - Bare-metal non-Arduino SDK firmware with no Arduino core.
-- Python MicroPython/CircuitPython — stack-specific docs.
+- Python MicroPython/CircuitPython, stack-specific docs.
 
 ## Workflow
 
-1. **API** — naming, read/write/begin, Stream, no pointer traps (`arduino-style-library-api.md`).
-2. **Structure** — guards, ctor vs begin, `_private` fields (`arduino-style-library-structure.md`).
-3. **Sketches** — setup/loop, camelCase, braces, AVR loop discipline (`arduino-style-sketch-code.md`).
-4. **Packaging** — keywords, examples, properties, compile (`arduino-style-packaging-verify.md`).
-5. **Verify** — `arduino-cli compile` on example; hardware smoke if available.
+1. **API**, naming, read/write/begin, Stream, no pointer traps (`arduino-style-library-api.md`).
+2. **Structure**, guards, ctor vs begin, `_private` fields (`arduino-style-library-structure.md`).
+3. **Sketches**, setup/loop, camelCase, braces, AVR loop discipline (`arduino-style-sketch-code.md`).
+4. **Packaging**, keywords, examples, properties, compile (`arduino-style-packaging-verify.md`).
+5. **Verify**, `arduino-cli compile` on example; hardware smoke if available.
 
 ## Red Flags
 
@@ -77,5 +77,5 @@ Arduino quality is **beginner-first APIs and compile-ready packaging** — camel
 
 ## Related skills
 
-- `cpp-coding-practices` — portable C++ layout and ownership
-- `c-coding-practices` — low-level C safety when mixing C drivers
+- `cpp-coding-practices`, portable C++ layout and ownership
+- `c-coding-practices`, low-level C safety when mixing C drivers

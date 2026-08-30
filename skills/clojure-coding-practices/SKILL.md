@@ -1,6 +1,6 @@
 ---
 name: clojure-coding-practices
-description: "Use when authoring or reviewing Clojure — 2-space layout, gathered parens, sorted ns requires, lisp-case naming, ?/! conventions, threading idioms, keyword maps, ex-info errors, and clj-kondo/cljfmt in CI."
+description: "Use when authoring or reviewing Clojure, 2-space layout, gathered parens, sorted ns requires, lisp-case naming,?/! conventions, threading idioms, keyword maps, ex-info errors, and clj-kondo/cljfmt in CI."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for Clojure style learning (from the archived `awesome-guideli
 
 ## Core Principle
 
-Clojure readability is **consistent layout + idiomatic expressions** — namespaces explicit, names conventional, data as maps/vectors, side effects marked.
+Clojure readability is **consistent layout + idiomatic expressions**, namespaces explicit, names conventional, data as maps/vectors, side effects marked.
 
 ## When to Use / NOT
 
@@ -20,15 +20,15 @@ Clojure readability is **consistent layout + idiomatic expressions** — namespa
 **NOT when:**
 
 - Non-Clojure code.
-- Generated `cljs` from macros — validate generator output.
+- Generated `cljs` from macros, validate generator output.
 
 ## Workflow
 
-1. **Layout & ns** — indent, parens, `ns` hygiene (`clojure-style-layout-namespaces.md`).
-2. **Naming** — lisp-case, `?`, `!`, dynamics (`clojure-style-naming-types.md`).
-3. **Functions** — when/if-let, threading, arity (`clojure-style-functions-idioms.md`).
-4. **Data & safety** — collections, errors, macros (`clojure-style-data-safety.md`).
-5. **Verify** — cljfmt, clj-kondo, `clojure -M:test` on changed namespaces.
+1. **Layout & ns**, indent, parens, `ns` hygiene (`clojure-style-layout-namespaces.md`).
+2. **Naming**, lisp-case, `?`, `!`, dynamics (`clojure-style-naming-types.md`).
+3. **Functions**, when/if-let, threading, arity (`clojure-style-functions-idioms.md`).
+4. **Data & safety**, collections, errors, macros (`clojure-style-data-safety.md`).
+5. **Verify**, cljfmt, clj-kondo, `clojure -M:test` on changed namespaces.
 
 ## Red Flags
 

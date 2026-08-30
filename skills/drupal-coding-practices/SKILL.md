@@ -1,6 +1,6 @@
 ---
 name: drupal-coding-practices
-description: "Use when authoring or reviewing Drupal modules/themes — 2-space PHP layout, module-prefixed functions, PSR-4 namespaces, docblocks, t() i18n, YAML/Twig/JS standards, and PHPCS/PHPStan verification."
+description: "Use when authoring or reviewing Drupal modules/themes, 2-space PHP layout, module-prefixed functions, PSR-4 namespaces, docblocks, t() i18n, YAML/Twig/JS standards, and PHPCS/PHPStan verification."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for Drupal official coding standards ingest (`awesome-guidelin
 
 ## Core Principle
 
-Drupal maintainability is **always-current handbook discipline plus typed PSR-4 services** — two-space layout, module-prefixed procedural code, documented APIs, translatable strings, and PHPCS/PHPStan-enforced conventions across PHP, YAML, Twig, and JS.
+Drupal maintainability is **always-current handbook discipline plus typed PSR-4 services**, two-space layout, module-prefixed procedural code, documented APIs, translatable strings, and PHPCS/PHPStan-enforced conventions across PHP, YAML, Twig, and JS.
 
 ## When to Use / NOT
 
@@ -20,17 +20,17 @@ Drupal maintainability is **always-current handbook discipline plus typed PSR-4 
 
 **NOT when:**
 
-- Non-Drupal PHP — `php-coding-practices`.
-- WordPress themes/plugins — `wordpress-coding-practices`.
-- Entity design, routing, or migration architecture — Drupal foundation docs.
-- Obsolete drupal.org wiki copies — use GitLab Pages canonical docs.
+- Non-Drupal PHP, `php-coding-practices`.
+- WordPress themes/plugins, `wordpress-coding-practices`.
+- Entity design, routing, or migration architecture, Drupal foundation docs.
+- Obsolete drupal.org wiki copies, use GitLab Pages canonical docs.
 
 ## Workflow
 
-1. **PHP layout/naming** — 2-space, prefixes, casing (`drupal-style-php-naming.md`).
-2. **Namespaces/types** — PSR-4, use, hints (`drupal-style-namespaces-types.md`).
-3. **Documentation/i18n** — docblocks, hooks, t() (`drupal-style-documentation-i18n.md`).
-4. **Assets/verify** — YAML, Twig, JS, CI (`drupal-style-assets-verify.md`).
+1. **PHP layout/naming**, 2-space, prefixes, casing (`drupal-style-php-naming.md`).
+2. **Namespaces/types**, PSR-4, use, hints (`drupal-style-namespaces-types.md`).
+3. **Documentation/i18n**, docblocks, hooks, t() (`drupal-style-documentation-i18n.md`).
+4. **Assets/verify**, YAML, Twig, JS, CI (`drupal-style-assets-verify.md`).
 
 ## Red Flags
 
@@ -80,9 +80,9 @@ Drupal maintainability is **always-current handbook discipline plus typed PSR-4 
 
 ## Related skills
 
-- `php-coding-practices` — PSR baseline outside Drupal
-- `wordpress-coding-practices` — sibling CMS conventions
-- `wcag-accessibility-practices` — accessible Drupal UI
-- `frontend-markup-practices` — generic HTML/CSS habits
-- `javascript-coding-practices` — JS outside Drupal admin patterns
-- `yaml` / config patterns — generic YAML hygiene where applicable
+- `php-coding-practices`, PSR baseline outside Drupal
+- `wordpress-coding-practices`, sibling CMS conventions
+- `wcag-accessibility-practices`, accessible Drupal UI
+- `frontend-markup-practices`, generic HTML/CSS habits
+- `javascript-coding-practices`, JS outside Drupal admin patterns
+- `yaml` / config patterns, generic YAML hygiene where applicable

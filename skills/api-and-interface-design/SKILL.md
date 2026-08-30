@@ -1,6 +1,6 @@
 ---
 name: api-and-interface-design
-description: Use when designing REST/GraphQL APIs, SDK interfaces, or public module boundaries — covers contract-first design, versioning, error shapes, and backward compatibility
+description: Use when designing REST/GraphQL APIs, SDK interfaces, or public module boundaries, covers contract-first design, versioning, error shapes, and backward compatibility
 ---
 
 
@@ -8,12 +8,12 @@ description: Use when designing REST/GraphQL APIs, SDK interfaces, or public mod
 
 ## Core Principle
 
-Contract first, implementation second — the API is the contract; internal code can change freely, the contract cannot.
+Contract first, implementation second, the API is the contract; internal code can change freely, the contract cannot.
 
 ## When to Use / NOT
 
-- **Use when:** designing REST/GraphQL APIs, SDK interfaces, or public module boundaries — contract-first design, versioning, error shapes, backward compatibility.
-- **NOT when:** N/A — no explicit exclusion stated in this skill.
+- **Use when:** designing REST/GraphQL APIs, SDK interfaces, or public module boundaries, contract-first design, versioning, error shapes, backward compatibility.
+- **NOT when:** N/A, no explicit exclusion stated in this skill.
 
 ## Workflow
 
@@ -44,12 +44,12 @@ Never let a request body reach the implementation as `any` or `unknown`. Decode 
 
 ## Versioning Strategy
 
-| Strategy                                        | When                                              |
+| Strategy | When |
 |-------------------------------------------------|---------------------------------------------------|
-| URL path (`/v1/`, `/v2/`)                       | Public API, multiple versions live simultaneously |
-| Header (`Accept: application/vnd.api+json;v=2`) | Internal API, more flexible                       |
-| Query param (`?v=2`)                            | Web-only, simple cases                            |
-| None (breaking is breaking)                     | Internal-only, single consumer                    |
+| URL path (`/v1/`, `/v2/`) | Public API, multiple versions live simultaneously |
+| Header (`Accept: application/vnd.api+json;v=2`) | Internal API, more flexible |
+| Query param (`?v=2`) | Web-only, simple cases |
+| None (breaking is breaking) | Internal-only, single consumer |
 
 For public APIs, prefer URL path. It's visible, cacheable, and easy to reason about.
 
@@ -70,7 +70,7 @@ Always: machine-readable `code` (stable, never localized), human-readable `messa
 
 ## Backward Compatibility
 
-**Add only.** Don't change existing field meanings. Don't tighten validation. Don't remove fields. Don't rename.
+**Add only.** Never change existing field meanings. Avoid tightening validation or removing fields. Do not rename.
 
 If you must break: new version, deprecation period, migration guide, codemod if possible.
 
@@ -116,4 +116,4 @@ Generated docs from the schema match what you ship; every error carries machine-
 
 ## References
 
-N/A — no reference files; this skill is self-contained.
+N/A, no reference files; this skill is self-contained.

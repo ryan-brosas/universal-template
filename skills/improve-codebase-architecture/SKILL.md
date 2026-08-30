@@ -53,16 +53,16 @@ Start at the bottom. Don't jump to 5.
 
 ## Common Smells
 
-| Smell               | Indicator                             | First move                 |
+| Smell | Indicator | First move |
 |---------------------|---------------------------------------|----------------------------|
-| Long method         | > 30 lines, multiple responsibilities | Extract method             |
-| God class           | 1000+ lines, 20+ methods              | Extract class              |
-| Tight coupling      | Changing A forces changes in B        | Dependency injection       |
-| Feature envy        | Method uses B's data more             | Move method to B           |
-| Primitive obsession | Strings/numbers for domain            | Value objects / branded    |
-| Long parameter list | > 3 params, especially bools          | Parameter object / options |
-| Shotgun surgery     | One change touches 5+ files           | Consolidate                |
-| Divergent change    | One class changes for many reasons    | Split by axis              |
+| Long method | > 30 lines, multiple responsibilities | Extract method |
+| God class | 1000+ lines, 20+ methods | Extract class |
+| Tight coupling | Changing A forces changes in B | Dependency injection |
+| Feature envy | Method uses B's data more | Move method to B |
+| Primitive obsession | Strings/numbers for domain | Value objects / branded |
+| Long parameter list | > 3 params, especially bools | Parameter object / options |
+| Shotgun surgery | One change touches 5+ files | Consolidate |
+| Divergent change | One class changes for many reasons | Split by axis |
 
 ## Module Boundaries
 
@@ -95,7 +95,7 @@ Refactor without tests; no baseline; "I think this is better" (no metric); "rewr
 
 ## Verification
 
-Tests pass after each step (behavior preserved); the measured metric — cyclomatic complexity, coupling, build time — improved versus the recorded baseline. Stop when tests are easy to write, build time decreased, new features easy, onboarding faster, and AI tools navigate.
+Tests pass after each step (behavior preserved); the measured metric, cyclomatic complexity, coupling, build time, improved versus the recorded baseline. Stop when tests are easy to write, build time decreased, new features easy, onboarding faster, and AI tools navigate.
 
 ## Skill Result Contract
 
@@ -111,4 +111,4 @@ Tests pass after each step (behavior preserved); the measured metric — cycloma
 
 ## References
 
-N/A — no reference files; the ladder, smells table, and patterns are inline in this skill.
+N/A, no reference files; the ladder, smells table, and patterns are inline in this skill.

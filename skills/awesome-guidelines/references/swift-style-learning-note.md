@@ -9,7 +9,7 @@
 | [Swift API Design Guidelines](https://www.swift.org/documentation/api-design-guidelines/) (primary) | clarity at point of use; doc comment per declaration; role-based naming; fluent call sites; argument labels; mutating/nonmutating pairs; defaulted parameters; protocol naming; acronym casing; avoid overload ambiguity |
 | [GitHub Swift Style Guide](https://github.com/github/swift-style-guide) (secondary, archived) | `let` by default; `guard` early exit; avoid force-unwrap/IUOs; implicit getters; explicit top-level access control; colon with identifier; minimal `self`; prefer structs; `final` classes by default; omit redundant generic params on methods |
 
-**Not duplicated here:** Full SwiftFormat rule matrix — project formatter config wins on indent (spaces vs tabs). SwiftUI/UIKit patterns — use stack foundations.
+**Not duplicated here:** Full SwiftFormat rule matrix — project formatter config wins on indent (spaces vs tabs). SwiftUI/UIKit patterns — use stack capsules in `foundation-pack/`.
 
 ## Mental model
 

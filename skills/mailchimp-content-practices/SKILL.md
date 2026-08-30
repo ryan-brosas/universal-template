@@ -1,6 +1,6 @@
 ---
 name: mailchimp-content-practices
-description: "Use when authoring or reviewing product/marketing copy — Mailchimp plainspoken voice, active positive language, inclusive people terms, sentence-case UI headings, descriptive links, a11y, and translation-safe SVO."
+description: "Use when authoring or reviewing product/marketing copy, Mailchimp plainspoken voice, active positive language, inclusive people terms, sentence-case UI headings, descriptive links, a11y, and translation-safe SVO."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for Mailchimp Content Style Guide (archived `awesome-guideline
 
 ## Core Principle
 
-Product copy quality is **clear, person-first, and scannable** — plainspoken voice, active positive sentences, inclusive terms, descriptive links, and translation-safe structure.
+Product copy quality is **clear, person-first, and scannable**, plainspoken voice, active positive sentences, inclusive terms, descriptive links, and translation-safe structure.
 
 ## When to Use / NOT
 
@@ -19,17 +19,17 @@ Product copy quality is **clear, person-first, and scannable** — plainspoken v
 
 **NOT when:**
 
-- Internal repo docs where only Markdown mechanics matter — `markdown-writing-practices`.
-- API/code identifiers — stack naming skills.
-- Legal contracts requiring non-Mailchimp house style — follow legal template.
+- Internal repo docs where only Markdown mechanics matter, `markdown-writing-practices`.
+- API/code identifiers, stack naming skills.
+- Legal contracts requiring non-Mailchimp house style, follow legal template.
 
 ## Workflow
 
-1. **Voice/tone** — plainspoken, active, positive (`mailchimp-style-voice-tone.md`).
-2. **Grammar/structure** — hierarchy, numbers, punctuation (`mailchimp-style-grammar-structure.md`).
-3. **Inclusive people** — they/them, bias-free terms (`mailchimp-style-inclusive-people.md`).
-4. **Web/a11y/i18n** — headings, links, forms, translation (`mailchimp-style-web-accessibility-i18n.md`).
-5. **Verify** — read aloud; heading outline; link/descriptive text scan; word-list grep for banned terms.
+1. **Voice/tone**, plainspoken, active, positive (`mailchimp-style-voice-tone.md`).
+2. **Grammar/structure**, hierarchy, numbers, punctuation (`mailchimp-style-grammar-structure.md`).
+3. **Inclusive people**, they/them, bias-free terms (`mailchimp-style-inclusive-people.md`).
+4. **Web/a11y/i18n**, headings, links, forms, translation (`mailchimp-style-web-accessibility-i18n.md`).
+5. **Verify**, read aloud; heading outline; link/descriptive text scan; word-list grep for banned terms.
 
 ## Red Flags
 
@@ -84,5 +84,5 @@ Product copy quality is **clear, person-first, and scannable** — plainspoken v
 
 ## Related skills
 
-- `markdown-writing-practices` — repo Markdown layout and fences
-- `frontend-markup-practices` — semantic HTML when copy ships in templates
+- `markdown-writing-practices`, repo Markdown layout and fences
+- `frontend-markup-practices`, semantic HTML when copy ships in templates

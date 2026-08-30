@@ -1,16 +1,16 @@
 ---
 name: fortran-coding-practices
-description: "Use when authoring or reviewing Fortran — fprettify 4-space layout, lowercase snake_case, intent/assumed-shape, dp kind, private modules, FORD docs, modern F2003+ only, and build/fprettify/test in CI."
+description: "Use when authoring or reviewing Fortran, fprettify 4-space layout, lowercase snake_case, intent/assumed-shape, dp kind, private modules, FORD docs, modern F2003+ only, and build/fprettify/test in CI."
 disable-model-invocation: true
 ---
 
 # Fortran Coding Practices
 
-Application skill for Fortran style learning (from the archived `awesome-guidelines` style capsules). For HPC parallelism (OpenMP/OpenACC), combine with domain stack foundations.
+Application skill for Fortran style learning (from the archived `awesome-guidelines` style capsules). For HPC parallelism (OpenMP/OpenACC), combine with domain stack capsules in `foundation-pack/`.
 
 ## Core Principle
 
-Fortran quality is **modern-standard clarity** — explicit modules, assumed-shape data, mechanical formatting, and documented public APIs.
+Fortran quality is **modern-standard clarity**, explicit modules, assumed-shape data, mechanical formatting, and documented public APIs.
 
 ## When to Use / NOT
 
@@ -19,16 +19,16 @@ Fortran quality is **modern-standard clarity** — explicit modules, assumed-sha
 
 **NOT when:**
 
-- Legacy fixed-form `.f` without modernization plan — migrate first or scope narrowly.
-- Generated LAPACK interfaces — validate generators.
+- Legacy fixed-form `.f` without modernization plan, migrate first or scope narrowly.
+- Generated LAPACK interfaces, validate generators.
 
 ## Workflow
 
-1. **Layout** — fprettify, files, indent (`fortran-style-formatting-layout.md`).
-2. **Modules** — names, intent, exports (`fortran-style-naming-modules.md`).
-3. **Arrays** — dp, assumed-shape, storage (`fortran-style-arrays-types.md`).
-4. **API** — modern std, FORD (`fortran-style-modern-api.md`).
-5. **Verify** — fprettify, `ford`, compiler warnings, tests on changed units.
+1. **Layout**, fprettify, files, indent (`fortran-style-formatting-layout.md`).
+2. **Modules**, names, intent, exports (`fortran-style-naming-modules.md`).
+3. **Arrays**, dp, assumed-shape, storage (`fortran-style-arrays-types.md`).
+4. **API**, modern std, FORD (`fortran-style-modern-api.md`).
+5. **Verify**, fprettify, `ford`, compiler warnings, tests on changed units.
 
 ## Red Flags
 

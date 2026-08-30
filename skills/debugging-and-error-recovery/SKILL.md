@@ -25,12 +25,12 @@ Feature work with no failure signal (source-first implementation); pure research
 4. Reduce to the smallest failing case.
 5. Form one hypothesis; test it with one change or one diagnostic.
 6. Write a failing regression test when behavior can be tested.
-7. Fix the root cause, not only the symptom.
+7. Fix the root cause, not just the symptom.
 8. Re-run the original reproduction and relevant regression checks.
 
 ## Retry Policy
 
-A repeated failure under the same hypothesis is evidence against the hypothesis, not a reason to repeat it. When a fix does not change the failure: stop, invalidate the current hypothesis, and reopen the evidence and assumptions (re-read the request, the full error, and the touched code; check for a mapping problem before another attempt). Change approach or escalate when no new hypothesis is available — not at a fixed attempt count. Most repeated failures are a mapping problem, not an execution problem.
+A repeated failure under the same hypothesis is evidence against the hypothesis, not a reason to repeat it. When a fix does not change the failure: stop, invalidate the current hypothesis, and reopen the evidence and assumptions (re-read the request, the full error, and the touched code; check for a mapping problem before another attempt). Change approach or escalate when no new hypothesis is available, not at a fixed attempt count. Most repeated failures are a mapping problem, not an execution problem.
 
 ## Evidence Log
 
@@ -38,13 +38,13 @@ For complex bugs, keep a short log: Symptoms / Reproduction / Hypotheses Elimina
 
 ## Common Rationalizations
 
-| Rationalization             | Rebuttal                                |
+| Rationalization | Rebuttal |
 |-----------------------------|-----------------------------------------|
-| "Probably the issue"        | Probably is a hypothesis, not evidence. |
-| "Patch the symptom now"     | Symptom patches hide root causes.       |
-| "Multiple fixes save time"  | You won't know which change mattered.   |
-| "Test failure is unrelated" | Prove it with isolation first.          |
-| "One more attempt"          | Same hypothesis + same failure = new hypothesis first. |
+| "Probably the issue" | Probably is a hypothesis, not evidence. |
+| "Patch the symptom now" | Symptom patches hide root causes. |
+| "Multiple fixes save time" | You won't know which change mattered. |
+| "Test failure is unrelated" | Prove it with isolation first. |
+| "One more attempt" | Same hypothesis + same failure = new hypothesis first. |
 
 ## Red Flags
 
@@ -57,4 +57,4 @@ Original failure reproduced or documented as non-reproducible; root cause stated
 
 ## References
 
-N/A — no reference files; this skill is self-contained.
+N/A, no reference files; this skill is self-contained.

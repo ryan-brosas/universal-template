@@ -34,8 +34,9 @@ distilled into an authoritative, actionable guide for coding agents and develope
    Pi Fabric's `/fabric prewalk` runtime feature.)
 5. **Read Deeply When It Pays:** Multi-pass mining (subsystem map first,
    internal seams after) is a deliberate pass for hard ports — not a default
-   ritual, and reading deeply never obligates encoding (see the
-   `code-foundations` promotion rules).
+   ritual, and reading deeply never obligates encoding (working prior art
+   stays project-local reference code; legacy foundations sit cold in
+   `foundation-pack/` and are retired over time).
 
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: markdown-writing-practices
-description: "Use when authoring or reviewing Markdown docs — single H1 layout, 80-column wrap, ATX headings, fenced code with language, descriptive links, reference links, and tables only when scannable 2D data."
+description: "Use when authoring or reviewing Markdown docs, single H1 layout, 80-column wrap, ATX headings, fenced code with language, descriptive links, reference links, and tables only when scannable 2D data."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for Markdown style learning (from the archived `awesome-guidel
 
 ## Core Principle
 
-Documentation Markdown is **maintainable plain text** — one H1, wrapped prose, fenced code, descriptive links, minimal HTML.
+Documentation Markdown is **maintainable plain text**, one H1, wrapped prose, fenced code, descriptive links, minimal HTML.
 
 ## When to Use / NOT
 
@@ -19,16 +19,16 @@ Documentation Markdown is **maintainable plain text** — one H1, wrapped prose,
 
 **NOT when:**
 
-- Generated API docs from source comments — validate generator templates.
-- Rich wiki with non-Markdown macros only — use platform foundation.
+- Generated API docs from source comments, validate generator templates.
+- Rich wiki with non-Markdown macros only, use platform foundation.
 
 ## Workflow
 
-1. **Layout** — H1, intro, TOC, headings, 80-col wrap (`markdown-style-document-layout.md`).
-2. **Lists & code** — lazy numbering, fences, languages (`markdown-style-lists-code.md`).
-3. **Links & media** — paths, reference links, alt text (`markdown-style-links-media.md`).
-4. **Tables** — 2D data only; Markdown not HTML (`markdown-style-tables-portability.md`).
-5. **Verify** — markdownlint/remark + `git diff --check` on changed `.md` files.
+1. **Layout**, H1, intro, TOC, headings, 80-col wrap (`markdown-style-document-layout.md`).
+2. **Lists & code**, lazy numbering, fences, languages (`markdown-style-lists-code.md`).
+3. **Links & media**, paths, reference links, alt text (`markdown-style-links-media.md`).
+4. **Tables**, 2D data only; Markdown not HTML (`markdown-style-tables-portability.md`).
+5. **Verify**, markdownlint/remark + `git diff --check` on changed `.md` files.
 
 ## Red Flags
 

@@ -1,16 +1,16 @@
 ---
 name: erlang-coding-practices
-description: "Use when authoring or reviewing Erlang — 2-space layout, snake_case/CamelCase naming, clause functions, -spec exports, OTP API encapsulation, {ok,error} returns, atom/deserialize safety, and Elvis/dialyzer/xref in CI."
+description: "Use when authoring or reviewing Erlang, 2-space layout, snake_case/CamelCase naming, clause functions, -spec exports, OTP API encapsulation, {ok,error} returns, atom/deserialize safety, and Elvis/dialyzer/xref in CI."
 disable-model-invocation: true
 ---
 
 # Erlang Coding Practices
 
-Application skill for Erlang style learning (from the archived `awesome-guidelines` style capsules). For supervision trees and release tooling, combine with OTP stack foundations.
+Application skill for Erlang style learning (from the archived `awesome-guidelines` style capsules). For supervision trees and release tooling, combine with OTP stack capsules in `foundation-pack/`.
 
 ## Core Principle
 
-Erlang quality is **pattern-visible modules + crash-loud bugs** — explicit exports, clause-driven control flow, and restrictive matching on every boundary.
+Erlang quality is **pattern-visible modules + crash-loud bugs**, explicit exports, clause-driven control flow, and restrictive matching on every boundary.
 
 ## When to Use / NOT
 
@@ -19,16 +19,16 @@ Erlang quality is **pattern-visible modules + crash-loud bugs** — explicit exp
 
 **NOT when:**
 
-- Elixir code — use `elixir-coding-practices` (BEAM overlap on security only).
-- Generated `.app` / protobuf stubs — validate generators.
+- Elixir code, use `elixir-coding-practices` (BEAM overlap on security only).
+- Generated `.app` / protobuf stubs, validate generators.
 
 ## Workflow
 
-1. **Layout** — indent, types/records, grouping (`erlang-style-formatting-modules.md`).
-2. **Names & types** — snake/CamelCase, specs, opaque state (`erlang-style-naming-types.md`).
-3. **Control flow** — clauses, try/catch, no if (`erlang-style-control-flow.md`).
-4. **OTP & security** — exports, API wrap, input safety (`erlang-style-otp-security.md`).
-5. **Verify** — Elvis, Dialyzer, xref, rebar3 test on changed modules.
+1. **Layout**, indent, types/records, grouping (`erlang-style-formatting-modules.md`).
+2. **Names & types**, snake/CamelCase, specs, opaque state (`erlang-style-naming-types.md`).
+3. **Control flow**, clauses, try/catch, no if (`erlang-style-control-flow.md`).
+4. **OTP & security**, exports, API wrap, input safety (`erlang-style-otp-security.md`).
+5. **Verify**, Elvis, Dialyzer, xref, rebar3 test on changed modules.
 
 ## Red Flags
 

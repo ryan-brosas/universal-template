@@ -45,14 +45,14 @@ chrome-devtools) with no external testing service or credentials.
 ## Review rounds
 
 1. Functional: map core journeys (entry, action, feedback, completion) and
-   walk each end to end. The next action must be discoverable at every step.
+ walk each end to end. The next action must be discoverable at every step.
 2. Adversarial: break each seam. Unauthorized access, expired sessions,
-   revoked roles, shared links, offline start, network loss mid-task,
-   partial input, invalid data, missing routes, cancelled external handoffs,
-   and destructive actions without confirmation.
+ revoked roles, shared links, offline start, network loss mid-task,
+ partial input, invalid data, missing routes, cancelled external handoffs,
+ and destructive actions without confirmation.
 3. Coverage gaps: sweep every journey at narrow viewport and across channels
-   (web, mobile, desktop, CLI, API where applicable), checking navigation,
-   back behavior, and dead ends.
+ (web, mobile, desktop, CLI, API where applicable), checking navigation,
+ back behavior, and dead ends.
 
 ## State checks
 
@@ -109,4 +109,4 @@ Every finding carries evidence: screen, control, step, observed behavior, consol
 
 ## References
 
-N/A — no reference files; this skill is self-contained.
+N/A, no reference files; this skill is self-contained.

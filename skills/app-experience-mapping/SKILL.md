@@ -10,7 +10,7 @@ metadata: '{"source":"synthesis; close adaptation: browserbase/skills ui-test (M
 
 ## Core Principle
 
-Treat the app as a black box: map product intent and observed behavior, never implementation details; mark every cell hypothesis (H) or observed (O) — unmarked cells are hypotheses, not facts.
+Treat the app as a black box: map product intent and observed behavior, never implementation details; mark every cell hypothesis (H) or observed (O), unmarked cells are hypotheses, not facts.
 
 ## When to Use
 
@@ -113,4 +113,4 @@ Every cell marked H or O; every output labeled hypothesis, observed, or verified
 
 ## References
 
-N/A — no reference files; this skill is self-contained.
+N/A, no reference files; this skill is self-contained.

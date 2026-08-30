@@ -1,6 +1,6 @@
 ---
 name: perl-coding-practices
-description: "Use when authoring or reviewing Perl — v5.36/strict/warnings, 4-space aligned layout, snake_case and Mixed::Case modules, 3-arg open, explicit subs/I/O, anti-pattern avoidance, and perlcritic/perltidy/prove in CI."
+description: "Use when authoring or reviewing Perl, v5.36/strict/warnings, 4-space aligned layout, snake_case and Mixed::Case modules, 3-arg open, explicit subs/I/O, anti-pattern avoidance, and perlcritic/perltidy/prove in CI."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for Perl style learning (from the archived `awesome-guidelines
 
 ## Core Principle
 
-Perl maintainability is **lexical scope + checked I/O** — strict warnings on, 3-arg open, explicit subs, avoid indirect objects and void map/grep.
+Perl maintainability is **lexical scope + checked I/O**, strict warnings on, 3-arg open, explicit subs, avoid indirect objects and void map/grep.
 
 ## When to Use / NOT
 
@@ -19,16 +19,16 @@ Perl maintainability is **lexical scope + checked I/O** — strict warnings on, 
 
 **NOT when:**
 
-- Raku (Perl 6) — different language foundations.
-- Generated `.pm` stubs — validate generators.
+- Raku (Perl 6), different language foundations.
+- Generated `.pm` stubs, validate generators.
 
 ## Workflow
 
-1. **Layout** — indent, braces, alignment (`perl-style-formatting-layout.md`).
-2. **Scope** — v5.36, my, naming (`perl-style-strict-scoping.md`).
-3. **Subs/I/O** — open, args, returns (`perl-style-subs-io.md`).
-4. **Anti-patterns** — OO, loops, regex (`perl-style-anti-patterns.md`).
-5. **Verify** — perlcritic, perltidy, prove on changed files.
+1. **Layout**, indent, braces, alignment (`perl-style-formatting-layout.md`).
+2. **Scope**, v5.36, my, naming (`perl-style-strict-scoping.md`).
+3. **Subs/I/O**, open, args, returns (`perl-style-subs-io.md`).
+4. **Anti-patterns**, OO, loops, regex (`perl-style-anti-patterns.md`).
+5. **Verify**, perlcritic, perltidy, prove on changed files.
 
 ## Red Flags
 

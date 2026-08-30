@@ -1,16 +1,16 @@
 ---
 name: javascript-coding-practices
-description: "Use when authoring or reviewing JavaScript — named ES module exports, const/let, strict equality, semicolons and braces, trailing commas, arrow callbacks, JSDoc on public API, and banned eval/with/var."
+description: "Use when authoring or reviewing JavaScript, named ES module exports, const/let, strict equality, semicolons and braces, trailing commas, arrow callbacks, JSDoc on public API, and banned eval/with/var."
 disable-model-invocation: true
 ---
 
 # JavaScript Coding Practices
 
-Application skill for JavaScript style learning (from the archived `awesome-guidelines` style capsules). For TypeScript domain rules, load `typescript-coding-standards`; for React, `react-foundation`.
+Application skill for JavaScript style learning (from the archived `awesome-guidelines` style capsules). For TypeScript domain rules, load `typescript-coding-standards`; for React, `foundation-pack/react-foundation`.
 
 ## Core Principle
 
-JavaScript maintainability is **explicit modules and lint-enforced habits** — named exports, const-by-default, strict equality, semicolons, no dynamic eval.
+JavaScript maintainability is **explicit modules and lint-enforced habits**, named exports, const-by-default, strict equality, semicolons, no dynamic eval.
 
 ## When to Use / NOT
 
@@ -19,16 +19,16 @@ JavaScript maintainability is **explicit modules and lint-enforced habits** — 
 
 **NOT when:**
 
-- TypeScript-only codebase — use `typescript-coding-practices` (style) and `typescript-coding-standards` (domain); still shares many ESLint rules with JS.
-- Generated/bundled output — validate source instead.
+- TypeScript-only codebase, use `typescript-coding-practices` (style) and `typescript-coding-standards` (domain); still shares many ESLint rules with JS.
+- Generated/bundled output, validate source instead.
 
 ## Workflow
 
-1. **Modules** — named exports, immutable export surface, dedupe imports (`javascript-style-modules-exports.md`).
-2. **Bindings** — `const`/`let`, `===`, explicit empty string/length checks (`javascript-style-variables-equality.md`).
-3. **Format** — 2 spaces, semicolons, braces, trailing commas, switch `default` (`javascript-style-formatting-control.md`).
-4. **Functions** — camelCase, arrows in callbacks, JSDoc on exports, ban eval/with/var (`javascript-style-functions-disallowed.md`).
-5. **Verify** — eslint + formatter on changed paths.
+1. **Modules**, named exports, immutable export surface, dedupe imports (`javascript-style-modules-exports.md`).
+2. **Bindings**, `const`/`let`, `===`, explicit empty string/length checks (`javascript-style-variables-equality.md`).
+3. **Format**, 2 spaces, semicolons, braces, trailing commas, switch `default` (`javascript-style-formatting-control.md`).
+4. **Functions**, camelCase, arrows in callbacks, JSDoc on exports, ban eval/with/var (`javascript-style-functions-disallowed.md`).
+5. **Verify**, eslint + formatter on changed paths.
 
 ## Red Flags
 

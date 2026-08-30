@@ -32,7 +32,7 @@ Route each question to **one leaf**. This index mirrors common "complete guide" 
 | Markdown docs | `awesome-guidelines` markdown-style capsules | `markdown-writing-practices`, markdownlint in CI |
 | Product & marketing copy | `awesome-guidelines` mailchimp-style capsules | `mailchimp-content-practices`, inclusive-language + link-text review in CI |
 | Google developer documentation | `awesome-guidelines` google-devdocs-style capsules | `google-devdocs-practices`, heading/link review in doc CI |
-| HTML/CSS markup | `awesome-guidelines` frontend capsules | `frontend-markup-practices`; TS/React → stack foundations |
+| HTML/CSS markup | `awesome-guidelines` frontend capsules | `frontend-markup-practices`; TS/React → stack capsules in `foundation-pack/` |
 | MDN doc code examples | `awesome-guidelines` mdn-style capsules | `mdn-code-examples-practices`, Prettier MDN config in doc CI |
 | Python style & API surface | `awesome-guidelines` python-style capsules | `python-coding-practices`, Ruff/Black/mypy in CI |
 | Django coding style | `awesome-guidelines` django-style capsules | `django-coding-practices`, pre-commit + manage.py test in CI |

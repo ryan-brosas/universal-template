@@ -1,6 +1,6 @@
 ---
 name: common-lisp-coding-practices
-description: "Use when authoring or reviewing Common Lisp — lisp-case naming, *earmuffs*/+constants+, SLIME indentation, :import-from packages, CLOS typed slots, defgeneric protocols, and ASDF test in CI."
+description: "Use when authoring or reviewing Common Lisp, lisp-case naming, *earmuffs*/+constants+, SLIME indentation,:import-from packages, CLOS typed slots, defgeneric protocols, and ASDF test in CI."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for Common Lisp style learning (from the archived `awesome-gui
 
 ## Core Principle
 
-Common Lisp quality is **idiomatic names + explicit packages + documented CLOS** — small libraries, exported APIs only, SLIME-consistent layout.
+Common Lisp quality is **idiomatic names + explicit packages + documented CLOS**, small libraries, exported APIs only, SLIME-consistent layout.
 
 ## When to Use / NOT
 
@@ -19,16 +19,16 @@ Common Lisp quality is **idiomatic names + explicit packages + documented CLOS**
 
 **NOT when:**
 
-- Clojure/Scheme/Racket — use language-specific practice skills.
-- Generated system stubs only — validate generator.
+- Clojure/Scheme/Racket, use language-specific practice skills.
+- Generated system stubs only, validate generator.
 
 ## Workflow
 
-1. **Format & files** — indent, columns, headers (`lisp-style-formatting-files.md`).
-2. **Naming** — lisp-case, *, +, predicates (`lisp-style-naming-symbols.md`).
-3. **Packages** — defpackage, ASDF (`lisp-style-packages-systems.md`).
-4. **CLOS & control** — classes, when/unless (`lisp-style-clos-control.md`).
-5. **Verify** — load/test system; SBCL `(declaim (optimize ...))` policy; review exports.
+1. **Format & files**, indent, columns, headers (`lisp-style-formatting-files.md`).
+2. **Naming**, lisp-case, *, +, predicates (`lisp-style-naming-symbols.md`).
+3. **Packages**, defpackage, ASDF (`lisp-style-packages-systems.md`).
+4. **CLOS & control**, classes, when/unless (`lisp-style-clos-control.md`).
+5. **Verify**, load/test system; SBCL `(declaim (optimize ...))` policy; review exports.
 
 ## Red Flags
 

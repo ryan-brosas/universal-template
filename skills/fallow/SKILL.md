@@ -5,15 +5,15 @@ disable-model-invocation: true
 ---
 
 
-# Fallow — Codebase Intelligence
+# Fallow, Codebase Intelligence
 
-Deterministic static analysis for TS/JS. Answers: dead code, duplication, complexity, architecture drift, (optionally) runtime behavior. **Does not generate code** — provides evidence.
+Deterministic static analysis for TS/JS. Answers: dead code, duplication, complexity, architecture drift, (optionally) runtime behavior. **Does not generate code**, provides evidence.
 
 **Always `--format json`** for structured output.
 
 ## Core Principle
 
-Deterministic static analysis provides evidence, not code. Read the JSON, cite the files and line counts — don't paraphrase; the numbers are the evidence.
+Deterministic static analysis provides evidence, not code. Read the JSON, cite the files and line counts, don't paraphrase; the numbers are the evidence.
 
 ## When to Use
 
@@ -25,7 +25,7 @@ Deterministic static analysis provides evidence, not code. Read the JSON, cite t
 
 ## When NOT to Use
 
-Non-TS/JS (Fallow is JS/TS only — for Python repos use the project's configured dead-code tooling, e.g. ruff or vulture); one-line edits (overhead); runtime data without the runtime layer set up.
+Non-TS/JS (Fallow is JS/TS only, for Python repos use the project's configured dead-code tooling, e.g. ruff or vulture); one-line edits (overhead); runtime data without the runtime layer set up.
 
 ## Core Commands
 
@@ -69,7 +69,7 @@ fallow --format json
 }
 ```
 
-Read the JSON. Cite the files and line counts. Don't paraphrase — the numbers are the evidence.
+Read the JSON. Cite the files and line counts. Don't paraphrase, the numbers are the evidence.
 
 ## Workflow
 
@@ -81,15 +81,15 @@ Read the JSON. Cite the files and line counts. Don't paraphrase — the numbers 
 
 ## Common Mistakes
 
-Reading summary without JSON (loses precision); running fallow but not acting on output; treating "low dead code %" as the goal (the goal is fewer bugs); not setting baseline; "delete this unused export" without checking who imports it (might be a public API); running on a 5k LOC project and trying to clean everything at once.
+Reading summary without JSON (loses precision). running fallow but not acting on output. treating "low dead code %" as the goal (the goal is fewer bugs). not setting baseline. "delete this unused export" without checking who imports it (might be a public API). running on a 5k LOC project and trying to clean everything at once.
 
 ## Red Flags
 
-"Code quality" claim without Fallow output; Fallow ignored because "we know it's bad"; dead code deleted without checking consumers; "we'll clean up later" (later never comes); no baseline = no diff = no signal; running once and never again; treating fallow output as a checklist instead of evidence.
+"Code quality" claim without Fallow output. Fallow ignored because "we know it's bad". dead code deleted without checking consumers. "we'll clean up later" (later never comes). no baseline = no diff = no signal. running once and never again. treating fallow output as a checklist instead of evidence.
 
 ## Anti-Patterns
 
-**"I know it's bad"** (run Fallow); **"small project, no need"** (even small projects have dead code); **"delete all dead"** (check public API first); **"summary is enough"** (JSON is the contract); **"fallow said so"** (Fallow is evidence, not authority — use judgment).
+**"I know it's bad"** (run Fallow); **"small project, no need"** (even small projects have dead code); **"delete all dead"** (check public API first); **"summary is enough"** (JSON is the contract); **"fallow said so"** (Fallow is evidence, not authority, use judgment).
 
 ## Verification
 

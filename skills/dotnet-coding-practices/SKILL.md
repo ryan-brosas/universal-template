@@ -1,36 +1,36 @@
 ---
 name: dotnet-coding-practices
-description: "Use when designing or reviewing cross-language .NET public APIs — Framework Design naming, scenario-driven library design, exception/event/dispose patterns, secure coding baseline, and analyzer/CLS gates in CI."
+description: "Use when designing or reviewing cross-language.NET public APIs, Framework Design naming, scenario-driven library design, exception/event/dispose patterns, secure coding baseline, and analyzer/CLS gates in CI."
 disable-model-invocation: true
 ---
 
-# .NET Coding Practices
+#.NET Coding Practices
 
 Cross-cutting application skill for Framework Design Guidelines + secure coding (from the archived `awesome-guidelines` style capsules). For language syntax, load `csharp-coding-practices`, `vb-coding-practices`, or `fsharp-coding-practices`.
 
 ## Core Principle
 
-.NET library quality is **scenario-first public API with FDG naming and modern security boundaries** — no CAS/binary formatters, specific exceptions, aggregate entry types.
+.NET library quality is **scenario-first public API with FDG naming and modern security boundaries**, no CAS/binary formatters, specific exceptions, aggregate entry types.
 
 ## When to Use / NOT
 
-- Shared .NET libraries, NuGet packages, multi-language solutions, public API reviews.
+- Shared.NET libraries, NuGet packages, multi-language solutions, public API reviews.
 - Naming namespaces/types, designing aggregate components, security baseline audits.
 
 **NOT when:**
 
-- C#/VB/F# formatting-only changes — use language practice skills.
+- C#/VB/F# formatting-only changes, use language practice skills.
 - Non-.NET stacks.
-- Generated designer/proxy code — validate generators.
+- Generated designer/proxy code, validate generators.
 
 ## Workflow
 
-1. **Naming** — Pascal/camel, affixes, namespaces (`dotnet-style-naming-framework.md`).
-2. **API design** — scenarios, aggregates, collections (`dotnet-style-api-design.md`).
-3. **Exceptions/events** — throw/catch, dispose (`dotnet-style-exceptions-events.md`).
-4. **Security/verify** — CAS ban, input hardening, analyzers (`dotnet-style-security-verify.md`).
-5. **Language pass** — route to C#/VB/F# skill for syntax/layout.
-6. **Verify** — analyzers, CLS, build/tests on changed assemblies.
+1. **Naming**, Pascal/camel, affixes, namespaces (`dotnet-style-naming-framework.md`).
+2. **API design**, scenarios, aggregates, collections (`dotnet-style-api-design.md`).
+3. **Exceptions/events**, throw/catch, dispose (`dotnet-style-exceptions-events.md`).
+4. **Security/verify**, CAS ban, input hardening, analyzers (`dotnet-style-security-verify.md`).
+5. **Language pass**, route to C#/VB/F# skill for syntax/layout.
+6. **Verify**, analyzers, CLS, build/tests on changed assemblies.
 
 ## Red Flags
 
@@ -86,5 +86,5 @@ Cross-cutting application skill for Framework Design Guidelines + secure coding 
 ## Language routing
 
 - C# layout/idioms → `csharp-coding-practices`
-- Visual Basic .NET → `vb-coding-practices`
+- Visual Basic.NET → `vb-coding-practices`
 - F# → `fsharp-coding-practices`

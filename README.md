@@ -8,19 +8,20 @@ Entry flow for unfamiliar repositories: `skills/project-bootstrap/SKILL.md`.
 
 ## Layout
 
-| Path | Contents |
-|---|---|
-| `skills/` | the full skill catalog (foundations + practice skills + workflow skills) |
-| `templates/` | CLI-neutral format templates (plus `source.yml`, the inspo ledger); canonical list in `references/templates-inventory.md` |
-| `essentials/` | cold rationale and decision references, indexed in `essentials/README.md`; read the smallest relevant file when a policy decision needs explanation |
-| `docs/roadmap.md` | current work objectives (reviewed at milestones) |
-| `extensions/style-guard.ts` | optional Pi output-style guard (audit by default; symlinked into `~/.pi/agent/extensions/`) |
-| Entry skills (`project-bootstrap`, `brainstorming`, `goal-setup`, `prototype`, `leverage-capture`) | project entry, direction, durable goals, cheap learning, leverage classification |
-| `docs/skill-catalog.md`, `docs/foundation-catalog.md` | generated human catalogs of the skill set (never hand-edit; regenerate with `scripts/skill-catalog.py`) |
-| `mcp/servers.json` | the **canonical** MCP capability registry (6 servers incl. mcp-steroid); per-CLI configs are derived copies |
-| `references/` | distilled contract capsules (reference contract, MCP catalog, templates inventory) |
-| `AGENTS.md` | the global agent rules every host loads |
-| `.github/` | the CI gate suite, PR automation (labels, release notes), Dependabot, issue forms, and community files |
+| Path                                                                                               | Contents                                                                                                                                            |
+| -------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `skills/`                                                                                          | the active skill catalog (practice + workflow skills)                                                                                               |
+| `foundation-pack/`                                                                                 | temporary cold prior-art capsules (legacy `*-foundation`); search only when project/reference evidence is insufficient                              |
+| `templates/`                                                                                       | CLI-neutral format templates (plus `source.yml`, the inspo ledger); canonical list in `references/templates-inventory.md`                           |
+| `essentials/`                                                                                      | cold rationale and decision references, indexed in `essentials/README.md`; read the smallest relevant file when a policy decision needs explanation |
+| `docs/roadmap.md`                                                                                  | current work objectives (reviewed at milestones)                                                                                                    |
+| `extensions/style-guard.ts`                                                                        | optional Pi output-style guard (audit by default; symlinked into `~/.pi/agent/extensions/`)                                                         |
+| Entry skills (`project-bootstrap`, `brainstorming`, `goal-setup`, `prototype`, `leverage-capture`) | project entry, direction, durable goals, cheap learning, leverage classification                                                                    |
+| `docs/skill-catalog.md`                                                                            | generated human catalog of the active skills (never hand-edit; regenerate with `scripts/skill-catalog.py`)                                          |
+| `mcp/servers.json`                                                                                 | the **canonical** MCP capability registry (6 servers incl. mcp-steroid); per-CLI configs are derived copies                                         |
+| `references/`                                                                                      | distilled contract capsules (reference contract, MCP catalog, templates inventory)                                                                  |
+| `AGENTS.md`                                                                                        | the global agent rules every host loads                                                                                                             |
+| `.github/`                                                                                         | the CI gate suite, PR automation (labels, release notes), Dependabot, issue forms, and community files                                              |
 
 ## How to use
 
@@ -82,26 +83,26 @@ Entry flow for unfamiliar repositories: `skills/project-bootstrap/SKILL.md`.
 One rule, one owner; other documents summarize and link. Machine-readable
 policy invariants live in `scripts/policy-consistency.py` (CI-enforced).
 
-| Policy | Canonical owner |
-|---|---|
-| Universal execution invariants (session-loaded constitution) | `APPEND_SYSTEM.md` |
-| Global engineering policy, routing summary, machine wiring | `AGENTS.md` |
-| Evidence and tool routing (NEED + HOST) | `skills/evidence-router` |
-| Execution shape (Main/child/parallel/RLM/actor, write isolation) | `skills/execution-router` |
-| Backend/model resolution (mechanical, runtime-discovered; internal) | `skills/model-resolution` + `scripts/resolve-model.py` |
-| GitHub Actions CI/CD (workflow files, check contract, release workflow) | `skills/github-actions-engineering` |
-| GitHub repository remote state (metadata, labels, rulesets, security, releases settings) | `skills/github-repo-setup` + `scripts/github-audit.py` |
-| PR title metadata and release-note categories | `scripts/pr-metadata.py` + `.github/release.yml` |
-| PR lifecycle (push, PR, reviews, auto-merge on request) | `skills/push-pr` |
-| Git release strategy and versioning | `skills/git-workflow-and-versioning` |
-| Prior-art/reference-driven implementation | `skills/reference-driven-development` |
-| Reference rules (repository + web) | `references/reference-contract.md` |
-| Fabric execution, Schema modes, agents/Veda escalation | `skills/fabric-native-execution` |
-| Natural-language prose style (STE-inspired) | `skills/house-writing-style` + `scripts/style-lint.py` |
-| Veda escalation specifics | `skills/veda-lane` |
-| Operating principles / small-model heuristics | `essentials/operating-philosophy.md` / `essentials/guiding-small-model.md` |
-| MCP registry and wiring | `mcp/servers.json` + `mcp/catalog.md` |
-| Runtime toolchain facts | `scripts/runtime-capabilities.py` (probed, never frozen into docs) |
+| Policy                                                                                   | Canonical owner                                                            |
+| ---------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| Universal execution invariants (session-loaded constitution)                             | `APPEND_SYSTEM.md`                                                         |
+| Global engineering policy, routing summary, machine wiring                               | `AGENTS.md`                                                                |
+| Evidence and tool routing (NEED + HOST)                                                  | `skills/evidence-router`                                                   |
+| Execution shape (Main/child/parallel/RLM/actor, write isolation)                         | `skills/execution-router`                                                  |
+| Backend/model resolution (mechanical, runtime-discovered; internal)                      | `skills/model-resolution` + `scripts/resolve-model.py`                     |
+| GitHub Actions CI/CD (workflow files, check contract, release workflow)                  | `skills/github-actions-engineering`                                        |
+| GitHub repository remote state (metadata, labels, rulesets, security, releases settings) | `skills/github-repo-setup` + `scripts/github-audit.py`                     |
+| PR title metadata and release-note categories                                            | `scripts/pr-metadata.py` + `.github/release.yml`                           |
+| PR lifecycle (push, PR, reviews, auto-merge on request)                                  | `skills/push-pr`                                                           |
+| Git release strategy and versioning                                                      | `skills/git-workflow-and-versioning`                                       |
+| Prior-art/reference-driven implementation                                                | `skills/reference-driven-development`                                      |
+| Reference rules (repository + web)                                                       | `references/reference-contract.md`                                         |
+| Fabric execution, Schema modes, agents/Veda escalation                                   | `skills/fabric-native-execution`                                           |
+| Natural-language prose style (STE-inspired)                                              | `skills/house-writing-style` + `scripts/style-lint.py`                     |
+| Veda escalation specifics                                                                | `skills/veda-lane`                                                         |
+| Operating principles / small-model heuristics                                            | `essentials/operating-philosophy.md` / `essentials/guiding-small-model.md` |
+| MCP registry and wiring                                                                  | `mcp/servers.json` + `mcp/catalog.md`                                      |
+| Runtime toolchain facts                                                                  | `scripts/runtime-capabilities.py` (probed, never frozen into docs)         |
 
 ## Source of truth
 
@@ -111,15 +112,15 @@ here directly; releases are cut as `vX.Y.Z` tags.
 
 ## Host mounts (how every CLI reads this)
 
-| Host | Mount | Points at |
-|---|---|---|
-| pi | native discovery | `~/.agents/skills` (no `.pi/agent/skills` needed) |
-| Claude Code | `~/.claude/skills` → symlink | `~/.agents/skills` |
-| Claude Code | `~/.claude/CLAUDE.md` → symlink | `~/.agents/AGENTS.md` |
-| DSH | `~/.dsh/skills` → symlink | `~/.agents/skills` |
-| Codex | `~/.codex/skills`, `~/.codex/AGENTS.md` → symlinks | `~/.agents/*` |
-| OpenCode | `~/.config/opencode/skills`, `~/.config/opencode/AGENTS.md` → symlinks | `~/.agents/*` |
-| Gemini CLI | `~/.gemini/GEMINI.md` → symlink | `~/.agents/AGENTS.md` |
+| Host        | Mount                                                                  | Points at                                         |
+| ----------- | ---------------------------------------------------------------------- | ------------------------------------------------- |
+| pi          | native discovery                                                       | `~/.agents/skills` (no `.pi/agent/skills` needed) |
+| Claude Code | `~/.claude/skills` → symlink                                           | `~/.agents/skills`                                |
+| Claude Code | `~/.claude/CLAUDE.md` → symlink                                        | `~/.agents/AGENTS.md`                             |
+| DSH         | `~/.dsh/skills` → symlink                                              | `~/.agents/skills`                                |
+| Codex       | `~/.codex/skills`, `~/.codex/AGENTS.md` → symlinks                     | `~/.agents/*`                                     |
+| OpenCode    | `~/.config/opencode/skills`, `~/.config/opencode/AGENTS.md` → symlinks | `~/.agents/*`                                     |
+| Gemini CLI  | `~/.gemini/GEMINI.md` → symlink                                        | `~/.agents/AGENTS.md`                             |
 
 MCP registry (`mcp/servers.json`, 6 servers: codebase-memory, context7, deepwiki,
 exa, openviking, mcp-steroid) is merged into: `~/.pi/agent/mcp.json`, `~/.claude.json`,

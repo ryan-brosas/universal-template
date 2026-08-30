@@ -11,7 +11,7 @@
 | [Clean Code PHP](https://github.com/piotrplenik/clean-code-php) (secondary) | `===`/`!==`; `??`; type hints + defaults; early return; private/protected members; prefer `final`; DI over singleton; no global mutation; named constants over magic numbers |
 | [PHP: The Right Way — Design Patterns](https://phptherightway.com/pages/Design-Patterns.html) (secondary) | Prefer dependency injection over singleton global state; singleton reduces testability |
 
-**Not duplicated here:** WordPress/Drupal/Magento CMS coding standards — use stack foundation when CMS is known. Full SOLID treatise — capsules capture review probes only.
+**Not duplicated here:** WordPress/Drupal/Magento CMS coding standards — use stack capsules in `foundation-pack/` when CMS is known. Full SOLID treatise — capsules capture review probes only.
 
 ## Mental model
 

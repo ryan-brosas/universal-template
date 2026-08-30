@@ -1,16 +1,16 @@
 ---
 name: scala-coding-practices
-description: "Use when authoring or reviewing Scala — 2-space layout, camelCase naming, accessor/mutator conventions, explicit public types, immutable case classes, Option over null, and Scaladoc on public API."
+description: "Use when authoring or reviewing Scala, 2-space layout, camelCase naming, accessor/mutator conventions, explicit public types, immutable case classes, Option over null, and Scaladoc on public API."
 disable-model-invocation: true
 ---
 
 # Scala Coding Practices
 
-Application skill for Scala style learning (from the archived `awesome-guidelines` style capsules). For Spark/Akka/ZIO stack patterns, load stack foundations.
+Application skill for Scala style learning (from the archived `awesome-guidelines` style capsules). For Spark/Akka/ZIO stack patterns, load stack capsules in `foundation-pack/`.
 
 ## Core Principle
 
-Scala readability is **official layout/naming plus functional safety** — immutable data, explicit public types, expression-oriented control, documented API.
+Scala readability is **official layout/naming plus functional safety**, immutable data, explicit public types, expression-oriented control, documented API.
 
 ## When to Use / NOT
 
@@ -20,16 +20,16 @@ Scala readability is **official layout/naming plus functional safety** — immut
 **NOT when:**
 
 - Non-Scala code.
-- Generated boilerplate — validate generators instead.
-- Spark-internal perf micro-optimizations — use Databricks guide in stack foundation.
+- Generated boilerplate, validate generators instead.
+- Spark-internal perf micro-optimizations, use Databricks guide in stack capsules in `foundation-pack/`.
 
 ## Workflow
 
-1. **Format & layout** — 2-space, wraps, control spacing (`scala-style-formatting-layout.md`).
-2. **Naming** — packages, accessors, parentheses (`scala-style-naming-packages.md`).
-3. **Types** — inference rules, immutability, Option (`scala-style-types-immutability.md`).
-4. **Control & docs** — return, for, Scaladoc, errors (`scala-style-control-api.md`).
-5. **Verify** — Scalafmt/Scalafix + `sbt test` / `sbt compile` on changed modules.
+1. **Format & layout**, 2-space, wraps, control spacing (`scala-style-formatting-layout.md`).
+2. **Naming**, packages, accessors, parentheses (`scala-style-naming-packages.md`).
+3. **Types**, inference rules, immutability, Option (`scala-style-types-immutability.md`).
+4. **Control & docs**, return, for, Scaladoc, errors (`scala-style-control-api.md`).
+5. **Verify**, Scalafmt/Scalafix + `sbt test` / `sbt compile` on changed modules.
 
 ## Red Flags
 

@@ -10,7 +10,7 @@
 | [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/) | Public API checklist: naming (RFC 430), `as_`/`to_`/`into_`, meaningful `Error + Send + Sync`, common traits, methods not free functions, no out-params, docs with `?` not `unwrap`, `# Errors`/`# Panics`/`# Safety` sections |
 | Effective Go overlap (error flow analogy) | Rust uses `Result` + `?`; library code avoids panic; defer → Rust `Drop` + explicit `?` |
 
-**Not duplicated here:** Full API guidelines checklist (100+ items) — capsules cover highest-leverage public-API seams. Async/concurrency deep dives — stack foundations when needed.
+**Not duplicated here:** Full API guidelines checklist (100+ items) — capsules cover highest-leverage public-API seams. Async/concurrency deep dives — stack capsules in `foundation-pack/` when needed.
 
 ## Mental model
 

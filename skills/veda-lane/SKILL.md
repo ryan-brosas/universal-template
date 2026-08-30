@@ -1,12 +1,12 @@
 ---
 name: veda-lane
-description: Use when a task justifies a Veda lane (navigator-plan, reviewer, worker, or deep thinking) — probe availability at runtime, discover models with veda models, delegate via the Fabric Veda runner when supported or the direct veda CLI otherwise.
+description: Use when a task justifies a Veda lane (navigator-plan, reviewer, worker, or deep thinking), probe availability at runtime, discover models with veda models, delegate via the Fabric Veda runner when supported or the direct veda CLI otherwise.
 disable-model-invocation: true
 ---
 
 # Veda Lane
 
-Veda is an **execution adapter and oracle lane** — a way to run a bounded task through an alternate backend, model, or persona when the execution router has already decided a Veda mechanism is justified. It is not "the Gemini tool" or "the Opus tool", and it does not own model routing: backend/model resolution is mechanical (`skills/model-resolution`); this skill covers how to execute correctly through Veda once chosen. Probe the installed pair at runtime; delegate through Fabric's Veda runner when it works, else the direct `veda` CLI; when neither is available, the normal Pi path carries the work.
+Veda is an **execution adapter and oracle lane**, a way to run a bounded task through an alternate backend, model, or persona when the execution router has already decided a Veda mechanism is justified. It is not "the Gemini tool" or "the Opus tool", and it does not own model routing: backend/model resolution is mechanical (`skills/model-resolution`); this skill covers how to execute correctly through Veda once chosen. Probe the installed pair at runtime; delegate through Fabric's Veda runner when it works, else the direct `veda` CLI; when neither is available, the normal Pi path carries the work.
 
 ## Core Principle
 
@@ -15,26 +15,26 @@ Veda output is advisory. Probe availability instead of trusting claims (no hard-
 ## When to Use / NOT
 
 - **Use when:** hard architecture, difficult debugging, high-risk review, frontend/design reasoning, an independent second opinion, or a very hard ambiguous problem justifies a stronger or different model family.
-- **NOT when:** normal implementation (Veda is never mandatory); when unavailable — fall back to native execution and report honestly instead of faking a result.
+- **NOT when:** normal implementation (Veda is never mandatory); when unavailable, fall back to native execution and report honestly instead of faking a result.
 
 ## Workflow
 
 1. **Probe once per session.** `veda --version` + `veda models` (installed backends and aliases) + `veda personas` (built-in vs locally installed). `python3 ~/.agents/scripts/runtime-capabilities.py` reports the whole stack including Fabric/Veda versions.
-2. **Pick the lane by task** — personas map to execution-router roles: `navigator-plan` → NAVIGATOR, `reviewer` → REVIEWER, `frontend` / `frontend-auditor` → FRONTEND-CRITIC, `worker` → WORKER, `deep` → SOLVER/JUDGE/VERIFIER (k× cost, only for genuinely hard ambiguous problems). The persona picks the *behavior*; `skills/model-resolution` picks the *backend/model* from the runtime catalog — a UI-critique lane needs a UI-capable reasoning model, whichever provider currently offers one.
-3. **Select models from the runtime catalog only** — `veda models <backend>`, `agy models`. Never hard-code a slug: AGY-hosted Claude may or may not exist in the installed catalog; Claude `opus` rides the claude-code backend when installed.
-4. **Delegate through the simplest supported path.** Prefer Fabric's `agents.run({ runner: "veda", persona, model })` — a one-shot headless child at the outer fabric_exec boundary (see the installed pi-fabric `docs/agents.md`, "Veda runner"). If the installed Fabric/Veda pair rejects it, fall back to the direct CLI and note the version pair — do not encode a temporary incompatibility as a permanent rule.
+2. **Pick the lane by task**, personas map to execution-router roles: `navigator-plan` → NAVIGATOR, `reviewer` → REVIEWER, `frontend` / `frontend-auditor` → FRONTEND-CRITIC, `worker` → WORKER, `deep` → SOLVER/JUDGE/VERIFIER (k× cost, only for hard ambiguous problems). The persona picks the *behavior*; `skills/model-resolution` picks the *backend/model* from the runtime catalog, a UI-critique lane needs a UI-capable reasoning model, whichever provider currently offers one.
+3. **Select models from the runtime catalog only**, `veda models <backend>`, `agy models`. Never hard-code a slug: AGY-hosted Claude may or may not exist in the installed catalog; Claude `opus` rides the claude-code backend when installed.
+4. **Delegate through the simplest supported path.** Prefer Fabric's `agents.run({ runner: "veda", persona, model })`, a one-shot headless child at the outer fabric_exec boundary (see the installed pi-fabric `docs/agents.md`, "Veda runner"). If the installed Fabric/Veda pair rejects it, fall back to the direct CLI and note the version pair, do not encode a temporary incompatibility as a permanent rule.
 
 ## The Pi backend bridge
 
-`veda -b pi` routes to **whatever Pi has configured** — the abstraction is `Veda → Pi backend → currently configured Pi provider/model`, so new Pi providers become usable lanes automatically. Re-verify at runtime: Veda's Pi backend may not enumerate Pi's catalog (`veda models pi` has reported `models (unavailable)`) — discover Pi models with `pi --list-models`, pass an explicit model, and one-shot probe the lane before trusting it.
-5. **Parse structured output where the persona provides it** (the worker persona's report file, a reviewer pass/needs-fix verdict) — not prose; Fabric's Veda runner returns a normalized result for programmatic use.
+`veda -b pi` routes to **whatever Pi has configured**, the abstraction is `Veda → Pi backend → currently configured Pi provider/model`, so new Pi providers become usable lanes automatically. Re-verify at runtime: Veda's Pi backend may not enumerate Pi's catalog (`veda models pi` has reported `models (unavailable)`), discover Pi models with `pi --list-models`, pass an explicit model, and one-shot probe the lane before trusting it.
+5. **Parse structured output where the persona provides it** (the worker persona's report file, a reviewer pass/needs-fix verdict), not prose; Fabric's Veda runner returns a normalized result for programmatic use.
 6. **Verify load-bearing findings** against source/tests/runtime before acting on them.
 
 ## CLI mechanics (direct path; verified on veda 0.75.x)
 
-- `-S <task>` isolates selection and conversation under `<project>/.veda/sessions/`; reuse one session across plan/worker/review. `.veda/` is ignored runtime state — never commit it.
+- `-S <task>` isolates selection and conversation under `<project>/.veda/sessions/`; reuse one session across plan/worker/review. `.veda/` is ignored runtime state, never commit it.
 - Quote prompts with single quotes (backticks inside double quotes execute as command substitution); read stdout and stderr separately, or use `-o file.md`.
-- Built-in personas: `navigator-plan`, `navigator-chat`, `reviewer`, `worker`; anything else listed by `veda personas` is locally installed or custom — do not assume it exists elsewhere.
+- Built-in personas: `navigator-plan`, `navigator-chat`, `reviewer`, `worker`; anything else listed by `veda personas` is locally installed or custom, do not assume it exists elsewhere.
 
 ## Rules
 
@@ -70,4 +70,4 @@ Veda output is advisory. Probe availability instead of trusting claims (no hard-
 
 ## References
 
-No reference capsules — the skill is self-contained; routing policy lives in `evidence-router`.
+No reference capsules, the skill is self-contained; routing policy lives in `evidence-router`.

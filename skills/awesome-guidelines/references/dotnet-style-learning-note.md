@@ -11,7 +11,7 @@
 | [Secure coding guidelines for .NET](https://learn.microsoft.com/en-us/dotnet/standard/security/secure-coding-guidelines) (primary) | No CAS/APTCA/partial trust; no Remoting/DCOM/binary formatters; validate untrusted input; library resource demands |
 | [Framework Design Guidelines (book overview)](https://learn.microsoft.com/en-us/dotnet/standard/design-guidelines/) (secondary) | Canonical reusable-library guidance; always/never convention tiers |
 
-**Scope:** Cross-language .NET **public API and security baseline** (libraries, shared components, multi-language repos). Language syntax/layout: load `csharp-coding-practices`, `vb-coding-practices`, or `fsharp-coding-practices`. Stack patterns (ASP.NET, etc.): load stack foundations.
+**Scope:** Cross-language .NET **public API and security baseline** (libraries, shared components, multi-language repos). Language syntax/layout: load `csharp-coding-practices`, `vb-coding-practices`, or `fsharp-coding-practices`. Stack patterns (ASP.NET, etc.): load stack capsules in `foundation-pack/`.
 
 ## Mental model
 

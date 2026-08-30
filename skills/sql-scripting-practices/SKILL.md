@@ -1,16 +1,16 @@
 ---
 name: sql-scripting-practices
-description: "Use when authoring or reviewing SQL — snake_case naming, uppercase keywords, river-aligned layout, portable DDL types, suffix conventions, and parameterized queries."
+description: "Use when authoring or reviewing SQL, snake_case naming, uppercase keywords, river-aligned layout, portable DDL types, suffix conventions, and parameterized queries."
 disable-model-invocation: true
 ---
 
 # SQL Scripting Practices
 
-Application skill for SQL style learning (from the archived `awesome-guidelines` style capsules). For ORM-specific patterns (Django, Prisma, SQLAlchemy), load stack foundations.
+Application skill for SQL style learning (from the archived `awesome-guidelines` style capsules). For ORM-specific patterns (Django, Prisma, SQLAlchemy), load stack capsules in `foundation-pack/`.
 
 ## Core Principle
 
-SQL readability is **consistent relational naming plus scannable layout** — river-aligned keywords, portable types, parameters at the app boundary.
+SQL readability is **consistent relational naming plus scannable layout**, river-aligned keywords, portable types, parameters at the app boundary.
 
 ## When to Use / NOT
 
@@ -19,16 +19,16 @@ SQL readability is **consistent relational naming plus scannable layout** — ri
 
 **NOT when:**
 
-- ORM-only codebases with no raw SQL — validate ORM/migration generator instead.
+- ORM-only codebases with no raw SQL, validate ORM/migration generator instead.
 - NoSQL query languages.
 
 ## Workflow
 
-1. **Naming** — tables, columns, aliases, suffixes (`sql-style-naming-schema.md`).
-2. **Layout** — keywords, river, joins, subqueries (`sql-style-query-layout.md`).
-3. **DDL** — CREATE, types, constraints (`sql-style-ddl-types.md`).
-4. **Patterns** — BETWEEN/IN/CASE, comments, parameters (`sql-style-query-patterns.md`).
-5. **Verify** — sqlfluff/SQLFluff or project linter + migration apply/dry-run on changed files.
+1. **Naming**, tables, columns, aliases, suffixes (`sql-style-naming-schema.md`).
+2. **Layout**, keywords, river, joins, subqueries (`sql-style-query-layout.md`).
+3. **DDL**, CREATE, types, constraints (`sql-style-ddl-types.md`).
+4. **Patterns**, BETWEEN/IN/CASE, comments, parameters (`sql-style-query-patterns.md`).
+5. **Verify**, sqlfluff/SQLFluff or project linter + migration apply/dry-run on changed files.
 
 ## Red Flags
 

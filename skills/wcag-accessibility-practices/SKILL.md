@@ -1,6 +1,6 @@
 ---
 name: wcag-accessibility-practices
-description: "Use when auditing or building web UI for WCAG 2.1 Level AA — POUR success criteria, keyboard/focus, contrast/reflow, forms/errors, name-role-value, and axe plus manual verification."
+description: "Use when auditing or building web UI for WCAG 2.1 Level AA, POUR success criteria, keyboard/focus, contrast/reflow, forms/errors, name-role-value, and axe plus manual verification."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for W3C WCAG 2.1 Level AA ingest (`awesome-guidelines`). Seman
 
 ## Core Principle
 
-Accessible web content satisfies **WCAG 2.1 Level AA** — perceivable without vision-only cues, operable by keyboard, understandable forms/language, robust for assistive technology, verified with automated **and** manual checks.
+Accessible web content satisfies **WCAG 2.1 Level AA**, perceivable without vision-only cues, operable by keyboard, understandable forms/language, robust for assistive technology, verified with automated **and** manual checks.
 
 ## When to Use / NOT
 
@@ -20,17 +20,17 @@ Accessible web content satisfies **WCAG 2.1 Level AA** — perceivable without v
 
 **NOT when:**
 
-- Static HTML/CSS style only — `frontend-markup-practices` (pair with this for SC coverage).
-- Native iOS/Android apps — platform accessibility HIG primary.
-- Marketing copy tone — `mailchimp-content-practices` (still pair for SC 2.4.4, 3.1.1).
+- Static HTML/CSS style only, `frontend-markup-practices` (pair with this for SC coverage).
+- Native iOS/Android apps, platform accessibility HIG primary.
+- Marketing copy tone, `mailchimp-content-practices` (still pair for SC 2.4.4, 3.1.1).
 
 ## Workflow
 
-1. **Perceivable** — alt text, structure, contrast, reflow (`wcag-perceivable-media-text.md`).
-2. **Operable** — keyboard, focus, navigation, pointer/motion (`wcag-operable-keyboard-focus.md`).
-3. **Understandable** — lang, predictability, forms/errors (`wcag-understandable-forms-language.md`).
-4. **Robust** — name/role/value, status messages, verification (`wcag-robust-verify.md`).
-5. **Verify** — scoped A+AA checklist + axe/Lighthouse + keyboard + screen reader sample.
+1. **Perceivable**, alt text, structure, contrast, reflow (`wcag-perceivable-media-text.md`).
+2. **Operable**, keyboard, focus, navigation, pointer/motion (`wcag-operable-keyboard-focus.md`).
+3. **Understandable**, lang, predictability, forms/errors (`wcag-understandable-forms-language.md`).
+4. **Robust**, name/role/value, status messages, verification (`wcag-robust-verify.md`).
+5. **Verify**, scoped A+AA checklist + axe/Lighthouse + keyboard + screen reader sample.
 
 ## Red Flags
 
@@ -46,7 +46,7 @@ Accessible web content satisfies **WCAG 2.1 Level AA** — perceivable without v
 - “Click here” / “Read more” links out of context
 - Duplicate `id` values in DOM
 - Custom widget missing ARIA state updates
-- Toast/alert visual-only — no live region
+- Toast/alert visual-only, no live region
 - AA claim from automated scan only
 - Testing only mouse, never Tab/Shift+Tab
 
@@ -81,6 +81,6 @@ Accessible web content satisfies **WCAG 2.1 Level AA** — perceivable without v
 
 ## Related skills
 
-- `frontend-markup-practices` — semantic HTML/CSS separation
-- `mailchimp-content-practices` — inclusive UI copy
-- `google-devdocs-practices` — developer doc accessibility
+- `frontend-markup-practices`, semantic HTML/CSS separation
+- `mailchimp-content-practices`, inclusive UI copy
+- `google-devdocs-practices`, developer doc accessibility

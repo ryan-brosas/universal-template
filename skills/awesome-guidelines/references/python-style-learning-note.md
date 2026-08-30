@@ -9,7 +9,7 @@
 | [PEP 8](https://peps.python.org/pep-0008/) | 4-space indent, 79/72 lines (99 team exception), import grouping, naming (`snake_case`, `CapWords`, `_` internal), whitespace, trailing commas, programming recommendations (`isinstance`, empty seq truthiness) |
 | [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html) | pylint/ruff gate, import modules not symbols (typing exemptions), full package paths, exception rules, no mutable defaults, comprehension limits, 80 cols + implicit join, type-annotate public APIs, `main()` guard |
 
-**Not duplicated here:** Django/FastAPI/Pydantic stack patterns — use `*-foundation` skills when the stack is known.
+**Not duplicated here:** Django/FastAPI/Pydantic stack patterns — use `foundation-pack/*-foundation` skills when the stack is known.
 
 ## Mental model
 
