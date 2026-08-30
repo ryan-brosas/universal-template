@@ -136,6 +136,7 @@ def scan() -> list[dict]:
             "folder": d.name,
             "desc": fm.get("description", ""),
             "hidden": hidden,
+            "local": d.name in local_dirs,
             "cls": classify(d.name, hidden),
             "path": str(sm),
             "body": text,
@@ -415,6 +416,9 @@ def cmd_stats(skills: list[dict], args) -> int:
         return 0
     print("Skill catalog stats")
     print(f"  total: {st['total']}  visible: {st['visible']}  hidden: {st['hidden']}")
+    n_local = sum(1 for s in skills if s.get("local"))
+    if n_local:
+        print(f"  machine-local (git-ignored; excluded from generated catalogs): {n_local}")
     print(f"  visible metadata: {st['visible_chars']} chars (~{st['visible_tokens_approx']} tokens)")
     for c in sorted(st["classes"]):
         print(f"  class {c:13} {st['classes'][c]}")

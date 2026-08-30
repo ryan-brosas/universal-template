@@ -5,7 +5,7 @@
 Derived from `skills/*/SKILL.md` metadata. Discovery tool:
 `python3 scripts/skill-catalog.py search "<topic>"`.
 
-359 skills: 50 visible, 309 hidden. Visible startup metadata: ~13967 chars (~3491 tokens).
+358 skills: 49 visible, 309 hidden. Visible startup metadata: ~13547 chars (~3386 tokens).
 
 ## Entry skills
 
@@ -38,7 +38,6 @@ Direct user-facing capabilities; trigger on request.
 | [`leverage-playbook`](../skills/leverage-playbook/SKILL.md) | entry | visible | Use when running the AI development loop: prep a session, prime a small or cheap model with context, decide code versus markdown, close out a session, or scale... |
 | [`math-schema`](../skills/math-schema/SKILL.md) | entry | visible | Use when the user studies real analysis, probability, PDEs, or the mathematics of physics and wants to reach results through their own conjectures and proofs.... |
 | [`mcp-steroid`](../skills/mcp-steroid/SKILL.md) | entry | visible | Use when an MCP-capable coding agent needs native JetBrains IntelliJ APIs, semantic navigation, refactoring, inspections, tests, debugging, or IDE UI control. |
-| [`omarchy`](../skills/omarchy/SKILL.md) | entry | visible | Use when customizing this machine's desktop or system config; required before editing: ~/.config/hypr/, waybar/, walker/, alacritty/, foot/, kitty/, ghostty/,... |
 | [`project-bootstrap`](../skills/project-bootstrap/SKILL.md) | entry | visible | Use when entering a new or unfamiliar repository, initializing a greenfield project workspace, or intentionally establishing lightweight persistent project-lev... |
 | [`prototype`](../skills/prototype/SKILL.md) | entry | visible | Use when the user wants to prototype, sanity-check a data model or state machine, mock up a UI, explore design options, or says 'prototype this', 'spike this',... |
 | [`push-pr`](../skills/push-pr/SKILL.md) | entry | visible | Use when finished work needs to be pushed and opened or updated as a GitHub pull request, when PR review feedback must be addressed in its thread, or when an o... |
