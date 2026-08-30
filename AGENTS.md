@@ -46,18 +46,28 @@ the task requires it; run builds/tests/linters/formatters; inspect with
 `git diff`/`status`/`log`; commit locally per project conventions.
 
 Confirmation (quote the exact command and its blast radius, then wait for the
-user in the same session) applies to the destructive and shared-write classes
-defined in `APPEND_SYSTEM.md` — work/data destruction, Git history rewrites,
-production mutation, external side effects, and machine-wide changes not
-implied by the task.
+user in the same session) is for genuinely dangerous actions only:
 
-**Universal execution invariants** (work preservation, destructive
-boundaries, external write boundary, artifact inspection, bounded filesystem
-discovery, non-interactive safety, shell-text handling, commit-convention
-precedence, reversible-operation preference) live in `APPEND_SYSTEM.md` and
-load with every session — this file never duplicates them. Machine-specific
-wiring stays here: MCP tokens live in env vars (`~/.profile`, `~/.dsh/.env`),
-referenced only by name.
+- deleting or overwriting untracked or user data;
+- `rm -rf` outside controlled project/temp scope;
+- history rewrites: `git reset --hard`, `git clean -fd`, force-push;
+- production mutation, credentials/secrets, external side effects with
+  real-world consequences;
+- machine-wide/system changes not implied by the task.
+
+Never expose, invent, or commit credentials or secret material. Tokens stay
+in env vars, referenced only by name.
+
+**Universal execution invariants** — the complete constitution (work
+preservation, unrelated-change preservation, additive recovery, artifact
+inspection, bounded filesystem discovery, non-interactive safety, external
+write boundary, review-thread continuity, commit-convention precedence,
+shell-text handling, reversible-operation preference, separator style,
+project precedence) lives in `APPEND_SYSTEM.md`. Hosts wired to append it
+load all invariants every session; the safety-critical core above is kept
+here because not every documented host loads `APPEND_SYSTEM.md` yet. Machine
+wiring stays in this file: MCP tokens live in env vars (`~/.profile`,
+`~/.dsh/.env`), referenced only by name.
 
 ## Finish line
 

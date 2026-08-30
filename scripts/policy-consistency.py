@@ -409,6 +409,13 @@ def check_append_bounded_search() -> None:
     require_phrase("APPEND-BOUNDED-SEARCH", "APPEND_SYSTEM.md", "repo root")
 
 
+def check_agents_safety_core() -> None:
+    """AGENTS.md must retain the operational destructive-confirmation core — hosts load AGENTS, not APPEND."""
+    require_phrase("AGENTS-SAFETY-CORE", "AGENTS.md", "Confirmation (quote the exact command")
+    require_phrase("AGENTS-SAFETY-CORE", "AGENTS.md", "Never expose, invent, or commit credentials")
+    require_phrase("AGENTS-SAFETY-CORE", "AGENTS.md", "history rewrites: `git reset --hard`, `git clean -fd`, force-push")
+
+
 
 CHECKS = [
     ("PREWALK-RESERVED", check_prewalk_reserved),
@@ -438,6 +445,7 @@ CHECKS = [
     ("APPEND-NO-TOOL-COUPLING", check_append_no_tool_coupling),
     ("APPEND-COMPACT", check_append_compact),
     ("APPEND-BOUNDED-SEARCH", check_append_bounded_search),
+    ("AGENTS-SAFETY-CORE", check_agents_safety_core),
 ]
 
 
