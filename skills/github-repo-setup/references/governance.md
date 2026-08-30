@@ -58,13 +58,23 @@ Solo baseline example (`ruleset.json`), applied and then read back:
 
 `integration_id: 15368` is the GitHub Actions app. For team repositories raise `required_approving_review_count` to 1+, set `required_review_thread_resolution: true`, and add CODEOWNERS-driven review only where ownership is real.
 
+Reconcile, do not blindly create. A POST always creates a new ruleset — repeated setup would stack duplicate protections instead of reaching the idempotent no-op. Always reconcile:
+
 ```bash
-gh api -X POST repos/OWNER/REPO/rulesets --input ruleset.json
+# 1. List and find the matching ruleset (by name and target)
 gh api repos/OWNER/REPO/rulesets --jq '.[] | {id, name, enforcement, rules: [.rules[].type]}'
-gh api repos/OWNER/REPO/rulesets/<id>   # verify conditions, rules, bypass_actors — HARD-GATE
+
+# 2a. Intended config already present and identical -> skip the write (report "No changes required")
+# 2b. A ruleset with the intended name exists but differs -> update it by id
+gh api -X PUT repos/OWNER/REPO/rulesets/<id> --input ruleset.json
+# 2c. None exists -> create
+gh api -X POST repos/OWNER/REPO/rulesets --input ruleset.json
+
+# 3. Read back and verify (every path) — HARD-GATE
+gh api repos/OWNER/REPO/rulesets/<id>   # verify conditions, rules, bypass_actors
 ```
 
-Prefer one ruleset over stacked legacy branch protection; migrate existing protection only deliberately, never silently.
+Preserve unrelated rulesets: inspect and touch only the one this skill manages. Prefer one ruleset over stacked legacy branch protection; migrate existing protection only deliberately, never silently.
 
 ## Required status checks
 

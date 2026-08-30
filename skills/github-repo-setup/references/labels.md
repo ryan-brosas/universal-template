@@ -31,13 +31,13 @@ Avoid giant catalogs. A tiny CLI may need four labels; that is correct.
 `gh label create <name> --force` creates missing labels and updates existing ones in one pass, so re-running is a no-op:
 
 ```bash
-# inspect first
+# inspect first (--limit: the default fetches only 30 labels)
 diff <(cat <<'WANT'
 type:bug
 type:feature
 area:ci
 WANT
-) <(gh label list --json name --jq '.[].name' | sort) || true
+) <(gh label list --limit 1000 --json name --jq '.[].name' | sort) || true
 
 # reconcile (adjust the set to the discovered project)
 while IFS='|' read -r name color desc; do
