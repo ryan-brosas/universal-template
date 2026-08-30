@@ -17,7 +17,7 @@ When outside code materially reduces uncertainty, use ONE strong reference repos
 ## Workflow
 
 1. **Ground locally** — inspect the current project and identify the seam; decide whether outside code materially reduces uncertainty (if not, stop — implement directly).
-2. **Select ONE reference** — place or reuse it at `<project>/reference/<repo>/`. Do not search ten repositories when one closes the gap. Full rules: `references/reference-contract.md` (purpose, location, authority, one-reference default, licensing, lifecycle).
+2. **Select ONE reference** — place or reuse it at `<project>/reference/<repo>/`. Do not search ten repositories when one closes the gap. Full rules: `~/.agents/references/reference-contract.md` (purpose, location, authority, one-reference default, licensing, lifecycle).
 3. **Read it as code, not docs** — map with Fovea (explicit root) when helpful; read the exact source and its direct tests; Steroid when exact semantics add value.
 4. **Compare boundaries** — local vs reference; decide ADOPT / ADAPT / OMIT per concern; never blind-copy.
 5. **Implement** in the current codebase; keep the reference untouched (read-only checkout).
@@ -46,5 +46,5 @@ When outside code materially reduces uncertainty, use ONE strong reference repos
 
 ## References
 
-- `references/reference-contract.md` — canonical reference-checkout contract (via the catalog `references/` directory)
+- `~/.agents/references/reference-contract.md` — canonical reference-checkout contract
 - `../push-pr/SKILL.md` — PR creation records the Reference/Prior-Art section

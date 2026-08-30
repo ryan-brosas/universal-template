@@ -1,6 +1,6 @@
 ---
 name: leverage-capture
-description: "Use after meaningful work to classify what is worth preserving — into code, references, gates, skills, or memory — and capture only that, in the cheapest appropriate form."
+description: "Use when meaningful work has finished and something may be worth preserving — classify it into code, references, gates, skills, or memory, and capture only that, in the cheapest appropriate form."
 ---
 
 # Leverage Capture
@@ -54,5 +54,5 @@ Each survivor exists in its claimed form (code compiles/used; gate fails on the 
 ## References
 
 - `../writing-skills/SKILL.md` — skill authoring grammar
-- `../references/reference-contract.md` — reference-checkout rules (via catalog `references/`)
+- `~/.agents/references/reference-contract.md` — reference-checkout rules
 - `../goal-setup/SKILL.md` — where multi-session decisions already live

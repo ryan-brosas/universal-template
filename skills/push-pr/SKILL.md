@@ -25,8 +25,8 @@ Use one evidence path for every pull request. The local gate checks the branch. 
 3. Discover the repository's own PR template first — `.github/PULL_REQUEST_TEMPLATE.md`, `PULL_REQUEST_TEMPLATE/` directory, `docs/`, or the repository root (GitHub-supported locations; re-verify when GitHub changes them). Use the repository's template when one exists; fall back to `~/.agents/templates/pull-request.md` otherwise.
 4. Construct the PR body from actual evidence — scope, what changed and why, verification output, run links. Never fabricate completed checks; mark absent values `None`. Conditional sections only when they apply: **visual change** → actual before/after screenshot or rendered evidence; **complex structural change** → Fovea/Steroid observation when useful; **external/reference implementation** → provenance + license note; **reusable lesson** → mark as a `leverage-capture` candidate (do not capture automatically).
 5. Write the body to a securely created temporary file (`mktemp`) — never interpolate generated Markdown into the shell command.
-6. Push and create the PR: `gh pr create --title "..." --body-file <file> --base <base>` plus metadata flags only when the project defines them (`--label`, `--reviewer`, `--milestone`, `--assignee`, `--project`, `--draft`).
-7. Watch the required CI to a final state (`gh pr checks` / `gh run watch`); update the body when state changes; confirm the result before claiming done.
+6. Push and create the PR: `gh pr create --title "..." --body-file <file> --base <base>` plus metadata flags only when the project defines them (`--label`, `--reviewer`, `--milestone`, `--assignee`, `--project`). **Open as `--draft` while required CI has not yet completed** — a ready PR with failing checks is reviewable when it should not be. Mark it ready only after required checks pass (or when the project policy explicitly says otherwise).
+7. Watch the required CI to a final state (`gh pr checks` / `gh run watch`); update the body when state changes; flip draft → ready when green; confirm the result before claiming done.
 8. Address review feedback when requested — the in-thread procedure below.
 
 Stop when the PR exists, the body reflects actual evidence, required CI is green or the failure is owned, and review feedback (if any) is handled per the in-thread contract.
@@ -50,7 +50,7 @@ Verified live on this repository (PR #10, 2026-08-30): REST list returned `{id, 
 - Do not invent screenshots, tests, CI states, PR links, labels, milestones, assignees, or reviewers — absent evidence is marked `None`, never faked.
 - Do not run every observation surface for every PR — evidence follows the change (visual → rendered proof; structural → graph when useful).
 - Do not add secrets, `.env` files, or unrelated files.
-- Keep `--draft` whole while the PR run is still open.
+- Marking a PR ready while its required checks are still failing or running (unless project policy says otherwise). HARD-GATE.
 - Do not use `pull_request_target` for untrusted branch code.
 - Resolving a review thread merely because a reply was posted. HARD-GATE.
 - Replying to review feedback as a new top-level comment instead of in-thread.
