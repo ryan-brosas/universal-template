@@ -107,7 +107,10 @@ for backend in ("claude", "codex", "gemini", "droid"):
     rc, out = run(["which", backend])
     probe(f"backend CLI: {backend}", rc == 0, "on PATH" if rc == 0 else "absent (unavailable as a direct/Veda backend)")
 rc, out = run(["which", "fabric"])
-probe("fabric native runners", True, "probed in-session via agents.models()/agents.list() — often empty; do not assume")
+if rc == 0:
+    results.append(("UNKNOWN", "fabric native runners", "CLI on PATH; runner/model inventory is session state — probe in-session via agents.models()/agents.list() (often empty); do not assume"))
+else:
+    results.append(("UNKNOWN", "fabric native runners", "fabric CLI not on PATH from here — runner availability unknown; probe in-session"))
 
 # --- MCP registry state -------------------------------------------------------
 reg = HOME / ".agents/mcp/servers.json"

@@ -1,7 +1,6 @@
 ---
 name: effort-router
 description: "Use when deciding how much agent effort and which execution mechanism a task needs: Main, focused child, bounded parallel workers, an alternate-model oracle, recursive decomposition, or a persistent actor — before any model or provider is chosen."
-disable-model-invocation: true
 ---
 
 # Effort Router

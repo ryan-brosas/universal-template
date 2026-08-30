@@ -1,7 +1,6 @@
 ---
 name: model-router
 description: "Use when a chosen role needs a backend/model resolved: discover currently available providers and models, filter by the role's capability requirements, rank with local preferences, select, and fall back gracefully — never hard-code a provider or model into the workflow."
-disable-model-invocation: true
 ---
 
 # Model Router
