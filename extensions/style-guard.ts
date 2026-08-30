@@ -40,7 +40,7 @@ function mask(text: string): string {
              .replace(URL, (m) => "\u0000".repeat(m.length));
 }
 
-function lintBlock(block: string): Violation[] {
+export function lintBlock(block: string): Violation[] {
   const out: Violation[] = [];
   let fenced = false;
   for (const raw of block.split("\n")) {
@@ -70,18 +70,31 @@ function lintBlock(block: string): Violation[] {
   return out;
 }
 
-function fixBlock(block: string): string {
-  // Apply only high-confidence fixes outside protected spans.
-  const parts = block.split(/(`[^`\n]+`|https?:\/\/[^\s)>\]]+)/);
-  return parts
-    .map((part, i) => {
-      if (i % 2 === 1) return part; // protected span (odd indexes)
-      return part
-        .replace(EM_DASH, ", ")
-        .replace(/\b(genuinely|really|truly|actually)\s+/gi, "")
-        .replace(/\butilize\b/gi, "use");
+function fixProseLine(part: string): string {
+  return part
+    .replace(EM_DASH, ", ")
+    .replace(/\b(genuinely|really|truly|actually)\s+/gi, "")
+    .replace(/\butilize\b/gi, "use");
+}
+
+export function fixText(block: string): string {
+  // Line-aware rewrite with the same protected-span machine as lintBlock:
+  // fenced code blocks, fence markers, and blockquote lines are copied through
+  // untouched; within prose lines, inline code and URL spans stay exact.
+  let fenced = false;
+  return block
+    .split("\n")
+    .map((line) => {
+      const trimmed = line.trim();
+      if (trimmed.startsWith("```") || trimmed.startsWith("~~~")) {
+        fenced = !fenced;
+        return line;
+      }
+      if (fenced || !trimmed || trimmed.startsWith(">")) return line;
+      const parts = line.split(/(`[^`\n]+`|https?:\/\/[^\s)>\]]+)/);
+      return parts.map((part, i) => (i % 2 === 1 ? part : fixProseLine(part))).join("");
     })
-    .join("");
+    .join("\n");
 }
 
 function log(entry: Record<string, unknown>): void {
@@ -122,19 +135,15 @@ export default function styleGuard(pi: ExtensionAPI): void {
 
     if (mode === "rewrite") {
       let changed = false;
-      const before = textBlocks.map(({ text }) => lintBlock(text).length);
-      const fixedTexts = textBlocks.map(({ text }, k) => {
-        if (!text || before[k] === 0) return text;
-        const fixed = fixBlock(text); // one rewrite pass, no loop
+      const beforeCount = textBlocks.reduce((n, { text }) => n + (text ? lintBlock(text).length : 0), 0);
+      const fixedTexts = textBlocks.map(({ text }) => {
+        if (!text || lintBlock(text).length === 0) return text;
         changed = true;
-        return fixed;
+        return fixText(text); // one rewrite pass, no loop; protected spans preserved
       });
       if (!changed) return;
       const remaining = fixedTexts.reduce((n, t) => n + lintBlock(t).length, 0);
-      for (const { text } of textBlocks) {
-        if (text) log({ ts: new Date().toISOString(), mode: "rewrite", fixed: before[0], remaining });
-        break;
-      }
+      log({ ts: new Date().toISOString(), mode: "rewrite", violationsBefore: beforeCount, remaining });
       if (remaining > 0) return; // violations remain: send the original untouched
       const content = message.content.map((b, k) =>
         b.type === "text" && typeof b.text === "string" ? { ...b, text: fixedTexts[k] } : b,

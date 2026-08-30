@@ -14,7 +14,15 @@ import os, re, sys
 from pathlib import Path
 
 try:
-    from style_lint import lint_text  # deterministic house-style notes
+    # scripts/style-lint.py has a hyphen: import by file path, not module name.
+    import importlib.util
+
+    _spec = importlib.util.spec_from_file_location(
+        "style_lint", str(Path(__file__).with_name("style-lint.py")))
+    assert _spec is not None and _spec.loader is not None
+    _mod = importlib.util.module_from_spec(_spec)
+    _spec.loader.exec_module(_mod)
+    lint_text = _mod.lint_text
 except Exception:  # noqa: BLE001
     lint_text = None
 

@@ -284,7 +284,14 @@ def main() -> int:
     print_budget(rep)
     check_budget_baseline(rep, default_root)
 
-    if update_baseline and default_root:
+    if errors:
+        print("CATALOG QUALITY FAILURES:")
+        for err in errors:
+            print(f"  - {err}")
+        return 1
+
+    # Baseline updates are deliberate: never on an invalid catalog (review fix).
+    if update_baseline and default_root and not errors:
         BASELINE.write_text(
             json.dumps({
                 "visible_chars": rep["chars"],
@@ -295,12 +302,6 @@ def main() -> int:
             encoding="utf-8",
         )
         print(f"baseline updated: {rep['chars']} visible chars, {rep['visible']} visible skills")
-
-    if errors:
-        print("CATALOG QUALITY FAILURES:")
-        for err in errors:
-            print(f"  - {err}")
-        return 1
     print(f"CATALOG QUALITY OK: {len(skills)} skills, {len(ESSENTIAL_FILES)} essentials")
     for w in warnings[:40]:
         print(f"  (warn) {w}")

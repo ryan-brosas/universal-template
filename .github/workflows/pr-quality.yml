@@ -69,7 +69,7 @@ jobs:
         id: style
         shell: bash
         run: |
-          set -o pipefail
+          set -euo pipefail
           python3 scripts/style-lint.py --selftest 2>&1 | tee /tmp/style-lint-selftest.log
           python3 scripts/style-lint.py 2>&1 | tee /tmp/style-lint.log
 
