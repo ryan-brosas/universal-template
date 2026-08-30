@@ -38,7 +38,7 @@ A rendered website is evidence, the same way a cloned repository is evidence for
 
 ## Verification
 
-- `python3 ~/.agents/scripts/web-reference-manifest.py reference/web/<host>` exits 0; `manifest.json` parses with source, captured_at, and scope; `REFERENCE.md` states what exists and coverage gaps. A capture without ADOPT / ADAPT / OMIT yet is valid — that decision record lands when `reference-driven-development` consumes the reference (the validator warns until then).
+- `python3 ~/.agents/scripts/web-reference-manifest.py reference/web/<host>` exits 0; `manifest.json` parses with source, captured_at, and scope; `REFERENCE.md` states what exists and coverage gaps. A capture without ADOPT / ADAPT / OMIT yet is valid, that decision record lands when `reference-driven-development` consumes the reference (the validator warns until then).
 - Frontend work built from the reference is verified in the browser with the `cdp` skill: render, responsive viewports, console, network. The current project's gates decide acceptance, not the reference.
 
 ## References

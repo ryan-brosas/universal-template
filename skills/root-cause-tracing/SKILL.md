@@ -7,7 +7,7 @@ disable-model-invocation: true
 
 # Root-Cause Tracing
 
-Companion to `debugging-and-error-recovery`. Use when the symptom is **deep** — a failure surfaces 10+ layers away from its cause. Linear debugging handles shallow failures; this is the loop-back version.
+Companion to `debugging-and-error-recovery`. Use when the symptom is **deep**, a failure surfaces 10+ layers away from its cause. Linear debugging handles shallow failures; this is the loop-back version.
 
 ## Core Principle
 
@@ -18,9 +18,9 @@ middle; one hypothesis per probe; and fix the upstream cause, never the symptom 
 ## Iron Laws
 
 <EXTREMELY-IMPORTANT>
-- **Trace backward, not forward.** Start at the symptom. What input reached this function? What path produced it? What called it? What changed?
+- **Trace backward, not forward.** Start at the symptom. What input reached this function? Which path produced it? What called it? What changed?
 - **Log at the boundary, not the middle.** Add probes between suspect layers, not inside them.
-- **One hypothesis per probe.** If you can't distinguish X from not-X, you're not probing — you're guessing.
+- **One hypothesis per probe.** If you can't distinguish X from not-X, you're not probing, you're guessing.
 - **Don't fix the symptom layer.** Fix the upstream cause. If the bad state reached the symptom, removing the symptom doesn't help.
 </EXTREMELY-IMPORTANT>
 
@@ -36,12 +36,12 @@ The cause is already known (use `debugging-and-error-recovery` or direct source-
 
 1. Start at the symptom layer where the failure surfaces.
 2. Walk up one boundary at a time: log the input, log the output, confirm the boundary
-   (see `The Backward Trace`).
+ (see `The Backward Trace`).
 3. Add probes between suspect layers, one hypothesis per probe
-   (`Instrumentation Strategy`).
+ (`Instrumentation Strategy`).
 4. At the root layer: write a regression test that would have caught the original
-   symptom, fix the upstream invariant, and re-run the trace from symptom to root
-   (`When You Find the Root`).
+ symptom, fix the upstream invariant, and re-run the trace from symptom to root
+ (`When You Find the Root`).
 
 ## The Backward Trace
 
@@ -79,7 +79,7 @@ Log the boundary, not the body. Body logging creates noise; boundary logging cre
 ## When You Find the Root
 
 - **Write a regression test** that would have caught the original symptom.
-- **Fix the upstream invariant** (a type, a guard, a parse) — not the symptom.
+- **Fix the upstream invariant** (a type, a guard, a parse), not the symptom.
 - **Verify** the fix by re-running the trace from symptom to root. No new issues.
 
 ## Common Mistakes
@@ -99,7 +99,7 @@ Hypothesis-free logging; log lines without structure (strings, not objects); tra
 - Re-run the trace from symptom to root after the fix: no new issues appear.
 - A regression test that would have caught the original symptom exists and passes.
 - The chain of boundary logs shows the upstream invariant was the cause, not a
-  plausible intermediate layer.
+ plausible intermediate layer.
 
 ## Skill Result Contract
 
@@ -115,4 +115,4 @@ Hypothesis-free logging; log lines without structure (strings, not objects); tra
 
 ## References
 
-N/A — no reference files; the backward-trace loop is fully specified in this file.
+N/A, no reference files; the backward-trace loop is fully specified in this file.

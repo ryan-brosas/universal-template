@@ -1,6 +1,6 @@
 ---
 name: documentation-and-adrs
-description: Use when writing technical documentation, Architecture Decision Records (ADRs), API docs, or project READMEs — covers documentation structure, ADR format, and keeping docs in sync with code
+description: Use when writing technical documentation, Architecture Decision Records (ADRs), API docs, or project READMEs, covers documentation structure, ADR format, and keeping docs in sync with code
 disable-model-invocation: true
 ---
 
@@ -65,10 +65,10 @@ Don't mix levels. A guide is not an ADR. A runbook is not a guide.
 
 ## Workflow
 
-1. Pick the level first (Doc Hierarchy) — a guide is not an ADR, a runbook is not a guide.
+1. Pick the level first (Doc Hierarchy), a guide is not an ADR, a runbook is not a guide.
 2. Write an ADR only when two+ viable options carry real trade-offs; otherwise document in code or plan.
 3. Update the doc in the same PR as the code change (doc-as-code).
-4. On review, delete or update anything stale — doc rot is 6+ months untouched.
+4. On review, delete or update anything stale, doc rot is 6+ months untouched.
 
 ## Keeping Docs in Sync
 
@@ -134,4 +134,4 @@ Doc rot (> 6 months); ADR without context or consequences; runbook without comma
 
 ## References
 
-N/A — no reference files; all formats and anatomy templates are inline in this skill.
+N/A, no reference files; all formats and anatomy templates are inline in this skill.

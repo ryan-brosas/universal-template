@@ -1,6 +1,6 @@
 ---
 name: objc-coding-practices
-description: "Use when authoring or reviewing Objective-C — Google/GitHub layout, 3+ char prefixes, property/copy semantics, designated initializers, Doxygen docs, NSError errors, literals, and clang-format/static analysis in CI."
+description: "Use when authoring or reviewing Objective-C, Google/GitHub layout, 3+ char prefixes, property/copy semantics, designated initializers, Doxygen docs, NSError errors, literals, and clang-format/static analysis in CI."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for Objective-C style learning (from the archived `awesome-gui
 
 ## Core Principle
 
-Objective-C quality is **prefixed, documented headers with explicit ownership** — copy immutables, designated inits, NSError for expected failures.
+Objective-C quality is **prefixed, documented headers with explicit ownership**, copy immutables, designated inits, NSError for expected failures.
 
 ## When to Use / NOT
 
@@ -19,16 +19,16 @@ Objective-C quality is **prefixed, documented headers with explicit ownership** 
 
 **NOT when:**
 
-- Swift-only modules — use Swift style foundations.
-- Generated ObjC stubs — validate generators.
+- Swift-only modules, use Swift style foundations.
+- Generated ObjC stubs, validate generators.
 
 ## Workflow
 
-1. **Layout** — indent, braces, imports (`objc-style-formatting-layout.md`).
-2. **Naming** — prefixes, categories (`objc-style-naming-prefixes.md`).
-3. **Memory** — properties, init, copy (`objc-style-properties-memory.md`).
-4. **Docs/errors** — Doxygen, NSError (`objc-style-docs-errors.md`).
-5. **Verify** — clang-format, analyzer, header doc audit on exports.
+1. **Layout**, indent, braces, imports (`objc-style-formatting-layout.md`).
+2. **Naming**, prefixes, categories (`objc-style-naming-prefixes.md`).
+3. **Memory**, properties, init, copy (`objc-style-properties-memory.md`).
+4. **Docs/errors**, Doxygen, NSError (`objc-style-docs-errors.md`).
+5. **Verify**, clang-format, analyzer, header doc audit on exports.
 
 ## Red Flags
 

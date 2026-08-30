@@ -1,6 +1,6 @@
 ---
 name: linux-kernel-coding-practices
-description: "Use when authoring or reviewing Linux kernel C — 8-tab indent, 80-col K&R braces, pointer-on-name spacing, descriptive globals, goto cleanup, kernel-doc, kmalloc_obj, and scripts/checkpatch.pl."
+description: "Use when authoring or reviewing Linux kernel C, 8-tab indent, 80-col K&R braces, pointer-on-name spacing, descriptive globals, goto cleanup, kernel-doc, kmalloc_obj, and scripts/checkpatch.pl."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for kernel coding-style (archived `awesome-guidelines` capsule
 
 ## Core Principle
 
-Kernel C quality is **checkpatch-clean tab layout and maintainable control flow** — 8-tab indent, 80 columns, descriptive global names, short functions, descriptive `goto` cleanup, kernel-doc on exports.
+Kernel C quality is **checkpatch-clean tab layout and maintainable control flow**, 8-tab indent, 80 columns, descriptive global names, short functions, descriptive `goto` cleanup, kernel-doc on exports.
 
 ## When to Use / NOT
 
@@ -19,17 +19,17 @@ Kernel C quality is **checkpatch-clean tab layout and maintainable control flow*
 
 **NOT when:**
 
-- GNU userspace packages — `gnu-c-coding-practices`.
+- GNU userspace packages, `gnu-c-coding-practices`.
 - Generic userspace C without kernel tree rules.
-- Rust kernel code — Rust kernel docs (style guide is C-centric).
+- Rust kernel code, Rust kernel docs (style guide is C-centric).
 
 ## Workflow
 
-1. **Indent/braces** — tabs, 80 cols, switch alignment (`linux-kernel-style-indent-braces.md`).
-2. **Naming/types** — pointers, typedefs, terminology (`linux-kernel-style-naming-types.md`).
-3. **Functions/goto** — size, prototypes, cleanup (`linux-kernel-style-functions-goto.md`).
-4. **Macros/verify** — kernel-doc, alloc, checkpatch (`linux-kernel-style-macros-verify.md`).
-5. **Verify** — `./scripts/checkpatch.pl --strict` on changed files/patch; build + `make` targets for subsystem.
+1. **Indent/braces**, tabs, 80 cols, switch alignment (`linux-kernel-style-indent-braces.md`).
+2. **Naming/types**, pointers, typedefs, terminology (`linux-kernel-style-naming-types.md`).
+3. **Functions/goto**, size, prototypes, cleanup (`linux-kernel-style-functions-goto.md`).
+4. **Macros/verify**, kernel-doc, alloc, checkpatch (`linux-kernel-style-macros-verify.md`).
+5. **Verify**, `./scripts/checkpatch.pl --strict` on changed files/patch; build + `make` targets for subsystem.
 
 ## Red Flags
 
@@ -81,5 +81,5 @@ Kernel C quality is **checkpatch-clean tab layout and maintainable control flow*
 
 ## Related skills
 
-- `c-coding-practices` — portable C safety baseline
-- `gnu-c-coding-practices` — GNU userspace layout (not kernel tabs)
+- `c-coding-practices`, portable C safety baseline
+- `gnu-c-coding-practices`, GNU userspace layout (not kernel tabs)

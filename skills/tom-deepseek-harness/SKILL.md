@@ -17,7 +17,7 @@ One source checkout, two planes: edit and run `/home/utopia/work/harness/deepsee
 
 ## When to Use / NOT
 
-- **Use when:** working on Tom's DeepSeek Harness source checkout — updating from Tom's remote, editing safely, building, running the source web app.
+- **Use when:** working on Tom's DeepSeek Harness source checkout, updating from Tom's remote, editing safely, building, running the source web app.
 - **NOT when:** doing normal work with the installed `dsh` distribution (that is the installed plane, not source work), or repairing OpenViking (a separate workflow per the Two-plane rule).
 
 ## Two-plane rule
@@ -34,7 +34,7 @@ One source checkout, two planes: edit and run `/home/utopia/work/harness/deepsee
    git status --short --branch
    git remote -v
    ```
-   Confirm the worktree and remote before touching files. Preserve unrelated changes.
+ Confirm the worktree and remote before touching files. Preserve unrelated changes.
 
 2. **Update safely.**
    ```bash
@@ -42,20 +42,20 @@ One source checkout, two planes: edit and run `/home/utopia/work/harness/deepsee
    git switch -c work/<short-name>   # once, if still on master
    git rebase origin/master
    ```
-   Fetch never changes the worktree. Commit a WIP save point before rebasing; stash only when a commit is not appropriate.
+ Fetch never changes the worktree. Commit a WIP save point before rebasing; stash only when a commit is not appropriate.
 
 3. **Install and build.**
    ```bash
    pnpm install --frozen-lockfile
    pnpm run build
    ```
-   Do not edit generated `dist/` artifacts by hand. Rebuild after source changes.
+ Do not edit generated `dist/` artifacts by hand. Rebuild after source changes.
 
 4. **Run source without disturbing the installed app.**
    ```bash
    pnpm dsh web --no-open --host 127.0.0.1 --port 43127
    ```
-   The web process is intentionally long-lived; a timeout is not a test failure if the HTTP probe is healthy. Restart it after rebuilding.
+ The web process is intentionally long-lived; a timeout is not a test failure if the HTTP probe is healthy. Restart it after rebuilding.
 
 5. **Verify before claiming success.**
    ```bash
@@ -63,7 +63,7 @@ One source checkout, two planes: edit and run `/home/utopia/work/harness/deepsee
    pnpm exec vitest run --config vitest.e2e.config.ts apps/cli/tests/built-bin.e2e.ts
    git status --short --branch
    ```
-   Add focused tests for the changed package when available.
+ Add focused tests for the changed package when available.
 
 6. **Integrate.** Commit only reviewed files, then rebase again before pushing. Never force-push shared branches. Use the reference workflow for conflict recovery, profile mismatches, and the stable/source update loop.
 
@@ -88,4 +88,4 @@ Report: checkout path, branch and base commit, update action, files changed, bui
 
 ## References
 
-- `references/update-while-editing.md` — the update-while-editing loop: fetch-during-edit safety, save-point/stash discipline before rebase, the release/update boundary (no global installs mid-edit), and recovery rules for wrong-repo/dirty-worktree/build-failure/pending-plugin cases.
+- `references/update-while-editing.md`, the update-while-editing loop: fetch-during-edit safety, save-point/stash discipline before rebase, the release/update boundary (no global installs mid-edit), and recovery rules for wrong-repo/dirty-worktree/build-failure/pending-plugin cases.

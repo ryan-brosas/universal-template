@@ -1,6 +1,6 @@
 ---
 name: vb-coding-practices
-description: "Use when authoring or reviewing Visual Basic .NET — Option Strict/Explicit, 4-space layout, Framework PascalCase naming, Try/Catch idioms, XML docs on public API, and dotnet format/build/test in CI."
+description: "Use when authoring or reviewing Visual Basic.NET, Option Strict/Explicit, 4-space layout, Framework PascalCase naming, Try/Catch idioms, XML docs on public API, and dotnet format/build/test in CI."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for VB.NET style (archived `awesome-guidelines` capsules). Leg
 
 ## Core Principle
 
-VB.NET quality is **Framework-aligned naming plus Strict options and readable blocks** — PascalCase public API, Try/Catch, no legacy On Error or Hungarian on new code.
+VB.NET quality is **Framework-aligned naming plus Strict options and readable blocks**, PascalCase public API, Try/Catch, no legacy On Error or Hungarian on new code.
 
 ## When to Use / NOT
 
@@ -19,16 +19,16 @@ VB.NET quality is **Framework-aligned naming plus Strict options and readable bl
 
 **NOT when:**
 
-- C# / F# — use language-specific practice skills.
-- Pure VB6/VBA maintenance — Wikibooks Hungarian may apply locally; do not mix into new .NET modules without migration plan.
+- C# / F#, use language-specific practice skills.
+- Pure VB6/VBA maintenance, Wikibooks Hungarian may apply locally; do not mix into new.NET modules without migration plan.
 
 ## Workflow
 
-1. **Formatting** — indent, statements, comments (`vb-style-formatting-layout.md`).
-2. **Naming** — PascalCase/camelCase, `m_` fields (`vb-style-naming-types.md`).
-3. **Idioms** — options, Try/Catch, LINQ, events (`vb-style-idioms-control.md`).
-4. **Docs/verify** — XML docs, file layout, build (`vb-style-docs-verify.md`).
-5. **Verify** — `dotnet build`, `dotnet format`, tests on changed projects.
+1. **Formatting**, indent, statements, comments (`vb-style-formatting-layout.md`).
+2. **Naming**, PascalCase/camelCase, `m_` fields (`vb-style-naming-types.md`).
+3. **Idioms**, options, Try/Catch, LINQ, events (`vb-style-idioms-control.md`).
+4. **Docs/verify**, XML docs, file layout, build (`vb-style-docs-verify.md`).
+5. **Verify**, `dotnet build`, `dotnet format`, tests on changed projects.
 
 ## Red Flags
 

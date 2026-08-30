@@ -9,16 +9,16 @@ description: "Use when auditing for security vulnerabilities, implementing auth 
 
 **Validate at every boundary and trust the types inside; deny by default and allow
 explicitly.** Secrets never in code, logs, or git; authn ≠ authz; least privilege by
-default; and every security event gets logged — never the secrets themselves.
+default; and every security event gets logged, never the secrets themselves.
 
 ## When to Use / NOT
 
 - **Use when:** auditing for security vulnerabilities, implementing auth or authz,
-  handling secrets, or hardening against OWASP Top 10 — input validation,
-  authentication, dependency auditing, and secure defaults.
+ handling secrets, or hardening against OWASP Top 10, input validation,
+ authentication, dependency auditing, and secure defaults.
 - **NOT when:** the change touches no external input, no authentication/authorization,
-  no secrets, no dependencies, and no response headers — there is no security surface
-  for this skill to apply.
+ no secrets, no dependencies, and no response headers, there is no security surface
+ for this skill to apply.
 
 ## Iron Laws
 
@@ -27,32 +27,32 @@ default; and every security event gets logged — never the secrets themselves.
 - **Secrets never in code, logs, or git.** Env vars; vault for prod.
 - **Authn ≠ Authz.** Who you are ≠ what you can do.
 - **Least privilege by default.** Deny by default, allow explicitly.
-- **Log security events.** Failed logins, denials, secret access — never the secrets themselves.
+- **Log security events.** Failed logins, denials, secret access, never the secrets themselves.
 </EXTREMELY-IMPORTANT>
 
 ## OWASP Top 10 (Quick Map)
 
-| Risk            | Defense                                            |
+| Risk | Defense |
 |-----------------|----------------------------------------------------|
-| Injection       | Parameterized queries, schema-validated input      |
-| Broken auth     | Rate limit, MFA, bcrypt/argon2                     |
-| Data exposure   | Encrypt at rest + transit, minimize retention      |
-| XXE             | Disable external entities                          |
-| Access control  | Authz on every action, deny default                |
-| Misconfig       | Secure defaults, no debug in prod, headers         |
-| XSS             | Output encoding, CSP, no innerHTML with user input |
-| Deserialization | Schema-validate, no eval on untrusted              |
-| Vulns (deps)    | `npm audit`, Dependabot, lockfile pinning          |
-| Logging         | Auth events, anomalies, access denials             |
+| Injection | Parameterized queries, schema-validated input |
+| Broken auth | Rate limit, MFA, bcrypt/argon2 |
+| Data exposure | Encrypt at rest + transit, minimize retention |
+| XXE | Disable external entities |
+| Access control | Authz on every action, deny default |
+| Misconfig | Secure defaults, no debug in prod, headers |
+| XSS | Output encoding, CSP, no innerHTML with user input |
+| Deserialization | Schema-validate, no eval on untrusted |
+| Vulns (deps) | `npm audit`, Dependabot, lockfile pinning |
+| Logging | Auth events, anomalies, access denials |
 
 ## Workflow
 
 1. Map the surface against the OWASP Top 10 quick map above.
 2. Validate all external input at the boundary (schema, reject unknown fields).
 3. Implement authentication (hashing, rate limit, MFA, sessions) and authorization
-   (check on every request; test the negative).
+ (check on every request; test the negative).
 4. Handle secrets (env vars locally, CI secret store, vault for prod; rotate; scrub
-   logs).
+ logs).
 5. Audit dependencies (`npm audit`, lockfile pinning, advisories).
 6. Set secure headers.
 7. Verify per `Verification` below.
@@ -67,7 +67,7 @@ bcrypt or argon2 for password hashing (never md5, sha1). Rate limit login (5 per
 
 ## Authorization
 
-Check on every request; never trust the frontend. Use a policy engine (CASL, Oso) or explicit checks. Test the negative — "user A accesses user B's resource" must fail. Audit log access denials.
+Check on every request; never trust the frontend. Use a policy engine (CASL, Oso) or explicit checks. Test the negative, "user A accesses user B's resource" must fail. Audit log access denials.
 
 ## Secrets
 
@@ -99,7 +99,7 @@ Plain-text passwords; md5/sha1; SQL string concat; "trust the frontend" authz; s
 - Confirm no `.env` or secret material in git, logs, or error messages.
 - Run `npm audit` and confirm lockfile pinning; confirm rate limiting on auth endpoints.
 - Confirm secure headers are present in responses and security events (failed logins,
-  denials) are logged without secret values.
+ denials) are logged without secret values.
 
 ## Skill Result Contract
 
@@ -115,4 +115,4 @@ Plain-text passwords; md5/sha1; SQL string concat; "trust the frontend" authz; s
 
 ## References
 
-N/A — no reference files; defenses are fully covered by the tables and sections in this file.
+N/A, no reference files; defenses are fully covered by the tables and sections in this file.

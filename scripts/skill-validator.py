@@ -8,12 +8,12 @@ Severity: P0 = broken discovery/contract, P1 = retrieval or parity risk,
           P2 = style deviation from the mandated skeleton.
 Zero dependencies. Exit 1 if any P0, else 0.
 """
+import importlib.util
 import os, re, sys
 from pathlib import Path
 
 try:
     # scripts/style-lint.py has a hyphen: import by file path, not module name.
-    import importlib.util
 
     _spec = importlib.util.spec_from_file_location(
         "style_lint", str(Path(__file__).with_name("style-lint.py")))

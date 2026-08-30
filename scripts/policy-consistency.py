@@ -19,6 +19,7 @@ import re
 import subprocess
 import sys
 from pathlib import Path
+from typing import Optional
 
 BASE = Path(__file__).resolve().parents[1]
 
@@ -45,7 +46,7 @@ fails: list[str] = []
 warns: list[str] = []
 
 
-def read(rel: str) -> str | None:
+def read(rel: str) -> Optional[str]:
     p = BASE / rel
     return p.read_text(encoding="utf-8") if p.is_file() else None
 
@@ -54,7 +55,7 @@ def check_fail(cid: str, rel: str, line_no: int, detail: str) -> None:
     fails.append(f"[{cid}] {rel}:{line_no}: {detail}")
 
 
-def forbid_phrase(cid: str, phrase: str, files: list[str] | None = None) -> None:
+def forbid_phrase(cid: str, phrase: str, files: Optional[list[str]] = None) -> None:
     for rel in (files or POLICY_FILES):
         text = read(rel)
         if not text:
@@ -548,7 +549,7 @@ def _load_internal_skills() -> set[str]:
         return set()
 
 
-def check_hidden_reachability(base: Path = BASE, internal: set[str] | None = None) -> list[str]:
+def check_hidden_reachability(base: Path = BASE, internal: Optional[set[str]] = None) -> list[str]:
     """Internal hidden skills need a real caller; cold ones are reachable via search.
 
     A hidden skill (disable-model-invocation: true) counts as reachable when any
@@ -717,14 +718,14 @@ def selftest() -> int:
             "---\nname: alpha\ndescription: Use when testing.\n---\n"
             "# Alpha\nRoute to `delta` for this.\n", encoding="utf-8")
         dead = check_hidden_reachability(base=base, internal=internal)
-        if dead == []:
+        if not dead:
             print("PASS real caller makes internal skill reachable")
         else:
             print(f"FAIL expected [] unreachable, got {dead}")
             ok = False
         # Cold hidden skills never need a route.
         dead = check_hidden_reachability(base=base, internal=set())
-        if dead == []:
+        if not dead:
             print("PASS cold hidden skills need no route")
         else:
             print(f"FAIL expected [] unreachable, got {dead}")
@@ -763,7 +764,7 @@ def selftest() -> int:
             "---\nname: caller\ndescription: Use when testing.\n---\n"
             "# caller\nRoute to " + probe + " during the workflow.\n", encoding="utf-8")
         dead = check_hidden_reachability(base=base, internal=internal)
-        if dead != []:
+        if dead:
             print(f"FAIL production internal skill {probe} should be reachable, got {dead}")
             ok = False
         else:

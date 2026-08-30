@@ -28,7 +28,7 @@ ASD-STE100 compliance; never claim certification.
 - **Antithesis as rhetoric:** contrast used for style, not meaning. Technical
   contrast is exempt (see exceptions).
 - **Corrective negation:** "not X, but Y" framing used as a rhetorical tic.
-- **Negative parallelism / anaphora:** repeated "not only... but also" or a
+- **` not only... but also ` parallelism / anaphora:** repeated "`not only... but also`" as a
   run of sentences opening with "not".
 - **Formulaic rule-of-three:** three-part cadence used as decoration.
 - **Setup and payoff beats:** "Little did X know" style narrative framing.
@@ -38,7 +38,7 @@ ASD-STE100 compliance; never claim certification.
 - **Nominalization:** "perform validation of" for "validate".
 - **Hedging:** stacked qualifiers where one decision word suffices.
 - **Performed enthusiasm:** exclamation marks, "excited", emoji in prose.
-- **Corporate-register verbs:** leverage, underscore in vague business use;
+- **Corporate-register verbs:** leaning on `underscore` in vague business use;
   technical use ("the API reflects the database state") is fine.
 - **Long sentences:** over 45 words (reported).
 - **Uniform cadence:** six or more sentences within a three-word length

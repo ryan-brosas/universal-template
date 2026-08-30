@@ -1,6 +1,6 @@
 ---
 name: typescript-coding-practices
-description: "Use when authoring or reviewing TypeScript style — named ES module exports, import type, unknown over any, nullable-at-use-site, optional params over overload sprawl, readonly/parameter properties, and banned default exports/namespaces/const enum."
+description: "Use when authoring or reviewing TypeScript style, named ES module exports, import type, unknown over any, nullable-at-use-site, optional params over overload sprawl, readonly/parameter properties, and banned default exports/namespaces/const enum."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for TypeScript **style and module** learning (from the archive
 
 ## Core Principle
 
-TypeScript maintainability is **typed modules with honest nullability** — named exports, `import type`, `unknown` at boundaries, no nullable aliases, minimal assertions.
+TypeScript maintainability is **typed modules with honest nullability**, named exports, `import type`, `unknown` at boundaries, no nullable aliases, minimal assertions.
 
 ## When to Use / NOT
 
@@ -19,16 +19,16 @@ TypeScript maintainability is **typed modules with honest nullability** — name
 
 **NOT when:**
 
-- Domain architecture, Effect/Result, schema parsing — `typescript-coding-standards`.
-- Generated `.d.ts` or bundled output — validate source instead.
+- Domain architecture, Effect/Result, schema parsing, `typescript-coding-standards`.
+- Generated `.d.ts` or bundled output, validate source instead.
 
 ## Workflow
 
-1. **Modules** — named exports, `import type`, no namespaces/require, dedupe imports (`typescript-style-modules-imports.md`).
-2. **Types** — primitives lowercase, `unknown` not `any`, null at use site, optional params (`typescript-style-types-nullability.md`).
-3. **Classes** — parameter properties, `readonly`, no `#private`/`const enum`, rare `as` (`typescript-style-classes-api.md`).
-4. **Verify** — `tsc --noEmit` + eslint on changed paths (`typescript-style-verify.md`).
-5. **Domain pass** — when handling untrusted input or errors-as-data, also run `typescript-coding-standards`.
+1. **Modules**, named exports, `import type`, no namespaces/require, dedupe imports (`typescript-style-modules-imports.md`).
+2. **Types**, primitives lowercase, `unknown` not `any`, null at use site, optional params (`typescript-style-types-nullability.md`).
+3. **Classes**, parameter properties, `readonly`, no `#private`/`const enum`, rare `as` (`typescript-style-classes-api.md`).
+4. **Verify**, `tsc --noEmit` + eslint on changed paths (`typescript-style-verify.md`).
+5. **Domain pass**, when handling untrusted input or errors-as-data, also run `typescript-coding-standards`.
 
 ## Red Flags
 

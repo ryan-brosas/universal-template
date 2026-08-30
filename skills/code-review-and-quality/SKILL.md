@@ -9,12 +9,12 @@ disable-model-invocation: true
 
 ## Core Principle
 
-**Bloat is the default failure mode.** Code grows; review subtracts. The goal is a tight, minimal change that solves the stated problem — nothing more. A review that lists nits without identifying deletion candidates has missed the point.
+**Bloat is the default failure mode.** Code grows; review subtracts. The goal is a tight, minimal change that solves the stated problem, nothing more. A review that lists nits without identifying deletion candidates has missed the point.
 
 ## When to Use / NOT
 
 - **Use when:** reviewing code or PRs before merge, after subagent work, or when a review is requested.
-- **NOT when:** style-only review — run the linter instead (see Anti-Patterns).
+- **NOT when:** style-only review, run the linter instead (see Anti-Patterns).
 
 ## Two Review Modes
 
@@ -28,39 +28,39 @@ For AI-generated code, after a refactor, or when scope may have crept. Output a 
 
 ## Workflow
 
-1. **Scope check** — diff match stated problem? Outside is `[blocker]` (split) or `[delete]`.
-2. **Iron-law scan** — domain-relevant iron law followed? (TDD: failing test first. Effect: typed errors. UI: design taste. Performance: profile first.)
-3. **Read for deletion** — "If I delete this, what breaks?" If nothing, it's bloat.
-4. **Verify behavior** — test pass? Path exercised? `[question]` if unsure.
-5. **Mark dead** — unused exports, dead branches, ownerless TODOs, restating comments.
-6. **Verify in one pass** — typecheck + lint + relevant test.
+1. **Scope check**, diff match stated problem? Outside is `[blocker]` (split) or `[delete]`.
+2. **Iron-law scan**, domain-relevant iron law followed? (TDD: failing test first. Effect: typed errors. UI: design taste. Performance: profile first.)
+3. **Read for deletion**, "If I delete this, what breaks?" If nothing, it's bloat.
+4. **Verify behavior**, test pass? Path exercised? `[question]` if unsure.
+5. **Mark dead**, unused exports, dead branches, ownerless TODOs, restating comments.
+6. **Verify in one pass**, typecheck + lint + relevant test.
 
 ## Delete-List Categories
 
-| Tag                  | Meaning                      | Action                         |
+| Tag | Meaning | Action |
 |----------------------|------------------------------|--------------------------------|
-| `[delete]`           | Unused / dead / speculative  | Remove                         |
-| `[simplify]`         | Works but over-engineered    | Reduce                         |
+| `[delete]` | Unused / dead / speculative | Remove |
+| `[simplify]` | Works but over-engineered | Reduce |
 | `[keep-with-reason]` | Looks bloat, is load-bearing | Justify, or move to `[delete]` |
 
 ## Iron Laws by Domain
 
-| Domain               | Iron law                                                      |
+| Domain | Iron law |
 |----------------------|---------------------------------------------------------------|
-| Any feature / bugfix | Failing test first (`test-driven-development`)                |
-| TS / JS with Effect  | Typed errors, no `any` (`typescript-coding-standards`)        |
-| React / Next.js      | Server components, bundle discipline (`react-best-practices`) |
-| UI                   | Match form to failure (`writing-skills`); design-taste layer  |
-| Performance          | Measure before optimizing (`performance-optimization`)        |
-| Security             | Validate at every layer (`defense-in-depth`)                  |
+| Any feature / bugfix | Failing test first (`test-driven-development`) |
+| TS / JS with Effect | Typed errors, no `any` (`typescript-coding-standards`) |
+| React / Next.js | Server components, bundle discipline (`react-best-practices`) |
+| UI | Match form to failure (`writing-skills`); design-taste layer |
+| Performance | Measure before optimizing (`performance-optimization`) |
+| Security | Validate at every layer (`defense-in-depth`) |
 
 ## Red Flags (Bloat)
 
-Abstraction with one call site; wrapper that does nothing; restating comment; helper "for future use" with no caller; generic name (`helper`, `util`, `manager`) hiding intent; feature flag never toggled; "might need this" branches; AI-shaped comments; `as any` casts; tests that mock the behavior they claim to test.
+Abstraction with one call site. wrapper that does nothing. restating comment. helper "for future use" with no caller. generic name (`helper`, `util`, `manager`) hiding intent. feature flag never toggled. "might need this" branches. AI-shaped comments; `as any` casts. tests that mock the behavior they claim to test.
 
 ## Anti-Patterns
 
-LGTM-by-default (review passes when nothing flagged); style nits as review (run the linter); scope creep (fixing unrelated issues — note `[NOTICED BUT NOT TOUCHING]`, don't fix); approving-vibes review ("looks good" without evidence — cite test runs, paths, lines).
+LGTM-by-default (review passes when nothing flagged); style nits as review (run the linter); scope creep (fixing unrelated issues, note `[NOTICED BUT NOT TOUCHING]`, don't fix); approving-vibes review ("looks good" without evidence, cite test runs, paths, lines).
 
 ## Self-Quiz
 
@@ -84,4 +84,4 @@ Typecheck + lint + relevant test pass in one pass; every `[blocker]` names the v
 
 ## References
 
-N/A — no reference files; this skill is self-contained.
+N/A, no reference files; this skill is self-contained.

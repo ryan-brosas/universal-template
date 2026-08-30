@@ -1,6 +1,6 @@
 ---
 name: php-coding-practices
-description: "Use when authoring or reviewing PHP — PSR-12 layout, PSR-1/PSR-4 file hygiene, strict_types, identical comparison, typed APIs, visibility, final classes, and constructor injection over singletons."
+description: "Use when authoring or reviewing PHP, PSR-12 layout, PSR-1/PSR-4 file hygiene, strict_types, identical comparison, typed APIs, visibility, final classes, and constructor injection over singletons."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for PHP style learning (from the archived `awesome-guidelines`
 
 ## Core Principle
 
-PHP readability is **PSR mechanical layout plus strict typed APIs** — side-effect-free autoload files, identical comparison, injected dependencies.
+PHP readability is **PSR mechanical layout plus strict typed APIs**, side-effect-free autoload files, identical comparison, injected dependencies.
 
 ## When to Use / NOT
 
@@ -20,16 +20,16 @@ PHP readability is **PSR mechanical layout plus strict typed APIs** — side-eff
 **NOT when:**
 
 - Non-PHP code.
-- Generated stubs (PHPUnit mocks, protobuf) — validate generator config instead.
-- CMS-specific rules (WordPress/Drupal) — use stack capsules in `foundation-pack/`.
+- Generated stubs (PHPUnit mocks, protobuf), validate generator config instead.
+- CMS-specific rules (WordPress/Drupal), use stack capsules in `foundation-pack/`.
 
 ## Workflow
 
-1. **Format & layout** — PSR-12 indent, braces, imports, LF endings (`php-style-formatting-layout.md`).
-2. **Files & namespaces** — PSR-4 side-effect-free files, PascalCase/camelCase (`php-style-files-namespaces.md`).
-3. **Types** — `strict_types`, hints, `===`, `??` (`php-style-types-comparisons.md`).
-4. **Classes** — visibility, `final`, DI, early return (`php-style-classes-design.md`).
-5. **Verify** — PHP-CS-Fixer, Laravel Pint, or PHPCS (PSR-12) + PHPStan/Psalm on changed paths.
+1. **Format & layout**, PSR-12 indent, braces, imports, LF endings (`php-style-formatting-layout.md`).
+2. **Files & namespaces**, PSR-4 side-effect-free files, PascalCase/camelCase (`php-style-files-namespaces.md`).
+3. **Types**, `strict_types`, hints, `===`, `??` (`php-style-types-comparisons.md`).
+4. **Classes**, visibility, `final`, DI, early return (`php-style-classes-design.md`).
+5. **Verify**, PHP-CS-Fixer, Laravel Pint, or PHPCS (PSR-12) + PHPStan/Psalm on changed paths.
 
 ## Red Flags
 

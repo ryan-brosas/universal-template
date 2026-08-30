@@ -1,6 +1,6 @@
 ---
 name: pdf-extract
-description: Use when extracting text, images, tables, or metadata from PDF files. MUST load to choose the correct extraction library based on PDF complexity — simple text vs structured data vs complex layouts.
+description: Use when extracting text, images, tables, or metadata from PDF files. MUST load to choose the correct extraction library based on PDF complexity, simple text vs structured data vs complex layouts.
 disable-model-invocation: true
 ---
 
@@ -34,14 +34,14 @@ Data exists in a non-PDF format (use that); copy-paste works; one-time, hand ins
 
 ## Library Selection
 
-| PDF type                       | Library                              |
+| PDF type | Library |
 |--------------------------------|--------------------------------------|
-| Simple text, English           | `pdf-parse`, `pdfplumber`            |
-| Complex text, multi-column     | `pdfplumber` (layout-aware)          |
+| Simple text, English | `pdf-parse`, `pdfplumber` |
+| Complex text, multi-column | `pdfplumber` (layout-aware) |
 | Tables (financial, scientific) | `camelot`, `tabula-py`, `pdfplumber` |
-| Scanned (image-based)          | `pytesseract` (OCR), or vision model |
-| Mixed (text + tables + images) | Vision model (GPT-4V, Claude)        |
-| Form fields                    | `pdf-lib`, `pdfrw`, `pypdf`          |
+| Scanned (image-based) | `pytesseract` (OCR), or vision model |
+| Mixed (text + tables + images) | Vision model (GPT-4V, Claude) |
+| Form fields | `pdf-lib`, `pdfrw`, `pypdf` |
 
 When in doubt: `pdfplumber` for English text, vision model for weird layouts.
 
@@ -51,7 +51,7 @@ When in doubt: `pdfplumber` for English text, vision model for weird layouts.
 2. **Pick the library** based on the structure.
 3. **Test on a small sample.** Extract 1-5 pages. Is the output what you expected?
 4. **Scale up.** Run on the full set. Watch for failures (encrypted, corrupted, etc.).
-5. **Verify.** Spot-check. Automated extraction lies silently — a missing column, a merged cell.
+5. **Verify.** Spot-check. Automated extraction lies silently, a missing column, a merged cell.
 
 ## Common Patterns
 
@@ -71,11 +71,11 @@ text = pytesseract.image_to_string(Image.open("scan.png"))
 
 ## Common Mistakes
 
-`pdftotext` on a scanned PDF (no text to extract); `pdf-parse` on a multi-column PDF (text jumbled); flattening tables to text (loses structure); no verification (output silently wrong); choosing a library for a 500-page PDF without testing on 5 pages; OCR on text-based PDF (overkill, slower, less accurate); batch processing without error handling (one bad PDF kills the run).
+`pdftotext` on a scanned PDF (no text to extract); `pdf-parse` on a multi-column PDF (text jumbled). flattening tables to text (loses structure). no verification (output silently wrong). choosing a library for a 500-page PDF without testing on 5 pages. OCR on text-based PDF (overkill, slower, less accurate). batch processing without error handling (one bad PDF kills the run).
 
 ## Red Flags
 
-No sample test before full run; no verification of output; `pdftotext` on scanned PDF; no error handling on batch; "the extraction worked on 1 page" assumption for the full 500; tables flattened to text; "I'll fix the output in post" (extraction should be correct); "the library says it supports tables" (test it on YOUR tables).
+No sample test before full run. no verification of output; `pdftotext` on scanned PDF. no error handling on batch. "the extraction worked on 1 page" assumption for the full 500. tables flattened to text. "I'll fix the output in post" (extraction should be correct). "the library says it supports tables" (test it on YOUR tables).
 
 ## Anti-Patterns
 
@@ -83,13 +83,13 @@ No sample test before full run; no verification of output; `pdftotext` on scanne
 
 ## Verification
 
-- Spot-check the extracted output against the source PDF — automated extraction lies
-  silently (a missing column, a merged cell).
+- Spot-check the extracted output against the source PDF, automated extraction lies
+ silently (a missing column, a merged cell).
 - Confirm the sample test (1–5 pages) produced the expected output before trusting the
-  full run.
+ full run.
 - For tables: verify row/column counts and cell alignment, not just that text came back.
 - For batches: confirm error handling caught encrypted/corrupted files instead of one
-  bad PDF killing the run.
+ bad PDF killing the run.
 
 ## Skill Result Contract
 
@@ -105,4 +105,4 @@ No sample test before full run; no verification of output; `pdftotext` on scanne
 
 ## References
 
-N/A — no reference files; library selection is fully covered by the table in this file.
+N/A, no reference files; library selection is fully covered by the table in this file.

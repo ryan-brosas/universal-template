@@ -1,6 +1,6 @@
 ---
 name: c-coding-practices
-description: "Use when authoring or reviewing C — snake_case naming, header guards, no data in headers, Yoda comparisons, safe macros, initialize-all, and checked error returns."
+description: "Use when authoring or reviewing C, snake_case naming, header guards, no data in headers, Yoda comparisons, safe macros, initialize-all, and checked error returns."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for C style learning (from the archived `awesome-guidelines` s
 
 ## Core Principle
 
-C quality is **explicit scope, explicit control flow, explicit failures** — the language will not save you from unclear names or unchecked returns.
+C quality is **explicit scope, explicit control flow, explicit failures**, the language will not save you from unclear names or unchecked returns.
 
 ## When to Use / NOT
 
@@ -19,16 +19,16 @@ C quality is **explicit scope, explicit control flow, explicit failures** — th
 
 **NOT when:**
 
-- C++ translation units — use `cpp-coding-practices`.
-- Generated bindings — validate generator output.
+- C++ translation units, use `cpp-coding-practices`.
+- Generated bindings, validate generator output.
 
 ## Workflow
 
-1. **Format & control** — K&R braces, Yoda `==`, switch default (`c-style-formatting-control.md`).
-2. **Naming** — snake_case, `g_`, pointers (`c-style-naming-types.md`).
-3. **Headers** — guards, extern/define split (`c-style-headers-modules.md`).
-4. **Macros & safety** — parenthesized macros, init-all, error checks (`c-style-macros-safety.md`).
-5. **Verify** — compiler warnings (`-Wall -Wextra`), static analyzer on changed files.
+1. **Format & control**, K&R braces, Yoda `==`, switch default (`c-style-formatting-control.md`).
+2. **Naming**, snake_case, `g_`, pointers (`c-style-naming-types.md`).
+3. **Headers**, guards, extern/define split (`c-style-headers-modules.md`).
+4. **Macros & safety**, parenthesized macros, init-all, error checks (`c-style-macros-safety.md`).
+5. **Verify**, compiler warnings (`-Wall -Wextra`), static analyzer on changed files.
 
 ## Red Flags
 

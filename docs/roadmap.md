@@ -11,7 +11,7 @@ catch-first test methodology.
 ## Summary
 
 | Pillar / methodology | Strategic objective | Marker |
-| :--- | :--- | :--- |
+| --- | --- | --- |
 | Ground truth | Reference-driven prior art; cold-pack fallback (no new foundations) | Every active project grounds claims in actual source, tests, and runtime probes |
 | Steer outcomes | Frictionless conclusive PR loop with mechanical gate boundaries | Fast CI checks, zero behavioral prompt bloat |
 | Stack leverage | Threshold-driven skill capture; experience-grade OpenViking sync (opt-in) | Recurring wins become skills when they prove out |
@@ -48,14 +48,14 @@ catch-first test methodology.
   into low-false-positive gates when correctness and maintenance value exceed
   the cost. Aesthetic preference alone is not a valid gate.
 
-## 3. Stack your leverage
+## 3. Build stacked advantage
 
 - **Threshold-driven skill capture.** At a meaningful milestone, classify
   recurring wins through `leverage-capture` (code, reference, gate, skill,
   memory, or not worth saving). Capture is threshold-driven, never automatic;
   one-off details recoverable from source stay in code.
-- **Domain-specific leverage leaves (as demand appears).** High-leverage
-  single-focus leaves for downstream clones, for example browser automation,
+- **Domain-specific skill leaves (as demand appears).** High-value
+  single-focus leaves for downstream clones, whether browser automation,
   data pipelines, or multi-agent coordination. Build on observed need, not
   speculation.
 - **Experience-grade OpenViking sync (opt-in).** Sync only

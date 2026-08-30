@@ -1,6 +1,6 @@
 ---
 name: kotlin-coding-practices
-description: "Use when authoring or reviewing Kotlin — 4-space layout, PascalCase/camelCase naming, package-aligned files, class member order, val immutability, default parameters, expression if/when, and explicit library API."
+description: "Use when authoring or reviewing Kotlin, 4-space layout, PascalCase/camelCase naming, package-aligned files, class member order, val immutability, default parameters, expression if/when, and explicit library API."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for Kotlin style learning (from the archived `awesome-guidelin
 
 ## Core Principle
 
-Kotlin readability is **official formatter mechanics plus immutability-first idioms** — explicit imports, semantic class layout, stable library surfaces.
+Kotlin readability is **official formatter mechanics plus immutability-first idioms**, explicit imports, semantic class layout, stable library surfaces.
 
 ## When to Use / NOT
 
@@ -20,16 +20,16 @@ Kotlin readability is **official formatter mechanics plus immutability-first idi
 **NOT when:**
 
 - Non-Kotlin code.
-- Generated code — validate generators, not hand-edits.
-- Compose/Android-only rules — use Android style guide / foundation when stack is Android.
+- Generated code, validate generators, not hand-edits.
+- Compose/Android-only rules, use Android style guide / foundation when stack is Android.
 
 ## Workflow
 
-1. **Format & layout** — 4-space, braces, modifiers, trailing commas (`kotlin-style-formatting-layout.md`).
-2. **Naming & files** — packages, files, constants, backing props (`kotlin-style-naming-files.md`).
-3. **Organization** — directories, class layout, overloads (`kotlin-style-organization-classes.md`).
-4. **Idioms & API** — val, defaults, expression control flow, library KDoc (`kotlin-style-idioms-api.md`).
-5. **Verify** — ktlint/detekt + `./gradlew check` (or project equivalent) on changed modules.
+1. **Format & layout**, 4-space, braces, modifiers, trailing commas (`kotlin-style-formatting-layout.md`).
+2. **Naming & files**, packages, files, constants, backing props (`kotlin-style-naming-files.md`).
+3. **Organization**, directories, class layout, overloads (`kotlin-style-organization-classes.md`).
+4. **Idioms & API**, val, defaults, expression control flow, library KDoc (`kotlin-style-idioms-api.md`).
+5. **Verify**, ktlint/detekt + `./gradlew check` (or project equivalent) on changed modules.
 
 ## Red Flags
 

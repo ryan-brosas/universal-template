@@ -1,6 +1,6 @@
 ---
 name: xml-markup-practices
-description: "Use when designing or reviewing machine-readable XML formats — reuse-first schemas, RELAX NG namespaces, lowerCamelCase names, element/attribute rules, UTF-8 instances, and xmllint/RNG validation in CI."
+description: "Use when designing or reviewing machine-readable XML formats, reuse-first schemas, RELAX NG namespaces, lowerCamelCase names, element/attribute rules, UTF-8 instances, and xmllint/RNG validation in CI."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for Google XML Document Format Style Guide (archived `awesome-
 
 ## Core Principle
 
-Machine XML quality is **schema-first reuse with lowerCamelCase names and element/attribute discipline** — no mixed content, typed literals, UTF-8 instances validated against RELAX NG.
+Machine XML quality is **schema-first reuse with lowerCamelCase names and element/attribute discipline**, no mixed content, typed literals, UTF-8 instances validated against RELAX NG.
 
 ## When to Use / NOT
 
@@ -19,17 +19,17 @@ Machine XML quality is **schema-first reuse with lowerCamelCase names and elemen
 
 **NOT when:**
 
-- XHTML/HTML rich text — use HTML/CSS guides.
-- ODF or protobuf-translated XML — host format wins.
-- JSON API payloads — use `json-api-practices`.
+- XHTML/HTML rich text, use HTML/CSS guides.
+- ODF or protobuf-translated XML, host format wins.
+- JSON API payloads, use `json-api-practices`.
 
 ## Workflow
 
-1. **Schema/namespaces** — reuse, RELAX NG, xmlns (`xml-style-schema-namespaces.md`).
-2. **Naming/values** — lowerCamelCase, dates, key-value (`xml-style-naming-values.md`).
-3. **Elements/attributes** — mixed-content ban, tradeoffs (`xml-style-elements-attributes.md`).
-4. **Instances/verify** — UTF-8, pretty-print, validate (`xml-style-instances-verify.md`).
-5. **Verify** — `xmllint --relaxng` (or project validator) on changed schema/samples.
+1. **Schema/namespaces**, reuse, RELAX NG, xmlns (`xml-style-schema-namespaces.md`).
+2. **Naming/values**, lowerCamelCase, dates, key-value (`xml-style-naming-values.md`).
+3. **Elements/attributes**, mixed-content ban, tradeoffs (`xml-style-elements-attributes.md`).
+4. **Instances/verify**, UTF-8, pretty-print, validate (`xml-style-instances-verify.md`).
+5. **Verify**, `xmllint --relaxng` (or project validator) on changed schema/samples.
 
 ## Red Flags
 

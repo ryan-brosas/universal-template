@@ -1,6 +1,6 @@
 ---
 name: elm-coding-practices
-description: "Use when authoring or reviewing Elm — elm-format, 80-column layout, type annotations, qualified imports, custom ID types, multi-step pipelines, and elm-review/test in CI."
+description: "Use when authoring or reviewing Elm, elm-format, 80-column layout, type annotations, qualified imports, custom ID types, multi-step pipelines, and elm-review/test in CI."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for Elm style learning (from the archived `awesome-guidelines`
 
 ## Core Principle
 
-Elm quality is **regular layout + compiler leverage** — formatted mechanically, typed explicitly, modules focused on one custom type.
+Elm quality is **regular layout plus compiler support**, formatted mechanically, typed explicitly, modules focused on one custom type.
 
 ## When to Use / NOT
 
@@ -19,16 +19,16 @@ Elm quality is **regular layout + compiler leverage** — formatted mechanically
 
 **NOT when:**
 
-- Generated `Page` boilerplate only — validate hand-edited modules.
+- Generated `Page` boilerplate only, validate hand-edited modules.
 - Non-Elm code.
 
 ## Workflow
 
-1. **Layout** — elm-format, 80 cols, declaration shape (`elm-style-formatting-layout.md`).
-2. **Modules** — names, imports, focus (`elm-style-naming-modules.md`).
-3. **Types** — unions, IDs, decoders (`elm-style-types-declarations.md`).
-4. **Expressions** — pipes, case, let (`elm-style-pipelines-expressions.md`).
-5. **Verify** — `elm-format --validate`, `elm-test`, `elm-review` on changed modules.
+1. **Layout**, elm-format, 80 cols, declaration shape (`elm-style-formatting-layout.md`).
+2. **Modules**, names, imports, focus (`elm-style-naming-modules.md`).
+3. **Types**, unions, IDs, decoders (`elm-style-types-declarations.md`).
+4. **Expressions**, pipes, case, let (`elm-style-pipelines-expressions.md`).
+5. **Verify**, `elm-format --validate`, `elm-test`, `elm-review` on changed modules.
 
 ## Red Flags
 

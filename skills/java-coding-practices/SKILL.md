@@ -1,6 +1,6 @@
 ---
 name: java-coding-practices
-description: "Use when authoring or reviewing Java — google-java-format layout, import discipline, Google naming, @Override, handled catches, static qualification, and Javadoc on public API."
+description: "Use when authoring or reviewing Java, google-java-format layout, import discipline, Google naming, @Override, handled catches, static qualification, and Javadoc on public API."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for Java style learning (from the archived `awesome-guidelines
 
 ## Core Principle
 
-Java readability is **mechanical Google format plus explicit API contracts** — formatted consistently, imports explicit, overrides annotated, catches never silent.
+Java readability is **mechanical Google format plus explicit API contracts**, formatted consistently, imports explicit, overrides annotated, catches never silent.
 
 ## When to Use / NOT
 
@@ -20,15 +20,15 @@ Java readability is **mechanical Google format plus explicit API contracts** —
 **NOT when:**
 
 - Non-Java code.
-- Generated sources — validate generator config instead.
+- Generated sources, validate generator config instead.
 
 ## Workflow
 
-1. **Format & imports** — 2-space, 100 cols, braces, no star imports (`java-style-formatting-imports.md`).
-2. **Naming** — camelCase algorithm, constants discipline (`java-style-naming-types.md`).
-3. **Practices** — `@Override`, catches, static qualify, null-safe equals (`java-style-exceptions-practices.md`).
-4. **Docs** — Javadoc on public/protected API (`java-style-javadoc-public-api.md`).
-5. **Verify** — formatter + Checkstyle (project rules) on changed paths.
+1. **Format & imports**, 2-space, 100 cols, braces, no star imports (`java-style-formatting-imports.md`).
+2. **Naming**, camelCase algorithm, constants discipline (`java-style-naming-types.md`).
+3. **Practices**, `@Override`, catches, static qualify, null-safe equals (`java-style-exceptions-practices.md`).
+4. **Docs**, Javadoc on public/protected API (`java-style-javadoc-public-api.md`).
+5. **Verify**, formatter + Checkstyle (project rules) on changed paths.
 
 ## Red Flags
 

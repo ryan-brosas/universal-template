@@ -1,6 +1,6 @@
 ---
 name: evidence-router
-description: "Use when choosing where to get evidence for a coding question: route by need and host to the smallest capable evidence source — Fovea, Steroid/JetBrains, source/tests, reference repos, Codebase Memory, OpenViking, docs, or web — and stop when the named gap is closed."
+description: "Use when choosing where to get evidence for a coding question: route by need and host to the smallest capable evidence source, Fovea, Steroid/JetBrains, source/tests, reference repos, Codebase Memory, OpenViking, docs, or web, and stop when the named gap is closed."
 ---
 
 # Evidence Router
@@ -17,10 +17,10 @@ merely because it is reachable.
 
 ## When to Use / NOT
 
-**Use** — deciding where evidence for a question should come from; closing a
+**Use**, deciding where evidence for a question should come from; closing a
 named gap after the first route came up short.
 
-**NOT** — as a ceremony. Do not walk every route per task; do not run a fixed
+**NOT**, as a ceremony. Do not walk every route per task; do not run a fixed
 retrieval chain; if direct source already answers the question, stop.
 
 ## Workflow
@@ -36,14 +36,14 @@ retrieval chain; if direct source already answers the question, stop.
 |---|---|---|---|
 | Orient the active Pi repository (feature location, neighborhoods, symbols, impact, changed-code context) | **Fovea** (`fovea_sketch` → `fovea_focus` → `fovea_dwell`) | the exact source windows it names | navigation/context, not correctness proof; skip when direct reading is cheaper |
 | Exact semantic/type/call information (usages, inheritance, refactor safety, inspections) | **MCP Steroid / JetBrains** (`steroid_*`) | source | also the runtime lane: debugger, test runner, expression evaluation |
-| Runtime behavior | tests / debugger / runtime evidence | — | the only proof of behavior |
+| Runtime behavior | tests / debugger / runtime evidence |, | the only proof of behavior |
 | One selected inspiration repository | project-local `<project>/reference/<repo>/` | Fovea on that root, then source + tests | see `reference-driven-development` for the workflow |
 | Rendered visual or runtime evidence from a live website (DOM, CSS, screenshots, behavior) | **web-reference** (bounded capture) | inspect the capture like source | capture is evidence; the current project stays the acceptance authority |
 | Design inspiration with no named source yet | web discovery (`gsearch` / Exa) or a design tool catalog | `web-reference` on the chosen site | propose candidates, capture only the selected ones |
 | Find which past/indexed project contains a pattern (cross-repo, cross-session) | **Codebase Memory** (`list_projects` → `search_graph` / `trace_path`) | activate the candidate under `reference/` and inspect with Fovea/source | persistent library, cold path; the graph is an index, not truth |
-| Past decisions, failed attempts, lessons, recurring edge cases | **OpenViking** (`memsearch` / `memgrep` / `memread`) | durable notes | experience memory — not a second copy of local source |
+| Past decisions, failed attempts, lessons, recurring edge cases | **OpenViking** (`memsearch` / `memgrep` / `memread`) | durable notes | experience memory, not a second copy of local source |
 | Current library/API docs | official docs / **Context7** (`resolve-library-id` → `query-docs`) | vendored source | only when the question depends on current docs |
-| Current external fact (versions, advisories, upstream changes) | **Exa** / a discovered read-only fetch | upstream source | cite what you actually opened |
+| Current external fact (versions, advisories, upstream changes) | **Exa** / a discovered read-only fetch | upstream source | cite what you opened |
 | GitHub repository overview | DeepWiki (index → page) | the repository itself | bounded overview only |
 
 Model opinions are not evidence routes. A model *processes* evidence; its
@@ -55,7 +55,7 @@ an execution decision (`skills/execution-router`), resolved mechanically by
 
 Escalate one step only after naming the gap ("Fovea shows the neighborhood but
 not the type hierarchy" → Steroid). Never run two routes for the same need up
-front. On non-Pi hosts Fovea may be absent — Codebase Memory or direct source
+front. On non-Pi hosts Fovea may be absent, Codebase Memory or direct source
 then covers orientation.
 
 ## Model consultation (not evidence)
@@ -63,7 +63,7 @@ then covers orientation.
 When a step needs different or stronger reasoning, that is an execution and
 model-resolution decision (`skills/execution-router` → `skills/model-resolution`),
 not an evidence route. Verify model output against source/tests before relying
-on it. Frontend visual claims need rendered/runtime verification — if no
+on it. Frontend visual claims need rendered/runtime verification, if no
 visual verifier is configured, record that as a capability gap instead of
 treating model review as proof.
 
@@ -108,4 +108,4 @@ confirmed against actual source/tests/runtime before implementation.
 
 ## References
 
-N/A — routing tables and validity rules are inline in this skill.
+N/A, routing tables and validity rules are inline in this skill.

@@ -116,13 +116,13 @@ a migration queue, not a gate.
   system-prompt instruction. Never use "prewalk" for repository exploration
   (the word belongs to Pi Fabric):
   say discovery, graph discovery, source inspection, or evidence discovery.
-- **Schema** modes are `off` (default) / `audit` / `enforce`. In `off`/`audit`
-  the `schema.*` loop is available but does not gate direct
-  `pi.edit`/`pi.write`/`pi.bash`. Use the Schema loop only when the session
-  runs enforce mode, the user invokes a Fabric Schema mechanism, or the task
-  explicitly needs transactional/postcondition guarantees. Enforce mode blocks
-  direct mutations and disables Fabric Prewalk; do not activate it silently as a
-  universal prerequisite.
+- **Schema** modes are `off` (default) / `audit` / `enforce`. In `off`/
+  `audit` the `schema.*` loop is available but does not gate direct
+  `pi.edit`/`pi.write`/`pi.bash`.
+- Use the Schema loop only when the session runs enforce mode, the user
+  invokes a Fabric Schema mechanism, or the task needs transactional or
+  postcondition guarantees. Enforce mode blocks direct mutations and disables
+  Fabric Prewalk; do not activate it silently as a universal prerequisite.
 
 ## Entry architecture
 

@@ -1,6 +1,6 @@
 ---
 name: wordpress-coding-practices
-description: "Use when authoring or reviewing WordPress themes/plugins — WPCS PHP naming, Yoda conditions, late esc_* output, $wpdb->prepare, i18n text domains, HTML/CSS/JS handbooks, and PHPCS verification."
+description: "Use when authoring or reviewing WordPress themes/plugins, WPCS PHP naming, Yoda conditions, late esc_* output, $wpdb->prepare, i18n text domains, HTML/CSS/JS handbooks, and PHPCS verification."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for WordPress official coding standards ingest (`awesome-guide
 
 ## Core Principle
 
-WordPress maintainability is **ecosystem-safe PHP plus late escaping** — snake_case and Yoda layout, context-matched `esc_*` at output, prepared SQL, translatable strings, and PHPCS-enforced handbooks across PHP/HTML/CSS/JS.
+WordPress maintainability is **ecosystem-safe PHP plus late escaping**, snake_case and Yoda layout, context-matched `esc_*` at output, prepared SQL, translatable strings, and PHPCS-enforced handbooks across PHP/HTML/CSS/JS.
 
 ## When to Use / NOT
 
@@ -20,16 +20,16 @@ WordPress maintainability is **ecosystem-safe PHP plus late escaping** — snake
 
 **NOT when:**
 
-- Non-WordPress PHP — `php-coding-practices`.
-- Vendored third-party libraries inside a plugin — exempt from WPCS per handbook.
-- Full plugin architecture (CPT, REST, blocks) — WordPress foundation docs.
+- Non-WordPress PHP, `php-coding-practices`.
+- Vendored third-party libraries inside a plugin, exempt from WPCS per handbook.
+- Full plugin architecture (CPT, REST, blocks), WordPress foundation docs.
 
 ## Workflow
 
-1. **PHP naming/layout** — snake_case, Yoda, files, hooks (`wordpress-style-php-naming.md`).
-2. **Security/escape** — late output escaping per context (`wordpress-style-security-escape.md`).
-3. **Database/i18n** — prepare SQL, gettext strings (`wordpress-style-database-i18n.md`).
-4. **Assets/verify** — HTML/CSS/JS + PHPCS + a11y (`wordpress-style-assets-verify.md`).
+1. **PHP naming/layout**, snake_case, Yoda, files, hooks (`wordpress-style-php-naming.md`).
+2. **Security/escape**, late output escaping per context (`wordpress-style-security-escape.md`).
+3. **Database/i18n**, prepare SQL, gettext strings (`wordpress-style-database-i18n.md`).
+4. **Assets/verify**, HTML/CSS/JS + PHPCS + a11y (`wordpress-style-assets-verify.md`).
 
 ## Red Flags
 
@@ -77,8 +77,8 @@ WordPress maintainability is **ecosystem-safe PHP plus late escaping** — snake
 
 ## Related skills
 
-- `php-coding-practices` — PSR baseline outside WordPress
-- `wcag-accessibility-practices` — WCAG AA UI depth
-- `frontend-markup-practices` — generic HTML/CSS habits
-- `javascript-coding-practices` — JS outside WP admin conventions
-- `webappsec-coding-practices` — broader secure coding patterns
+- `php-coding-practices`, PSR baseline outside WordPress
+- `wcag-accessibility-practices`, WCAG AA UI depth
+- `frontend-markup-practices`, generic HTML/CSS habits
+- `javascript-coding-practices`, JS outside WP admin conventions
+- `webappsec-coding-practices`, broader secure coding patterns

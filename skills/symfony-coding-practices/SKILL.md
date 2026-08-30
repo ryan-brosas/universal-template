@@ -1,6 +1,6 @@
 ---
 name: symfony-coding-practices
-description: "Use when authoring or reviewing Symfony PHP — PHP CS Fixer, Yoda identical compares, naming matrix, FQCN services, PHPDoc rules, sprintf exceptions, and MIT license headers."
+description: "Use when authoring or reviewing Symfony PHP, PHP CS Fixer, Yoda identical compares, naming matrix, FQCN services, PHPDoc rules, sprintf exceptions, and MIT license headers."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for Symfony official coding standards ingest (`awesome-guideli
 
 ## Core Principle
 
-Symfony PHP reads uniformly — **PSR-12 via PHP CS Fixer**, **Yoda identical compares**, **strict naming matrix**, **FQCN service ids**, and **formatted exception/deprecation messages** with MIT headers.
+Symfony PHP reads uniformly, **PSR-12 via PHP CS Fixer**, **Yoda identical compares**, **strict naming matrix**, **FQCN service ids**, and **formatted exception/deprecation messages** with MIT headers.
 
 ## When to Use / NOT
 
@@ -20,16 +20,16 @@ Symfony PHP reads uniformly — **PSR-12 via PHP CS Fixer**, **Yoda identical co
 
 **NOT when:**
 
-- Generic PHP without Symfony conventions — `php-coding-practices`.
-- Laravel/WordPress-specific style — stack capsules in `foundation-pack/`.
-- Runtime Symfony architecture (DI tags, events) — framework docs/foundation.
+- Generic PHP without Symfony conventions, `php-coding-practices`.
+- Laravel/WordPress-specific style, stack capsules in `foundation-pack/`.
+- Runtime Symfony architecture (DI tags, events), framework docs/foundation.
 
 ## Workflow
 
-1. **Structure** — spacing, Yoda, control flow, class order (`symfony-style-structure-control.md`).
-2. **Naming/services** — case matrix, FQCN ids (`symfony-style-naming-services.md`).
-3. **PHPDoc/errors** — docs, exceptions, license (`symfony-style-phpdoc-exceptions.md`).
-4. **Verify** — PHP CS Fixer + tests (`symfony-style-verify.md`).
+1. **Structure**, spacing, Yoda, control flow, class order (`symfony-style-structure-control.md`).
+2. **Naming/services**, case matrix, FQCN ids (`symfony-style-naming-services.md`).
+3. **PHPDoc/errors**, docs, exceptions, license (`symfony-style-phpdoc-exceptions.md`).
+4. **Verify**, PHP CS Fixer + tests (`symfony-style-verify.md`).
 
 ## Red Flags
 
@@ -81,6 +81,6 @@ Symfony PHP reads uniformly — **PSR-12 via PHP CS Fixer**, **Yoda identical co
 
 ## Related skills
 
-- `php-coding-practices` — PSR-12, strict_types, DI baseline
-- `api-design-practices` — HTTP API adjacent to Symfony routes
-- `webappsec-coding-practices` — web security on Symfony apps
+- `php-coding-practices`, PSR-12, strict_types, DI baseline
+- `api-design-practices`, HTTP API adjacent to Symfony routes
+- `webappsec-coding-practices`, web security on Symfony apps

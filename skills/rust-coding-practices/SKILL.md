@@ -1,6 +1,6 @@
 ---
 name: rust-coding-practices
-description: "Use when authoring or reviewing Rust — rustfmt defaults, RFC 430 naming, meaningful Error types, Result/? in docs, common trait impls, iter/into_iter conventions, and predictable public APIs."
+description: "Use when authoring or reviewing Rust, rustfmt defaults, RFC 430 naming, meaningful Error types, Result/? in docs, common trait impls, iter/into_iter conventions, and predictable public APIs."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for Rust style learning (from the archived `awesome-guidelines
 
 ## Core Principle
 
-Rust quality is **rustfmt-mechanical + API-guidelines semantic** — formatted code and public surfaces that interoperate without surprises.
+Rust quality is **rustfmt-mechanical + API-guidelines semantic**, formatted code and public surfaces that interoperate without surprises.
 
 ## When to Use / NOT
 
@@ -20,15 +20,15 @@ Rust quality is **rustfmt-mechanical + API-guidelines semantic** — formatted c
 **NOT when:**
 
 - Non-Rust code.
-- Macro-heavy generated code — validate generator output, not hand-edits.
+- Macro-heavy generated code, validate generator output, not hand-edits.
 
 ## Workflow
 
-1. **Format & names** — `cargo fmt`, casing, conversion prefixes (`rust-style-formatting-naming.md`).
-2. **Errors** — meaningful `Error + Send + Sync`, no `()`, `?` in examples (`rust-style-errors-result.md`).
-3. **Interop** — common traits, `From`, iterator naming (`rust-style-traits-interop.md`).
-4. **API shape** — methods, `new`, no out-params, Deref discipline, docs (`rust-style-api-predictability.md`).
-5. **Verify** — `cargo fmt --check`, `cargo clippy`, `cargo test --doc`.
+1. **Format & names**, `cargo fmt`, casing, conversion prefixes (`rust-style-formatting-naming.md`).
+2. **Errors**, meaningful `Error + Send + Sync`, no `()`, `?` in examples (`rust-style-errors-result.md`).
+3. **Interop**, common traits, `From`, iterator naming (`rust-style-traits-interop.md`).
+4. **API shape**, methods, `new`, no out-params, Deref discipline, docs (`rust-style-api-predictability.md`).
+5. **Verify**, `cargo fmt --check`, `cargo clippy`, `cargo test --doc`.
 
 ## Red Flags
 

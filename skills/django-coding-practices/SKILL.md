@@ -1,6 +1,6 @@
 ---
 name: django-coding-practices
-description: "Use when authoring or reviewing Django code — black/isort imports, DTL spacing, request-first views, model field order, TextChoices, lazy settings, i18n strings, and pre-commit verification."
+description: "Use when authoring or reviewing Django code, black/isort imports, DTL spacing, request-first views, model field order, TextChoices, lazy settings, i18n strings, and pre-commit verification."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for Django official coding style ingest (`awesome-guidelines`)
 
 ## Core Principle
 
-Django code reads as **one codebase** — black-formatted Python, isort import groups, disciplined templates, ordered models, lazy settings in reusable modules, and i18n-ready strings verified by pre-commit.
+Django code reads as **one codebase**, black-formatted Python, isort import groups, disciplined templates, ordered models, lazy settings in reusable modules, and i18n-ready strings verified by pre-commit.
 
 ## When to Use / NOT
 
@@ -20,16 +20,16 @@ Django code reads as **one codebase** — black-formatted Python, isort import g
 
 **NOT when:**
 
-- Non-Django Python — `python-coding-practices`.
-- ORM/query design, middleware architecture — `foundation-pack/django-foundation`.
-- Django admin JavaScript — Django JS style doc (separate).
+- Non-Django Python, `python-coding-practices`.
+- ORM/query design, middleware architecture, `foundation-pack/django-foundation`.
+- Django admin JavaScript, Django JS style doc (separate).
 
 ## Workflow
 
-1. **Python/imports** — black, isort, tests (`django-style-python-imports.md`).
-2. **Templates/views** — DTL + `request` (`django-style-templates-views.md`).
-3. **Models/settings** — field order, choices, lazy settings (`django-style-models-settings.md`).
-4. **Misc/verify** — i18n, hygiene, pre-commit (`django-style-misc-verify.md`).
+1. **Python/imports**, black, isort, tests (`django-style-python-imports.md`).
+2. **Templates/views**, DTL + `request` (`django-style-templates-views.md`).
+3. **Models/settings**, field order, choices, lazy settings (`django-style-models-settings.md`).
+4. **Misc/verify**, i18n, hygiene, pre-commit (`django-style-misc-verify.md`).
 
 ## Red Flags
 
@@ -80,6 +80,6 @@ Django code reads as **one codebase** — black-formatted Python, isort import g
 
 ## Related skills
 
-- `python-coding-practices` — PEP 8/Google baseline
-- `foundation-pack/django-foundation` — Django framework patterns
-- `frontend-markup-practices` — non-DTL HTML/CSS
+- `python-coding-practices`, PEP 8/Google baseline
+- `foundation-pack/django-foundation`, Django framework patterns
+- `frontend-markup-practices`, non-DTL HTML/CSS

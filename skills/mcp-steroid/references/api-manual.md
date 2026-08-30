@@ -25,7 +25,7 @@ The IDE has indexed everything. It knows the code better than any file search. *
 > **Project / backend naming contract:** if you reach this guide via
 > the **devrig stdio MCP server** (`devrig mcp`), the `project_name`
 > values returned by `steroid_list_projects` follow the
-> [`docs/devrig-naming.md`](../devrig-naming.md) spec — they include a
+> devrig naming spec (the `devrig-naming` contract) — they include a
 > hash suffix (`<slug(name)>-<hash8>`) and are routed through an
 > on-demand snapshot per call. The in-IDE MCP Steroid endpoint exposes
 > the raw IntelliJ `Project.name` instead; pick one transport and

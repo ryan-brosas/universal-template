@@ -44,4 +44,4 @@ The map names every relevant module and caller direction; the vocabulary matches
 
 ## References
 
-No reference capsules — the skill is self-contained.
+No reference capsules, the skill is self-contained.

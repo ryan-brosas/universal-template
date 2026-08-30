@@ -126,6 +126,10 @@ def lint_text(text: str, name: str = "<text>") -> list[dict]:
             continue
         if stripped.startswith(">"):
             continue  # blockquote: quotation fidelity
+        if stripped.startswith("|"):
+            para_counts.clear()
+            sentence_starts.clear()
+            continue  # markdown table row: structured data, protected
         masked = _mask(raw)
 
         # HARD rules
@@ -141,6 +145,12 @@ def lint_text(text: str, name: str = "<text>") -> list[dict]:
             if m:
                 out.append({"file": name, "line": line_no, "col": m.start() + 1,
                             "level": level, "rule": rule, "message": msg})
+
+        # A list item starts its own block: a 12-item list is not one paragraph,
+        # and consecutive bullets must not read as one repeated-start paragraph.
+        if re.match(r"^\s*([-*+]|\d+[.)])\s+", stripped):
+            para_counts.clear()
+            sentence_starts.clear()
 
         # Sentence-level heuristics on masked prose
         prose = masked.replace("\x00", " ")

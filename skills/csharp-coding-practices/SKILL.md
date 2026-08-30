@@ -1,16 +1,16 @@
 ---
 name: csharp-coding-practices
-description: "Use when authoring or reviewing C# — Allman 4-space layout, file-scoped namespaces, Framework Design naming, modern C# idioms, specific exception handling, and XML docs on public API."
+description: "Use when authoring or reviewing C#, Allman 4-space layout, file-scoped namespaces, Framework Design naming, modern C# idioms, specific exception handling, and XML docs on public API."
 disable-model-invocation: true
 ---
 
 # C# Coding Practices
 
-Application skill for C# / .NET style learning (from the archived `awesome-guidelines` style capsules). For ASP.NET/Blazor/MAUI patterns, load stack capsules in `foundation-pack/`.
+Application skill for C# /.NET style learning (from the archived `awesome-guidelines` style capsules). For ASP.NET/Blazor/MAUI patterns, load stack capsules in `foundation-pack/`.
 
 ## Core Principle
 
-C# readability is **Framework Design naming plus modern idioms enforced by EditorConfig/analyzers** — explicit public API, safe boolean ops, specific exceptions.
+C# readability is **Framework Design naming plus modern idioms enforced by EditorConfig/analyzers**, explicit public API, safe boolean ops, specific exceptions.
 
 ## When to Use / NOT
 
@@ -20,16 +20,16 @@ C# readability is **Framework Design naming plus modern idioms enforced by Edito
 **NOT when:**
 
 - Non-C# code.
-- Generated designer files — validate generators instead.
-- F# / VB — different language conventions.
+- Generated designer files, validate generators instead.
+- F# / VB, different language conventions.
 
 ## Workflow
 
-1. **Format & layout** — Allman braces, file-scoped namespace, usings (`csharp-style-formatting-layout.md`).
-2. **Naming** — Pascal/camel, interfaces, suffixes (`csharp-style-naming-types.md`).
-3. **Modern idioms** — var, collections, strings, required (`csharp-style-modern-idioms.md`).
-4. **Exceptions & API** — catch, using, statics, XML docs (`csharp-style-exceptions-api.md`).
-5. **Verify** — `dotnet format`, analyzer warnings as errors, tests on changed projects.
+1. **Format & layout**, Allman braces, file-scoped namespace, usings (`csharp-style-formatting-layout.md`).
+2. **Naming**, Pascal/camel, interfaces, suffixes (`csharp-style-naming-types.md`).
+3. **Modern idioms**, var, collections, strings, required (`csharp-style-modern-idioms.md`).
+4. **Exceptions & API**, catch, using, statics, XML docs (`csharp-style-exceptions-api.md`).
+5. **Verify**, `dotnet format`, analyzer warnings as errors, tests on changed projects.
 
 ## Red Flags
 

@@ -1,6 +1,6 @@
 ---
 name: dart-coding-practices
-description: "Use when authoring or reviewing Dart — dart format, UpperCamelCase/lowerCamelCase naming, /// documentation, null-safe idioms, async/await, typed public API, class modifiers, and dart analyze/test in CI."
+description: "Use when authoring or reviewing Dart, dart format, UpperCamelCase/lowerCamelCase naming, /// documentation, null-safe idioms, async/await, typed public API, class modifiers, and dart analyze/test in CI."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for Dart style learning (from the archived `awesome-guidelines
 
 ## Core Principle
 
-Dart quality is **Effective Dart consistency** — formatted mechanically, documented publicly, null-safe and briefly expressed.
+Dart quality is **Effective Dart consistency**, formatted mechanically, documented publicly, null-safe and briefly expressed.
 
 ## When to Use / NOT
 
@@ -20,15 +20,15 @@ Dart quality is **Effective Dart consistency** — formatted mechanically, docum
 **NOT when:**
 
 - Non-Dart code.
-- Generated `.g.dart` / protobuf — validate generators.
+- Generated `.g.dart` / protobuf, validate generators.
 
 ## Workflow
 
-1. **Format & names** — dart format, imports, casing (`dart-style-formatting-names.md`).
-2. **Docs** — `///` summaries, dart doc (`dart-style-documentation.md`).
-3. **Usage** — null, collections, async, errors (`dart-style-usage-idioms.md`).
-4. **Design** — types, classes, equality (`dart-style-design-api.md`).
-5. **Verify** — `dart format`, `dart analyze`, `dart test` on changed packages.
+1. **Format & names**, dart format, imports, casing (`dart-style-formatting-names.md`).
+2. **Docs**, `///` summaries, dart doc (`dart-style-documentation.md`).
+3. **Usage**, null, collections, async, errors (`dart-style-usage-idioms.md`).
+4. **Design**, types, classes, equality (`dart-style-design-api.md`).
+5. **Verify**, `dart format`, `dart analyze`, `dart test` on changed packages.
 
 ## Red Flags
 

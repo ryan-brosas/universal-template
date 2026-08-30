@@ -9,17 +9,17 @@ disable-model-invocation: true
 
 ## Core Principle
 
-Stress-test the plan against the project's own language and documented decisions: interview relentlessly, one question at a time, until shared understanding is reached. Read-only by default — writing `CONTEXT.md`, `docs/adr/`, or any other file is a mutation behind the Schema loop or explicit approval.
+Stress-test the plan against the project's own language and documented decisions: interview relentlessly, one question at a time, until shared understanding is reached. Read-only by default, writing `CONTEXT.md`, `docs/adr/`, or any other file is a mutation behind the Schema loop or explicit approval.
 
 ## When to Use / NOT
 
-**Use** — the user wants to stress-test a plan against their project's language and documented decisions.
+**Use**, the user wants to stress-test a plan against their project's language and documented decisions.
 
-**NOT** — when file writes are needed without the Schema loop or explicit approval (this skill is read-only by default); when a question can be answered by exploring the codebase (explore the codebase instead).
+**NOT**, when file writes are needed without the Schema loop or explicit approval (this skill is read-only by default); when a question can be answered by exploring the codebase (explore the codebase instead).
 
 ## Workflow
 
-Interview one question at a time, walking down each branch of the design tree and resolving dependencies between decisions one-by-one, with a recommended answer for each. Challenge terms against the `CONTEXT.md` glossary, sharpen fuzzy language, discuss concrete scenarios, and cross-reference claims with the code. Update `CONTEXT.md` inline as each term resolves; offer ADRs sparingly — only when hard to reverse, surprising without context, and the result of a real trade-off.
+Interview one question at a time, walking down each branch of the design tree and resolving dependencies between decisions one-by-one, with a recommended answer for each. Challenge terms against the `CONTEXT.md` glossary, sharpen fuzzy language, discuss concrete scenarios, and cross-reference claims with the code. Update `CONTEXT.md` inline as each term resolves; offer ADRs sparingly, only when hard to reverse, surprising without context, and the result of a real trade-off.
 
 ## Read-only default and mutation boundary
 
@@ -71,17 +71,17 @@ If a `CONTEXT-MAP.md` exists at the root, the repo has multiple contexts. The ma
 │       └── docs/adr/
 ```
 
-Create files lazily — only when you have something to write. If no `CONTEXT.md` exists, create one when the first term is resolved. If no `docs/adr/` exists, create it when the first ADR is needed.
+Create files lazily, only when you have something to write. If no `CONTEXT.md` exists, create one when the first term is resolved. If no `docs/adr/` exists, create it when the first ADR is needed.
 
 ## During the session
 
 ### Challenge against the glossary
 
-When the user uses a term that conflicts with the existing language in `CONTEXT.md`, call it out immediately. "Your glossary defines 'cancellation' as X, but you seem to mean Y — which is it?"
+When the user uses a term that conflicts with the existing language in `CONTEXT.md`, call it out immediately. "Your glossary defines 'cancellation' as X, but you seem to mean Y, which is it?"
 
 ### Sharpen fuzzy language
 
-When the user uses vague or overloaded terms, propose a precise canonical term. "You're saying 'account' — do you mean the Customer or the User? Those are different things."
+When the user uses vague or overloaded terms, propose a precise canonical term. "You're saying 'account', do you mean the Customer or the User? Those are different things."
 
 ### Discuss concrete scenarios
 
@@ -89,11 +89,11 @@ When domain relationships are being discussed, stress-test them with specific sc
 
 ### Cross-reference with code
 
-When the user states how something works, check whether the code agrees. If you find a contradiction, surface it: "Your code cancels entire Orders, but you just said partial cancellation is possible — which is right?"
+When the user states how something works, check whether the code agrees. If you find a contradiction, surface it: "Your code cancels entire Orders, but you just said partial cancellation is possible, which is right?"
 
 ### Update CONTEXT.md inline
 
-When a term is resolved, update `CONTEXT.md` right there. Don't batch these up — capture them as they happen. Use the format in [CONTEXT-FORMAT.md](./CONTEXT-FORMAT.md).
+When a term is resolved, update `CONTEXT.md` right there. Don't batch these up, capture them as they happen. Use the format in [CONTEXT-FORMAT.md](./CONTEXT-FORMAT.md).
 
 `CONTEXT.md` should be totally devoid of implementation details. Do not treat `CONTEXT.md` as a spec, a scratch pad, or a repository for implementation decisions. It is a glossary and nothing else.
 
@@ -101,9 +101,9 @@ When a term is resolved, update `CONTEXT.md` right there. Don't batch these up �
 
 Only offer to create an ADR when all three are true:
 
-1. **Hard to reverse** — the cost of changing your mind later is meaningful
-2. **Surprising without context** — a future reader will wonder "why did they do it this way?"
-3. **The result of a real trade-off** — there were genuine alternatives and you picked one for specific reasons
+1. **Hard to reverse**, the cost of changing your mind later is meaningful
+2. **Surprising without context**, a future reader will wonder "why did they do it this way?"
+3. **The result of a real trade-off**, there were genuine alternatives and you picked one for specific reasons
 
 If any of the three is missing, skip the ADR. Use the format in [ADR-FORMAT.md](./ADR-FORMAT.md).
 
@@ -111,11 +111,11 @@ If any of the three is missing, skip the ADR. Use the format in [ADR-FORMAT.md](
 
 ## Red Flags
 
-A glossary conflict in `CONTEXT.md` not called out immediately; vague or overloaded terms left unsharpened; a contradiction between stated behavior and the code not surfaced; `CONTEXT.md` accumulating implementation details (it is a glossary and nothing else); CONTEXT.md updates batched instead of captured inline; an ADR offered without all three conditions true.
+A glossary conflict in `CONTEXT.md` not called out immediately. vague or overloaded terms left unsharpened. a contradiction between stated behavior and the code not surfaced; `CONTEXT.md` accumulating implementation details (it is a glossary and nothing else). CONTEXT.md updates batched instead of captured inline. an ADR offered without all three conditions true.
 
 ## Verification
 
-Shared understanding reached — each branch of the design tree resolved one-by-one; `CONTEXT.md` updated inline with every resolved term; any ADR created satisfies all three conditions (hard to reverse, surprising without context, real trade-off).
+Shared understanding reached, each branch of the design tree resolved one-by-one; `CONTEXT.md` updated inline with every resolved term; any ADR created satisfies all three conditions (hard to reverse, surprising without context, real trade-off).
 
 ## Skill Result Contract
 
@@ -132,5 +132,5 @@ Shared understanding reached — each branch of the design tree resolved one-by-
 ## References
 
 Format references at the skill root:
-- `CONTEXT-FORMAT.md` — the `CONTEXT.md` glossary format used for inline updates
-- `ADR-FORMAT.md` — the minimal ADR form for small, low-stakes entries
+- `CONTEXT-FORMAT.md`, the `CONTEXT.md` glossary format used for inline updates
+- `ADR-FORMAT.md`, the minimal ADR form for small, low-stakes entries

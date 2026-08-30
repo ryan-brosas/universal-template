@@ -1,6 +1,6 @@
 ---
 name: angular-coding-practices
-description: "Use when authoring or reviewing Angular apps — kebab-case files, feature folders, inject(), readonly inputs, protected template members, class/style bindings, selector prefixes, and angular-eslint verification."
+description: "Use when authoring or reviewing Angular apps, kebab-case files, feature folders, inject(), readonly inputs, protected template members, class/style bindings, selector prefixes, and angular-eslint verification."
 disable-model-invocation: true
 ---
 
@@ -20,16 +20,16 @@ Angular apps stay navigable with **feature-first `src/` layout**, **kebab-case c
 
 **NOT when:**
 
-- Generic TypeScript only — `typescript-coding-standards`.
-- AngularJS 1.x — archived style guide.
-- Framework package contributions — Angular repo CONTRIBUTING.
+- Generic TypeScript only, `typescript-coding-standards`.
+- AngularJS 1.x, archived style guide.
+- Framework package contributions, Angular repo CONTRIBUTING.
 
 ## Workflow
 
-1. **Naming/files** — kebab-case, specs, triplets (`angular-style-naming-files.md`).
-2. **Structure** — src, features, one concept (`angular-style-project-structure.md`).
-3. **Components** — inject, templates, lifecycle (`angular-style-components-templates.md`).
-4. **Selectors/verify** — selectors, I/O, lint (`angular-style-selectors-verify.md`).
+1. **Naming/files**, kebab-case, specs, triplets (`angular-style-naming-files.md`).
+2. **Structure**, src, features, one concept (`angular-style-project-structure.md`).
+3. **Components**, inject, templates, lifecycle (`angular-style-components-templates.md`).
+4. **Selectors/verify**, selectors, I/O, lint (`angular-style-selectors-verify.md`).
 
 ## Red Flags
 
@@ -79,6 +79,6 @@ Angular apps stay navigable with **feature-first `src/` layout**, **kebab-case c
 
 ## Related skills
 
-- `typescript-coding-standards` — Google TS baseline
-- `wcag-accessibility-practices` — accessible templates
-- `javascript-project-practices` — wider JS repo workflow
+- `typescript-coding-standards`, Google TS baseline
+- `wcag-accessibility-practices`, accessible templates
+- `javascript-project-practices`, wider JS repo workflow

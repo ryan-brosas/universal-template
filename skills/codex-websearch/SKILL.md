@@ -12,24 +12,24 @@ does not require a project API key, package install, or browser automation.
 
 ## Core Principle
 
-Bounded live-web discovery through the host's OpenAI subscription authentication — no project API key, package install, or browser automation; search output is a shortlist or cited answer, not permission to invent an unsupported claim.
+Bounded live-web discovery through the host's OpenAI subscription authentication, no project API key, package install, or browser automation; search output is a shortlist or cited answer, not permission to invent an unsupported claim.
 
 ## When to Use / NOT
 
 - **Use when:** current web facts, documentation discovery, or cited search results through the installed Codex web-search extension.
-- **NOT when:** N/A — no explicit exclusion stated; under Pi Fabric Schema `enforce`, report the capability gap and keep research read-only (see Boundaries).
+- **NOT when:** N/A, no explicit exclusion stated; under Pi Fabric Schema `enforce`, report the capability gap and keep research read-only (see Boundaries).
 
 ## Workflow
 
 1. Search with the user's information need stated plainly.
 2. Set `responseLength` to `short` for discovery, `medium` for a compact
-   evidence summary, or `long` only when synthesis needs more context.
+ evidence summary, or `long` only when synthesis needs more context.
 3. Preserve the returned citations, access date, and exact query in the evidence
-   ledger.
+ ledger.
 4. Prefer official, dated, versioned sources; treat search output as a
-   shortlist or cited answer, not permission to invent an unsupported claim.
+ shortlist or cited answer, not permission to invent an unsupported claim.
 5. Stop at 3–5 useful results. Fetch or inspect only a selected URL with a
-   separately discovered read-only capability; never invent a fetch action.
+ separately discovered read-only capability; never invent a fetch action.
 
 Example inside `fabric_exec`:
 
@@ -73,4 +73,4 @@ Evidence ledger holds the exact query, cited results, access date, and confidenc
 
 ## References
 
-N/A — no reference files; this skill is self-contained.
+N/A, no reference files; this skill is self-contained.

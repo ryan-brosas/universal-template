@@ -1,6 +1,6 @@
 ---
 name: d-coding-practices
-description: "Use when authoring or reviewing D — 4-space Allman layout, camelCase/PascalCase naming, alias= declarations, @property APIs, selective imports, Ddoc Params/Returns, and dub test/dfmt in CI."
+description: "Use when authoring or reviewing D, 4-space Allman layout, camelCase/PascalCase naming, alias= declarations, @property APIs, selective imports, Ddoc Params/Returns, and dub test/dfmt in CI."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for D style learning (from the archived `awesome-guidelines` s
 
 ## Core Principle
 
-D quality is **dstyle naming + explicit types/docs + tested modules** — properties and UFCS where idiomatic, not clever.
+D quality is **dstyle naming + explicit types/docs + tested modules**, properties and UFCS where idiomatic, not clever.
 
 ## When to Use / NOT
 
@@ -19,16 +19,16 @@ D quality is **dstyle naming + explicit types/docs + tested modules** — proper
 
 **NOT when:**
 
-- C/C++ code in same repo — use respective practice skills.
-- Generated D bindings only — validate generator.
+- C/C++ code in same repo, use respective practice skills.
+- Generated D bindings only, validate generator.
 
 ## Workflow
 
-1. **Layout** — indent, braces, imports (`d-style-formatting-layout.md`).
-2. **Naming** — modules, types, acronyms (`d-style-naming-types.md`).
-3. **API** — alias, properties, UFCS (`d-style-declarations-api.md`).
-4. **Docs & tests** — Ddoc, unittest, attributes (`d-style-docs-testing.md`).
-5. **Verify** — dfmt, dub test, coverage on changed modules.
+1. **Layout**, indent, braces, imports (`d-style-formatting-layout.md`).
+2. **Naming**, modules, types, acronyms (`d-style-naming-types.md`).
+3. **API**, alias, properties, UFCS (`d-style-declarations-api.md`).
+4. **Docs & tests**, Ddoc, unittest, attributes (`d-style-docs-testing.md`).
+5. **Verify**, dfmt, dub test, coverage on changed modules.
 
 ## Red Flags
 

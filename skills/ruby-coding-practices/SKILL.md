@@ -1,6 +1,6 @@
 ---
 name: ruby-coding-practices
-description: "Use when authoring or reviewing Ruby — 2-space layout, snake_case/CapitalCase naming, keyword args, call parentheses, class skeleton, explicit namespaces, module_function, and StandardError rescue discipline."
+description: "Use when authoring or reviewing Ruby, 2-space layout, snake_case/CapitalCase naming, keyword args, call parentheses, class skeleton, explicit namespaces, module_function, and StandardError rescue discipline."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for Ruby style learning (from the archived `awesome-guidelines
 
 ## Core Principle
 
-Ruby readability is **RuboCop-community layout plus idiomatic naming and explicit failure** — 2-space files, `?`/`!` suffix rules, keyword args, no exception flow control.
+Ruby readability is **RuboCop-community layout plus idiomatic naming and explicit failure**, 2-space files, `?`/`!` suffix rules, keyword args, no exception flow control.
 
 ## When to Use / NOT
 
@@ -20,16 +20,16 @@ Ruby readability is **RuboCop-community layout plus idiomatic naming and explici
 **NOT when:**
 
 - Non-Ruby code.
-- Generated files — validate generator config instead.
-- Rails-specific cops only — use Rails style guide / foundation when stack is Rails.
+- Generated files, validate generator config instead.
+- Rails-specific cops only, use Rails style guide / foundation when stack is Rails.
 
 ## Workflow
 
-1. **Format & layout** — 2-space, spacing, safe nav, blank lines (`ruby-style-formatting-layout.md`).
-2. **Naming & files** — snake_case, CapitalCase, `?`/`!`, one class per file (`ruby-style-naming-files.md`).
-3. **Methods** — keyword args, parens, `&&`/`||` vs `and`/`or` (`ruby-style-methods-blocks.md`).
-4. **Classes & exceptions** — layout, nesting, rescue/raise (`ruby-style-classes-exceptions.md`).
-5. **Verify** — RuboCop (project `.rubocop.yml`) + test suite on changed paths.
+1. **Format & layout**, 2-space, spacing, safe nav, blank lines (`ruby-style-formatting-layout.md`).
+2. **Naming & files**, snake_case, CapitalCase, `?`/`!`, one class per file (`ruby-style-naming-files.md`).
+3. **Methods**, keyword args, parens, `&&`/`||` vs `and`/`or` (`ruby-style-methods-blocks.md`).
+4. **Classes & exceptions**, layout, nesting, rescue/raise (`ruby-style-classes-exceptions.md`).
+5. **Verify**, RuboCop (project `.rubocop.yml`) + test suite on changed paths.
 
 ## Red Flags
 

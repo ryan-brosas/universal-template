@@ -1,6 +1,6 @@
 ---
 name: cloudflare
-description: Use when deploying to or configuring ANY Cloudflare service — Workers, Pages, KV, D1, R2, AI, Tunnel, WAF. MUST load before writing Cloudflare Workers code, wrangler configs, or infrastructure-as-code for Cloudflare.
+description: Use when deploying to or configuring ANY Cloudflare service, Workers, Pages, KV, D1, R2, AI, Tunnel, WAF. MUST load before writing Cloudflare Workers code, wrangler configs, or infrastructure-as-code for Cloudflare.
 disable-model-invocation: true
 ---
 
@@ -9,7 +9,7 @@ disable-model-invocation: true
 
 ## Core Principle
 
-Workers are V8 isolates, not Node.js — the edge runtime is small, fast, cold; secrets via `wrangler secret put`, bindings over fetch.
+Workers are V8 isolates, not Node.js, the edge runtime is small, fast, cold; secrets via `wrangler secret put`, bindings over fetch.
 
 ## Iron Laws
 
@@ -38,19 +38,19 @@ Plain Node.js server (no CF); static without Workers; different platform.
 
 ## Core Services
 
-| Service        | Use                                           |
+| Service | Use |
 |----------------|-----------------------------------------------|
-| **Workers**    | Compute at the edge (V8 isolate)              |
-| **Pages**      | Static + Workers Functions                    |
-| **KV**         | Low-latency key-value (eventually consistent) |
-| **D1**         | SQLite at the edge                            |
-| **R2**         | S3-compatible, no egress fees                 |
-| **Queues**     | Async messaging                               |
-| **Workers AI** | Run models on Workers                         |
-| **Vectorize**  | Vector DB for similarity search               |
-| **Tunnel**     | Secure origin connectivity                    |
-| **WAF**        | Web app firewall rules                        |
-| **DNS**        | Authoritative DNS                             |
+| **Workers** | Compute at the edge (V8 isolate) |
+| **Pages** | Static + Workers Functions |
+| **KV** | Low-latency key-value (eventually consistent) |
+| **D1** | SQLite at the edge |
+| **R2** | S3-compatible, no egress fees |
+| **Queues** | Async messaging |
+| **Workers AI** | Run models on Workers |
+| **Vectorize** | Vector DB for similarity search |
+| **Tunnel** | Secure origin connectivity |
+| **WAF** | Web app firewall rules |
+| **DNS** | Authoritative DNS |
 
 ## Workers Code Anatomy
 
@@ -165,4 +165,4 @@ Node.js APIs (`fs`, `Buffer`, `child_process`); large bundles; secrets in toml; 
 
 ## References
 
-N/A — no reference files; this skill is self-contained.
+N/A, no reference files; this skill is self-contained.

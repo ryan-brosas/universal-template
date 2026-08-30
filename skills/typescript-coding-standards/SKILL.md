@@ -14,8 +14,8 @@ Types describe the domain and errors are data: no `any` (branded primitives, `un
 ## When to Use / NOT
 
 - **Use when:** writing, refactoring, or reviewing TypeScript code that needs strong domain modeling, typed errors, schema parsing, safe adapters, test seams, or maintainable module boundaries.
-- **NOT when:** the file has no domain surface to model — a throwaway script with no untrusted input, no external systems, and no shared types; or the code is not TypeScript.
-- **NOT when:** the question is only ESLint/tsc style (imports, `any`, formatting) — load `typescript-coding-practices` instead.
+- **NOT when:** the file has no domain surface to model, a throwaway script with no untrusted input, no external systems, and no shared types; or the code is not TypeScript.
+- **NOT when:** the question is only ESLint/tsc style (imports, `any`, formatting), load `typescript-coding-practices` instead.
 
 ## Workflow
 
@@ -51,7 +51,7 @@ type RequestState<T> =
   | { kind: "error"; error: AppError }
 ```
 
-Use `kind` for discriminants (not `type` — collides with TS).
+Use `kind` for discriminants (not `type`, collides with TS).
 
 ## Schema Boundaries
 
@@ -115,7 +115,7 @@ Business code depends on `UserRepo`, not `pg`. Tests use in-memory `UserRepo`.
 - One concern per module. Name after the concept, not the file type.
 - Public API: explicit exports. Internal: not exported or in `internal/`.
 - No circular deps. If A imports B, B does not import A.
-- Index files are minimal — only the public surface.
+- Index files are minimal, only the public surface.
 
 ## Common Mistakes
 
@@ -132,7 +132,7 @@ Business code depends on `UserRepo`, not `pg`. Tests use in-memory `UserRepo`.
 ## Verification
 
 - Scan for red flags: no `any` in production, no untyped `JSON.parse`, no `try/catch` around `await`, no `Date.now()` in logic, no leftover `console.log`, no `data: any`, no circular imports.
-- Tests exercise behavior through test seams — in-memory implementations of the domain interfaces — not mocks of what they test (Adapters, Common Mistakes).
+- Tests exercise behavior through test seams, in-memory implementations of the domain interfaces, not mocks of what they test (Adapters, Common Mistakes).
 
 ## Skill Result Contract
 
@@ -148,4 +148,4 @@ Business code depends on `UserRepo`, not `pg`. Tests use in-memory `UserRepo`.
 
 ## References
 
-N/A — no references/ directory; the skill is a self-contained prompt corpus.
+N/A, no references/ directory; the skill is a self-contained prompt corpus.

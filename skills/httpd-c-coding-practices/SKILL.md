@@ -1,6 +1,6 @@
 ---
 name: httpd-c-coding-practices
-description: "Use when authoring or reviewing Apache httpd C — 4-space 80-col layout, GNU indent profile, ANSI function/control-flow spacing, httpd cast rules, rationale comments, and build/tests in CI."
+description: "Use when authoring or reviewing Apache httpd C, 4-space 80-col layout, GNU indent profile, ANSI function/control-flow spacing, httpd cast rules, rationale comments, and build/tests in CI."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for Apache httpd C style (archived `awesome-guidelines` capsul
 
 ## Core Principle
 
-httpd C quality is **reviewer-readable layout plus generic C safety** — ANSI signatures, httpd brace/spacing rhythm, 80-column wraps, comments for non-obvious rationale.
+httpd C quality is **reviewer-readable layout plus generic C safety**, ANSI signatures, httpd brace/spacing rhythm, 80-column wraps, comments for non-obvious rationale.
 
 ## When to Use / NOT
 
@@ -19,16 +19,16 @@ httpd C quality is **reviewer-readable layout plus generic C safety** — ANSI s
 
 **NOT when:**
 
-- Generic C libraries with no httpd contribution path — `c-coding-practices`.
-- C++ — `cpp-coding-practices`.
+- Generic C libraries with no httpd contribution path, `c-coding-practices`.
+- C++, `cpp-coding-practices`.
 
 ## Workflow
 
-1. **Format** — indent, 80 cols, braces (`httpd-style-formatting-indent.md`).
-2. **Functions/flow** — ANSI, if/switch (`httpd-style-functions-flow.md`).
-3. **Expressions** — operators, casts, wraps (`httpd-style-expressions-casts.md`).
-4. **Comments/verify** — rationale, build (`httpd-style-comments-verify.md`).
-5. **Safety pass** — also apply `c-coding-practices` capsules for headers/errors/macros.
+1. **Format**, indent, 80 cols, braces (`httpd-style-formatting-indent.md`).
+2. **Functions/flow**, ANSI, if/switch (`httpd-style-functions-flow.md`).
+3. **Expressions**, operators, casts, wraps (`httpd-style-expressions-casts.md`).
+4. **Comments/verify**, rationale, build (`httpd-style-comments-verify.md`).
+5. **Safety pass**, also apply `c-coding-practices` capsules for headers/errors/macros.
 
 ## Red Flags
 
@@ -76,4 +76,4 @@ httpd C quality is **reviewer-readable layout plus generic C safety** — ANSI s
 
 ## Related skills
 
-- `c-coding-practices` — portable C safety and headers
+- `c-coding-practices`, portable C safety and headers

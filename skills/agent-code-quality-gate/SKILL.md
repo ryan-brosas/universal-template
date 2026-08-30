@@ -9,7 +9,7 @@ disable-model-invocation: true
 
 ## Core Principle
 
-Code-changed-this-session → review required. Scope = diff scope, and behavior tests, duplication check, and verification evidence are all mandatory — no "trust me, it works."
+Code-changed-this-session → review required. Scope = diff scope, and behavior tests, duplication check, and verification evidence are all mandatory, no "trust me, it works."
 
 ## Iron Laws
 
@@ -45,33 +45,33 @@ Before declaring "done" after bugfix, feature edit, refactor, or subagent work. 
 
 ## Common Findings
 
-| Finding                    | Action                   |
+| Finding | Action |
 |----------------------------|--------------------------|
-| "While I'm here" cleanup   | Split or revert          |
-| Copy-pasted helper         | Extract to common module |
-| New test that doesn't test | Rewrite or delete        |
-| Skipped test (`.skip`)     | Un-skip or fix           |
-| Removed test               | Add back, or justify     |
-| No regression test         | Add one                  |
-| Output truncated           | Show full output         |
+| "While I'm here" cleanup | Split or revert |
+| Copy-pasted helper | Extract to common module |
+| New test that doesn't test | Rewrite or delete |
+| Skipped test (`.skip`) | Un-skip or fix |
+| Removed test | Add back, or justify |
+| No regression test | Add one |
+| Output truncated | Show full output |
 
 ## Severity Tells
 
-| Tell           | Action                        |
+| Tell | Action |
 |----------------|-------------------------------|
-| `[blocker]`    | Must fix. Violated invariant. |
-| `[should-fix]` | Worth fixing now. Real cost.  |
-| `[nit]`        | Cosmetic. Note, don't block.  |
-| `[question]`   | Need clarification.           |
+| `[blocker]` | Must fix. Violated invariant. |
+| `[should-fix]` | Worth fixing now. Real cost. |
+| `[nit]` | Cosmetic. Note, don't block. |
+| `[question]` | Need clarification. |
 
 ## When to Override
 
-| Override                     | When                                    |
+| Override | When |
 |------------------------------|-----------------------------------------|
-| "Scope creep is acceptable"  | User explicitly approved the extra work |
-| "Duplication is acceptable"  | One-time use, extraction premature      |
-| "Skipped test is acceptable" | Flaky, in test-quarantine               |
-| "Removed test is acceptable" | Replaced by a better test               |
+| "Scope creep is acceptable" | User explicitly approved the extra work |
+| "Duplication is acceptable" | One-time use, extraction premature |
+| "Skipped test is acceptable" | Flaky, in test-quarantine |
+| "Removed test is acceptable" | Replaced by a better test |
 
 Document the override in the commit. Don't hide it.
 
@@ -81,7 +81,7 @@ Skipping the gate; "I checked, it's fine" (no evidence); scope creep unmarked; t
 
 ## Red Flags
 
-"Should work" (run); "I tested it" (show run); truncated output; "tests later"; .skip on new; removed unmarked; "while I'm here" unmarked; scope creep unmarked.
+"Should work" (run); "I tested it" (show run); truncated output; "tests later";.skip on new; removed unmarked; "while I'm here" unmarked; scope creep unmarked.
 
 ## Anti-Patterns
 
@@ -105,4 +105,4 @@ Run the 5 checks against the diff: scope, duplication, behavior tests, verificat
 
 ## References
 
-N/A — no reference files; this skill is self-contained.
+N/A, no reference files; this skill is self-contained.

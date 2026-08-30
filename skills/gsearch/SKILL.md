@@ -7,23 +7,23 @@ compatibility: Requires browser-harness-js on PATH and a running Chromium browse
 
 # Google Search
 
-Search Google and extract structured results via CDP. No external dependencies beyond `browser-harness-js` (which provides the CDP session). Each call opens its own tab and WebSocket session — safe for parallel use.
+Search Google and extract structured results via CDP. No external dependencies beyond `browser-harness-js` (which provides the CDP session). Each call opens its own tab and WebSocket session, safe for parallel use.
 
 ## Core Principle
 
-Search Google and extract structured results via CDP through the user's own browser — no API key, no external dependencies beyond `browser-harness-js`. Each call opens its own tab and WebSocket session — safe for parallel use.
+Search Google and extract structured results via CDP through the user's own browser, no API key, no external dependencies beyond `browser-harness-js`. Each call opens its own tab and WebSocket session, safe for parallel use.
 
 ## When to Use / NOT
 
-**Use** — when the user asks to search the web, look something up, find a link, or research a topic; also to open a result link with `follow <url>` and read its page text or JSON.
+**Use**, when the user asks to search the web, look something up, find a link, or research a topic; also to open a result link with `follow <url>` and read its page text or JSON.
 
-**NOT** — when the target page is behind a login wall or anti-bot challenge the browser session cannot pass (`follow --json` bails early on a `text/html` response); when a guaranteed result count is required (Google may return fewer than requested).
+**NOT**, when the target page is behind a login wall or anti-bot challenge the browser session cannot pass (`follow --json` bails early on a `text/html` response); when a guaranteed result count is required (Google may return fewer than requested).
 
 ## Workflow
 
 1. Run `gsearch "<query>" [count]` (pretty) or `gsearch --json "<query>" [count]`.
-2. Pick a result and read it with `gsearch follow <url>` — `--selector` for a custom CSS selector, `--settle` for lazy/SPA content, `--wait` to pick the readiness event, `--json` for JSON endpoints.
-3. Parallelize independent queries — each call attaches to its own tab with a per-call `sessionId`.
+2. Pick a result and read it with `gsearch follow <url>`, `--selector` for a custom CSS selector, `--settle` for lazy/SPA content, `--wait` to pick the readiness event, `--json` for JSON endpoints.
+3. Parallelize independent queries, each call attaches to its own tab with a per-call `sessionId`.
 
 ## Quick search
 
@@ -35,7 +35,7 @@ gsearch --json "your query" 3   # raw JSON
 
 ## Parallel use
 
-Each `gsearch` call reuses the shared WebSocket but attaches to its own tab with a per-call `sessionId`. Tab-specific CDP calls go through `cdp(sessionId, method, params)`. Multiple calls can run concurrently without interfering — no `activeSessionId` clobbering, no tab trampling, no event cross-fire. Tabs are closed fire-and-forget via `Target.closeTarget` so the caller isn't blocked waiting for cleanup.
+Each `gsearch` call reuses the shared WebSocket but attaches to its own tab with a per-call `sessionId`. Tab-specific CDP calls go through `cdp(sessionId, method, params)`. Multiple calls can run concurrently without interfering, no `activeSessionId` clobbering, no tab trampling, no event cross-fire. Tabs are closed fire-and-forget via `Target.closeTarget` so the caller isn't blocked waiting for cleanup.
 
 ```bash
 gsearch "rust async" 3 &
@@ -59,7 +59,7 @@ Each result is `{ title, url, snippet }`:
 
 ## Following a result link
 
-`gsearch follow <url>` opens a result link directly — no need to re-search or route through Google — and returns the page's readable text, or with `--json` the parsed JSON. It packages the connect/create-tab/navigate/wait/evaluate flow so you don't hand-roll it (or reach for `curl`, which bot-walled sites reject) for every link:
+`gsearch follow <url>` opens a result link directly, no need to re-search or route through Google, and returns the page's readable text, or with `--json` the parsed JSON. It packages the connect/create-tab/navigate/wait/evaluate flow so you don't hand-roll it (or reach for `curl`, which bot-walled sites reject) for every link:
 
 ```bash
 gsearch follow https://example.com/some-article                   # readable text (article/main/body)
@@ -73,7 +73,7 @@ Flags may appear before or after the URL. The default selector is `article, main
 
 ### Under the hood (manual)
 
-Open a result `url` directly through `browser-harness-js` — no need to re-search or route through Google. Same connect/create-tab/evaluate flow as ad-hoc search, but navigate to the link and extract page text:
+Open a result `url` directly through `browser-harness-js`, no need to re-search or route through Google. Same connect/create-tab/evaluate flow as ad-hoc search, but navigate to the link and extract page text:
 
 ```bash
 browser-harness-js <<'EOF'
@@ -107,11 +107,11 @@ EOF
 ```
 
 - `article, main` skips nav/footer chrome; `document.body.innerText` is the fallback.
-- **Wait strategy.** The example waits for `networkIdle` (500ms of no in-flight network requests) — the right default for content pages: it fires after `load` so it returns at least as much content, and it isn't blocked by hanging ad/analytics beacons the way `loadEventFired` is. Alternatives for specific page types:
-  - `networkAlmostIdle` (250ms quiet window) — for pages with continuous XHR polling that never reach the full 500ms.
-  - `loadEventFired` — when you genuinely need every subresource loaded (rare for text extraction).
-  - A short post-ready `await new Promise(r => setTimeout(r, 1000))` before the evaluate — for pages that lazy-render content *after* `networkIdle` (e.g. SPA hydration, lazy image packs).
-- **JSON endpoints (`--json`)**: `application/json` navigations fire **no** `Page` lifecycle events, and Chrome's JSON viewer renders the body into `document.body.innerText` on its own schedule. Don't `waitFor('networkIdle', …)` (it hangs) and don't read `innerText` once at a fixed time (you get `''` or a partial/truncated blob before the viewer finishes). `gsearch follow --json` polls `innerText` until `JSON.parse` succeeds (the poll IS the head validation) and bails early if the response is actually `text/html` (error page / login wall / anti-bot challenge). For the raw recipes and the anti-bot `fetch()` trap, see the `cdp` skill's [json-navigation.md](../cdp/interaction-skills/json-navigation.md).
+- **Wait strategy.** The example waits for `networkIdle` (500ms of no in-flight network requests), the right default for content pages: it fires after `load` so it returns at least as much content, and it isn't blocked by hanging ad/analytics beacons the way `loadEventFired` is. Alternatives for specific page types:
+ - `networkAlmostIdle` (250ms quiet window), for pages with continuous XHR polling that never reach the full 500ms.
+ - `loadEventFired`, when you need every subresource loaded (rare for text extraction).
+ - A short post-ready `await new Promise(r => setTimeout(r, 1000))` before the evaluate, for pages that lazy-render content *after* `networkIdle` (e.g. SPA hydration, lazy image packs).
+- **JSON endpoints (`--json`)**: `application/json` navigations fire **no** `Page` lifecycle events, and Chrome's JSON viewer renders the body into `document.body.innerText` on its own schedule. Don't `waitFor('networkIdle', …)` (it hangs) and don't read `innerText` once at a fixed time (you get `''` or a partial/truncated blob before the viewer finishes). `gsearch follow --json` polls `innerText` until `JSON.parse` succeeds (the poll IS the head validation) and bails early if the response is `text/html` (error page / login wall / anti-bot challenge). For the raw recipes and the anti-bot `fetch()` trap, see the `cdp` skill's [json-navigation.md](../cdp/interaction-skills/json-navigation.md).
 
 ## Ad-hoc search without the script
 
@@ -156,29 +156,29 @@ EOF
 | 2 | `Target.createTarget({ background: true })` | Create an isolated background tab |
 | 3 | `Target.attachToTarget` | Get per-call `sessionId` for tab-scoped routing |
 | 4 | `cdp(sessionId, "Page.enable", …)` | Subscribe to page events |
-| 5 | `cdp(sessionId, "Page.setLifecycleEventsEnabled", …)` | Enable lifecycle events — `networkIdle` won't fire without this |
+| 5 | `cdp(sessionId, "Page.setLifecycleEventsEnabled", …)` | Enable lifecycle events, `networkIdle` won't fire without this |
 | 6 | `session.waitFor('Page.lifecycleEvent' networkIdle)` armed BEFORE `cdp(sessionId, "Page.navigate", …)` | Race fix: arm the `networkIdle` wait before navigate (kills the load-already-fired race), then go to `google.com/search?q=…&num=N` (URI-encoded via `encodeURIComponent` in JS) |
 | 7 | `cdp(sessionId, "Runtime.evaluate", …)` | Single DOM query extracts all results |
 | 8 | `closeTab` (fire-and-forget) | Tear down tab without blocking the response |
 
-Each call takes ~2–3s (dominated by the `networkIdle` wait). The shared WebSocket means no repeated permission popups. URI encoding and output formatting happen in JS — no `jq` dependency.
+Each call takes ~2–3s (dominated by the `networkIdle` wait). The shared WebSocket means no repeated permission popups. URI encoding and output formatting happen in JS, no `jq` dependency.
 
 ## Why `Runtime.evaluate` over the accessibility tree
 
-Google's AX tree for a search page has 1300+ nodes — walking it requires per-node parent lookups to reconstruct result hierarchy. A single `Runtime.evaluate` with `querySelectorAll('.tF2Cxc')` returns the same data in one CDP call (~5ms vs ~200ms for AX tree traversal). The CSS selectors (`.tF2Cxc` for result containers, `h3` for titles, `.VwiC3b` for snippets) are stable across Google's current HTML structure.
+Google's AX tree for a search page has 1300+ nodes, walking it requires per-node parent lookups to reconstruct result hierarchy. A single `Runtime.evaluate` with `querySelectorAll('.tF2Cxc')` returns the same data in one CDP call (~5ms vs ~200ms for AX tree traversal). The CSS selectors (`.tF2Cxc` for result containers, `h3` for titles, `.VwiC3b` for snippets) are stable across Google's current HTML structure.
 
 ## No `jq` dependency
 
-URI encoding uses `encodeURIComponent()` in JS and output formatting is done via `.map().join()` in the heredoc. The raw query is escaped for JS string interpolation with `sed` (backslashes, `$`, backticks for bash; single quotes for JS). The REPL's `renderResult` passes string returns through raw — no JSON wrapping — so bash just prints.
+URI encoding uses `encodeURIComponent()` in JS and output formatting is done via `.map().join()` in the heredoc. The raw query is escaped for JS string interpolation with `sed` (backslashes, `$`, backticks for bash; single quotes for JS). The REPL's `renderResult` passes string returns through raw, no JSON wrapping, so bash just prints.
 
 ## Red Flags
 
-- **Tab cleanup uses `try/finally` with fire-and-forget `closeTab`** — `closeTab` does `window.close()` + `Target.closeTarget` for thorough cleanup, wrapped in `finally` so it runs even on errors. The call is not awaited so it doesn't block the response. Under rapid parallel calls the close operations serialize in the session's `closeQueue`, but they don't block results.
-- **`Page.enable()` AND `Page.setLifecycleEventsEnabled({ enabled: true })` must both be called** on each new tab. The latter is required for Chrome to emit any `Page.lifecycleEvent` — without it, the `networkIdle` wait times out every time.
-- **`networkIdle` wait has a 30s timeout** — uses `session.waitFor()` instead of a raw promise, so a hung page doesn't leak the tab. Pages with continuous XHR polling may never reach the 500ms quiet window — see the wait-strategy note under "Following a result link" for `networkAlmostIdle` as a fallback.
-- **Result count may be less than `num=`** — Google sometimes returns fewer results than requested.
-- **Google may serve a consent/cookie wall** in some regions — this returns 0 results, same as the old approach. Check with a screenshot if results come back empty.
-- **Multi-statement heredocs need `return`** — `browser-harness-js` auto-returns single expressions only.
+- **Tab cleanup uses `try/finally` with fire-and-forget `closeTab`**, `closeTab` does `window.close()` + `Target.closeTarget` for thorough cleanup, wrapped in `finally` so it runs even on errors. The call is not awaited so it doesn't block the response. Under rapid parallel calls the close operations serialize in the session's `closeQueue`, but they don't block results.
+- **`Page.enable()` AND `Page.setLifecycleEventsEnabled({ enabled: true })` must both be called** on each new tab. The latter is required for Chrome to emit any `Page.lifecycleEvent`, without it, the `networkIdle` wait times out every time.
+- **`networkIdle` wait has a 30s timeout**, uses `session.waitFor()` instead of a raw promise, so a hung page doesn't leak the tab. Pages with continuous XHR polling may never reach the 500ms quiet window, see the wait-strategy note under "Following a result link" for `networkAlmostIdle` as a fallback.
+- **Result count may be less than `num=`**, Google sometimes returns fewer results than requested.
+- **Google may serve a consent/cookie wall** in some regions, this returns 0 results, same as the old approach. Check with a screenshot if results come back empty.
+- **Multi-statement heredocs need `return`**, `browser-harness-js` auto-returns single expressions only.
 
 ## Verification
 
@@ -198,4 +198,4 @@ Results parse as `{ title, url, snippet }`; `--json` emits valid JSON. If result
 
 ## References
 
-- Cross-skill pointer: the `cdp` skill's `json-navigation.md` (`../cdp/interaction-skills/json-navigation.md`) — raw recipes and the anti-bot `fetch()` trap for `application/json` navigations.
+- Cross-skill pointer: the `cdp` skill's `json-navigation.md` (`../cdp/interaction-skills/json-navigation.md`), raw recipes and the anti-bot `fetch()` trap for `application/json` navigations.

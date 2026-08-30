@@ -61,4 +61,4 @@ Scenario: a client needs a virtual assistant who can start Monday and handle ema
 
 ## References
 
-N/A — no references/ directory; the skill is a self-contained prompt corpus.
+N/A, no references/ directory; the skill is a self-contained prompt corpus.

@@ -1,6 +1,6 @@
 ---
 name: android-coding-practices
-description: "Use when authoring or reviewing Android apps — ribot/xmartlabs resource naming, component factories, Java/Kotlin conventions, MVP/Jetpack layering, and lint/detekt/tests in CI."
+description: "Use when authoring or reviewing Android apps, ribot/xmartlabs resource naming, component factories, Java/Kotlin conventions, MVP/Jetpack layering, and lint/detekt/tests in CI."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for ribot + Xmartlabs Android guides (archived `awesome-guidel
 
 ## Core Principle
 
-Android quality is **prefixed resources + factory-based navigation + layered UI/data** — not Activities that own network and database code.
+Android quality is **prefixed resources + factory-based navigation + layered UI/data**, not Activities that own network and database code.
 
 ## When to Use / NOT
 
@@ -19,17 +19,17 @@ Android quality is **prefixed resources + factory-based navigation + layered UI/
 
 **NOT when:**
 
-- Pure Kotlin/JVM libraries with no Android resources — `kotlin-coding-practices`.
+- Pure Kotlin/JVM libraries with no Android resources, `kotlin-coding-practices`.
 - iOS/web clients.
-- Generated R/layout binding boilerplate only — validate generators.
+- Generated R/layout binding boilerplate only, validate generators.
 
 ## Workflow
 
-1. **Resources** — drawables, layouts, strings (`android-style-resources-layout.md`).
-2. **Code** — imports, fields, logs, wrap (`android-style-code-conventions.md`).
-3. **Components** — factories, keys, tests (`android-style-components-tests.md`).
-4. **Architecture** — layers, lint/tests (`android-style-architecture-verify.md`).
-5. **Verify** — `./gradlew lint`, unit/Espresso on changed flows.
+1. **Resources**, drawables, layouts, strings (`android-style-resources-layout.md`).
+2. **Code**, imports, fields, logs, wrap (`android-style-code-conventions.md`).
+3. **Components**, factories, keys, tests (`android-style-components-tests.md`).
+4. **Architecture**, layers, lint/tests (`android-style-architecture-verify.md`).
+5. **Verify**, `./gradlew lint`, unit/Espresso on changed flows.
 
 ## Red Flags
 
@@ -80,5 +80,5 @@ Android quality is **prefixed resources + factory-based navigation + layered UI/
 
 ## Related skills
 
-- `kotlin-coding-practices` — Kotlin formatting/idioms
-- `java-coding-practices` — JVM naming where shared
+- `kotlin-coding-practices`, Kotlin formatting/idioms
+- `java-coding-practices`, JVM naming where shared

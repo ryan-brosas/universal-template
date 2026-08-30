@@ -1,6 +1,6 @@
 ---
 name: r-coding-practices
-description: "Use when authoring or reviewing R — tidyverse snake_case/<-/2-space layout, native |> pipes, roxygen2 docs, Google BigCamelCase/return/:: deltas when declared, and styler/lintr/testthat in CI."
+description: "Use when authoring or reviewing R, tidyverse snake_case/<-/2-space layout, native |> pipes, roxygen2 docs, Google BigCamelCase/return/:: deltas when declared, and styler/lintr/testthat in CI."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for R style learning (from the archived `awesome-guidelines` s
 
 ## Core Principle
 
-R analysis quality is **consistent formatting + pipe-clear data flow** — `<-` and snake_case objects, native `|>`, documented exports, mechanical styler/lintr gates.
+R analysis quality is **consistent formatting + pipe-clear data flow**, `<-` and snake_case objects, native `|>`, documented exports, mechanical styler/lintr gates.
 
 ## When to Use / NOT
 
@@ -19,16 +19,16 @@ R analysis quality is **consistent formatting + pipe-clear data flow** — `<-` 
 
 **NOT when:**
 
-- Renviron/secrets — never commit credentials.
-- Generated `.Rd`/NAMESPACE-only churn — validate hand-edited `.R`.
+- Renviron/secrets, never commit credentials.
+- Generated `.Rd`/NAMESPACE-only churn, validate hand-edited `.R`.
 
 ## Workflow
 
-1. **Syntax** — spacing, braces, `<-` (`r-style-formatting-syntax.md`).
-2. **Naming/files** — snake_case vs BigCamelCase policy (`r-style-naming-files.md`).
-3. **Functions/pipes** — `|>`, returns, control (`r-style-functions-pipes.md`).
-4. **Docs/verify** — roxygen, styler, lintr (`r-style-docs-verify.md`).
-5. **Verify** — styler, lintr, tests on changed files.
+1. **Syntax**, spacing, braces, `<-` (`r-style-formatting-syntax.md`).
+2. **Naming/files**, snake_case vs BigCamelCase policy (`r-style-naming-files.md`).
+3. **Functions/pipes**, `|>`, returns, control (`r-style-functions-pipes.md`).
+4. **Docs/verify**, roxygen, styler, lintr (`r-style-docs-verify.md`).
+5. **Verify**, styler, lintr, tests on changed files.
 
 ## Red Flags
 

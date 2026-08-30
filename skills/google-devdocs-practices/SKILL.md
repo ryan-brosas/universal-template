@@ -1,6 +1,6 @@
 ---
 name: google-devdocs-practices
-description: "Use when authoring Google-style developer docs — you/imperative voice, sentence-case headings, bold UI and code font, numbered procedures, For more information see links, and accessible global English."
+description: "Use when authoring Google-style developer docs, you/imperative voice, sentence-case headings, bold UI and code font, numbered procedures, For more information see links, and accessible global English."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for Google developer documentation style guide (archived `awes
 
 ## Core Principle
 
-Google devdoc quality is **you-focused clarity built for translation** — active conversational prose, sentence-case structure, context-first procedures, descriptive links, consistent terms.
+Google devdoc quality is **you-focused clarity built for translation**, active conversational prose, sentence-case structure, context-first procedures, descriptive links, consistent terms.
 
 ## When to Use / NOT
 
@@ -19,17 +19,17 @@ Google devdoc quality is **you-focused clarity built for translation** — activ
 
 **NOT when:**
 
-- Product marketing landing copy — `mailchimp-content-practices`.
-- MDN-specific example code fences — `mdn-code-examples-practices`.
-- Non-English source docs — follow locale guide; English rules here are US English baseline.
+- Product marketing landing copy, `mailchimp-content-practices`.
+- MDN-specific example code fences, `mdn-code-examples-practices`.
+- Non-English source docs, follow locale guide; English rules here are US English baseline.
 
 ## Workflow
 
-1. **Voice/person** — you, active, no please (`google-devdocs-style-voice-person.md`).
-2. **Format/headings** — sentence case, bold UI, code font (`google-devdocs-style-format-headings.md`).
-3. **Procedures/links** — numbered steps, cross-refs (`google-devdocs-style-procedures-links.md`).
-4. **Accessibility/global** — alt text, i18n wording (`google-devdocs-style-accessibility-global.md`).
-5. **Verify** — heading outline; link text out-of-context test; please/click here grep; term consistency scan.
+1. **Voice/person**, you, active, no please (`google-devdocs-style-voice-person.md`).
+2. **Format/headings**, sentence case, bold UI, code font (`google-devdocs-style-format-headings.md`).
+3. **Procedures/links**, numbered steps, cross-refs (`google-devdocs-style-procedures-links.md`).
+4. **Accessibility/global**, alt text, i18n wording (`google-devdocs-style-accessibility-global.md`).
+5. **Verify**, heading outline; link text out-of-context test; please/click here grep; term consistency scan.
 
 ## Red Flags
 
@@ -60,7 +60,7 @@ Google devdoc quality is **you-focused clarity built for translation** — activ
 
 - Heading hierarchy outline (one h1, no level skips)
 - grep `\bplease\b`, `click here`, `this document` in changed prose
-- Link text read out of context — still meaningful?
+- Link text read out of context, still meaningful?
 - Acronym first-use expansion check
 - Optional: accessibility lint (alt, heading order) on rendered HTML
 - Cross-check project-specific style overrides first in reference hierarchy
@@ -87,6 +87,6 @@ Google devdoc quality is **you-focused clarity built for translation** — activ
 
 ## Related skills
 
-- `markdown-writing-practices` — repo Markdown layout
-- `mdn-code-examples-practices` — MDN code example blocks
-- `mailchimp-content-practices` — product/marketing copy voice
+- `markdown-writing-practices`, repo Markdown layout
+- `mdn-code-examples-practices`, MDN code example blocks
+- `mailchimp-content-practices`, product/marketing copy voice

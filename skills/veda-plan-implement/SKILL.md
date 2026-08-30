@@ -1,6 +1,6 @@
 ---
 name: veda-plan-implement
-description: "Use when planning a refactor, debugging approach, research, analysis, writing, or any course of action before implementing — plan work by collaborating with the Veda Navigator model. Drives `veda -S plan-TASKNAME -m flash -p navigator-plan` to align on a plan; does not execute. Invoke when the user says plan, discuss, align, or wants to iterate on a plan before coding."
+description: "Use when planning a refactor, debugging approach, research, analysis, writing, or any course of action before implementing, plan work by collaborating with the Veda Navigator model. Drives `veda -S plan-TASKNAME -m flash -p navigator-plan` to align on a plan; does not execute. Invoke when the user says plan, discuss, align, or wants to iterate on a plan before coding."
 argument-hint: "[veda-flags]"
 ---
 
@@ -16,21 +16,21 @@ Align with Navigator before executing: Navigator advises (no tool access), the D
 ## Workflow
 
 1. `veda -S plan-TASKNAME sel clear` + `sel add` (full files first; slice only above 125k).
-2. `veda -S plan-TASKNAME -m flash -p navigator-plan` once — commit to a position, carry the user's ask verbatim.
+2. `veda -S plan-TASKNAME -m flash -p navigator-plan` once, commit to a position, carry the user's ask verbatim.
 3. Continue via `resume` / `-p navigator-chat` until aligned; involve the user on scope/cost/direction.
 4. Execute with native tools, checkpointing at plan-step boundaries with evidence. Stop when the task is complete or blocked on input only the user can provide.
 
 
-## Model routing (authoritative — do not substitute)
+## Model routing (authoritative, do not substitute)
 
 - Load-bearing planning / architecture / high-risk review → `agy --model claude-opus-4-6-thinking --mode plan` (direct `agy` CLI, NOT veda/gemini).
 - Critique / follow-up → `agy --model claude-sonnet-4-6 --mode plan`.
 - Cheap discovery / context curation → `veda` + gemini (`gemini-3.7-flash-*`, `gemini-3.1-pro-low`).
 - `veda deep` (parallel solvers) runs on gemini and is only for "N independent attempts"; the final architecture decision still comes from claude-opus.
 
-## Invocation — veda CLI (confirmed working)
+## Invocation, veda CLI (confirmed working)
 
-Use the veda CLI with a **positional** prompt. The default backend/model are now fixed in `~/.config/veda/config` (`BACKEND="agy"`, `MODEL="gemini-3.7-flash-high"`) — no flags needed:
+Use the veda CLI with a **positional** prompt. The default backend/model are now fixed in `~/.config/veda/config` (`BACKEND="agy"`, `MODEL="gemini-3.7-flash-high"`), no flags needed:
 
 ```bash
 veda -S plan-<task> -p navigator-plan '<your prompt — inline ALL relevant file contents; veda sees only what you paste>'
@@ -39,7 +39,7 @@ veda -S plan-<task> -p navigator-plan '<your prompt — inline ALL relevant file
 - Pin explicitly with `-b agy -m gemini-3.7-flash-high` if you ever need to override.
 - Keep one `-S` session name; follow up with `veda -S plan-<task> resume '...'` or `-p navigator-chat`. You implement afterwards with native tools.
 
-**Do NOT use `agents.run({ runner: "veda", ... })`:** broken with veda-ts 0.75.8 — pi-fabric pipes the prompt to stdin, but veda reads positionals only (`src/cli/validate.ts` throws "No prompt provided"). Use the CLI until pi-fabric fixes the runner.
+**Do NOT use `agents.run({ runner: "veda", ... })`:** broken with veda-ts 0.75.8, pi-fabric pipes the prompt to stdin, but veda reads positionals only (`src/cli/validate.ts` throws "No prompt provided"). Use the CLI until pi-fabric fixes the runner.
 
 ## Your Task
 
@@ -51,7 +51,7 @@ Collaborate, discuss, and align with the Navigator model on a plan using `veda -
 
 Use `-p navigator-plan` to start, then switch to `-p navigator-chat` for follow-up discussion. Only use `navigator-plan` once per task unless the user instructs otherwise.
 
-**Involve the user when the work genuinely requires them.** Use your `ask_user` tool (or plain questions if unavailable) when the goal is ambiguous, a decision would change scope, cost, or direction, or input only the user can provide. Navigator advises; the user decides. Otherwise, when you have enough information to act, act.
+**Involve the user when the work requires them.** Use your `ask_user` tool (or plain questions if unavailable) when the goal is ambiguous, a decision would change scope, cost, or direction, or input only the user can provide. Navigator advises; the user decides. Otherwise, when you have enough information to act, act.
 
 ### Escaping Backticks in Prompts (Critical)
 
@@ -128,7 +128,7 @@ Think of Navigator as a senior collaborator you're pairing with. Your opening me
 - State the goal and your proposed approach (take a stance; Navigator stress-tests it)
 - Provide evidence anchors: file and section references for your key claims
 - Name constraints and non-goals
-- Ask 1-2 specific questions where you are genuinely uncertain
+- Ask 1-2 specific questions where you are uncertain
 - Invite Navigator to help in any way, especially if you're stuck; a fresh perspective on a dead end is often the breakthrough
 
 Example flow:
@@ -209,4 +209,4 @@ Alignment confirmed before execution starts; every checkpoint cites evidence ("s
 
 ## References
 
-No reference capsules — the skill is self-contained.
+No reference capsules, the skill is self-contained.

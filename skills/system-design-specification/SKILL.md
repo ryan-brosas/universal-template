@@ -17,12 +17,12 @@ code.
 ## When to Use / NOT
 
 - **Use when:** authoring formal, crash-proof system design documents and architectural
-  specifications for complex distributed, concurrent, or asynchronous software systems —
-  scope fences and non-goals, 4-part state ontologies, mathematical invariants,
-  provisioned ID pre-allocation, ASCII trace calculus (E/R/L/G/H/X), exhaustive crash
-  matrices, and deterministic boundary testing.
+ specifications for complex distributed, concurrent, or asynchronous software systems,
+ scope fences and non-goals, 4-part state ontologies, mathematical invariants,
+ provisioned ID pre-allocation, ASCII trace calculus (E/R/L/G/H/X), exhaustive crash
+ matrices, and deterministic boundary testing.
 - **NOT when:** the deliverable is production code rather than a design document, or the
-  system has no async side effects or crash-recovery surface to prove.
+ system has no async side effects or crash-recovery surface to prove.
 
 ## Workflow
 
@@ -73,26 +73,26 @@ Specify how long-running loops park at effect boundaries in test mode (`drive: "
 ## Red Flags
 
 - Describing features before defining the scope fence (migration & backward
-  compatibility, explicit non-goals).
+ compatibility, explicit non-goals).
 - Mixing passive shared data with active execution lines in one undifferentiated state
-  blob.
+ blob.
 - Fewer than 5 unbreakable invariants, or invariants that cannot be checked mechanically.
 - Initiating an external/async side effect before persisting the intent record with a
-  pre-allocated UUID.
+ pre-allocated UUID.
 - Prose descriptions of async interleaving instead of the E/R/L/G/H/X trace grammar.
 - A crash matrix that omits fault sites or maps them to recovery actions without the
-  exact durable state on disk.
+ exact durable state on disk.
 - Thrown runtime exceptions across architectural boundaries instead of `Result<T, E>` /
-  tagged errors.
+ tagged errors.
 
 ## Verification
 
 - Every fault site $X_1 \dots X_n$ appears in the crash matrix with its exact durable
-  state on disk and deterministic recovery algorithm.
+ state on disk and deterministic recovery algorithm.
 - All async flows are written in the 6-letter trace grammar, not prose.
 - The spec declares 5–10 checkable invariants and a scope fence with explicit non-goals.
 - Boundary testing mode (`drive: "manual"`, `peekAction()`, `executeAction()`) is
-  specified so long-running loops park at effect boundaries for deterministic tests.
+ specified so long-running loops park at effect boundaries for deterministic tests.
 
 ## Skill Result Contract
 
@@ -107,7 +107,7 @@ Specify how long-running loops park at effect boundaries in test mode (`drive: "
 ```
 
 ## References
-- `references/trace-calculus-grammar.md` — 6-letter trace grammar ($E, R, L, G, H, X$) for unambiguous async sequence notation.
-- `references/crash-site-matrices.md` — how to construct exhaustive crash $\to$ durable state $\to$ recovery action proof tables.
-- `references/state-ontology-and-invariants.md` — separating passive data DAGs from active execution lines and formulating hard invariants.
-- `references/provisioned-id-protocols.md` — intent pre-allocation protocols for crash-proof side effects without 2PC.
+- `references/trace-calculus-grammar.md`, 6-letter trace grammar ($E, R, L, G, H, X$) for unambiguous async sequence notation.
+- `references/crash-site-matrices.md`, how to construct exhaustive crash $\to$ durable state $\to$ recovery action proof tables.
+- `references/state-ontology-and-invariants.md`, separating passive data DAGs from active execution lines and formulating hard invariants.
+- `references/provisioned-id-protocols.md`, intent pre-allocation protocols for crash-proof side effects without 2PC.

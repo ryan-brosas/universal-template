@@ -1,6 +1,6 @@
 ---
 name: solidity-coding-practices
-description: "Use when authoring or reviewing Solidity — official layout/naming, NatSpec ABI docs, contract structure, Solcurity CEI/external-call checks, forge fmt/test and Slither in CI."
+description: "Use when authoring or reviewing Solidity, official layout/naming, NatSpec ABI docs, contract structure, Solcurity CEI/external-call checks, forge fmt/test and Slither in CI."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for official Solidity style + Solcurity (archived `awesome-gui
 
 ## Core Principle
 
-Solidity quality is **consistent layout + documented public API + security-aware effects ordering** — CapWords types, mixedCase members, visibility ladder, CEI on value paths.
+Solidity quality is **consistent layout + documented public API + security-aware effects ordering**, CapWords types, mixedCase members, visibility ladder, CEI on value paths.
 
 ## When to Use / NOT
 
@@ -19,16 +19,16 @@ Solidity quality is **consistent layout + documented public API + security-aware
 
 **NOT when:**
 
-- Vyper/Move/Cairo — different language guides.
-- Generated ABI bindings only — validate generators, not hand-style rules.
+- Vyper/Move/Cairo, different language guides.
+- Generated ABI bindings only, validate generators, not hand-style rules.
 
 ## Workflow
 
-1. **Formatting** — indent, wraps, braces (`solidity-style-formatting-layout.md`).
-2. **Naming/NatSpec** — CapWords/mixedCase, public docs (`solidity-style-naming-natspec.md`).
-3. **Structure** — file/contract order, visibility ladder (`solidity-style-contract-structure.md`).
-4. **Security** — Solcurity CEI/calls/events (`solidity-style-security-verify.md`).
-5. **Verify** — `forge fmt`/`forge test`, Slither on changed contracts.
+1. **Formatting**, indent, wraps, braces (`solidity-style-formatting-layout.md`).
+2. **Naming/NatSpec**, CapWords/mixedCase, public docs (`solidity-style-naming-natspec.md`).
+3. **Structure**, file/contract order, visibility ladder (`solidity-style-contract-structure.md`).
+4. **Security**, Solcurity CEI/calls/events (`solidity-style-security-verify.md`).
+5. **Verify**, `forge fmt`/`forge test`, Slither on changed contracts.
 
 ## Red Flags
 

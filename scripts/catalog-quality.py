@@ -20,6 +20,7 @@ import re
 import sys
 from datetime import date
 from pathlib import Path
+from typing import Optional
 
 BASE = Path(__file__).resolve().parents[1]
 SKILLS = BASE / "skills"
@@ -84,7 +85,7 @@ VENDOR_SKILLS = {
 }
 
 
-def classify(folder: str, hidden: bool) -> str | None:
+def classify(folder: str, hidden: bool) -> Optional[str]:
     """Mechanical class for a skill (None = unclassified)."""
     if folder in VENDOR_SKILLS:
         return "vendor"
@@ -394,7 +395,7 @@ def check_generated_catalogs() -> None:
 
 def main() -> int:
     update_baseline = "--update-baseline" in sys.argv
-    root_arg: str | None = None
+    root_arg: Optional[str] = None
     if "--root" in sys.argv:
         root_arg = sys.argv[sys.argv.index("--root") + 1]
     skills_dir = Path(root_arg) if root_arg else SKILLS

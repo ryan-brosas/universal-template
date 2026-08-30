@@ -13,25 +13,25 @@ disable-model-invocation: true
 ## When to Use / NOT
 
 - **Use when:** searching, reading, creating, updating, organizing, or synchronizing
-  Notion pages and databases; maintaining a central workspace or second brain in
-  Notion; recording decisions, summaries, content, and flexible capture. Prefer this
-  over driving Notion in a browser.
+ Notion pages and databases; maintaining a central workspace or second brain in
+ Notion; recording decisions, summaries, content, and flexible capture. Prefer this
+ over driving Notion in a browser.
 - **NOT when:** tracking code work identity (GitHub issues, pull requests, and
-  milestones own that); storing registries, audits, clone state, or validation results
-  (the local ryan-workspace repository owns those).
+ milestones own that); storing registries, audits, clone state, or validation results
+ (the local ryan-workspace repository owns those).
 
 ## Workflow
 
-1. `notion-cli auth status` — if unauthenticated, have the user run `notion-cli auth`
-   themselves; never ask for or expose credentials.
+1. `notion-cli auth status`, if unauthenticated, have the user run `notion-cli auth`
+ themselves; never ask for or expose credentials.
 2. Search before fetch, fetch before edit: `notion-cli search <query>` →
-   `notion-cli fetch <page-url-or-id>`. Never write to a page not fetched in this task.
-3. Reuse existing structure — the single central Second Brain hub and Creator's
-   Companion content system — instead of creating duplicates.
+ `notion-cli fetch <page-url-or-id>`. Never write to a page not fetched in this task.
+3. Reuse existing structure, the single central Second Brain hub and Creator's
+ Companion content system, instead of creating duplicates.
 4. Edit surgically with `page edit --find/--replace` (file variants for multiline or
-   batches); deliberate full rewrites only via `page update --content`.
+ batches); deliberate full rewrites only via `page update --content`.
 5. Report per the Result Contract below: page URL, what changed, what still needs user
-   action.
+ action.
 
 ## Auth and First Moves
 
@@ -65,22 +65,22 @@ Reuse Creator's Companion as the content system. Content Ideas, Research & Swipe
 ## Red Flags
 
 - Copying machine state (registries, audits, clone state, validation results) into
-  Notion — GitHub and the local ryan-workspace repository own those.
+ Notion, GitHub and the local ryan-workspace repository own those.
 - Creating a parallel hub or dashboard when Second Brain exists, or a second content
-  system when Creator's Companion exists.
+ system when Creator's Companion exists.
 - Writing to a page that was not fetched in this task.
 - Running destructive operations (`page remove-child`, deleting or restructuring an
-  existing database) without explicit user approval.
+ existing database) without explicit user approval.
 - Exposing tokens, cookies, credentials, or credential paths.
 
 ## Verification
 
 - All commands return JSON; pipe to `jq` and confirm the expected page/database came
-  back before proceeding.
+ back before proceeding.
 - Re-fetch the edited page (`notion-cli fetch`) to confirm the change landed with the
-  correct tab-depth nesting at the insertion point.
+ correct tab-depth nesting at the insertion point.
 - Confirm no duplicate system was created: the single central hub and the single
-  content system are intact.
+ content system are intact.
 
 ## Result Contract
 
@@ -88,4 +88,4 @@ After acting, report the page URL, what changed, and what still needs user actio
 
 ## References
 
-N/A — no reference files; every command used by this skill is a `notion-cli` invocation documented in this file.
+N/A, no reference files; every command used by this skill is a `notion-cli` invocation documented in this file.

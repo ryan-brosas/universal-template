@@ -37,7 +37,6 @@ LARGE_EXEMPT_SUFFIXES = (
 )
 
 def is_vendored_path(rel: str) -> bool:
-    parts = rel.split("/")
     return (
         "/sdk/" in f"/{rel}/"
         or "/learnings/" in f"/{rel}/"

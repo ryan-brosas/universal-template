@@ -1,6 +1,6 @@
 ---
 name: deprecation-and-migration
-description: Use when deprecating APIs, migrating between library versions, removing legacy code, or planning breaking changes — covers deprecation notices, migration guides, codemods, and staged rollout
+description: Use when deprecating APIs, migrating between library versions, removing legacy code, or planning breaking changes, covers deprecation notices, migration guides, codemods, and staged rollout
 ---
 
 
@@ -12,9 +12,9 @@ Deprecate first, remove later, and document the migration path. "Deprecated" wit
 
 ## When to Use / NOT
 
-**Use** — deprecating APIs, migrating between library versions, removing legacy code, or planning breaking changes.
+**Use**, deprecating APIs, migrating between library versions, removing legacy code, or planning breaking changes.
 
-**NOT** — when nothing is being removed or replaced: there is no deprecation period, migration path, or codemod to design.
+**NOT**, when nothing is being removed or replaced: there is no deprecation period, migration path, or codemod to design.
 
 ## Iron Laws
 
@@ -26,7 +26,7 @@ Deprecate first, remove later, and document the migration path. "Deprecated" wit
 - **Communicate in changelog, docs, runtime warnings.** All three.
 </EXTREMELY-IMPORTANT>
 
-## Workflow — Deprecation Lifecycle
+## Workflow, Deprecation Lifecycle
 
 ```
 [1] Add @deprecated notice + runtime warning
@@ -73,7 +73,7 @@ In code: `@deprecated` JSDoc + runtime `console.warn` (rate-limited). In docs: a
 [Common questions from the team or community.]
 ```
 
-The TL;DR is for the impatient. The step-by-step is for the careful. The codemod is for the many.
+The TL;DR is for the impatient. The step-by-step is for the careful. Codemods serve the many teams.
 
 ## Codemod
 
@@ -105,11 +105,11 @@ function process(input) {
 
 ## Common Mistakes
 
-Removing without deprecation period; "deprecated" without a migration guide; bundling multiple breaks into one major; no runtime warning; no changelog entry; codemod that doesn't run on real code; guide that's only the TL;DR; deprecating without telling users; @deprecated JSDoc forever; "we removed it, use the new one" (no link).
+Removing without deprecation period. "deprecated" without a migration guide. bundling multiple breaks into one major. no runtime warning. no changelog entry. codemod that doesn't run on real code. guide that's only the TL;DR. deprecating without telling users; @deprecated JSDoc forever. "we removed it, use the new one" (no link).
 
 ## Red Flags
 
-Removal without notice; `@deprecated` without runtime warning; no migration guide; codemod not tested; deprecation period < 1 minor version; "deprecated" not in changelog; multiple breaks in one major; asking users to read source for migration; no opt-in for early adopters; "we'll keep both forever" (that's a feature, not a migration).
+Removal without notice; `@deprecated` without runtime warning. no migration guide. codemod not tested. deprecation period < 1 minor version. "deprecated" not in changelog. multiple breaks in one major. asking users to read source for migration. no opt-in for early adopters. "we'll keep both forever" (that's a feature, not a migration).
 
 ## Anti-Patterns
 
@@ -136,4 +136,4 @@ Removal without notice; `@deprecated` without runtime warning; no migration guid
 
 ## References
 
-N/A — no reference files; all templates and examples are inline in this skill.
+N/A, no reference files; all templates and examples are inline in this skill.

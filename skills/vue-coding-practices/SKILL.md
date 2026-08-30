@@ -1,6 +1,6 @@
 ---
 name: vue-coding-practices
-description: "Use when authoring or reviewing Vue 3 SFCs — Priority A multi-word components, typed props, keyed v-for, scoped styles, naming conventions, template simplicity, props-down/events-up, and eslint-plugin-vue."
+description: "Use when authoring or reviewing Vue 3 SFCs, Priority A multi-word components, typed props, keyed v-for, scoped styles, naming conventions, template simplicity, props-down/events-up, and eslint-plugin-vue."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for official Vue Style Guide ingest (`awesome-guidelines`). Ge
 
 ## Core Principle
 
-Vue maintainability is **tiered style guide discipline** — Priority A prevents errors, Priority B naming keeps components discoverable, templates stay declarative, and parent-child state flows props down / events up.
+Vue maintainability is **tiered style guide discipline**, Priority A prevents errors, Priority B naming keeps components discoverable, templates stay declarative, and parent-child state flows props down / events up.
 
 ## When to Use / NOT
 
@@ -19,16 +19,16 @@ Vue maintainability is **tiered style guide discipline** — Priority A prevents
 
 **NOT when:**
 
-- React/Svelte — use stack capsules in `foundation-pack/`.
-- Pure JS utilities outside Vue — `javascript-coding-practices`.
-- Full app architecture (Pinia routing) — Vue/Pinia foundation docs.
+- React/Svelte, use stack capsules in `foundation-pack/`.
+- Pure JS utilities outside Vue, `javascript-coding-practices`.
+- Full app architecture (Pinia routing), Vue/Pinia foundation docs.
 
 ## Workflow
 
-1. **Essential (A)** — names, props, keys, styles (`vue-style-essential-errors.md`).
-2. **Naming/files (B)** — component tree conventions (`vue-style-components-naming.md`).
-3. **Templates (B/C)** — expressions, order, shorthands (`vue-style-templates-composition.md`).
-4. **Caution/verify (D)** — props/events, eslint (`vue-style-caution-verify.md`).
+1. **Essential (A)**, names, props, keys, styles (`vue-style-essential-errors.md`).
+2. **Naming/files (B)**, component tree conventions (`vue-style-components-naming.md`).
+3. **Templates (B/C)**, expressions, order, shorthands (`vue-style-templates-composition.md`).
+4. **Caution/verify (D)**, props/events, eslint (`vue-style-caution-verify.md`).
 
 ## Red Flags
 
@@ -79,6 +79,6 @@ Vue maintainability is **tiered style guide discipline** — Priority A prevents
 
 ## Related skills
 
-- `javascript-coding-practices` — script block JS habits
-- `wcag-accessibility-practices` — accessible Vue UI
-- `typescript-coding-standards` — typed Vue + TS projects
+- `javascript-coding-practices`, script block JS habits
+- `wcag-accessibility-practices`, accessible Vue UI
+- `typescript-coding-standards`, typed Vue + TS projects

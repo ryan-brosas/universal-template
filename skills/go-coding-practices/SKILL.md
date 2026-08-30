@@ -1,6 +1,6 @@
 ---
 name: go-coding-practices
-description: "Use when authoring or reviewing Go — gofmt, MixedCaps naming, explicit error returns, early error flow, consumer-defined interfaces, context-first APIs, goroutine lifetimes, and no production panic."
+description: "Use when authoring or reviewing Go, gofmt, MixedCaps naming, explicit error returns, early error flow, consumer-defined interfaces, context-first APIs, goroutine lifetimes, and no production panic."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for Go style learning (from the archived `awesome-guidelines` 
 
 ## Core Principle
 
-Go code should be **gofmt-clear, error-explicit, and concurrency-obvious** — interfaces earned at the consumer, not invented at the producer.
+Go code should be **gofmt-clear, error-explicit, and concurrency-obvious**, interfaces earned at the consumer, not invented at the producer.
 
 ## When to Use / NOT
 
@@ -20,15 +20,15 @@ Go code should be **gofmt-clear, error-explicit, and concurrency-obvious** — i
 **NOT when:**
 
 - Non-Go code.
-- Generated protobuf/grpc stubs — validate generators, not hand-edits.
+- Generated protobuf/grpc stubs, validate generators, not hand-edits.
 
 ## Workflow
 
-1. **Format & names** — gofmt, MixedCaps, context-aware locals (`go-style-formatting-naming.md`).
-2. **Errors** — `(T, error)`, early return, wrap, defer, no prod panic (`go-style-errors-flow.md`).
-3. **APIs** — concrete returns, small consumer interfaces, named external literals (`go-style-interfaces-apis.md`).
-4. **Concurrency** — `ctx` first, bounded goroutines, no mutable globals (`go-style-concurrency-context.md`).
-5. **Verify** — `go test`, `go vet`, staticcheck on changed packages.
+1. **Format & names**, gofmt, MixedCaps, context-aware locals (`go-style-formatting-naming.md`).
+2. **Errors**, `(T, error)`, early return, wrap, defer, no prod panic (`go-style-errors-flow.md`).
+3. **APIs**, concrete returns, small consumer interfaces, named external literals (`go-style-interfaces-apis.md`).
+4. **Concurrency**, `ctx` first, bounded goroutines, no mutable globals (`go-style-concurrency-context.md`).
+5. **Verify**, `go test`, `go vet`, staticcheck on changed packages.
 
 ## Red Flags
 

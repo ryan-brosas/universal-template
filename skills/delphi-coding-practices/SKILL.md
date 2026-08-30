@@ -1,6 +1,6 @@
 ---
 name: delphi-coding-practices
-description: "Use when authoring or reviewing Delphi/Object Pascal — 2-space layout, PascalCase T/I/E/F/A/L naming, dotted unit hierarchy, try/finally FreeAndNil, properties, XML docs, and IDE formatter in CI."
+description: "Use when authoring or reviewing Delphi/Object Pascal, 2-space layout, PascalCase T/I/E/F/A/L naming, dotted unit hierarchy, try/finally FreeAndNil, properties, XML docs, and IDE formatter in CI."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for Delphi/Object Pascal style learning (from the archived `aw
 
 ## Core Principle
 
-Delphi quality is **PascalCase clarity + unit hierarchy + deterministic cleanup** — properties and docs on public surfaces, `FreeAndNil` in finally blocks.
+Delphi quality is **PascalCase clarity + unit hierarchy + deterministic cleanup**, properties and docs on public surfaces, `FreeAndNil` in finally blocks.
 
 ## When to Use / NOT
 
@@ -19,16 +19,16 @@ Delphi quality is **PascalCase clarity + unit hierarchy + deterministic cleanup*
 
 **NOT when:**
 
-- Free Pascal/Lazarus-only dialect differences — document project baseline.
-- Generated form `.dfm` designer output — validate hand-edited `.pas` only.
+- Free Pascal/Lazarus-only dialect differences, document project baseline.
+- Generated form `.dfm` designer output, validate hand-edited `.pas` only.
 
 ## Workflow
 
-1. **Layout** — indent, begin/end, whitespace (`delphi-style-formatting-layout.md`).
-2. **Naming** — T/I/E/F/A/L, PascalCase (`delphi-style-naming-types.md`).
-3. **Units** — hierarchy, uses, structure (`delphi-style-units-structure.md`).
-4. **Resources** — try/finally, except, docs (`delphi-style-resources-errors.md`).
-5. **Verify** — compile, formatter, tests on changed units.
+1. **Layout**, indent, begin/end, whitespace (`delphi-style-formatting-layout.md`).
+2. **Naming**, T/I/E/F/A/L, PascalCase (`delphi-style-naming-types.md`).
+3. **Units**, hierarchy, uses, structure (`delphi-style-units-structure.md`).
+4. **Resources**, try/finally, except, docs (`delphi-style-resources-errors.md`).
+5. **Verify**, compile, formatter, tests on changed units.
 
 ## Red Flags
 

@@ -1,6 +1,6 @@
 ---
 name: magento-coding-practices
-description: "Use when authoring or reviewing Adobe Commerce/Magento extensions — strict_types, PSR-12, ::class, DI/composition, prepared SQL, escape output, service contracts, and PHPCS Magento2 verification."
+description: "Use when authoring or reviewing Adobe Commerce/Magento extensions, strict_types, PSR-12,::class, DI/composition, prepared SQL, escape output, service contracts, and PHPCS Magento2 verification."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Application skill for Adobe Commerce / Magento Open Source coding standards inge
 
 ## Core Principle
 
-Magento extension quality is **PSR-12 mechanics plus Magento2 PHPCS security sniffs plus technical-guideline architecture** — strict typed PHP, interface DI and composition, layered service contracts, sanitize/escape discipline, and static analysis in CI.
+Magento extension quality is **PSR-12 mechanics plus Magento2 PHPCS security sniffs plus technical-guideline architecture**, strict typed PHP, interface DI and composition, layered service contracts, sanitize/escape discipline, and static analysis in CI.
 
 ## When to Use / NOT
 
@@ -20,17 +20,17 @@ Magento extension quality is **PSR-12 mechanics plus Magento2 PHPCS security sni
 
 **NOT when:**
 
-- Non-Magento PHP — `php-coding-practices`.
-- WordPress/Drupal — sibling CMS practice skills.
-- Core platform refactors spanning entire Magento tree — follow Adobe core contribution process.
-- Hyvä/headless frontends only — still apply API/security rules; JS/CSS guides may differ.
+- Non-Magento PHP, `php-coding-practices`.
+- WordPress/Drupal, sibling CMS practice skills.
+- Core platform refactors spanning entire Magento tree, follow Adobe core contribution process.
+- Hyvä/headless frontends only, still apply API/security rules; JS/CSS guides may differ.
 
 ## Workflow
 
-1. **PHP/types** — strict_types, return types, ::class (`magento-style-php-types.md`).
-2. **Class/DI** — composition, constructors, di.xml (`magento-style-class-di.md`).
-3. **Security/exceptions** — SQL, XSS, superglobals, exceptions (`magento-style-security-exceptions.md`).
-4. **Layers/verify** — Api modules, docblocks, PHPCS (`magento-style-layers-verify.md`).
+1. **PHP/types**, strict_types, return types,::class (`magento-style-php-types.md`).
+2. **Class/DI**, composition, constructors, di.xml (`magento-style-class-di.md`).
+3. **Security/exceptions**, SQL, XSS, superglobals, exceptions (`magento-style-security-exceptions.md`).
+4. **Layers/verify**, Api modules, docblocks, PHPCS (`magento-style-layers-verify.md`).
 
 ## Red Flags
 
@@ -80,8 +80,8 @@ Magento extension quality is **PSR-12 mechanics plus Magento2 PHPCS security sni
 
 ## Related skills
 
-- `php-coding-practices` — PSR baseline outside Magento
-- `webappsec-coding-practices` — broader secure coding patterns
-- `symfony-coding-practices` — DI/Yoda patterns in Symfony stacks (contrast)
-- `drupal-coding-practices` — sibling CMS conventions
-- `wordpress-coding-practices` — sibling CMS conventions
+- `php-coding-practices`, PSR baseline outside Magento
+- `webappsec-coding-practices`, broader secure coding patterns
+- `symfony-coding-practices`, DI/Yoda patterns in Symfony stacks (contrast)
+- `drupal-coding-practices`, sibling CMS conventions
+- `wordpress-coding-practices`, sibling CMS conventions
