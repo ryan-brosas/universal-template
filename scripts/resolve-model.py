@@ -24,6 +24,7 @@ import os
 import re
 import subprocess
 import sys
+import tempfile
 import time
 from pathlib import Path
 
@@ -59,9 +60,9 @@ ROLE_REQS: dict[str, tuple[int, bool, list[str]]] = {
 }
 
 
-def run(cmd: list[str], timeout: int = 30) -> tuple[int, str]:
+def run(cmd: list[str], timeout: int = 30, cwd: str | None = None) -> tuple[int, str]:
     try:
-        p = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+        p = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, cwd=cwd)
         return p.returncode, (p.stdout or p.stderr).strip()
     except (OSError, subprocess.TimeoutExpired) as exc:
         return 127, str(exc)
@@ -257,7 +258,8 @@ def probe(report: dict) -> str | None:
     else:
         cmd = ["veda", "-S", "resolve-probe", "-b", top["backend"], "-m", top["model"],
                "--no-tools", "-o", "/tmp/resolve-probe.md", "Reply with the single word OK"]
-    rc, out = run(cmd, timeout=120)
+    # Temp cwd keeps veda session artifacts out of whatever directory the resolver ran from.
+    rc, out = run(cmd, timeout=120, cwd=tempfile.gettempdir())
     body = ""
     if Path("/tmp/resolve-probe.md").is_file():
         body = Path("/tmp/resolve-probe.md").read_text()[:120]

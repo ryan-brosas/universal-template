@@ -19,6 +19,7 @@ import os
 import re
 import subprocess
 import sys
+import tempfile
 import time
 import urllib.error
 import urllib.request
@@ -31,9 +32,9 @@ AGENTS = Path(_home_override) if _home_override else Path(__file__).resolve().pa
 records: list[dict] = []  # {status, name, detail}
 
 
-def run(cmd: list[str], timeout: int = 20) -> tuple[int, str]:
+def run(cmd: list[str], timeout: int = 20, cwd: str | None = None) -> tuple[int, str]:
     try:
-        p = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+        p = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, cwd=cwd)
         return p.returncode, (p.stdout or p.stderr).strip()
     except (OSError, subprocess.TimeoutExpired) as exc:
         return 127, str(exc)
@@ -206,7 +207,8 @@ def smoke(backend_arg: str | None) -> dict:
     else:
         cmd = ["veda", "-S", "cap-probe", "-b", backend, "-m", model, "--no-tools",
                "-o", "/tmp/veda-smoke-out.md", "Reply with the single word OK"]
-    rc, out = run(cmd, timeout=120)
+    # Run veda from a temp cwd so its .veda session artifacts never land in the repo.
+    rc, out = run(cmd, timeout=120, cwd=tempfile.gettempdir())
     body = Path("/tmp/veda-smoke-out.md").read_text()[:120] if Path("/tmp/veda-smoke-out.md").is_file() else ""
     ok = rc == 0 and "OK" in body.upper()
     result = {"backend": backend, "model": model, "ok": ok,
