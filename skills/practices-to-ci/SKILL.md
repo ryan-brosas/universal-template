@@ -94,7 +94,7 @@ below.
 
 Use when a repo has a practice that "should be followed" but isn't enforced —
 turn it into a check rather than adding a prose rule. This complements
-`ci-best-practices` (how to write good workflows) and `code-discipline` (the
+`github-actions-engineering` (how to write good workflows) and `code-discipline` (the
 practices themselves).
 
 ## Red Flags

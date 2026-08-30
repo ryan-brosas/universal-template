@@ -2,7 +2,7 @@
 
 ## Workflow contract
 
-The `github-ci-workflow` skill authors or reviews the project workflow file. It copies `~/.agents/templates/github-pr-ci.yml` into the project and replaces the placeholder gate with the project gate from AGENTS.md. The file itself lives in the project, never in the global catalog.
+The `github-actions-engineering` skill authors or reviews the project workflow file. It copies `~/.agents/templates/github-pr-ci.yml` into the project and replaces the placeholder gate with the project gate from AGENTS.md. The file itself lives in the project, never in the global catalog.
 
 The workflow runs on branch pushes, pull requests, and manual dispatch. The manual dispatch is what an agent uses to watch one run before filing the PR.
 
@@ -33,7 +33,7 @@ Write one observation in the PR body. Include the project name, covered paths, p
 A failed check or a review comment can expose a reusable rule. Distill it in place. No prompt file is needed.
 
 1. Write the failure as one line, the exact command or code that fixed it, and the friction cause.
-2. Prefer a mechanical check. When the rule fits the workflow, author it with the `github-ci-workflow` skill.
+2. Prefer a mechanical check. When the rule fits the workflow, author it with the `github-actions-engineering` skill.
 3. When the rule fits the skill, update the matching SKILL.md and run `python3 ~/.agents/scripts/skill-validator.py`.
 4. Record the rule, the changed file path, and the verification result.
 

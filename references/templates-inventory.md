@@ -26,7 +26,7 @@ Usage mapping (what each rendered file's template drives):
 | `user.md` | `.pi/user.md` | workflow-lifecycle init (`--user`) |
 | `foundation-skill.md` / `foundation-capsule.md` | new skill/capsule leaves | workflow-lifecycle learn |
 | `skill.md` | the mandated SKILL.md skeleton | workflow-lifecycle learn, writing-skills |
-| `github-pr-ci.yml` | the project GitHub Actions quality workflow | `github-ci-workflow`, `push-pr` |
+| `github-pr-ci.yml` | the project GitHub Actions quality workflow | `github-actions-engineering`, `push-pr` |
 | `pull-request.md` | the PR body template | `push-pr`, project PRs |
 | `readme.md` | the repository README | workflow-lifecycle init (new repos) |
 
