@@ -1,0 +1,31 @@
+name: Bug report
+description: Something in the catalog, gates, or skills is broken
+labels: ["type:bug"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: The observed behavior, including the exact command and output
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Minimal steps, or the gate output showing the failure
+    validations:
+      required: true
+  - type: input
+    id: area
+    attributes:
+      label: Affected path or skill
+      description: e.g. skills/push-pr, scripts/catalog-quality.py, .github/workflows
+    validations:
+      required: false
+  - type: checkboxes
+    id: gates
+    attributes:
+      label: Local gates
+      options:
+        - label: I ran the catalog gate suite from AGENTS.md (Finish line) before filing

@@ -39,6 +39,7 @@ ENTRY_SKILLS = {
     "leverage-capture", "github-repo-setup", "github-actions-engineering",
     "push-pr", "reference-driven-development", "writing-skills",
     "house-writing-style", "evidence-router", "execution-router",
+    "git-workflow-and-versioning",
 }
 # Internal mechanics another skill/router selects; never startup metadata.
 INTERNAL_SKILLS = {

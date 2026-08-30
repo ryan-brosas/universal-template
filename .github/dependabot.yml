@@ -1,0 +1,19 @@
+# Keeps the SHA-pinned Actions current: Dependabot opens grouped PRs whose
+# conventional titles feed the label automation and release categories.
+# Full SHAs stay pinned in the workflows; Dependabot updates them.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      actions-minor-and-patch:
+        update-types:
+          - minor
+          - patch
+    commit-message:
+      prefix: ci
+    labels:
+      - type:dependencies
