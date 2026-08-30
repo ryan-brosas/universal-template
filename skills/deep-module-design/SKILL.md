@@ -1,7 +1,6 @@
 ---
 name: deep-module-design
 description: Use when designing modules, refactoring shallow structures, or reviewing AI-generated code for structural quality.
-disable-model-invocation: true
 ---
 
 

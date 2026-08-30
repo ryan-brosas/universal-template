@@ -1,7 +1,6 @@
 ---
 name: github-contribution-opportunities
 description: "Use when finding and qualifying legitimate GitHub pull-request contribution opportunities in open-source repositories before claiming or implementing work."
-disable-model-invocation: true
 ---
 
 # GitHub Contribution Opportunities

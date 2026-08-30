@@ -3,7 +3,7 @@
 This directory is the **global baseline** read by all agent CLIs on this
 machine (pi, Claude Code, Codex/OpenCode, opencode, agy/veda, subprocess
 agents). It is the absorbed, living copy of the **pi-template** repository
-(`~/.agents (absorbed from the retired pi-template repo)`; contract: `references/init-contract.md`)
+(`~/.agents (absorbed from the retired pi-template repo)`; entry flow: `skills/project-bootstrap/SKILL.md`)
 — the workflow we set up there, made global.
 
 ## Layout
@@ -13,7 +13,7 @@ agents). It is the absorbed, living copy of the **pi-template** repository
 | `skills/` | the full skill catalog (foundations + practice skills + workflow skills) |
 | `templates/` | 18 CLI-neutral format templates (adr, agents, design, foundation-capsule, foundation-skill, github-pr-ci, issue, prd, project, proposal, pull-request, readme, roadmap, skill, state, tasks, tech-stack, user) |
 | `essentials/` | the operating baseline (objectives, operating-philosophy, stack-your-leverage, steer-outcomes-not-behavior, guiding-small-model, enforce-code-quality-mechanically, how-to-build-good-tests) |
-| `skills/workflow-lifecycle/` | the worldwide workflows (init, learn, audit, verify, gc) as one skill |
+| Entry skills (`project-bootstrap`, `brainstorming`, `goal-setup`, `prototype`, `leverage-capture`) | project entry, direction, durable goals, cheap learning, leverage classification |
 | `mcp/servers.json` | the **canonical** MCP capability registry (6 servers incl. mcp-steroid) — per-CLI configs are derived copies |
 | `references/` | distilled contract capsules (init, mcp-catalog, templates-inventory) |
 | `AGENTS.md` | the distilled pi-template agent rules, globalized |
@@ -21,8 +21,8 @@ agents). It is the absorbed, living copy of the **pi-template** repository
 
 ## How to use
 
-- **Init a project**: run the `workflow-lifecycle` skill's init command (`skills/workflow-lifecycle/SKILL.md`,
-  details in `skills/workflow-lifecycle/references/init.md`) — use the templates from `templates/`.
+- **Enter a project**: `skills/project-bootstrap/SKILL.md` — read-only onboarding by
+  default; governance and greenfield modes when asked. Uses `templates/` selectively.
 - **MCP**: the canonical registry is `mcp/servers.json`; wire servers into
   whichever CLIs are configured, one requested server at a time (merging into
   each CLI's own config rather than overwriting it).
@@ -31,10 +31,9 @@ agents). It is the absorbed, living copy of the **pi-template** repository
   the registry (codebase-memory, openviking, context7, exa, deepwiki) supplies
   the routes. Skill authoring follows one uniform grammar —
   `skills/writing-skills/SKILL.md` + `templates/skill.md`.
-- **Governed loop (opt-in)**: `skills/workflow-lifecycle/SKILL.md` — for
-  persistent/governed workspaces: init once, AGENTS.md as the spine, scoped
-  work with gates before claims, documents after implementation, learn closes
-  the loop. A normal task stays: inspect → implement → verify → finish.
+- **Long-running goals (opt-in)**: `skills/goal-setup/SKILL.md` — one durable
+  execution contract for significant multi-session work. A normal task stays:
+  inspect → implement → verify → finish.
 - **Catalog gate (this repo only)**: run the suite listed under "Finish line"
   in `AGENTS.md` (`skill-validator`, `catalog-integrity`, `catalog-quality`,
   `repo-hygiene`, `policy-consistency`, `dead-code`, `conventional-commit`,
@@ -75,7 +74,7 @@ policy invariants live in `scripts/policy-consistency.py` (CI-enforced).
 | Execution shape (Main/child/parallel/RLM/actor, write isolation) | `skills/execution-router` |
 | Backend/model resolution (mechanical, runtime-discovered; internal) | `skills/model-resolution` + `scripts/resolve-model.py` |
 | GitHub Actions CI/CD (.github/workflows/**, CI contract, release/deploy workflows) | `skills/github-actions-engineering` |
-| Normal development procedure | `skills/codebase-driven-development` |
+| Prior-art/reference-driven implementation | `skills/reference-driven-development` |
 | Reference-repository rules | `references/reference-contract.md` |
 | Fabric execution, Schema modes, agents/Veda escalation | `skills/fabric-native-execution` |
 | Veda escalation specifics | `skills/veda-lane` |

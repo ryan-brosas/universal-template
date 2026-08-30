@@ -30,7 +30,7 @@ Failure surfaces 10+ layers from the cause; the linear `debugging-and-error-reco
 
 ## When NOT to Use
 
-The cause is already known (use `debugging-and-error-recovery` or `codebase-driven-development`); the failure is at the entry point (no tracing needed); you have a stack trace pointing to the line (just read the code).
+The cause is already known (use `debugging-and-error-recovery` or direct source-first work); the failure is at the entry point (no tracing needed); you have a stack trace pointing to the line (just read the code).
 
 ## Workflow
 

@@ -14,7 +14,7 @@ External guides become **durable context** only after deep reading, a **learning
 - **Use when:** ingesting the next row from `references/ingestion-index.md` or applying an already-`deep` topic during implementation.
 - **Use when:** Git, semver, changelog, API, language style questions and no stack-specific foundation owns it yet.
 - **NOT when:** a `*-foundation` skill already covers the stack — load that first.
-- **NOT when:** workflow ritual — use `codebase-driven-development` + project gates.
+- **NOT when:** workflow ritual — use source-first implementation + project gates.
 
 ## Workflow
 

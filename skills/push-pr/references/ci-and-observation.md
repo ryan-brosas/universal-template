@@ -1,40 +1,19 @@
-# CI, anti-slop gate, and the Codebase observation
+# CI evidence and structural observation
 
-## Workflow contract
+## CI evidence
 
-The `github-actions-engineering` skill authors or reviews the project workflow file. It copies `~/.agents/templates/github-pr-ci.yml` into the project and replaces the placeholder gate with the project gate from AGENTS.md. The file itself lives in the project, never in the global catalog.
+The `github-actions-engineering` skill authors/reviews the project workflow. The workflow runs on branch pushes, pull requests, and manual dispatch; least-privilege read access; checks the project gate, changed-line whitespace, and (when the project uses a PR body contract) the body headings.
 
-The workflow runs on branch pushes, pull requests, and manual dispatch. The manual dispatch is what an agent uses to watch one run before filing the PR.
+- Find runs: `gh run list --branch <branch>`; watch to a terminal state before filing or updating the PR.
+- Record run links and final states in the PR body — never a claimed state you did not watch.
+- Review the workflow itself as part of the gate: triggers, permission scope, action pins, untrusted code on `pull_request`, secrets kept out of PR jobs.
 
-The quality job uses least-privilege read access. It checks the project gate, changed-line whitespace, and the PR body contract. The PR body check requires the fixed headings, including `## GitHub metadata`, and rejects template placeholders.
+## Structural observation (conditional)
 
-## Anti-slop gate
+Graph observation is **evidence-driven, not mandatory**. Reach for Codebase Memory (`check_index_coverage` → `search_graph`/`trace_path`) when the change is structurally complex and a blast-radius claim adds value; reach for Fovea (`fovea_impact`) for local structural questions. Skip silently when the change is small or direct reading settles it — a skip needs no justification line.
 
-Run the project gate from `AGENTS.md`. Use `agent-code-quality-gate` for scope, duplication, behavior tests, verification evidence, and regressions.
+When used: the graph is a map; source and tests confirm. Record the project, covered paths, and caveats. Do not turn a missing index into an exhaustive claim — and do not cite a graph you did not verify covers the code.
 
-Record the exact command and exit status for each check. Run `git diff --check` on the branch range. Keep the diff limited to the requested change. Keep new tests active. Explain a removed test in the PR body.
+## Learnable rules
 
-The GitHub workflow is part of the gate. Review its trigger, permission scope, action versions, changed-line range, and body check. Keep untrusted code on `pull_request`. Keep secrets out of pull request jobs.
-
-## Codebase observation
-
-Run the graph sequence in the agent session:
-
-1. Check Codebase Memory index status for the selected project.
-2. Check coverage for every touched path with `check_index_coverage`.
-3. Search changed symbols with `search_graph` or `search_code`.
-4. Trace callers and callees with `trace_path` when a symbol has a blast radius.
-5. Read the relevant source and tests. The graph is a map. Source and tests confirm the result.
-
-Write one observation in the PR body. Include the project name, covered paths, parse or skip caveats, and the observed blast radius. Use a skip line when Codebase Memory is unavailable. Do not turn a missing index into an exhaustive claim.
-
-## Learning loop
-
-A failed check or a review comment can expose a reusable rule. Distill it in place. No prompt file is needed.
-
-1. Write the failure as one line, the exact command or code that fixed it, and the friction cause.
-2. Prefer a mechanical check. When the rule fits the workflow, author it with the `github-actions-engineering` skill.
-3. When the rule fits the skill, update the matching SKILL.md and run `python3 ~/.agents/scripts/skill-validator.py`.
-4. Record the rule, the changed file path, and the verification result.
-
-Keep one-off facts in the PR notes. The rule lives in the workflow or in the skill, not in a prompt.
+When a CI failure or review comment exposes a reusable rule, mark it as a `leverage-capture` candidate in the PR notes. The capture decision happens there — not automatically after every PR.

@@ -28,17 +28,9 @@ Numbered imperative steps, ending in a stop condition or the final output.
 ## Verification
 The exact check(s) before claiming it works: command, expected output, how to cite the evidence.
 
-## Skill Result Contract
+## Skill Result Contract (only when downstream automation consumes it)
 
-```
-<skill_result>
-  <skill><name></skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>…</evidence>
-  <artifacts>…</artifacts>
-  <risks>…</risks>
-</skill_result>
-```
+Delete this section when a human reads the output — do not emit XML ceremony by default.
 
 ## References
 - `references/<capsule>.md` — what the capsule adds (probes, invariants, sources).
@@ -48,5 +40,5 @@ One capsule per deep seam; keep the leaf under ~600 words.
 ## Notes for the author (delete after filling)
 - name must equal the folder name, kebab-case.
 - description: "Use when …" is the mandatory first phrase; it is what the retriever matches.
-- Required order = Core Principle → When to Use / NOT → Workflow → Red Flags → Verification → Skill Result Contract → References. Do not reorder.
+- Required order = Core Principle → When to Use / NOT → Workflow → Red Flags → Verification → References (Result Contract optional — only for machine-consumed output). Do not reorder.
 - Every `references/` line must point to a real file in `references/`.

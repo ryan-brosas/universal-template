@@ -1,7 +1,6 @@
 ---
 name: github-repo-setup
-description: "Use when setting up, governing, or auditing GitHub for a project: create the repository or wire origin, set description and topics, apply namespaced labels, add the PR template and issue forms, configure rulesets with required checks and merge policy, establish release and tag conventions, create an evidence-based PR for finished work, or audit an existing repository's GitHub setup without mutating it."
-disable-model-invocation: true
+description: "Use when setting up, governing, or auditing GitHub for a project: create the repository or wire origin, set description and topics, apply namespaced labels, add the PR template and issue forms, configure rulesets with required checks and merge policy, or establish release and tag conventions."
 ---
 
 # GitHub Repo Setup
@@ -12,7 +11,8 @@ Inspect first, pick the smallest governance level that fits the project, change 
 
 ## When to Use / NOT
 
-- **Use when:** set up GitHub for a project (new or existing); audit an existing repository's configuration; add labels, the PR template, issue forms, CONTRIBUTING, SECURITY, rulesets, required checks, merge policy, topics, or release/tag conventions; create an evidence-based PR for already-finished work.
+- **Use when:** set up GitHub for a project (new or existing); audit an existing repository's configuration; add labels, the PR template, issue forms, CONTRIBUTING, SECURITY, rulesets, required checks, merge policy, topics, or release/tag conventions.
+- **NOT when:** creating or updating a PR for finished work, or handling PR review feedback — `push-pr` owns the PR lifecycle; this skill only wires what GitHub requires (e.g. the required checks that PR's CI must satisfy).
 - **NOT when:** authoring GitHub Actions workflow content (`github-actions-engineering` defines the CI contract and proves the check names; this skill only wires them as required checks); local git hygiene, commits, branches, semver, changelogs (use `git-workflow-and-versioning`); the implementation work itself.
 
 ## Workflow
@@ -63,7 +63,7 @@ Inspect first, pick the smallest governance level that fits the project, change 
 
 ## References
 
-- `references/pr-template.md` — canonical PR template, risk scaling, body validation, evidence-based PR creation
+- `references/pr-template.md` — canonical PR template, risk scaling, body validation (PR creation itself is `push-pr`'s; this reference defines what GitHub governance expects of the body)
 - `references/labels.md` — label taxonomy, colors, idempotent sync commands, default-label reconciliation
 - `references/governance.md` — verified gh command inventory, ruleset create and read-back, solo vs team policy, releases, guardrails
 - `references/setup-matrix.md` — mode and project-type matrix, final report format, acceptance cases

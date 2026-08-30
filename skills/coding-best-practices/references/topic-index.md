@@ -18,7 +18,7 @@ Route each question to **one leaf**. This index mirrors common "complete guide" 
 | Topic | Reference | Primary leaf skills |
 |---|---|---|
 | Naming & formatting | `naming-and-formatting.md` | `typescript-coding-practices` (TS style), `typescript-coding-standards` (TS domain), `python-coding-practices` (Python), `javascript-coding-practices` (JS), `go-coding-practices` (Go), `rust-coding-practices` (Rust), `java-coding-practices` (Java), `php-coding-practices` (PHP), `ruby-coding-practices` (Ruby), `kotlin-coding-practices` (Kotlin), `swift-coding-practices` (Swift), `csharp-coding-practices` (C#), `scala-coding-practices` (Scala), project linter |
-| Documentation | `documentation-and-readme.md` | `markdown-writing-practices`, `google-devdocs-practices` (developer guides), `mailchimp-content-practices` (user-facing copy), `templates/readme.md`, `workflow-lifecycle` init |
+| Documentation | `documentation-and-readme.md` | `markdown-writing-practices`, `google-devdocs-practices` (developer guides), `mailchimp-content-practices` (user-facing copy), `templates/readme.md`, `project-bootstrap` |
 | Error handling | `error-handling-and-resilience.md` | `quality-gate-methodology`, `testing-anti-patterns` |
 | Git & collaboration | `git-and-collaboration.md`, `awesome-guidelines` learning notes + git-style capsules | `git-workflow-and-versioning`, `push-pr` |
 | AI-assisted coding | `ai-assisted-coding.md` | `agent-code-quality-gate`, `AGENTS.md` |

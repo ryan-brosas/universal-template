@@ -1,7 +1,7 @@
 # Reference Contract — project-local implementation prior art
 
 The single contract for using external repositories as prior art. Procedures
-live in `skills/codebase-driven-development`; this file owns the rules.
+live in `skills/reference-driven-development`; this file owns the rules.
 
 ## Purpose
 

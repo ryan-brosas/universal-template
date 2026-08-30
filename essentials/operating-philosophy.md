@@ -46,7 +46,7 @@ distilled into an authoritative, actionable guide for coding agents and develope
    linters, typecheckers, and test suites.
 4. **The Conclusive PR Loop:** Push to branch $\to$ open PR $\to$ `gh pr checks --watch` $\to$
    resolve mechanical feedback $\to$ merge when green.
-5. **Verifiable Code Taste:** Convert aesthetic principles into deterministic AST metrics and linter rules.
+5. **Mechanical Gates Earn Their Place:** Convert demonstrated deterministic outcome constraints into mechanical gates when they prove real value at an acceptable false-positive cost. Aesthetic preference alone is not a gate.
 
 ---
 

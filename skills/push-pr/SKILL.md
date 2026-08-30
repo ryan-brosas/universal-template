@@ -20,18 +20,16 @@ Use one evidence path for every pull request. The local gate checks the branch. 
 
 ## Workflow
 
-1. Read the project `AGENTS.md`. Record the base branch, the branch name, the canonical gate, and the workflow file. When the workflow file is missing or out of date, run `github-actions-engineering` first and come back after it passes.
-2. Inspect the diff and commit list. Run `agent-code-quality-gate` against scope, duplication, behavior tests, evidence, and regressions.
-3. Run the project gate from the repository root. Save each command and its exit status. Run `git diff --check` on the branch range.
-4. Observe the change with Codebase Memory. Probe index status and coverage for every touched path. Search or trace the touched symbols. Record the project, coverage caveat, and blast radius. Record a skipped reason when the server is unavailable.
-5. Capture a before and after screenshot for each visual change. Save images under `docs/screenshots/`. Write `No visual result.` for a text-only change.
-6. Commit with the project convention and push the branch. Find the push run with `gh run list --branch <branch> --workflow pr-quality.yml`. Watch the run to its final state.
-7. Discover the repository's own PR template first — `.github/PULL_REQUEST_TEMPLATE.md`, `PULL_REQUEST_TEMPLATE/` directory, `docs/`, or the repository root (GitHub-supported locations; re-verify when GitHub changes them). Use the repository's template when one exists; fall back to `~/.agents/templates/pull-request.md` otherwise. Fill every section from the actual diff, implementation, and verification — never fabricate completed checks. Write the body to a securely created temporary file (`mktemp`), not a predictable path.
-8. Create the PR with `gh pr create --title "..." --body-file <file>` plus the metadata flags. Always pass `--base <base>`. Repeat `--label <name>` and `--reviewer <handle>` for each value. Add `--milestone <name>`, `--assignee <login>`, and `--project <title>` when the project defines them. Add `--draft` while the run is pending or the project policy requires a draft. Mark an absent value as `None` in the body, never invent one.
-9. Watch the pull request run to its final state. Confirm the metadata with `gh pr view <number>`. Add what is missing with `gh pr edit --add-label <name> --milestone <name>` when the project policy requires it. Update the body when the run state changes.
-10. When a CI failure or a review comment gives a reusable rule, distill it in place. Workflow rules go through `github-actions-engineering`. Other rules update a skill file and pass the skill validator. Keep one-off facts in the PR notes.
+1. Inspect the branch and diff: `git status`, `git log <base>..HEAD`, `git diff <base>...HEAD`. Record the base branch and what actually changed.
+2. Run the relevant project verification (the project's gates for the touched surface — not every gate in existence). Save each command and its exit status. Run `git diff --check` on the branch range.
+3. Discover the repository's own PR template first — `.github/PULL_REQUEST_TEMPLATE.md`, `PULL_REQUEST_TEMPLATE/` directory, `docs/`, or the repository root (GitHub-supported locations; re-verify when GitHub changes them). Use the repository's template when one exists; fall back to `~/.agents/templates/pull-request.md` otherwise.
+4. Construct the PR body from actual evidence — scope, what changed and why, verification output, run links. Never fabricate completed checks; mark absent values `None`. Conditional sections only when they apply: **visual change** → actual before/after screenshot or rendered evidence; **complex structural change** → Fovea/Steroid observation when useful; **external/reference implementation** → provenance + license note; **reusable lesson** → mark as a `leverage-capture` candidate (do not capture automatically).
+5. Write the body to a securely created temporary file (`mktemp`) — never interpolate generated Markdown into the shell command.
+6. Push and create the PR: `gh pr create --title "..." --body-file <file> --base <base>` plus metadata flags only when the project defines them (`--label`, `--reviewer`, `--milestone`, `--assignee`, `--project`, `--draft`).
+7. Watch the required CI to a final state (`gh pr checks` / `gh run watch`); update the body when state changes; confirm the result before claiming done.
+8. Address review feedback when requested — the in-thread procedure below.
 
-Stop when the PR exists, the body is complete, the metadata matches the project, the CI state is current, the observation has evidence or a skip reason, and the lesson is recorded as a rule.
+Stop when the PR exists, the body reflects actual evidence, required CI is green or the failure is owned, and review feedback (if any) is handled per the in-thread contract.
 
 ## Review feedback (in-thread)
 
@@ -48,32 +46,19 @@ Verified live on this repository (PR #10, 2026-08-30): REST list returned `{id, 
 
 ## Red Flags
 
-- **HARD-GATE:** A failed local gate or push run blocks a ready PR. Keep the PR as a draft while the failure is open.
-- **HARD-GATE:** A Codebase Memory claim needs a coverage probe. Graph results are pointers until source review confirms them.
-- Do not invent screenshots, tests, CI states, graph coverage, PR links, labels, milestones, assignees, or reviewers.
+- **HARD-GATE:** A failed local gate or required CI run blocks a ready PR. Keep the PR as a draft while the failure is open.
+- Do not invent screenshots, tests, CI states, PR links, labels, milestones, assignees, or reviewers — absent evidence is marked `None`, never faked.
+- Do not run every observation surface for every PR — evidence follows the change (visual → rendered proof; structural → graph when useful).
 - Do not add secrets, `.env` files, or unrelated files.
 - Keep `--draft` whole while the PR run is still open.
 - Do not use `pull_request_target` for untrusted branch code.
-- Keep the workflow permission set at the smallest required scope.
 - Resolving a review thread merely because a reply was posted. HARD-GATE.
 - Replying to review feedback as a new top-level comment instead of in-thread.
 - Confusing the REST review-comment id with the GraphQL thread node id. HARD-GATE.
 
 ## Verification
 
-Run `python3 ~/.agents/scripts/skill-validator.py`. Expect no P0 for `push-pr`. Check that `references/pull-request-format.md` and `references/ci-and-observation.md` exist. Check the workflow with the repository YAML checker when one exists. Run `git diff --check` on the owned files. Test the PR body contract with a filled copy of `~/.agents/templates/pull-request.md`; the copy must include the GitHub metadata rows filled or marked `None`.
-
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>push-pr</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>branch, diff scope, gate output, CI run link and state, observation coverage, screenshots</evidence>
-  <artifacts>filled PR body, screenshots, PR link, learn record when a lesson exists</artifacts>
-  <risks>open CI failure, missing graph coverage, missing screenshot, draft PR, or none</risks>
-</skill_result>
-```
+The PR exists with a body whose claims trace to real evidence (diff, commands + exit codes, run links); required checks are green or the failure is owned with a plan; metadata matches the project or is absent by policy; review feedback handled per the in-thread contract. No invented evidence anywhere in the body.
 
 ## References
 

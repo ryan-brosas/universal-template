@@ -22,7 +22,6 @@ PRACTICE_SECTIONS = [
     ("Workflow", "workflow"),
     ("Red Flags", "red flag"),
     ("Verification", "verification"),
-    ("Skill Result Contract", "result contract"),
     ("References", "references"),
 ]
 FOUNDATION_SECTIONS = [

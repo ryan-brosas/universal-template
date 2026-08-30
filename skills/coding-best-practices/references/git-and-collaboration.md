@@ -2,7 +2,7 @@
 
 ## Every project uses version control
 
-- Commit at natural checkpoints with a coherent, verifiable diff (`code-discipline`, `workflow-lifecycle` dev loop).
+- Commit at natural checkpoints with a coherent, verifiable diff (`code-discipline`).
 - Do not leave work uncommitted at end of turn unless the user asked.
 
 ## Branches
