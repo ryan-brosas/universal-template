@@ -16,7 +16,7 @@ reference/web/<host>/
 └ interactions/         # state captures when interaction evidence was needed
 ```
 
-A quick capture can be one page directory, one screenshot, `REFERENCE.md`, and `manifest.json`. Do not create empty placeholder files.
+A quick capture is one region screenshot, `REFERENCE.md`, and `manifest.json` — source URL, capture timestamp, one visual artifact, truthful manifest. Rendered HTML, styles, and fonts are optional for quick mode; declare anything skipped in `coverage_gaps` instead of quietly pretending. Do not create empty placeholder files.
 
 ## manifest.json
 
@@ -51,7 +51,7 @@ A quick capture can be one page directory, one screenshot, `REFERENCE.md`, and `
 }
 ```
 
-Evidence values are booleans or bundle-relative paths. Every declared path must exist. A known key marked `false` needs a `coverage_gaps` entry that names it. Expected evidence by scope: quick, page, and site captures need `rendered_html` and `screenshots`; deep additionally needs `computed_styles` and `css_variables`. An expected key that is absent needs a matching `coverage_gaps` entry too.
+Evidence values are booleans or bundle-relative paths. Every declared path must exist. A known key marked `false` needs a `coverage_gaps` entry that names it. Expected evidence by scope: quick needs `screenshots`; page and site need `rendered_html` and `screenshots`; deep additionally needs `computed_styles` and `css_variables`. An expected key that is absent needs a matching `coverage_gaps` entry too.
 
 Capture ids are `YYYY-MM-DD`, or `YYYY-MM-DDTHHMM` when a second capture happens on the same calendar day. Ids must be unique.
 
@@ -61,11 +61,13 @@ Capture ids are `YYYY-MM-DD`, or `YYYY-MM-DDTHHMM` when a second capture happens
 python3 ~/.agents/scripts/web-reference-manifest.py reference/web/<host>
 ```
 
-P0 findings fail the check: missing manifest or REFERENCE.md, a manifest that is not a JSON object, bad fields, referenced files that do not exist, evidence values that are neither boolean nor path, expected evidence missing without a declared gap, invalid or duplicate capture ids, REFERENCE.md without ADOPT / ADAPT / OMIT decision section headers, credential-like material, undeclared partial capture. Warnings: oversized files, duplicate routes, missing viewports on site captures, credential scans truncated by file size.
+P0 findings fail the check: missing manifest or REFERENCE.md, a manifest that is not a JSON object, bad fields, referenced files that do not exist, evidence values that are neither boolean nor path, expected evidence missing without a declared gap, invalid or duplicate capture ids, credential-like material in authored metadata (manifest, REFERENCE.md, design, patterns), undeclared partial capture. Warnings: missing ADOPT / ADAPT / OMIT sections (a capture may exist before implementation decisions — record them via `reference-driven-development` later), credential-like samples in raw captured evidence (likely public documentation examples; review and quarantine before reuse), oversized files, duplicate routes, missing viewports on site captures, credential scans truncated by file size.
 
 ## REFERENCE.md
 
-Decision-oriented and short: why the reference exists, important visual qualities, typography, layout, patterns, motion, responsive and interaction behavior, media roles, then ADOPT / ADAPT / OMIT per concern, then coverage gaps. No design encyclopedia.
+Decision-oriented and short: why the reference exists, important visual qualities, typography, layout, patterns, motion, responsive and interaction behavior, media roles, then coverage gaps. No design encyclopedia.
+
+ADOPT / ADAPT / OMIT sections belong here when the project has decided how the reference enters implementation — that decision is owned by `reference-driven-development`, not by capture. A capture without decisions yet is valid: state what the site does, and the decision record lands when the reference is consumed.
 
 ## Versioning and refresh
 

@@ -3,9 +3,6 @@
     "codebase-memory": {
       "command": "codebase-memory-mcp",
       "args": [],
-      "env": {
-        "CBM_CACHE_DIR": "/mnt/hdd/utopia/.codebase-memory"
-      },
       "lifecycle": "keep-alive"
     },
     "context7": {

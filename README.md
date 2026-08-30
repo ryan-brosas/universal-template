@@ -11,7 +11,7 @@ Entry flow for unfamiliar repositories: `skills/project-bootstrap/SKILL.md`.
 | Path | Contents |
 |---|---|
 | `skills/` | the full skill catalog (foundations + practice skills + workflow skills) |
-| `templates/` | 15 CLI-neutral format templates (plus `source.yml`, the inspo ledger); canonical list in `references/templates-inventory.md` |
+| `templates/` | CLI-neutral format templates (plus `source.yml`, the inspo ledger); canonical list in `references/templates-inventory.md` |
 | `essentials/` | cold rationale and decision references, indexed in `essentials/README.md`; read the smallest relevant file when a policy decision needs explanation |
 | `docs/roadmap.md` | current work objectives (reviewed at milestones) |
 | `extensions/style-guard.ts` | optional Pi output-style guard (audit by default; symlinked into `~/.pi/agent/extensions/`) |

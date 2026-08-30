@@ -41,7 +41,7 @@ TOKEN_CHARS = 4            # documented rough estimator; trend metric only
 ENTRY_SKILLS = {
     # flow entries
     "project-bootstrap", "brainstorming", "goal-setup", "prototype",
-    "leverage-capture", "leverage-playbook", "reference-driven-development",
+    "leverage-capture", "reference-driven-development",
     "using-git-worktrees", "zoom-out",
     # github / delivery
     "github-repo-setup", "github-actions-engineering", "push-pr",
@@ -55,20 +55,21 @@ ENTRY_SKILLS = {
     "writing-skills", "house-writing-style",
     # discovery
     "skill-catalog",
-    # tool / runtime capabilities
-    "cdp", "findata", "gmaps", "gnews", "gsearch", "rsearch", "xsearch",
-    "web-reference",
-    "ytdl", "ttdl", "upwork-proposals", "omarchy", "math-schema",
-    "mcp-steroid", "gemini-large-context",
+    # tool / runtime capabilities (frequent-in-coding tools only; rare
+    # utilities stay cold and searchable: findata, gmaps, gnews, rsearch,
+    # xsearch, ttdl, ytdl, gemini-large-context)
+    "cdp", "gsearch", "web-reference",
+    "upwork-proposals", "omarchy", "math-schema",
+    "mcp-steroid",
 }
 # Automatic dispatch points: visible because a state or phase routes to them.
 ROUTER_SKILLS = {
-    "evidence-router", "execution-router", "verification-before-completion",
+    "evidence-router", "execution-router",
 }
 # Internally invoked mechanics: never startup metadata.
 INTERNAL_SKILLS = {
     "model-resolution", "veda-lane", "fabric-native-execution",
-    "code-foundations", "foundations-workflow", "memory-graph-skill-miner",
+    "code-foundations", "foundations-workflow",
     "repo-inspo-organizer", "code-discipline", "agent-code-quality-gate",
     "code-review-and-quality", "quality-gate-methodology",
     "test-driven-development", "source-driven-development",
@@ -352,6 +353,35 @@ def near_duplicate_warnings(skills: dict[str, dict]) -> None:
                 warnings.append(f"near-duplicate descriptions: {n1} ~ {n2} (prefix {common} chars)")
 
 
+def check_generated_catalogs() -> None:
+    """docs/skill-catalog.md and docs/foundation-catalog.md must be current.
+
+    Generated views are derived from skills/*/SKILL.md + classify(); they are
+    validated here so catalog-quality is the one required catalog gate.
+    """
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "skill_catalog", str(Path(__file__).with_name("skill-catalog.py")))
+    if spec is None or spec.loader is None:
+        errors.append("cannot load scripts/skill-catalog.py")
+        return
+    try:
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        targets = mod.build_docs(mod.scan())
+    except Exception as exc:  # noqa: BLE001 - broken generator is a normal failure
+        errors.append(
+            f"cannot generate catalogs ({type(exc).__name__}: {exc}); "
+            f"restore scripts/skill-catalog.py and rerun")
+        return
+    for rel, content in targets.items():
+        p = BASE / rel
+        if not p.is_file() or p.read_text(encoding="utf-8") != content:
+            errors.append(
+                f"generated catalog stale: {rel} "
+                f"(rerun python3 scripts/skill-catalog.py generate)")
+
+
 def main() -> int:
     update_baseline = "--update-baseline" in sys.argv
     root_arg: str | None = None
@@ -365,6 +395,7 @@ def main() -> int:
         check_essentials()
         check_templates_inventory()
         check_essentials_inventory()
+        check_generated_catalogs()
     near_duplicate_warnings(skills)
     check_visibility_policy(skills)
     rep = budget_report(skills)

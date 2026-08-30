@@ -7,13 +7,27 @@
 
 ## Prompt and scope discipline
 
-- Scope the task clearly — agree on outcome and boundaries before large diffs (`leverage-playbook`: code is ground truth, stack skills).
+- Scope the task clearly — agree on outcome and boundaries before large diffs; code is ground truth, captured skills stack leverage.
 - Give context pointers (files, skills, graph hits) and let the agent retrieve; do not hand-script every step.
 - Maintain the project spine: `AGENTS.md` (plus a durable goal artifact for multi-session work) — context files beat repeating rules in chat.
 
 ## Verification over self-report
 
-- **HARD-GATE:** "I checked" without command output is a fail. Run the project gate and paste exit codes (`agent-code-quality-gate`, `verification-before-completion`).
+- **HARD-GATE:** "I checked" without command output is a fail. Run the project gate and paste exit codes (`agent-code-quality-gate`; the global AGENTS.md finish line owns the rule).
+
+Evidence hierarchy (what backs each claim):
+
+| Claim | Required evidence |
+|---|---|
+| "Test passes" | Test runner output, exit 0 |
+| "Typecheck clean" | `tsc --noEmit`, exit 0 |
+| "Lint clean" | Linter output, exit 0 |
+| "Build succeeds" | Build output, exit 0 |
+| "Behavior is X" | Repro + observed output |
+| "Code matches spec" | Diff or path + line range |
+| "Bug is fixed" | Regression test fails without, passes with |
+| "Shipped" | All of the above + commit / PR link |
+
 - Feed gate failures back to the model; unbypassable checks beat re-prompting (`essentials/enforce-code-quality-mechanically.md`).
 
 ## Scope and duplication
@@ -28,4 +42,4 @@
 
 ## Leaf skills
 
-- `agent-code-quality-gate`, `code-review-and-quality`, `practices-to-ci`, `push-pr`, `leverage-playbook`
+- `agent-code-quality-gate`, `code-review-and-quality`, `practices-to-ci`, `push-pr`

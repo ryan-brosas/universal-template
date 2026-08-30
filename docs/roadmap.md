@@ -40,7 +40,7 @@ catch-first test methodology.
 ## 2. Steer outcomes, not behavior
 
 - **System prompt and AGENTS.md de-cluttering.** Keep auditing `AGENTS.md`,
-  `.pi/templates/agents.md`, and `.pi/prompts/*.md`: strip restrictive
+  host-rendered agent prompts, and this repo's policy docs: strip restrictive
   behavioral rules, and replace them with outcome contracts, binary pass/fail
   conditions, and mechanical validator commands.
 - **Fast conclusive PR loop.** Keep this repo's CI jobs (catalog gates, repo
@@ -68,7 +68,7 @@ catch-first test methodology.
 ## 4. Enforce mechanically
 
 - **Expand the catalog gate suite.** Grow the validator scripts
-  (`scripts/skill-validator.py`, `catalog-integrity.py`, `catalog-quality.py`,
+  (`scripts/skill-validator.py`, `catalog-quality.py`,
   `repo-hygiene.py`, `dead-code.py`, `policy-consistency.py`,
   `style-lint.py`) with structural skill-visibility checks, dangling
   cross-skill reference detection, and portable-path validation for new config

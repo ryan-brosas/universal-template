@@ -5,7 +5,7 @@
 Derived from `skills/*/SKILL.md` metadata. Discovery tool:
 `python3 scripts/skill-catalog.py search "<topic>"`.
 
-359 skills: 50 visible, 309 hidden. Visible startup metadata: ~13715 chars (~3428 tokens).
+356 skills: 40 visible, 316 hidden. Visible startup metadata: ~10702 chars (~2675 tokens).
 
 ## Entry skills
 
@@ -21,39 +21,30 @@ Direct user-facing capabilities; trigger on request.
 | [`debugging-and-error-recovery`](../skills/debugging-and-error-recovery/SKILL.md) | entry | visible | Use when tests fail, builds break, behavior is unexpected, or multiple fix attempts have not worked. |
 | [`deprecation-and-migration`](../skills/deprecation-and-migration/SKILL.md) | entry | visible | Use when deprecating APIs, migrating between library versions, removing legacy code, or planning breaking changes - covers deprecation notices, migration guide... |
 | [`farmed-test-harness`](../skills/farmed-test-harness/SKILL.md) | entry | visible | Use when writing tests for code that talks to HTTP/LLM/external services - reuse the farmed test harness (cassette recording/replay, client error handling, pyt... |
-| [`findata`](../skills/findata/SKILL.md) | entry | visible | Use when the user asks for stock prices, price history, or financial statements without an API key. Keyless via CDP: Yahoo Finance price snapshots and OHLCV hi... |
-| [`gemini-large-context`](../skills/gemini-large-context/SKILL.md) | entry | visible | Use when large-context repository research exceeds the local window; routes through budget-aware Veda AGY Gemini profiles, while direct AGY Claude is reserved... |
 | [`git-workflow-and-versioning`](../skills/git-workflow-and-versioning/SKILL.md) | entry | visible | Use when preparing a release, choosing a version bump, creating or moving tags, writing changelog or release-note content, or when git hygiene for shared histo... |
 | [`github-actions-engineering`](../skills/github-actions-engineering/SKILL.md) | entry | visible | Use when designing, creating, auditing, repairing, hardening, or optimizing GitHub Actions CI/CD: set up CI for a project, fix a failing workflow, secure or sp... |
 | [`github-contribution-opportunities`](../skills/github-contribution-opportunities/SKILL.md) | entry | visible | Use when finding and qualifying legitimate GitHub pull-request contribution opportunities in open-source repositories before claiming or implementing work. |
 | [`github-repo-setup`](../skills/github-repo-setup/SKILL.md) | entry | visible | Use when setting up, governing, or auditing GitHub for a project: create the repository or wire origin, set description and topics, apply namespaced labels, ad... |
-| [`gmaps`](../skills/gmaps/SKILL.md) | entry | visible | Use when the user asks to find local businesses, get directions or travel time between places, or plan a multi-stop visiting order. Keyless Google Maps via CDP... |
-| [`gnews`](../skills/gnews/SKILL.md) | entry | visible | Use when the user asks for news, headlines, or recent coverage of a topic. Google News via CDP returns title, URL, source, time, and snippet, linking the publi... |
 | [`goal-setup`](../skills/goal-setup/SKILL.md) | entry | visible | Use when significant, ambiguous, high-risk, or multi-session work needs a durable execution contract with explicit scope, completion criteria, key decisions, a... |
 | [`grill-me`](../skills/grill-me/SKILL.md) | entry | visible | Use when you have a rough idea, ADR, PRD, or spec that needs to survive scrutiny before code is written. |
 | [`gsearch`](../skills/gsearch/SKILL.md) | entry | visible | Use when the user asks to search the web, look something up, find a link, or research a topic. Google via CDP returns title, URL, and snippet in about a second... |
 | [`house-writing-style`](../skills/house-writing-style/SKILL.md) | entry | visible | Use when rewriting, polishing, or auditing natural-language prose in the house style: agent output, docs, release notes, PR and issue text, or when a style vio... |
 | [`improve-codebase-architecture`](../skills/improve-codebase-architecture/SKILL.md) | entry | visible | Use when the user wants to improve architecture, find refactoring opportunities, consolidate tightly-coupled modules, or make a codebase more testable and AI-n... |
 | [`leverage-capture`](../skills/leverage-capture/SKILL.md) | entry | visible | Use when meaningful work has finished and something may be worth preserving - classify it into code, references, gates, skills, or memory, and capture only tha... |
-| [`leverage-playbook`](../skills/leverage-playbook/SKILL.md) | entry | visible | Use when running the AI development loop: prep a session, prime a small or cheap model with context, decide code versus markdown, close out a session, or scale... |
 | [`math-schema`](../skills/math-schema/SKILL.md) | entry | visible | Use when the user studies real analysis, probability, PDEs, or the mathematics of physics and wants to reach results through their own conjectures and proofs.... |
 | [`mcp-steroid`](../skills/mcp-steroid/SKILL.md) | entry | visible | Use when an MCP-capable coding agent needs native JetBrains IntelliJ APIs, semantic navigation, refactoring, inspections, tests, debugging, or IDE UI control. |
 | [`project-bootstrap`](../skills/project-bootstrap/SKILL.md) | entry | visible | Use when entering a new or unfamiliar repository, initializing a greenfield project workspace, or intentionally establishing lightweight persistent project-lev... |
 | [`prototype`](../skills/prototype/SKILL.md) | entry | visible | Use when the user wants to prototype, sanity-check a data model or state machine, mock up a UI, explore design options, or says 'prototype this', 'spike this',... |
 | [`push-pr`](../skills/push-pr/SKILL.md) | entry | visible | Use when finished work needs to be pushed and opened or updated as a GitHub pull request, when PR review feedback must be addressed in its thread, or when an o... |
 | [`reference-driven-development`](../skills/reference-driven-development/SKILL.md) | entry | visible | Use when implementation should be grounded in outside prior art - adapting an external implementation, comparing against a reference repository, or porting a k... |
-| [`rsearch`](../skills/rsearch/SKILL.md) | entry | visible | Use when the user asks to search Reddit, find discussions or posts, or gauge community sentiment on a topic. Searches Reddit through the browser via CDP and re... |
 | [`security-and-hardening`](../skills/security-and-hardening/SKILL.md) | entry | visible | Use when auditing for security vulnerabilities, implementing auth or authz, handling secrets, or hardening against OWASP Top 10 - covers input validation, auth... |
 | [`skill-catalog`](../skills/skill-catalog/SKILL.md) | entry | visible | Use when the user asks what skills exist, to find a skill for a topic, or to surface cold or foundation knowledge - deterministic search over the local catalog... |
 | [`system-design-specification`](../skills/system-design-specification/SKILL.md) | entry | visible | Use when authoring formal, crash-proof system design documents and architectural specifications: scope fences and non-goals, 4-part state ontologies, mathemati... |
 | [`test-generation`](../skills/test-generation/SKILL.md) | entry | visible | Use when writing, expanding, or auditing tests, converting workflow rules into gates, or deciding what to test. Catch-first method: a test is only good if it c... |
-| [`ttdl`](../skills/ttdl/SKILL.md) | entry | visible | Use when the user wants to download or save a TikTok video (with or without audio) to disk. Browser-native capture, no yt-dlp: the page plays the video and ttd... |
 | [`upwork-proposals`](../skills/upwork-proposals/SKILL.md) | entry | visible | Use when writing an Upwork application or job proposal - concise, energetic, client-focused copy that leads with action and keeps every claim truthful |
 | [`using-git-worktrees`](../skills/using-git-worktrees/SKILL.md) | entry | visible | Use when starting feature work that needs isolation from current workspace or before executing implementation plans - creates isolated git worktrees with smart... |
 | [`web-reference`](../skills/web-reference/SKILL.md) | entry | visible | Use when a live website or web page should be captured and studied as frontend, visual, layout, interaction, or design-system prior art for implementation. |
 | [`writing-skills`](../skills/writing-skills/SKILL.md) | entry | visible | Use when authoring, editing, or verifying any SKILL.md in this catalog: canonical template, frontmatter grammar, uniform anatomy, progressive disclosure, and t... |
-| [`xsearch`](../skills/xsearch/SKILL.md) | entry | visible | Use when the user asks to search X (Twitter) for posts, discussions, or an author. Returns author, handle, text, URL, and timestamp per result. Requires browse... |
-| [`ytdl`](../skills/ytdl/SKILL.md) | entry | visible | Use when the user wants to download or save a YouTube video (audio or video) to disk. Browser-native capture, no yt-dlp or signature solving: the page plays th... |
 | [`zoom-out`](../skills/zoom-out/SKILL.md) | entry | visible | Use when unfamiliar with a section of code or needing to understand how it fits into the bigger picture. |
 
 ## Routers
@@ -64,7 +55,6 @@ Automatic dispatch points; visible on purpose.
 |---|---|---|---|
 | [`evidence-router`](../skills/evidence-router/SKILL.md) | router | visible | Use when choosing where to get evidence for a coding question: route by need and host to the smallest capable evidence source - Fovea, Steroid/JetBrains, sourc... |
 | [`execution-router`](../skills/execution-router/SKILL.md) | router | visible | Use when deciding HOW a task should be executed before starting it: Main directly, an isolated child, bounded parallel workers, an alternate-model oracle, recu... |
-| [`verification-before-completion`](../skills/verification-before-completion/SKILL.md) | router | visible | Use when about to claim work is complete, fixed, or passing, before committing or creating PRs - requires running verification commands and confirming output b... |
 
 ## Internal
 
@@ -84,7 +74,6 @@ Invoked by other skills or system components; hidden from startup metadata.
 | [`fallow`](../skills/fallow/SKILL.md) | internal | hidden | Use when analyzing code quality, finding dead code, detecting duplication, assessing complexity, checking blast radius, or cleaning up a TS or JS codebase with... |
 | [`foundations-workflow`](../skills/foundations-workflow/SKILL.md) | internal | hidden | Use when a deliberate exception justifies mining one repository into a foundation skill: graph-led seam discovery, source-confirmed capsules, behavior-tested r... |
 | [`grill-with-docs`](../skills/grill-with-docs/SKILL.md) | internal | hidden | Use when user wants to stress-test a plan against their project's language and documented decisions. |
-| [`memory-graph-skill-miner`](../skills/memory-graph-skill-miner/SKILL.md) | internal | hidden | Use when mining an indexed Codebase Memory repository into a verified foundation skill - the autonomous learn → note → capsule → OpenViking sync → close loop.... |
 | [`model-resolution`](../skills/model-resolution/SKILL.md) | internal | hidden | Use when execution-router has already chosen a role and mechanism and the lane needs a concrete backend/model: discover available providers and models at runti... |
 | [`opensrc`](../skills/opensrc/SKILL.md) | internal | hidden | Use when you need to understand how a library works internally, debug dependency issues, or inspect package source beyond types and docs - fetches source for n... |
 | [`performance-optimization`](../skills/performance-optimization/SKILL.md) | internal | hidden | Use when profiling, optimizing, or adding performance budgets to applications - covers measure-first workflow, Core Web Vitals, common anti-patterns, and perfo... |
@@ -127,9 +116,13 @@ Rare specialists; searchable here, not loaded every session.
 | [`elm-coding-practices`](../skills/elm-coding-practices/SKILL.md) | cold | hidden | Use when authoring or reviewing Elm - elm-format, 80-column layout, type annotations, qualified imports, custom ID types, multi-step pipelines, and elm-review/... |
 | [`emacs-lisp-coding-practices`](../skills/emacs-lisp-coding-practices/SKILL.md) | cold | hidden | Use when authoring or reviewing Emacs Lisp - lexical-binding, lisp-case prefixes, when/unless idioms, sharp quotes, provide/require/autoload, docstrings, and c... |
 | [`erlang-coding-practices`](../skills/erlang-coding-practices/SKILL.md) | cold | hidden | Use when authoring or reviewing Erlang - 2-space layout, snake_case/CamelCase naming, clause functions, -spec exports, OTP API encapsulation, {ok,error} return... |
+| [`findata`](../skills/findata/SKILL.md) | cold | hidden | Use when the user asks for stock prices, price history, or financial statements without an API key. Keyless via CDP: Yahoo Finance price snapshots and OHLCV hi... |
 | [`fortran-coding-practices`](../skills/fortran-coding-practices/SKILL.md) | cold | hidden | Use when authoring or reviewing Fortran - fprettify 4-space layout, lowercase snake_case, intent/assumed-shape, dp kind, private modules, FORD docs, modern F20... |
 | [`frontend-markup-practices`](../skills/frontend-markup-practices/SKILL.md) | cold | hidden | Use when authoring or reviewing static HTML/CSS - semantic markup, accessibility, class-based low-specificity CSS, js-* hooks, formatting, HTTPS assets, and va... |
 | [`fsharp-coding-practices`](../skills/fsharp-coding-practices/SKILL.md) | cold | hidden | Use when authoring or reviewing F# - .NET naming, XML docs, module/type design, Async/Task boundaries, vanilla .NET interop (Func, IEnumerable, TryGetValue), a... |
+| [`gemini-large-context`](../skills/gemini-large-context/SKILL.md) | cold | hidden | Use when large-context repository research exceeds the local window; routes through budget-aware Veda AGY Gemini profiles, while direct AGY Claude is reserved... |
+| [`gmaps`](../skills/gmaps/SKILL.md) | cold | hidden | Use when the user asks to find local businesses, get directions or travel time between places, or plan a multi-stop visiting order. Keyless Google Maps via CDP... |
+| [`gnews`](../skills/gnews/SKILL.md) | cold | hidden | Use when the user asks for news, headlines, or recent coverage of a topic. Google News via CDP returns title, URL, source, time, and snippet, linking the publi... |
 | [`gnu-c-coding-practices`](../skills/gnu-c-coding-practices/SKILL.md) | cold | hidden | Use when authoring or reviewing GNU package C - 79-col defun braces, GNU indent spacing, lowercase_with_underscores naming, English comments, braced nested if/... |
 | [`go-coding-practices`](../skills/go-coding-practices/SKILL.md) | cold | hidden | Use when authoring or reviewing Go - gofmt, MixedCaps naming, explicit error returns, early error flow, consumer-defined interfaces, context-first APIs, gorout... |
 | [`google-devdocs-practices`](../skills/google-devdocs-practices/SKILL.md) | cold | hidden | Use when authoring Google-style developer docs - you/imperative voice, sentence-case headings, bold UI and code font, numbered procedures, For more information... |
@@ -162,6 +155,7 @@ Rare specialists; searchable here, not loaded every session.
 | [`python-coding-practices`](../skills/python-coding-practices/SKILL.md) | cold | hidden | Use when authoring or reviewing Python - PEP 8 layout, Google import and exception rules, naming matrix, mutable-default traps, type-annotated public APIs, and... |
 | [`r-coding-practices`](../skills/r-coding-practices/SKILL.md) | cold | hidden | Use when authoring or reviewing R - tidyverse snake_case/<-/2-space layout, native \|> pipes, roxygen2 docs, Google BigCamelCase/return/:: deltas when declared,... |
 | [`racket-coding-practices`](../skills/racket-coding-practices/SKILL.md) | cold | hidden | Use when authoring or reviewing Racket - DrRacket indent, kebab-case naming, define/cond/for idioms, provide/contract-out modules, rackunit tests, and raco tes... |
+| [`rsearch`](../skills/rsearch/SKILL.md) | cold | hidden | Use when the user asks to search Reddit, find discussions or posts, or gauge community sentiment on a topic. Searches Reddit through the browser via CDP and re... |
 | [`ruby-coding-practices`](../skills/ruby-coding-practices/SKILL.md) | cold | hidden | Use when authoring or reviewing Ruby - 2-space layout, snake_case/CapitalCase naming, keyword args, call parentheses, class skeleton, explicit namespaces, modu... |
 | [`rust-coding-practices`](../skills/rust-coding-practices/SKILL.md) | cold | hidden | Use when authoring or reviewing Rust - rustfmt defaults, RFC 430 naming, meaningful Error types, Result/? in docs, common trait impls, iter/into_iter conventio... |
 | [`scala-coding-practices`](../skills/scala-coding-practices/SKILL.md) | cold | hidden | Use when authoring or reviewing Scala - 2-space layout, camelCase naming, accessor/mutator conventions, explicit public types, immutable case classes, Option o... |
@@ -172,6 +166,7 @@ Rare specialists; searchable here, not loaded every session.
 | [`swift-coding-practices`](../skills/swift-coding-practices/SKILL.md) | cold | hidden | Use when authoring or reviewing Swift - let/guard/optionals, explicit access, struct/final defaults, API naming fluency, argument labels, defaulted parameters,... |
 | [`symfony-coding-practices`](../skills/symfony-coding-practices/SKILL.md) | cold | hidden | Use when authoring or reviewing Symfony PHP - PHP CS Fixer, Yoda identical compares, naming matrix, FQCN services, PHPDoc rules, sprintf exceptions, and MIT li... |
 | [`tom-deepseek-harness`](../skills/tom-deepseek-harness/SKILL.md) | cold | hidden | Use when working on Tom's DeepSeek Harness source checkout: update from Tom's remote, edit safely, build, run the source web app, and keep the installed DSH se... |
+| [`ttdl`](../skills/ttdl/SKILL.md) | cold | hidden | Use when the user wants to download or save a TikTok video (with or without audio) to disk. Browser-native capture, no yt-dlp: the page plays the video and ttd... |
 | [`typescript-coding-practices`](../skills/typescript-coding-practices/SKILL.md) | cold | hidden | Use when authoring or reviewing TypeScript style - named ES module exports, import type, unknown over any, nullable-at-use-site, optional params over overload... |
 | [`typescript-coding-standards`](../skills/typescript-coding-standards/SKILL.md) | cold | hidden | Use when writing, refactoring, or reviewing TypeScript code that needs strong domain modeling, typed errors, schema parsing, safe adapters, test seams, or main... |
 | [`vb-coding-practices`](../skills/vb-coding-practices/SKILL.md) | cold | hidden | Use when authoring or reviewing Visual Basic .NET - Option Strict/Explicit, 4-space layout, Framework PascalCase naming, Try/Catch idioms, XML docs on public A... |
@@ -181,6 +176,8 @@ Rare specialists; searchable here, not loaded every session.
 | [`webappsec-coding-practices`](../skills/webappsec-coding-practices/SKILL.md) | cold | hidden | Use when building or reviewing web apps - Mozilla WebAppSec auth/sessions, whitelist input, output encoding, CSRF/TLS/CSP, safe uploads, generic errors, and QA... |
 | [`wordpress-coding-practices`](../skills/wordpress-coding-practices/SKILL.md) | cold | hidden | Use when authoring or reviewing WordPress themes/plugins - WPCS PHP naming, Yoda conditions, late esc_* output, $wpdb->prepare, i18n text domains, HTML/CSS/JS... |
 | [`xml-markup-practices`](../skills/xml-markup-practices/SKILL.md) | cold | hidden | Use when designing or reviewing machine-readable XML formats - reuse-first schemas, RELAX NG namespaces, lowerCamelCase names, element/attribute rules, UTF-8 i... |
+| [`xsearch`](../skills/xsearch/SKILL.md) | cold | hidden | Use when the user asks to search X (Twitter) for posts, discussions, or an author. Returns author, handle, text, URL, and timestamp per result. Requires browse... |
+| [`ytdl`](../skills/ytdl/SKILL.md) | cold | hidden | Use when the user wants to download or save a YouTube video (audio or video) to disk. Browser-native capture, no yt-dlp or signature solving: the page plays th... |
 
 ## Vendor-managed
 

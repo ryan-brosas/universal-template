@@ -1,6 +1,6 @@
 # Capture: tool ladder and verified commands
 
-Commands verified against `browser-harness-js` 0.9.0 and Chromium 151. Re-verify after tool upgrades.
+Probe tool availability at capture time (`browser-harness-js --version`, `npx single-file --help`, `docker image inspect`); do not rely on versions frozen in this document. Commands here describe shape, not pinned releases.
 
 ## Tool ladder (cheapest sufficient)
 
@@ -20,12 +20,14 @@ Start a disposable headless browser and connect the harness to it:
 
 ```bash
 chromium --headless=new --remote-debugging-port=9222 \
-  --user-data-dir=/tmp/webref-profile --no-first-run --no-sandbox --hide-scrollbars about:blank &
+  --user-data-dir=/tmp/webref-profile --no-first-run --hide-scrollbars about:blank &
 browser-harness-js 'await session.connect({wsUrl: await resolveWsUrl({port:9222})})'
 browser-harness-js 'const t=await listPageTargets(); await session.use(t[0].targetId); t.length'
 ```
 
 Plain `session.connect()` auto-detects the user's running profile browsers (Chrome, Chromium, Edge, Brave, Vivaldi, Opera are scanned). Use that path when the user's authorized session is required and the request makes that clear.
+
+The browser sandbox stays on by default. Add `--no-sandbox` only when the runtime requires it (root in a container, known broken seccomp); it is an environment-specific exception, never the normal path.
 
 Navigate and poll readiness. Single-expression snippets return values; multi-statement snippets need the heredoc form:
 
@@ -87,7 +89,7 @@ SingleFile inlines styles and assets into one HTML file. Good for "use this one 
 ## Site archive (WACZ)
 
 ```bash
-docker run -v "$PWD/crawls:/crawls/" webrecorder/browsertrix-crawler:latest crawl \
+docker run -v "$PWD/crawls:/crawls/" webrecorder/browsertrix-crawler:<pinned-version> crawl \
   --url https://example.com --generateWACZ --text --collection webref --limit 25
 ```
 

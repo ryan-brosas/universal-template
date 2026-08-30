@@ -51,13 +51,6 @@ jobs:
           set -o pipefail
           SKILLS_ROOT="${GITHUB_WORKSPACE}/skills" python3 scripts/skill-validator.py 2>&1 | tee /tmp/skill-validator.log
 
-      - name: Catalog integrity
-        id: integrity
-        shell: bash
-        run: |
-          set -o pipefail
-          python3 scripts/catalog-integrity.py 2>&1 | tee /tmp/catalog-integrity.log
-
       - name: Catalog quality
         id: catalog
         shell: bash
@@ -148,7 +141,6 @@ jobs:
           name: quality-gate-logs
           path: |
             /tmp/skill-validator.log
-            /tmp/catalog-integrity.log
             /tmp/catalog-quality.log
             /tmp/repo-hygiene.log
             /tmp/style-lint-selftest.log

@@ -33,7 +33,7 @@ licenses when materially copying implementation. Canonical contract:
 
 **Freeze:** new repo-derived foundations are paused while the reference-driven
 workflow is validated. Foundation generation is a deliberate exception path
-(`foundations-workflow`, run per repository by `memory-graph-skill-miner`),
+(`foundations-workflow`, one repository and one porting question at a time),
 never the automatic destination for a useful repo.
 
 ## When to encode

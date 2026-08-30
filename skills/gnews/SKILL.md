@@ -1,5 +1,6 @@
 ---
 name: gnews
+disable-model-invocation: true
 description: "Use when the user asks for news, headlines, or recent coverage of a topic. Google News via CDP returns title, URL, source, time, and snippet, linking the publisher direct URL. Requires browser-harness-js on PATH and a Chromium browser with remote debugging."
 setup: bash <skill-dir>/scripts/setup
 compatibility: >-

@@ -40,7 +40,6 @@ POLICY_FILES = [
     "skills/model-resolution/SKILL.md",
     "skills/foundations-workflow/SKILL.md",
     "skills/github-repo-setup/SKILL.md",
-    "skills/leverage-playbook/references/session-principles.md",
 ]
 POLICY_FILES += sorted(str(p.relative_to(BASE)) for p in (BASE / "essentials").glob("*.md"))
 
@@ -166,21 +165,34 @@ def check_mcp_count() -> None:
         fails.append(f"[MCP-COUNT] README claims {sorted(claimed)} servers; registry has {n}")
 
 
+# Canonical MCP capability registry: every server a fresh clone can wire.
+EXPECTED_MCP_SERVERS = {"codebase-memory", "context7", "deepwiki", "exa", "openviking", "mcp-steroid"}
+MACHINE_LOCAL_PATHS = ("/home/", "/mnt/", "/Users/", "C:\\")
+
+
 def check_mcp_portable() -> None:
-    """Registry commands resolve via PATH; no absolute /home/ /mnt/ in command or args."""
+    """Canonical registry is readable, complete, and portable: commands resolve
+    via PATH, and no machine-local absolute path is frozen into it. Machine-local
+    values ride in process env (exported by the shell profile), never here."""
     data = read("mcp/servers.json")
     try:
         servers = json.loads(data)["mcpServers"]
-    except Exception:
+    except Exception as exc:
+        fails.append(f"[MCP-REGISTRY] mcp/servers.json unreadable or missing mcpServers: {exc}")
         return
+    missing = EXPECTED_MCP_SERVERS - set(servers)
+    if missing:
+        fails.append(f"[MCP-REGISTRY] mcp/servers.json missing canonical servers: {sorted(missing)}")
     for name, cfg in servers.items():
         for key in ("command", *cfg.get("args", [])):
             val = str(cfg.get("command") if key == "command" else key)
-            if val.startswith("/") or "/home/" in val or "/mnt/" in val:
+            if val.startswith("/") or any(marker in val for marker in MACHINE_LOCAL_PATHS):
                 fails.append(f"[MCP-PORTABLE] servers.json: server {name!r} uses absolute path: {val}")
         for k, v in (cfg.get("env") or {}).items():
-            if isinstance(v, str) and (v.startswith("/") or "/mnt/" in v):
-                warns.append(f"[MCP-PORTABLE-WARN] servers.json: {name}.env.{k} is machine-local: {v}")
+            if isinstance(v, str) and (v.startswith("/") or any(marker in v for marker in MACHINE_LOCAL_PATHS)):
+                fails.append(
+                    f"[MCP-PORTABLE] servers.json: {name}.env.{k} freezes a machine-local value: {v} "
+                    f"(reference it by name or inherit from the process environment)")
 
 
 def check_ut_gate_scoped() -> None:
@@ -482,13 +494,75 @@ def check_objective_drift() -> None:
                 check_fail("OBJECTIVE-DRIFT", rel, i, "obsolete quality/capture objective resurfaced")
 
 
-def check_hidden_reachability() -> None:
-    """Every hidden skill (disable-model-invocation) must be referenced outside its own directory — else it is dead."""
-    skills_dir = BASE / "skills"
+# Real callers for reachability: another SKILL.md or its references, top-level
+# policy, runtime scripts, and CI config. Generated views (docs/skill-catalog.md,
+# docs/foundation-catalog.md), inventories, roadmap, and templates are NOT
+# callers — a generated index must never make a dead skill look reachable.
+REACHABILITY_CALLER_PARTS = ("AGENTS.md", "APPEND_SYSTEM.md", "README.md", "CONTRIBUTING.md")
+
+
+def _reachability_corpus(base: Path) -> list[tuple[str, Path]]:
+    corpus: list[tuple[str, Path]] = []
+    skills = base / "skills"
+    if skills.is_dir():
+        for d in sorted(skills.iterdir()):
+            if not d.is_dir():
+                continue
+            sm = d / "SKILL.md"
+            if sm.is_file():
+                corpus.append((d.name, sm))
+            refs = d / "references"
+            if refs.is_dir():
+                corpus.extend((d.name, f) for f in sorted(refs.glob("*.md")))
+    for name in REACHABILITY_CALLER_PARTS:
+        p = base / name
+        if p.is_file():
+            corpus.append(("", p))
+    scripts = base / "scripts"
+    if scripts.is_dir():
+        corpus.extend(("", f) for f in sorted(scripts.glob("*.py")))
+    gh = base / ".github"
+    if gh.is_dir():
+        corpus.extend(("", f) for f in sorted(gh.rglob("*")) if f.is_file())
+    return corpus
+
+
+def _load_internal_skills() -> set[str]:
+    """One classification source: catalog-quality.py owns INTERNAL_SKILLS."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "catalog_quality_pc", str(Path(__file__).with_name("catalog-quality.py")))
+    if spec is None or spec.loader is None:
+        return set()
+    try:
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        return set(getattr(mod, "INTERNAL_SKILLS", set()))
+    except Exception:  # noqa: BLE001
+        return set()
+
+
+def check_hidden_reachability(base: Path = BASE, internal: set[str] | None = None) -> list[str]:
+    """Internal hidden skills need a real caller; cold ones are reachable via search.
+
+    A hidden skill (disable-model-invocation: true) counts as reachable when any
+    of these hold:
+    - x-manual-only: true (explicitly designated manual-only)
+    - it is a *-foundation capsule (retrieval corpus, not a routed procedure)
+    - it classifies as cold (hidden, not internal) — skill-catalog search is its
+      discovery path, so it needs no route
+    - otherwise (internal): some real caller names it. Generated catalogs,
+      inventory docs, and other derived views are excluded from the caller scan.
+    """
+    if internal is None:
+        internal = _load_internal_skills()
+    skills_dir = base / "skills"
     if not skills_dir.is_dir():
-        return
+        return []
+    corpus = _reachability_corpus(base)
+    dead: list[str] = []
     for d in sorted(skills_dir.iterdir()):
-        if not d.is_dir():
+        if not d.is_dir() or d.name.startswith("."):
             continue
         skill_file = d / "SKILL.md"
         if not skill_file.is_file():
@@ -500,27 +574,22 @@ def check_hidden_reachability() -> None:
         if not re.search(r"^disable-model-invocation:\s*true", text, re.M):
             continue
         if re.search(r"^x-manual-only:\s*true", text, re.M):
-            continue  # explicitly designated manual-only
-        # Foundation leaves are retrieval capsules (OpenViking-indexed corpus),
-        # not routed procedures — reachability does not apply to them.
-        if d.name.endswith("-foundation") or d.name.startswith("."):
             continue
+        if d.name.endswith("-foundation"):
+            continue
+        if d.name not in internal:
+            continue  # cold: searchable through skill-catalog
         needle = d.name
-        hits = 0
-        for f in list(BASE.rglob("*.md")) + list((BASE / "scripts").glob("*.py")):
-            sp = str(f)
-            if ".git/" in sp or sp.startswith(str(d)):
-                continue
-            if any(x in sp for x in ("node_modules", "/.system/")):
-                continue
-            try:
-                if needle in f.read_text(encoding="utf-8", errors="ignore"):
-                    hits += 1
-                    break
-            except OSError:
-                continue
-        if hits == 0:
-            check_fail("HIDDEN-REACHABILITY", f"skills/{needle}/SKILL.md", 1, "hidden skill has no incoming reference — add a route or make it visible")
+        reachable = any(owner != needle and needle in f.read_text(encoding="utf-8", errors="ignore")
+                        for owner, f in corpus)
+        if not reachable:
+            dead.append(d.name)
+            if base == BASE:
+                check_fail("HIDDEN-REACHABILITY", f"skills/{needle}/SKILL.md", 1,
+                           "internal hidden skill has no incoming reference from a real caller "
+                           "(skill docs, AGENTS/APPEND, scripts, CI) — add a route, reclassify it "
+                           "cold, or make it visible")
+    return dead
 
 
 def check_readme_skill_refs() -> None:
@@ -589,6 +658,82 @@ def check_web_reference_split() -> None:
             check_fail("WEBREF-SPLIT", "skills/reference-driven-development/SKILL.md", 1, f"crawler mechanics in reference-driven-development: {token}")
 
 
+def check_gate_documentation() -> None:
+    """Absorbed from catalog-integrity.py (deleted): AGENTS.md documents the
+    required gate scripts, and README/AGENTS carry no volatile inventory counts.
+    The canonical template inventory (references/templates-inventory.md) is the
+    only place that enumerates templates; counts there are machine-checked
+    against disk by catalog-quality.py."""
+    agents = read("AGENTS.md") or ""
+    for needle in ("skill-validator.py", "repo-hygiene.py", "catalog-quality.py"):
+        if needle not in agents:
+            fails.append(f"[GATE-DOCS] AGENTS.md must document the required gate script: {needle}")
+    for rel in ("README.md", "AGENTS.md"):
+        text = read(rel) or ""
+        if re.search(r"\d+\s+CLI-neutral", text):
+            fails.append(f"[GATE-DOCS] {rel} states a template count; point at references/templates-inventory.md instead")
+        if "references/templates-inventory.md" not in text and rel == "README.md":
+            fails.append("[GATE-DOCS] README.md must point at references/templates-inventory.md as the canonical template inventory")
+        for retired in ("project.md", "state.md", "tech-stack.md", "user.md"):
+            if retired in text:
+                fails.append(f"[GATE-DOCS] {rel} lists retired template as current: {retired}")
+
+
+def selftest() -> int:
+    """Golden test: a generated catalog must not make a dead internal skill
+    look reachable; a real caller must."""
+    import tempfile
+    ok = True
+    with tempfile.TemporaryDirectory() as td:
+        base = Path(td)
+        skills = base / "skills"
+        (skills / "alpha").mkdir(parents=True)
+        (skills / "alpha" / "SKILL.md").write_text(
+            "---\nname: alpha\ndescription: Use when testing.\n---\n# Alpha\n", encoding="utf-8")
+        (skills / "beta-foundation").mkdir()
+        (skills / "beta-foundation" / "SKILL.md").write_text(
+            "---\nname: beta-foundation\ndescription: Use when testing.\n"
+            "disable-model-invocation: true\n---\n# Beta\n", encoding="utf-8")
+        (skills / "gamma").mkdir()
+        (skills / "gamma" / "SKILL.md").write_text(
+            "---\nname: gamma\ndescription: Use when testing.\n"
+            "disable-model-invocation: true\n---\n# Gamma (cold, searchable)\n", encoding="utf-8")
+        (skills / "delta").mkdir()
+        (skills / "delta" / "SKILL.md").write_text(
+            "---\nname: delta\ndescription: Use when testing.\n"
+            "disable-model-invocation: true\n---\n# Delta (internal)\n", encoding="utf-8")
+        # The generated catalog names delta — this must NOT make it reachable.
+        (base / "docs").mkdir()
+        (base / "docs" / "skill-catalog.md").write_text(
+            "# Catalog\n- delta\n", encoding="utf-8")
+        internal = {"delta"}
+        dead = check_hidden_reachability(base=base, internal=internal)
+        if dead == ["delta"]:
+            print("PASS catalog-only reference leaves internal skill unreachable")
+        else:
+            print(f"FAIL expected ['delta'] unreachable, got {dead}")
+            ok = False
+        # A real caller (another SKILL.md) makes it reachable.
+        (skills / "alpha" / "SKILL.md").write_text(
+            "---\nname: alpha\ndescription: Use when testing.\n---\n"
+            "# Alpha\nRoute to `delta` for this.\n", encoding="utf-8")
+        dead = check_hidden_reachability(base=base, internal=internal)
+        if dead == []:
+            print("PASS real caller makes internal skill reachable")
+        else:
+            print(f"FAIL expected [] unreachable, got {dead}")
+            ok = False
+        # Foundations and cold hidden skills never need a route.
+        dead = check_hidden_reachability(base=base, internal=set())
+        if dead == []:
+            print("PASS foundation and cold hidden skills need no route")
+        else:
+            print(f"FAIL expected [] unreachable, got {dead}")
+            ok = False
+    print("policy-consistency selftest: PASS" if ok else "policy-consistency selftest: FAIL")
+    return 0 if ok else 1
+
+
 CHECKS = [
     ("PREWALK-RESERVED", check_prewalk_reserved),
     ("LIFECYCLE-OPTIONAL", check_lifecycle_optional),
@@ -628,10 +773,13 @@ CHECKS = [
     ("README-SKILL-REFS", check_readme_skill_refs),
     ("GITHUB-OWNERSHIP", check_github_ownership),
     ("WEBREF-SPLIT", check_web_reference_split),
+    ("GATE-DOCS", check_gate_documentation),
 ]
 
 
 def main() -> int:
+    if "--selftest" in sys.argv:
+        return selftest()
     for _cid, fn in CHECKS:
         fn()
     for w in warns:

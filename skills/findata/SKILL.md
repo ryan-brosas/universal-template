@@ -1,5 +1,6 @@
 ---
 name: findata
+disable-model-invocation: true
 description: "Use when the user asks for stock prices, price history, or financial statements without an API key. Keyless via CDP: Yahoo Finance price snapshots and OHLCV history plus SEC EDGAR XBRL statements. Returns structured JSON or tables. Requires browser-harness-js on PATH and a Chromium browser with remote debugging."
 setup: bash <skill-dir>/scripts/setup
 compatibility: Requires browser-harness-js on PATH and a running Chromium-based browser with remote debugging (chrome://inspect or --remote-debugging-port). No API key. Statements come from SEC EDGAR (public, free); prices from Yahoo Finance's chart API (rendered through the browser to bypass bot blocks).
