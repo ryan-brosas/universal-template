@@ -97,9 +97,15 @@ def check_generated_catalogs() -> None:
     if spec is None or spec.loader is None:
         errors.append("cannot load scripts/skill-catalog.py")
         return
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    targets = mod.build_docs(mod.scan())
+    try:
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        targets = mod.build_docs(mod.scan())
+    except Exception as exc:  # noqa: BLE001 - missing/broken generator is a normal failure
+        errors.append(
+            f"cannot load scripts/skill-catalog.py ({type(exc).__name__}: {exc}); "
+            f"the generated-catalog check cannot run - restore the script and rerun")
+        return
     for rel, content in targets.items():
         p = BASE / rel
         if not p.is_file() or p.read_text(encoding="utf-8") != content:
