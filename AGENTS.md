@@ -46,17 +46,18 @@ the task requires it; run builds/tests/linters/formatters; inspect with
 `git diff`/`status`/`log`; commit locally per project conventions.
 
 Confirmation (quote the exact command and its blast radius, then wait for the
-user in the same session) is for genuinely dangerous actions only:
+user in the same session) applies to the destructive and shared-write classes
+defined in `APPEND_SYSTEM.md` — work/data destruction, Git history rewrites,
+production mutation, external side effects, and machine-wide changes not
+implied by the task.
 
-- deleting or overwriting untracked or user data;
-- `rm -rf` outside controlled project/temp scope;
-- history rewrites: `git reset --hard`, `git clean -fd`, force-push;
-- production mutation, credentials/secrets, external side effects with
-  real-world consequences;
-- machine-wide/system changes not implied by the task.
-
-Never expose, invent, or commit credentials or secret material. Tokens stay
-in env vars, referenced only by name.
+**Universal execution invariants** (work preservation, destructive
+boundaries, external write boundary, artifact inspection, bounded filesystem
+discovery, non-interactive safety, shell-text handling, commit-convention
+precedence, reversible-operation preference) live in `APPEND_SYSTEM.md` and
+load with every session — this file never duplicates them. Machine-specific
+wiring stays here: MCP tokens live in env vars (`~/.profile`, `~/.dsh/.env`),
+referenced only by name.
 
 ## Finish line
 

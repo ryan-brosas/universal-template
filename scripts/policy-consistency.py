@@ -24,6 +24,7 @@ BASE = Path(__file__).resolve().parents[1]
 
 # essentials/*.md is policy as a set (globbed below) — new essentials docs are covered automatically.
 POLICY_FILES = [
+    "APPEND_SYSTEM.md",
     "AGENTS.md",
     "README.md",
     "skills/evidence-router/SKILL.md",
@@ -353,6 +354,62 @@ def check_router_refs_resolve() -> None:
 
 
 
+def check_append_no_api_recipes() -> None:
+    """APPEND_SYSTEM.md carries invariants only — no GitHub API/GraphQL recipes."""
+    text = read("APPEND_SYSTEM.md")
+    if text is None:
+        fails.append("[APPEND-NO-API-RECIPES] APPEND_SYSTEM.md: file missing")
+        return
+    banned = re.compile(r"resolveReviewThread|api\.github\.com|in_reply_to|graphql|/repos/", re.I)
+    for i, line in enumerate(text.splitlines(), 1):
+        if banned.search(line):
+            check_fail("APPEND-NO-API-RECIPES", "APPEND_SYSTEM.md", i, "GitHub API recipe belongs in the GitHub skill, not APPEND")
+
+
+def check_append_no_model_slugs() -> None:
+    """APPEND_SYSTEM.md never names model/provider routing specifics."""
+    text = read("APPEND_SYSTEM.md")
+    if text is None:
+        return
+    banned = re.compile(r"\b(agy|veda|claude|codex|copilot|deepseek|qwen|pi/|gemini)\b", re.I)
+    for i, line in enumerate(text.splitlines(), 1):
+        if banned.search(line):
+            check_fail("APPEND-NO-MODEL-SLUGS", "APPEND_SYSTEM.md", i, "model/provider specifics belong in routing skills, not APPEND")
+
+
+def check_append_no_commitlint_mandate() -> None:
+    """APPEND never mandates a specific commitlint standard — convention is discovered per repository."""
+    forbid_phrase("APPEND-NO-COMMITLINT-MANDATE", "commitlint standards", files=["APPEND_SYSTEM.md"])
+
+
+def check_append_no_tool_coupling() -> None:
+    """APPEND invariants are tool-neutral — never coupled to a tool literally named 'read'."""
+    text = read("APPEND_SYSTEM.md")
+    if text is None:
+        return
+    banned = re.compile(r"\bread tool\b|\bthe read tool\b", re.I)
+    for i, line in enumerate(text.splitlines(), 1):
+        if banned.search(line):
+            check_fail("APPEND-NO-TOOL-COUPLING", "APPEND_SYSTEM.md", i, "artifact inspection must stay tool-neutral")
+
+
+def check_append_compact() -> None:
+    """APPEND stays a small execution constitution (~13 invariants), not a second AGENTS."""
+    text = read("APPEND_SYSTEM.md")
+    if text is None:
+        return
+    nonempty = sum(1 for line in text.splitlines() if line.strip())
+    if nonempty > 60:
+        check_fail("APPEND-COMPACT", "APPEND_SYSTEM.md", 1, f"{nonempty} non-empty lines — APPEND must stay under 60; move detail to AGENTS/skills/gates")
+
+
+def check_append_bounded_search() -> None:
+    """APPEND's filesystem rule must allow repository-root traversal while bounding discovery."""
+    require_phrase("APPEND-BOUNDED-SEARCH", "APPEND_SYSTEM.md", "repository/workspace")
+    require_phrase("APPEND-BOUNDED-SEARCH", "APPEND_SYSTEM.md", "repo root")
+
+
+
 CHECKS = [
     ("PREWALK-RESERVED", check_prewalk_reserved),
     ("LIFECYCLE-OPTIONAL", check_lifecycle_optional),
@@ -375,6 +432,12 @@ CHECKS = [
     ("RESOLVER-CHECKOUT-LOCAL", check_resolver_checkout_local),
     ("RUNTIME-JSON", check_runtime_json),
     ("ROUTER-REFS-RESOLVE", check_router_refs_resolve),
+    ("APPEND-NO-API-RECIPES", check_append_no_api_recipes),
+    ("APPEND-NO-MODEL-SLUGS", check_append_no_model_slugs),
+    ("APPEND-NO-COMMITLINT-MANDATE", check_append_no_commitlint_mandate),
+    ("APPEND-NO-TOOL-COUPLING", check_append_no_tool_coupling),
+    ("APPEND-COMPACT", check_append_compact),
+    ("APPEND-BOUNDED-SEARCH", check_append_bounded_search),
 ]
 
 

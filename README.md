@@ -69,7 +69,8 @@ policy invariants live in `scripts/policy-consistency.py` (CI-enforced).
 
 | Policy | Canonical owner |
 |---|---|
-| Global invariants, safety boundaries, routing summary | `AGENTS.md` |
+| Universal execution invariants (session-loaded constitution) | `APPEND_SYSTEM.md` |
+| Global engineering policy, routing summary, machine wiring | `AGENTS.md` |
 | Evidence and tool routing (NEED + HOST) | `skills/evidence-router` |
 | Execution shape (Main/child/parallel/RLM/actor, write isolation) | `skills/execution-router` |
 | Backend/model resolution (mechanical, runtime-discovered; internal) | `skills/model-resolution` + `scripts/resolve-model.py` |
