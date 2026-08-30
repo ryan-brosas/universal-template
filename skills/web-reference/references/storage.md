@@ -7,7 +7,7 @@ reference/web/<host>/
 ├ REFERENCE.md
 ├ manifest.json
 ├ captures/
-│  └ 2026-08-31/
+│  └ <capture-id>/      # YYYY-MM-DD, or YYYY-MM-DDTHHMM for a second capture on the same day
 │     ├ raw/            # site.wacz when a site archive was earned
 │     ├ pages/<slug>/   # rendered.html, styles.json, links.json, source.html
 │     └ screenshots/
@@ -43,14 +43,17 @@ A quick capture can be one page directory, one screenshot, `REFERENCE.md`, and `
     {"role": "hero-visual", "reuse": "omit", "replacement": "generate",
      "notes": "large dark product visualization"}
   ],
-  "coverage_gaps": ["hover states not captured"],
+  "coverage_gaps": ["interactions: hover states not captured"],
   "captures": [
-    {"date": "2026-08-31", "archive": "captures/2026-08-31/raw/site.wacz"}
+    {"id": "2026-08-31", "archive": "captures/2026-08-31/raw/site.wacz"},
+    {"id": "2026-08-31T1435"}
   ]
 }
 ```
 
-Evidence values are booleans or bundle-relative paths. Every declared path must exist; evidence marked `false` or absent requires matching entries in `coverage_gaps`.
+Evidence values are booleans or bundle-relative paths. Every declared path must exist. A known key marked `false` needs a `coverage_gaps` entry that names it. Expected evidence by scope: quick, page, and site captures need `rendered_html` and `screenshots`; deep additionally needs `computed_styles` and `css_variables`. An expected key that is absent needs a matching `coverage_gaps` entry too.
+
+Capture ids are `YYYY-MM-DD`, or `YYYY-MM-DDTHHMM` when a second capture happens on the same calendar day. Ids must be unique.
 
 ## Validation
 
@@ -58,7 +61,7 @@ Evidence values are booleans or bundle-relative paths. Every declared path must 
 python3 ~/.agents/scripts/web-reference-manifest.py reference/web/<host>
 ```
 
-P0 findings fail the check: missing manifest or REFERENCE.md, bad fields, referenced files that do not exist, credential-like material, undeclared partial capture. Warnings: oversized files, duplicate routes, missing viewports on site captures.
+P0 findings fail the check: missing manifest or REFERENCE.md, a manifest that is not a JSON object, bad fields, referenced files that do not exist, evidence values that are neither boolean nor path, expected evidence missing without a declared gap, invalid or duplicate capture ids, REFERENCE.md without ADOPT / ADAPT / OMIT decision section headers, credential-like material, undeclared partial capture. Warnings: oversized files, duplicate routes, missing viewports on site captures, credential scans truncated by file size.
 
 ## REFERENCE.md
 
@@ -66,8 +69,8 @@ Decision-oriented and short: why the reference exists, important visual qualitie
 
 ## Versioning and refresh
 
-- Each capture lands in `captures/<date>/`; never overwrite an earlier capture.
-- `refresh` captures into a new dated directory, updates the manifest `captures` list, and reports route, token, pattern, and screenshot changes. Do not diff minified JavaScript by default.
+- Each capture lands in `captures/<capture-id>/`; the id is the date, or the date plus `T<HHMM>` for a second capture on the same day. Never overwrite an earlier capture.
+- `refresh` captures into a new capture-id directory, updates the manifest `captures` list, and reports route, token, pattern, and screenshot changes. Do not diff minified JavaScript by default.
 - The live site is current evidence when behavior may have changed; the archive stays historical evidence.
 
 ## Storage policy

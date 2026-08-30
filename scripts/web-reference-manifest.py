@@ -37,9 +37,21 @@ EVIDENCE_KEYS = {
     "interactions",
     "responsive",
 }
-MAX_SCAN_BYTES = 2 * 1024 * 1024
-MAX_SCAN_FILES = 200
+MAX_SCAN_BYTES = 20 * 1024 * 1024
 ARCHIVE_WARN_BYTES = 25 * 1024 * 1024
+BINARY_SUFFIXES = {
+    ".7z", ".avif", ".bin", ".bmp", ".bz2", ".dat", ".eot", ".gif", ".gz",
+    ".ico", ".jpeg", ".jpg", ".mp3", ".mp4", ".mov", ".ogg", ".otf", ".pdf",
+    ".png", ".tgz", ".ttf", ".wav", ".webm", ".webp", ".woff", ".woff2",
+    ".wacz", ".xz", ".zip",
+}
+CAPTURE_ID_RE = re.compile(r"^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2})(\d{2}))?$")
+EXPECTED_EVIDENCE = {
+    "quick": {"screenshots", "rendered_html"},
+    "page": {"screenshots", "rendered_html"},
+    "site": {"screenshots", "rendered_html"},
+    "deep": {"screenshots", "rendered_html", "computed_styles", "css_variables"},
+}
 
 SECRET_PATTERNS = [
     ("openai-style key", re.compile(r"\bsk-[A-Za-z0-9_-]{16,}\b")),
@@ -68,6 +80,21 @@ def iso8601(value: str) -> bool:
         return True
     except ValueError:
         return False
+
+
+def check_capture_id(value: str, findings: Findings, where: str) -> None:
+    m = CAPTURE_ID_RE.match(value)
+    if not m:
+        findings.fail(f"{where}: capture id must be YYYY-MM-DD or YYYY-MM-DDTHHMM: {value}")
+        return
+    year, month, day = int(m.group(1)), int(m.group(2)), int(m.group(3))
+    try:
+        datetime(year, month, day)
+    except ValueError:
+        findings.fail(f"{where}: capture id is not a real calendar date: {value}")
+        return
+    if m.group(4) is not None and (int(m.group(4)) > 23 or int(m.group(5)) > 59):
+        findings.fail(f"{where}: capture id time is not a valid HHMM: {value}")
 
 
 def resolve_under(root: Path, rel: str) -> Path | None:
@@ -105,25 +132,32 @@ def check_file_ref(root: Path, rel: str, findings: Findings, where: str) -> None
     check_path_ref(root, rel, findings, where, allow_dir=False)
 
 
-def walk_text_files(root: Path) -> list[Path]:
-    out: list[Path] = []
+def walk_text_files(root: Path) -> list[tuple[Path, bool]]:
+    """Every bundle file that is not a known binary, flagged when oversized."""
+    out: list[tuple[Path, bool]] = []
     for p in sorted(root.rglob("*")):
-        if not p.is_file() or p.suffix.lower() not in {".md", ".json", ".txt"}:
+        if not p.is_file() or p.is_symlink():
             continue
-        if p.stat().st_size > MAX_SCAN_BYTES:
+        if p.suffix.lower() in BINARY_SUFFIXES:
             continue
-        out.append(p)
-        if len(out) >= MAX_SCAN_FILES:
-            break
+        out.append((p, p.stat().st_size > MAX_SCAN_BYTES))
     return out
 
 
 def scan_secrets(root: Path, findings: Findings) -> None:
-    for p in walk_text_files(root):
+    for p, oversized in walk_text_files(root):
         try:
-            text = p.read_text(encoding="utf-8")
-        except (UnicodeDecodeError, OSError):
+            data = p.read_bytes()
+        except OSError:
             continue
+        if b"\x00" in data[:1024]:
+            continue
+        if oversized:
+            findings.warn(
+                f"{p.relative_to(root)}: larger than {MAX_SCAN_BYTES // (1024 * 1024)}MB; "
+                f"credential scan covered the first {MAX_SCAN_BYTES // (1024 * 1024)}MB only"
+            )
+        text = data[:MAX_SCAN_BYTES].decode("utf-8", errors="replace")
         for label, pattern in SECRET_PATTERNS:
             if pattern.search(text):
                 findings.fail(f"{p.relative_to(root)}: credential-like material ({label}) must never be stored in a reference bundle")
@@ -144,6 +178,9 @@ def validate_bundle(raw_root: str) -> Findings:
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
         findings.fail(f"manifest.json unreadable: {exc}")
+        return findings
+    if not isinstance(manifest, dict):
+        findings.fail("manifest.json must contain an object")
         return findings
 
     if manifest.get("type") != "web-reference":
@@ -166,21 +203,35 @@ def validate_bundle(raw_root: str) -> Findings:
     if not isinstance(coverage, list) or not all(isinstance(g, str) for g in coverage):
         findings.fail("coverage_gaps must be a list of strings")
 
+    expected_evidence = EXPECTED_EVIDENCE.get(scope, set())
+
+    def gap_declares(key: str) -> bool:
+        variants = (key, key.replace("_", " "))
+        gaps = coverage if isinstance(coverage, list) else []
+        return any(
+            variant in gap.lower()
+            for gap in gaps
+            if isinstance(gap, str)
+            for variant in variants
+        )
+
     evidence = manifest.get("evidence", {})
     if not isinstance(evidence, dict):
         findings.fail("evidence must be an object")
         evidence = {}
-    any_false = False
     for key, value in evidence.items():
         if key not in EVIDENCE_KEYS:
             findings.warn(f"evidence.{key} is not a known evidence key")
-        if value is False:
-            any_false = True
+        if isinstance(value, bool):
+            if value is False and not gap_declares(key):
+                findings.fail(f"evidence.{key} is false but coverage_gaps does not name it: a partial capture must be declared")
         elif isinstance(value, str):
             check_file_ref(root, value, findings, f"evidence.{key}")
-
-    if any_false and not manifest.get("coverage_gaps"):
-        findings.fail("evidence marked false but coverage_gaps is empty: a partial capture must be declared")
+        else:
+            findings.fail(f"evidence.{key} must be a boolean or a bundle-relative path")
+    for key in sorted(expected_evidence):
+        if key not in evidence and not gap_declares(key):
+            findings.fail(f"evidence.{key} is expected for scope '{scope}' but absent and coverage_gaps does not declare it")
 
     pages = manifest.get("pages", [])
     if not isinstance(pages, list):
@@ -217,14 +268,15 @@ def validate_bundle(raw_root: str) -> Findings:
     if not isinstance(captures, list):
         findings.fail("captures must be a list")
         captures = []
-    dates: set[str] = set()
+    capture_ids: set[str] = set()
     for i, cap in enumerate(captures):
-        if not isinstance(cap, dict) or not isinstance(cap.get("date"), str):
-            findings.fail(f"captures[{i}] needs a date string")
+        if not isinstance(cap, dict) or not isinstance(cap.get("id"), str):
+            findings.fail(f"captures[{i}] needs an id string (YYYY-MM-DD or YYYY-MM-DDTHHMM)")
             continue
-        if cap["date"] in dates:
-            findings.fail(f"duplicate capture date: {cap['date']}")
-        dates.add(cap["date"])
+        if cap["id"] in capture_ids:
+            findings.fail(f"duplicate capture id: {cap['id']}")
+        capture_ids.add(cap["id"])
+        check_capture_id(cap["id"], findings, f"captures[{i}].id")
         archive = cap.get("archive")
         if archive is not None:
             check_file_ref(root, archive, findings, f"captures[{i}].archive")
@@ -248,7 +300,7 @@ def validate_bundle(raw_root: str) -> Findings:
     else:
         text = reference_md.read_text(encoding="utf-8", errors="replace")
         for token in ("ADOPT", "ADAPT", "OMIT"):
-            if token not in text:
+            if not re.search(rf"^##\s+{token}\s*$", text, re.MULTILINE):
                 findings.fail(f"REFERENCE.md missing {token} decision section")
 
     scan_secrets(root, findings)
@@ -292,8 +344,9 @@ def selftest() -> int:
                          "rendered_html": True, "computed_styles": True, "css_variables": True,
                          "interactions": False},
             "media": [{"role": "hero-visual", "reuse": "omit", "replacement": "generate"}],
-            "coverage_gaps": ["hover states not captured"],
-            "captures": [{"date": "2026-08-31", "archive": "captures/2026-08-31/raw/site.wacz"}],
+            "coverage_gaps": ["interactions: hover states not captured"],
+            "captures": [{"id": "2026-08-31", "archive": "captures/2026-08-31/raw/site.wacz"},
+                         {"id": "2026-08-31T1435"}],
         }))
         f = validate_bundle(str(good))
         if f.p0:
@@ -352,6 +405,100 @@ def selftest() -> int:
             print("PASS bad-scope rejected")
         else:
             print(f"FAIL bad scope not caught: {f.p0}")
+            ok = False
+
+        emptyevidence = base / "emptyevidence"
+        write_fixture(emptyevidence, json.dumps({
+            "type": "web-reference", "source": "https://example.com",
+            "captured_at": "2026-08-31T00:00:00Z", "scope": "site",
+            "evidence": {}, "coverage_gaps": [],
+        }))
+        f = validate_bundle(str(emptyevidence))
+        if any("expected for scope" in m for m in f.p0):
+            print("PASS empty-evidence rejected")
+        else:
+            print(f"FAIL empty evidence not caught: {f.p0}")
+            ok = False
+
+        badtype = base / "badtype"
+        write_fixture(badtype, json.dumps({
+            "type": "web-reference", "source": "https://example.com",
+            "captured_at": "2026-08-31T00:00:00Z", "scope": "page",
+            "evidence": {"screenshots": 3}, "coverage_gaps": [],
+        }))
+        f = validate_bundle(str(badtype))
+        if any("boolean or a bundle-relative path" in m for m in f.p0):
+            print("PASS bad-evidence-type rejected")
+        else:
+            print(f"FAIL bad evidence type not caught: {f.p0}")
+            ok = False
+
+        notobject = base / "notobject"
+        write_fixture(notobject, "[]")
+        f = validate_bundle(str(notobject))
+        if any("must contain an object" in m for m in f.p0):
+            print("PASS non-object manifest rejected")
+        else:
+            print(f"FAIL non-object manifest not caught: {f.p0}")
+            ok = False
+
+        dupid = base / "dupid"
+        write_fixture(dupid, json.dumps({
+            "type": "web-reference", "source": "https://example.com",
+            "captured_at": "2026-08-31T00:00:00Z", "scope": "page",
+            "evidence": {}, "coverage_gaps": [],
+            "captures": [{"id": "2026-08-31"}, {"id": "2026-08-31"}],
+        }))
+        f = validate_bundle(str(dupid))
+        if any("duplicate capture id" in m for m in f.p0):
+            print("PASS duplicate capture id rejected")
+        else:
+            print(f"FAIL duplicate capture id not caught: {f.p0}")
+            ok = False
+
+        badid = base / "badid"
+        write_fixture(badid, json.dumps({
+            "type": "web-reference", "source": "https://example.com",
+            "captured_at": "2026-08-31T00:00:00Z", "scope": "page",
+            "evidence": {}, "coverage_gaps": [],
+            "captures": [{"id": "2026-13-45"}],
+        }))
+        f = validate_bundle(str(badid))
+        if any("not a real calendar date" in m for m in f.p0):
+            print("PASS invalid capture id rejected")
+        else:
+            print(f"FAIL invalid capture id not caught: {f.p0}")
+            ok = False
+
+        prose = base / "prose"
+        write_fixture(prose, json.dumps({
+            "type": "web-reference", "source": "https://example.com",
+            "captured_at": "2026-08-31T00:00:00Z", "scope": "page",
+            "evidence": {}, "coverage_gaps": [],
+        }))
+        (prose / "REFERENCE.md").write_text(
+            "We do not ADOPT, ADAPT, or OMIT anything here.\n", encoding="utf-8")
+        f = validate_bundle(str(prose))
+        if any("decision section" in m for m in f.p0):
+            print("PASS prose-only decision tokens rejected")
+        else:
+            print(f"FAIL prose tokens not caught: {f.p0}")
+            ok = False
+
+        htmlsecret = base / "htmlsecret"
+        write_fixture(htmlsecret, json.dumps({
+            "type": "web-reference", "source": "https://example.com",
+            "captured_at": "2026-08-31T00:00:00Z", "scope": "page",
+            "evidence": {"rendered_html": "captures/2026-08-31/pages/home/rendered.html"},
+            "coverage_gaps": ["screenshots and remaining evidence omitted"],
+        }))
+        (htmlsecret / "captures" / "2026-08-31" / "pages" / "home" / "rendered.html").write_text(
+            "Authorization: Bearer " + "b" * 24 + "\n", encoding="utf-8")
+        f = validate_bundle(str(htmlsecret))
+        if any("credential-like" in m for m in f.p0):
+            print("PASS secret in rendered HTML rejected")
+        else:
+            print(f"FAIL secret in rendered HTML not caught: {f.p0}")
             ok = False
 
     print("web-reference manifest selftest: PASS" if ok else "web-reference manifest selftest: FAIL")
