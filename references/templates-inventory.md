@@ -5,18 +5,26 @@ Installed globally at:
 - `~/.agents/templates/` - the CLI-neutral format templates
 - `~/.agents/essentials/` - the operating baseline docs
 
-Source: the pi-template repo (`~/.agents (absorbed from the retired pi-template repo)`); re-absorb
-from it on demand to keep these current.
+Canonical source: this repository (universal-template). Retired assets are
+recoverable from Git history; there is no upstream repo to re-absorb from.
+`catalog-quality.py` enforces this inventory against disk (templates and
+essentials); `catalog-integrity.py` checks the README's claims.
 
 ## Format templates
 
+15 CLI-neutral format templates:
+
 `adr.md` `agents.md` `design.md` `foundation-skill.md` `foundation-capsule.md`
-`github-pr-ci.yml` `issue.md` `prd.md` `project-context.md` `proposal.md` `pull-request.md` `readme.md` `roadmap.md` `skill.md` `tasks.md`
+`github-pr-ci.yml` `issue.md` `prd.md` `project-context.md` `proposal.md`
+`pull-request.md` `readme.md` `roadmap.md` `skill.md` `tasks.md`
+
+Plus `source.yml` (the inspo ledger; tracked separately from the format
+templates).
 
 Retired in the entry-architecture refactor (recoverable from Git history):
-`project.md`, `tech-stack.md`, `state.md`, `user.md` — persistent project
-artifacts are now selective (`project-bootstrap` Mode B / `goal-setup`), not a
-default pack.
+project.md, tech-stack.md, state.md, user.md — persistent project artifacts
+are now selective (`project-bootstrap` Mode B / `goal-setup`), not a default
+pack.
 
 Usage mapping (what each rendered file's template drives):
 
@@ -35,13 +43,18 @@ Usage mapping (what each rendered file's template drives):
 
 File name = core principle:
 
-1. `objectives.md` - purpose before process
-2. `operating-philosophy.md` - the overall baseline
+1. `operating-philosophy.md` - the overall baseline
+2. `steer-outcomes-not-behavior.md` - outcomes plus mechanical checks over behavior rules
 3. `stack-your-leverage.md` - mechanical checks before rules
 4. `guiding-small-model.md` - write for small models too
 5. `enforce-code-quality-mechanically.md` - inference + prevent
 6. `how-to-build-good-tests.md` - what "good" means
-7. `README.md` - index & how they fit
+7. `openviking-foundation.md` - OpenViking holds durable experience, not source copies
+8. `README.md` - index and how they fit
+
+`discord-material/` holds the verbatim source behind `leverage-playbook`.
+The former objectives file moved to docs/roadmap.md — working objectives are
+not cold rationale.
 
 When proposing a new rule, first check whether the right fix is a mechanical
 check, not just a behavioral prompt.

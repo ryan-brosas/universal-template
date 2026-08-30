@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # API Design Practices
 
-Application skill for API design learning (`awesome-guidelines` deep ingest). Load learning note for *why*; capsules for probes.
+Application skill for API design learning (from the archived `awesome-guidelines` style capsules). Load learning note for *why*; capsules for probes.
 
 ## Core Principle
 

@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # MDN Code Examples Practices
 
-Application skill for MDN Web Docs code style hub deep ingest (`awesome-guidelines`). For application JS/HTML/CSS, load `javascript-coding-practices` and `frontend-markup-practices`. For repo Markdown structure, load `markdown-writing-practices`.
+Application skill for MDN Web Docs code style hub (archived `awesome-guidelines` capsules). For application JS/HTML/CSS, load `javascript-coding-practices` and `frontend-markup-practices`. For repo Markdown structure, load `markdown-writing-practices`.
 
 ## Core Principle
 

@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Common Lisp Coding Practices
 
-Application skill for Common Lisp style learning (`awesome-guidelines` deep ingest). For Emacs Lisp, use `emacs-lisp-coding-practices` when ingested.
+Application skill for Common Lisp style learning (from the archived `awesome-guidelines` style capsules). For Emacs Lisp, use `emacs-lisp-coding-practices` when ingested.
 
 ## Core Principle
 

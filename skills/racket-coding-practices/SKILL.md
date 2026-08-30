@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Racket Coding Practices
 
-Application skill for official Racket style learning (`awesome-guidelines` deep ingest). Scribble and Typed Racket files follow guide exceptions noted in upstream docs.
+Application skill for official Racket style learning (from the archived `awesome-guidelines` style capsules). Scribble and Typed Racket files follow guide exceptions noted in upstream docs.
 
 ## Core Principle
 

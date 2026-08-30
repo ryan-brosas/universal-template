@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Elixir Coding Practices
 
-Application skill for Elixir style learning (`awesome-guidelines` deep ingest). For OTP/supervision design, combine with stack foundations.
+Application skill for Elixir style learning (from the archived `awesome-guidelines` style capsules). For OTP/supervision design, combine with stack foundations.
 
 ## Core Principle
 

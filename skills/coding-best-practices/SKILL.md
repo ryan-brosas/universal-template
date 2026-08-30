@@ -1,6 +1,6 @@
 ---
 name: coding-best-practices
-description: "Use when starting implementation, onboarding to team standards, or asked for general coding best practices — routes topic questions to the right leaf skill (discipline, tests, review, security, CI) without restating every rule inline."
+description: "Use when the user explicitly asks for engineering standards, coding best practices, quality guidance, or help selecting a quality procedure or leaf skill — routes the topic to the right leaf or mechanical gate instead of restating rules."
 ---
 
 # Coding Best Practices — topic router
@@ -11,8 +11,9 @@ General coding guidance is a **map**, not a monolith. Route each topic to one le
 
 ## When to Use / NOT
 
-- **Use when:** starting a coding task, answering "what are best practices for X?", onboarding someone to how this catalog expects work to flow, or choosing which quality skill to load next.
+- **Use when:** the user explicitly asks for best practices, standards, or quality guidance ("what are best practices for X?"), onboarding someone to how this catalog expects work to flow, or choosing which quality skill to load next.
 - **Use when:** the question spans naming, docs, Git, testing, security, or AI-generated code and you need the right pointer fast.
+- **NOT when:** a normal implementation task starts — the ordinary loop (inspect, implement, verify) needs no router; load this only when standards guidance is the actual request.
 - **NOT when:** the task is TypeScript-only — load `typescript-coding-practices` (style/modules) and `typescript-coding-standards` (domain modeling) instead of this router alone.
 - **NOT when:** declaring work complete — load `agent-code-quality-gate` and the project gate from `AGENTS.md`.
 - **NOT when:** opening or updating a PR — load `push-pr`.
@@ -42,7 +43,7 @@ General coding guidance is a **map**, not a monolith. Route each topic to one le
 | AI-generated code | `references/ai-assisted-coding.md` | `agent-code-quality-gate` |
 | Performance / data efficiency | `references/performance-and-data-efficiency.md` | profile-first; benchmark in CI when stable |
 | Security | `security-and-hardening` | secret scan, dependency audit |
-| Turn practice into CI | `practices-to-ci` | `.github/workflows/pr-quality.yml` |
+| Turn practice into CI | `practices-to-ci` | the project's PR quality workflow |
 
 ## Red Flags
 
@@ -57,17 +58,6 @@ General coding guidance is a **map**, not a monolith. Route each topic to one le
 - For implementation work: `agent-code-quality-gate` five checks recorded before claiming done.
 - For catalog edits: `SKILLS_ROOT="$PWD/skills" python3 scripts/skill-validator.py` exit 0.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>coding-best-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>topic classified, leaf skill(s) loaded, gate output or skip reason</evidence>
-  <artifacts>pointer list, verification commands run</artifacts>
-  <risks>wrong leaf loaded, prose-only guidance with no gate, or none</risks>
-</skill_result>
-```
 
 ## References
 
@@ -78,4 +68,5 @@ General coding guidance is a **map**, not a monolith. Route each topic to one le
 - `references/git-and-collaboration.md` — Git, branches, commits, PRs.
 - `references/ai-assisted-coding.md` — reviewing generated code, context files, no blind trust.
 - `references/performance-and-data-efficiency.md` — profile first, vectorize/chunk when measured.
-- `awesome-guidelines` — Kristories/awesome-guidelines ingested one topic at a time (`references/ingestion-index.md`).
+- `awesome-guidelines` — archived cold library; its `references/` capsules feed the `*-coding-practices` leaves (no new ingestion).
+- `deep-module-design` — structural quality review when the topic is module boundaries or interface complexity.

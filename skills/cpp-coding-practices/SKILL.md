@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # C++ Coding Practices
 
-Application skill for C++ style learning (`awesome-guidelines` deep ingest). When project uses LLVM/Chromium/Mozilla variants, follow local baseline first.
+Application skill for C++ style learning (from the archived `awesome-guidelines` style capsules). When project uses LLVM/Chromium/Mozilla variants, follow local baseline first.
 
 ## Core Principle
 

@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Apache httpd C Coding Practices
 
-Application skill for Apache httpd C style deep ingest (`awesome-guidelines`). For non-httpd portable C, load `c-coding-practices`. Kernel/GNU tab-based trees follow their own docs.
+Application skill for Apache httpd C style (archived `awesome-guidelines` capsules). For non-httpd portable C, load `c-coding-practices`. Kernel/GNU tab-based trees follow their own docs.
 
 ## Core Principle
 

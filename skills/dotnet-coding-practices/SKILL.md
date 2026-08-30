@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # .NET Coding Practices
 
-Cross-cutting application skill for Framework Design Guidelines + secure coding (`awesome-guidelines` deep ingest). For language syntax, load `csharp-coding-practices`, `vb-coding-practices`, or `fsharp-coding-practices`.
+Cross-cutting application skill for Framework Design Guidelines + secure coding (from the archived `awesome-guidelines` style capsules). For language syntax, load `csharp-coding-practices`, `vb-coding-practices`, or `fsharp-coding-practices`.
 
 ## Core Principle
 

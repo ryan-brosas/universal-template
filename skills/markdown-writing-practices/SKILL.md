@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Markdown Writing Practices
 
-Application skill for Markdown style learning (`awesome-guidelines` deep ingest). For HTML/CSS page templates, load `frontend-markup-practices`. For platform wiki syntax (Confluence), use stack conventions.
+Application skill for Markdown style learning (from the archived `awesome-guidelines` style capsules). For HTML/CSS page templates, load `frontend-markup-practices`. For platform wiki syntax (Confluence), use stack conventions.
 
 ## Core Principle
 

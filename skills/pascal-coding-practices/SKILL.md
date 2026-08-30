@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Pascal Coding Practices
 
-Application skill for classic Pascal style learning (`awesome-guidelines` deep ingest). For Lazarus/LCL or Delphi VCL/Object Pascal, use `delphi-coding-practices` instead.
+Application skill for classic Pascal style learning (from the archived `awesome-guidelines` style capsules). For Lazarus/LCL or Delphi VCL/Object Pascal, use `delphi-coding-practices` instead.
 
 ## Core Principle
 

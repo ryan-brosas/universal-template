@@ -33,7 +33,8 @@ licenses when materially copying implementation. Canonical contract:
 
 **Freeze:** new repo-derived foundations are paused while the reference-driven
 workflow is validated. Foundation generation is a deliberate exception path
-(`foundations-workflow`), never the automatic destination for a useful repo.
+(`foundations-workflow`, run per repository by `memory-graph-skill-miner`),
+never the automatic destination for a useful repo.
 
 ## When to encode
 A foundation is worth creating only when the reusable knowledge is **repeated, non-obvious porting knowledge** — a recurring wrong-port pattern, a hard-won invariant, a proven capsule that demonstrably changed an outcome. A useful repository alone is no longer sufficient. Never encode speculative or one-off implementations.

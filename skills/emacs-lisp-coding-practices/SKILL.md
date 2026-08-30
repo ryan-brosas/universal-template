@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Emacs Lisp Coding Practices
 
-Application skill for Emacs Lisp style learning (`awesome-guidelines` deep ingest). For major/minor mode APIs and key-binding policy details, combine with stack-specific foundations.
+Application skill for Emacs Lisp style learning (from the archived `awesome-guidelines` style capsules). For major/minor mode APIs and key-binding policy details, combine with stack-specific foundations.
 
 ## Core Principle
 

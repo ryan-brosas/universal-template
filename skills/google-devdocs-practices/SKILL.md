@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Google Developer Documentation Practices
 
-Application skill for Google developer documentation style guide deep ingest (`awesome-guidelines`). For repo Markdown mechanics, load `markdown-writing-practices`. For MDN ``` code blocks, load `mdn-code-examples-practices`. For marketing voice, load `mailchimp-content-practices`.
+Application skill for Google developer documentation style guide (archived `awesome-guidelines` capsules). For repo Markdown mechanics, load `markdown-writing-practices`. For MDN ``` code blocks, load `mdn-code-examples-practices`. For marketing voice, load `mailchimp-content-practices`.
 
 ## Core Principle
 

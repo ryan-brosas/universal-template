@@ -23,7 +23,7 @@ Minimum CI that proves the project's actual requirements, with strong security b
 4. **Design the smallest architecture that satisfies the contract.** Triggers each with a reason; permissions least-privilege; one required gate; jobs split only when runtime or permissions actually differ; matrix only for real variation; caching only where it pays; concurrency with identity; timeouts that reflect reality. Quality level (minimal/standard/release/deployment/hardened-OSS) is inferred from the project, not chosen ceremonially.
 5. **Apply the security baseline** (`references/security.md`): minimal `permissions:` (top-level `contents: read`, per-job writes), full-SHA pins with version comments, no untrusted interpolation into `run:`, `pull_request_target` treated as privileged, fork-safe PR jobs, secrets only at their boundary, OIDC over long-lived keys, self-hosted runners never for untrusted code.
 6. **Implement.** Workflow YAML stays an orchestrator: checkout → setup → install → *project-defined check* → report. Multi-line logic belongs in `scripts/`, repeated step logic in composite actions, repeated job orchestration in reusable workflows — extracted only after real repetition. Start from `templates/github-pr-ci.yml` when the project wants the standard PR-gate shape (replace the gate placeholder; the file fails closed until you do).
-7. **Validate.** YAML parse; `actionlint` when available (detect, don't require); `zizmor` for security findings (this catalog's standard — `.github/workflows/security-audit.yml`); shellcheck via actionlint when present. If a tool is unavailable, say so — never claim it ran. Then run the project's own gates locally.
+7. **Validate.** YAML parse; `actionlint` when available (detect, don't require); the repository's configured workflow security analysis — `zizmor` locally when installed, and a specialized scanner only when justified; shellcheck via actionlint when present. If a tool is unavailable, say so — never claim it ran. Then run the project's own gates locally.
 8. **Verify remote behavior when GitHub access exists.** `gh run watch`/`gh run view --log-failed` on the real run: workflow parsed, trigger fired, job/check names exactly as contracted, permissions sufficient, cache/artifacts behaving. Local syntax validation does NOT prove remote semantics — report "local validation passes; remote run pending" when accurate.
 9. **Report the governance handoff.** List the exact check names proven by a real run (e.g. `quality / required`) — `github-repo-setup` consumes this contract to configure rulesets; never let both skills guess names. Release/deploy environments (name, secrets, restrictions, approvals) are specified here, configured there.
 
@@ -31,7 +31,7 @@ Minimum CI that proves the project's actual requirements, with strong security b
 
 ## Red Flags
 
-- **HARD-GATE:** this catalog's own workflow (`.github/workflows/pr-quality.yml`) uses the AGENTS.md skill-validator gate — never swap it or copy an unrelated project gate into `~/.agents/.github`.
+- **HARD-GATE:** a repository's own established quality workflow is intentional architecture — never swap, rename, or copy unrelated project gates into it without an explicit request.
 - **HARD-GATE:** the template file must fail while the gate placeholder remains; never push a file still carrying it.
 - `permissions: write-all`, or `contents: write` added just because checkout exists. EXTREMELY-IMPORTANT.
 - Workflow-level `paths:` on a required workflow — a skipped workflow leaves the required check pending forever. Trigger always; skip jobs conditionally.
@@ -42,7 +42,7 @@ Minimum CI that proves the project's actual requirements, with strong security b
 - Mutable action refs (`@main`, bare tags) without a pinning decision; secrets or credentials in cache paths; cache as trusted artifact store.
 - Fork-PR code on persistent self-hosted runners. HARD-GATE.
 - Publishing on any push instead of a detected release condition; rebuilding the release artifact after verification.
-- Hand-maintained CodeQL where default setup suffices; a new scanner where zizmor/CodeQL already covers the finding class.
+- Hand-maintained CodeQL where default setup suffices; a new scanner where the repository's existing analysis already covers the finding class.
 - Renaming required checks after rulesets depend on them.
 
 ## Verification
@@ -52,17 +52,6 @@ Minimum CI that proves the project's actual requirements, with strong security b
 - Audit mode ends with prioritized findings (Critical/High/Medium/Low, each with path, impact, fix, mechanical-verifiability) — not a generic checklist dump.
 - Repair mode names the failing layer (parse/environment/dependency/project/permission/secret/policy/external/cancellation/required-check) and fixes that layer, citing the actual run log.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>github-actions-engineering</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>CI contract, validation actually run, run links, check names read back</evidence>
-  <artifacts>.github/workflows/*.yml, contract for github-repo-setup</artifacts>
-  <risks>Unpinned actions, pending remote verification, policy blocks, or none</risks>
-</skill_result>
-```
 
 ## References
 

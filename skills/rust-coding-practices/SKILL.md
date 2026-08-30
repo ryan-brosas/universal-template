@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Rust Coding Practices
 
-Application skill for Rust style learning (`awesome-guidelines` deep ingest). For async/concurrency or framework crates, combine with stack-specific guidance.
+Application skill for Rust style learning (from the archived `awesome-guidelines` style capsules). For async/concurrency or framework crates, combine with stack-specific guidance.
 
 ## Core Principle
 

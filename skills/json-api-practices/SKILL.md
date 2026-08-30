@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # JSON API Practices
 
-Application skill for JSON style learning (`awesome-guidelines` deep ingest). For HTTP resource design and versioning policy, load `api-design-practices`.
+Application skill for JSON style learning (from the archived `awesome-guidelines` style capsules). For HTTP resource design and versioning policy, load `api-design-practices`.
 
 ## Core Principle
 

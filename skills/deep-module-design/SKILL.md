@@ -1,6 +1,7 @@
 ---
 name: deep-module-design
-description: Use when designing modules, refactoring shallow structures, or reviewing AI-generated code for structural quality.
+description: "Use when reviewing module boundaries, designing a deep module, reducing interface complexity, or reviewing AI-generated code for structural quality. Hidden by default: load for explicit design-review requests."
+disable-model-invocation: true
 ---
 
 
@@ -10,15 +11,15 @@ description: Use when designing modules, refactoring shallow structures, or revi
 
 Interface is the design — push complexity down, expose simplicity up; small interface, deep implementation.
 
-## Iron Laws
+## Design rules (heuristics, not laws)
 
-<EXTREMELY-IMPORTANT>
 - **Interface is the design.** What the module *exposes* is what it is.
-- **Hide complexity behind the interface.** Caller doesn't read internals to use it.
-- **Push complexity down, expose simplicity up.** If user thinks about it, module failed.
+- **Hide complexity behind the interface.** Callers should not read internals to use it.
+- **Push complexity down, expose simplicity up.**
 - **One concept per module.** Two things = two interfaces pretending to be one.
-- **Small interface, deep implementation.** Hard problem, small surface.
-</EXTREMELY-IMPORTANT>
+- **Small interface, deep implementation.**
+
+These are decision hints to weigh, not universal gates; a shallow helper with two callers can be the right shape.
 
 ## When to Use
 
@@ -106,17 +107,6 @@ Shallow modules; exposed state; config in args (env); "two ways to do it"; tests
 
 Depth improved (smaller interface, larger impl); no public state; config moved inside with sensible defaults; tests exercise the interface, not mocked internals; one way to do each thing.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>deep-module-design</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>Depth metric improved; interface tells cleared; tests exercise the interface</evidence>
-  <artifacts>Module design or refactor toward a smaller interface</artifacts>
-  <risks>Shallow module, public state, mocked internals, or none</risks>
-</skill_result>
-```
 
 ## References
 

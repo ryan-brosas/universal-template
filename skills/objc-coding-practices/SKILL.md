@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Objective-C Coding Practices
 
-Application skill for Objective-C style learning (`awesome-guidelines` deep ingest). Follow Apple Cocoa Coding Guidelines plus project `clang-format`; GitHub tab legacy trees normalize via formatter over time.
+Application skill for Objective-C style learning (from the archived `awesome-guidelines` style capsules). Follow Apple Cocoa Coding Guidelines plus project `clang-format`; GitHub tab legacy trees normalize via formatter over time.
 
 ## Core Principle
 

@@ -89,6 +89,8 @@ python3 scripts/policy-consistency.py
 python3 scripts/style-lint.py --selftest   # style fixtures must pass
 python3 scripts/style-lint.py              # hard rules on the default docs scope
 python3 scripts/dead-code.py
+python3 scripts/legacy-skill-report.py            # stale-pattern report (advisory)
+python3 scripts/skill-catalog.py generate --check # generated catalogs current
 CHECK_RANGE="origin/main..HEAD" python3 scripts/conventional-commit.py
 git diff --check
 ```
@@ -170,7 +172,8 @@ deterministic linter live in `skills/house-writing-style/` and
   demand (`python3 scripts/foundation-search.py "<topic>"`). Foundations are
   retrieval shortcuts to proven code; the source they point at is the
   authority.
-- `templates/`: 18 CLI-neutral format templates. `essentials/`: cold
+- `templates/`: 15 CLI-neutral format templates (plus `source.yml`); canonical
+  inventory in `references/templates-inventory.md`. `essentials/`: cold
   rationale and decision references: read the smallest relevant file when a
   policy decision needs explanation; current objectives live in
   `docs/roadmap.md`. `mcp/servers.json`: canonical MCP registry (per-CLI

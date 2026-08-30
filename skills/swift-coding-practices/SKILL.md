@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Swift Coding Practices
 
-Application skill for Swift style learning (`awesome-guidelines` deep ingest). For SwiftUI/UIKit/SPM layout, load stack foundations.
+Application skill for Swift style learning (from the archived `awesome-guidelines` style capsules). For SwiftUI/UIKit/SPM layout, load stack foundations.
 
 ## Core Principle
 

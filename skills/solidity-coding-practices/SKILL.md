@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Solidity Coding Practices
 
-Application skill for official Solidity style + Solcurity deep ingest (`awesome-guidelines`). Project-specific guides override when stricter.
+Application skill for official Solidity style + Solcurity (archived `awesome-guidelines` capsules). Project-specific guides override when stricter.
 
 ## Core Principle
 

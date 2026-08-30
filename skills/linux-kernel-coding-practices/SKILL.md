@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Linux Kernel C Coding Practices
 
-Application skill for kernel coding-style deep ingest (`awesome-guidelines`). For GNU userspace C, load `gnu-c-coding-practices`. Generic portable C: `c-coding-practices`. Apache httpd: `httpd-c-coding-practices`.
+Application skill for kernel coding-style (archived `awesome-guidelines` capsules). For GNU userspace C, load `gnu-c-coding-practices`. Generic portable C: `c-coding-practices`. Apache httpd: `httpd-c-coding-practices`.
 
 ## Core Principle
 

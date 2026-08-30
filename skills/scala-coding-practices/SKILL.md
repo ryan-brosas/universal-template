@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Scala Coding Practices
 
-Application skill for Scala style learning (`awesome-guidelines` deep ingest). For Spark/Akka/ZIO stack patterns, load stack foundations.
+Application skill for Scala style learning (from the archived `awesome-guidelines` style capsules). For Spark/Akka/ZIO stack patterns, load stack foundations.
 
 ## Core Principle
 

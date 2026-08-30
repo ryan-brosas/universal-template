@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Visual Basic Coding Practices
 
-Application skill for VB.NET style deep ingest (`awesome-guidelines`). Legacy VB6 Wikibooks Hungarian rules apply only when maintaining pre-.NET code.
+Application skill for VB.NET style (archived `awesome-guidelines` capsules). Legacy VB6 Wikibooks Hungarian rules apply only when maintaining pre-.NET code.
 
 ## Core Principle
 

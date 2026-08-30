@@ -99,7 +99,7 @@ Core principle: do not ship work that cannot be verified, explained, or rolled b
 
 ## Pi Fabric Boundaries
 
-**Verification** — cite direct behavioral probes and recorded outputs. Any fix defers to the Schema mutation guard in AGENTS.md.
+**Verification** — cite direct behavioral probes and recorded outputs. Pi Fabric Schema transactional mutation is opt-in (enforce mode or explicit request); ordinary fixes need only the project verification.
 
 ## References
 

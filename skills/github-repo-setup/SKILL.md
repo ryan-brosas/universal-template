@@ -17,7 +17,7 @@ Inspect first, pick the smallest governance level that fits the project, change 
 
 ## Workflow
 
-0. **Mode** — `audit` (read-only, zero mutation; remote drift report via `python3 scripts/github-audit.py` plus graded findings), `setup` (additive/reconciliatory), `minimal`, `team`, `full` (only on explicit request, e.g. "full setup"). Default: "set up" → `setup`; "audit" → `audit`. `full` means: inspect every GitHub surface that can earn its place for THIS project, configure the ones that do, delegate CI/version work to their owners, read back, and close with the per-surface report and decision log (`references/setup-matrix.md`). It never means turning every feature on.
+0. **Mode** — `audit` (read-only, zero mutation; remote drift report via `python3 scripts/github-audit.py` plus graded findings), `setup` (additive/reconciliatory), `minimal`, `team`, `full` (only on explicit request, e.g. "full setup"). Default: "set up" → `setup`; "audit" → `audit`. `full` means: inspect every GitHub surface that can earn its place for THIS project, configure the ones that do, delegate CI/version work to their owners, read back, and close with the per-surface report and decision log (`references/setup-matrix.md`). It never means turning every feature on. Baseline requests ("standard setup", "our baseline", "make this production-ready", "OSS-ready") select the mode from the maturity class in `references/setup-matrix.md` and compose the standard baseline: `project-bootstrap` first, then this skill, then `github-actions-engineering`, then `git-workflow-and-versioning` only when the project is versioned, then the audit re-run. A plain "start a new project" requests none of this and stays with `project-bootstrap`.
 1. **Preflight.** `gh --version`, `gh auth status` (record the authenticated account; an auth failure stops the run), `git status`, `git remote -v`. Determine repository existence with `gh repo view` from the repo root. A confirmed not-found is a normal result: continue to step 3 when creation was requested. Any other failure (auth, permission, network) stops and reports. HARD-GATE: if `origin` exists and is not the target repository, stop and report the conflict — never replace it.
 2. **Discover facts.** Name (directory/manifest), one-sentence description candidates (README, manifest), languages and frameworks (manifests), license file, existing `.github/`, CI jobs (`.github/workflows/` + `gh api repos/OWNER/REPO/actions/workflows`), solo vs team (contributors, org teams), existing labels/templates/rulesets. Classify findings KEEP / ADD / UPDATE / REMOVE; preserve everything intentional. HARD-GATE: never choose or change a license for the user — report a missing license.
 3. **New repository** (only absent and requested). Propose the name; ask only when owner or visibility is genuinely ambiguous or externally consequential — visibility is never changed silently. `gh repo create OWNER/NAME --public|--private -d "desc"`, then add `origin` only when no conflicting remote exists. Do not push unreviewed work beyond the requested scope.
@@ -52,23 +52,13 @@ Inspect first, pick the smallest governance level that fits the project, change 
 - Local `.github/*.yml` parses as YAML.
 - Re-run the skill: every already-correct item reports "No changes required".
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>github-repo-setup</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>gh read-back of applied settings, label set diff, template file paths</evidence>
-  <artifacts>.github templates, ruleset id, label set, report</artifacts>
-  <risks>Unresolved license/visibility decisions, missing CI for required checks, or none</risks>
-</skill_result>
-```
 
 ## References
 
 - `references/pr-template.md` — canonical PR template, risk scaling, body validation (PR creation itself is `push-pr`'s; this reference defines what GitHub governance expects of the body)
 - `references/labels.md` — label taxonomy, colors, idempotent sync commands, default-label reconciliation
 - `references/governance.md` — verified gh command inventory, ruleset create and read-back, solo vs team policy, releases, guardrails
-- `references/setup-matrix.md` — mode and project-type matrix (including `full` and the maturity classes), final report format, acceptance cases
+- `references/setup-matrix.md` — mode and project-type matrix (including `full` and the maturity classes), the standard-baseline composition, final report format, acceptance cases
+- `references/account-defaults.md` — account/organization `.github` default community files, precedence, org-level future path, authorization boundary
 - `references/security.md` — security and dependency surfaces: verified endpoints, enable order, plan-availability caveats
 - `references/releases.md` — release authority options, `.github/release.yml`, tag rulesets, immutable releases, attestations

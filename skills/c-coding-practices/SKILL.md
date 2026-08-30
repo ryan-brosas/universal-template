@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # C Coding Practices
 
-Application skill for C style learning (`awesome-guidelines` deep ingest). For Linux kernel or GNU projects, follow tree-specific style (tabs, 80 cols) when documented locally.
+Application skill for C style learning (from the archived `awesome-guidelines` style capsules). For Linux kernel or GNU projects, follow tree-specific style (tabs, 80 cols) when documented locally.
 
 ## Core Principle
 

@@ -11,6 +11,7 @@ Exit 0 = consistent. Non-zero = drift.
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -65,10 +66,58 @@ def check_agents_gate() -> None:
             errors.append(f"AGENTS.md must document {needle} in the catalog gate")
 
 
+def check_readme() -> None:
+    """README claims match disk: template count, inventory pointer, no retired names."""
+    readme = BASE / "README.md"
+    if not readme.is_file():
+        errors.append("missing README.md")
+        return
+    text = readme.read_text(encoding="utf-8")
+    on_disk = [p for p in (BASE / "templates").iterdir()
+               if p.is_file() and p.name != "source.yml"]
+    m = re.search(r"(\d+)\s+CLI-neutral format templates", text)
+    if m and int(m.group(1)) != len(on_disk):
+        errors.append(
+            f"README claims {m.group(1)} format templates; disk has {len(on_disk)} "
+            f"(excluding source.yml) - see references/templates-inventory.md")
+    if "references/templates-inventory.md" not in text:
+        errors.append("README must point at references/templates-inventory.md as the canonical template inventory")
+    for retired in ("project.md", "state.md", "tech-stack.md", "user.md"):
+        if retired in text:
+            errors.append(f"README lists retired template as current: {retired}")
+    if re.search(r"one-page principles", text):
+        errors.append("README hard-codes an essentials count; point at essentials/README.md instead")
+
+
+def check_generated_catalogs() -> None:
+    """docs/skill-catalog.md and docs/foundation-catalog.md must be current."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "skill_catalog", str(Path(__file__).with_name("skill-catalog.py")))
+    if spec is None or spec.loader is None:
+        errors.append("cannot load scripts/skill-catalog.py")
+        return
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    skills = mod.scan()
+    targets = {
+        "docs/skill-catalog.md": mod.build_skill_catalog_md(skills),
+        "docs/foundation-catalog.md": mod.build_foundation_catalog_md(skills),
+    }
+    for rel, content in targets.items():
+        p = BASE / rel
+        if not p.is_file() or p.read_text(encoding="utf-8") != content:
+            errors.append(
+                f"generated catalog stale: {rel} "
+                f"(rerun python3 scripts/skill-catalog.py generate)")
+
+
 def main() -> int:
     check_mcp()
     check_skills_present()
     check_agents_gate()
+    check_readme()
+    check_generated_catalogs()
     if errors:
         print("CATALOG INTEGRITY FAILURES:")
         for err in errors:

@@ -1,6 +1,7 @@
 ---
 name: repo-inspo-organizer
 description: "Use when placing or repairing an inspiration repository checkout under the shared inspo library — canonical placement, source sidecar, catalog pointer, and worktree identity checks. Host-neutral; does not index, study, or promote the repo."
+disable-model-invocation: true
 ---
 
 # Repository Inspo Organizer

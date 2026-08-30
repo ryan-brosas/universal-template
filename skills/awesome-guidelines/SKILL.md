@@ -1,56 +1,45 @@
 ---
 name: awesome-guidelines
-description: "Use when ingesting or applying Kristories/awesome-guidelines — deep-read sources, write learning notes, distill capsule-v2 references, wire application skills; one topic at a time via ingestion-index."
+description: "Use when a practices leaf or question points at a specific awesome-guidelines style capsule or learning note - archived cold library; the ingestion pipeline is retired, so load only to read a cited capsule."
+disable-model-invocation: true
 ---
 
-# Awesome Guidelines — deep ingestion router
+# Awesome Guidelines — archived style-capsule library
+
+> **Archived (2026-09):** the ingestion pipeline (learn → note → capsule → wire skill) is retired. The catalog is reference-first: useful repositories become `reference/<repo>/` checkouts, and foundation creation is frozen to the `foundations-workflow` exception path (`code-foundations` owns the policy). This skill stays as the cold library behind the `*-coding-practices` leaves — its `references/` capsules are still their content source. Load it only to read a specific capsule or learning note; do not run new ingestion.
+
 
 ## Core Principle
 
-External guides become **durable context** only after deep reading, a **learning note** (audit trail), and **capsule-v2** distillation (invariants + probes). Shallow bullet summaries are not ingestion.
+This skill is an archive, not a procedure. Its `references/` capsules are the
+content source behind the `*-coding-practices` leaves; nothing new is ingested.
 
 ## When to Use / NOT
 
-- **Use when:** ingesting the next row from `references/ingestion-index.md` or applying an already-`deep` topic during implementation.
-- **Use when:** Git, semver, changelog, API, language style questions and no stack-specific foundation owns it yet.
-- **NOT when:** a `*-foundation` skill already covers the stack — load that first.
-- **NOT when:** workflow ritual — use source-first implementation + project gates.
+- **Use when:** a practices leaf or a question cites a specific capsule or
+  learning note under `references/` — open exactly that file.
+- **NOT when:** adopting a new external repository — use reference-first
+  (`reference-driven-development`, `code-foundations`).
+- **NOT when:** a stack foundation covers the topic — load that instead.
 
 ## Workflow
 
-1. Open `references/ingestion-protocol.md` — three phases: **learn deep → note → skill**.
-2. Pick one `pending` row in `references/ingestion-index.md` (or open a `deep` row to apply). **Catalog ingest is complete** — only documented **skip** rows remain unless the upstream catalog grows.
-3. **Learn** — read every primary source + one secondary; extract invariants, flows, FAQ edges.
-4. **Note** — write `references/<topic>-learning-note.md` (mental model, tables, anti-patterns, skill trace).
-5. **Skill material** — one or more capsule-v2 files under `references/`; wire application skill from index.
-6. **Apply** — load application skill (`git-workflow-and-versioning`, `api-design-practices`, `json-api-practices`, `dotnet-coding-practices`, `powershell-scripting-practices`, `android-coding-practices`, `httpd-c-coding-practices`, `arduino-coding-practices`, `gnu-c-coding-practices`, `linux-kernel-coding-practices`, `mailchimp-content-practices`, `mdn-code-examples-practices`, `google-devdocs-practices`, `node-coding-practices`, `mongodb-data-practices`, `wcag-accessibility-practices`, `webappsec-coding-practices`, `javascript-project-practices`, `django-coding-practices`, `symfony-coding-practices`, `vue-coding-practices`, `angular-coding-practices`, `wordpress-coding-practices`, `drupal-coding-practices`, `magento-coding-practices`, `october-coding-practices`, `typescript-coding-practices`, `cpp-coding-practices`, `c-coding-practices`, `clojure-coding-practices`, `common-lisp-coding-practices`, `d-coding-practices`, `dart-coding-practices`, `delphi-coding-practices`, `pascal-coding-practices`, `perl-coding-practices`, `r-coding-practices`, `racket-coding-practices`, `solidity-coding-practices`, `vb-coding-practices`, `xml-markup-practices`, `elm-coding-practices`, `emacs-lisp-coding-practices`, `erlang-coding-practices`, `fsharp-coding-practices`, `fortran-coding-practices`, `groovy-coding-practices`, `haskell-coding-practices`, `julia-coding-practices`, `lua-coding-practices`, `nim-coding-practices`, `objc-coding-practices`, `elixir-coding-practices`, `shell-scripting-practices`, `frontend-markup-practices`, `sql-scripting-practices`, `markdown-writing-practices`, `python-coding-practices`, …) + capsules during work.
-7. Mark row **`deep`**; run catalog gate.
+1. Open the cited `references/<topic>.md` capsule.
+2. Apply it through the practices leaf that owns the topic.
+3. Do not add rows, notes, or capsules; the pipeline is retired.
 
 ## Red Flags
 
-- Capsule without learning note.
-- Shallow bullet summary marked done.
-- One mega-file per topic mixing unrelated seams.
-- Copy-paste of entire external guides.
+- Running the old learn → note → capsule → wire-skill pipeline.
+- Writing new learning notes or ingestion-index rows.
+- Treating a capsule as current best practice without checking the practices
+  leaf that superseded it.
 
 ## Verification
 
-- Learning note exists and lists sources actually read.
-- Each capsule has `Flow`, `Invariant`, `Probe` (or explicit human-only probe).
-- Index row = `deep` with learning note + capsule paths + application skill.
-- `SKILLS_ROOT="$PWD/skills" python3 scripts/skill-validator.py` exit 0.
+- The cited capsule exists on disk and no new files were added.
+- The consuming practices leaf, not this archive, drove the change.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>awesome-guidelines</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>learning note path, capsule paths, index deep, gate exit 0</evidence>
-  <artifacts>references/*-learning-note.md, references/*-*.md capsules</artifacts>
-  <risks>shallow distill, missing probe, or none</risks>
-</skill_result>
-```
 
 ## References
 

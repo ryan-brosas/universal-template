@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # XML Markup Practices
 
-Application skill for Google XML Document Format Style Guide deep ingest (`awesome-guidelines`). For XHTML/HTML page markup, load `frontend-markup-practices`. For ODF/protobuf-generated XML, follow those format rules.
+Application skill for Google XML Document Format Style Guide (archived `awesome-guidelines` capsules). For XHTML/HTML page markup, load `frontend-markup-practices`. For ODF/protobuf-generated XML, follow those format rules.
 
 ## Core Principle
 

@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # SQL Scripting Practices
 
-Application skill for SQL style learning (`awesome-guidelines` deep ingest). For ORM-specific patterns (Django, Prisma, SQLAlchemy), load stack foundations.
+Application skill for SQL style learning (from the archived `awesome-guidelines` style capsules). For ORM-specific patterns (Django, Prisma, SQLAlchemy), load stack foundations.
 
 ## Core Principle
 

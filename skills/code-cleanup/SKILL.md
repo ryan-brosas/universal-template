@@ -47,29 +47,11 @@ Cleanup before behavior is locked (can't prove nothing broke); expanding scope (
 
 Cleanup before tests pass; "I just want to refactor this"; expanding into unrelated files; "while I'm here" fixes; tests deleted (not the cleanup target); reformatting the whole file; rename of public API; no baseline saved; re-verify skipped; "I'll write tests for the new structure later".
 
-## Self-Quiz
-
-- Is behavior locked (tests + typecheck + lint passing before)?
-- Is each change *deletion or simplification*, not addition?
-- Did I re-run the same checks after, and compare to baseline?
-- Are all changes scoped to what was actually noisy?
-- Did I avoid renaming public APIs or restructuring unrelated code?
 
 ## Verification
 
 Same tests, typecheck, and lint re-run after cleanup; outputs match the saved "before" baseline; every change is a deletion or simplification scoped to what was noisy.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>code-cleanup</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>Before/after baselines match (tests, typecheck, lint); diff scoped to noisy code</evidence>
-  <artifacts>Simplified diff: deletions, renames, extractions, inlines</artifacts>
-  <risks>Scope expansion, unproven behavior, or none</risks>
-</skill_result>
-```
 
 ## References
 

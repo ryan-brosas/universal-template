@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Delphi Coding Practices
 
-Application skill for Delphi/Object Pascal style learning (`awesome-guidelines` deep ingest). Follow Embarcadero baseline; apply DelphiStandards namespace rules when project adopts them.
+Application skill for Delphi/Object Pascal style learning (from the archived `awesome-guidelines` style capsules). Follow Embarcadero baseline; apply DelphiStandards namespace rules when project adopts them.
 
 ## Core Principle
 
