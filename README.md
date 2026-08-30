@@ -10,13 +10,14 @@ Entry flow for unfamiliar repositories: `skills/project-bootstrap/SKILL.md`.
 
 | Path | Contents |
 |---|---|
-| `skills/` | the full skill catalog (foundations + practice skills + workflow skills) |
+| `skills/` | the active skill catalog (practice + workflow skills) |
+| `foundation-pack/` | temporary cold prior-art capsules (legacy `*-foundation`); search only when project/reference evidence is insufficient |
 | `templates/` | CLI-neutral format templates (plus `source.yml`, the inspo ledger); canonical list in `references/templates-inventory.md` |
 | `essentials/` | cold rationale and decision references, indexed in `essentials/README.md`; read the smallest relevant file when a policy decision needs explanation |
 | `docs/roadmap.md` | current work objectives (reviewed at milestones) |
 | `extensions/style-guard.ts` | optional Pi output-style guard (audit by default; symlinked into `~/.pi/agent/extensions/`) |
 | Entry skills (`project-bootstrap`, `brainstorming`, `goal-setup`, `prototype`, `leverage-capture`) | project entry, direction, durable goals, cheap learning, leverage classification |
-| `docs/skill-catalog.md`, `docs/foundation-catalog.md` | generated human catalogs of the skill set (never hand-edit; regenerate with `scripts/skill-catalog.py`) |
+| `docs/skill-catalog.md` | generated human catalog of the active skills (never hand-edit; regenerate with `scripts/skill-catalog.py`) |
 | `mcp/servers.json` | the **canonical** MCP capability registry (6 servers incl. mcp-steroid); per-CLI configs are derived copies |
 | `references/` | distilled contract capsules (reference contract, MCP catalog, templates inventory) |
 | `AGENTS.md` | the global agent rules every host loads |

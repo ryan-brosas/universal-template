@@ -19,7 +19,7 @@ Vue maintainability is **tiered style guide discipline** — Priority A prevents
 
 **NOT when:**
 
-- React/Svelte — use stack foundation.
+- React/Svelte — use stack capsules in `foundation-pack/`.
 - Pure JS utilities outside Vue — `javascript-coding-practices`.
 - Full app architecture (Pinia routing) — Vue/Pinia foundation docs.
 

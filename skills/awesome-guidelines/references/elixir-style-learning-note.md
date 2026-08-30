@@ -9,7 +9,7 @@
 | [christopheradams/elixir_style_guide](https://github.com/christopheradams/elixir_style_guide) (primary) | `mix format`; 98-char lines; snake_case/CamelCase; pipe operator; module attribute order; `@moduledoc` first; `@spec` + `@type t`; `Error` suffix; keyword list syntax; ExUnit assert order |
 | [Elixir naming conventions](https://hexdocs.pm/elixir/naming-conventions.html) (secondary) | official snake_case atoms/functions; CamelCase modules; `?` predicates; `is_` guard-safe names |
 
-**Not duplicated here:** Every Credo rule — enable project-relevant checks. Full OTP/supervision patterns — use stack foundations.
+**Not duplicated here:** Every Credo rule — enable project-relevant checks. Full OTP/supervision patterns — use stack capsules in `foundation-pack/`.
 
 ## Mental model
 

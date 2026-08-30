@@ -10,7 +10,7 @@
 | [CSS Guidelines](https://cssguidelin.es/) (Harry Roberts) | Selector intent, location independence, no IDs in CSS, `js-*` hooks separate from style classes, BEM-like naming, specificity discipline, proactive utility `!important` only |
 | [HTML + CSS Code Guide](https://codeguide.co/) (Mark Otto) | Attribute order, boolean attrs, `.js-*` behavior classes, declaration grouping (position/box/type/visual), co-located media queries, avoid `@import`, meaningful class names, WCAG contrast note |
 
-**Not duplicated here:** TypeScript/React/component frameworks — see `typescript-coding-standards`, `react-foundation`, stack foundations.
+**Not duplicated here:** TypeScript/React/component frameworks — see `typescript-coding-standards`, `foundation-pack/react-foundation`, stack capsules in `foundation-pack/`.
 
 ## Mental model
 

@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 """skill-validator.py — mechanical format gate for ~/.agents/skills.
 
-Two canonical formats (see templates/):
-  A. practice/tool skills  -> templates/skill.md skeleton
-  B. foundation leaves     -> templates/foundation-skill.md skeleton
-     (detected by directory name ending in "-foundation")
+Canonical format (see templates/): practice/tool skills -> templates/skill.md
+skeleton.
 
 Severity: P0 = broken discovery/contract, P1 = retrieval or parity risk,
           P2 = style deviation from the mandated skeleton.
@@ -47,13 +45,6 @@ PRACTICE_SECTIONS = [
     ("Red Flags", "red flag"),
     ("Verification", "verification"),
     ("References", "references"),
-]
-FOUNDATION_SECTIONS = [
-    ("Use this for", "use this for"),
-    ("Capsule map", "capsule map"),
-    ("Provenance", "provenance"),
-    ("Full view", "full view"),
-    ("Boundaries", "boundaries"),
 ]
 
 def parse_frontmatter(text):
@@ -109,16 +100,11 @@ def check_sections(body, spec):
 def ref_lines(body):
     return re.findall(r"^\s*-\s+`references/([^`]+)`", body, re.M)
 
-def map_bullets(body):
-    m = re.search(r"^#{1,6}\s+Capsule map\s*$(.*?)(?=^##\s|\Z)", body, re.M | re.S)
-    if not m:
-        return None
-    return len(re.findall(r"^\s*-\s+\*\*", m.group(1), re.M))
 
 def main():
     report = []
     counts = {"P0": 0, "P1": 0, "P2": 0}
-    n_practice = n_found = 0
+    n_practice = 0
     for d in sorted(os.listdir(ROOT)):
         dpath = os.path.join(ROOT, d)
         if not os.path.isdir(dpath):
@@ -164,44 +150,18 @@ def main():
         if not archived:
             for o in sorted(disk_refs - cited_set):
                 issues.append(("P2", f"orphan reference not cited in SKILL.md: {o}"))
-        is_found = d.endswith("-foundation")
-        if is_found:
-            n_found += 1
-            missing = check_sections(body, FOUNDATION_SECTIONS)
-            for label in missing:
-                issues.append(("P2", f"foundation section missing: {label}"))
-            v2 = v1 = 0
-            for f in sorted(disk_refs):
-                t = open(os.path.join(refs_dir, f), encoding="utf-8").read()
-                v2 += t.count("capsule-v2 -->")
-                v1 += t.count("capsule-v1 -->")
-            mb = map_bullets(body)
-            if len(cited_set) != v2 + v1:
-                issues.append(("P1", f"parity: {len(cited_set)} loader refs != {v2+v1} capsule markers ({v2} v2 / {v1} v1)"))
-            if len(cited_set) > 0 and mb == 0:
-                issues.append(("P1", "capsule map empty but loader refs exist"))
-            # every loader ref must be named somewhere in the capsule map, in any
-            # bullet style (top-level, grouped, or nested sub-bullets)
-            mm = re.search(r"^#{1,6}\s+Capsule map\s*$(.*?)(?=^##\s|\Z)", body, re.M | re.S)
-            if mm and len(cited_set) > 0:
-                map_text = mm.group(1)
-                for c in sorted(cited_set):
-                    name = c[:-3]
-                    if not re.search(r"\b" + re.escape(name) + r"\b", map_text):
-                        issues.append(("P1", f"loader ref missing from capsule map: {name}"))
-        else:
-            n_practice += 1
-            if not archived:
-                for label in check_sections(body, PRACTICE_SECTIONS):
-                    issues.append(("P2", f"skeleton section missing: {label}"))
-            if lint_text is not None:
-                for v in lint_text(body)[:3]:
-                    issues.append(("P2", f"style[{v['level']}] {v['rule']}: {v['message']}"))
+        n_practice += 1
+        if not archived:
+            for label in check_sections(body, PRACTICE_SECTIONS):
+                issues.append(("P2", f"skeleton section missing: {label}"))
+        if lint_text is not None:
+            for v in lint_text(body)[:3]:
+                issues.append(("P2", f"style[{v['level']}] {v['rule']}: {v['message']}"))
         for sev, _ in issues:
             counts[sev] += 1
         report.append((d, issues))
     # markdown report
-    out = ["# Skill catalog audit", f"root: {ROOT}", f"practice/tool skills: {n_practice}, foundation leaves: {n_found}",
+    out = ["# Skill catalog audit", f"root: {ROOT}", f"practice/tool skills: {n_practice}",
            f"P0={counts['P0']} P1={counts['P1']} P2={counts['P2']}", "",
            "## P0/P1 offenders", ""]
     for d, issues in report:
@@ -219,7 +179,7 @@ def main():
     txt = "\n".join(out) + "\n"
     dest = os.environ.get("AUDIT_OUT", "/tmp/skill-audit-report.md")
     open(dest, "w", encoding="utf-8").write(txt)
-    print(f"skills scanned: {len(report)} (practice {n_practice}, foundation {n_found})")
+    print(f"skills scanned: {len(report)} (practice {n_practice})")
     print(f"P0={counts['P0']} P1={counts['P1']} P2={counts['P2']}")
     print(f"report: {dest}")
     sys.exit(1 if counts["P0"] else 0)

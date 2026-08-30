@@ -6,8 +6,8 @@ invariants. Each check below states one invariant; do not restate policy in a
 second hand-maintained philosophy document — add or extend a check here.
 
 Scope: policy documents only (AGENTS, README, essentials, routing/workflow
-skills, mcp registry, PR template). Foundation capsules with pinned provenance
-and verbatim archives (essentials/discord-material) are exempt by design.
+skills, mcp registry, PR template). Coded prior-art archives and verbatim
+archives (foundation-pack/, essentials/discord-material) are exempt by design.
 
 FAIL = exit 1 (CI gate). WARN = printed, non-blocking.
 Zero dependencies; python3 stdlib only.
@@ -32,13 +32,11 @@ POLICY_FILES = [
     "skills/project-bootstrap/SKILL.md",
     "skills/goal-setup/SKILL.md",
     "skills/leverage-capture/SKILL.md",
-    "skills/code-foundations/SKILL.md",
     "skills/codebase-memory/SKILL.md",
     "skills/fabric-native-execution/SKILL.md",
     "skills/veda-lane/SKILL.md",
     "skills/execution-router/SKILL.md",
     "skills/model-resolution/SKILL.md",
-    "skills/foundations-workflow/SKILL.md",
     "skills/github-repo-setup/SKILL.md",
 ]
 POLICY_FILES += sorted(str(p.relative_to(BASE)) for p in (BASE / "essentials").glob("*.md"))
@@ -240,7 +238,7 @@ def check_pr_template() -> None:
 
 
 def check_no_mass_ingestion() -> None:
-    """Essentials never promise mass ingestion/squeezing of inspiration repos (foundation freeze)."""
+    """Essentials never promise automated mass ingestion of external repos."""
     for rel in ("essentials/README.md", "docs/roadmap.md"):
         text = read(rel)
         if text is None:
@@ -248,7 +246,7 @@ def check_no_mass_ingestion() -> None:
         for i, line in enumerate(text.splitlines(), 1):
             low = line.lower()
             if "squeeze" in low or re.search(r"100%\s+(inspiration\s+)?ingestion", low) or "full squeeze" in low:
-                check_fail("NO-MASS-INGESTION", rel, i, "mass-ingestion promise contradicts the foundation freeze")
+                check_fail("NO-MASS-INGESTION", rel, i, "mass-ingestion promise in policy docs")
 
 
 def check_router_visibility() -> None:
@@ -495,8 +493,8 @@ def check_objective_drift() -> None:
 
 
 # Real callers for reachability: another SKILL.md or its references, top-level
-# policy, runtime scripts, and CI config. Generated views (docs/skill-catalog.md,
-# docs/foundation-catalog.md), inventories, roadmap, and templates are NOT
+# policy, runtime scripts, and CI config. Generated views (docs/skill-catalog.md),
+# inventories, roadmap, and templates are NOT
 # callers — a generated index must never make a dead skill look reachable.
 REACHABILITY_CALLER_PARTS = ("AGENTS.md", "APPEND_SYSTEM.md", "README.md", "CONTRIBUTING.md")
 # Catalog machinery that enumerates skill names by design (classification sets,
@@ -504,7 +502,7 @@ REACHABILITY_CALLER_PARTS = ("AGENTS.md", "APPEND_SYSTEM.md", "README.md", "CONT
 # appears there, so counting it as a caller makes the gate self-satisfying.
 REACHABILITY_ENUMERATION_SCRIPTS = {
     "catalog-quality.py", "skill-validator.py", "skill-catalog.py",
-    "policy-consistency.py", "legacy-skill-report.py", "foundation-search.py",
+    "policy-consistency.py", "legacy-skill-report.py",
 }
 
 
@@ -556,7 +554,6 @@ def check_hidden_reachability(base: Path = BASE, internal: set[str] | None = Non
     A hidden skill (disable-model-invocation: true) counts as reachable when any
     of these hold:
     - x-manual-only: true (explicitly designated manual-only)
-    - it is a *-foundation capsule (retrieval corpus, not a routed procedure)
     - it classifies as cold (hidden, not internal) — skill-catalog search is its
       discovery path, so it needs no route
     - otherwise (internal): some real caller names it. Generated catalogs,
@@ -582,8 +579,6 @@ def check_hidden_reachability(base: Path = BASE, internal: set[str] | None = Non
         if not re.search(r"^disable-model-invocation:\s*true", text, re.M):
             continue
         if re.search(r"^x-manual-only:\s*true", text, re.M):
-            continue
-        if d.name.endswith("-foundation"):
             continue
         if d.name not in internal:
             continue  # cold: searchable through skill-catalog
@@ -698,10 +693,6 @@ def selftest() -> int:
         (skills / "alpha").mkdir(parents=True)
         (skills / "alpha" / "SKILL.md").write_text(
             "---\nname: alpha\ndescription: Use when testing.\n---\n# Alpha\n", encoding="utf-8")
-        (skills / "beta-foundation").mkdir()
-        (skills / "beta-foundation" / "SKILL.md").write_text(
-            "---\nname: beta-foundation\ndescription: Use when testing.\n"
-            "disable-model-invocation: true\n---\n# Beta\n", encoding="utf-8")
         (skills / "gamma").mkdir()
         (skills / "gamma" / "SKILL.md").write_text(
             "---\nname: gamma\ndescription: Use when testing.\n"
@@ -731,10 +722,10 @@ def selftest() -> int:
         else:
             print(f"FAIL expected [] unreachable, got {dead}")
             ok = False
-        # Foundations and cold hidden skills never need a route.
+        # Cold hidden skills never need a route.
         dead = check_hidden_reachability(base=base, internal=set())
         if dead == []:
-            print("PASS foundation and cold hidden skills need no route")
+            print("PASS cold hidden skills need no route")
         else:
             print(f"FAIL expected [] unreachable, got {dead}")
             ok = False

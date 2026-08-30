@@ -21,7 +21,7 @@ Symfony PHP reads uniformly — **PSR-12 via PHP CS Fixer**, **Yoda identical co
 **NOT when:**
 
 - Generic PHP without Symfony conventions — `php-coding-practices`.
-- Laravel/WordPress-specific style — stack foundation.
+- Laravel/WordPress-specific style — stack capsules in `foundation-pack/`.
 - Runtime Symfony architecture (DI tags, events) — framework docs/foundation.
 
 ## Workflow

@@ -12,7 +12,7 @@ catch-first test methodology.
 
 | Pillar / methodology | Strategic objective | Marker |
 | :--- | :--- | :--- |
-| Ground truth | Reference-driven prior art; foundation freeze (no mass ingestion) | Every active project grounds claims in actual source, tests, and runtime probes |
+| Ground truth | Reference-driven prior art; cold-pack fallback (no new foundations) | Every active project grounds claims in actual source, tests, and runtime probes |
 | Steer outcomes | Frictionless conclusive PR loop with mechanical gate boundaries | Fast CI checks, zero behavioral prompt bloat |
 | Stack leverage | Threshold-driven skill capture; experience-grade OpenViking sync (opt-in) | Recurring wins become skills when they prove out |
 | Mechanical quality | Gates for demonstrated deterministic regressions, where value exceeds false-positive cost | Known regression classes are mechanically defended where practical |
@@ -22,12 +22,10 @@ catch-first test methodology.
 
 - **Reference-driven prior art (replaces mass ingestion).** Useful external
   repositories become project-local `reference/<repo>/` checkouts: read source
-  and tests, adopt, adapt, or omit. Repo-to-foundation mining stays frozen
-  while this path is validated. Deliberate foundation exceptions only: a named
-  recurring porting question that source alone does not answer
-  (`foundations-workflow`, one repo at a time). Existing `*-foundation` leaves
-  are preserved pending measured triage (keep, shrink, or retire per
-  `code-foundations`).
+  and tests, adopt, adapt, or omit. The legacy `*-foundation` leaves moved to
+  `foundation-pack/`; they stay cold, are searched only when
+  project/reference evidence is insufficient, and are retired over time. No
+  new foundations are created.
 - **Reference contract adherence.** New `references/` capsules follow
   `references/reference-contract.md` (source, decisive excerpts, retrieval
   queries, verdict). Existing capsules are maintained as they are touched; no

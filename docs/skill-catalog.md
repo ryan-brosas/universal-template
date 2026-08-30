@@ -5,7 +5,7 @@
 Derived from `skills/*/SKILL.md` metadata. Discovery tool:
 `python3 scripts/skill-catalog.py search "<topic>"`.
 
-355 skills: 40 visible, 315 hidden. Visible startup metadata: ~10702 chars (~2675 tokens).
+146 skills: 40 visible, 106 hidden. Visible startup metadata: ~10674 chars (~2668 tokens).
 
 ## Entry skills
 
@@ -38,7 +38,7 @@ Direct user-facing capabilities; trigger on request.
 | [`push-pr`](../skills/push-pr/SKILL.md) | entry | visible | Use when finished work needs to be pushed and opened or updated as a GitHub pull request, when PR review feedback must be addressed in its thread, or when an o... |
 | [`reference-driven-development`](../skills/reference-driven-development/SKILL.md) | entry | visible | Use when implementation should be grounded in outside prior art - adapting an external implementation, comparing against a reference repository, or porting a k... |
 | [`security-and-hardening`](../skills/security-and-hardening/SKILL.md) | entry | visible | Use when auditing for security vulnerabilities, implementing auth or authz, handling secrets, or hardening against OWASP Top 10 - covers input validation, auth... |
-| [`skill-catalog`](../skills/skill-catalog/SKILL.md) | entry | visible | Use when the user asks what skills exist, to find a skill for a topic, or to surface cold or foundation knowledge - deterministic search over the local catalog... |
+| [`skill-catalog`](../skills/skill-catalog/SKILL.md) | entry | visible | Use when the user asks what skills exist or needs to find the right skill for a topic - deterministic search over the local catalog; return candidates and load... |
 | [`system-design-specification`](../skills/system-design-specification/SKILL.md) | entry | visible | Use when authoring formal, crash-proof system design documents and architectural specifications: scope fences and non-goals, 4-part state ontologies, mathemati... |
 | [`test-generation`](../skills/test-generation/SKILL.md) | entry | visible | Use when writing, expanding, or auditing tests, converting workflow rules into gates, or deciding what to test. Catch-first method: a test is only good if it c... |
 | [`upwork-proposals`](../skills/upwork-proposals/SKILL.md) | entry | visible | Use when writing an Upwork application or job proposal - concise, energetic, client-focused copy that leads with action and keeps every claim truthful |
@@ -64,7 +64,6 @@ Invoked by other skills or system components; hidden from startup metadata.
 |---|---|---|---|
 | [`agent-code-quality-gate`](../skills/agent-code-quality-gate/SKILL.md) | internal | hidden | Use when a coding agent claims implementation work is complete - an operational gate over scope, duplication, behavior tests, verification evidence, and regres... |
 | [`code-discipline`](../skills/code-discipline/SKILL.md) | internal | hidden | Use when implementing, reviewing, or committing code - general code-discipline principles (scope, verification, type-safety, tests, context-gathering) farmed f... |
-| [`code-foundations`](../skills/code-foundations/SKILL.md) | internal | hidden | Use when deciding where reusable implementation knowledge should live: a useful repository becomes project-local reference code; only repeated, non-obvious por... |
 | [`code-review-and-quality`](../skills/code-review-and-quality/SKILL.md) | internal | hidden | Use when reviewing code or PRs before merge, after subagent work, or when a review is requested. Bloat Review mode hunts over-engineering only, with a delete-l... |
 | [`codebase-memory`](../skills/codebase-memory/SKILL.md) | internal | hidden | Use when navigating, indexing, tracing, or comparing local and inspiration repositories through the Codebase Memory MCP knowledge graph. |
 | [`codex-websearch`](../skills/codex-websearch/SKILL.md) | internal | hidden | Use when you need current web facts, documentation discovery, or cited search results through the installed Codex web-search extension. |
@@ -72,7 +71,6 @@ Invoked by other skills or system components; hidden from startup metadata.
 | [`documentation-and-adrs`](../skills/documentation-and-adrs/SKILL.md) | internal | hidden | Use when writing technical documentation, Architecture Decision Records (ADRs), API docs, or project READMEs - covers documentation structure, ADR format, and... |
 | [`fabric-native-execution`](../skills/fabric-native-execution/SKILL.md) | internal | hidden | Use when working inside Pi Fabric: core fabric_exec execution first, native providers (memory, state, compact) as helpers, and deliberate escalation to agents/... |
 | [`fallow`](../skills/fallow/SKILL.md) | internal | hidden | Use when analyzing code quality, finding dead code, detecting duplication, assessing complexity, checking blast radius, or cleaning up a TS or JS codebase with... |
-| [`foundations-workflow`](../skills/foundations-workflow/SKILL.md) | internal | hidden | Use when a deliberate exception justifies mining one repository into a foundation skill: graph-led seam discovery, source-confirmed capsules, behavior-tested r... |
 | [`grill-with-docs`](../skills/grill-with-docs/SKILL.md) | internal | hidden | Use when user wants to stress-test a plan against their project's language and documented decisions. |
 | [`model-resolution`](../skills/model-resolution/SKILL.md) | internal | hidden | Use when execution-router has already chosen a role and mechanism and the lane needs a concrete backend/model: discover available providers and models at runti... |
 | [`opensrc`](../skills/opensrc/SKILL.md) | internal | hidden | Use when you need to understand how a library works internally, debug dependency issues, or inspect package source beyond types and docs - fetches source for n... |
@@ -189,7 +187,3 @@ Installed and updated by their vendor; visibility follows integration.
 | [`veda-plan-implement`](../skills/veda-plan-implement/SKILL.md) | vendor | visible | Use when planning a refactor, debugging approach, research, analysis, writing, or any course of action before implementing - plan work by collaborating with th... |
 | [`veda-plan-implement-review`](../skills/veda-plan-implement-review/SKILL.md) | vendor | visible | Use when you need to plan an approach, execute it, and review the outcome - plan AND implement with the Veda Navigator model, then review the result: align on... |
 | [`veda-worker`](../skills/veda-worker/SKILL.md) | vendor | visible | Use when you want a full plan → implement → verify cycle with Veda DELEGATED to the worker agent, not done by you - orchestrate from the caller's point of view... |
-
-## Foundations
-
-207 foundation leaves (all hidden, class cold) are indexed in [foundation-catalog.md](foundation-catalog.md). Search them with `python3 scripts/foundation-search.py "<topic>"` or `python3 scripts/skill-catalog.py search "<topic>"`. Source repositories in `<project>/reference/<repo>/` come first; foundations are the cold fallback.

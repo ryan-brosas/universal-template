@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Go Coding Practices
 
-Application skill for Go style learning (from the archived `awesome-guidelines` style capsules). For service layout or framework patterns, follow project conventions and stack foundations.
+Application skill for Go style learning (from the archived `awesome-guidelines` style capsules). For service layout or framework patterns, follow project conventions and stack capsules in `foundation-pack/`.
 
 ## Core Principle
 

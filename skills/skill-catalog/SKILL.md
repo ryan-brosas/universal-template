@@ -1,6 +1,6 @@
 ---
 name: skill-catalog
-description: "Use when the user asks what skills exist, to find a skill for a topic, or to surface cold or foundation knowledge - deterministic search over the local catalog; return candidates and load only the chosen skill."
+description: "Use when the user asks what skills exist or needs to find the right skill for a topic - deterministic search over the local catalog; return candidates and load only the chosen skill."
 ---
 
 # Skill Catalog
@@ -9,15 +9,18 @@ description: "Use when the user asks what skills exist, to find a skill for a to
 
 Discovery is a deterministic filesystem query, not a model memory test. Search
 the catalog, show a few scored candidates with their class, then load only the
-chosen skill. The catalog is large by design (foundations and specialists stay
-hidden); visible startup metadata stays small.
+chosen skill. The catalog is large by design (specialists stay hidden); visible
+startup metadata stays small.
 
 ## When to Use / NOT
 
-- **Use when:** "what skills do we have?", "find a skill for CI", "do we have a
-  Django foundation?", "show GitHub skills", "list cold foundations".
+- **Use when:** "what skills do we have?", "find a skill for CI", "show GitHub
+  skills".
 - **Use when:** a hidden or cold capability is suspected and startup metadata
   does not show it.
+- **Use when:** the user asks to search the cold legacy foundation pack —
+  plain `grep -ril "<topic>" foundation-pack/` is enough (the pack is not
+  part of the active catalog).
 - **NOT when:** a visible skill already matches the request directly — invoke
   that skill.
 - **NOT when:** choosing evidence sources or execution shape — `evidence-router`
@@ -27,20 +30,19 @@ hidden); visible startup metadata stays small.
 
 1. `python3 scripts/skill-catalog.py search "<topic>" --limit 8` — scored
    candidates with class and visibility.
-2. Narrow when useful: `list --visible`, `list --hidden`, `list --foundations`,
-   `list --class cold`, `list --category github`.
+2. Narrow when useful: `list --visible`, `list --hidden`, `list --class cold`.
 3. Inspect before loading: `python3 scripts/skill-catalog.py show <name>`
    (description, class, model-visible, path, related skills).
 4. Load only the chosen candidate (`skills/<name>/SKILL.md`) and proceed.
 5. After catalog edits: `python3 scripts/skill-catalog.py generate` refreshes
-   the human catalogs; CI fails on stale generated docs.
+   the human catalog; CI fails on stale generated docs.
 
 ## Red Flags
 
 - Pasting the catalog into the answer instead of returning candidates.
-- Loading every foundation that matched — read the best candidate first.
-- Hand-editing `docs/skill-catalog.md` or `docs/foundation-catalog.md` — both
-  are generated files.
+- Loading every candidate that matched — read the best one first.
+- Hand-editing `docs/skill-catalog.md` — it is generated from
+  `skills/*/SKILL.md` metadata.
 - Adding a visible skill without classifying it (catalog-quality fails the
   build until it lands in ENTRY_SKILLS, ROUTER_SKILLS, or VENDOR_SKILLS).
 
@@ -54,7 +56,6 @@ hidden); visible startup metadata stays small.
 
 - `scripts/skill-catalog.py` — deterministic catalog tool (list, search, show,
   stats, generate).
-- `scripts/foundation-search.py` — foundation-only ranked search (cold
-  fallback).
-- `docs/skill-catalog.md` and `docs/foundation-catalog.md` — generated human
-  catalogs.
+- `foundation-pack/` — cold legacy capsules; search with plain `grep`,
+  not the catalog.
+- `docs/skill-catalog.md` — generated human catalog.

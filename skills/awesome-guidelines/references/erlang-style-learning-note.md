@@ -9,7 +9,7 @@
 | [inaka/erlang_guidelines](https://github.com/inaka/erlang_guidelines) (primary) | 2-space indent; 100 cols; snake_case modules/functions/atoms; CamelCase variables; types/records first; clause functions over case; no `if`; no `-import`/`-export_all`; OTP API encapsulation; `-spec`; opaque records; iolists; minimal macros |
 | [OTP Secure Coding Guidelines](https://www.erlang.org/doc/system/secure_coding.html) (secondary) | STL-001 restrictive matching; STL-002 avoid boolean blindness; DSG-002 `{ok,Result}` over exceptions; DSG-003 atom abuse; DSG-011 trusted deserialize; LNG-002 no legacy `catch`; explicit conversions over `binary_to_atom` |
 
-**Not duplicated here:** Full OTP supervision design — use stack foundations. Every Elvis rule — enable project-relevant checks.
+**Not duplicated here:** Full OTP supervision design — use stack capsules in `foundation-pack/`. Every Elvis rule — enable project-relevant checks.
 
 ## Mental model
 

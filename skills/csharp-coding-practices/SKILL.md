@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # C# Coding Practices
 
-Application skill for C# / .NET style learning (from the archived `awesome-guidelines` style capsules). For ASP.NET/Blazor/MAUI patterns, load stack foundations.
+Application skill for C# / .NET style learning (from the archived `awesome-guidelines` style capsules). For ASP.NET/Blazor/MAUI patterns, load stack capsules in `foundation-pack/`.
 
 ## Core Principle
 

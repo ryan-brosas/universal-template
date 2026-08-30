@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Frontend Markup Practices
 
-Application skill for HTML/CSS learning (from the archived `awesome-guidelines` style capsules). For React/TS component patterns, load stack foundations first.
+Application skill for HTML/CSS learning (from the archived `awesome-guidelines` style capsules). For React/TS component patterns, load stack capsules in `foundation-pack/` first.
 
 ## Core Principle
 
@@ -19,7 +19,7 @@ Application skill for HTML/CSS learning (from the archived `awesome-guidelines` 
 
 **NOT when:**
 
-- TypeScript/React implementation — use `typescript-coding-standards`, `react-foundation`.
+- TypeScript/React implementation — use `typescript-coding-standards`, `foundation-pack/react-foundation`.
 - Stack-specific UI kit already owns conventions — project wins.
 
 ## Workflow

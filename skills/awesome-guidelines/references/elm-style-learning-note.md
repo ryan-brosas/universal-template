@@ -10,7 +10,7 @@
 | [NoRedInk Elm Style Guide](https://github.com/NoRedInk/elm-style-guide) (secondary) | `elm-format`; exhaustive case; custom types over string aliases for IDs; avoid giant `let`; no single-step pipe; `_ ->` over `always`; parens over `<|` |
 | [Elm Guide — Modules](https://guide.elm-lang.org/webapps/modules.html) (secondary) | modules around central type; minimal `exposing`; `src/` layout; qualified imports |
 
-**Not duplicated here:** Full TEA architecture — use stack foundations. Every Html/CSS rule — see frontend skills.
+**Not duplicated here:** Full TEA architecture — use stack capsules in `foundation-pack/`. Every Html/CSS rule — see frontend skills.
 
 ## Mental model
 

@@ -9,7 +9,7 @@
 | [The Ruby Style Guide](https://rubystyle.guide) (RuboCop canonical) | 2-space indent; 80-char lines (up to 120 by team agreement); UTF-8; snake_case methods/files; CapitalCase classes; SCREAMING_SNAKE constants; `?`/`!` suffix rules; spacing; safe navigation; class layout; explicit namespace nesting; `module_function`; exception discipline; `&&`/`||` vs `and`/`or` |
 | [Airbnb Ruby Style Guide](https://github.com/airbnb/ruby) (secondary) | keyword arguments over positional defaults; parentheses on value-returning calls; no class variables (`@@`); `def self.method`; access modifier spacing |
 
-**Not duplicated here:** Rails/RSpec style guides — use `*-foundation` when framework is known. Full hash-literal spacing debates — project RuboCop config wins.
+**Not duplicated here:** Rails/RSpec style guides — use `foundation-pack/*-foundation` when framework is known. Full hash-literal spacing debates — project RuboCop config wins.
 
 ## Mental model
 

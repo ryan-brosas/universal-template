@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # PHP Coding Practices
 
-Application skill for PHP style learning (from the archived `awesome-guidelines` style capsules). For Laravel/Symfony/WordPress stack patterns, load stack foundations.
+Application skill for PHP style learning (from the archived `awesome-guidelines` style capsules). For Laravel/Symfony/WordPress stack patterns, load stack capsules in `foundation-pack/`.
 
 ## Core Principle
 
@@ -21,7 +21,7 @@ PHP readability is **PSR mechanical layout plus strict typed APIs** — side-eff
 
 - Non-PHP code.
 - Generated stubs (PHPUnit mocks, protobuf) — validate generator config instead.
-- CMS-specific rules (WordPress/Drupal) — use stack foundation.
+- CMS-specific rules (WordPress/Drupal) — use stack capsules in `foundation-pack/`.
 
 ## Workflow
 

@@ -5,8 +5,8 @@ Checks (hard failures exit 1):
 - every skill dir has SKILL.md; name matches folder; no duplicate names
 - essentials present and indexed in essentials/README.md
 - templates inventory matches templates/ on disk
-- visibility policy: *-foundation hidden by default, entry skills visible,
-  internal helpers hidden (invocation-ownership model)
+- visibility policy: entry skills visible, internal helpers hidden
+  (invocation-ownership model)
 - context budget: visible skill metadata vs the recorded baseline; growth is a
   warning, growth beyond GROWTH_FAIL is an error until the baseline is updated
   deliberately via --update-baseline
@@ -37,7 +37,7 @@ TOKEN_CHARS = 4            # documented rough estimator; trend metric only
 # entry (a user request selects it directly), router (automatic dispatch point),
 # or vendor (externally managed). Hidden skills default to cold (searchable
 # specialist knowledge) unless listed as internal (another skill/system invokes
-# them) — foundations are always cold.
+# them).
 ENTRY_SKILLS = {
     # flow entries
     "project-bootstrap", "brainstorming", "goal-setup", "prototype",
@@ -69,7 +69,6 @@ ROUTER_SKILLS = {
 # Internally invoked mechanics: never startup metadata.
 INTERNAL_SKILLS = {
     "model-resolution", "veda-lane", "fabric-native-execution",
-    "code-foundations", "foundations-workflow",
     "code-discipline", "agent-code-quality-gate",
     "code-review-and-quality", "quality-gate-methodology",
     "test-driven-development", "source-driven-development",
@@ -87,8 +86,6 @@ VENDOR_SKILLS = {
 
 def classify(folder: str, hidden: bool) -> str | None:
     """Mechanical class for a skill (None = unclassified)."""
-    if folder.endswith("-foundation"):
-        return "cold"
     if folder in VENDOR_SKILLS:
         return "vendor"
     if not hidden:
@@ -98,8 +95,6 @@ def classify(folder: str, hidden: bool) -> str | None:
             return "entry"
         return None
     return "internal" if folder in INTERNAL_SKILLS else "cold"
-# Foundations are cold prior-art capsules: hidden unless explicitly allowlisted.
-FOUNDATION_ALLOWLIST: set[str] = set()
 
 errors: list[str] = []
 warnings: list[str] = []
@@ -252,20 +247,10 @@ def check_templates_inventory() -> None:
             )
 
 
-def is_foundation(folder: str) -> bool:
-    return folder.endswith("-foundation")
-
-
-
-
 def check_visibility_policy(skills: dict[str, dict]) -> None:
     """Visibility follows invocation ownership, not leaf-vs-router shape."""
     for name, info in sorted(skills.items()):
         folder, hidden = info["dir"], info["hidden"]
-        if is_foundation(folder) and not hidden and folder not in FOUNDATION_ALLOWLIST:
-            errors.append(
-                f"visible foundation (add disable-model-invocation: true or allowlist): {folder}"
-            )
         if folder in ENTRY_SKILLS and hidden:
             errors.append(f"entry skill must stay model-visible: {folder}")
         if folder in INTERNAL_SKILLS and not hidden:
@@ -314,7 +299,7 @@ def print_budget(rep: dict) -> None:
     print("  Classification (entry / router / internal / cold / vendor):")
     for c in ("entry", "router", "internal", "cold", "vendor"):
         members = rep["class_members"].get(c, [])
-        print(f"    {c:9} {len(members):4}  " + ", ".join(m for m in members if not is_foundation(m)))
+        print(f"    {c:9} {len(members):4}  " + ", ".join(members))
     if rep["unclassified_visible"]:
         print("  UNCLASSIFIED VISIBLE (cleanup queue):")
         for n in rep["unclassified_visible"]:
@@ -379,7 +364,7 @@ def near_duplicate_warnings(skills: dict[str, dict]) -> None:
 
 
 def check_generated_catalogs() -> None:
-    """docs/skill-catalog.md and docs/foundation-catalog.md must be current.
+    """docs/skill-catalog.md must be current.
 
     Generated views are derived from skills/*/SKILL.md + classify(); they are
     validated here so catalog-quality is the one required catalog gate.

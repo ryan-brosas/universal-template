@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Django Coding Practices
 
-Application skill for Django official coding style ingest (`awesome-guidelines`). Generic Python: `python-coding-practices`. Framework architecture: `django-foundation`.
+Application skill for Django official coding style ingest (`awesome-guidelines`). Generic Python: `python-coding-practices`. Framework architecture: `foundation-pack/django-foundation`.
 
 ## Core Principle
 
@@ -21,7 +21,7 @@ Django code reads as **one codebase** — black-formatted Python, isort import g
 **NOT when:**
 
 - Non-Django Python — `python-coding-practices`.
-- ORM/query design, middleware architecture — `django-foundation`.
+- ORM/query design, middleware architecture — `foundation-pack/django-foundation`.
 - Django admin JavaScript — Django JS style doc (separate).
 
 ## Workflow
@@ -81,5 +81,5 @@ Django code reads as **one codebase** — black-formatted Python, isort import g
 ## Related skills
 
 - `python-coding-practices` — PEP 8/Google baseline
-- `django-foundation` — Django framework patterns
+- `foundation-pack/django-foundation` — Django framework patterns
 - `frontend-markup-practices` — non-DTL HTML/CSS

@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Groovy Coding Practices
 
-Application skill for Groovy style learning (from the archived `awesome-guidelines` style capsules). For Grails-specific conventions, combine with stack foundations and project CodeNarc rulesets.
+Application skill for Groovy style learning (from the archived `awesome-guidelines` style capsules). For Grails-specific conventions, combine with stack capsules in `foundation-pack/` and project CodeNarc rulesets.
 
 ## Core Principle
 

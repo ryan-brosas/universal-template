@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Ruby Coding Practices
 
-Application skill for Ruby style learning (from the archived `awesome-guidelines` style capsules). For Rails/RSpec stack patterns, load stack foundations.
+Application skill for Ruby style learning (from the archived `awesome-guidelines` style capsules). For Rails/RSpec stack patterns, load stack capsules in `foundation-pack/`.
 
 ## Core Principle
 

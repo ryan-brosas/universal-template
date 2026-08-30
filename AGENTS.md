@@ -18,8 +18,12 @@ that apply everywhere.
   retrieval chain runs per task:
   - **Fovea**: active working-set map of the current project (orientation,
     feature location, impact/blast radius); then read exact source.
-  - **MCP Steroid / JetBrains**: exact semantic/type/call information,
-    inspections, debugger; semantic quality barrier for non-trivial changes.
+  - **MCP Steroid / JetBrains**: a semantic quality layer for non-trivial
+    changes: usages, symbol resolution, types, inheritance, overrides, call
+    hierarchy, rename/move, change signature, inspections, project model,
+    debugger evidence. Preflight before editing and a targeted check after;
+    it never replaces source reads, the compiler, or tests. Skip when the
+    change is trivial or the IDE is unavailable.
   - **Fabric**: execution and orchestration: `fabric_exec`, `/fabric
     prewalk` (its real Fabric meaning only), agents/Veda runner when the
     task benefits, Schema audit (observes) / enforce (intentionally strict)
@@ -169,11 +173,13 @@ deterministic linter live in `skills/house-writing-style/` and
 - `skills/`: one directory per skill, `SKILL.md` with `name` +
   trigger-first `description` ≤1024 chars. Grammar: `skills/writing-skills/`;
   skeleton: `templates/skill.md`. Visibility follows invocation ownership:
-  entry skills stay model-visible; internal helpers and `*-foundation`
-  capsules stay hidden (`disable-model-invocation: true`) and are searched on
-  demand (`python3 scripts/foundation-search.py "<topic>"`). Foundations are
-  retrieval shortcuts to proven code; the source they point at is the
-  authority.
+  entry skills stay model-visible; internal helpers stay hidden
+  (`disable-model-invocation: true`).
+- `foundation-pack/`: temporary cold prior-art capsules (`*-foundation`,
+  moved out of the active catalog); search only when project/reference
+  evidence is insufficient (plain `grep -ril "<topic>" foundation-pack/`).
+  The source they point at is the authority. The pack is retired over
+  time; no new foundations.
 - `templates/`: CLI-neutral format templates; canonical inventory (the only
   place that enumerates them) in `references/templates-inventory.md`.
   `essentials/`: cold

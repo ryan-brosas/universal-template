@@ -7,7 +7,7 @@ x-archive: true
 
 # Awesome Guidelines — archived style-capsule library
 
-> **Archived (2026-09):** the ingestion pipeline (learn → note → capsule → wire skill) is retired. The catalog is reference-first: useful repositories become `reference/<repo>/` checkouts, and foundation creation is frozen to the `foundations-workflow` exception path (`code-foundations` owns the policy). This skill stays as the cold library behind the `*-coding-practices` leaves — its `references/` capsules are still their content source. Load it only to read a specific capsule or learning note; do not run new ingestion.
+> **Archived (2026-09):** the ingestion pipeline (learn → note → capsule → wire skill) is retired. The catalog is reference-first: useful repositories become `reference/<repo>/` checkouts, and foundation creation is frozen with no new foundations (legacy `*-foundation` leaves sit cold in `foundation-pack/`). This skill stays as the cold library behind the `*-coding-practices` leaves — its `references/` capsules are still their content source. Load it only to read a specific capsule or learning note; do not run new ingestion.
 
 ## Core Principle
 
@@ -20,8 +20,8 @@ The filesystem is the index — there is no catalog to maintain.
 - **Use when:** a practices leaf or a question cites a specific capsule or
   learning note under `references/` — open exactly that file.
 - **NOT when:** adopting a new external repository — use reference-first
-  (`reference-driven-development`, `code-foundations`).
-- **NOT when:** a stack foundation covers the topic — load that instead.
+  (`reference-driven-development`).
+- **NOT when:** a stack capsule in `foundation-pack/` covers the topic — load that instead.
 
 ## Workflow
 

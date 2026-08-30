@@ -13,9 +13,9 @@ counts or listing retired files as current.
 
 ## Format templates
 
-15 CLI-neutral format templates:
+13 CLI-neutral format templates:
 
-`adr.md` `agents.md` `design.md` `foundation-skill.md` `foundation-capsule.md`
+`adr.md` `agents.md` `design.md`
 `github-pr-ci.yml` `issue.md` `prd.md` `project-context.md` `proposal.md`
 `pull-request.md` `readme.md` `roadmap.md` `skill.md` `tasks.md`
 
@@ -34,7 +34,6 @@ Usage mapping (what each rendered file's template drives):
 | `agents.md` | project `AGENTS.md` | `project-bootstrap` (Mode B/C) |
 | `project-context.md` | `docs/project-context.md` (or repo-native location) | `project-bootstrap` (Mode B, optional) |
 | `roadmap.md` | roadmap doc | explicit user request only |
-| `foundation-skill.md` / `foundation-capsule.md` | new skill/capsule leaves | `leverage-capture` |
 | `skill.md` | the SKILL.md skeleton | `writing-skills`, `leverage-capture` |
 | `github-pr-ci.yml` | the project GitHub Actions quality workflow | `github-actions-engineering`, `push-pr` |
 | `pull-request.md` | the PR body template | `push-pr`, project PRs |

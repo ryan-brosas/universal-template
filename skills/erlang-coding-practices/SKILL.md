@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Erlang Coding Practices
 
-Application skill for Erlang style learning (from the archived `awesome-guidelines` style capsules). For supervision trees and release tooling, combine with OTP stack foundations.
+Application skill for Erlang style learning (from the archived `awesome-guidelines` style capsules). For supervision trees and release tooling, combine with OTP stack capsules in `foundation-pack/`.
 
 ## Core Principle
 

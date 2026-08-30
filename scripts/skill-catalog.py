@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """skill-catalog.py — deterministic discovery over the local skill catalog.
 
-The catalog (skills/*/SKILL.md) is far larger than startup metadata should
-carry. Visible skills are deliberately few; everything else (foundations,
-specialists, internal mechanics) stays hidden and is found here:
+Visible skills are deliberately few; everything else (specialists, internal
+mechanics) stays hidden and is found here:
 
     list / search / show / stats / generate
 
@@ -46,56 +45,6 @@ STOPWORDS = {
     "how", "does", "do", "is", "are", "our", "we", "my", "me", "use", "when",
     "find", "show", "skill", "skills", "have", "list", "what", "which",
 }
-
-# Mechanical foundation buckets for the generated human catalog. First keyword
-# hit wins; leftovers land in Other. Classification stays name/description
-# based — no per-foundation manual curation.
-BUCKETS = [
-    ("Agent & LLM frameworks", (
-        "agent", "agno", "autogen", "crewai", "langgraph", "llm", "openai",
-        "swarm", "semantic-kernel", "smolagents", "pydantic-ai", "mastra",
-        "camel", "ell", "gpt-", "litellm", "mem0", "graphiti", "cognee",
-        "cline", "continue", "openhands", "gpt-engineer", "roo-", "sweep",
-        "cuga", "locoagent", "awaithumans", "agent-s")),
-    ("Web frameworks & services", (
-        "django", "flask", "fastapi", "starlette", "rails", "spring",
-        "laravel", "symfony", "express", "nest-", "uvicorn", "requests",
-        "server-", "wordpress", "drupal", "magento", "october", "strapi",
-        "ghost", "directus", "payload", "tooljet")),
-    ("Frontend", (
-        "react", "vue-", "svelte", "angular", "tailwind", "shadcn", "radix",
-        "dnd-kit", "framer", "recharts", "visx", "headlessui", "htmx",
-        "rsbuild", "solid-", "tanstack", "ui-ant", "ui-daisyui", "eslint",
-        "biome")),
-    ("Data & databases", (
-        "duckdb", "milvus", "qdrant", "chroma", "weaviate", "lancedb",
-        "txtai", "supabase", "postgres", "mongodb", "meilisearch",
-        "typesense", "ragflow", "graphrag", "superset", "airflow", "dagster",
-        "prefect", "celery", "turso", "codedb")),
-    ("Browser & automation", (
-        "browser", "playwright", "crawl", "scrap", "zendriver", "undetectable",
-        "ufo-", "theagenticbrowser", "open-computer-use", "screenity")),
-    ("Infrastructure & ops", (
-        "cloudflare", "railway", "coolify", "docker", "kubernetes", "k8s",
-        "cap-", "dokploy", "mailcow", "postal", "listmonk", "healthchecks",
-        "uptime", "easyappointments")),
-    ("Developer tooling", (
-        "aider", "codex", "mcp-", "pi-", "dsh-", "opencode", "inspo-",
-        "skills-", "billion-context", "codebase-memory", "jetbrains",
-        "qodana", "mike-", "pdf-")),
-    ("Security", ("webappsec", "vaultwarden", "aliasvault", "security")),
-    ("Content & docs", ("markdown", "docmost", "joplin", "notion", "outline",
-                         "paperqa", "storm-")),
-    ("Applications & products", (
-        "appflowy", "baserow", "nocodb", "teable", "grist", "chatwoot",
-        "frezier", "freescout", "plane-", "twenty-", "relaticle", "lemmy",
-        "dub-", "growchief", "openoutreach", "openoats", "meetily",
-        "linkforty", "georank", "geoready", "openreplay", "penpot",
-        "kdenlive", "sharex", "umami", "isso-", "changedetection", "rallly",
-        "vercel", "affine", "apitable", "nexus", "os-clovy", "palmier",
-        "quickbeam", "scout-", "jobspy", "linkedin", "maximo", "humanizer",
-        "fallow", "localterm", "tom-", "opensrc", "nexus-public")),
-]
 
 
 def scan() -> list[dict]:
@@ -186,19 +135,6 @@ def related(skills: list[dict], name: str, limit: int = 8) -> list[str]:
     return hits
 
 
-def foundation_bucket(name: str, desc_low: str) -> str:
-    hay = name.lower()
-    for label, keys in BUCKETS:
-        for k in keys:
-            if k in hay:
-                return label
-    for label, keys in BUCKETS:
-        for k in keys:
-            if k in desc_low[:400]:
-                return label
-    return "Other"
-
-
 def visible_chars(skills: list[dict]) -> int:
     return sum(len(s["name"]) + len(s["desc"]) for s in skills if not s["hidden"])
 
@@ -255,59 +191,22 @@ def build_skill_catalog_md(skills: list[dict]) -> str:
         ("Entry skills", "entry", "Direct user-facing capabilities; trigger on request."),
         ("Routers", "router", "Automatic dispatch points; visible on purpose."),
         ("Internal", "internal", "Invoked by other skills or system components; hidden from startup metadata."),
-        ("Cold specialists", "cold_nonfoundation", "Rare specialists; searchable here, not loaded every session."),
+        ("Cold specialists", "cold", "Rare specialists; searchable here, not loaded every session."),
         ("Vendor-managed", "vendor", "Installed and updated by their vendor; visibility follows integration."),
     ]
     for title, key, blurb in sections:
-        rows = [s for s in skills if s["cls"] == key] if not key.endswith("nonfoundation") \
-            else [s for s in skills if s["cls"] == "cold" and not s["folder"].endswith("-foundation")]
+        rows = [s for s in skills if s["cls"] == key]
         if not rows:
             continue
         lines += [f"## {title}", "", blurb, "",
                   "| Skill | Class | Visible | Description |", "|---|---|---|---|"]
         lines += [_md_row(s) for s in rows]
         lines.append("")
-    founds = [s for s in skills if s["folder"].endswith("-foundation")]
-    lines += ["## Foundations", "",
-              f"{len(founds)} foundation leaves (all hidden, class cold) are indexed in "
-              "[foundation-catalog.md](foundation-catalog.md). Search them with "
-              "`python3 scripts/foundation-search.py \"<topic>\"` or "
-              "`python3 scripts/skill-catalog.py search \"<topic>\"`. Source repositories "
-              "in `<project>/reference/<repo>/` come first; foundations are the cold fallback.", ""]
     unclassified = [s["name"] for s in skills if s["cls"] is None]
     if unclassified:
         lines += ["## Unclassified", "",
                   "These lack a class (catalog-quality fails on unclassified visible skills): "
                   + ", ".join(f"`{n}`" for n in unclassified), ""]
-    return "\n".join(lines)
-
-
-def build_foundation_catalog_md(skills: list[dict]) -> str:
-    founds = [s for s in skills if s["folder"].endswith("-foundation")]
-    lines = [
-        "<!-- GENERATED by scripts/skill-catalog.py (generate). Do not edit by hand; rerun the script. -->",
-        "",
-        "# Foundation Catalog",
-        "",
-        f"{len(founds)} hidden foundation leaves, grouped mechanically by name/description "
-        "keywords. Buckets are a human-navigation aid; deterministic search remains:",
-        "`python3 scripts/foundation-search.py \"<topic>\"`.",
-        "",
-    ]
-    groups: dict[str, list[dict]] = {}
-    for s in founds:
-        groups.setdefault(foundation_bucket(s["folder"], s["desc"].lower()), []).append(s)
-    for label in [l for l, _ in BUCKETS] + ["Other"]:
-        rows = groups.get(label)
-        if not rows:
-            continue
-        lines += [f"## {label} ({len(rows)})", ""]
-        for s in sorted(rows, key=lambda x: x["folder"]):
-            desc = _clean(s["desc"])
-            if len(desc) > 120:
-                desc = desc[:119].rstrip() + "..."
-            lines.append(f"- [`{s['folder']}`](../skills/{s['folder']}/SKILL.md) - {desc}")
-        lines.append("")
     return "\n".join(lines)
 
 
@@ -317,18 +216,8 @@ def cmd_list(skills: list[dict], args) -> int:
         rows = [s for s in rows if not s["hidden"]]
     if args.hidden:
         rows = [s for s in rows if s["hidden"]]
-    if args.foundations:
-        rows = [s for s in rows if s["folder"].endswith("-foundation")]
     if args.klass:
         rows = [s for s in rows if s["cls"] == args.klass]
-    if args.category:
-        cat = args.category.lower()
-        if cat in CLASSES:
-            rows = [s for s in rows if s["cls"] == cat]
-        else:
-            rows = [s for s in rows
-                    if foundation_bucket(s["folder"], s["desc"].lower()).lower().startswith(cat)
-                    or cat in foundation_bucket(s["folder"], s["desc"].lower()).lower()]
     if args.json:
         print(json.dumps([{k: s[k] for k in ("name", "cls", "hidden", "desc", "path")}
                           for s in rows], indent=2))
@@ -409,13 +298,12 @@ def cmd_stats(skills: list[dict], args) -> int:
 
 
 def build_docs(skills: list[dict]) -> dict[str, str]:
-    """Generated catalogs cover the tracked catalog only: machine-local
+    """The generated catalog covers the tracked catalog only: machine-local
     (git-ignored) skills are excluded so a clean CI checkout regenerates
     byte-identical docs."""
     pub = [s for s in skills if not s.get("local")]
     return {
         DOCS / "skill-catalog.md": build_skill_catalog_md(pub),
-        DOCS / "foundation-catalog.md": build_foundation_catalog_md(pub),
     }
 
 
@@ -447,9 +335,7 @@ def main() -> int:
     p = sub.add_parser("list", help="list skills with class and visibility")
     p.add_argument("--visible", action="store_true")
     p.add_argument("--hidden", action="store_true")
-    p.add_argument("--foundations", action="store_true")
     p.add_argument("--class", dest="klass", choices=CLASSES)
-    p.add_argument("--category", help="class name or foundation bucket substring")
     p.add_argument("--json", action="store_true")
     p = sub.add_parser("search", help="scored catalog search")
     p.add_argument("query")
@@ -460,7 +346,7 @@ def main() -> int:
     p.add_argument("--json", action="store_true")
     p = sub.add_parser("stats", help="catalog and context-budget stats")
     p.add_argument("--json", action="store_true")
-    p = sub.add_parser("generate", help="write docs/skill-catalog.md + docs/foundation-catalog.md")
+    p = sub.add_parser("generate", help="write docs/skill-catalog.md")
     p.add_argument("--check", action="store_true", help="verify generated docs are current")
     args = ap.parse_args()
     skills = scan()

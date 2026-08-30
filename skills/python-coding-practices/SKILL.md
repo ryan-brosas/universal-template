@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Python Coding Practices
 
-Application skill for Python style learning (from the archived `awesome-guidelines` style capsules). For framework-specific patterns, load the stack foundation.
+Application skill for Python style learning (from the archived `awesome-guidelines` style capsules). For framework-specific patterns, load the stack capsules in `foundation-pack/`.
 
 ## Core Principle
 
@@ -19,7 +19,7 @@ Python readability is **enforced consistency plus semantic footgun avoidance** �
 
 **NOT when:**
 
-- Stack-specific rules dominate (Django ORM, Pydantic models, etc.) — load `*-foundation`.
+- Stack-specific rules dominate (Django ORM, Pydantic models, etc.) — load `foundation-pack/*-foundation`.
 - Non-Python code.
 
 ## Workflow
