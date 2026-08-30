@@ -290,6 +290,31 @@ def check_profiles_stable_prefs() -> None:
             check_fail("PROFILES-STABLE-PREFS", rel, i, "model-profiles.yaml must hold stable preferences only (runtime state goes to state/ or audits/)")
 
 
+def check_resolver_checkout_local() -> None:
+    """resolve-model.py loads the CHECKED-OUT preference chain, not ~/.agents — proven from a temp checkout."""
+    import shutil
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        (root / "scripts").mkdir()
+        (root / "config").mkdir()
+        shutil.copy(BASE / "scripts/resolve-model.py", root / "scripts/resolve-model.py")
+        prof = (BASE / "config/model-profiles.yaml").read_text()
+        prof = prof.replace(
+            "  economy-worker:\n    prefer:\n",
+            "  economy-worker:\n    prefer:\n      - pi:sentinel/checkout-probe-model\n", 1)
+        (root / "config/model-profiles.yaml").write_text(prof)
+        try:
+            p = subprocess.run(
+                ["python3", str(root / "scripts/resolve-model.py"), "--role", "MAIN", "--json"],
+                capture_output=True, text=True, timeout=90, cwd=str(root))
+            data = json.loads(p.stdout)
+            if "pi:sentinel/checkout-probe-model" not in data.get("preference_chain", []):
+                fails.append("[RESOLVER-CHECKOUT-LOCAL] resolve-model.py ignored the checkout-local preference file when run outside ~/.agents")
+        except Exception as exc:
+            fails.append(f"[RESOLVER-CHECKOUT-LOCAL] {type(exc).__name__}: {exc}")
+
+
 def check_resolver_json() -> None:
     """scripts/resolve-model.py --json produces valid JSON with a candidates list."""
     try:
@@ -347,6 +372,7 @@ CHECKS = [
     ("VEDA-LANE-OWNERSHIP", check_veda_lane_ownership),
     ("PROFILES-STABLE-PREFS", check_profiles_stable_prefs),
     ("RESOLVER-JSON", check_resolver_json),
+    ("RESOLVER-CHECKOUT-LOCAL", check_resolver_checkout_local),
     ("RUNTIME-JSON", check_runtime_json),
     ("ROUTER-REFS-RESOLVE", check_router_refs_resolve),
 ]

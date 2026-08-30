@@ -24,6 +24,11 @@ the role's hard filters (backend present, model in catalog, context ≥ required
 capability flags, auth where checkable), ranks survivors by
 `config/model-profiles.yaml` preference order, and prints candidates plus
 excluded reasons as JSON. Read its output; do not re-derive it by hand.
+Candidates carry `context_unverified` / `capability_unverified` flags for any
+field discovery could not confirm — treat those as unknown, never as
+guaranteed compatibility; roles are accepted case-insensitively and the
+preference file resolves from the checkout the script lives in
+(`AGENTS_PROFILES` overrides explicitly).
 
 ## Role → capability requirements
 

@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
@@ -24,7 +25,9 @@ import urllib.request
 from pathlib import Path
 
 HOME = Path.home()
-AGENTS = HOME / ".agents"
+_home_override = os.environ.get("AGENTS_HOME")
+# Repo root = the checkout this script lives in (explicit AGENTS_HOME override).
+AGENTS = Path(_home_override) if _home_override else Path(__file__).resolve().parents[1]
 records: list[dict] = []  # {status, name, detail}
 
 
@@ -61,8 +64,8 @@ def load_smoke_chain() -> list[str]:
                 continue
             if in_lane and re.match(r"^\s*-\s*(\S+)", line):
                 chain.append(re.match(r"^\s*-\s*(\S+)", line).group(1))
-            elif in_lane and line and not line.startswith(" "):
-                break
+            elif in_lane and re.match(r"^  [A-Za-z0-9_-]+:", line):
+                break  # next profile lane begins — do not leak its entries
     return chain
 
 
@@ -223,8 +226,9 @@ def main() -> int:
     smoke_result = None
     if args.smoke is not None:
         smoke_result = smoke(args.smoke)
-        print("NOTE: Fabric-side agents.run({runner:'veda'}) hands off at the outer fabric_exec boundary;")
-        print("      probe it live in a session if the direct CLI works but Fabric delegation does not.")
+        if not args.json:
+            print("NOTE: Fabric-side agents.run({runner:'veda'}) hands off at the outer fabric_exec boundary;")
+            print("      probe it live in a session if the direct CLI works but Fabric delegation does not.")
 
     if args.json:
         print(json.dumps({

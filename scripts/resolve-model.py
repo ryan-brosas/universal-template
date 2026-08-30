@@ -28,7 +28,19 @@ import time
 from pathlib import Path
 
 HOME = Path.home()
-PROFILES = HOME / ".agents/config/model-profiles.yaml"
+
+
+def profiles_path() -> Path:
+    """Preference file: explicit AGENTS_PROFILES override → the checkout this
+    script lives in → the installed ~/.agents tree (legacy fallback)."""
+    env = os.environ.get("AGENTS_PROFILES")
+    if env:
+        return Path(env)
+    local = Path(__file__).resolve().parents[1] / "config/model-profiles.yaml"
+    if local.is_file():
+        return local
+    return HOME / ".agents/config/model-profiles.yaml"
+
 
 # role → (min_context_tokens, requires_images, profile_lanes)
 ROLE_REQS: dict[str, tuple[int, bool, list[str]]] = {
@@ -67,11 +79,12 @@ def parse_ctx(token: str) -> int | None:
 def load_profiles() -> dict[str, list[str]]:
     """Parse the `profiles:` section (indentation-based YAML subset)."""
     out: dict[str, list[str]] = {}
-    if not PROFILES.is_file():
+    prof = profiles_path()
+    if not prof.is_file():
         return out
     lane: str | None = None
     in_prefer = False
-    for raw in PROFILES.read_text().splitlines():
+    for raw in prof.read_text().splitlines():
         line = raw.split("#", 1)[0].rstrip()
         if not line.strip():
             continue
@@ -203,9 +216,11 @@ def resolve(role: str, require_context: int | None, require_images: bool,
         if reasons:
             excluded.append({"address": e["address"], "reasons": reasons})
         else:
-            candidates.append(e)
             if e["context_tokens"] is None:
                 e["context_unverified"] = True
+            if e.get("thinking") is None or e.get("images") is None:
+                e["capability_unverified"] = True
+            candidates.append(e)
     candidates.sort(key=rank_key)
     candidates = candidates[:limit]
 
@@ -217,9 +232,12 @@ def resolve(role: str, require_context: int | None, require_images: bool,
                          "backend": backend, "profile_lanes": lanes},
         "preference_chain": chain,
         "chosen": chosen,
-        "candidates": [{k: e[k] for k in ("address", "backend", "model",
-                                           "context_tokens", "thinking",
-                                           "images", "source")} for e in candidates],
+        "candidates": [{**{k: e[k] for k in ("address", "backend", "model",
+                                             "context_tokens", "thinking",
+                                             "images", "source")},
+                        "context_unverified": e.get("context_unverified", False),
+                        "capability_unverified": e.get("capability_unverified", False)}
+                       for e in candidates],
         "excluded": excluded[:40],
         "auth": "NOT PROBED (environment-scoped; use --probe for a one-shot smoke)",
         "notes": notes,
@@ -265,6 +283,7 @@ def main() -> int:
         return 0
     if not args.role:
         ap.error("--role is required (or --roles)")
+    args.role = args.role.upper()  # roles are canonical uppercase; accept any case
     report = resolve(args.role, args.require_context, args.require_images,
                      args.require_thinking, args.backend, args.limit)
     if args.probe:
