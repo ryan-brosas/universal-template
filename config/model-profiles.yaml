@@ -32,9 +32,7 @@ profiles:
       - claude-code:opus
   architect:
     prefer:
-      - agy:claude-opus-4-6-thinki- pi:cursor/claude-opus-5@1m
-      - claude-code:opus
-  ng
+      - agy:claude-opus-4-6-thinking
       - pi:cursor/claude-opus-5@1m
   frontend-critic:
     prefer:
