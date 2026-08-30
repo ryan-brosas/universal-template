@@ -123,8 +123,11 @@ jobs:
             git diff --check "$GITHUB_SHA^" "$GITHUB_SHA"
           fi
 
+      # Body quality is a creation-time contract: apps (review bots) and
+      # evidence updates edit the body later, so re-checking on synchronize or
+      # edited would let an external app fail a required check.
       - name: Check the PR body contract
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'reopened')
         shell: bash
         env:
           PR_BODY: ${{ github.event.pull_request.body }}
