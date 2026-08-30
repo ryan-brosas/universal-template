@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -31,8 +32,8 @@ POLICY_FILES = [
     "skills/codebase-memory/SKILL.md",
     "skills/fabric-native-execution/SKILL.md",
     "skills/veda-lane/SKILL.md",
-    "skills/effort-router/SKILL.md",
-    "skills/model-router/SKILL.md",
+    "skills/execution-router/SKILL.md",
+    "skills/model-resolution/SKILL.md",
     "skills/workflow-lifecycle/SKILL.md",
     "skills/foundations-workflow/SKILL.md",
     "skills/github-repo-setup/SKILL.md",
@@ -223,6 +224,110 @@ def check_pr_template() -> None:
         fails.append("[PR-TEMPLATE] stale CodeMemory-centric section present")
 
 
+def check_no_mass_ingestion() -> None:
+    """Essentials never promise mass ingestion/squeezing of inspiration repos (foundation freeze)."""
+    for rel in ("essentials/README.md", "essentials/objectives.md"):
+        text = read(rel)
+        if text is None:
+            continue
+        for i, line in enumerate(text.splitlines(), 1):
+            low = line.lower()
+            if "squeeze" in low or re.search(r"100%\s+(inspiration\s+)?ingestion", low) or "full squeeze" in low:
+                check_fail("NO-MASS-INGESTION", rel, i, "mass-ingestion promise contradicts the foundation freeze")
+
+
+def check_router_visibility() -> None:
+    """Top-level *-router skills must stay model-visible (they route automatically)."""
+    skills_dir = BASE / "skills"
+    if not skills_dir.is_dir():
+        return
+    for d in sorted(skills_dir.iterdir()):
+        if not d.is_dir() or not d.name.endswith("-router"):
+            continue
+        rel = f"skills/{d.name}/SKILL.md"
+        text = read(rel)
+        if text is None:
+            continue
+        if re.search(r"^disable-model-invocation:\s*true", text, re.M):
+            check_fail("ROUTER-VISIBILITY", rel, 1, "router skill has disable-model-invocation: true — a router must be model-visible")
+
+
+def check_evidence_router_scope() -> None:
+    """evidence-router routes EVIDENCE only: no provider/model selection content."""
+    rel = "skills/evidence-router/SKILL.md"
+    text = read(rel)
+    if text is None:
+        return
+    banned = re.compile(r"veda\b|\bagy\b|codex|claude|opus|gemini|gpt-|deepseek|qwen|disable-model-invocation", re.I)
+    for i, line in enumerate(text.splitlines(), 1):
+        if banned.search(line):
+            check_fail("EVIDENCE-ROUTER-SCOPE", rel, i, "evidence-router must not carry provider/model selection content")
+
+
+def check_veda_lane_ownership() -> None:
+    """veda-lane is an execution adapter; it never claims global model-routing ownership."""
+    rel = "skills/veda-lane/SKILL.md"
+    text = read(rel)
+    if text is None:
+        fails.append(f"[{ 'VEDA-LANE-OWNERSHIP' }] {rel}: file missing")
+        return
+    flat = re.sub(r"\s+", " ", text)
+    if "execution adapter" not in flat:
+        check_fail("VEDA-LANE-OWNERSHIP", rel, 1, "veda-lane must frame itself as an execution adapter/oracle lane")
+    if "routing layer" in flat or "model-router" in flat:
+        check_fail("VEDA-LANE-OWNERSHIP", rel, 1, "veda-lane must not claim model-routing ownership")
+
+
+def check_profiles_stable_prefs() -> None:
+    """config/model-profiles.yaml holds stable preferences only — no dated/auth runtime state."""
+    rel = "config/model-profiles.yaml"
+    text = read(rel)
+    if text is None:
+        return
+    banned = re.compile(r"20\d\d-\d\d|unauthenticated|/login|broken|auth state", re.I)
+    for i, line in enumerate(text.splitlines(), 1):
+        if banned.search(line):
+            check_fail("PROFILES-STABLE-PREFS", rel, i, "model-profiles.yaml must hold stable preferences only (runtime state goes to state/ or audits/)")
+
+
+def check_resolver_json() -> None:
+    """scripts/resolve-model.py --json produces valid JSON with a candidates list."""
+    try:
+        p = subprocess.run(["python3", str(BASE / "scripts/resolve-model.py"), "--role", "REVIEWER", "--json"],
+                           capture_output=True, text=True, timeout=90)
+        data = json.loads(p.stdout)
+        if not isinstance(data.get("candidates"), list):
+            fails.append("[RESOLVER-JSON] scripts/resolve-model.py: output missing 'candidates' list")
+    except Exception as exc:
+        fails.append(f"[RESOLVER-JSON] scripts/resolve-model.py: {type(exc).__name__}: {exc}")
+
+
+def check_runtime_json() -> None:
+    """scripts/runtime-capabilities.py --json produces valid JSON with a probes list."""
+    try:
+        p = subprocess.run(["python3", str(BASE / "scripts/runtime-capabilities.py"), "--json"],
+                           capture_output=True, text=True, timeout=120)
+        data = json.loads(p.stdout)
+        if not isinstance(data.get("probes"), list):
+            fails.append("[RUNTIME-JSON] scripts/runtime-capabilities.py: output missing 'probes' list")
+    except Exception as exc:
+        fails.append(f"[RUNTIME-JSON] scripts/runtime-capabilities.py: {type(exc).__name__}: {exc}")
+
+
+def check_router_refs_resolve() -> None:
+    """skills/<name> references inside router SKILL.md files must exist."""
+    for name in ("evidence-router", "execution-router", "model-resolution"):
+        rel = f"skills/{name}/SKILL.md"
+        text = read(rel)
+        if text is None:
+            fails.append(f"[ROUTER-REFS-RESOLVE] {rel}: file missing")
+            continue
+        for m in re.finditer(r"`skills/([a-z0-9-]+)", text):
+            if not (BASE / f"skills/{m.group(1)}/SKILL.md").is_file():
+                check_fail("ROUTER-REFS-RESOLVE", rel, 1, f"dangling skill reference: skills/{m.group(1)}")
+
+
+
 CHECKS = [
     ("PREWALK-RESERVED", check_prewalk_reserved),
     ("LIFECYCLE-OPTIONAL", check_lifecycle_optional),
@@ -236,6 +341,14 @@ CHECKS = [
     ("ABSOLUTES", check_absolutes),
     ("PORTABLE-PATHS", check_portable_paths),
     ("PR-TEMPLATE", check_pr_template),
+    ("NO-MASS-INGESTION", check_no_mass_ingestion),
+    ("ROUTER-VISIBILITY", check_router_visibility),
+    ("EVIDENCE-ROUTER-SCOPE", check_evidence_router_scope),
+    ("VEDA-LANE-OWNERSHIP", check_veda_lane_ownership),
+    ("PROFILES-STABLE-PREFS", check_profiles_stable_prefs),
+    ("RESOLVER-JSON", check_resolver_json),
+    ("RUNTIME-JSON", check_runtime_json),
+    ("ROUTER-REFS-RESOLVE", check_router_refs_resolve),
 ]
 
 

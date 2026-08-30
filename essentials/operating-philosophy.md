@@ -18,7 +18,7 @@ distilled into an authoritative, actionable guide for coding agents and develope
    concrete code, exact signatures, and named probes can do agentic work that would
    otherwise demand a frontier model. This is an observed working pattern, not a proven
    equivalence — treat "small model" claims as testable bets per task.
-2. **Code Over Markdown Specs (Docs Come Last):** Markdown specs discard type definitions and burn tokens. As Tom explicitly teaches: *do not write markdown specifications up-front*. Markdown docs should only ever be generated *after* the implementation is complete, derived directly from the working, proven code. The code is the source of truth; docs are just a downstream projection of it.
+2. **Code Over Restating Specs:** Markdown prose that restates type definitions and burns tokens is waste. *Do not write up-front prose specs* for what code, tests, and gates can specify. Pre-code documents are valid when they are contracts — RFCs, ADRs, interface definitions, gate definitions. Documentation that restates implemented code is generated after the implementation and derived from it; the code and its gates are the source of truth.
 3. **Skills Remove Re-derivation:** *"Deepseek makes no mistakes, because the workflow
    is written in code or a skill somewhere"* is the mentor's shorthand for a real effect:
    a verified skill with a named probe removes re-derivation and the error class that
@@ -28,10 +28,10 @@ distilled into an authoritative, actionable guide for coding agents and develope
    explore the code graph itself (Codebase Memory / IDE navigation); never hand-plan every
    trivial step. (The mentor's word for this was "prewalk"; that term is now reserved for
    Pi Fabric's `/fabric prewalk` runtime feature.)
-5. **Read Deeply When It Pays:** The **Two-Pass Learning Protocol** (Pass 1:
-   subsystem mapping, Pass 2+: internal seams) is a deliberate mining pass for
-   hard ports — not a default ritual, and reading deeply never obligates
-   encoding (see the `code-foundations` promotion rules).
+5. **Read Deeply When It Pays:** Multi-pass mining (subsystem map first,
+   internal seams after) is a deliberate pass for hard ports — not a default
+   ritual, and reading deeply never obligates encoding (see the
+   `code-foundations` promotion rules).
 
 ---
 
@@ -127,7 +127,7 @@ distilled into an authoritative, actionable guide for coding agents and develope
                                │
                                ▼
 ┌─────────────────────────────────────────────────────────────┐
-│ 5. Post-Session Skill Harvest                               │
-│    - Harvest edge cases -> write capsule-v2 -> stack leverage│
+│ 5. Post-Session Asset Harvest                                │
+│    - Promote what pays: skill, gate, or reference -> stack    │
 └─────────────────────────────────────────────────────────────┘
 ```

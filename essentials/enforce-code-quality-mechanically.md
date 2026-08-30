@@ -85,7 +85,7 @@ Automate detection for these four deterministic defect categories across every p
 
 | Workflow Requirement | Prompted Suggestion (Fails) | Unbypassable Mechanical Gate (Succeeds) |
 | :--- | :--- | :--- |
-| **Research Before Mutation** | *"Please make sure you thoroughly search the docs before editing."* | Workflow state machine rejects `write_to_file` until a verified research evidence log is written to disk. |
+| **Ground Truth Before Claims** | *"Please verify everything with direct evidence."* | The evidence-router contract plus structural policy checks (`scripts/policy-consistency.py`) that fail the PR in CI. |
 | **Mutation Scope Boundary** | *"Only touch the files relevant to this task."* | Schema guard (`schema.verify` $\to$ `schema.commit`) rolls back any transaction touching undeclared files. |
 | **Formatting & Whitespace** | *"Format code nicely with clean line endings."* | `repo-hygiene.py` and `git diff --check` running in CI and pre-commit hooks. |
 | **Commit Subject Standards** | *"Use conventional commit formatting."* | `conventional-commit.py` and `pr-title.yml` failing PR checks on non-conventional titles. |
@@ -125,5 +125,7 @@ Organize all mechanical enforcement into a two-layer hierarchy:
   `quality-gate.py`, `dead-code.py`, `repo-hygiene.py`, and `conventional-commit.py`.
 - **Zero Prompted Discipline:** The slash-command prompts (`.pi/prompts/`) do not plead
   with the model to be careful; they require executing deterministic commands and inspecting output.
-- **CI is the Ultimate Judge:** GitHub Actions (`.github/workflows/`) provides an objective,
-  reproducible pass/fail verdict for every single commit.
+- **CI is the enforcement surface:** GitHub Actions (`.github/workflows/`) runs the checks
+  that were encoded into CI — an objective, reproducible pass/fail for exactly those checks.
+  It is the boundary of what was encoded, not a global verdict on correctness; a green CI
+  does not certify anything no gate covers.

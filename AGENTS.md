@@ -27,10 +27,11 @@ that apply everywhere.
   - **Codebase Memory** — persistent cross-repo structural library (cold path).
   - **OpenViking** — durable experience/context: decisions, failed attempts,
     lessons; not a second copy of local source.
-  - **Veda** — the broad model/backend routing layer (alternate provider or
-    stronger model when justified). Route by role and capability through
-    `skills/effort-router` + `skills/model-router`; discover models at
-    runtime, never hard-code them.
+  - **Veda** — an execution adapter and oracle lane (alternate backend,
+    model, or persona when the execution decision justifies it). Route the
+    mechanism through `skills/execution-router`, resolve models mechanically
+    via `skills/model-resolution`; discover models at runtime, never
+    hard-code them.
 - Reusable prior art lives in `<project>/reference/<repo>/` (read-only
   checkout; read source and tests) — not automatically a skill, index, or
   corpus. This repo's global `references/` means contract docs; keep the two

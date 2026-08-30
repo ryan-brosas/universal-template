@@ -9,9 +9,13 @@
 !/scripts/conventional-commit.py
 !/scripts/policy-consistency.py
 !/scripts/runtime-capabilities.py
+!/scripts/resolve-model.py
+# Generated runtime capability state (machine-local, never committed).
+/state/
 # Skill-local helper scripts stay out of the catalog repo.
 skills/*/scripts/
 *.pyc
 __pycache__/
 skills/omarchy
 .idea/
+.veda/

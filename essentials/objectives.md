@@ -10,7 +10,7 @@ roadmap, skill development, testing harness, automation pipelines, and cron mara
 
 | Pillar / Methodology | Primary Strategic Objective | Target Milestone |
 | :--- | :--- | :--- |
-| **Pillar 1: Ground Truth** | 100% Inspiration Ingestion into per-repo foundation leaves (`skills/*-foundation`) via Two-Pass Learning | Full squeeze of all 73 inspo repos |
+| **Pillar 1: Ground Truth** | Reference-driven prior art; foundation freeze (no mass ingestion) | Every active project grounds claims in actual source, tests, and runtime probes |
 | **Pillar 2: Steer Outcomes** | Frictionless Conclusive PR Loop with Mechanical Gate Boundaries | Sub-30s CI checks, zero behavioral prompt bloat |
 | **Pillar 3: Stack Leverage** | Automated Post-Session Skill Capture & Tripled-Layer Viking Memory | Autonomous `/learn` workflow and OpenViking sync |
 | **Pillar 4: Mechanical Quality** | Universal + Language-Specific Quality Gates with Unbypassable Walls | Zero-defect automated gating across all projects |
@@ -27,9 +27,9 @@ roadmap, skill development, testing harness, automation pipelines, and cron mara
   - Useful external repositories become project-local `reference/<repo>/` checkouts — read source/tests, adopt/adapt/omit. Repo → foundation mining is **frozen** while this path is validated.
   - Deliberate foundation exceptions only: a named recurring porting question that source alone does not answer (`foundations-workflow`, one repo at a time).
   - Existing `*-foundation` leaves are preserved pending measured triage (keep / shrink / retire per `code-foundations`).
-- [ ] **Objective 1.2 — 100% `<!-- capsule-v2 -->` Migration:**
-  - Audit all references across every emergent foundation leaf (the flat `skills/*-foundation` layout) and ensure 100% adherence to the capsule-v2 contract (Source/Question, HEAD line numbers, Signature, Data Shape, decisive source, Flow, Invariant, direct test Probe, Retrieve query, Verdict).
-  - Eliminate all remaining legacy capsule-v1 markdown files.
+- [ ] **Objective 1.2 — Reference contract adherence:**
+  - New `references/` capsules follow `references/reference-contract.md` (source, decisive excerpts, retrieval queries, verdict).
+  - Existing capsules are maintained as they are touched — no bulk migration.
 - [ ] **Objective 1.3 — Automated Code Graph Context Discovery:**
   - Standardize discovery routines so that before planning or editing, agents query the nearest sufficient source — direct code, Fovea (active-project structure), or Codebase Memory (cross-repo prior art) — instead of drafting from blank context. One primary route per question; escalate only on a named gap.
 
@@ -44,8 +44,8 @@ roadmap, skill development, testing harness, automation pipelines, and cron mara
   - Continuously audit `AGENTS.md`, `.pi/templates/agents.md`, and all `.pi/prompts/*.md` templates.
   - Strip out any restrictive behavioral rules ("simplest implementation", "grow in layers", "avoid abstraction").
   - Replace them with clear outcome contracts, binary pass/fail conditions, and mechanical validator commands.
-- [ ] **Objective 2.2 — Ultra-Fast Conclusive PR Loop:**
-  - Maintain sub-30s execution times on all GitHub Actions workflows (`quality-gate`, `check-integrity`, `dead-code`, `repo-hygiene`, `pr-title`).
+- [ ] **Objective 2.2 — Fast Conclusive PR Loop:**
+  - Keep this repo's CI jobs (`catalog gates`, `repo hygiene`, `policy consistency`, `pr-title`) fast and conclusive.
   - Provide machine-readable annotations and auto-fix triggers on all pull requests.
 - [ ] **Objective 2.3 — Quantitative Code Taste Enforcement:**
   - Replace vague "clean code" instructions with deterministic AST metrics:
@@ -78,15 +78,15 @@ roadmap, skill development, testing harness, automation pipelines, and cron mara
 > *"Anything that is mechanical, predictable, or deterministic — create tests for it."*
 
 ### Tactical Objectives:
-- [ ] **Objective 4.1 — Expand Universal Quality Pack:**
-  - Continuously enhance the pi-template repo's `scripts/quality-gate.py`, `scripts/dead-code.py`, `scripts/repo-hygiene.py`, and `scripts/check-integrity.py` (at `~/.agents (absorbed from the retired pi-template repo)`):
-    - Add detection for circular import dependencies.
-    - Add detection for orphaned images, attachments, and scratch files.
-    - Add schema validation for all JSON and YAML configs.
+- [ ] **Objective 4.1 — Expand the catalog gate suite:**
+  - Continuously enhance this repo's gate scripts (`scripts/skill-validator.py`, `scripts/catalog-integrity.py`, `scripts/catalog-quality.py`, `scripts/repo-hygiene.py`, `scripts/dead-code.py`, `scripts/policy-consistency.py`):
+    - Structural skill-visibility checks (router visibility, ownership boundaries).
+    - Detection for dangling cross-skill references.
+    - Portable-path validation for new config surfaces.
 - [ ] **Objective 4.2 — Transactional Mutation Boundaries (opt-in):**
   - Keep Pi Fabric's Schema transaction loop (`schema.hypothesize` $\to$ `verify` $\to$ `commit`) available for work that needs transactional/postcondition guarantees (enforce mode, explicit request, or postcondition-critical tasks) without making it a universal prerequisite for every reversible edit.
-- [ ] **Objective 4.3 — Modular Language Quality Leaves:**
-  - Maintain reusable, copyable skill leaves for downstream clones (each a `*-foundation`-canonical capsule set):
+- [ ] **Objective 4.3 — Modular Language Quality Leaves (as needed):**
+  - Maintain reusable, copyable skill leaves for downstream clones (following the reference contract):
     - python-coding-practices  (pytest, mypy, ruff, bandit).
     - typescript-coding-standards (tsc, biome, effect-ts lint, vitest).
     - rust-coding-practices (cargo clippy, cargo audit, cargo test).
@@ -98,8 +98,8 @@ roadmap, skill development, testing harness, automation pipelines, and cron mara
 > *"A test is only a good test if it can properly CATCH — a passing test means nothing."*
 
 ### Tactical Objectives:
-- [ ] **Objective 5.1 — Catch-First Enforcement in Core Slash Commands:**
-  - Enforce the 5-Step Catch-First Protocol in `/fix` and `/ship`:
+- [ ] **Objective 5.1 — Catch-First Enforcement in Project Command Suites:**
+  - Enforce the 5-Step Catch-First Protocol in the project's fix/ship command suites:
     - Require pre-fix **RED** test output evidence before code edits are permitted.
     - Require post-fix **GREEN** test output evidence before completion claims.
 - [ ] **Objective 5.2 — Active Test Inventory Ledger:**
