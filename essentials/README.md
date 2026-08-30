@@ -1,25 +1,31 @@
 # Essentials — Operating Philosophy
 
-The operating philosophy (from mentor Tom and scarywood75) that guides how we work.
-These documents define *how* we approach development and automation without over-restricting agent behavior.
+Six working principles synthesized from the Discord threads in
+`discord-material/` (verbatim source kept there; this directory keeps only
+what still guides decisions today). `operating-philosophy.md` is the
+long-form manifesto; the other files carry one principle each. Nothing here
+is a hard behavioral rule — enforcement lives in mechanical gates (principle
+4), not in prose.
 
-## The Synthesis & Objectives (Start Here)
-- `operating-philosophy.md` — The authoritative unified manifesto combining all four pillars, the Catch-First test methodology, and the complete development flywheel.
-- `objectives.md` — Concrete, actionable tactical & strategic objectives derived from each pillar, driving our roadmap, skill development, testing harness, and cron marathons.
+## The six principles
 
-## The Core Pillars & Methodology
-- `guiding-small-model.md` — **Pillar 1:** Code is ground truth, skills are the shortcuts. How to feed the small model (`deepseek-flash`) ground truth and run the Two-Pass Learning Protocol so it executes without hallucinations or mistakes.
-- `steer-outcomes-not-behavior.md` — **Pillar 2:** Don't over-restrict the agent with behavioral system prompt rules. Let the agent execute with full autonomy, and enforce quality at the outcome boundary via mechanical CI checks and conclusive PR loops.
-- `stack-your-leverage.md` — **Pillar 3:** Code is your compounding asset. Stack proven code into reusable skills, harvest edge cases post-session, and accelerate velocity ($2\text{ hrs} \to 20\text{ mins} \to 30\text{ secs}$).
-- `enforce-code-quality-mechanically.md` — **Pillar 4:** Enforce code quality with unbypassable tests, gates, and CI, not prompting. Strip deterministic responsibility from the LLM.
-- `how-to-build-good-tests.md` — **Test & Gate Methodology:** A test is only good if it can catch (un-fixed RED $\to$ fixed GREEN). Build broad tests, expand instead of duplicating, maintain a test ledger, and promote manual catches to CI workflows.
+| # | Principle | File | One line |
+|---|---|---|---|
+| 1 | **Code is ground truth** | `guiding-small-model.md` | Read the actual code, tests, and docs before believing any summary — including your own memory of them. |
+| 2 | **Steer outcomes, not behavior** | `steer-outcomes-not-behavior.md` | Do not write behavioral rule lists; define the outcome and verify it with a mechanical gate. |
+| 3 | **Stack your leverage** | `stack-your-leverage.md` | Keep representation assets that pay for themselves; promote them when they prove out; do not hoard. |
+| 4 | **Enforce mechanically** | `enforce-code-quality-mechanically.md` | Anything deterministic becomes a gate (test, linter, AST check, CI), never a prompt plea. |
+| 5 | **Catch-first tests** | `how-to-build-good-tests.md` | A test is only good if it can catch: RED on the bug, GREEN after the fix. |
+| 6 | **Durable context memory** | `openviking-foundation.md` | Past experience is retrieved at runtime; machine facts are probed, never frozen into docs. |
 
-## The Context & Memory Plane
-- `openviking-foundation.md` — OpenViking's role (durable experience/context memory), retrieval surface, and the **ingest protocol** for new source material (Discord exports, doc sets, chat logs). Machine facts (endpoint, storage, corpus size) are probed at runtime, not frozen here. Discord status: found & harvested (see `discord-material/`).
-- `discord-material/` — **The verbatim Discord threads** (raw/ + patterns/) these pillars were synthesized from: code-is-ground-truth (8/21), steer-outcomes-not-behavior (8/11), stacking-leverage (7/26), mechanical gates (7/19), catch-first tests (8/3). `README.md` maps each thread → its pillar doc. Quote these verbatim when developing the workflow further.
-## How to Use in Practice
-- Read `operating-philosophy.md` before planning architecture or starting complex tasks.
-- Track progress against `objectives.md` during milestone planning.
-- Squeezing repos into per-repo foundation leaves (`skills/*-foundation`) **IS** Pillar 1 & 3 in action.
-- The 7-gate `foundations-workflow` and PR conclusive loops **ARE** Pillar 2 & 4 in action.
-- Catch-First testing (RED $\to$ GREEN) is the verification standard across all prompts and tools.
+`objectives.md` tracks the working objectives — treat it as a living
+checklist, not a contract. `discord-material/` holds the verbatim threads
+these principles were synthesized from; quote them when extending the
+philosophy, and keep philosophy edits faithful to their source.
+
+## Using this directory
+
+- Read the principle relevant to the decision at hand; skip the rest.
+- When a principle and reality conflict, fix the principle in the same change.
+- Machine state (endpoints, corpus sizes, model catalogs, auth state) is
+  never recorded here — probe it at runtime.

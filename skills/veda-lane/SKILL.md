@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Veda Lane
 
-Veda is the **broad model/backend routing layer** — frontier, alternate-model, and alternate-provider consultation and orchestration. It is not "the Gemini tool" or "the Opus tool": its backends (codex, claude-code, droid, pi, agy, and future registrations) are interchangeable routes resolved per task by `skills/model-router`. Probe the installed pair at runtime; delegate through Fabric's Veda runner when it works, else the direct `veda` CLI; when neither is available, the normal Pi path carries the work.
+Veda is an **execution adapter and oracle lane** — a way to run a bounded task through an alternate backend, model, or persona when the execution router has already decided a Veda mechanism is justified. It is not "the Gemini tool" or "the Opus tool", and it does not own model routing: backend/model resolution is mechanical (`skills/model-resolution`); this skill covers how to execute correctly through Veda once chosen. Probe the installed pair at runtime; delegate through Fabric's Veda runner when it works, else the direct `veda` CLI; when neither is available, the normal Pi path carries the work.
 
 ## Core Principle
 
@@ -20,14 +20,14 @@ Veda output is advisory. Probe availability instead of trusting claims (no hard-
 ## Workflow
 
 1. **Probe once per session.** `veda --version` + `veda models` (installed backends and aliases) + `veda personas` (built-in vs locally installed). `python3 ~/.agents/scripts/runtime-capabilities.py` reports the whole stack including Fabric/Veda versions.
-2. **Pick the lane by task** — personas map to effort-router roles: `navigator-plan` → NAVIGATOR, `reviewer` → REVIEWER, `frontend` / `frontend-auditor` → FRONTEND-CRITIC, `worker` → WORKER, `deep` → SOLVER/JUDGE/VERIFIER (k× cost, only for genuinely hard ambiguous problems). The persona picks the *behavior*; `skills/model-router` picks the *backend/model* from the runtime catalog — a UI-critique lane needs a UI-capable reasoning model, whichever provider currently offers one.
+2. **Pick the lane by task** — personas map to execution-router roles: `navigator-plan` → NAVIGATOR, `reviewer` → REVIEWER, `frontend` / `frontend-auditor` → FRONTEND-CRITIC, `worker` → WORKER, `deep` → SOLVER/JUDGE/VERIFIER (k× cost, only for genuinely hard ambiguous problems). The persona picks the *behavior*; `skills/model-resolution` picks the *backend/model* from the runtime catalog — a UI-critique lane needs a UI-capable reasoning model, whichever provider currently offers one.
 3. **Select models from the runtime catalog only** — `veda models <backend>`, `agy models`. Never hard-code a slug: AGY-hosted Claude may or may not exist in the installed catalog; Claude `opus` rides the claude-code backend when installed.
 4. **Delegate through the simplest supported path.** Prefer Fabric's `agents.run({ runner: "veda", persona, model })` — a one-shot headless child at the outer fabric_exec boundary (see the installed pi-fabric `docs/agents.md`, "Veda runner"). If the installed Fabric/Veda pair rejects it, fall back to the direct CLI and note the version pair — do not encode a temporary incompatibility as a permanent rule.
 
 ## The Pi backend bridge
 
 `veda -b pi` routes to **whatever Pi has configured** — the abstraction is `Veda → Pi backend → currently configured Pi provider/model`, so new Pi providers become usable lanes automatically. Re-verify at runtime: Veda's Pi backend may not enumerate Pi's catalog (`veda models pi` has reported `models (unavailable)`) — discover Pi models with `pi --list-models`, pass an explicit model, and one-shot probe the lane before trusting it.
-5. **Parse structured output** (`report.yaml`, `review: pass/needs-fix`, worker reports) — not prose.
+5. **Parse structured output where the persona provides it** (the worker persona's report file, a reviewer pass/needs-fix verdict) — not prose; Fabric's Veda runner returns a normalized result for programmatic use.
 6. **Verify load-bearing findings** against source/tests/runtime before acting on them.
 
 ## CLI mechanics (direct path; verified on veda 0.75.x)

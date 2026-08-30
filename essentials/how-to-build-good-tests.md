@@ -44,6 +44,12 @@ To prove that a test is a genuine catch, adhere strictly to the **Catch-First Pr
 
 Only when **Step 3 (RED)** and **Step 5 (GREEN)** both succeed is the test proven to be a true catch.
 
+**Non-reproducible bugs:** if a defect cannot be reproduced on demand, do not
+claim a RED proof. Record the smallest failing input observed, treat the first
+successful reproduction as the RED run, and if no reproduction ever exists,
+say so honestly in the fix description instead of manufacturing a passing
+pre-fix test.
+
 ---
 
 ## 3. Broad Category Testing vs. Narrow Unit Tests
@@ -134,8 +140,9 @@ Popularity is social proof, not technical evidence:
 
 ## 9. Structural Practices for Agentic Development
 
-- **Keep Files Small (<300 lines):** Smaller files reduce token consumption, eliminate merge
-  conflicts, and drastically improve LLM comprehension.
+- **Keep Files Small:** Split by responsibility so tests stay navigable and a CI failure
+  points at a small surface. No fixed line count — the smallest split that keeps related
+  invariants together wins.
 - **Group Changes into Cohorts:** Deconstruct large migrations into coherently-themed cohorts
   (e.g., Cohort 1: Types, Cohort 2: Store, Cohort 3: UI). Smaller scopes yield high one-shot pass rates.
 - **Build CLI Tools for Everything:** Instead of pleading with an LLM in a prompt to format

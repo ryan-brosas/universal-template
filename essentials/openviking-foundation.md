@@ -29,7 +29,7 @@ do not copy them into portable philosophy:
 - Corpus inventory: `extensions.membrowse` over `viking://resources/`
 - Dated audit snapshots live in git history, not in this document.
 
-## 4. Retrieval surface (exact tool names)
+## 3. Retrieval surface (exact tool names)
 
 | Tool | Use for | Typical call |
 |---|---|---|
@@ -57,26 +57,13 @@ When new source material arrives (e.g., a Discord export, a doc set, or a chat l
 2. Wait for `memqueue()` to drain (embedding & semantic processing).
 3. Point the workflow's context phase at it: `memsearch({query, target_uri: 'viking://resources/<kebab>/'})`.
 4. Distill the *exact* quotes into `~/.agents/essentials/` (verbatim blocks with source URI), because essentials are the durable, host-neutral reference every CLI reads.
-5. The counts/provenance table above is updated each time material is absorbed — do not drift.
+5. Record provenance where the material lands (e.g. `discord-material/README.md`); dated audit snapshots go to `audits/openviking/`, never into this document.
 
-## 5. Discord message material — FOUND (audited 2026-08-26)
+## 5. Discord message material — provenance
 
-The exact Discord message material **is** in OpenViking and is now source material for the workflow:
-
-- **Verbatim threads** (byte-exact, deduped by content hash): `essentials/discord-material/raw/`
-  — scanning all **2849 session archives** (session
-  `20260822_231822_f198ed/history/archive_001/messages.jsonl`) surfaced **5 unique Discord
-  threads**: 2026-08-21 (Tom: code is ground truth, no specs, context-first graph discovery — source wording "prewalk=best tool"), 2026-08-11
-  (AGENTS.md over-restriction → steer outcomes not behavior), 2026-07-26 (stacking leverage,
-  capture-into-skills ritual), 2026-07-19 (mechanical tests & quality packs), 2026-08-03
-  (catch-first test & gate methodology).
-- **Distilled OpenViking patterns** (byte-identical): `essentials/discord-material/patterns/`
-- **Thread → pillar mapping:** `essentials/discord-material/README.md`.
-
-`~/.hermes/hermes-agent/plugins/platforms/discord/` is adapter *code*, not message content —
-irrelevant here.
-
-**When future Discord exports arrive** (DiscordChat JSON, a raw chat log, a hermes
-channel thread), run the ingest protocol in §4 first, then add the messages **verbatim**
-under `essentials/discord-material/raw/` with their source URI — that is how the material
-stays live as the workflow develops from it.
+The five threads the pillars synthesize from are preserved verbatim in
+`essentials/discord-material/` (`raw/` + `patterns/`, mapped to pillars in its
+`README.md`). How they were recovered from session archives is recorded in
+`audits/openviking/2026-08-26.md`. When future Discord exports arrive, run the
+ingest protocol (§4) and add the messages verbatim under `discord-material/raw/`
+with their source URI.

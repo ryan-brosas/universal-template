@@ -42,7 +42,10 @@ suffices.
    - `compact.request` — compaction at a safe boundary.
    - Degrade to tracked files and say so when a provider is missing.
 3. **Agent escalation (deliberate).** Choose the mechanism with
-   `skills/effort-router` and the backend/model with `skills/model-router`.
+   `skills/execution-router` (its runner-compatibility table applies here:
+   native runners are pi/claude/veda; RLM and recursive Fabric require the Pi
+   runner) and resolve the backend/model mechanically with
+   `skills/model-resolution`.
    `agents.run({ runner: "pi", model })` runs a **native Pi child — which may
    use a different configured provider/model than Main** (cheaper workers,
    stronger reviewers, rate-limit spread; options via `pi --list-models`).

@@ -27,9 +27,9 @@ agents). It is the absorbed, living copy of the **pi-template** repository
   whichever CLIs are configured, one requested server at a time (merging into
   each CLI's own config rather than overwriting it).
 - **Retrieval**: need-driven — one primary route, escalate on a named gap,
-  stop when evidence is sufficient (`skills/evidence-router/SKILL.md`); the
-  registry (codebase-memory, openviking, context7, exa, deepwiki) supplies the
-  routes. Skill authoring follows one uniform grammar —
+  stop when the named uncertainty is closed (`skills/evidence-router/SKILL.md`);
+  the registry (codebase-memory, openviking, context7, exa, deepwiki) supplies
+  the routes. Skill authoring follows one uniform grammar —
   `skills/writing-skills/SKILL.md` + `templates/skill.md`.
 - **Governed loop (opt-in)**: `skills/workflow-lifecycle/SKILL.md` — for
   persistent/governed workspaces: init once, AGENTS.md as the spine, scoped
@@ -41,11 +41,13 @@ agents). It is the absorbed, living copy of the **pi-template** repository
   `git diff --check`) — repository-specific verification for this catalog, not
   a universal requirement. CI runs the same suite via
   `.github/workflows/pr-quality.yml`.
-- **Runtime probe**: `python3 scripts/runtime-capabilities.py` reports the
-  installed toolchain (gh, pi, pi-fabric, veda, agy, fovea, steroid, devrig,
-  codebase-memory, openviking, MCP registry state). Diagnostics only — not a
-  per-task step. Runtime facts stay here and in machine-local config, never
-  frozen into philosophy.
+- **Runtime probe + model resolution**: `python3 scripts/runtime-capabilities.py`
+  reports the installed toolchain (gh, pi, pi-fabric, veda, agy, fovea,
+  steroid, devrig, codebase-memory, openviking, MCP registry state);
+  `python3 scripts/resolve-model.py --role <role> --json` resolves a chosen
+  role to concrete backend/model candidates from live discovery. Diagnostics
+  only — not a per-task step. Runtime facts stay here and in `state/`
+  (gitignored), never frozen into philosophy or tracked config.
 - **Reference contract**: `<project>/reference/<repo>/` is implementation
   prior art — see `references/reference-contract.md` (one reference first,
   current project's tests are the acceptance authority, licensing obligations
@@ -69,8 +71,8 @@ policy invariants live in `scripts/policy-consistency.py` (CI-enforced).
 |---|---|
 | Global invariants, safety boundaries, routing summary | `AGENTS.md` |
 | Evidence and tool routing (NEED + HOST) | `skills/evidence-router` |
-| Effort/mechanism selection (Main/child/parallel/oracle/actor) | `skills/effort-router` |
-| Backend/model resolution (capability-driven, runtime-discovered) | `skills/model-router` |
+| Execution shape (Main/child/parallel/RLM/actor, write isolation) | `skills/execution-router` |
+| Backend/model resolution (mechanical, runtime-discovered; internal) | `skills/model-resolution` + `scripts/resolve-model.py` |
 | Normal development procedure | `skills/codebase-driven-development` |
 | Reference-repository rules | `references/reference-contract.md` |
 | Fabric execution, Schema modes, agents/Veda escalation | `skills/fabric-native-execution` |
