@@ -19,7 +19,7 @@ Preserve reusable leverage in its cheapest appropriate representation — not ev
 | Class | Test | Where it lands |
 |---|---|---|
 | **CODE** | Reusable implementation? | Actual code / library / project template |
-| **REFERENCE** | Upstream implementation worth keeping? | `reference/<repo>/` checkout per `reference-contract` |
+| **REFERENCE** | Upstream implementation or website worth keeping? | `reference/<repo>/` checkout or `reference/web/<site>/` capture per `reference-contract` |
 | **GATE** | Deterministic regression class with low false positives? | Test / lint / CI check / validator script |
 | **SKILL** | Repeated procedure or hard-won operational method? | Skill leaf in the catalog (follows `writing-skills`) |
 | **MEMORY** | Historical decision, failure, or context worth recall? | Session/OpenViking memory entry — not a file in the repo |

@@ -5,7 +5,7 @@
 Derived from `skills/*/SKILL.md` metadata. Discovery tool:
 `python3 scripts/skill-catalog.py search "<topic>"`.
 
-358 skills: 49 visible, 309 hidden. Visible startup metadata: ~13547 chars (~3386 tokens).
+359 skills: 50 visible, 309 hidden. Visible startup metadata: ~13715 chars (~3428 tokens).
 
 ## Entry skills
 
@@ -50,6 +50,7 @@ Direct user-facing capabilities; trigger on request.
 | [`ttdl`](../skills/ttdl/SKILL.md) | entry | visible | Use when the user wants to download or save a TikTok video (with or without audio) to disk. Browser-native capture, no yt-dlp: the page plays the video and ttd... |
 | [`upwork-proposals`](../skills/upwork-proposals/SKILL.md) | entry | visible | Use when writing an Upwork application or job proposal - concise, energetic, client-focused copy that leads with action and keeps every claim truthful |
 | [`using-git-worktrees`](../skills/using-git-worktrees/SKILL.md) | entry | visible | Use when starting feature work that needs isolation from current workspace or before executing implementation plans - creates isolated git worktrees with smart... |
+| [`web-reference`](../skills/web-reference/SKILL.md) | entry | visible | Use when a live website or web page should be captured and studied as frontend, visual, layout, interaction, or design-system prior art for implementation. |
 | [`writing-skills`](../skills/writing-skills/SKILL.md) | entry | visible | Use when authoring, editing, or verifying any SKILL.md in this catalog: canonical template, frontmatter grammar, uniform anatomy, progressive disclosure, and t... |
 | [`xsearch`](../skills/xsearch/SKILL.md) | entry | visible | Use when the user asks to search X (Twitter) for posts, discussions, or an author. Returns author, handle, text, URL, and timestamp per result. Requires browse... |
 | [`ytdl`](../skills/ytdl/SKILL.md) | entry | visible | Use when the user wants to download or save a YouTube video (audio or video) to disk. Browser-native capture, no yt-dlp or signature solving: the page plays th... |

@@ -57,6 +57,7 @@ ENTRY_SKILLS = {
     "skill-catalog",
     # tool / runtime capabilities
     "cdp", "findata", "gmaps", "gnews", "gsearch", "rsearch", "xsearch",
+    "web-reference",
     "ytdl", "ttdl", "upwork-proposals", "omarchy", "math-schema",
     "mcp-steroid", "gemini-large-context",
 }

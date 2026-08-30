@@ -567,6 +567,28 @@ def check_pr_ownership() -> None:
 
 
 
+def check_web_reference_split() -> None:
+    """web-reference owns site capture; the contract recognizes web references; rdd stays crawler-free."""
+    contract_text = read("references/reference-contract.md") or ""
+    if "web reference" not in contract_text.lower():
+        fails.append("[WEBREF-SPLIT] references/reference-contract.md: required phrase missing: 'web reference'")
+    rel = "skills/web-reference/SKILL.md"
+    text = read(rel)
+    if text is None:
+        fails.append("[WEBREF-SPLIT] skills/web-reference/SKILL.md: file missing")
+        return
+    flat = re.sub(r"\s+", " ", text)
+    for token in ("ADOPT", "ADAPT", "OMIT"):
+        if token not in flat:
+            check_fail("WEBREF-SPLIT", rel, 1, "web-reference must carry the ADOPT/ADAPT/OMIT model")
+    if "implementation and acceptance authority" not in flat:
+        check_fail("WEBREF-SPLIT", rel, 1, "web-reference must defer acceptance to the current project")
+    rdd_text = (read("skills/reference-driven-development/SKILL.md") or "").lower()
+    for token in ("browsertrix", "browser-harness", "wacz"):
+        if token in rdd_text:
+            check_fail("WEBREF-SPLIT", "skills/reference-driven-development/SKILL.md", 1, f"crawler mechanics in reference-driven-development: {token}")
+
+
 CHECKS = [
     ("PREWALK-RESERVED", check_prewalk_reserved),
     ("LIFECYCLE-OPTIONAL", check_lifecycle_optional),
@@ -605,6 +627,7 @@ CHECKS = [
     ("PR-OWNERSHIP", check_pr_ownership),
     ("README-SKILL-REFS", check_readme_skill_refs),
     ("GITHUB-OWNERSHIP", check_github_ownership),
+    ("WEBREF-SPLIT", check_web_reference_split),
 ]
 
 

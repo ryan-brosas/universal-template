@@ -23,6 +23,18 @@ When outside code materially reduces uncertainty, use ONE strong reference repos
 5. **Implement** in the current codebase; keep the reference untouched (read-only checkout).
 6. **Verify against the CURRENT project's gates** — its tests/compiler/lint/CI, never the reference's own tests alone. Record provenance and license obligations in the PR's Reference/Prior-Art section.
 
+## Reference sources
+
+A reference source is usually a repository, but the loop is the same for other evidence:
+
+- **Repository**: `reference/<repo>/`; code and tests, acquired as a read-only clone.
+- **Website**: `reference/web/<site>/`; rendered visual and interaction evidence, captured by `web-reference`. This skill only consumes it.
+- **Design artifact**: an approved design state (for example an OpenDesign project); it becomes implementation evidence only after explicit approval.
+
+For a web reference, read `REFERENCE.md` first, then `manifest.json` for scope
+and coverage gaps. A partial capture is not complete knowledge. Site captures
+never become foundations (see the reference contract).
+
 ## Rules
 
 1. **Examples beat specs** — 1–2 concrete examples from the reference one-shot what a spec takes pages to describe.

@@ -16,6 +16,7 @@
 !/scripts/legacy-skill-report.py
 !/scripts/pr-metadata.py
 !/scripts/github-audit.py
+!/scripts/web-reference-manifest.py
 !/scripts/context-budget-baseline.json
 !/scripts/fixtures/
 # Generated runtime capability state (machine-local, never committed).

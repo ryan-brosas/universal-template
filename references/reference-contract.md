@@ -8,6 +8,20 @@ live in `skills/reference-driven-development`; this file owns the rules.
 Reference repositories provide **working implementation prior art**: real
 source and real tests to study, port from, and compare against.
 
+## Reference kinds
+
+- **Code reference**: a repository checkout at `<project>/reference/<repo>/`,
+  providing implementation evidence (source, tests).
+- **Web reference**: a capture of a live website at
+  `<project>/reference/web/<site>/`, providing visual and interaction evidence
+  (rendered HTML, CSS, screenshots, archives). Produced by the `web-reference`
+  skill; validated by `~/.agents/scripts/web-reference-manifest.py`.
+
+Both are evidence, never authority. The same ADOPT / ADAPT / OMIT decision
+applies. A web reference records source, capture date, scope, evidence
+inventory, and coverage gaps in its `manifest.json`; brand assets, logos, and
+proprietary media are not copied into the project.
+
 ## Location
 
 `<project>/reference/<repo>/` — one directory per reference repository.

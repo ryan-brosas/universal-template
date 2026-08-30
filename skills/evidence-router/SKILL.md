@@ -38,6 +38,8 @@ retrieval chain; if direct source already answers the question, stop.
 | Exact semantic/type/call information (usages, inheritance, refactor safety, inspections) | **MCP Steroid / JetBrains** (`steroid_*`) | source | also the runtime lane: debugger, test runner, expression evaluation |
 | Runtime behavior | tests / debugger / runtime evidence | — | the only proof of behavior |
 | One selected inspiration repository | project-local `<project>/reference/<repo>/` | Fovea on that root, then source + tests | see `reference-driven-development` for the workflow |
+| Rendered visual or runtime evidence from a live website (DOM, CSS, screenshots, behavior) | **web-reference** (bounded capture) | inspect the capture like source | capture is evidence; the current project stays the acceptance authority |
+| Design inspiration with no named source yet | web discovery (`gsearch` / Exa) or a design tool catalog | `web-reference` on the chosen site | propose candidates, capture only the selected ones |
 | Find which past/indexed project contains a pattern (cross-repo, cross-session) | **Codebase Memory** (`list_projects` → `search_graph` / `trace_path`) | activate the candidate under `reference/` and inspect with Fovea/source | persistent library, cold path; the graph is an index, not truth |
 | Past decisions, failed attempts, lessons, recurring edge cases | **OpenViking** (`memsearch` / `memgrep` / `memread`) | durable notes | experience memory — not a second copy of local source |
 | Current library/API docs | official docs / **Context7** (`resolve-library-id` → `query-docs`) | vendored source | only when the question depends on current docs |
