@@ -115,11 +115,11 @@ veda -S deep-auth-refactor sel add config.ts:25       # Single line 25
 veda -S deep-auth-refactor sel add "src/*.c:1-80"     # First 80 lines of each file
 ```
 
-| Syntax | Description |
-|--------|-------------|
-| `file.c:10-20` | Lines 10 to 20 (inclusive) |
-| `file.c:15-` | Line 15 to end of file |
-| `file.c:8` | Single line 8 |
+| Syntax           | Description                         |
+| ---------------- | ----------------------------------- |
+| `file.c:10-20`   | Lines 10 to 20 (inclusive)          |
+| `file.c:15-`     | Line 15 to end of file              |
+| `file.c:8`       | Single line 8                       |
 | `"src/*.c:1-50"` | First 50 lines of each matched file |
 
 ---

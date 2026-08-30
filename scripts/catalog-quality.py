@@ -1,17 +1,15 @@
 #!/usr/bin/env python3
-"""Catalog quality gate - anti-slop structure plus the context-budget report.
+"""Catalog quality gate: structure checks and the context-budget report.
 
-Checks (hard failures exit 1):
-- every skill dir has SKILL.md; name matches folder; no duplicate names
-- essentials present and indexed in essentials/README.md
-- templates inventory matches templates/ on disk
-- visibility policy: entry skills visible, internal helpers hidden
-  (invocation-ownership model)
-- context budget: visible skill metadata vs the recorded baseline; growth is a
-  warning, growth beyond GROWTH_FAIL is an error until the baseline is updated
-  deliberately via --update-baseline
+These checks fail (exit 1) when:
+- a skill directory lacks `SKILL.md`, the name does not match, or names repeat;
+- the essentials are missing or not indexed in `essentials/README.md`;
+- the templates inventory does not match `templates/` on disk;
+- a visible skill stays unclassified;
+- visible metadata grows beyond the recorded baseline; a deliberate
+  refresh with the update-baseline flag resets it.
 
-Warnings print but do not fail.
+Warnings print without failing.
 """
 from __future__ import annotations
 
@@ -36,7 +34,7 @@ TOKEN_CHARS = 4            # documented rough estimator; trend metric only
 # Invocation-ownership classification (validator-side policy; hosts only read
 # disable-model-invocation). Every visible skill must carry an explicit class:
 # entry (a user request selects it directly), router (automatic dispatch point),
-# or vendor (externally managed). Hidden skills default to cold (searchable
+# or vendor (externally managed). Hidden skills are cold by default (searchable
 # specialist knowledge) unless listed as internal (another skill/system invokes
 # them).
 ENTRY_SKILLS = {
@@ -44,7 +42,7 @@ ENTRY_SKILLS = {
     "project-bootstrap", "brainstorming", "goal-setup", "prototype",
     "leverage-capture", "reference-driven-development",
     "using-git-worktrees", "zoom-out",
-    # github / delivery
+    # GitHub / delivery
     "github-repo-setup", "github-actions-engineering", "push-pr",
     "git-workflow-and-versioning", "github-contribution-opportunities",
     # engineering procedures
@@ -57,8 +55,8 @@ ENTRY_SKILLS = {
     # discovery
     "skill-catalog",
     # tool / runtime capabilities (frequent-in-coding tools only; rare
-    # utilities stay cold and searchable: findata, gmaps, gnews, rsearch,
-    # xsearch, ttdl, ytdl, gemini-large-context)
+    # utilities stay cold and searchable: `findata`, `gmaps`, `gnews`,
+    # `rsearch`, `xsearch`, `ttdl`, `ytdl`, `gemini-large-context`)
     "cdp", "gsearch", "web-reference",
     "upwork-proposals", "omarchy", "math-schema",
     "mcp-steroid",
@@ -67,7 +65,7 @@ ENTRY_SKILLS = {
 ROUTER_SKILLS = {
     "evidence-router", "execution-router",
 }
-# Internally invoked mechanics: never startup metadata.
+# Internally invoked mechanics: never in model start-up metadata.
 INTERNAL_SKILLS = {
     "model-resolution", "veda-lane", "fabric-native-execution",
     "code-discipline", "agent-code-quality-gate",
@@ -142,7 +140,7 @@ def parse_frontmatter(text: str) -> Dict[str, str]:
 
 
 def git_ignored_dirs(root: Path) -> Set[str]:
-    """Skill dirs ignored by git on this machine (machine-local skills).
+    """Skill directories ignored by git on this machine (machine-local skills).
 
     The budget, the baseline, and the generated catalogs must all measure the
     tracked set: a clean CI checkout has to reproduce every number. Local
@@ -193,7 +191,7 @@ def collect_skills(skills_dir: Path = SKILLS) -> Dict[str, dict]:
 
 
 def check_essentials_inventory() -> None:
-    """templates-inventory.md essentials list must match essentials/ on disk."""
+    """The templates-inventory essentials list must match the essentials directory."""
     if not INVENTORY.is_file():
         return
     inv = INVENTORY.read_text(encoding="utf-8")
@@ -231,8 +229,8 @@ def check_templates_inventory() -> None:
         if p.is_file() and not p.name.startswith(".")
     )
     for name in on_disk:
-        # source.yml is an inspo ledger template; inventory may list it or omit --
-        # require every non-source template to be named in the inventory body.
+        # The `source.yml` ledger template may be listed or omitted by the inventory;
+        # every other template must be named in the inventory body.
         if name == "source.yml":
             continue
         if name not in inv:
@@ -365,9 +363,9 @@ def near_duplicate_warnings(skills: Dict[str, dict]) -> None:
 
 
 def check_generated_catalogs() -> None:
-    """docs/skill-catalog.md must be current.
+    """The generated `docs/skill-catalog.md` must be current.
 
-    Generated views are derived from skills/*/SKILL.md + classify(); they are
+    Generated views are derived from `skills/*/SKILL.md` plus `classify()`; they are
     validated here so catalog-quality is the one required catalog gate.
     """
     import importlib.util

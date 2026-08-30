@@ -55,7 +55,8 @@ def check_fail(cid: str, rel: str, line_no: int, detail: str) -> None:
     fails.append(f"[{cid}] {rel}:{line_no}: {detail}")
 
 
-def forbid_phrase(cid: str, phrase: str, files: Optional[List[str]] = None) -> None:
+def forbid_phrase(cid: str, phrase: str, files=None) -> None:
+    # files: sequence of policy paths, defaults to POLICY_FILES.
     for rel in (files or POLICY_FILES):
         text = read(rel)
         if not text:
@@ -549,7 +550,7 @@ def _load_internal_skills() -> Set[str]:
         return set()
 
 
-def check_hidden_reachability(base: Path = BASE, internal: Optional[Set[str]] = None) -> List[str]:
+def check_hidden_reachability(base: Path = BASE, internal=None) -> List[str]:
     """Internal hidden skills need a real caller; cold ones are reachable via search.
 
     A hidden skill (disable-model-invocation: true) counts as reachable when any

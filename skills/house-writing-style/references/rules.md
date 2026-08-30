@@ -14,14 +14,14 @@ ASD-STE100 compliance; never claim certification.
 
 ## Hard rules (deterministic, ERROR)
 
-| Rule | Detection | Fix |
-|---|---|---|
-| Em dash | the em dash character in prose | colon, semicolon, comma, or parentheses |
-| Filler intensifiers | `genuinely`, `really`, `truly`, `actually` | delete the word |
-| Slop words | `utilize`, `seamlessly`, `effortlessly`, `delve`, `game-changer`, `supercharge` | plain replacement or delete |
-| Throat-clearing opener | "it is important to note", "it should be noted", "it's worth noting" | state the point directly |
-| Artificial landing | "in conclusion", "to summarize", "all in all" | delete; end on the content |
-| Decorative separator | six or more `= - _` characters as a line | blank line or heading |
+| Rule                   | Detection                                                                       | Fix                                     |
+| ---------------------- | ------------------------------------------------------------------------------- | --------------------------------------- |
+| Em dash                | the em dash character in prose                                                  | colon, semicolon, comma, or parentheses |
+| Filler intensifiers    | `genuinely`, `really`, `truly`, `actually`                                      | delete the word                         |
+| Slop words             | `utilize`, `seamlessly`, `effortlessly`, `delve`, `game-changer`, `supercharge` | plain replacement or delete             |
+| Throat-clearing opener | "it is important to note", "it should be noted", "it's worth noting"            | state the point directly                |
+| Artificial landing     | "in conclusion", "to summarize", "all in all"                                   | delete; end on the content              |
+| Decorative separator   | six or more `= - _` characters as a line                                        | blank line or heading                   |
 
 ## Soft rules (heuristic, WARN; model review decides)
 

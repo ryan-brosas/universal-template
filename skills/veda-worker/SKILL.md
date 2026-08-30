@@ -163,11 +163,11 @@ yq '.needs' "$REPORT"           # only when blocked
 
 Branch on the status:
 
-| Report status | What to do |
-|---|---|
-| `completed` | Check `whatWasLeftUndone` ("nothing" = done). Go to the review step. Do not re-implement. |
-| `blocked` | Supply the single `needs` item and `resume` with it answered: `veda -S task-cache-layer resume '<the missing input>'`. A new block is new information, each resume should narrow toward `completed`. Cap iterations (3) before escalating/cutting scope. |
-| `failed` | The work was attempted and its own verification disproved it. Read `discovered_issues`, revise YOUR `design.json` (the plan was wrong, not the typing), then re-run the worker against the revised design (cap 1 replan per design). |
+| Report status | What to do                                                                                                                                                                                                                                               |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `completed`   | Check `whatWasLeftUndone` ("nothing" = done). Go to the review step. Do not re-implement.                                                                                                                                                                |
+| `blocked`     | Supply the single `needs` item and `resume` with it answered: `veda -S task-cache-layer resume '<the missing input>'`. A new block is new information, each resume should narrow toward `completed`. Cap iterations (3) before escalating/cutting scope. |
+| `failed`      | The work was attempted and its own verification disproved it. Read `discovered_issues`, revise YOUR `design.json` (the plan was wrong, not the typing), then re-run the worker against the revised design (cap 1 replan per design).                     |
 
 ## Step 5, Review the Whole Result (reviewer at end)
 
