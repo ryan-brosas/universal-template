@@ -19,6 +19,10 @@
 #     from all chains (observed 2026-08-30); re-add only after it works.
 #   - yolo-auto/qwen3.8-27b: spam-safe lane (owner-approved, no rate concern).
 #   - pi provider readiness is environment-scoped — check per lane.
+#   - Catalog context columns are base-tier values: an active Pro
+#     subscription can raise the effective window (owner-confirmed 256K on
+#     yolo-auto/qwen3.8-27b vs 131.1K listed). Owner-confirmed effective
+#     limits override catalog numbers for context budgeting.
 
 profiles:
   economy-worker:
@@ -51,4 +55,4 @@ profiles:
       - agy:claude-sonnet-4-6
   spam-worker:
     prefer:
-      - pi:yolo-auto/qwen3.8-27b             # owner-approved spam lane (131K, thinking, images)
+      - pi:yolo-auto/qwen3.8-27b             # owner-approved spam lane; 256K effective ctx (Pro subs; catalog lists 131.1K), thinking + images
