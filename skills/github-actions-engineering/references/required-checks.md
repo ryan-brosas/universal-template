@@ -17,19 +17,24 @@ Once a ruleset requires a check name, renaming it breaks merges. Prefer one stab
 
 ### Correct aggregation job
 
-A gate succeeds **only when every needed job reports `success`** — `if: always()` alone is wrong because it runs the gate but does not make it fail:
+**The gate must RUN to a verdict — a skipped required job counts as success.** If the gate's `if:` can evaluate false when an upstream job fails (e.g. `needs.lint.result == 'success' && ...`), the gate is *skipped*, GitHub reports the skipped required check as successful, and broken changes merge. `if: always()` alone is equally wrong (it runs but succeeds regardless). The correct pattern runs unconditionally (except on cancellation) and fails unless every dependency succeeded:
 
 ```yaml
 required:
   needs: [lint, typecheck, test, build]
-  # run even when an upstream job failed (so the verdict is visible),
-  # but succeed only if every required dependency succeeded:
-  if: ${{ !cancelled() && needs.lint.result == 'success' && needs.typecheck.result == 'success' && needs.test.result == 'success' && needs.build.result == 'success' }}
+  if: ${{ !cancelled() }}   # always reach a verdict; never skip (skipped = green)
   steps:
-    - run: echo "all required checks passed"
+    - name: Fail unless every required job succeeded
+      run: |
+        # needs.<id>.result is a fixed enum: success | failure | cancelled | skipped
+        # (safe to interpolate: not attacker-controlled data)
+        case ",${{ join(needs.*.result, ',') }}," in
+          *,failure,*|*,cancelled,*|*,skipped,*) exit 1 ;;
+          *) exit 0 ;;
+        esac
 ```
 
-For many dependencies, generate the condition or check `needs.*.result` in a script step that exits non-zero on any `failure`/`cancelled` result — but never a gate that succeeds unconditionally.
+Treat a `skipped` dependency as a failure here too — a skipped test job must not yield a green gate. Test the gate both ways: break a required job → gate red; fix it → gate green. A gate that has never failed is not proven.
 
 Test the gate both ways: break a required job → gate red; fix it → gate green. A gate that never failed is not proven. Never use a required gate with plain `continue-on-error` upstream: a skipped/failed dependency must never yield a green gate. Do not add an aggregator at all when the repository's ruleset already requires stable individual checks cleanly.
 
@@ -70,9 +75,10 @@ If expensive CI skips drafts (`if: github.event.pull_request.draft == false`), v
 
 ## Job naming
 
-- Stable machine ids (`lint`, `test`, `build`); descriptive display names are fine and do not affect required-check identity — but know which one GitHub surfaces and validate from a real run.
+- The reported check context is the job's display `name:` (its id when unset), suffixed with matrix values when present, prefixed by the workflow name — e.g. `quality / test (3.12)`. **Rulesets match that exact string, so renaming the workflow OR a job name changes required-check identity** and strands open PRs without the required status.
+- Keep machine ids (`lint`, `test`, `build`) stable; treat both ids and display names of required jobs as frozen API once a ruleset depends on them.
 - No emojis in required check names; they complicate ruleset matching.
-- Required checks that exist only on one workflow must keep that workflow's name stable too (the check string includes it).
+- Validate the actual check strings from a real run (`gh pr checks`, check-runs API) before reporting the contract — never assume id vs name from memory.
 
 ## Governance handoff (github-repo-setup)
 
