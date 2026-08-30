@@ -98,7 +98,29 @@ BUCKETS = [
 ]
 
 
+def git_ignored_dirs(root: Path) -> set[str]:
+    """Skill dirs ignored by git on this machine (machine-local skills).
+
+    Generated catalogs must regenerate byte-identically from a clean CI
+    checkout, so they exclude these; local search still lists them.
+    """
+    try:
+        import subprocess
+        dirs = [d.name for d in root.iterdir()
+                if d.is_dir() and not d.name.startswith(".")]
+        r = subprocess.run(
+            ["git", "-C", str(root.parent), "check-ignore", "--stdin", "--no-index"],
+            input="\n".join("skills/" + n for n in dirs) + "\n",
+            capture_output=True, text=True)
+        if r.returncode not in (0, 1):
+            return set()
+        return {line.rsplit("/", 1)[-1] for line in r.stdout.splitlines() if line.strip()}
+    except Exception:  # noqa: BLE001 - no git available: treat everything as tracked
+        return set()
+
+
 def scan() -> list[dict]:
+    local_dirs = git_ignored_dirs(SKILLS)
     out: list[dict] = []
     for d in sorted(SKILLS.iterdir()):
         if not d.is_dir() or d.name.startswith("."):
@@ -332,7 +354,8 @@ def cmd_list(skills: list[dict], args) -> int:
         return 0
     for s in rows:
         vis = "hidden" if s["hidden"] else "VISIBLE"
-        print(f"{s['cls'] or 'unclassified':12} {vis:7} {s['name']}")
+        local = " machine-local" if s.get("local") else ""
+        print(f"{s['cls'] or 'unclassified':12} {vis:7} {s['name']}{local}")
     print(f"-- {len(rows)} skills", file=sys.stderr)
     return 0
 
@@ -401,10 +424,19 @@ def cmd_stats(skills: list[dict], args) -> int:
     return 0
 
 
+def build_docs(skills: list[dict]) -> dict[str, str]:
+    """Generated catalogs cover the tracked catalog only: machine-local
+    (git-ignored) skills are excluded so a clean CI checkout regenerates
+    byte-identical docs."""
+    pub = [s for s in skills if not s.get("local")]
+    return {
+        DOCS / "skill-catalog.md": build_skill_catalog_md(pub),
+        DOCS / "foundation-catalog.md": build_foundation_catalog_md(pub),
+    }
+
+
 def cmd_generate(skills: list[dict], args) -> int:
-    skill_doc = build_skill_catalog_md(skills)
-    foundation_doc = build_foundation_catalog_md(skills)
-    targets = {DOCS / "skill-catalog.md": skill_doc, DOCS / "foundation-catalog.md": foundation_doc}
+    targets = build_docs(skills)
     if args.check:
         stale = []
         for path, content in targets.items():

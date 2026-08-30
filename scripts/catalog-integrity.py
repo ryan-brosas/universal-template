@@ -99,11 +99,7 @@ def check_generated_catalogs() -> None:
         return
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
-    skills = mod.scan()
-    targets = {
-        "docs/skill-catalog.md": mod.build_skill_catalog_md(skills),
-        "docs/foundation-catalog.md": mod.build_foundation_catalog_md(skills),
-    }
+    targets = mod.build_docs(mod.scan())
     for rel, content in targets.items():
         p = BASE / rel
         if not p.is_file() or p.read_text(encoding="utf-8") != content:
