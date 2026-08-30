@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# noinspection LSPLocalInspectionTool
 """Catalog quality gate: structure checks and the context-budget report.
 
 These checks fail (exit 1) when:
