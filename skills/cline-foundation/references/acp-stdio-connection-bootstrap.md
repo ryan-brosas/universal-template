@@ -33,4 +33,3 @@ await mcp.codebase_memory.search_graph({ project: "cline", query: "runAcpMode st
 
 ## Verdict
 Adopt stdout-is-protocol hygiene (stderr-only diagnostics, never error-labeled), lazy bridge imports, one-connection-per-process with a fresh-agent factory, park-on-closed lifetime, and fail-reject headless OAuth prompts. Adapt diagnostic prefixes and the provider vocabulary (closed trio: cline / cline-pass / openai-codex). Omit Cline's credential storage internals. Coverage: sources+test read whole at pin; MCP coverage check not runnable this session — recorded caveat.
-

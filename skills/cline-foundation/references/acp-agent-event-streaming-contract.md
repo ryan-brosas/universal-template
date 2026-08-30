@@ -44,4 +44,3 @@ await mcp.codebase_memory.search_graph({ project: "cline", query: "forwardAgentE
 
 ## Verdict
 Adopt payload-at-start/terminal-at-end streaming with fire-and-forget notification sends, one-shot text payloads, error-presence tool settlement, and end-only media materialization with graceful text degradation. Adapt the event-type names and update vocabulary to your protocol. Omit Cline's specific AgentEvent union. Coverage: source+test read whole at pin; MCP coverage check not runnable this session — recorded caveat.
-

@@ -33,4 +33,3 @@ await mcp.codebase_memory.get_code_snippet({ project: "cline", qualified_name: "
 
 ## Verdict
 Adopt the fail-closed decision table with an always-echoed decision frame, fire-and-forget pending updates, and the auto-approve bypass as a capability closure over the connection. Adapt the option vocabulary and tool-kind map to host tool names. Omit (or deliberately implement) the always-rule persistence Cline itself lacks — do not port the dead affordance as if it were durable. Coverage: sources read whole at pin; no dedicated permissions suite; MCP coverage check not runnable this session — recorded caveat.
-

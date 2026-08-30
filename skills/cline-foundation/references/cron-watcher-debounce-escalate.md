@@ -40,4 +40,3 @@ await mcp.codebase_memory.get_code_snippet({ project: "cline", qualified_name: "
 
 ## Verdict
 Adopt trailing-edge per-path debounce with a filter set that mirrors the downstream walk, delete-escalates-to-full-reconcile, mkdir-before-watch, and the dispose latch. Adapt the 250ms constant, the skip set, and the materialization hook signature. Omit Cline's reconciler internals (covered by `cron-reconciler-loop`). Coverage: source+test read whole at pin; MCP coverage check not runnable this session (transport unavailable) — recorded caveat.
-

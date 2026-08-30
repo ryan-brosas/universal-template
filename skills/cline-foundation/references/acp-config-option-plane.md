@@ -46,4 +46,3 @@ await mcp.codebase_memory.search_graph({ project: "cline", query: "setSessionCon
 
 ## Verdict
 Adopt env-pin immutability, teardown-then-re-resolve ordering against the new catalog, declared-default-over-first-listed model fallback, single-flight token refresh, fail-closed value parsing, and rebuild-and-broadcast-all after every accepted change. Adapt the config vocabulary and provider catalog source. Omit Cline's organization persistence details. Coverage: sources+tests read whole at pin; MCP coverage check not runnable this session — recorded caveat.
-

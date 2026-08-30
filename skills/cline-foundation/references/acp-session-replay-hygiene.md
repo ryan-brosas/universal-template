@@ -37,4 +37,3 @@ await mcp.codebase_memory.search_graph({ project: "cline", query: "replaySession
 
 ## Verdict
 Adopt awaited in-order replay, display-projection-before-transport, asymmetric user-strip/assistant-verbatim text handling, synthetic-prompt filtering, and pending-then-settled historical tool pairing. Adapt the wrapper vocabulary (`<user_input>`, `<mode_notice>`, `<user_command>`) and the display projection to your transcript format. Omit Cline's provider metadata specifics. Coverage: source+test read whole at pin; MCP coverage check not runnable this session — recorded caveat.
-

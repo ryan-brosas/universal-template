@@ -33,4 +33,3 @@ await mcp.codebase_memory.get_code_snippet({ project: "cline", qualified_name: "
 
 ## Verdict
 Adopt persist-first replay detection via an INSERT constraint, the three-distinct-semantics suppression ladder (debounce push-out / dedupe window / spec-wide cooldown), the race-guarded UPDATE with fall-through, and filter_mismatch excluded from throttling counts. Adapt reason names, the dedupeKey template, and filter resolution depth. Omit Cline's runner claim loop (separate plane). Coverage: source+test read whole at pin; MCP coverage check not runnable this session — recorded caveat.
-

@@ -40,4 +40,3 @@ await mcp.codebase_memory.search_graph({ project: "cline", query: "ensureSession
 
 ## Verdict
 Adopt lazy idempotent session managers, persisting the runtime session under the client-held id, save-before-teardown continuity, one-AbortController cancel with double re-check, cancelled-not-error reporting, and fail-closed empty-resume. Adapt the dispose reason vocabulary and the approval-capability closure to your runtime. Omit Cline's provider-settings persistence. Coverage: source read whole at pin; no direct suite — recorded caveat.
-
