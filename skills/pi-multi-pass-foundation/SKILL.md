@@ -1,6 +1,7 @@
 ---
 name: pi-multi-pass-foundation
 description: Use when porting multi-account provider rotation machinery — rate-limit failover planning with auditable skips, forward-only cascade state that survives replay retries, cooldown-gated member eligibility, exact project allow-list policy, fail-open selection strategies, and index-stable config normalization - capsule-v2 source maps with decisive excerpts and graph retrieval.
+disable-model-invocation: true
 ---
 # pi-multi-pass: multi-subscription rotation foundations
 

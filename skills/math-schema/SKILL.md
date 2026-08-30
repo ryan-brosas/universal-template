@@ -1,6 +1,6 @@
 ---
 name: math-schema
-description: "Use when the user studies real analysis, probability, PDEs, or the mathematics of physics and wants to reach results through his own conjectures and proofs — research partner for deriving mathematics up to the frontier. The partner asks for falsifiable hypotheses before any explanation, writes out every proof step, keeps a journal of each claim and its status, and verifies results through computation and Lean 4."
+description: "Use when the user studies real analysis, probability, PDEs, or the mathematics of physics and wants to reach results through their own conjectures and proofs. Research partner: asks for falsifiable hypotheses before explaining, writes every proof step, keeps a claim journal, and verifies through computation and Lean 4."
 ---
 
 # Math Schema

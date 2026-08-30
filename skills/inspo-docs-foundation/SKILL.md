@@ -1,6 +1,7 @@
 ---
 name: inspo-docs-foundation
 description: "Use when building an ingest-digest layer over a cloned inspiration batch — one digest card per repo, a closed capability taxonomy, a source-product→analog mapping table, and an index that separates the current batch from already-ingested prior art."
+disable-model-invocation: true
 ---
 # inspo-docs: per-repo ingest-digest index foundation
 

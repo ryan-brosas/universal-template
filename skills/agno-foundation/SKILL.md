@@ -1,6 +1,7 @@
 ---
 name: agno-foundation
 description: "Use when building or porting an agent framework runtime — the single-agent run loop with retries/cancellation/HITL pauses/approvals and conversation time-travel (continue/fork/regenerate), model provider fallback and retry-with-guidance, OR the multi-agent layer: a supervisor/team-leader loop over member agents, an autonomous shared-task-list mode, tool routing for the leader model, cooperative run cancellation with cancel-before-start support, and HITL pause propagation from members to teams. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
+disable-model-invocation: true
 ---
 
 # agno: Agent & Team Control-Plane Foundations

@@ -1,6 +1,7 @@
 ---
 name: cline-foundation
 description: "Use when porting Cline's agentic-runtime core — context compaction (trigger budget, overflow-recovery ladder, safe cuts, no-LLM fold), compaction state projection with prefix hashes, runtime safety (loop detection, mistake tracker), pending-prompt steer/queue gate, local hub-daemon transport plane (discovery record, mkdir-lock mutex, ensure/retire ladders, WS envelope, subscription refcounts), claim-once env sentinels with supervised-child restart/adoption, hub command router (authority/drain gates, degraded replies), monotonic shutdown coordination, disk-truth cron reconciliation, agenda task persistence kernel (run-admission gates, exactly-once terminals, crash triage, revision+content-hash CAS), strict/tolerant Markdown intent grammars, location containment, todo-tool scope gate, workspace file-index TTL worker, @mention budget matching, ACP stdio bridge (stdio hygiene, fail-closed permissions, streaming/replay, session lifecycle, config options). Source code and direct tests are ground truth."
+disable-model-invocation: true
 ---
 
 # Cline: agentic coding-agent runtime core

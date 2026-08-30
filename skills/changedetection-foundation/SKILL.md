@@ -1,6 +1,7 @@
 ---
 name: changedetection-foundation
 description: "Use when building watch/recheck schedulers, polite pollers, or any multi-worker job fleet — reusable contracts from changedetection.io (Apache-2.0): epoch-priority recheck queue, claim-then-defer UUID mutex, ticker scheduler gate ladder, timezone-pinned schedule windows, per-worker event-loop fleet with health self-repair, quiescence protocol, and memory-hygiene cleanup."
+disable-model-invocation: true
 ---
 
 # changedetection.io: Watch-scheduler & worker-fleet Foundation

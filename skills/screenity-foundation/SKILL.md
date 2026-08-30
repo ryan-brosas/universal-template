@@ -1,6 +1,7 @@
 ---
 name: screenity-foundation
 description: Use when porting Chrome-extension recording machinery from screenity — WebCodecs fast-recorder capability gate (probe ladder, sticky device-disable TTL, transient classification), MediaRecorder fallback swap, start-gate stream-readiness races, background alarm watchdogs (first-chunk evidence ladder, stall recovery), output-blob validation taxonomy, the MV3 message-router response contract, and the CloudRecorder upload-telemetry/session-recovery kernel (BG-forward survival relay, serialized event ring store, fan-in hub, typed request allowlist, send degradation ladder, dual status machines, post-crash journal sweep and download-then-clear rescue).
+disable-model-invocation: true
 ---
 
 # screenity: recording-lifecycle foundation

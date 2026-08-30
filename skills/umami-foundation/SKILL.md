@@ -1,6 +1,7 @@
 ---
 name: umami-foundation
 description: "Use when porting privacy-first analytics/telemetry machinery — cookieless derived session identity, rolling cache-token handshakes for anonymous ingest, dual-backend SQL dispatch (Postgres + ClickHouse), dynamic filter compilation with typed bind placeholders, Kafka wire-size batching, soft-delete read caches, 2FA with partial-auth tokens and replay ledgers, rrweb session-replay chunking/reassembly, heatmap capture with scroll bucketing, hand-rolled Core Web Vitals, and share-token capability grants."
+disable-model-invocation: true
 ---
 # umami: privacy-first web analytics platform
 

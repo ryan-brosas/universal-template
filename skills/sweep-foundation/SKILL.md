@@ -1,6 +1,7 @@
 ---
 name: sweep-foundation
 description: "Use when porting GitHub-app webhook routers that fan out to long-running agent jobs: fail-open HMAC signature gates, latest-wins ctypes thread cancellation, per-object coalescing work queues, event/action gate ladders, GHA-autofix attribution chains, single-progress-comment lifecycles, branch/commit/PR assembly, cron PR maintenance, delta-gated progress persistence, mutable-comment header rendering, lexical/vector code-search infrastructure, LLM file-selection budgeting, Jira second-forge dispatch via issue mirroring, FCR tag grammar with COPIED_FROM markers, FCR application loops with lazy tool calls, self-correcting search-and-replace match ladders, FCR pre-validation escape hatches, GHA two-stage planner, repo-parsing chunk corpus builder, lint/parse validation kernel, FCR tag grammar kernel, jsonpatch-diffed chat streaming, stateful suggestion streaming, XML tool-call parse twins, and plan-context assembly. Source/tests ground truth; references carry excerpts."
+disable-model-invocation: true
 ---
 # sweep: GitHub webhook dispatch & ticket lifecycle foundation
 

@@ -1,6 +1,7 @@
 ---
 name: litellm-foundation
 description: "Use when porting multi-provider LLM gateway machinery — provider routing, exception mapping, cooldown/retry ladders, streaming normalization, cost ledgers. Source code and direct tests are ground truth."
+disable-model-invocation: true
 ---
 
 # litellm: Multi-Provider LLM Gateway Kernel Foundation

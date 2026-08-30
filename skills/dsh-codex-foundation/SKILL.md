@@ -1,6 +1,7 @@
 ---
 name: dsh-codex-foundation
 description: "Use when porting ChatGPT-OAuth Codex provider machinery — provider-native auth adapters, single-flight browser login, cancellation and status recovery, exact-origin Web OAuth routes, CLI device-code selection, bounded Fast Mode state, quota parsing, search, image tools, Responses API policy, model-catalog settings, SSRF-guarded public HTTP loading, durable search-request session events, boot-free CLI JSON diagnostics, terminal /codex command internals (background login controller, headless-aware browser launch, redaction-bounded handler), client UI plane (slot-injected browser entry, settings OAuth lifecycle, fail-soft quota projection, fast-mode toggle, imagegen tool view), binary publication plane (sandbox-checked byte writes, atomic temp-file publish under per-path promise locks), server-side settings/Fast-Mode route gates over one bounded-body kernel, OAuth-bearer/factory/catalog adapter assembly, search config-overlay defaults, version-injection/composition-patch/release-provenance build plumbing."
+disable-model-invocation: true
 ---
 # dsh-codex: OpenAI Codex Subscription Provider Foundation
 

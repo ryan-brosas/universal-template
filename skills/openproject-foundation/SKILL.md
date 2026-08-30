@@ -1,6 +1,7 @@
 ---
 name: openproject-foundation
 description: "Use when porting OpenProject's service-object mutation spine — result objects with dependent trees, contract-gated stage ladders, transactional/advisory-locked execution contexts, field-level permission-reduced writability, system-vs-user change attribution, and the work-package attribute/update cascade. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
+disable-model-invocation: true
 ---
 # OpenProject: mutation-kernel foundation
 

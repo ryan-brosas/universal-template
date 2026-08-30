@@ -1,6 +1,7 @@
 ---
 name: txtai-foundation
 description: Use when porting txtai vector-engine mechanics — hybrid dense+sparse fusion, IVFSparse/FAISS/sqlite-vec index builds, BM25 term scoring, filter-then-search planning, or embeddings lifecycle. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval.
+disable-model-invocation: true
 ---
 
 # txtai: Embeddings Engine Foundation

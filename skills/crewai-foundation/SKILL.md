@@ -1,6 +1,7 @@
 ---
 name: crewai-foundation
 description: "Use when porting crewAI's Flow runtime kernel — event-driven method graph execution, HITL pause/resume, checkpoint lineage, and the pluggable-infra patterns they share."
+disable-model-invocation: true
 ---
 
 # crewAI: flow-runtime & event-bus foundation

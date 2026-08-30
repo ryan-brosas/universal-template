@@ -1,6 +1,7 @@
 ---
 name: openhistory-foundation
 description: "Use when porting append-only JSONL event-store ingestion, bounded record schemas, incremental append caches with partial-write recovery, atomic in-place file rewrites, stateful privacy/redaction filters over timestamp-ordered event streams, task-episode segmentation with stable derived-record ids, provenance reconciliation of derived summary stores after source deletions, or evidence- calibrated LLM summarization gates that cap claims at what observations prove. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
+disable-model-invocation: true
 ---
 # OpenHistory: local activity-history ingestion, projection & privacy foundation
 

@@ -1,6 +1,7 @@
 ---
 name: pi-mono-foundation
 description: Use when porting agent-loop, event-stream, provider-retry, context-compaction, branch-summarization, tool-batch-execution, auto-compaction wiring, Anthropic wire-compat/message normalization, session-storage backends, extension tool-wrapping, Vertex AI auth/ADC ladders, Azure OpenAI Responses twin deltas, Codex WebSocket resume transports, provider OAuth refresh contracts, or cross-model message-history preshaping from badlogic/pi-mono — capsule-v2 source maps with decisive excerpts and graph retrieval.
+disable-model-invocation: true
 ---
 
 # pi-mono: agent-runtime foundation

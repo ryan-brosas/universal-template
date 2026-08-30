@@ -1,7 +1,6 @@
 ---
 name: push-pr
-description: "Use when a verified branch needs a repeatable GitHub pull request with local quality gates, CI evidence, screenshots, Codebase Memory observation, GitHub metadata (labels, milestone, assignees, reviewers, project, draft), a learn handoff, or PR review feedback must be addressed in-thread and resolved. The github-actions-engineering skill authors the workflow file."
-disable-model-invocation: true
+description: "Use when finished work on a verified branch needs to be pushed and opened or updated as a GitHub pull request, or when PR review feedback must be addressed in its thread. Runs the project's own gates, builds the PR body from real evidence, and watches required CI before marking the PR ready."
 ---
 
 # Push PR

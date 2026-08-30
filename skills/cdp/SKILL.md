@@ -1,6 +1,6 @@
 ---
 name: cdp
-description: "Use when the user wants to automate, script, or inspect a Chromium-based browser via CDP — drive any Chromium-based browser through the DevTools Protocol from JavaScript: run JS snippets through the `browser-harness-js` CLI, which auto-spawns a long-lived Node HTTP server holding a fully-typed CDP `Session`, and every call executes against the same persistent connection; session, active target, and globals survive across calls — single tab or multi-tab, attach to an existing browser or launch a new one with --remote-debugging-port."
+description: "Use when the user wants to automate, script, or inspect a Chromium-based browser through the DevTools Protocol. Runs JS snippets through the browser-harness-js CLI against a persistent CDP session: session, targets, and globals survive across calls; attach to a running browser or launch one with --remote-debugging-port."
 setup: bash /Users/monotykamary/VCS/working-remote/open-source/browser-harness-js/skills/cdp/scripts/setup
 compatibility: >-
   Requires `node` on PATH (the REPL server is Node-native — TypeScript type stripping from Node 23.6) and a Chromium-based browser with remote debugging (chrome://inspect or --remote-debugging-port).

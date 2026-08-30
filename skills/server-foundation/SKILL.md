@@ -1,6 +1,7 @@
 ---
 name: server-foundation
 description: "Use when porting multi-engine push/notification fan-out, Azure Notification Hubs registration pools, tag-based targeting/exclusion grammars, installation-relay protocols for self-hosted instances, feature-flagged per-user vault-sync fan-out, or the real-time consumer side: SignalR hub group grammars and connect lifecycles, queue-consumer poll/poison loops, internal send ingress, wire-format contract tables across rolling deploys, and pre-auth token-as-group waiting rooms. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
+disable-model-invocation: true
 ---
 # Bitwarden server: push-notification platform foundation
 

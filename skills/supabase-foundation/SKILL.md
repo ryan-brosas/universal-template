@@ -1,6 +1,7 @@
 ---
 name: supabase-foundation
 description: Use when porting Supabase studio dashboard machinery — typed OpenAPI fetch-client kernel with error enrichment, duck-typed error classification ladder, HTTP/3 empty-body normalization, fail-fast pg-meta connection guard, SQL guard ladder with line rewinding, contextual cache invalidation, react-query data-module recipe with retry gating, branded-SQL taint kernel with ident/literal/keyword ladders, filter compiler, guarded query-builder pipeline, role-impersonation producer plane, cursor-paginated table-row fetching, disjoint analytics safe-SQL brand family, query-cell source rebrand registry, composite-keyset and server-cursor pagination, cell-operations document reducer, draft-id/wire identity ladder, scoped-OID catalog retrieve, shared safe-SQL log-query builder, rows-count heap-size gate, DDL mutation statement ladders, content wire-brand remap boundary, table-editor prefetch + grid-state plane, permission-settle count gate, comment-marker column masking, severity-chart zero-fill under level filters.
+disable-model-invocation: true
 ---
 
 # Supabase: studio API data-fetching kernel foundation

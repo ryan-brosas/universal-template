@@ -2,6 +2,7 @@
 name: openhands-foundation
 description: "Use when building or porting an agent-chat frontend or the OpenHands Agent Canvas UI runtime — resumable dual-socket WebSocket event streams with REST-preload gating, rAF delta coalescing, id-dedup replay handling, optimistic message queues with server-echo matching, replay-safe client-action dispatch, reconnect ladders for parallel sockets, cron-preset automation schedules, browser-executed client tools with exactly-once launch ledgers, backend-split REST services with compensating import transactions, scoped query-cache invalidation, contract-fixture MSW mock fleets, desktop boot-splash launch chains, bootstrap version gates, local dev-stack launch orchestration, read-only terminal projection, rate-budgeted run-health dashboards, multi-backend selection with persisted health disable-latches, prompt-injection git controls, cookie-minted workspace file previews, host-login ACP auth probes, and manifest-owned command palettes."
 
+disable-model-invocation: true
 ---
 
 # OpenHands (Agent Canvas): agent-conversation UI runtime foundation

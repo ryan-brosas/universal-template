@@ -1,6 +1,7 @@
 ---
 name: typechat-foundation
 description: "Use when porting natural-language→structured-JSON pipelines — schema-driven prompting, LLM-output validation with one-shot repair, safe JSON program interpretation, retry/timeout/DoS hardening for model endpoints, or Python↔TypeScript schema bridging."
+disable-model-invocation: true
 ---
 # TypeChat: structured-LLM-output foundation
 

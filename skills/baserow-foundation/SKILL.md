@@ -1,6 +1,7 @@
 ---
 name: baserow-foundation
 description: "Use when porting Baserow's dynamic-schema kernel: per-user-table Postgres DDL, runtime Django model generation, versioned model caching, link-row twin relations, and MVCC-safe reads beside live ALTERs."
+disable-model-invocation: true
 ---
 
 # Baserow: dynamic user-table schema kernel

@@ -1,6 +1,7 @@
 ---
 name: semantic-kernel-foundation
 description: Use when porting Semantic Kernel's Python kernel-core machinery — filter call-stack onion, corrective tool-call feedback, bounded auto-invoke loop, exception smuggling, OTel-gated telemetry, decorator-time metadata, argument coercion, copy-on-add plugin registries, the {{...}} prompt-template block engine, HTML trust gates, AI service selection/registration, tool-view generation, prompt-config parsing ladders, Jinja2/Handlebars helper-binding/sandbox, streaming auto-invoke twin, .NET method-function/filter mirrors, and the agents plane (Assistant run lifecycle, requires-action handoff, Responses auto-invoke loop, agent merge twins, function-choice gate, Azure AI run lifecycle + approval gate, Azure streaming event plane, request-prep flattening, handoff turn-taking, .NET FunctionChoiceBehavior twin, the AutoGen-style actor runtime (envelope queue, intervention gate, routed handlers, subscriptions, serialization registry, telemetry links), Responses streaming item mapping, and the AgentChannel protocol).
+disable-model-invocation: true
 ---
 
 # Semantic Kernel: kernel-core invocation foundation

@@ -1,6 +1,6 @@
 ---
 name: ttdl
-description: "Use when the user wants to download, save, or fetch a TikTok video (with or without audio) to disk — browser-native capture with no yt-dlp, no signature solver, no watermark: the page plays the video (URL signing, CDN tokens, quality selection), ttdl records the demuxed media the player feeds to MediaSource via a SourceBuffer.appendBuffer hook and muxes to MP4 with ffmpeg. Region-locked and age-gated content work as long as a logged-in tab can play them; the capture is the clean unwatermarked playback stream."
+description: "Use when the user wants to download or save a TikTok video (with or without audio) to disk. Browser-native capture, no yt-dlp: the page plays the video and ttdl records the demuxed stream the player feeds to MediaSource, then muxes to MP4 with ffmpeg. Region-locked and age-gated content work with a logged-in tab."
 setup: bash <skill-dir>/scripts/setup
 compatibility: Requires `browser-harness-js` on PATH + a Chromium browser with remote debugging (see the `cdp` skill) and a logged-in TikTok tab for gated/region-locked content. `ffmpeg` on PATH (always — mux + trim + faststart).
 ---

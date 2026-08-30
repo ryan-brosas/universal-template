@@ -2,6 +2,7 @@
 name: pydantic-foundation
 description: "Use when porting pydantic-v2-style machinery into another codebase: metaclass-driven model class construction, deferred/lazy validator+serializer builds with loud mock errors, generic-model parametrization and caching, union→tagged-union conversion, core-schema traversal/cleaning, or a type-checker plugin that synthesizes fields-aware constructors. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
 
+disable-model-invocation: true
 ---
 
 # pydantic: Foundation

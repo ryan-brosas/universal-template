@@ -1,5 +1,9 @@
 # Essential: The Operating Philosophy (Synthesized)
 
+> Explanatory rationale, not a separate policy source: the long-form
+> synthesis behind the six one-page essentials. When this file and a
+> focused essential disagree, the focused essential wins.
+
 A unified synthesis of mentor Tom and scarywood75's core operating pillars,
 distilled into an authoritative, actionable guide for coding agents and developers.
 

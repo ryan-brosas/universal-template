@@ -1,6 +1,7 @@
 ---
 name: analytics-foundation
 description: Use when porting or debugging privacy-analytics engine internals — ClickHouse query planning with table partitioning and subquery joins, session metric sign arithmetic, timeSlots smearing, goal array-index joins, filter-to-SQL compilation, batched RowBinary ingestion, per-user serialization, comparison-period arithmetic, or tracker engagement protocol.
+disable-model-invocation: true
 ---
 
 # Plausible Analytics: ClickHouse web-analytics foundation

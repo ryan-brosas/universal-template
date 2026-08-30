@@ -1,6 +1,6 @@
 ---
 name: gnews
-description: "Use when the user asks for news, headlines, or recent coverage of a topic — search Google News through CDP. Returns structured results (title, URL, source, time, snippet) for any query — the publisher's direct URL, no news.google.com redirect wrapper. Requires browser-harness-js on PATH and a Chromium-based browser with remote debugging enabled."
+description: "Use when the user asks for news, headlines, or recent coverage of a topic. Google News via CDP returns title, URL, source, time, and snippet, linking the publisher direct URL. Requires browser-harness-js on PATH and a Chromium browser with remote debugging."
 setup: bash <skill-dir>/scripts/setup
 compatibility: >-
   Requires browser-harness-js on PATH and a running Chromium browser with

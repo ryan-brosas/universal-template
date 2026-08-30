@@ -1,6 +1,7 @@
 ---
 name: ollama-foundation
 description: "Use when porting local model-serving machinery from Ollama: scheduler load/evict loops, VRAM prediction and GPU placement, OOM retry ladders, streaming NDJSON→SSE codecs, thinking/harmony/tool parsers, capability derivation, and OpenAI/Anthropic compat bridges."
+disable-model-invocation: true
 ---
 
 # Ollama: local model server foundation

@@ -1,6 +1,7 @@
 ---
 name: pydantic-settings-foundation
 description: Use when porting layered settings/config resolution machinery — ordered settings-source pipelines, env-var field resolution with aliases, nested-delimiter explosion of complex values, .env extra harvesting, secret-dir scanning, alias-aware JSON/TOML/YAML config file sources, or argparse-style CLI settings sources with repeated-flag merging, bool flag modes, and subcommand app runtimes from pydantic-settings.
+disable-model-invocation: true
 ---
 
 # pydantic-settings: settings-source resolution foundation

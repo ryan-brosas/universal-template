@@ -1,6 +1,7 @@
 ---
 name: ui-ant-design-foundation
 description: "Use when porting Ant Design's design-token kernel AND its component-consumer plane: seed→derivative→alias token ladder, per-component algorithm recursion, sync getDesignToken parity, dark/compact algorithm deltas, palette index semantics, radius clamps, CSS-var naming/unitless wiring for cssinjs-style style hooks, plus the Table-proven consumption contracts — prepareComponentToken externals, genStyleHooks registration with mergeToken renaming, fixed/RTL shadow machinery, size ladders, nested-border CSS-var protocol, and dual style/layout token consumption."
+disable-model-invocation: true
 ---
 
 # Ant Design (ui-ant-design): design-token kernel contracts

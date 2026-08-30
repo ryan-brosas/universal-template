@@ -1,6 +1,7 @@
 ---
 name: inspo-notes-foundation
 description: "Use when writing INGEST notes that capture one function or subsystem from an indexed inspiration repo — maintaining a capability→candidate discovery cache, or encoding license boundaries for borrowed designs."
+disable-model-invocation: true
 ---
 # inspo-notes: INGEST-note knowledge-capture foundation
 

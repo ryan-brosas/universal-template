@@ -1,6 +1,7 @@
 ---
 name: pydantic-core-foundation
 description: "Use when porting schema-driven validation/serialization machinery, embedding pydantic-style validators in another runtime, or answering what pydantic-core guarantees about unions, recursion, defaults, error locations, and field serialization. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
+disable-model-invocation: true
 ---
 # pydantic-core: validation & serialization engine foundation
 

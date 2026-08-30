@@ -1,6 +1,7 @@
 ---
 name: shadcn-ui-foundation
 description: Use when porting shadcn/ui's CLI registry-client machinery — typed registry error taxonomy with server-detail extraction, promise-in-flight fetch cache keyed by URL+header hash, AsyncLocalStorage registry header/env context, namespaced @registry URL building with {name}/{style}/${VAR} templating and env-var header suppression, item-address scheme dispatch (url/file/namespace/github/shadcn), recursive dependency-tree resolution with source tracking and fail-loud namespace errors, Kahn topological sort over name::source-hash node ids, proxy-aware manual-redirect fetching that strips secrets on cross-origin hops, anonymous-lock GitHub auth ladders with single-flight credential selection, sanitized transport-error taxonomy for subprocess+REST fleets, hermetic gh slot semaphores, streaming oversize read caps, git ls-remote ref-resolution ladders with authenticated fallbacks, rejection-evicting per-invocation source caches, and bounded-concurrency validation sweeps.
+disable-model-invocation: true
 ---
 
 # shadcn/ui: Registry Client Plane Foundation

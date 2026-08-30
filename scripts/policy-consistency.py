@@ -229,7 +229,7 @@ def check_pr_template() -> None:
 
 def check_no_mass_ingestion() -> None:
     """Essentials never promise mass ingestion/squeezing of inspiration repos (foundation freeze)."""
-    for rel in ("essentials/README.md", "essentials/objectives.md"):
+    for rel in ("essentials/README.md", "docs/roadmap.md"):
         text = read(rel)
         if text is None:
             continue
@@ -472,7 +472,7 @@ def check_no_artifact_pack() -> None:
 
 def check_objective_drift() -> None:
     """Essentials never promise zero defects, universal code-taste metrics, or automatic per-session capture."""
-    for rel in ("essentials/objectives.md", "essentials/operating-philosophy.md"):
+    for rel in ("docs/roadmap.md", "essentials/operating-philosophy.md"):
         text = read(rel)
         if text is None:
             continue

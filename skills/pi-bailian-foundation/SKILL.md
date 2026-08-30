@@ -1,6 +1,7 @@
 ---
 name: pi-bailian-foundation
 description: "Use when porting BYO-API-key subscription-provider machinery for coding-agent hosts — API-key-as-OAuth-credentials shim, prompt-only console login flow, prefix-laddered key validation, env-reference dual auth path, dual-region provider registration twins, zero-cost subscription model catalogs, and base-URL path-append delegation — capsule-v2 source maps with decisive excerpts and graph retrieval."
+disable-model-invocation: true
 ---
 
 # pi-bailian: Bailian Coding Plan provider-extension foundation

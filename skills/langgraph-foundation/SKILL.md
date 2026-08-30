@@ -1,6 +1,7 @@
 ---
 name: langgraph-foundation
 description: "Use when building agent orchestration engines, step graphs, or durable resumable runtimes — reusable contracts from LangGraph (MIT): the Pregel execution kernel — channel semantics (LastValue/Topic/BinOp/Ephemeral/Barrier/Delta), BSP superstep loop with version-based triggering, deterministic task IDs, interrupt/resume scratchpad protocol, runner panic/cancel semantics, retry ladder with ParentCommand routing, durability modes, exit-mode delta persistence, stream-mode output projection with custom-writer injection, branch/Command navigation grammar, Send fan-out guards, per-node input projection, managed values, functional-API call reuse on resume, messages-mode callback propagation (incl. v2 content-block streaming), subgraph checkpoint addressing, write caching, idle-timeout guards with attempt-observer contract, parent-config checkpoint chains, and runtime override/merge algebra."
+disable-model-invocation: true
 ---
 
 # LangGraph: Pregel Execution Kernel Foundation

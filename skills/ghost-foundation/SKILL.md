@@ -1,6 +1,7 @@
 ---
 name: ghost-foundation
 description: "Use when porting Ghost's outbound webhook dispatch engine (HMAC signing, 410 tombstones, SSRF client selection, plan-limit suppression), scheduled-publishing machinery (JWT-signed schedule URLs, in-memory wake ladder, tolerance-based publish decisions), admin session/API-key auth planes (origin-pinned CSRF, email MFA challenges, kid-addressed JWT verification), or the lazy URL service (per-call URL resolution/generation with derived required-shape inference, NQL filter compatibility stripping, thin-resource degrade reporting, canonical reverse lookup, boot readiness gating). Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
+disable-model-invocation: true
 ---
 # Ghost: publishing-platform foundation
 

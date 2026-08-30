@@ -1,6 +1,7 @@
 ---
 name: pi-model-router-foundation
 description: Use when porting per-turn LLM tier-routing machinery — heuristic routing ladders with sticky phase bias, custom-rule highest-tier precedence, fall-up tier resolution, fail-open LLM classifiers with a two-line wire protocol, Google thought-signature continuation pins, image-capability tier escalation, fallback chains gated by a content-received latch, plus the router config plane — layered global/project merge, canonical provider/model ref grammar, alias-then-canonical resolution, warn-and-degrade normalization, registry-over-config capacity precedence with honest truncation, per-tier thinking-level derivation with downward clamping — and the session lifecycle plane: snapshot-dedup persistence, branch-safe restore with legacy migration, internal-action guard flags, and first-writer-wins initialization with turn-end model enforcement — capsule-v2 source maps with decisive excerpts and graph retrieval.
+disable-model-invocation: true
 ---
 # pi-model-router: per-turn tier-routing foundation
 

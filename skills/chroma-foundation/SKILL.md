@@ -5,6 +5,7 @@ license: Apache-2.0
 metadata:
   hermes:
     tags: [vector-database, hnsw, metadata-filtering, wal, sparse-retrieval, chroma]
+disable-model-invocation: true
 ---
 
 # Chroma: Vector Database Foundation

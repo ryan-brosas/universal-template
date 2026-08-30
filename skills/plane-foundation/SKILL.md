@@ -1,6 +1,7 @@
 ---
 name: plane-foundation
 description: "Use when porting multi-instance CRDT document collaboration (a Hocuspocus/Yjs live server bolted onto an HTTP API backend) or SSRF-safe outbound HTTP with signed webhook delivery (fail-closed IP classification, DNS-rebinding-proof pinned fetches, manual redirect ladders, celery delivery/retry/deactivation). Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
+disable-model-invocation: true
 ---
 # Plane foundation: realtime collaboration + SSRF-safe outbound/webhook planes
 

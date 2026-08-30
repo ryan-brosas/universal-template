@@ -1,6 +1,7 @@
 ---
 name: lh-basis-foundation
 description: "Use when porting LinkedIn identity resolution, runtime type-guard kernels, or automation-domain payload validation — Linked Helper v2 domain-kernel contracts: person/organization/chat/message external-identifier families with hash→memberId decoding, guard-composition data models without classes, property+method-surface aggregate duck-typing, recursive message-template node validators, polymorphic list-payload guards, cross-layer DB collision error mining, source-conditional collect-info schema, interval/credit-limit guards, presence/absence discriminator pairs for campaign/action/result family splits with postpone-reason tagged unions, positional-trap CSV-import rejection taxonomies, signed result-status domains, and getDay()-compatible week-working schedule maps."
+disable-model-invocation: true
 ---
 
 # LH Basis (Linked Helper v2.130.5 ingest): Domain-Kernel Foundation

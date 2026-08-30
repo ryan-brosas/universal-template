@@ -5,6 +5,7 @@ metadata:
   hermes:
     tags: [computer-use, agents, llm-providers, grounding, e2b, foundations]
     category: autonomous-ai-agents
+disable-model-invocation: true
 ---
 # open-computer-use: Minimal computer-use agent foundation
 

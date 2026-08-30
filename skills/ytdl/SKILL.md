@@ -1,6 +1,6 @@
 ---
 name: ytdl
-description: "Use when the user wants to download, save, or fetch a YouTube video (audio or video) to disk — browser-native capture with no yt-dlp, no client impersonation, no n-signature solver: the page plays the video (auth, poToken, n-solving, SABR demux), ytdl records the demuxed media the player feeds to MediaSource via a SourceBuffer.appendBuffer hook and muxes to MP4 with ffmpeg. Made-for-kids, age-gated, and members-only work as long as a logged-in tab can play them."
+description: "Use when the user wants to download or save a YouTube video (audio or video) to disk. Browser-native capture, no yt-dlp or signature solving: the page plays the video and ytdl records the demuxed media, then muxes to MP4 with ffmpeg. Age-gated and members-only videos work with a logged-in tab."
 setup: bash <skill-dir>/scripts/setup
 compatibility: Requires `browser-harness-js` on PATH + a Chromium browser with remote debugging (see the `cdp` skill) and a logged-in YouTube tab for gated content. `ffmpeg` on PATH to mux video+audio into MP4.
 ---

@@ -1,7 +1,6 @@
 ---
 name: writing-skills
-description: "Use when authoring, editing, or verifying any SKILL.md in the catalog - the one standardized system: canonical template, frontmatter grammar, uniform anatomy, progressive disclosure, RED-GREEN-REFACTOR behavior tests, and the validation gate."
-disable-model-invocation: true
+description: "Use when authoring, editing, or verifying any SKILL.md in this catalog: canonical template, frontmatter grammar, uniform anatomy, progressive disclosure, and the validation gate. Also when creating a new skill from a demonstrated procedure."
 ---
 
 # Writing Skills — The Unified SKILL.md
@@ -35,7 +34,7 @@ Author with both open; change one, align the other.
 
 - `name`: kebab-case, identical to the directory name.
 - `description`: trigger-first — `Use when <condition>` — then the capability; under 1024 characters, aim for ≤ 512. Triggers must be mutually exclusive between skills so retrieval never ties.
-- `disable-model-invocation`: `true` for leaves; pack routers and core safety skills stay model-visible.
+- `disable-model-invocation`: visibility follows invocation ownership. Hide a skill when a router or another skill selects it, or when it is intentionally cold or manual; entry skills that a user request selects directly stay model-visible. `*-foundation` skills are hidden by default.
 - YAML-safe: quote long values; avoid unescaped colons/hashes.
 
 ## 2. Uniform anatomy (fixed section order)
@@ -89,6 +88,7 @@ For load-bearing behavioral skills, keep the adversarial protocol: RED — a sub
 4. Validation per skill type (RED/GREEN log for load-bearing behavioral skills).
 5. No duplicate skill names; the loader picks up the skill.
 6. The change passes hygiene (diff check / trailing whitespace).
+7. Prose follows the house style (`skills/house-writing-style/SKILL.md`); `scripts/style-lint.py` reports no errors on the SKILL.md.
 
 ## Red flags (while authoring)
 

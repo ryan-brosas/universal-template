@@ -1,6 +1,7 @@
 ---
 name: openoats-foundation
 description: "Use when porting a local-first recording/session store: canonical per-session directory layouts with permission-hardened atomic JSON writes, long-lived append file handles, delayed async-enrichment write draining before shutdown, destructive-overwrite backup ladders, time-windowed artifact retention, empty-\"ghost\" session reconciliation, abandoned-session resume election, user-tag updates that must preserve machine-namespaced tags, hostile-filename-safe attachment import with copy-before-metadata consistency, ordered finalize drain ladders with ghost collapse and typed recovery results, pure audio-retention/empty-session health plans, or session-selection state resets that preserve unsaved drafts. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
+disable-model-invocation: true
 ---
 # OpenOats: session-storage kernel foundation
 

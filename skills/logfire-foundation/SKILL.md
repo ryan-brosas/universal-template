@@ -1,6 +1,7 @@
 ---
 name: logfire-foundation
 description: "Use when porting logfire's OTel-native telemetry machinery: fail-soft span factories, disk-backed export reliability, scrubbing, tail sampling, managed variables."
+disable-model-invocation: true
 ---
 
 # logfire: OTel-Native Observability SDK Foundation
