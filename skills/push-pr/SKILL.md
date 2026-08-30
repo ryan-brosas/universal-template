@@ -55,6 +55,7 @@ Verified live on this repository (PR #10, 2026-08-30): REST list returned `{id, 
 - Hand-adding type/area/breaking-change labels that repository automation derives from the title and changed paths.
 - Do not use `pull_request_target` for untrusted branch code.
 - Resolving a review thread merely because a reply was posted. HARD-GATE.
+- Merging while review threads are unresolved, or treating a green review-bot check as "the review has no findings" - fetch and read the review threads before merging. HARD-GATE.
 - Replying to review feedback as a new top-level comment instead of in-thread.
 - Confusing the REST review-comment id with the GraphQL thread node id. HARD-GATE.
 

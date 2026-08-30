@@ -32,6 +32,7 @@ jobs:
         uses: actions/labeler@bf12e9b00b37c5c0ca2b87b79b2daf7891dbda13 # v7.0.0
         with:
           configuration-path: .github/labeler.yml
+          sync-labels: true
 
   type-labels:
     name: type labels
@@ -46,15 +47,23 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: Derive labels from the PR title
+      - name: Reconcile labels from the PR title
         env:
           GH_TOKEN: ${{ github.token }}
           TITLE: ${{ github.event.pull_request.title }}
           NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          labels="$(python3 scripts/pr-metadata.py labels --title "$TITLE")"
-          if [ -n "$labels" ]; then
-            gh pr edit "$NUMBER" --add-label $labels
-          else
-            echo "no deterministic labels for: $TITLE"
-          fi
+          derived="$(python3 scripts/pr-metadata.py labels --title "$TITLE")"
+          current="$(gh pr view "$NUMBER" --json labels --jq '[.labels[].name] | join(" ")')"
+          # The title parser owns the type:* namespace and breaking-change:
+          # remove deterministic labels the current title no longer derives,
+          # add the ones it does. One label per gh flag (never word-split).
+          for l in type:bug type:feature type:refactor type:docs type:test type:chore type:performance type:ci type:build type:security type:dependencies breaking-change; do
+            case " $derived " in *" $l "*) ;; *)
+              case " $current " in *" $l "*) gh pr edit "$NUMBER" --remove-label "$l" ;; esac ;;
+            esac
+          done
+          for l in $derived; do
+            case " $current " in *" $l "*) ;; *) gh pr edit "$NUMBER" --add-label "$l" ;; esac
+          done
+          echo "derived: ${derived:-none}; current: ${current:-none}"
