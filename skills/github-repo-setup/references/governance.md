@@ -80,7 +80,7 @@ Preserve unrelated rulesets: inspect and touch only the one this skill manages. 
 
 1. Local discovery: `.github/workflows/*` job definitions + `gh api repos/OWNER/REPO/actions/workflows`.
 2. Authoritative names: open one PR and read `gh pr checks` — require exactly those strings.
-3. No CI yet: scaffold via the `github-ci-workflow` skill (shape from `~/.agents/templates/github-pr-ci.yml`) when clearly in scope; otherwise report that required checks cannot be configured. Never invent a green status name.
+3. No CI yet: scaffold via the `github-actions-engineering` skill (shape from `~/.agents/templates/github-pr-ci.yml`) when clearly in scope; otherwise report that required checks cannot be configured. Never invent a green status name.
 
 ## Merge policy
 

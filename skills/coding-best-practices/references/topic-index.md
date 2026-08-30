@@ -114,5 +114,5 @@ push-pr (ship with evidence)
 
 - **Security surface** → `security-and-hardening` (validate boundaries, secrets, OWASP map).
 - **External style catalogs** → `awesome-guidelines` → `ingestion-protocol.md` (learn deep → note → skill).
-- **Workflow shape** → `ci-best-practices`, `github-ci-workflow`.
+- **Workflow shape** → `github-actions-engineering`.
 - **Catalog repo** → `AGENTS.md` gate block + `.github/workflows/pr-quality.yml`.

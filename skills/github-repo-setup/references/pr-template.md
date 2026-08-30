@@ -62,7 +62,7 @@ No  (or: Yes, with migration requirements)
 - [ ] No secrets or credentials were added
 ```
 
-Keep the checklist this short. Never add subjective items (clean code, elegant architecture, follows best practices) — those are not mechanically meaningful; deterministic checks belong in CI (see `ci-best-practices`).
+Keep the checklist this short. Never add subjective items (clean code, elegant architecture, follows best practices) — those are not mechanically meaningful; deterministic checks belong in CI (see `github-actions-engineering`).
 
 ## Detail scales with risk
 

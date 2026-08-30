@@ -1,5 +1,5 @@
 # github-pr-ci.yml
-# Use with the github-ci-workflow skill. Copy this file into a PROJECT
+# Use with the github-actions-engineering skill. Copy this file into a PROJECT
 # repository as .github/workflows/pr-quality.yml.
 # The project gate that AGENTS.md defines belongs where the placeholder runs.
 # The job fails closed while the placeholder stays in the file.

@@ -73,6 +73,7 @@ policy invariants live in `scripts/policy-consistency.py` (CI-enforced).
 | Evidence and tool routing (NEED + HOST) | `skills/evidence-router` |
 | Execution shape (Main/child/parallel/RLM/actor, write isolation) | `skills/execution-router` |
 | Backend/model resolution (mechanical, runtime-discovered; internal) | `skills/model-resolution` + `scripts/resolve-model.py` |
+| GitHub Actions CI/CD (.github/workflows/**, CI contract, release/deploy workflows) | `skills/github-actions-engineering` |
 | Normal development procedure | `skills/codebase-driven-development` |
 | Reference-repository rules | `references/reference-contract.md` |
 | Fabric execution, Schema modes, agents/Veda escalation | `skills/fabric-native-execution` |

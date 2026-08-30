@@ -38,4 +38,4 @@
 
 - `git-workflow-and-versioning` — application skill (deep Git/semver/changelog learning)
 - `awesome-guidelines/references/git-style-learning-note.md` — why behind branch/commit/merge rules
-- `push-pr`, `github-ci-workflow`, `code-discipline`, `code-review-and-quality`
+- `push-pr`, `github-actions-engineering`, `code-discipline`, `code-review-and-quality`
