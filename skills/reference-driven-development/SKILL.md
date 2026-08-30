@@ -17,7 +17,7 @@ When outside code materially reduces uncertainty, use ONE strong reference repos
 ## Workflow
 
 1. **Ground locally** — inspect the current project and identify the seam; decide whether outside code materially reduces uncertainty (if not, stop — implement directly).
-2. **Select ONE reference** — place or reuse it at `<project>/reference/<repo>/`. Do not search ten repositories when one closes the gap. Full rules: `~/.agents/references/reference-contract.md` (purpose, location, authority, one-reference default, licensing, lifecycle).
+2. **Select the reference** — place or reuse it at the conventional path. Code references: ONE strong repository at `<project>/reference/<repo>/`; add a second only after naming the gap the first left. Web references: synthesis may combine several captured sites when each contributes a named quality. Full rules: `~/.agents/references/reference-contract.md` (kinds, authority, defaults, licensing, lifecycle).
 3. **Read it as code, not docs** — map with Fovea (explicit root) when helpful; read the exact source and its direct tests; Steroid when exact semantics add value.
 4. **Compare boundaries** — local vs reference; decide ADOPT / ADAPT / OMIT per concern; never blind-copy.
 5. **Implement** in the current codebase; keep the reference untouched (read-only checkout).
@@ -39,7 +39,7 @@ never become foundations (see the reference contract).
 
 1. **Examples beat specs** — 1–2 concrete examples from the reference one-shot what a spec takes pages to describe.
 2. **The reference is prior art, not authority** — the current project's requirements and gates decide.
-3. **One reference at a time.**
+3. **One code reference at a time**; frontend synthesis may read several web references, each for a named quality.
 4. **A reference repository is never converted** into a foundation skill, index, or corpus by default.
 5. **Licensing obligations** are recorded when materially copying.
 

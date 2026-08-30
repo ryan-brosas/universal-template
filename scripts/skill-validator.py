@@ -26,6 +26,17 @@ try:
 except Exception:  # noqa: BLE001
     lint_text = None
 
+try:
+    # One canonical frontmatter parser: catalog-quality.py owns it.
+    _cq_spec = importlib.util.spec_from_file_location(
+        "catalog_quality", str(Path(__file__).with_name("catalog-quality.py")))
+    assert _cq_spec is not None and _cq_spec.loader is not None
+    _cq = importlib.util.module_from_spec(_cq_spec)
+    _cq_spec.loader.exec_module(_cq)
+    _parse_fm = _cq.parse_frontmatter
+except Exception:  # noqa: BLE001
+    _parse_fm = None
+
 _REPO_SKILLS = str(Path(__file__).resolve().parents[1] / "skills")
 ROOT = os.environ.get("SKILLS_ROOT", _REPO_SKILLS)
 
@@ -46,16 +57,25 @@ FOUNDATION_SECTIONS = [
 ]
 
 def parse_frontmatter(text):
-    """Return (fm dict, body). fm values may be multi-line YAML scalars."""
+    """Return (fm dict, body) using the canonical catalog parser.
+
+    catalog-quality.py owns frontmatter parsing; this wrapper recovers the
+    body after the closing delimiter. Falls back to an inline parser only if
+    catalog-quality cannot be imported.
+    """
     if not text.startswith("---"):
         return None, text
     end = text.find("\n---", 3)
     if end == -1:
-        return None, text
-    raw = text[4:end] if text.startswith("---\n") else text[3:end]
+        return None, text  # no closing delimiter: unparseable
     body = text[end + 4:]
+    if _parse_fm is not None:
+        fm = _parse_fm(text)
+        if not fm:
+            return None, text  # closing delimiter but no parseable keys
+        return fm, body
+    lines = text[4:end].splitlines() if text.startswith("---\n") else text[3:end].splitlines()
     fm = {}
-    lines = raw.splitlines()
     i = 0
     while i < len(lines):
         m = re.match(r"^([A-Za-z0-9_-]+):\s*(.*)$", lines[i])
@@ -128,6 +148,10 @@ def main():
             issues.append(("P0", f"description {len(desc)} chars > 1024"))
         if desc and not desc.lower().startswith("use when"):
             issues.append(("P1", "description does not start with 'Use when'"))
+        # Archived cold libraries (x-archive: true) are content, not
+        # procedures: the filesystem is their index, so the skeleton and
+        # orphan-reference style checks do not apply.
+        archived = str(fm.get("x-archive", "")).strip().lower() == "true"
         refs_dir = os.path.join(dpath, "references")
         disk_refs = set()
         if os.path.isdir(refs_dir):
@@ -137,8 +161,9 @@ def main():
         for c in sorted(cited_set):
             if c not in disk_refs:
                 issues.append(("P1", f"cited reference missing on disk: {c}"))
-        for o in sorted(disk_refs - cited_set):
-            issues.append(("P2", f"orphan reference not cited in SKILL.md: {o}"))
+        if not archived:
+            for o in sorted(disk_refs - cited_set):
+                issues.append(("P2", f"orphan reference not cited in SKILL.md: {o}"))
         is_found = d.endswith("-foundation")
         if is_found:
             n_found += 1
@@ -166,8 +191,9 @@ def main():
                         issues.append(("P1", f"loader ref missing from capsule map: {name}"))
         else:
             n_practice += 1
-            for label in check_sections(body, PRACTICE_SECTIONS):
-                issues.append(("P2", f"skeleton section missing: {label}"))
+            if not archived:
+                for label in check_sections(body, PRACTICE_SECTIONS):
+                    issues.append(("P2", f"skeleton section missing: {label}"))
             if lint_text is not None:
                 for v in lint_text(body)[:3]:
                     issues.append(("P2", f"style[{v['level']}] {v['rule']}: {v['message']}"))

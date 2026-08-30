@@ -41,7 +41,7 @@ TOKEN_CHARS = 4            # documented rough estimator; trend metric only
 ENTRY_SKILLS = {
     # flow entries
     "project-bootstrap", "brainstorming", "goal-setup", "prototype",
-    "leverage-capture", "leverage-playbook", "reference-driven-development",
+    "leverage-capture", "reference-driven-development",
     "using-git-worktrees", "zoom-out",
     # github / delivery
     "github-repo-setup", "github-actions-engineering", "push-pr",
@@ -55,21 +55,22 @@ ENTRY_SKILLS = {
     "writing-skills", "house-writing-style",
     # discovery
     "skill-catalog",
-    # tool / runtime capabilities
-    "cdp", "findata", "gmaps", "gnews", "gsearch", "rsearch", "xsearch",
-    "web-reference",
-    "ytdl", "ttdl", "upwork-proposals", "omarchy", "math-schema",
-    "mcp-steroid", "gemini-large-context",
+    # tool / runtime capabilities (frequent-in-coding tools only; rare
+    # utilities stay cold and searchable: findata, gmaps, gnews, rsearch,
+    # xsearch, ttdl, ytdl, gemini-large-context)
+    "cdp", "gsearch", "web-reference",
+    "upwork-proposals", "omarchy", "math-schema",
+    "mcp-steroid",
 }
 # Automatic dispatch points: visible because a state or phase routes to them.
 ROUTER_SKILLS = {
-    "evidence-router", "execution-router", "verification-before-completion",
+    "evidence-router", "execution-router",
 }
 # Internally invoked mechanics: never startup metadata.
 INTERNAL_SKILLS = {
     "model-resolution", "veda-lane", "fabric-native-execution",
-    "code-foundations", "foundations-workflow", "memory-graph-skill-miner",
-    "repo-inspo-organizer", "code-discipline", "agent-code-quality-gate",
+    "code-foundations", "foundations-workflow",
+    "code-discipline", "agent-code-quality-gate",
     "code-review-and-quality", "quality-gate-methodology",
     "test-driven-development", "source-driven-development",
     "testing-anti-patterns", "documentation-and-adrs", "defense-in-depth",
@@ -144,14 +145,39 @@ def parse_frontmatter(text: str) -> dict[str, str]:
     return fm
 
 
+def git_ignored_dirs(root: Path) -> set[str]:
+    """Skill dirs ignored by git on this machine (machine-local skills).
+
+    The budget, the baseline, and the generated catalogs must all measure the
+    tracked set: a clean CI checkout has to reproduce every number. Local
+    search (skill-catalog list/search) still lists machine-local skills.
+    """
+    try:
+        import subprocess
+        dirs = [d.name for d in root.iterdir()
+                if d.is_dir() and not d.name.startswith(".")]
+        r = subprocess.run(
+            ["git", "-C", str(root.parent), "check-ignore", "--stdin", "--no-index"],
+            input="\n".join("skills/" + n for n in dirs) + "\n",
+            capture_output=True, text=True)
+        if r.returncode not in (0, 1):
+            return set()
+        return {line.rsplit("/", 1)[-1] for line in r.stdout.splitlines() if line.strip()}
+    except Exception:  # noqa: BLE001 - no git available: treat everything as tracked
+        return set()
+
+
 def collect_skills(skills_dir: Path = SKILLS) -> dict[str, dict]:
     skills: dict[str, dict] = {}
     if not skills_dir.is_dir():
         errors.append("skills/ missing")
         return skills
+    ignored = git_ignored_dirs(skills_dir)
     for entry in sorted(skills_dir.iterdir()):
         if not entry.is_dir() or entry.name.startswith("."):
             continue
+        if entry.name in ignored:
+            continue  # machine-local skill: tracked-set metrics only
         skill_md = entry / "SKILL.md"
         if not skill_md.is_file():
             errors.append(f"missing SKILL.md: skills/{entry.name}")
@@ -352,6 +378,35 @@ def near_duplicate_warnings(skills: dict[str, dict]) -> None:
                 warnings.append(f"near-duplicate descriptions: {n1} ~ {n2} (prefix {common} chars)")
 
 
+def check_generated_catalogs() -> None:
+    """docs/skill-catalog.md and docs/foundation-catalog.md must be current.
+
+    Generated views are derived from skills/*/SKILL.md + classify(); they are
+    validated here so catalog-quality is the one required catalog gate.
+    """
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "skill_catalog", str(Path(__file__).with_name("skill-catalog.py")))
+    if spec is None or spec.loader is None:
+        errors.append("cannot load scripts/skill-catalog.py")
+        return
+    try:
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        targets = mod.build_docs(mod.scan())
+    except Exception as exc:  # noqa: BLE001 - broken generator is a normal failure
+        errors.append(
+            f"cannot generate catalogs ({type(exc).__name__}: {exc}); "
+            f"restore scripts/skill-catalog.py and rerun")
+        return
+    for rel, content in targets.items():
+        p = BASE / rel
+        if not p.is_file() or p.read_text(encoding="utf-8") != content:
+            errors.append(
+                f"generated catalog stale: {rel} "
+                f"(rerun python3 scripts/skill-catalog.py generate)")
+
+
 def main() -> int:
     update_baseline = "--update-baseline" in sys.argv
     root_arg: str | None = None
@@ -365,6 +420,7 @@ def main() -> int:
         check_essentials()
         check_templates_inventory()
         check_essentials_inventory()
+        check_generated_catalogs()
     near_duplicate_warnings(skills)
     check_visibility_policy(skills)
     rep = budget_report(skills)

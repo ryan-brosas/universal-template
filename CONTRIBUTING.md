@@ -6,7 +6,6 @@ Run the catalog gate suite from `AGENTS.md` (Finish line):
 
 ```bash
 SKILLS_ROOT="$PWD/skills" python3 scripts/skill-validator.py   # P0 count must be 0
-python3 scripts/catalog-integrity.py
 python3 scripts/catalog-quality.py
 python3 scripts/repo-hygiene.py
 python3 scripts/policy-consistency.py

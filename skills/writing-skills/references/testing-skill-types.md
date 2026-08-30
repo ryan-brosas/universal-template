@@ -4,7 +4,7 @@ Different skill types need different test approaches:
 
 ## Discipline-Enforcing Skills (rules/requirements)
 
-**Examples:** TDD, verification-before-completion, designing-before-coding
+**Examples:** TDD, agent-code-quality-gate, designing-before-coding
 
 **Test with:**
 

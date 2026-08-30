@@ -8,7 +8,8 @@ Installed globally at:
 Canonical source: this repository (universal-template). Retired assets are
 recoverable from Git history; there is no upstream repo to re-absorb from.
 `catalog-quality.py` enforces this inventory against disk (templates and
-essentials); `catalog-integrity.py` checks the README's claims.
+essentials); `policy-consistency.py` keeps README and AGENTS from restating
+counts or listing retired files as current.
 
 ## Format templates
 
@@ -52,7 +53,8 @@ File name = core principle:
 7. `openviking-foundation.md` - OpenViking holds durable experience, not source copies
 8. `README.md` - index and how they fit
 
-`discord-material/` holds the verbatim source behind `leverage-playbook`.
+`discord-material/` holds the verbatim threads the essentials principles were
+synthesized from.
 The former objectives file moved to docs/roadmap.md — working objectives are
 not cold rationale.
 

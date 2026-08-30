@@ -10,7 +10,7 @@
 
 <!-- only checks actually run, with results -->
 
-- Catalog gates: `skill-validator` / `catalog-integrity` / `catalog-quality` / `repo-hygiene` / `policy-consistency` / `dead-code` / `conventional-commit`
+- Catalog gates: `skill-validator` / `catalog-quality` / `repo-hygiene` / `policy-consistency` / `dead-code` / `conventional-commit`
 - `git diff --check`
 
 ## Risks

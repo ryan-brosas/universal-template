@@ -39,5 +39,5 @@ Editing (remove background, extend, recolor, recompose) applies to generated or 
 - Location: the project asset directory (`public/`, `assets/`, `src/assets/` per project convention), never `reference/web/`.
 - Formats: alpha needs PNG or WebP; photographic fits WebP or JPEG; icons and simple shapes prefer SVG or CSS.
 - Optimize before shipping: dimensions, compression, responsive variants, lazy loading.
-- Provenance sidecar next to the asset (`<name>.media.json`): provider, date, prompt or brief, dimensions, purpose. No secrets in it.
+- Provenance scales with value. A durable `<name>.media.json` sidecar (provider, date, prompt or brief, dimensions, purpose; no secrets) is worth writing when reproduction, licensing, compliance, or continued design iteration matters — hero art, brand-critical visuals, anything the project will regenerate. Disposable decorative assets (one-off backgrounds, test placeholders) carry no sidecar; the brief in the commit or PR is enough.
 - Misleading product shots: prefer real product screenshots; generated mock UI only when conceptual or explicitly requested.

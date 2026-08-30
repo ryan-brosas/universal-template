@@ -1,5 +1,6 @@
 ---
 name: ytdl
+disable-model-invocation: true
 description: "Use when the user wants to download or save a YouTube video (audio or video) to disk. Browser-native capture, no yt-dlp or signature solving: the page plays the video and ytdl records the demuxed media, then muxes to MP4 with ffmpeg. Age-gated and members-only videos work with a logged-in tab."
 setup: bash <skill-dir>/scripts/setup
 compatibility: Requires `browser-harness-js` on PATH + a Chromium browser with remote debugging (see the `cdp` skill) and a logged-in YouTube tab for gated content. `ffmpeg` on PATH to mux video+audio into MP4.

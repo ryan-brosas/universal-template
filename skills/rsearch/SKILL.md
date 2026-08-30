@@ -1,5 +1,6 @@
 ---
 name: rsearch
+disable-model-invocation: true
 description: "Use when the user asks to search Reddit, find discussions or posts, or gauge community sentiment on a topic. Searches Reddit through the browser via CDP and returns title, subreddit, author, score, comments, permalink, and selftext, with optional subreddit and sort filters. No API key; a logged-in session is used automatically if present."
 setup: bash <skill-dir>/scripts/setup
 compatibility: >-
