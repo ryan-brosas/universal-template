@@ -69,6 +69,8 @@ profiles:
 
 Profiles are **fallback chains**: the resolver walks the list, skips unavailable options, and degrades to a generic strong candidate or to Main. Never fail a task because preferred option #1 is down.
 
+Addressing: entries are `<backend>:<model>` (Pi keeps its provider form: `pi:<provider>/<model>`; through the Veda Pi backend the full string is `pi/<provider>/<model>`). A real maintained example lives at `~/.agents/config/model-profiles.yaml` — treat its observations as dated: lanes must be re-probed after any version change. Observed-quirk pattern (2026-08-30, veda 0.75.9 + agy): AGY-hosted Claude models reject `--effort` at every level while the direct `agy --model <model> -p` invocation works — the resolver's answer is fallback to the working direct lane and re-verify after upgrades, never a frozen ban.
+
 ## Diversity rules
 
 - Provider diversity is useful when it reduces correlated failure or adds a genuinely different capability — not for its own sake. If one model handles everything reliably, use it.

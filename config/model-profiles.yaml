@@ -1,0 +1,50 @@
+# Model profiles — LOCAL PREFERENCES, not facts.
+#
+# Resolve every entry against runtime discovery before use:
+#   pi --list-models | veda models [backend] | agy models
+#   python3 ~/.agents/scripts/runtime-capabilities.py
+#
+# Addressing: <backend>:<model>. Pi models keep their provider form
+# (<backend>:<provider>/<model>); through Veda the pi backend expects the
+# full pi/<provider>/<model> string (runtime-verified).
+#
+# Observed 2026-08-30 (veda 0.75.9, pi 0.84.4, agy 2026.2) — re-verify:
+#   - agy Gemini lanes work via veda and via direct `agy -p`.
+#   - agy Claude models (claude-sonnet-4-6, claude-opus-4-6-thinking) reject
+#     --effort at any level (fixed-thinking); direct
+#     `agy --model <model> -p ...` works; the veda lane injects effort and
+#     currently fails — fall back to direct agy, re-verify on veda upgrades.
+#   - claude-code backend installed but unauthenticated (/login required).
+#   - pi provider readiness is environment-scoped: github-copilot reported
+#     ready; cursor/hyper/zro not-ready in a subprocess env — check per lane.
+
+profiles:
+  economy-worker:
+    prefer:
+      - pi:zro/deepseek-v4-flash-0731        # configured Main model
+      - pi:hyper/deepseek-v4-flash           # 1M context
+      - agy:gemini-3.7-flash-low
+  fast-investigator:
+    prefer:
+      - pi:hyper/deepseek-v4-flash
+      - agy:gemini-3.7-flash-medium
+  strong-reviewer:
+    prefer:
+      - agy:claude-opus-4-6-thinking         # direct agy only (no --effort)
+      - agy:claude-sonnet-4-6                # direct agy only
+      - pi:github-copilot/claude-opus-4.5    # pi auth: ready (observed)
+      - claude-code:opus                     # pending /login
+  architect:
+    prefer:
+      - agy:claude-opus-4-6-thinking         # direct agy only
+      - pi:github-copilot/claude-opus-4.5
+      - pi:cursor/claude-opus-5@1m           # listed in pi catalog; auth unverified
+  frontend-critic:
+    prefer:
+      - agy:gemini-3.1-pro-high              # alias: gemini-pro
+      - agy:gemini-3.7-flash-high            # alias: gemini-ui
+      - agy:claude-sonnet-4-6                # direct agy; strong alternate UI critic
+  debugger:
+    prefer:
+      - pi:github-copilot/kimi-k3            # 1.0M context
+      - pi:hyper/deepseek-v4-pro
