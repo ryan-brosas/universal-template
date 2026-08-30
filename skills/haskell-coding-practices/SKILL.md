@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Haskell Coding Practices
 
-Application skill for Haskell style learning (`awesome-guidelines` deep ingest). For GHC internals or specific linters (fourmolu vs stylish-haskell), follow project config first.
+Application skill for Haskell style learning (from the archived `awesome-guidelines` style capsules). For GHC internals or specific linters (fourmolu vs stylish-haskell), follow project config first.
 
 ## Core Principle
 

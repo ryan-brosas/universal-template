@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # F# Coding Practices
 
-Application skill for F# component design learning (`awesome-guidelines` deep ingest). When targeting C# consumers, prioritize vanilla .NET API rules over F#-only idioms on the public surface.
+Application skill for F# component design learning (from the archived `awesome-guidelines` style capsules). When targeting C# consumers, prioritize vanilla .NET API rules over F#-only idioms on the public surface.
 
 ## Core Principle
 

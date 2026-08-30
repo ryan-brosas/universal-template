@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Python Coding Practices
 
-Application skill for Python style learning (`awesome-guidelines` deep ingest). For framework-specific patterns, load the stack foundation.
+Application skill for Python style learning (from the archived `awesome-guidelines` style capsules). For framework-specific patterns, load the stack foundation.
 
 ## Core Principle
 

@@ -36,6 +36,8 @@ KNOWN_INTENTIONAL = {
     "merge queue": "solo repository with low PR volume",
     "codeowners": "solo repository; no ownership split to encode",
     "social preview": "manual upload via the settings UI; API path not used",
+    "non-provider patterns": "not settable via the API on this plan; manual follow-up in Settings > Code security",
+    "code scanning default setup": "not settable via the API on this plan; manual follow-up in Settings > Code security > CodeQL",
 }
 
 issues: list[str] = []  # unexpected gaps (strict mode)
@@ -208,7 +210,8 @@ def audit() -> None:
                 data = json.loads(out)
                 state = "enabled" if data.get("enabled", True) else "disabled"
             except json.JSONDecodeError:
-                state = "enabled" if rc == 200 else "disabled"
+                # 204/empty body on these endpoints means enabled.
+                state = "enabled"
             (fact if state == "enabled" else gap)(label, state)
         else:
             gap(label, f"unavailable or disabled (gh exit {rc})")

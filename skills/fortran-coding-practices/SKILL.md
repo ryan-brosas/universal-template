@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Fortran Coding Practices
 
-Application skill for Fortran style learning (`awesome-guidelines` deep ingest). For HPC parallelism (OpenMP/OpenACC), combine with domain stack foundations.
+Application skill for Fortran style learning (from the archived `awesome-guidelines` style capsules). For HPC parallelism (OpenMP/OpenACC), combine with domain stack foundations.
 
 ## Core Principle
 

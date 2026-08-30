@@ -9,7 +9,7 @@ description: "Use when about to claim work is complete, fixed, or passing, befor
 
 No completion claim without evidence: "done" means the named verification command ran, exited 0, and its output was inspected. Evidence before assertion, always.
 
-## The Iron Law
+## The Evidence Rule
 
 <EXTREMELY-IMPORTANT>
 **No completion claim without evidence.** "Done" = the named verification command ran, exited 0, output inspected. Not "should work", "looks right", "tested locally". **Evidence before assertion, always.**
@@ -64,20 +64,6 @@ Lower levels (prose, code review) are inspection, not verification.
 
 "It should work" (run it); "I've tested it" (show the run); "tests pass" (paste output, count); LGTM without a verification run; "made the changes" (show diff); truncating output that hides an error.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>verification-before-completion</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>
-    - <command>: <exit code>, <output tail>
-    - <test name>: <runner output>
-  </evidence>
-  <artifacts>Paths or SHAs touched</artifacts>
-  <risks>Untested paths, missing guard, or none</risks>
-</skill_result>
-```
 
 If `<evidence>` is empty, the claim is unverified. **Do not say "done".**
 

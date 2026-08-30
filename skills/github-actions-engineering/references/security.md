@@ -51,7 +51,7 @@ Caches are keyed by branch with fallback to the base branch — a low-trust work
 
 ## Workflow security scanning
 
-- **zizmor** — the catalog standard for workflow security audit (see `.github/workflows/security-audit.yml`): dangerous triggers, template injection, credential persistence. Run it locally on any workflow you touch.
+- **zizmor** — workflow security audit: dangerous triggers, template injection, credential persistence. Run it locally on any workflow you touch when installed. Whether it becomes a required repository workflow is that repository's decision (this catalog's repo wires it into its own CI); never assume a fixed workflow name.
 - **actionlint** — syntax/expression correctness; complements, not replaces, zizmor.
 - **CodeQL** — prefer GitHub's default code-scanning setup where eligible; advanced CodeQL workflow only for real customization (custom build, matrix, query packs). GitHub can also analyze workflow files themselves where available — enable rather than stacking duplicate scanners.
 - One useful scanner beats five stacked ones; every scanner is a dependency to maintain.

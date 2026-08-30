@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Dart Coding Practices
 
-Application skill for Dart style learning (`awesome-guidelines` deep ingest). For Flutter UI patterns, combine with stack-specific foundations.
+Application skill for Dart style learning (from the archived `awesome-guidelines` style capsules). For Flutter UI patterns, combine with stack-specific foundations.
 
 ## Core Principle
 

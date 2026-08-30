@@ -12,6 +12,8 @@
 !/scripts/resolve-model.py
 !/scripts/style-lint.py
 !/scripts/foundation-search.py
+!/scripts/skill-catalog.py
+!/scripts/legacy-skill-report.py
 !/scripts/pr-metadata.py
 !/scripts/github-audit.py
 !/scripts/context-budget-baseline.json

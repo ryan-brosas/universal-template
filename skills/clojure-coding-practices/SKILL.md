@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Clojure Coding Practices
 
-Application skill for Clojure style learning (`awesome-guidelines` deep ingest). For ClojureScript-specific tooling, follow project `shadow-cljs` / `cljs` conventions.
+Application skill for Clojure style learning (from the archived `awesome-guidelines` style capsules). For ClojureScript-specific tooling, follow project `shadow-cljs` / `cljs` conventions.
 
 ## Core Principle
 

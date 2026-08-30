@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Mailchimp Content Practices
 
-Application skill for Mailchimp Content Style Guide deep ingest (`awesome-guidelines`). For repo Markdown structure (H1, fences, wrap), load `markdown-writing-practices` first; apply this skill to user-facing voice, UI microcopy, and inclusive language.
+Application skill for Mailchimp Content Style Guide (archived `awesome-guidelines` capsules). For repo Markdown structure (H1, fences, wrap), load `markdown-writing-practices` first; apply this skill to user-facing voice, UI microcopy, and inclusive language.
 
 ## Core Principle
 

@@ -1,6 +1,6 @@
 ---
 name: quality-gate-methodology
-description: "Use when writing or reviewing tests and quality gates for code — a test is only good if it catches: test un-fixed + fixed, broad tests, expand don't duplicate, maintain a test list, turn manual catches into workflows."
+description: "Use when writing or reviewing tests and quality gates for code — a test is only good if it catches: pre-fix FAIL and post-fix PASS, broad tests over single cases, expand existing tests instead of duplicating, promote repeated manual catches into gates when the value is proven."
 disable-model-invocation: true
 ---
 
@@ -16,21 +16,22 @@ versions (pre-fix FAIL, post-fix PASS), target the TYPE of bug rather than one
 instance, expand existing tests instead of duplicating them, keep a test list, and turn
 every manual catch into a mechanical test.
 
-## Iron Laws
+## Core rules
 
 <EXTREMELY-IMPORTANT>
-- **A test is only good if it catches.** You must test the un-fixed AND fixed
-  versions: pre-fix should FAIL the test, post-fix should PASS. Otherwise the
-  test proves nothing.
-- **Broad tests, not many.** Target the TYPE of bug/gap/issue, not specific
-  things. A test that only catches one case is weak.
+- **A test is only good if it catches.** Test the un-fixed AND fixed versions:
+  pre-fix should FAIL the test, post-fix should PASS. Otherwise the test proves
+  nothing.
+- **Broad tests, not many.** Target the TYPE of bug/gap/issue, not one
+  instance. A test that only catches one case is weak.
 - **Expand, don't duplicate.** When something should've been caught but wasn't,
-  EXPAND the existing test rather than creating a new near-identical one.
-- **Maintain a test list.** Keep a list of tests and what they target; check it
-  every time something isn't caught.
-- **Turn manual catches into mechanical tests.** Every manual catch becomes a
-  test. Every jerry-rigged script reused more than once becomes a workflow.
+  EXPAND the existing test rather than creating a near-identical one.
 </EXTREMELY-IMPORTANT>
+
+Supporting practices (apply where the value is real, not as ceremony): keep a
+short test inventory when the suite is large enough to need one, and promote a
+manual catch into a mechanical gate when it recurs or its escape cost is high
+("repeated, proven value" — not every catch, and not every reused script).
 
 ## When to Use
 
@@ -41,8 +42,8 @@ expand the test, not just fix the bug.
 ## Workflow
 
 Test un-fixed + fixed → write broad tests targeting the bug type → expand, don't
-duplicate → maintain the test list → test your test units → turn manual catches into
-workflows. The full steps are in `The Methodology` below.
+duplicate → test your test units → promote repeated manual catches into gates
+when the value is proven. The full steps are in `The Methodology` below.
 
 ## The Methodology
 
@@ -52,12 +53,14 @@ workflows. The full steps are in `The Methodology` below.
    test catch the class, not one instance.
 3. **Expand, don't duplicate.** When a bug slips past existing tests, expand
    the relevant test to cover it. Avoid creating duplicate/near-identical tests.
-4. **Maintain a test list.** Track each test + what it targets. When something
-   isn't caught, consult the list and expand the right test.
+4. **Keep a test inventory when it earns itself.** For a large suite, track
+   each test + what it targets; when something isn't caught, consult it and
+   expand the right test. Skip the ceremony on a small suite.
 5. **Test your test units.** Ensure tests are well-formed: use shared
    functions, avoid static values/lists, avoid near-identical logic.
-6. **Turn manual catches into workflows.** Every time a manual check or
-   jerry-rigged script is reused, convert it into a workflow/CI gate.
+6. **Promote proven catches into gates.** When a manual check or jerry-rigged
+   script keeps catching real escapes, convert it into a test/CI gate — value
+   and false-positive cost decide, not reuse count alone.
 
 ## Judging "good" code
 
@@ -79,28 +82,19 @@ workflows. The full steps are in `The Methodology` below.
 - A test that only catches one specific case instead of the type of bug.
 - Creating a new near-identical test when an existing one should have been expanded.
 - No test list to consult when something isn't caught.
-- A jerry-rigged script reused more than once that never became a workflow.
+- A repeatedly load-bearing manual check that never became a gate despite real
+  escape risk.
 - Judging code quality by repo stars or "it works" instead of mechanical tests and
   gates.
 
 ## Verification
 
-- Every test fails on the broken version and passes on the fixed version.
+- Every new test fails on the broken version and passes on the fixed version.
 - No duplicate/near-identical tests.
-- A test list exists and is consulted when something isn't caught.
-- Manual catches have been converted to mechanical tests/workflows.
+- Test inventory (when kept) consulted when something isn't caught.
+- Proven repeated catches promoted to gates; unproven ones left as manual
+  checks with a note.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill><name></skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>…</evidence>
-  <artifacts>…</artifacts>
-  <risks>…</risks>
-</skill_result>
-```
 
 ## References
 

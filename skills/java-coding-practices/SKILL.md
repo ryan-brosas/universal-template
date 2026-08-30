@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Java Coding Practices
 
-Application skill for Java style learning (`awesome-guidelines` deep ingest). For Spring/Jakarta/EE patterns, load stack foundations.
+Application skill for Java style learning (from the archived `awesome-guidelines` style capsules). For Spring/Jakarta/EE patterns, load stack foundations.
 
 ## Core Principle
 

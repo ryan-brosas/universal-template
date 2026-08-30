@@ -31,7 +31,7 @@
 
 - `git diff --check` (whitespace)
 - `conventional-commit.py` on branch range
-- Project `pr-quality.yml` workflow
+- The project's PR quality workflow
 - PR title check (`pr-title.yml` on catalog)
 
 ## Leaf skills

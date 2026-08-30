@@ -11,11 +11,12 @@ Entry flow for unfamiliar repositories: `skills/project-bootstrap/SKILL.md`.
 | Path | Contents |
 |---|---|
 | `skills/` | the full skill catalog (foundations + practice skills + workflow skills) |
-| `templates/` | 18 CLI-neutral format templates (adr, agents, design, foundation-capsule, foundation-skill, github-pr-ci, issue, prd, project, proposal, pull-request, readme, roadmap, skill, state, tasks, tech-stack, user) |
-| `essentials/` | cold rationale and decision references (operating-philosophy plus six one-page principles); read the smallest relevant file when a policy decision needs explanation |
+| `templates/` | 15 CLI-neutral format templates (plus `source.yml`, the inspo ledger); canonical list in `references/templates-inventory.md` |
+| `essentials/` | cold rationale and decision references, indexed in `essentials/README.md`; read the smallest relevant file when a policy decision needs explanation |
 | `docs/roadmap.md` | current work objectives (reviewed at milestones) |
 | `extensions/style-guard.ts` | optional Pi output-style guard (audit by default; symlinked into `~/.pi/agent/extensions/`) |
 | Entry skills (`project-bootstrap`, `brainstorming`, `goal-setup`, `prototype`, `leverage-capture`) | project entry, direction, durable goals, cheap learning, leverage classification |
+| `docs/skill-catalog.md`, `docs/foundation-catalog.md` | generated human catalogs of the skill set (never hand-edit; regenerate with `scripts/skill-catalog.py`) |
 | `mcp/servers.json` | the **canonical** MCP capability registry (6 servers incl. mcp-steroid); per-CLI configs are derived copies |
 | `references/` | distilled contract capsules (init, mcp-catalog, templates-inventory) |
 | `AGENTS.md` | the global agent rules every host loads |
@@ -25,6 +26,14 @@ Entry flow for unfamiliar repositories: `skills/project-bootstrap/SKILL.md`.
 
 - **Normal work**: inspect current code and evidence → implement → run the
   relevant verification → finish. No lifecycle machinery required.
+- **Standard baseline**: "create this repo with our standard setup",
+  "production-ready", or "OSS-ready" composes `project-bootstrap` →
+  `github-repo-setup` (profile from its `references/setup-matrix.md`) →
+  `github-actions-engineering` → `git-workflow-and-versioning` when versioned.
+  "Start a new project" stays bootstrap-only.
+- **Skill catalog navigation**: `python3 scripts/skill-catalog.py search
+  "github release"` (or `list`, `show`, `stats`) returns scored candidates with
+  class and visibility without loading the catalog.
 - **Enter a project**: `skills/project-bootstrap/SKILL.md`: read-only
   onboarding by default; governance and greenfield modes when asked.
 - **Unclear direction**: `skills/brainstorming/SKILL.md`. **Durable major

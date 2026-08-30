@@ -7,14 +7,14 @@ description: "Use when finished work needs to be pushed and opened or updated as
 
 ## Core Principle
 
-Use one evidence path for every pull request. The local gate checks the branch. GitHub Actions checks the pushed commit. The PR body stores the scope, proof, CI result, graph observation, and follow-up lesson.
+Use one evidence path for every pull request. The local gate checks the branch. GitHub Actions checks the pushed commit. The PR body stores the scope, proof, and CI result; conditional evidence (visual, structural) follows the change, and a reusable lesson is only marked as a `leverage-capture` candidate.
 
 ## When to Use / NOT
 
 - **Use when:** a verified branch needs a pull request.
-- **Use when:** the project has `.github/workflows/pr-quality.yml` or needs the standard from `~/.agents/templates/github-pr-ci.yml` (the `github-actions-engineering` skill authors or reviews that file).
+- **Use when:** the project defines a quality workflow that guards its branches (`github-actions-engineering` authors or reviews it; the standard shape is `~/.agents/templates/github-pr-ci.yml`).
 - **Use when:** a review must show screenshots, CI state, or graph evidence.
-- **NOT when:** the project has no stated quality gate. Stop and ask for one.
+- **NOT when:** the project defines no quality gate. Run the strongest applicable checks (build, tests, lint, `git diff --check`), report the verification gap in the PR body, and do not invent CI that does not exist.
 - **NOT when:** an open PR already covers the branch. Update that PR.
 
 ## Workflow

@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Android Coding Practices
 
-Application skill for ribot + Xmartlabs Android guides deep ingest (`awesome-guidelines`). For Kotlin syntax alone, load `kotlin-coding-practices`. Greenfield architecture: prefer Jetpack over legacy MVP/Rx verbatim.
+Application skill for ribot + Xmartlabs Android guides (archived `awesome-guidelines` capsules). For Kotlin syntax alone, load `kotlin-coding-practices`. Greenfield architecture: prefer Jetpack over legacy MVP/Rx verbatim.
 
 ## Core Principle
 

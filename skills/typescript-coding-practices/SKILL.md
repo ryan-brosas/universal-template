@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # TypeScript Coding Practices
 
-Application skill for TypeScript **style and module** learning (`awesome-guidelines` deep ingest). For domain modeling, branded types, and schema boundaries, load `typescript-coding-standards`; for plain JS, `javascript-coding-practices`.
+Application skill for TypeScript **style and module** learning (from the archived `awesome-guidelines` style capsules). For domain modeling, branded types, and schema boundaries, load `typescript-coding-standards`; for plain JS, `javascript-coding-practices`.
 
 ## Core Principle
 

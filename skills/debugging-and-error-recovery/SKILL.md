@@ -30,7 +30,7 @@ Feature work with no failure signal (source-first implementation); pure research
 
 ## Retry Policy
 
-Try once with the same tool, then a fallback approach. After 2 consecutive failures, stop and escalate. After three failed fixes, the model is wrong — rethink architecture or assumptions. Before retrying, run a map-vs-territory check: re-read the request and any notes. Most repeated failures are a mapping problem, not an execution problem.
+A repeated failure under the same hypothesis is evidence against the hypothesis, not a reason to repeat it. When a fix does not change the failure: stop, invalidate the current hypothesis, and reopen the evidence and assumptions (re-read the request, the full error, and the touched code; check for a mapping problem before another attempt). Change approach or escalate when no new hypothesis is available — not at a fixed attempt count. Most repeated failures are a mapping problem, not an execution problem.
 
 ## Evidence Log
 
@@ -44,27 +44,16 @@ For complex bugs, keep a short log: Symptoms / Reproduction / Hypotheses Elimina
 | "Patch the symptom now"     | Symptom patches hide root causes.       |
 | "Multiple fixes save time"  | You won't know which change mattered.   |
 | "Test failure is unrelated" | Prove it with isolation first.          |
-| "One more attempt"          | After three failures, stop and rethink. |
+| "One more attempt"          | Same hypothesis + same failure = new hypothesis first. |
 
 ## Red Flags
 
-Code changes before reproduction; fix before reading the full error; same failure persists after two attempts; new failures in different layers; regression test skipped for a reproducible bug; success claimed without re-running the original failing scenario.
+Code changes before reproduction; fix before reading the full error; same failure persists across identical hypotheses; new failures in different layers; regression test skipped for a reproducible bug; success claimed without re-running the original failing scenario.
 
 ## Verification
 
 Original failure reproduced or documented as non-reproducible; root cause stated with evidence; regression test or guard exists when feasible; original scenario and related checks pass.
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>debugging-and-error-recovery</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>Reproduction, root cause, fix, and verification commands</evidence>
-  <artifacts>Changed files, tests, debug notes</artifacts>
-  <risks>Non-reproducible behavior, missing regression test, or none</risks>
-</skill_result>
-```
 
 ## References
 

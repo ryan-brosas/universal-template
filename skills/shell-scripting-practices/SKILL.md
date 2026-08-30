@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Shell Scripting Practices
 
-Application skill for shell learning (`awesome-guidelines` deep ingest). Load learning note for *why*; capsules for probes.
+Application skill for shell learning (from the archived `awesome-guidelines` style capsules). Load learning note for *why*; capsules for probes.
 
 ## Core Principle
 

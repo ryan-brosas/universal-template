@@ -16,10 +16,61 @@
 |---|---|
 | Experimental | description, topics, minimal CI, light PR policy; no release bureaucracy, no community files |
 | Internal application | CI, ruleset, dependency + security automation, deployment governance; no public community files |
-| Public OSS | metadata, topics, issue forms, CONTRIBUTING + SECURITY, vulnerability reporting, labels + auto-labeling, ruleset, Dependabot, release notes |
+| Public OSS | metadata, topics, issue forms, CONTRIBUTING + SECURITY, vulnerability reporting, SUPPORT (or account default), labels + auto-labeling, ruleset, Dependabot, release notes; Discussions only when a community actually forms |
 | Distributed library / CLI | everything from public OSS plus: versioned releases, release notes, tag protection, immutable releases when assets must stay fixed, provenance only where it adds value |
 
 `full` classifies the project first, then configures the intersection of the class and what the repository actually uses. Every deliberate skip is recorded with a reason; "maximize GitHub" means maximizing useful integration, not feature count.
+
+## Standard baseline (composition contract)
+
+The "standard setup" is not a skill and not a fixed file set. It is this
+composition, applied at the maturity class the project actually is:
+
+```
+project-bootstrap               scaffold or onboard (the local project exists first)
+github-repo-setup               setup | full at the class-derived profile below
+github-actions-engineering      CI that proves the project's real gates
+git-workflow-and-versioning     only when the project is versioned
+github audit                    github-audit.py re-run plus ruleset read-back
+```
+
+Requests that authorize the baseline: "create this repo with our standard
+setup", "start a new project using our baseline", "make this
+production-ready", "make this OSS-ready", "give this repo the full setup".
+A plain "start a new project" or "create a scratch project" stays
+bootstrap-only: no remote, labels, rulesets, SECURITY, or release machinery
+unless separately requested.
+
+Profile mapping (request intent to class; every row still passes project
+applicability checks):
+
+| Request | Class | Baseline adds beyond bootstrap |
+|---|---|---|
+| "scratch project" | experimental | nothing remote; local CI only if asked |
+| "standard setup", "our baseline" | internal application | description/topics, core labels, PR template, CI plus ruleset, dependency and security automation |
+| "OSS-ready", "production-ready" for a public project | public OSS | plus issue forms, CONTRIBUTING, SECURITY with private vulnerability reporting, SUPPORT (or account default), auto-labeling |
+| "full setup" for a versioned library/CLI/Action | distributed | plus release authority, tag protection, generated release notes, immutable releases only where published artifacts must stay fixed |
+
+Existing repositories are reconciled: inspect, compare, change only what is
+stale or missing, and preserve intentional labels, established CI, release
+strategy, docs, and history. Never rebuild a working repository to match this
+catalog's defaults.
+
+## Account- and organization-level defaults
+
+Generic community files (CONTRIBUTING, SECURITY, SUPPORT, Code of Conduct,
+issue/PR templates, discussion forms, FUNDING) can live once in the account or
+organization `.github` repository instead of per repository. Verified facts,
+precedence rules, and the boundary for touching that repository:
+`references/account-defaults.md`.
+
+## GitHub template repositories (separate mechanism)
+
+A GitHub template repository seeds starter code, directory structure, and
+common local files. It does not configure labels, rulesets, remote security
+settings, metadata, or release settings; `github-repo-setup` owns those remote
+surfaces either way. This catalog repository is agent configuration, not an
+application template.
 
 ## Project-type adjustments
 

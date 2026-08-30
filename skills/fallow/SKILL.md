@@ -25,7 +25,7 @@ Deterministic static analysis provides evidence, not code. Read the JSON, cite t
 
 ## When NOT to Use
 
-Non-TS/JS (Fallow is JS/TS only — for Python repos use `codegraph-context` → `codegraphcontext_find_dead_code` / `codegraphcontext_calculate_cyclomatic_complexity` instead); one-line edits (overhead); runtime data without the runtime layer set up.
+Non-TS/JS (Fallow is JS/TS only — for Python repos use the project's configured dead-code tooling, e.g. ruff or vulture); one-line edits (overhead); runtime data without the runtime layer set up.
 
 ## Core Commands
 

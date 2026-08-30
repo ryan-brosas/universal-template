@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # R Coding Practices
 
-Application skill for R style learning (`awesome-guidelines` deep ingest). Default to tidyverse + styler/lintr; when project declares Google R guide, apply BigCamelCase functions, explicit `return()`, and `pkg::fun()` qualification.
+Application skill for R style learning (from the archived `awesome-guidelines` style capsules). Default to tidyverse + styler/lintr; when project declares Google R guide, apply BigCamelCase functions, explicit `return()`, and `pkg::fun()` qualification.
 
 ## Core Principle
 

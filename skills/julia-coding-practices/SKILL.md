@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Julia Coding Practices
 
-Application skill for Julia BlueStyle learning (`awesome-guidelines` deep ingest). When project sets SciMLStyle or custom `.JuliaFormatter.toml`, follow that formatter config first.
+Application skill for Julia BlueStyle learning (from the archived `awesome-guidelines` style capsules). When project sets SciMLStyle or custom `.JuliaFormatter.toml`, follow that formatter config first.
 
 ## Core Principle
 

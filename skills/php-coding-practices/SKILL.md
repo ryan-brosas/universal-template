@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # PHP Coding Practices
 
-Application skill for PHP style learning (`awesome-guidelines` deep ingest). For Laravel/Symfony/WordPress stack patterns, load stack foundations.
+Application skill for PHP style learning (from the archived `awesome-guidelines` style capsules). For Laravel/Symfony/WordPress stack patterns, load stack foundations.
 
 ## Core Principle
 

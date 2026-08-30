@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # PowerShell Scripting Practices
 
-Application skill for PoshCode PowerShellPracticeAndStyle deep ingest (`awesome-guidelines`). For bash glue, use `shell-scripting-practices`. For .NET library API naming, use `dotnet-coding-practices`.
+Application skill for PoshCode PowerShellPracticeAndStyle (archived `awesome-guidelines` capsules). For bash glue, use `shell-scripting-practices`. For .NET library API naming, use `dotnet-coding-practices`.
 
 ## Core Principle
 

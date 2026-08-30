@@ -1,6 +1,7 @@
 ---
 name: memory-graph-skill-miner
 description: "Use when mining an indexed Codebase Memory repository into a verified foundation skill — the autonomous learn → note → capsule → OpenViking sync → close loop. Host-neutral: runs from any agent CLI (DSH Factory lane, pi recurring task, or manual invocation)."
+disable-model-invocation: true
 ---
 
 # Memory-Graph Skill Miner

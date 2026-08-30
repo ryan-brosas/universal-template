@@ -1,6 +1,6 @@
 ---
 name: test-driven-development
-description: Use when implementing any feature or bugfix, before writing implementation code - write the test first, watch it fail, write minimal code to pass; ensures tests actually verify behavior by requiring failure first
+description: Use when implementing a behavior change or fixing a reproducible defect - demonstrate the failure first (RED), fix, verify GREEN; for non-reproducible issues, use the strongest available failure evidence plus deterministic verification
 disable-model-invocation: true
 ---
 
@@ -9,20 +9,22 @@ disable-model-invocation: true
 
 ## Core Principle
 
-**No production code without a failing test first.** The failing test is the design
-conversation: write the test first, watch it fail for the right reason, write the
-minimum code to pass, then refactor while keeping tests green. A test asserts observable
-behavior, never implementation details.
+**A claimed fix carries failure evidence.** For a reproducible defect or a behavior
+change, the strongest evidence is a failing test first (RED), then the fix, then GREEN.
+Write the test first when the behavior is testable; a test asserts observable behavior,
+never implementation details. For a non-reproducible issue, use the strongest available
+failure evidence (log, trace, probe, user report) and the strongest deterministic
+verification afterward. Never fabricate a failing test to satisfy process.
 
-## The Iron Law
+## The Evidence Rule
 
 <HARD-GATE>
-**NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST.** No exceptions for "obvious" code, "trivial" fixes, "I just need to see if this works first", or "I'll add tests later." The failing test is the design conversation. If you wrote code before the test, you don't know what you built.
+**A fix ships with failure evidence and a passing verification.** Reproducible defect or behavior change: the test existed and failed before the fix (RED for the right reason), passes after (GREEN). Non-reproducible: the report names the strongest available failure evidence and the deterministic verification that was run. Skipping evidence is how a "fix" ships unproven.
 </HARD-GATE>
 
 ## When to Use
 
-Before any feature implementation, bug fix, or refactor that changes behavior. REQUIRED BACKGROUND for `code-review-and-quality` and any feature work.
+Before feature implementation, bug fixes, or refactors that change testable behavior. REQUIRED BACKGROUND for `code-review-and-quality` and any feature work. Documentation-only changes and pure configuration need the project's normal verification, not a RED step.
 
 ## When NOT to Use
 
@@ -69,9 +71,6 @@ The test must fail for the **right reason** — the behavior is missing, not the
 5. **Refactor** — names, structure, duplication. No new behavior. Tests stay green.
 6. **Verify** — full test file, not just the new test.
 
-## Self-Quiz
-
-Did I see RED for the right reason? Minimum code (no extras)? Refactor preserved behavior? Full test file green? If I skipped ("obvious"), what test would make it testable?
 
 ## Red Flags
 
@@ -84,17 +83,6 @@ Test passes on first run; test asserts implementation details; test breaks on re
 - The minimum code made it GREEN with no "while I'm here" extras.
 - The full test file — not just the new test — is green after the refactor.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill><name></skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>…</evidence>
-  <artifacts>…</artifacts>
-  <risks>…</risks>
-</skill_result>
-```
 
 ## References
 
@@ -102,4 +90,4 @@ N/A — no reference files; the loop and rationalization table are fully specifi
 
 ## Pi Fabric Boundaries
 
-Tests are direct behavioral probes (black-box first); mutation defers to the Schema mutation guard in AGENTS.md.
+Tests are direct behavioral probes (black-box first). Pi Fabric's Schema transactional mutation loop is opt-in (enforce mode or explicit request), never a prerequisite for ordinary test edits.

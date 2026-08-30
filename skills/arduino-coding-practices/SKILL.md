@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Arduino Coding Practices
 
-Application skill for Arduino library + sketch guides deep ingest (`awesome-guidelines`). For portable C++ outside Arduino core, load `cpp-coding-practices`. Professional embedded without Arduino APIs: follow project RTOS/SDK docs.
+Application skill for Arduino library + sketch guides (archived `awesome-guidelines` capsules). For portable C++ outside Arduino core, load `cpp-coding-practices`. Professional embedded without Arduino APIs: follow project RTOS/SDK docs.
 
 ## Core Principle
 

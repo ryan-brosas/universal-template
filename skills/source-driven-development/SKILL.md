@@ -1,6 +1,6 @@
 ---
 name: source-driven-development
-description: "Use when shipping code that depends on unfamiliar libraries, external APIs, or framework behavior: cite the source or mark the decision unverified; route discovery to the research pack."
+description: "Use when shipping code that depends on unfamiliar libraries, external APIs, or framework behavior: cite the authoritative source or mark the decision unverified; route discovery itself to evidence-router."
 disable-model-invocation: true
 ---
 
@@ -36,23 +36,19 @@ unverified label means the claim does not ship.
 
 1. Identify every non-trivial external API, framework, or version decision in the
    change.
-2. Route discovery to the matching research leaf (table below) instead of re-deriving a
-   retrieval workflow here.
+2. Route discovery to `evidence-router` instead of re-deriving a retrieval
+   workflow here.
 3. Run the Gate Checklist: version-check → behavioral probe → cite or mark unverified →
    conflict resolution.
 4. Ship only claims that carry a citation or an explicit `[UNVERIFIED: reason]` label.
 
-## Route Discovery to research leaves
+## Route discovery to the evidence owner
 
-Do not re-derive a retrieval workflow here. Load the matching leaf:
-
-| Question | Route |
-|---|---|
-| Local code, architecture, definitions, traces, blast radius | `evidence-router` → Codebase Memory → JetBrains → Fovea |
-| Current web facts, cited discovery | `codex-websearch` |
-| Versioned library/API docs | `evidence-router` → Context7 (`resolve-library-id` → `query-docs`) |
-| Package internals / source | `opensrc` |
-| Pressure-test a claim against docs | `grill-with-docs` |
+There is one evidence-routing owner: `evidence-router`. When an external
+behavior materially affects the implementation, delegate source selection to
+it (local code, Fovea, Codebase Memory, Context7, web — it picks the smallest
+capable source). This skill enforces only the delivery-time rule: the claim
+ships cited or labeled `[UNVERIFIED: reason]`.
 
 ## Gate Checklist
 
@@ -76,17 +72,6 @@ Do not re-derive a retrieval workflow here. Load the matching leaf:
 - Recommendation is specific.
 - External claims probed when cheap.
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>source-driven-development</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>Sources consulted, version checks, probes</evidence>
-  <artifacts>Citations or explicit unverified labels</artifacts>
-  <risks>Unverified claims, stale docs, conflicting sources, or none</risks>
-</skill_result>
-```
 
 ## References
 

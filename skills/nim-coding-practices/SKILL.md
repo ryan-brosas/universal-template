@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Nim Coding Practices
 
-Application skill for NEP-1 style learning (`awesome-guidelines` deep ingest). For legacy codebases with non-NEP spellings, prefer `--styleCheck:usages` over full NEP-1 enforcement until migrated.
+Application skill for NEP-1 style learning (from the archived `awesome-guidelines` style capsules). For legacy codebases with non-NEP spellings, prefer `--styleCheck:usages` over full NEP-1 enforcement until migrated.
 
 ## Core Principle
 

@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Frontend Markup Practices
 
-Application skill for HTML/CSS learning (`awesome-guidelines` deep ingest). For React/TS component patterns, load stack foundations first.
+Application skill for HTML/CSS learning (from the archived `awesome-guidelines` style capsules). For React/TS component patterns, load stack foundations first.
 
 ## Core Principle
 

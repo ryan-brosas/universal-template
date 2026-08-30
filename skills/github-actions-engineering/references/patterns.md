@@ -71,7 +71,7 @@ Tests needing Postgres/Redis/etc. run them as service containers with health pro
 
 ## Workflow file organization
 
-A small catalog: `ci.yml`, `release.yml`, `deploy.yml`, `security-audit.yml` (zizmor), `dependency-review.yml` where justified. Not seven micro-workflows — separate only when triggers/permissions/runtime genuinely differ. Stable human-readable workflow `name:` (it appears in required check strings and the UI).
+A small catalog: `ci.yml`, `release.yml`, `deploy.yml`, an optional workflow-security audit (zizmor) where the repository wants it, `dependency-review.yml` where justified. Not seven micro-workflows — separate only when triggers/permissions/runtime genuinely differ. Stable human-readable workflow `name:` (it appears in required check strings and the UI).
 
 ## Comments
 
@@ -80,3 +80,18 @@ Explain WHY, not what. `# Keep this workflow trigger broad: this job is a requir
 ## Generated workflow hygiene
 
 Multi-line shell: safe quoting, explicit failure behavior, no swallowed errors (`|| true` only when failure is informational), no untrusted interpolation. Prefer a repo script over a heredoc longer than ~15 lines.
+
+## Reusable workflow promotion ladder
+
+Do not centralize CI on first sight. The ladder:
+
+1. First occurrence: the repository keeps its own workflow in `.github/workflows/`.
+2. Repeated stable pattern: consider a reusable workflow only after enough
+   repositories prove the inputs are stable, the outputs are stable, the
+   security model (secrets, permissions, `github_repository` scope of callers)
+   is understood, and per-project differences stay manageable as inputs.
+3. Promoted: the reusable workflow lives with an owner; callers pass only real
+   inputs, never project logic.
+
+Skip promotion while any of those is unproven; duplicated-but-local beats
+premature central infrastructure.

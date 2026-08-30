@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Perl Coding Practices
 
-Application skill for Perl style learning (`awesome-guidelines` deep ingest). When project adopts PBP/perltidy profile, follow that formatter config first.
+Application skill for Perl style learning (from the archived `awesome-guidelines` style capsules). When project adopts PBP/perltidy profile, follow that formatter config first.
 
 ## Core Principle
 

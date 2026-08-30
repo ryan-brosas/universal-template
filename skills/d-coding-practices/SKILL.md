@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # D Coding Practices
 
-Application skill for D style learning (`awesome-guidelines` deep ingest). For Phobos contributions, follow full official dstyle Phobos section.
+Application skill for D style learning (from the archived `awesome-guidelines` style capsules). For Phobos contributions, follow full official dstyle Phobos section.
 
 ## Core Principle
 
