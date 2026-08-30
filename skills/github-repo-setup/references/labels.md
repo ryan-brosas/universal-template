@@ -4,10 +4,12 @@
 
 | Dimension | Labels | Rule |
 |---|---|---|
-| `type:` | `type:bug`, `type:feature`, `type:refactor`, `type:docs`, `type:test`, `type:chore`, `type:performance`, `type:security`, `type:dependencies` | create only the relevant ones |
+| `type:` | `type:bug`, `type:feature`, `type:refactor`, `type:docs`, `type:test`, `type:chore`, `type:performance`, `type:ci`, `type:build`, `type:security`, `type:dependencies` | create only the relevant ones; on PRs these come from the title via the repository's single title parser (e.g. `scripts/pr-metadata.py`) |
 | `area:` | `area:frontend`, `area:backend`, `area:api`, `area:cli`, `area:runtime`, `area:ci`, `area:docs`, ... | inferred from real top-level paths only — never fake areas |
 | `priority:` | `priority:p0` (critical) … `priority:p3` (low) | only when the project actually prioritizes issues |
-| special | `breaking-change`, `blocked`, `needs-reproduction`, `good-first-issue`, `help wanted` | only what a workflow consumes |
+| special | `breaking-change`, `release:skip`, `blocked`, `needs-reproduction`, `good-first-issue`, `help wanted` | only what a workflow consumes; `breaking-change` and the `type:*` set drive `.github/release.yml` categories |
+
+Organization repositories: if GitHub Issue Types exist for issues, use them for issue classification and keep `type:*` as the PR taxonomy; do not maintain the same classification twice. Detect at runtime (`gh api orgs/ORG/issue-types` when applicable). |
 
 Avoid giant catalogs. A tiny CLI may need four labels; that is correct.
 

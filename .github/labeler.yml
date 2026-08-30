@@ -1,0 +1,28 @@
+# Area labels derive from changed paths only; no regex. Type and
+# breaking-change labels come from the PR title via scripts/pr-metadata.py
+# (the single parser), not from this file.
+area:skills:
+  - changed-files:
+      - any-glob-to-any-file: skills/**
+area:scripts:
+  - changed-files:
+      - any-glob-to-any-file: scripts/**
+area:github:
+  - changed-files:
+      - any-glob-to-any-file: .github/**
+area:templates:
+  - changed-files:
+      - any-glob-to-any-file: templates/**
+area:essentials:
+  - changed-files:
+      - any-glob-to-any-file: essentials/**
+area:docs:
+  - changed-files:
+      - any-glob-to-any-file: docs/**
+      - any-glob-to-any-file: "*.md"
+area:mcp:
+  - changed-files:
+      - any-glob-to-any-file: mcp/**
+area:extensions:
+  - changed-files:
+      - any-glob-to-any-file: extensions/**

@@ -1,0 +1,40 @@
+# Generated release notes: categories are driven by the label taxonomy, so a
+# merged PR's title-derived type label places it automatically. Area labels
+# describe the changed seam and deliberately do not create categories.
+# The release:skip label excludes a merged PR from the notes entirely.
+changelog:
+  exclude:
+    labels:
+      - release:skip
+  categories:
+    - title: Breaking Changes
+      labels:
+        - breaking-change
+    - title: Features
+      labels:
+        - type:feature
+    - title: Bug Fixes
+      labels:
+        - type:bug
+    - title: Performance
+      labels:
+        - type:performance
+    - title: Security
+      labels:
+        - type:security
+    - title: Documentation
+      labels:
+        - type:docs
+    - title: Dependencies
+      labels:
+        - type:dependencies
+    - title: Internal Changes
+      labels:
+        - type:refactor
+        - type:test
+        - type:chore
+        - type:ci
+        - type:build
+    - title: Other Changes
+      labels:
+        - "*"

@@ -1,0 +1,24 @@
+name: Feature request
+description: A new capability or improvement for the catalog or its tooling
+labels: ["type:feature"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What is hard, missing, or repeated today
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: The smallest change that solves it, and the surfaces it touches
+    validations:
+      required: true
+  - type: checkboxes
+    id: prior-art
+    attributes:
+      label: Prior art
+      options:
+        - label: I checked whether a project-local reference or an existing skill already covers this

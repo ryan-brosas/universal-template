@@ -1,47 +1,32 @@
 # PR body format and push rules
 
-The PR body uses this section order:
+The PR body follows the repository's own template first
+(`.github/pull_request_template.md`); this reference defines the evidence
+category each section must carry. Current template sections:
 
-1. Title
-2. Summary
-3. Changed files
-4. Screenshots
-5. Verification
-6. CI state
-7. Codebase observation
-8. GitHub metadata
-9. Notes for the reviewer
+1. Summary: what changed, stated as the user-visible result
+2. Why: the problem this solves; issue linkage lives here (`Closes #N` only
+   when the PR fully fixes the issue, `Refs #N` when informational, never a
+   guessed closure)
+3. Verification: only checks actually run, with results (commands, exit
+   codes, run links). `git diff --check` on the branch range.
+4. Risks: regression / compatibility / migration / performance / security, or
+   None identified
+5. Reference / Prior Art: repo, path, revision, ADOPT/ADAPT/INSPIRATION; else N/A
+6. Visual Evidence: rendered or runtime proof for visual changes; else N/A.
+   Model review is not rendered proof.
+7. Breaking Changes / Migration: what breaks and how to migrate; else N/A
 
-Fill each section with a fact. Use `No visual result.` in the Screenshots section for text-only changes. Keep the headings and order.
+## Rules
 
-## Screenshots
-
-- Capture the changed UI before and after when both states exist.
-- Save images under `docs/screenshots/` with the PR slug in the file name.
-- Use relative image paths.
-- Use one row per changed visual area.
-- State `No visual result.` when the change has no visual output.
-
-## Verification
-
-List each command and its exit status. Include the project gate, the behavior test, the duplication check, and `git diff --check` when they apply.
-
-## CI state
-
-Write the workflow name, run URL, head commit, and final state. Use `pending` only while the run is active. Update the PR body after the pull request run finishes.
-
-## Codebase observation
-
-Write the Codebase Memory project, coverage for touched paths, caveats, and one blast-radius observation. Write a skip reason when the server is unavailable.
-
-## GitHub metadata
-
-Write the label, assignees, milestone, reviewers, project, draft state, and base from the project `AGENTS.md` or the task page. Use the literal `None` for a field that has no value.
-
-Set the metadata when you create the PR. The `gh pr create` flags are repeatable `--label` and `--reviewer`, then `--milestone`, `--assignee`, `--project`, and always `--base`. Pass `--draft` while the run is still open.
-
-Confirm the result with `gh pr view <number>` after creation. Add a missing value with `gh pr edit --add-label <name> --milestone <name>`.
-
-## Push order
-
-Add only owned files. Use the commit convention from the project `AGENTS.md`. Push the branch. Watch the push run. Create the PR after a passing push run, or create one with `--draft` while the CI run is open. Set the labels, milestone, assignees, reviewers, and project during creation, then confirm with `gh pr view`. Watch the pull request run and update the body and the CI state.
+- Every claim traces to real evidence: a diff, a command with its exit status,
+  or a run link. Absent values are `None` or N/A, never fabricated.
+- Visual changes need actual before/after rendered evidence; text-only changes
+  state N/A.
+- Metadata (labels, reviewers, milestone) is set by repository automation or
+  explicit user request, not hand-copied: area labels come from changed paths,
+  type and breaking-change labels come from the PR title via
+  `scripts/pr-metadata.py`.
+- CI state is watched (`gh pr checks` / `gh run watch`) and recorded as
+  observed. A failing required check blocks the merge; it does not force the
+  PR back to draft.

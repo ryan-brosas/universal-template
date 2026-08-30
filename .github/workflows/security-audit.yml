@@ -1,6 +1,7 @@
-# Audits GitHub Actions workflows for insecure patterns using zizmor
-# (farmed from pi-template / pydantic-ai). Catches dangerous triggers and
-# untrusted-input injection.
+# Audits GitHub Actions workflows for insecure patterns with zizmor
+# (dangerous triggers, untrusted-input injection). Path-filtered by design:
+# it runs only when workflows change, so it is intentionally NOT a required
+# status check (required checks must have unconditional trigger semantics).
 
 name: security-audit
 
@@ -31,7 +32,7 @@ jobs:
           persist-credentials: false
 
       - name: Install zizmor
-        run: pip install --user zizmor
+        run: pip install --user zizmor==1.29.0  # pinned; bump deliberately
 
       - name: Audit workflows
         run: |

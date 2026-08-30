@@ -1,0 +1,57 @@
+# Publishes a versioned GitHub release for a pushed vX.Y.Z tag: runs the same
+# gate suite PRs run, then creates the release with GitHub-generated notes
+# (categories from .github/release.yml). The tag is the single release
+# authority; this workflow never publishes on plain pushes.
+#
+# The gate commands are intentionally inlined rather than shared via a
+# reusable workflow: a caller/callee pair would rename this check to
+# 'job / sub-job', and the required-check name must stay stable.
+name: release
+
+on:
+  push:
+    tags: ["v*.*.*"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+
+cancel-in-progress: false
+
+jobs:
+  release:
+    name: release
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install YAML checker
+        run: pip install --user pyyaml==6.0.3  # pinned; bump deliberately
+
+      - name: Run the catalog gate suite
+        shell: bash
+        run: |
+          set -euo pipefail
+          SKILLS_ROOT="${GITHUB_WORKSPACE}/skills" python3 scripts/skill-validator.py
+          python3 scripts/catalog-integrity.py
+          python3 scripts/catalog-quality.py
+          python3 scripts/repo-hygiene.py
+          python3 scripts/policy-consistency.py
+          python3 scripts/style-lint.py --selftest
+          python3 scripts/style-lint.py
+          python3 scripts/dead-code.py
+          CHECK_RANGE="$GITHUB_REF_NAME^..$GITHUB_REF_NAME" python3 scripts/conventional-commit.py
+          git diff --check
+
+      - name: Publish the release with generated notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" --verify-tag --generate-notes --title "$GITHUB_REF_NAME"
+          gh release view "$GITHUB_REF_NAME" --json url,name,isDraft --jq '{url, name, isDraft}'

@@ -1,0 +1,60 @@
+# Deterministic PR labeling. Two independent jobs:
+#   area-labels: changed paths -> area:* (actions/labeler, path globs only)
+#   type-labels: PR title -> type:* / breaking-change (scripts/pr-metadata.py,
+#                the single title parser shared with CI and release notes)
+name: pr-labels
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, edited]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  area-labels:
+    name: area labels
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Apply area labels from changed paths
+        uses: actions/labeler@bf12e9b00b37c5c0ca2b87b79b2daf7891dbda13 # v7.0.0
+        with:
+          configuration-path: .github/labeler.yml
+
+  type-labels:
+    name: type labels
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: read
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Derive labels from the PR title
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TITLE: ${{ github.event.pull_request.title }}
+          NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          labels="$(python3 scripts/pr-metadata.py labels --title "$TITLE")"
+          if [ -n "$labels" ]; then
+            gh pr edit "$NUMBER" --add-label $labels
+          else
+            echo "no deterministic labels for: $TITLE"
+          fi

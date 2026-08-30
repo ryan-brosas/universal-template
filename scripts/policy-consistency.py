@@ -523,6 +523,39 @@ def check_hidden_reachability() -> None:
             check_fail("HIDDEN-REACHABILITY", f"skills/{needle}/SKILL.md", 1, "hidden skill has no incoming reference — add a route or make it visible")
 
 
+def check_readme_skill_refs() -> None:
+    """Every skills/<name> referenced from README.md must exist; retired names must not return."""
+    readme = BASE / "README.md"
+    if not readme.is_file():
+        fails.append("[README-SKILL-REFS] README.md: file missing")
+        return
+    text = readme.read_text(encoding="utf-8")
+    for m in re.finditer(r"skills/([a-z0-9-]+)", text):
+        name = m.group(1)
+        if not (BASE / f"skills/{name}/SKILL.md").is_file():
+            check_fail("README-SKILL-REFS", "README.md", 1, f"stale skill reference: skills/{name}")
+    for stale in ("workflow-lifecycle", "five-source", "Codebase Memory observation"):
+        if stale.lower() in text.lower():
+            check_fail("README-SKILL-REFS", "README.md", 1, f"retired concept present: {stale!r}")
+
+
+def check_github_ownership() -> None:
+    """GitHub skill ownership stays exclusive (no duplicated canonical claims)."""
+    push_pr = BASE / "skills/push-pr/SKILL.md"
+    repo_setup = BASE / "skills/github-repo-setup/SKILL.md"
+    git_wf = BASE / "skills/git-workflow-and-versioning/SKILL.md"
+    ghe = BASE / "skills/github-actions-engineering/SKILL.md"
+    if push_pr.is_file() and re.search(r"ruleset", push_pr.read_text(encoding="utf-8"), re.I):
+        check_fail("GITHUB-OWNERSHIP", "skills/push-pr/SKILL.md", 1, "PR lifecycle skill must not claim ruleset governance")
+    if repo_setup.is_file() and "gh pr create" in repo_setup.read_text(encoding="utf-8"):
+        check_fail("GITHUB-OWNERSHIP", "skills/github-repo-setup/SKILL.md", 1, "repository setup must not own PR creation (push-pr does)")
+    if git_wf.is_file() and re.search(r"github-actions-engineering\s*$", git_wf.read_text(encoding="utf-8"), re.M):
+        check_fail("GITHUB-OWNERSHIP", "skills/git-workflow-and-versioning/SKILL.md", 1, "versioning skill must not claim Actions ownership")
+    if ghe.is_file() and re.search(r"gh api .*rulesets", ghe.read_text(encoding="utf-8")):
+        check_fail("GITHUB-OWNERSHIP", "skills/github-actions-engineering/SKILL.md", 1, "Actions skill must not configure remote rulesets (github-repo-setup does)")
+
+
+
 def check_pr_ownership() -> None:
     """github-repo-setup must not claim general PR-creation ownership — push-pr owns the PR lifecycle."""
     rel = "skills/github-repo-setup/SKILL.md"
@@ -570,6 +603,8 @@ CHECKS = [
     ("OBJECTIVE-DRIFT", check_objective_drift),
     ("HIDDEN-REACHABILITY", check_hidden_reachability),
     ("PR-OWNERSHIP", check_pr_ownership),
+    ("README-SKILL-REFS", check_readme_skill_refs),
+    ("GITHUB-OWNERSHIP", check_github_ownership),
 ]
 
 

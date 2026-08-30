@@ -1,6 +1,6 @@
 ---
 name: push-pr
-description: "Use when finished work on a verified branch needs to be pushed and opened or updated as a GitHub pull request, or when PR review feedback must be addressed in its thread. Runs the project's own gates, builds the PR body from real evidence, and watches required CI before marking the PR ready."
+description: "Use when finished work needs to be pushed and opened or updated as a GitHub pull request, when PR review feedback must be addressed in its thread, or when an open PR should be auto-merged on request. Runs the project's own gates and builds the PR body from real evidence."
 ---
 
 # Push PR
@@ -24,9 +24,10 @@ Use one evidence path for every pull request. The local gate checks the branch. 
 3. Discover the repository's own PR template first — `.github/PULL_REQUEST_TEMPLATE.md`, `PULL_REQUEST_TEMPLATE/` directory, `docs/`, or the repository root (GitHub-supported locations; re-verify when GitHub changes them). Use the repository's template when one exists; fall back to `~/.agents/templates/pull-request.md` otherwise.
 4. Construct the PR body from actual evidence — scope, what changed and why, verification output, run links. Never fabricate completed checks; mark absent values `None`. Conditional sections only when they apply: **visual change** → actual before/after screenshot or rendered evidence; **complex structural change** → Fovea/Steroid observation when useful; **external/reference implementation** → provenance + license note; **reusable lesson** → mark as a `leverage-capture` candidate (do not capture automatically).
 5. Write the body to a securely created temporary file (`mktemp`) — never interpolate generated Markdown into the shell command.
-6. Push and create the PR: `gh pr create --title "..." --body-file <file> --base <base>` plus metadata flags only when the project defines them (`--label`, `--reviewer`, `--milestone`, `--assignee`, `--project`). **Open as `--draft` while required CI has not yet completed** — a ready PR with failing checks is reviewable when it should not be. Mark it ready only after required checks pass (or when the project policy explicitly says otherwise).
-7. Watch the required CI to a final state (`gh pr checks` / `gh run watch`); update the body when state changes; flip draft → ready when green; confirm the result before claiming done.
-8. Address review feedback when requested — the in-thread procedure below.
+6. Push and create the PR: `gh pr create --title "..." --body-file <file> --base <base>`. **Draft policy:** implementation incomplete → `--draft`; implementation ready → open ready for review and let CI run in parallel (review and CI are parallel activities). A failing required check blocks the merge, not the review.
+7. **Metadata after creation:** let deterministic repository automation label the PR (area labels from changed paths; type and breaking-change labels from the title) and do not hand-add labels automation derives. Link issues deliberately in the body: `Closes #N` only when the PR fully fixes the issue, `Refs #N` when informational, never a guessed closure. Reviewers come from CODEOWNERS or an explicit request; milestones and projects inherit from issue relationships only. Enable auto-merge only on an explicit user request (`gh pr merge --auto`) - the repository capability is not per-PR permission.
+8. Watch the required CI to a final state (`gh pr checks` / `gh run watch`); update the body when state changes; confirm the result before claiming done.
+9. Address review feedback when requested — the in-thread procedure below.
 
 Stop when the PR exists, the body reflects actual evidence, required CI is green or the failure is owned, and review feedback (if any) is handled per the in-thread contract.
 
@@ -45,11 +46,13 @@ Verified live on this repository (PR #10, 2026-08-30): REST list returned `{id, 
 
 ## Red Flags
 
-- **HARD-GATE:** A failed local gate or required CI run blocks a ready PR. Keep the PR as a draft while the failure is open.
+- **HARD-GATE:** a failing local gate or failing required check blocks the MERGE. A ready PR with CI still running is normal; review and CI run in parallel.
 - Do not invent screenshots, tests, CI states, PR links, labels, milestones, assignees, or reviewers — absent evidence is marked `None`, never faked.
 - Do not run every observation surface for every PR — evidence follows the change (visual → rendered proof; structural → graph when useful).
 - Do not add secrets, `.env` files, or unrelated files.
-- Marking a PR ready while its required checks are still failing or running (unless project policy says otherwise). HARD-GATE.
+- Merging, or enabling auto-merge on, a PR whose required checks are failing. HARD-GATE.
+- Enabling auto-merge without an explicit user request. HARD-GATE.
+- Hand-adding type/area/breaking-change labels that repository automation derives from the title and changed paths.
 - Do not use `pull_request_target` for untrusted branch code.
 - Resolving a review thread merely because a reply was posted. HARD-GATE.
 - Replying to review feedback as a new top-level comment instead of in-thread.

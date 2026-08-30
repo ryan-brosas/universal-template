@@ -4,10 +4,22 @@
 
 | Mode | Mutates | Adds | Deliberately skips |
 |---|---|---|---|
-| `audit` | nothing | graded findings (HIGH / MEDIUM / LOW) with specific proposals | everything |
+| `audit` | nothing | remote drift report (`scripts/github-audit.py`) + graded findings (HIGH / MEDIUM / LOW) with specific proposals | everything |
 | `setup` | additive + reconciliatory | description, topics, labels, PR template, issue forms, CONTRIBUTING/SECURITY when justified, ruleset from real CI | destructive changes, license decisions |
 | `minimal` | additive, smallest | description, topics, core labels, PR template, CI-based default-branch protection | issue forms beyond the basics, CODEOWNERS, Dependabot, release automation |
 | `team` | additive, stronger | + required approval(s), conversation resolution, CODEOWNERS (real ownership), SECURITY, dependency automation | activating team controls without evidence of a team |
+| `full` | additive + reconciliatory across all surfaces | everything from `setup` plus security features, Dependabot ecosystems, release authority + release notes + tag protection, feature decisions with reasons | any feature that does not earn its place for THIS project (each skip is stated with its reason in the decision log) |
+
+## Maturity classes (decide surfaces, not feature counts)
+
+| Class | Configure |
+|---|---|
+| Experimental | description, topics, minimal CI, light PR policy; no release bureaucracy, no community files |
+| Internal application | CI, ruleset, dependency + security automation, deployment governance; no public community files |
+| Public OSS | metadata, topics, issue forms, CONTRIBUTING + SECURITY, vulnerability reporting, labels + auto-labeling, ruleset, Dependabot, release notes |
+| Distributed library / CLI | everything from public OSS plus: versioned releases, release notes, tag protection, immutable releases when assets must stay fixed, provenance only where it adds value |
+
+`full` classifies the project first, then configures the intersection of the class and what the repository actually uses. Every deliberate skip is recorded with a reason; "maximize GitHub" means maximizing useful integration, not feature count.
 
 ## Project-type adjustments
 

@@ -1,7 +1,7 @@
-# Catalog quality CI for universal-template (~/.agents).
-# Shape from templates/github-pr-ci.yml; gate from AGENTS.md.
-# Practices: codebase-memory-mcp (concurrency, least privilege, pinned checkout)
-# + absorbed pi-template check/quality-gate suite (practices-to-ci).
+# Catalog quality CI for universal-template (~/.agents): enforces the
+# AGENTS.md gate suite, the changed-line contract, and the PR body contract.
+# The required-check contract is the job name below ("quality / required");
+# the default-branch ruleset requires exactly that name.
 
 name: Project quality
 
@@ -20,7 +20,7 @@ permissions:
 
 jobs:
   quality:
-    name: Coding practice and anti-slop
+    name: quality / required
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -42,7 +42,7 @@ jobs:
           fi
 
       - name: Install YAML checker
-        run: pip install --user pyyaml
+        run: pip install --user pyyaml==6.0.3  # pinned; bump deliberately
 
       - name: Skill validator
         id: validator
