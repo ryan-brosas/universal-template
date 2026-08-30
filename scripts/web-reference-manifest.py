@@ -72,12 +72,18 @@ def is_authored_file(rel: str) -> bool:
         return True
     return len(parts) >= 2 and parts[0] in AUTHORED_SECRET_DIRS
 
+# (label, pattern, class). "key" = vendor-format credential: real wherever it
+# appears, including raw captures. "sample" = bearer/labeled form that public
+# documentation legitimately shows: a hard failure in authored metadata, a
+# review warning in raw captured evidence. Private session material (cookies,
+# auth headers from the user's session, localStorage, session tokens) must
+# never be captured in the first place; that rule lives in the skill.
 SECRET_PATTERNS = [
-    ("openai-style key", re.compile(r"\bsk-[A-Za-z0-9_-]{16,}\b")),
-    ("github token", re.compile(r"\bgh[pousr]_[A-Za-z0-9]{20,}\b")),
-    ("aws access key", re.compile(r"\bAKIA[0-9A-Z]{16}\b")),
-    ("bearer header", re.compile(r"(?i)authorization[\"']?\s*[:=]\s*[\"']?bearer\s+[A-Za-z0-9._-]+")),
-    ("labeled secret", re.compile(r"(?i)\b(api[_-]?key|client[_-]?secret|password|auth[_-]?token)\b[\"']?\s*[:=]\s*[\"'][^\"'\s]{8,}")),
+    ("openai-style key", re.compile(r"\bsk-[A-Za-z0-9_-]{16,}\b"), "key"),
+    ("github token", re.compile(r"\bgh[pousr]_[A-Za-z0-9]{20,}\b"), "key"),
+    ("aws access key", re.compile(r"\bAKIA[0-9A-Z]{16}\b"), "key"),
+    ("bearer header", re.compile(r"(?i)authorization[\"']?\s*[:=]\s*[\"']?bearer\s+[A-Za-z0-9._-]+"), "sample"),
+    ("labeled secret", re.compile(r"(?i)\b(api[_-]?key|client[_-]?secret|password|auth[_-]?token)\b[\"']?\s*[:=]\s*[\"'][^\"'\s]{8,}"), "sample"),
 ]
 
 
@@ -179,13 +185,20 @@ def scan_secrets(root: Path, findings: Findings) -> None:
         text = data[:MAX_SCAN_BYTES].decode("utf-8", errors="replace")
         rel = str(p.relative_to(root))
         authored = is_authored_file(rel)
-        for label, pattern in SECRET_PATTERNS:
+        for label, pattern, kind in SECRET_PATTERNS:
             if not pattern.search(text):
                 continue
             if authored:
                 findings.fail(
                     f"{rel}: credential-like material ({label}) in authored metadata "
                     f"must never be stored in a reference bundle")
+            elif kind == "key":
+                # A vendor-format key in captured content is a real credential
+                # leak far more often than a docs example: quarantine the file.
+                findings.fail(
+                    f"{rel}: vendor-format credential ({label}) in captured evidence "
+                    f"must be removed or re-captured without it before the bundle is "
+                    f"committed or shared")
             else:
                 findings.warn(
                     f"{rel}: credential-like sample ({label}) in raw captured evidence — "
@@ -246,6 +259,20 @@ def validate_bundle(raw_root: str) -> Findings:
             for variant in variants
         )
 
+    pages = manifest.get("pages", [])
+    if not isinstance(pages, list):
+        findings.fail("pages must be a list")
+        pages = []
+    routes: set[str] = set()
+    pages_have_shots = False
+    for i, page in enumerate(pages):
+        if not isinstance(page, dict) or not isinstance(page.get("route"), str) or not page["route"]:
+            findings.fail(f"pages[{i}] needs a route string")
+            continue
+        shots = page.get("screenshots")
+        if isinstance(shots, list) and shots:
+            pages_have_shots = True
+
     evidence = manifest.get("evidence", {})
     if not isinstance(evidence, dict):
         findings.fail("evidence must be an object")
@@ -261,14 +288,13 @@ def validate_bundle(raw_root: str) -> Findings:
         else:
             findings.fail(f"evidence.{key} must be a boolean or a bundle-relative path")
     for key in sorted(expected_evidence):
-        if key not in evidence and not gap_declares(key):
+        if key in evidence:
+            continue
+        if key == "screenshots" and pages_have_shots:
+            continue  # page-level screenshots satisfy the quick contract
+        if not gap_declares(key):
             findings.fail(f"evidence.{key} is expected for scope '{scope}' but absent and coverage_gaps does not declare it")
 
-    pages = manifest.get("pages", [])
-    if not isinstance(pages, list):
-        findings.fail("pages must be a list")
-        pages = []
-    routes: set[str] = set()
     for i, page in enumerate(pages):
         if not isinstance(page, dict) or not isinstance(page.get("route"), str) or not page["route"]:
             findings.fail(f"pages[{i}] needs a route string")
@@ -288,6 +314,23 @@ def validate_bundle(raw_root: str) -> Findings:
             findings.fail(f"pages[{i}].screenshots must be a list")
     if scope in {"site", "deep"} and not pages:
         findings.warn("site/deep capture lists no routes")
+
+    # Quick contract: the one mandatory artifact is a real screenshot file.
+    # A boolean true or a coverage_gaps entry must not satisfy it — without a
+    # visual artifact there is no quick capture at all.
+    if scope == "quick":
+        shot = evidence.get("screenshots")
+        shot_path = resolve_under(root, shot) if isinstance(shot, str) else None
+        shot_ok = shot_path is not None and shot_path.is_file()
+        page_shots = any(
+            isinstance(page.get("screenshots"), list) and page["screenshots"]
+            for page in pages if isinstance(page, dict))
+        if not shot_ok and not page_shots:
+            findings.fail(
+                "quick capture needs at least one real screenshot file "
+                "(evidence.screenshots as a bundle-relative path, or a non-empty "
+                "pages[].screenshots); a boolean or a coverage gap does not "
+                "satisfy the quick contract")
 
     viewports = manifest.get("viewports", [])
     if not isinstance(viewports, list) or not all(isinstance(v, str) for v in viewports):
@@ -510,11 +553,15 @@ def selftest() -> int:
             ok = False
 
         prose = base / "prose"
-        write_fixture(prose, json.dumps({
+        (prose / "captures" / "2026-08-31" / "screenshots").mkdir(parents=True)
+        (prose / "captures" / "2026-08-31" / "screenshots" / "hero.png").write_bytes(b"png")
+        (prose / "REFERENCE.md").write_text("# Website Reference\n", encoding="utf-8")
+        (prose / "manifest.json").write_text(json.dumps({
             "type": "web-reference", "source": "https://example.com",
             "captured_at": "2026-08-31T00:00:00Z", "scope": "quick",
-            "evidence": {}, "coverage_gaps": ["screenshots not collected (prose test)"],
-        }))
+            "evidence": {"screenshots": "captures/2026-08-31/screenshots/hero.png"},
+            "coverage_gaps": [],
+        }), encoding="utf-8")
         (prose / "REFERENCE.md").write_text(
             "We do not ADOPT, ADAPT, or OMIT anything here.\n", encoding="utf-8")
         f = validate_bundle(str(prose))
@@ -544,6 +591,56 @@ def selftest() -> int:
             print(f"FAIL quick capture rejected: {f.p0}")
             ok = False
 
+        # Quick contract: a boolean true is not a screenshot.
+        boolshot = base / "boolshot"
+        boolshot.mkdir()
+        (boolshot / "REFERENCE.md").write_text("# Website Reference\n", encoding="utf-8")
+        (boolshot / "manifest.json").write_text(json.dumps({
+            "type": "web-reference", "source": "https://example.com",
+            "captured_at": "2026-08-31T00:00:00Z", "scope": "quick",
+            "evidence": {"screenshots": True}, "coverage_gaps": [],
+        }), encoding="utf-8")
+        f = validate_bundle(str(boolshot))
+        if any("quick capture needs" in m for m in f.p0):
+            print("PASS quick boolean screenshot rejected")
+        else:
+            print(f"FAIL quick boolean screenshot accepted: {f.p0}")
+            ok = False
+
+        # Quick contract: a declared gap does not replace the visual artifact.
+        gapshot = base / "gapshot"
+        gapshot.mkdir()
+        (gapshot / "REFERENCE.md").write_text("# Website Reference\n", encoding="utf-8")
+        (gapshot / "manifest.json").write_text(json.dumps({
+            "type": "web-reference", "source": "https://example.com",
+            "captured_at": "2026-08-31T00:00:00Z", "scope": "quick",
+            "evidence": {}, "coverage_gaps": ["screenshots not captured"],
+        }), encoding="utf-8")
+        f = validate_bundle(str(gapshot))
+        if any("quick capture needs" in m for m in f.p0):
+            print("PASS quick gap-declared screenshot rejected")
+        else:
+            print(f"FAIL quick gap-declared screenshot accepted: {f.p0}")
+            ok = False
+
+        # A page-level screenshot also satisfies the quick contract.
+        pageshot = base / "pageshot"
+        (pageshot / "captures" / "2026-08-31" / "screenshots").mkdir(parents=True)
+        (pageshot / "captures" / "2026-08-31" / "screenshots" / "hero.png").write_bytes(b"png")
+        (pageshot / "REFERENCE.md").write_text("# Website Reference\n", encoding="utf-8")
+        (pageshot / "manifest.json").write_text(json.dumps({
+            "type": "web-reference", "source": "https://example.com",
+            "captured_at": "2026-08-31T00:00:00Z", "scope": "quick",
+            "pages": [{"route": "/", "screenshots": ["captures/2026-08-31/screenshots/hero.png"]}],
+            "evidence": {}, "coverage_gaps": [],
+        }), encoding="utf-8")
+        f = validate_bundle(str(pageshot))
+        if not f.p0:
+            print("PASS quick page-level screenshot accepted")
+        else:
+            print(f"FAIL quick page-level screenshot rejected: {f.p0}")
+            ok = False
+
         # Golden test: public doc example in raw capture warns; authored
         # metadata with the same material stays a hard failure.
         rawsample = base / "rawsample"
@@ -568,6 +665,24 @@ def selftest() -> int:
             print("PASS secret in authored metadata stays a hard failure")
         else:
             print(f"FAIL expected authored-metadata P0, got P0={f.p0}")
+            ok = False
+
+        # A vendor-format key in a raw capture is a real leak: hard failure
+        # even outside authored metadata.
+        keysample = base / "keysample"
+        write_fixture(keysample, json.dumps({
+            "type": "web-reference", "source": "https://example.com",
+            "captured_at": "2026-08-31T00:00:00Z", "scope": "page",
+            "evidence": {"rendered_html": "captures/2026-08-31/pages/home/rendered.html"},
+            "coverage_gaps": ["screenshots and remaining evidence omitted"],
+        }))
+        (keysample / "captures" / "2026-08-31" / "pages" / "home" / "rendered.html").write_text(
+            "api_key = " + "sk-" + "k" * 24 + "\n", encoding="utf-8")
+        f = validate_bundle(str(keysample))
+        if any("vendor-format credential" in m for m in f.p0):
+            print("PASS vendor-format key in raw capture fails")
+        else:
+            print(f"FAIL vendor-format key in raw capture passed: P0={f.p0}")
             ok = False
 
     print("web-reference manifest selftest: PASS" if ok else "web-reference manifest selftest: FAIL")

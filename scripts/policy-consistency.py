@@ -499,6 +499,13 @@ def check_objective_drift() -> None:
 # docs/foundation-catalog.md), inventories, roadmap, and templates are NOT
 # callers — a generated index must never make a dead skill look reachable.
 REACHABILITY_CALLER_PARTS = ("AGENTS.md", "APPEND_SYSTEM.md", "README.md", "CONTRIBUTING.md")
+# Catalog machinery that enumerates skill names by design (classification sets,
+# visibility policy, discovery, migration patterns). Every internal skill name
+# appears there, so counting it as a caller makes the gate self-satisfying.
+REACHABILITY_ENUMERATION_SCRIPTS = {
+    "catalog-quality.py", "skill-validator.py", "skill-catalog.py",
+    "policy-consistency.py", "legacy-skill-report.py", "foundation-search.py",
+}
 
 
 def _reachability_corpus(base: Path) -> list[tuple[str, Path]]:
@@ -520,7 +527,8 @@ def _reachability_corpus(base: Path) -> list[tuple[str, Path]]:
             corpus.append(("", p))
     scripts = base / "scripts"
     if scripts.is_dir():
-        corpus.extend(("", f) for f in sorted(scripts.glob("*.py")))
+        corpus.extend(("", f) for f in sorted(scripts.glob("*.py"))
+                      if f.name not in REACHABILITY_ENUMERATION_SCRIPTS)
     gh = base / ".github"
     if gh.is_dir():
         corpus.extend(("", f) for f in sorted(gh.rglob("*")) if f.is_file())
@@ -730,6 +738,45 @@ def selftest() -> int:
         else:
             print(f"FAIL expected [] unreachable, got {dead}")
             ok = False
+    # Production classification path: load INTERNAL_SKILLS from
+    # catalog-quality.py exactly as the gate does, then prove a real internal
+    # skill flips unreachable -> reachable when its only caller appears. This
+    # catches the corpus regaining a self-satisfying source (classification or
+    # generated-discovery scripts must stay excluded).
+    internal = _load_internal_skills()
+    if not internal:
+        print("FAIL production INTERNAL_SKILLS failed to load")
+        return 1
+    probe = next(name for name in sorted(internal)
+                 if (BASE / "skills" / name / "SKILL.md").is_file())
+    with tempfile.TemporaryDirectory() as td:
+        base = Path(td)
+        (base / "skills" / probe).mkdir(parents=True)
+        (base / "skills" / probe / "SKILL.md").write_text(
+            "---\nname: " + probe + "\ndescription: Use when testing.\n"
+            "disable-model-invocation: true\n---\n# probe\n", encoding="utf-8")
+        (base / "docs").mkdir()
+        (base / "docs" / "skill-catalog.md").write_text(
+            "# Catalog\n- " + probe + "\n", encoding="utf-8")
+        dead = check_hidden_reachability(base=base, internal=internal)
+        if dead != [probe]:
+            print(f"FAIL production internal skill {probe} should be unreachable, got {dead}")
+            ok = False
+        else:
+            print("PASS production classification: unreachable without a real caller")
+        # A second skill names the probe: a real caller flips it reachable.
+        # (A self-reference in the probe's own SKILL.md never counts — the
+        # corpus excludes the skill's own directory.)
+        (base / "skills" / "caller").mkdir()
+        (base / "skills" / "caller" / "SKILL.md").write_text(
+            "---\nname: caller\ndescription: Use when testing.\n---\n"
+            "# caller\nRoute to " + probe + " during the workflow.\n", encoding="utf-8")
+        dead = check_hidden_reachability(base=base, internal=internal)
+        if dead != []:
+            print(f"FAIL production internal skill {probe} should be reachable, got {dead}")
+            ok = False
+        else:
+            print("PASS production classification: reachable with a real caller")
     print("policy-consistency selftest: PASS" if ok else "policy-consistency selftest: FAIL")
     return 0 if ok else 1
 

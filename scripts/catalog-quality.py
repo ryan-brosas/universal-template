@@ -70,7 +70,7 @@ ROUTER_SKILLS = {
 INTERNAL_SKILLS = {
     "model-resolution", "veda-lane", "fabric-native-execution",
     "code-foundations", "foundations-workflow",
-    "repo-inspo-organizer", "code-discipline", "agent-code-quality-gate",
+    "code-discipline", "agent-code-quality-gate",
     "code-review-and-quality", "quality-gate-methodology",
     "test-driven-development", "source-driven-development",
     "testing-anti-patterns", "documentation-and-adrs", "defense-in-depth",
@@ -145,14 +145,39 @@ def parse_frontmatter(text: str) -> dict[str, str]:
     return fm
 
 
+def git_ignored_dirs(root: Path) -> set[str]:
+    """Skill dirs ignored by git on this machine (machine-local skills).
+
+    The budget, the baseline, and the generated catalogs must all measure the
+    tracked set: a clean CI checkout has to reproduce every number. Local
+    search (skill-catalog list/search) still lists machine-local skills.
+    """
+    try:
+        import subprocess
+        dirs = [d.name for d in root.iterdir()
+                if d.is_dir() and not d.name.startswith(".")]
+        r = subprocess.run(
+            ["git", "-C", str(root.parent), "check-ignore", "--stdin", "--no-index"],
+            input="\n".join("skills/" + n for n in dirs) + "\n",
+            capture_output=True, text=True)
+        if r.returncode not in (0, 1):
+            return set()
+        return {line.rsplit("/", 1)[-1] for line in r.stdout.splitlines() if line.strip()}
+    except Exception:  # noqa: BLE001 - no git available: treat everything as tracked
+        return set()
+
+
 def collect_skills(skills_dir: Path = SKILLS) -> dict[str, dict]:
     skills: dict[str, dict] = {}
     if not skills_dir.is_dir():
         errors.append("skills/ missing")
         return skills
+    ignored = git_ignored_dirs(skills_dir)
     for entry in sorted(skills_dir.iterdir()):
         if not entry.is_dir() or entry.name.startswith("."):
             continue
+        if entry.name in ignored:
+            continue  # machine-local skill: tracked-set metrics only
         skill_md = entry / "SKILL.md"
         if not skill_md.is_file():
             errors.append(f"missing SKILL.md: skills/{entry.name}")

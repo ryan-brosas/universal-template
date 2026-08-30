@@ -98,29 +98,9 @@ BUCKETS = [
 ]
 
 
-def git_ignored_dirs(root: Path) -> set[str]:
-    """Skill dirs ignored by git on this machine (machine-local skills).
-
-    Generated catalogs must regenerate byte-identically from a clean CI
-    checkout, so they exclude these; local search still lists them.
-    """
-    try:
-        import subprocess
-        dirs = [d.name for d in root.iterdir()
-                if d.is_dir() and not d.name.startswith(".")]
-        r = subprocess.run(
-            ["git", "-C", str(root.parent), "check-ignore", "--stdin", "--no-index"],
-            input="\n".join("skills/" + n for n in dirs) + "\n",
-            capture_output=True, text=True)
-        if r.returncode not in (0, 1):
-            return set()
-        return {line.rsplit("/", 1)[-1] for line in r.stdout.splitlines() if line.strip()}
-    except Exception:  # noqa: BLE001 - no git available: treat everything as tracked
-        return set()
-
-
 def scan() -> list[dict]:
-    local_dirs = git_ignored_dirs(SKILLS)
+    # One owner for the tracked-set rule: catalog-quality.git_ignored_dirs.
+    local_dirs = _CQ.git_ignored_dirs(SKILLS)
     out: list[dict] = []
     for d in sorted(SKILLS.iterdir()):
         if not d.is_dir() or d.name.startswith("."):

@@ -5,7 +5,7 @@
 Derived from `skills/*/SKILL.md` metadata. Discovery tool:
 `python3 scripts/skill-catalog.py search "<topic>"`.
 
-356 skills: 40 visible, 316 hidden. Visible startup metadata: ~10702 chars (~2675 tokens).
+355 skills: 40 visible, 315 hidden. Visible startup metadata: ~10702 chars (~2675 tokens).
 
 ## Entry skills
 
@@ -79,7 +79,6 @@ Invoked by other skills or system components; hidden from startup metadata.
 | [`performance-optimization`](../skills/performance-optimization/SKILL.md) | internal | hidden | Use when profiling, optimizing, or adding performance budgets to applications - covers measure-first workflow, Core Web Vitals, common anti-patterns, and perfo... |
 | [`practices-to-ci`](../skills/practices-to-ci/SKILL.md) | internal | hidden | Use when a repo has code practices/discipline that should be enforced automatically - turn them into mechanical CI checks instead of relying on prompting or pr... |
 | [`quality-gate-methodology`](../skills/quality-gate-methodology/SKILL.md) | internal | hidden | Use when writing or reviewing tests and quality gates for code - a test is only good if it catches: pre-fix FAIL and post-fix PASS, broad tests over single cas... |
-| [`repo-inspo-organizer`](../skills/repo-inspo-organizer/SKILL.md) | internal | hidden | Use when placing or repairing an inspiration repository checkout under the shared inspo library - canonical placement, source sidecar, catalog pointer, and wor... |
 | [`root-cause-tracing`](../skills/root-cause-tracing/SKILL.md) | internal | hidden | Use when errors occur deep in execution and you need to trace back to the original trigger - trace bugs backward through the call stack, adding instrumentation... |
 | [`source-driven-development`](../skills/source-driven-development/SKILL.md) | internal | hidden | Use when shipping code that depends on unfamiliar libraries, external APIs, or framework behavior: cite the authoritative source or mark the decision unverifie... |
 | [`test-driven-development`](../skills/test-driven-development/SKILL.md) | internal | hidden | Use when implementing a behavior change or fixing a reproducible defect - demonstrate the failure first (RED), fix, verify GREEN; for non-reproducible issues,... |
