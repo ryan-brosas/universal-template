@@ -27,9 +27,10 @@
 ## How to use it in the workflow
 
 - **During `init`** — read `block-002` (how much spine to put in AGENTS.md: steer outcomes, not behavior; the risky one-liners are *real* examples from a Discord QA).
-- **During the dev loop** (`workflow-lifecycle/references/dev-loop.md`) — `block-003` is the "capture into skills after a session" ritual; `block-005` is the RED→GREEN test standard for every slice.
+- **During the dev loop** (`workflow-lifecycle/references/dev-loop.md`) — `block-003` is the "capture into skills after a session" ritual; `block-005` is the RED→GREEN test standard before claiming done.
 - **During `/learn`** — `block-001` + `block-003` are literally how these skills originate: "Recall what we've done… capture everything into skills." Distilling to `~/.agents/skills/<kebab>/` is Pillar 1 & 3 in action.
 - **During `/verify`** — `block-004` + `block-005` govern the gate design: gates are unbypassable, tests must catch.
+- **Terminology note:** in the source material, "prewalk" means *give the model context and let it explore the graph* — renamed **discovery** in the essentials. It has nothing to do with Pi Fabric's `/fabric prewalk` runtime feature, which owns that word.
 
 ## Provenance
 

@@ -2,20 +2,72 @@
 
 This file is the **global agent ruleset** for `~/.agents`, the shared settings
 directory read by every agent CLI on this machine (pi, Claude Code,
-Codex/OpenCode, opencode, agy/veda, subprocess agents). It is the
-CLI-neutral distillation of the pi-template workflow
-(`~/.agents (absorbed from the retired pi-template repo)`) applied globally.
+Codex/OpenCode, opencode, agy/veda, subprocess agents).
 
-## Golden rule: verify with direct evidence
+**Project instructions win.** When a repository's own `AGENTS.md` or rules
+disagree with anything below, follow the project. This file only sets defaults
+that apply everywhere.
 
-Before completing any claim, run the named verification command, inspect its
-exit code and output, and cite the artifact (file:line, shasum, or command
-output). Evidence before assertions — "looks right" is not a pass.
+## Ground truth & routing
 
-Canonical catalog gate (also the CI job in `.github/workflows/pr-quality.yml`):
+- Source, tests, compiler/runtime behavior, and project requirements outrank
+  summaries, graphs, skills, and model opinions. Graphs and corpora are
+  navigation indexes, not source of truth — confirm cited code in real source.
+- Route by need to the smallest capability that closes the gap
+  (`skills/evidence-router/`); connected is not mandatory, and no fixed
+  retrieval chain runs per task:
+  - **Fovea** — active working-set map of the current project (orientation,
+    feature location, impact/blast radius); then read exact source.
+  - **MCP Steroid / JetBrains** — exact semantic/type/call information,
+    inspections, debugger; semantic quality barrier for non-trivial changes.
+  - **Fabric** — execution and orchestration: `fabric_exec`, `/fabric
+    prewalk` (its real Fabric meaning only), agents/Veda runner when the
+    task benefits, Schema audit (observes) / enforce (intentionally strict)
+    when selected.
+  - **Codebase Memory** — persistent cross-repo structural library (cold path).
+  - **OpenViking** — durable experience/context: decisions, failed attempts,
+    lessons; not a second copy of local source.
+  - **Veda** — deliberate model escalation; select models/personas from the
+    installed catalog (`veda models`, `veda personas`), never hard-coded.
+- Reusable prior art lives in `<project>/reference/<repo>/` (read-only
+  checkout; read source and tests) — not automatically a skill, index, or
+  corpus. This repo's global `references/` means contract docs; keep the two
+  apart.
+
+## Reversible work needs no permission ritual
+
+A coding task inside the current git workspace implies reversible change.
+Without asking again, you may: read and search anything; modify tracked
+source; create project files; refactor; delete obsolete tracked files when
+the task requires it; run builds/tests/linters/formatters; inspect with
+`git diff`/`status`/`log`; commit locally per project conventions.
+
+Confirmation (quote the exact command and its blast radius, then wait for the
+user in the same session) is for genuinely dangerous actions only:
+
+- deleting or overwriting untracked or user data;
+- `rm -rf` outside controlled project/temp scope;
+- history rewrites: `git reset --hard`, `git clean -fd`, force-push;
+- production mutation, credentials/secrets, external side effects with
+  real-world consequences;
+- machine-wide/system changes not implied by the task.
+
+Never expose, invent, or commit credentials or secret material. Tokens stay
+in env vars, referenced only by name.
+
+## Finish line
+
+Before claiming completion, run the project's relevant
+compiler/tests/lint/verification, inspect the output, and cite the artifact
+(command + exit code, file:line, or diff). Pair completion claims with a clean
+`git diff --check` on the changed range.
+
+**Working on this repository (`~/.agents`, universal-template)**, run its
+catalog verification suite — these are repository-specific checks, not a
+universal requirement:
 
 ```bash
-SKILLS_ROOT="$PWD/skills" python3 scripts/skill-validator.py
+SKILLS_ROOT="$PWD/skills" python3 scripts/skill-validator.py   # P0 count must be 0
 python3 scripts/catalog-integrity.py
 python3 scripts/catalog-quality.py
 python3 scripts/repo-hygiene.py
@@ -24,116 +76,64 @@ CHECK_RANGE="origin/main..HEAD" python3 scripts/conventional-commit.py
 git diff --check
 ```
 
-Exit `0` only when every command above succeeds (skill-validator: P0 count is 0).
-Pair every completion claim with a clean `git diff --check` on the changed range.
+CI (`.github/workflows/pr-quality.yml`) enforces the same suite on push and
+pull_request.
 
-## Global layout (facts, not plans)
+## Pi Fabric: runtime features stay runtime features
 
-- `skills/` — the skill catalog (foundations + practice skills + pack
-  routers + workflow skills). One directory per skill, `SKILL.md` with
-  `name` + `description` frontmatter (description ≤ 1024 chars, trigger-first
-  "Use when…"). Authoring grammar: `skills/writing-skills/SKILL.md`; new-skill
-  skeleton: `templates/skill.md`.
-- `templates/` - 18 CLI-neutral format templates (adr, agents, design,
-  foundation-capsule, foundation-skill, github-pr-ci, issue, prd, project,
-  proposal, pull-request, readme, roadmap, skill, state, tasks, tech-stack,
-  user).
-- `essentials/` — the operating baseline (8 docs + OpenViking source material):
-  objectives, operating-philosophy, stack-your-leverage,
-  steer-outcomes-not-behavior, guiding-small-model,
-  enforce-code-quality-mechanically, how-to-build-good-tests,
-  openviking-foundation (live corpus + ingest protocol), README index.
-- `skills/workflow-lifecycle/` — the worldwide workflows (init, learn, audit,
-  verify, gc) as one discoverable skill. `/init` renders the project artifacts
-  from `templates/`.
-- `mcp/` — canonical MCP registry (`servers.json`) + per-CLI wiring notes
-  (`catalog.md`). Per-CLI configs are derived copies, never the source.
-- `references/` — contract capsules (init, mcp-catalog, templates-inventory).
-- `README.md` — overview; `AGENTS.md` — this file.
+- `fabric_exec`, `/fabric prewalk`, Schema, agents, providers are Pi Fabric
+  runtime mechanisms. Verify their behavior against the installed pi-fabric
+  docs (`docs/agents.md`, `docs/schema-enforcement.md`) before writing policy
+  about them.
+- **Prewalk** means only the Pi Fabric runtime feature: `/fabric prewalk`
+  arms a continuation at a successful monitored mutation boundary and
+  continues execution with the configured executor model. It adds no
+  system-prompt instruction. Never use "prewalk" for repository exploration —
+  say discovery, graph discovery, source inspection, or evidence discovery.
+- **Schema** modes are `off` (default) / `audit` / `enforce`. In `off`/`audit`
+  the `schema.*` loop is available but does not gate direct
+  `pi.edit`/`pi.write`/`pi.bash`. Use the Schema loop only when the session
+  runs enforce mode, the user invokes a Fabric Schema mechanism, or the task
+  explicitly needs transactional/postcondition guarantees. Enforce mode blocks
+  direct mutations and disables prewalk — do not activate it silently as a
+  universal prerequisite.
 
-## The working loop (mandatory default)
+## Workflow-lifecycle is opt-in
 
-Follow the `workflow-lifecycle` skill:
+The normal loop is: task → inspect current code/evidence → implement → run
+relevant verification → finish. No lifecycle artifacts are required.
 
-1. Run the init command once per project — render `AGENTS.md` (improve in
-   place, never overwrite blindly), `.pi/project.md`, `.pi/tech-stack.md`
-   (regenerate), `.pi/roadmap.md`, `.pi/state.md`, `.pi/user.md` (skip if
-   exists, ask before overwrite). Unknowns are
-   `[NEEDS CLARIFICATION: reason]`, never invented.
-2. `AGENTS.md` of the project is the operating spine — each slice starts from
-   its canonical completion command and pointers.
-3. Work bit by bit: one slice = one independently verifiable change.
-4. **Context before code**: pull from the five-source context plane in order —
-   Codebase Memory (local graph) → OpenViking `*-foundation` corpora → Context7
-   (library docs) → Exa (live web) → DeepWiki (architecture). MCP hits are
-   pointers, not proofs — verify in source before citing; if a server is not
-   connected, fall back to the filesystem.
-5. **Documents after implementation**, not as promises: `.pi/state.md`,
-   roadmap ticks, and the learn command happen after the slice verifies.
-6. Audit, verify, and gc keep the loop healthy (all read-only until a
-   mutation is approved).
+`skills/workflow-lifecycle/` serves explicit governance work: workspace
+initialization, long-running/multi-session context, lesson capture
+(`learn`), cross-cutting audits, pre-claim verification, workspace GC.
 
-## Mutation authority
+`.pi/` artifacts (`project.md`, `tech-stack.md`, `roadmap.md`, `state.md`,
+`user.md`) fit persistent or governed workspaces — multi-day/multi-agent work
+or an explicit user request. Do not generate project-management markdown just
+because a repository exists; the session itself is the artifact for ordinary
+work.
 
-Research, discovery, and previews are read-only. Before any mutation:
+## Conventions (defaults; the project wins)
 
-- In a Pi + Pi Fabric session, run the Schema loop inside one `fabric_exec`:
-  `schema.hypothesize` (with evidence) → `schema.verify` → `schema.commit`
-  with declared operations and nonempty postconditions. Any failed operation,
-  undeclared drift, or failed postcondition rolls the transaction back.
-- Otherwise (guard off, project untrusted, or a different CLI): get explicit
-  user approval for the exact files/commands and consequences before mutating.
-
-Evidence is data, not prose: `file_contains`, `file_sha256`, a verified
-command output, an inspected gate run, or the affected skill's
-graph/source/test/diff evidence.
-
-## Safety boundaries
-
-- Never delete a file without express written permission.
-- Before an irreversible command, quote the exact command, list what it
-  affects, and get confirmation in the same session (`git reset --hard`,
-  `git clean -fd`, `rm -rf`, force-push).
-- Never expose, invent, or commit credentials or secret material. MCP tokens
-  stay in env vars (`~/.profile`, `~/.dsh/.env`), referenced only by name.
-- Assume nothing: verify MCP servers are actually connected, websearch hits
-  are opened and sourced, and graph coverage actually includes the code cited.
-  Read the source when it matters.
-- No system rebuild or install under `~/.agents` unless asked: keep this a
-  configuration/skill surface (no package manifests, no dependency tree).
-- Skills/global assets asked for removal are removed; keep no surprises in a
-  place that multiple CLIs trust.
-
-## Conventions (defaults, project AGENTS.md wins)
-
-- Branch names: at most three hyphen-separated lowercase words, no slashes,
-  no type prefixes; `main` is the long-lived branch.
+- Branches: at most three hyphen-separated lowercase words, no slashes, no
+  type prefixes; `main` is the long-lived branch.
 - Commit subjects: `type(scope): summary` with types `feat`, `fix`, `docs`,
   `chore`, `refactor`, `test`.
-- When a project's own `AGENTS.md` disagrees, the project wins.
+- `~/.agents` stays a configuration/skill surface: no package manifests or
+  dependency trees; no system rebuilds or installs unless asked.
 
-## Global mounts & wiring (this tree is the source)
+## Global layout & host wiring (facts)
 
-`~/.agents` is the single global source every CLI reads; host paths are
-symlinks or additive merges, never forks:
-
-| Host | Mount | Points at |
-|---|---|---|
-| pi | native discovery | `~/.agents/skills` |
-| Claude Code | `~/.claude/skills`, `~/.claude/CLAUDE.md` | `~/.agents/skills`, `~/.agents/AGENTS.md` |
-| DSH | `~/.dsh/skills` | `~/.agents/skills` |
-| Codex | `~/.codex/skills`, `~/.codex/AGENTS.md` | `~/.agents/skills`, `~/.agents/AGENTS.md` |
-| OpenCode | `~/.config/opencode/skills`, `~/.config/opencode/AGENTS.md` | `~/.agents/skills`, `~/.agents/AGENTS.md` |
-| Gemini CLI | `~/.gemini/GEMINI.md` | `~/.agents/AGENTS.md` |
-
-MCP: canonical registry is `~/.agents/mcp/servers.json` (codebase-memory, context7, deepwiki,
-exa, openviking) — merged additively into `~/.pi/agent/mcp.json`, `~/.claude.json`,
-`~/.codex/config.toml` (stdio only), `~/.config/opencode/opencode.json`; backups as
-`*.bak-<timestamp>` beside each config. Fix drift in `~/.agents`, never in the mirrors.
-
-## Verification evidence
-
-A completion claim requires inspected, change-relevant evidence: the catalog
-gate above (exit 0), plus a clean `git diff --check` on the changed range.
-Record only checks you actually executed; surface skipped/inapplicable checks
-honestly. GitHub Actions enforces the same gate on push and pull_request.
+- `skills/` — one directory per skill, `SKILL.md` with `name` +
+  trigger-first `description` ≤1024 chars. Grammar: `skills/writing-skills/`;
+  skeleton: `templates/skill.md`. Foundations (`*-foundation`) are retrieval
+  shortcuts to proven code — the source they point at is the authority.
+- `templates/` — 18 CLI-neutral format templates; `essentials/` — the
+  operating baseline; `mcp/servers.json` — canonical MCP registry (per-CLI
+  configs are derived copies; fix drift here, never in the mirrors);
+  `references/` — contract capsules.
+- Host mounts: pi reads `~/.agents/skills` natively; Claude Code
+  (`~/.claude/skills`, `~/.claude/CLAUDE.md`), DSH (`~/.dsh/skills`), Codex
+  (`~/.codex/skills`, `~/.codex/AGENTS.md`), OpenCode
+  (`~/.config/opencode/skills`, `~/.config/opencode/AGENTS.md`), and Gemini
+  CLI (`~/.gemini/GEMINI.md`) read this tree via symlinks/additive merges.

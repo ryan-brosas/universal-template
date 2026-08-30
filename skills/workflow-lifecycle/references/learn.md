@@ -3,7 +3,7 @@
 Applies to workflow-lifecycle command learn. This reference is the canonical contract (the retired global prompt file is folded into it).
 
 ## Goal
-Turn a session lesson, edge case, or platform quirk into a permanent, discoverable skill in ~/.agents/skills/.
+Turn a *recurring* session lesson, edge case, or platform quirk into a permanent, discoverable skill in ~/.agents/skills/. Promotion threshold: a repeatable procedure, tool workflow, stable decision routine, or verified debugging/recovery path that re-derivation would waste. One-off implementation details, speculative architecture, arbitrary repo summaries, temporary state, and information cheaply recoverable from source stay in code — not in the catalog.
 
 ## Phase 1 - Gather
 - The problem / failure / edge case.
@@ -25,7 +25,7 @@ Strip project specifics; generalize to a repeatable pattern; identify future tri
 Frontmatter/description length, references listing, no duplicate names, discovery probe.
 
 ## Mutation
-Skill file edits require the Schema loop / explicit approval.
+In a Pi Fabric session running Schema enforce mode — or when the user invokes a Fabric Schema mechanism — skill file edits go through the Schema loop; otherwise edit directly and verify (normal reversible work in this git workspace).
 
 ## Output
 1. Lesson, 2. new/updated SKILL.md path, 3. catalog registration, 4. retrievability confirmation.

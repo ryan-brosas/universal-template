@@ -6,18 +6,21 @@ disable-model-invocation: true
 
 # Codebase Memory
 
-Use the `codebase-memory` MCP as the primary structural code-discovery surface.
-Its graph is an index, not source of truth: confirm exact code in the JetBrains IDE
-or direct source before editing or making exhaustive claims.
+Codebase Memory is the **persistent structural / cross-project discovery
+surface**: a long-lived library of indexed repositories for cross-session and
+cross-repository questions. It is not a prerequisite for normal Pi work —
+Fovea owns the active working-set map, and direct source owns truth. Its
+graph is an index, not source of truth: confirm exact code in the JetBrains
+IDE or direct source before editing or making exhaustive claims.
 
 ## Core Principle
 
-The graph is an index, not source of truth — confirm exact code in the JetBrains IDE or direct source before editing or making exhaustive claims.
+A persistent cross-project library, not a default step: the graph is an index, not source of truth — confirm exact code in the JetBrains IDE or direct source before editing or making exhaustive claims.
 
 ## When to Use / NOT
 
-- **Use when:** navigating, indexing, tracing, or comparing local and inspiration repositories through the Codebase Memory MCP knowledge graph.
-- **NOT when:** N/A — no explicit exclusion stated; never call `codebase-memory_delete_project` without explicit user approval, and do not write ADRs or ingest traces unless requested (see Boundaries).
+- **Use when:** the question spans repositories or sessions — finding which indexed project holds a pattern, comparing a reference candidate, cross-service structure, or non-Pi environments where Fovea is unavailable.
+- **NOT when:** the active project just needs orientation (use Fovea or direct source). Do not index every current project merely because the MCP is connected — index when the user asks or to grow the persistent reference library. Never call `codebase-memory_delete_project` without explicit user approval, and do not write ADRs or ingest traces unless requested (see Boundaries).
 
 ## Workflow
 

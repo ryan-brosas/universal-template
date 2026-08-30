@@ -16,6 +16,14 @@ CANONICAL SOURCE OF TRUTH: `~/.agents/mcp/servers.json`
   only env var **names** (`${EXA_API_KEY}`, `${CONTEXT7_API_KEY}`, `bearerTokenEnv`).
   The actual key values live only in shell env / a daemon env file.
 - Skip host shapes we haven't verified (Codex remote) instead of guessing.
+- This file is a capability registry, not a mandatory "context plane": wire
+  what a host actually needs; connected is not mandatory.
+- **Veda is a CLI/runner, not an MCP server** — never add it to
+  `servers.json`. Pi Fabric launches it via `agents.run({ runner: "veda" })`.
+- **`pi-acp`** is the ACP transport into Pi — not an MCP server, and it
+  carries no JetBrains PSI/Steroid semantics.
+- **`mcp-steroid`** connects through `~/.mcp-steroid/bin/devrig mcp` (devrig
+  launcher → JetBrains IDE; the launcher pins its own JDK).
 
 ## Current registry (`~/.agents/mcp/servers.json`)
 
@@ -26,6 +34,7 @@ CANONICAL SOURCE OF TRUTH: `~/.agents/mcp/servers.json`
 | deepwiki          | stdio | `npx -y deepwiki-mcp`                        | none                             | OSS architecture pages |
 | exa               | stdio | `npx -y exa-mcp-server`                      | `EXA_API_KEY`                    | live web search |
 | openviking        | remote| `http://127.0.0.1:1933/mcp`                  | none (local daemon)              | mined-corpus retrieval; register only when the daemon runs |
+| mcp-steroid       | stdio | `/home/utopia/.mcp-steroid/bin/devrig mcp`    | none (local IDE bridge)          | JetBrains PSI/refactoring/test/debugger access via devrig |
 
 ### Where the keys live (names only — never commit values)
 
@@ -45,7 +54,7 @@ These hosts already export or can export the needed vars; the `${VAR}` text in
 | Claude Code | `~/.claude.json` | `mcpServers` (same shape) |
 | Codex | `~/.codex/config.toml` | `[mcp_servers.<name>]` (stdio only) |
 | OpenCode | `~/.config/opencode/opencode.json` | `mcp.<name>` (`type: local\|remote`, `enabled`) |
-| DSH web profile | `~/.dsh/cordis.patch.yml` | `@monotykamary/dsh-mcp-client` inserts (codebase-memory, openviking, context7, deepwiki, exa) |
+| DSH web profile | `~/.dsh/cordis.patch.yml` | `@monotykamary/dsh-mcp-client` inserts (codebase-memory, openviking, context7, deepwiki, exa, mcp-steroid) |
 
 Wire the requested server into the target CLI config by merging its block from
 the canonical registry; merge, don't overwrite, and never touch unrequested servers.
@@ -60,7 +69,7 @@ write anything); report it as "not wired (unsupported)".
   was launched with; ensure `EXA_API_KEY` / `CONTEXT7_API_KEY` are exported.
 - **Claude Code / Codex / OpenCode**: same merge rule per host block; stdio
   entries use `command` + `args`; secrets stay env-only.
-- **sonatype-guide**: intentionally uninstalled — not part of the context plane; do not re-register.
+- **sonatype-guide**: intentionally uninstalled — not part of the registry; do not re-register.
 - **openviking**: local streamable-HTTP daemon (port matches the running
   daemon, default `1933`). If the daemon is not running the server will fail to
   connect — treat as optional context, never a blocker.

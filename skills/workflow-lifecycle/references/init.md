@@ -3,7 +3,10 @@
 Applies to workflow-lifecycle command init. This reference is the canonical content (the retired global prompt file was folded into it).
 
 ## When to apply
-First-time project bootstrap or a re-govern pass, once per project.
+First-time project bootstrap or a re-govern pass, once per project — for workspaces
+where persistent context pays off: multi-day or multi-agent work, governed repos, or
+an explicit user request. For a one-off task in an ordinary repository, skip init
+entirely: inspect the code, implement, verify, finish.
 
 ## Flags
 | Flag | Scope |

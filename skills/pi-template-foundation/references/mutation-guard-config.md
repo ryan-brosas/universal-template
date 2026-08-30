@@ -46,3 +46,5 @@ await mcp.codebase_memory.search_graph({ project: "pi-template", query: "memoryL
 
 ## Verdict
 Adopt the dual-authority model and evidence-as-data rule for ANY agent-workspace repo; adopt "declare every file, rollback on drift" transactional shape. Adapt the executor specifics (memory ceiling, prewalk model) to your host. Omit Pi Fabric product names — on other hosts substitute the native equivalent (e.g., DSH schema_hypothesize/verify/commit tools); the INVARIANT ports, the API names do not.
+
+**Policy update (2026-08-30, `~/.agents`):** the global policy no longer makes the Schema loop a universal prerequisite. Pi Fabric Schema modes are `off`/`audit`/`enforce`; the loop is required only in enforce mode, on explicit user invocation of a Fabric Schema mechanism, or for postcondition-critical work — and enforce mode also disables `/fabric prewalk`. Normal reversible edits in the git workspace need no repeated approval. The verbatim quote above reflects the pinned pi-template commit, not current policy.

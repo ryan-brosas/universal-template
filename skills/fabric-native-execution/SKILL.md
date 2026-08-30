@@ -1,51 +1,87 @@
 ---
 name: fabric-native-execution
-description: Use when executing Pi Fabric work that can lean on native providers (memory, state, compact) inside fabric_exec, or when a workflow needs durable session state or cross-session recall.
+description: "Use when working inside Pi Fabric: core fabric_exec execution first, native providers (memory, state, compact) as helpers, and deliberate escalation to agents/Veda runner or Schema audit/enforce when the task benefits."
 disable-model-invocation: true
 ---
 
 # Fabric-Native Execution
 
-Prefer Pi Fabric's native providers over hand-rolled files and shell caches. The Schema loop stays the mutation gate; these providers are read/write helpers around it, never a replacement for `schema.hypothesize → verify → commit` on repo files.
+Core `fabric_exec` is the ordinary execution path. Native providers are
+read/write helpers around it. Agents, workflows, the Veda runner, and Schema
+modes are deliberate escalations — use them when the task benefits, never as
+automatic ceremony.
 
 ## Core Principle
 
-Native providers are read/write helpers around the Schema loop — never a replacement for `schema.hypothesize → verify → commit` on repo files.
+Use core `fabric_exec` for ordinary work. Escalate deliberately: `agents.run`
+for delegation or parallelism, the Veda runner for frontier-model oracles,
+Schema audit for observation, Schema enforce only for intentionally strict
+transactional mutation.
 
 ## When to Use / NOT
 
-**Use** — executing Pi Fabric work that can lean on native providers (memory, state, compact) inside `fabric_exec`; workflows that need durable session state or cross-session recall.
+**Use** — any Pi Fabric work: normal code-mode execution; durable session
+state or cross-session recall via providers; deliberate delegation or review
+escalation.
 
-**NOT** — repo file mutations (the Schema loop is the gate); multi-actor coordination via `mesh`; subagent dispatch via `agents.run`.
+**NOT** — replacing the project's tracked files with runtime state; running
+agents, Veda, or Schema out of habit; `mesh` coordination when one process
+suffices.
 
-## Workflow
+## The layers
 
-1. `memory.recall` / `memory.expand` before re-deriving past decisions ("what did we decide about X").
-2. `state.put` short-lived coordination values (active work ID, current station, handoff payloads) so they survive across `fabric_exec` calls without touching repo dotfiles.
-3. `compact.request` at a safe boundary between stations; keep the handoff payload in `state` or the station ledger, not only in memory.
-4. If a provider is missing or refused, degrade to reading the tracked files and say so.
-
-## Providers
-
-- `memory.recall` / `memory.expand` — search past sessions and durable decisions for evidence before re-deriving them. Use for cross-session recall ("what did we decide about X").
-- `state.get` / `state.put` / `state.list` — versioned shared state keyed by prefix. Highly valuable for short-lived coordination values (active work ID, current station, handoff payloads between `/ship` stations, verification cache). Use this to survive across `fabric_exec` calls without repeatedly touching repo dotfiles.
-- `compact.request` — ask the host to compact context at a safe boundary (used by `/ship` between stations). Keep the handoff payload in `state` or the station ledger, not only in memory.
+1. **Core path (default).** `fabric_exec` with `pi.read`/`pi.edit`/`pi.write`/
+   `pi.bash` and tool/MCP composition. `/fabric prewalk` continues execution
+   after a mutation boundary when armed. This is normal development.
+2. **Native providers (helpers).**
+   - `memory.recall` / `memory.expand` — past decisions and session recall
+     before re-deriving them.
+   - `state.get` / `state.put` / `state.list` — short-lived coordination
+     values (active work ID, handoff payloads) that survive across
+     `fabric_exec` calls without touching repo dotfiles.
+   - `compact.request` — compaction at a safe boundary.
+   - Degrade to tracked files and say so when a provider is missing.
+3. **Agent escalation (deliberate).** `agents.run({ runner: "pi" })` for
+   delegation, parallel subtasks, or isolation. `agents.run({ runner:
+   "veda", persona, model })` launches the Veda CLI as a one-shot headless
+   child for frontier-model oracles (review, navigation, hard planning).
+   Veda children have no steering, no persistent actors, and no recursive
+   Fabric; select persona/model from the installed catalog (`veda personas`,
+   `veda models [backend]`), never from hard-coded names.
+4. **Schema (intentional).** `off` — normal host behavior. `audit` — behavior
+   unchanged; records what enforce would block (policy telemetry).
+   `enforce` — strict evidence-gated transaction mode: blocks direct
+   `pi.edit`/`pi.write`/`pi.bash` and disables Prewalk; select it deliberately
+   for postcondition-critical work. Schema never replaces tests, the
+   compiler, IDE semantics, or review.
 
 ## Rules
 
-- Evidence over prose: cite the provider result (value, recall hit, event) when you rely on it.
-- Never write repo files through `state`; it is runtime state, not the durable record. The work ledger (`.pi/work/<slug>/.progress.md`) stays authoritative for history.
-- Do not use `mesh` (multi-actor coordination is overkill for a local template) and do not dispatch subagents (`agents.run`).
-- If a provider is missing or refused, degrade to reading the tracked files and say so.
-- Do not build a persistence layer: one `put` for a value, one `recall` for a decision, one `compact.request` per station boundary.
+- Evidence over prose: cite the provider result when you rely on it.
+- Never write repo files through `state`; it is runtime state, not the
+  durable record — tracked files stay authoritative.
+- Do not build a persistence layer: one `put` for a value, one `recall` for a
+  decision, one `compact.request` per boundary.
+- Escalate to agents/Veda/Schema only for a named benefit (parallelism,
+  frontier review, transactional guarantee). Do not forbid them globally and
+  do not require them by default.
+- If a provider is missing or refused, degrade to reading the tracked files
+  and say so.
 
 ## Red Flags
 
-Writing repo files through `state`; building a persistence layer (more than one `put` for a value, one `recall` for a decision, one `compact.request` per station boundary); using `mesh` or dispatching subagents (`agents.run`); relying on a provider result without citing it.
+Writing repo files through `state`; building a persistence layer; dispatching
+agents or Veda as an automatic phase after every change; enabling Schema
+enforce (which disables Prewalk) without an explicit transactional need;
+relying on a provider result without citing it.
 
 ## Verification
 
-Cite the provider result (value, recall hit, event) when you rely on it. When degrading to reading the tracked files because a provider is missing or refused, say so explicitly.
+Normal work: the named project checks pass (tests/compiler/lint). Provider
+reliance: cite the recalled value or state. Agent/Veda escalation: the child
+report is advisory — verify load-bearing findings against source/tests before
+acting. Schema enforce: only `committed` postconditions count, and never as a
+substitute for behavior verification.
 
 ## Skill Result Contract
 
@@ -61,4 +97,4 @@ Cite the provider result (value, recall hit, event) when you rely on it. When de
 
 ## References
 
-N/A — no reference files; provider contracts and rules are inline in this skill.
+N/A — no reference files; provider and escalation contracts are inline in this skill.
