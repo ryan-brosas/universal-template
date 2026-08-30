@@ -31,7 +31,45 @@ if (!updateBranchTip(db, sessionId, branchId, parentId, entryId)) {
 
 **Flow:** append resolves parent → parent is a live TIP: extend that branch in place and swing the tip (optimistic UPDATE returns changes≠1 if the tip moved) → parent is MID-branch: allocate a NEW branch_id, `INSERT … SELECT … WHERE entry_seq <= throughSeq` copies the prefix, then add the child + a new tip (copy-on-write; original branch untouched) → parent NULL: brand-new single-row branch → path builds (`insertBranchEntriesForPath`) walk parents leaf→root under a SAVEPOINT with cycle detection (`Entry parent cycle at X`) and per-custom-row payload parse for custom_type, inserting reversed root→leaf → rebuild deletes all cache rows and re-derives leaves via `NOT EXISTS (SELECT 1 FROM entries AS child … child.parent_id = leaf.id)` ordered by seq.
 **Invariant:** the cache is always a DERIVED index — every mutation writes canonical `entries` first and cache rows in the same transaction, so crash-consistency reduces to SQLite atomicity; any cache loss is recoverable by rebuild, never by guesswork.
+
+## Explicit repair path — rebuild is a repository maintenance op, never an implicit read fallback
+**Path/Symbol:** `packages/session-backends/sqlite-node/src/sqlite/repo.ts:SqliteSessionRepository.repairBranchCache` (:750-760); `branch-cache.ts:rebuildBranchCache` (:19-28).
+**Signature:** `repairBranchCache(metadata: SqliteSessionMetadata): Promise<void>` — enqueued on the repository serial queue.
+**Flow:** release every active storage lease for the session FIRST (`releaseStoragesForSession` — the writer lease must be free, not stolen) → one transaction: `claimWriterLease` → `requireSessionRow` → `rebuildBranchCache` → `releaseWriterLease`. Rebuild derives leaves as entries with NO child — `NOT EXISTS (SELECT 1 FROM entries AS child WHERE child.session_id = leaf.session_id AND child.parent_id = leaf.id)`, ordered by seq — deletes the entire cache, then `buildCachedBranch` per leaf (each under its own SAVEPOINT with cycle detection). Missing cache is a HARD failure on both read and write (`invalid_entry`, "has no branch containing parent entry"); nothing auto-repairs.
+**Invariant:** repair is explicit because an implicit rebuild inside a read would silently hide cache drift — the drift alarm (chain validation, sqlite-compaction-stop-window) only fires while the cache is trusted. Repairing costs a full leaf-path re-derivation, so it is a deliberate maintenance action, not a fast path.
+**Probe:** `packages/session-backends/sqlite-node/test/branch-cache.test.ts:120-148` — raw SQL deletes `branch_tips` + `branch_entries`; `getSqliteBranch` rejects `invalid_entry`; `repo.repairBranchCache(metadata)` restores the exact `[rootId, childId]` path. Deterministic probe P2 this pass (verification.md) reproduces the leaf-derivation query.
 **Probe:** `packages/session-backends/sqlite-node/test/branch-cache.test.ts:15-42` — after compaction + lane move + re-append, raw SQL over `branch_entries` shows the branched child's branch contains exactly `[rootId, keptId, compactionId, branchedId]` (full root path); :83-115 proves missing cache fails BOTH read and write with `invalid_entry` ("has no branch containing parent entry").
+
+## Cache-build-time loudness: the materialized custom_type column is re-validated, never trusted
+**Path/Symbol:** `packages/session-backends/sqlite-node/src/sqlite/storage/branch-entries.ts:customTypeFromPayload` (:114–131) called from `insertBranchEntriesForPath` (:133–152).
+**Signature:** `customTypeFromPayload(row: BranchPathEntryRow): string | null` — non-custom rows return `null` without parsing; custom rows MUST parse.
+**Data Shape:** during any cache build (append path build, fork per-tip rebuild, full rebuild), every custom-type row's payload is JSON-parsed and its `customType` field validated: payload must be a non-null non-array object and `customType` must be a string.
+
+### Decisive source
+```ts
+function customTypeFromPayload(row: BranchPathEntryRow): string | null {
+	if (row.type !== "custom") return null;
+	try {
+		const payload = JSON.parse(row.payload) as unknown;
+		if (typeof payload !== "object" || payload === null || Array.isArray(payload)) {
+			throw new Error("Payload is not an object");
+		}
+		const customType = (payload as { customType?: unknown }).customType;
+		if (typeof customType !== "string") throw new Error("Invalid custom payload");
+		return customType;
+	} catch (error) {
+		throw new SessionError("invalid_entry", `Invalid SQLite session entry ${row.id}: failed to decode entry ${row.id}`, …);
+	}
+}
+// insertBranchEntriesForPath: leaf→root walk with cycle guard, then reversed insert
+for (const row of path.reverse()) {
+	insertBranchEntry(db, sessionId, branchId, row.id, row.seq, row.type, customTypeFromPayload(row));
+}
+```
+
+**Flow:** the path walk itself fails loud before any insert — a repeated id throws `invalid_entry` "Entry parent cycle at X" (the `seen` set) and a missing canonical row throws "Entry X not found". Then EVERY custom row is decoded: a malformed payload throws `invalid_entry` and the surrounding SAVEPOINT (`build_branch_cache`) rolls the whole path build back. This is the write-time twin of the read-plane decode loudness (sqlite-compaction-stop-window / sqlite-derived-facts-stats-plane): a corrupt custom payload cannot slip into `branch_entries.custom_type` as a NULL or wrong value, so the materialized column that powers SQL-side `customType` filtering (001_initial.sql :49/:56) stays trustworthy.
+**Invariant:** derived columns are re-derived through validation, not copied from untrusted input — if you materialize a decoded field into an index, the indexer must re-run the decoder, or the index becomes a corruption amplifier (a bad value would be served by fast SQL filters that never touch the payload).
+**Probe:** deterministic probe P1 this pass (verification.md) — transcribed the validation chain in node:sqlite: valid custom payload → column set; payload "not json" → invalid_entry, zero cache rows; payload `[]` → invalid_entry; non-string customType → invalid_entry.
 
 ## Get live surrounding code
 **Retrieve:**
@@ -40,4 +78,4 @@ await mcp.codebase_memory.search_graph({ project: "pi-upstream", name_pattern: "
 ```
 
 ## Verdict
-Adopt: materialize full paths per branch, treat tips as optimistic pointers, fork mid-branch appends via seq-bounded prefix copy, keep parent links canonical and everything in one transaction. Adapt branch-id generation and savepoint scoping to your engine. Omit recursive-CTE read paths entirely — the materialization exists precisely so reads are flat scans. Coverage caveat: none on cited files (all `no_recorded_issue`).
+Adopt: materialize full paths per branch, treat tips as optimistic pointers, fork mid-branch appends via seq-bounded prefix copy, keep parent links canonical and everything in one transaction. Adapt branch-id generation and savepoint scoping to your engine. Omit recursive-CTE read paths entirely — the materialization exists precisely so reads are flat scans — and omit implicit read-time rebuilds: keep repair explicit so cache drift stays observable. Coverage caveat: none on cited files (all `no_recorded_issue`).

@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Query cost model — how does the engine estimate how many similarity comparisons a query costs per point?
 
-**Source:** Qdrant Apache-2.0 `master@74f3e85b`; Codebase Memory `ext-qdrant`. **Question:** How is a query's relative execution cost derived for rate limiting / planning, per query type?
+**Source:** Qdrant Apache-2.0 `master@74f3e85b`; Codebase Memory `qdrant`. **Question:** How is a query's relative execution cost derived for rate limiting / planning, per query type?
 
 ## Per-query similarity-cost accounting
 **Path/Symbol:** `lib/shard/src/query/query_enum.rs`: `QueryEnum::search_cost` (:90-103) + `fn search_cost` helper (:106-111), `is_distance_scored` (:31-40); `operation_rate_cost.rs` consumes such costs shard-wide.
@@ -32,7 +32,7 @@ fn search_cost<'a>(vectors: impl IntoIterator<Item = &'a VectorInternal>) -> usi
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "ext-qdrant", query: "search_cost similarity_cost flat_iter operation_rate_cost SearchRateCost", limit: 10, fields: ["signature", "name", "file"] });
+await mcp.codebase_memory.search_graph({ project: "qdrant", query: "search_cost similarity_cost flat_iter operation_rate_cost SearchRateCost", limit: 10, fields: ["signature", "name", "file"] });
 ```
 
 ## Verdict

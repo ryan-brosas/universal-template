@@ -1,13 +1,13 @@
 ---
 name: workflow-lifecycle
-description: "Use when running pi lifecycle workflows as a skill - workspace init, learning lessons into skills, cross-cutting pattern audits, pre-claim verification, or workspace GC - and when decisions should first draw context from the five-source plane: Codebase Memory (index_status, search_graph), OpenViking (memsearch, memgrep, memread), Context7 library docs, Exa web, and DeepWiki architecture pages, so prior skill-mining context is reused instead of starting cold."
+description: "Use when running pi lifecycle workflows as a skill - workspace init for persistent or governed workspaces, learning lessons into skills, cross-cutting pattern audits, pre-claim verification, or workspace GC - with need-driven retrieval (one primary route, escalate on a named gap, stop when evidence is sufficient) so prior skill-mining context is reused instead of starting cold. NOT for one-off edits or plain commands."
 ---
 
 # Workflow Lifecycle (init / learn / audit / verify / gc)
 
 ## Core Principle
 
-One skeleton for every lifecycle workflow: verify capability, retrieve context, preview read-only, mutate only under Schema or explicit approval, verify the artifact, record evidence. Host-neutral by default; MCP-aware when the toolset offers it.
+One skeleton for every lifecycle workflow: verify capability, retrieve context as needed, preview read-only, mutate through the session's authority mode, verify the artifact, record evidence. Host-neutral by default; MCP-aware when the toolset offers it.
 
 ## When to Use / NOT
 
@@ -23,24 +23,26 @@ One skeleton for every lifecycle workflow: verify capability, retrieve context, 
 | audit | A graded, prioritized pattern report | references/audit.md |
 | verify | A gate-backed READY / NEEDS-WORK verdict | references/verify.md |
 | gc | Workspace hygiene cleanup | references/gc.md |
-| dev loop | the daily working loop — init once, AGENTS.md as spine, slice-by-slice development, documents AFTER implementation, lessons distilled via the learn command | references/dev-loop.md |
+| dev loop | the daily working loop — init once, AGENTS.md as spine, scoped implementation with gates, documents AFTER implementation, lessons distilled via the learn command | references/dev-loop.md |
 
-## Shared context plane (five sources)
+## Context sources (need-driven, not an ordered ritual)
 
-Retrieval is a first-class phase before any answer or write. Probe what exists, then use the sources in order:
+Pick the one source that answers the question; escalate only after a named gap; stop when evidence is sufficient. `evidence-router` is the canonical routing policy. The registered inventory:
 
-1. **Codebase Memory** (`codebase_memory.*`, project graph): probe `index_status` / `check_index_coverage` first (read the parse_partial/skipped coverage report), then `search_graph` / `query_graph` / `trace_path` / `get_code_snippet`. Never cite a graph you did not verify covers the code.
-2. **OpenViking** (`extensions.memsearch` / `memfind` / `memgrep` / `memread`, plus `membrowse` / `memglob` for structure): semantic search, discovery, exact symbols/errors, targeted reads over the mined corpora (`viking://resources/*-foundation`, `llm-repo-learning-*`). This is how prior skill-mining context is reused.
-3. **Context7** (`context7.resolve-library-id` → `context7.query-docs`): current library documentation + code examples; one concept per call, max 3 calls per question.
-4. **Exa** (web search): current versions/trends/upstream facts not in any local graph or corpus.
-5. **DeepWiki** (`deepwiki.get-deepwiki-index` → `get-deepwiki-page`): architecture pages for large OSS repos.
+- **Codebase Memory** (`codebase_memory.*`, project graph): architecture, definitions, callers/callees, traces. An index, not source of truth — probe `index_status` / `check_index_coverage` before citing coverage; never cite a graph you did not verify covers the code.
+- **OpenViking** (`extensions.memsearch` / `memfind` / `memgrep` / `memread`, plus `membrowse` / `memglob` for structure): semantic search, exact symbols/errors, targeted reads over the mined corpora (`viking://resources/*-foundation`, `llm-repo-learning-*`). This is how prior skill-mining context is reused.
+- **Context7** (`context7.resolve-library-id` → `context7.query-docs`): current library documentation + code examples; one concept per call, max 3 calls per question.
+- **Exa** (web search): current versions/trends/upstream facts not in any local graph or corpus.
+- **DeepWiki** (`deepwiki.get-deepwiki-index` → `get-deepwiki-page`): architecture pages for large OSS repos.
 
-Which sources actually exist depends on what MCP servers the host registered. Probe first (registry check), and skip missing sources with a note — never fabricate a reference or cite a hit you did not verify.
+Which sources actually exist depends on what MCP servers the host registered. Probe first (registry check), skip missing sources with a note — never fabricate a reference or cite a hit you did not verify. Read the actual source before implementing or making load-bearing claims; hits are pointers, not proofs.
 
 ## Mutation boundary
 
 - Research and previews are read-only.
-- Any write (artifact, skill file, catalog) goes through the Schema loop in one fabric_exec: schema.hypothesize (evidence) to schema.verify to schema.commit with declared files and postconditions; when the mode is not enforce, propose exact files and get approval.
+- Normal reversible writes (artifact, skill file, catalog) inside the current git workspace need no repeated approval; verify them like any code change.
+- Run the Schema loop in one fabric_exec (`schema.hypothesize` with evidence → `schema.verify` → `schema.commit` with declared operations and postconditions) only when the session runs Schema enforce mode, the user invokes a Fabric Schema mechanism, or the task explicitly needs transactional/postcondition guarantees. Schema enforce mode disables `/fabric prewalk` — never switch modes silently.
+- Outside Pi Fabric, apply the global mutation boundaries in `AGENTS.md` (dangerous actions need confirmation).
 
 ## Skill Result Contract
 
@@ -61,13 +63,13 @@ Which sources actually exist depends on what MCP servers the host registered. Pr
 - `references/audit.md` - pattern discovery and severity grading
 - `references/verify.md` - cache, completeness, gates
 - `references/gc.md` - hygiene contract
-- `references/mcp-context.md` - five-source retrieval recipes (graph, corpus, library docs, web, wiki)
-- `references/dev-loop.md` - the default daily working loop (init once, slice by slice, documents after implementation, essentials enforced)
+- `references/mcp-context.md` - context source inventory recipes (graph, corpus, library docs, web, wiki)
+- `references/dev-loop.md` - the default daily working loop (init once, scoped work with gates, documents after implementation, essentials enforced)
 
 ## Red Flags
 
-Citing a graph that was not verified to cover the code; fabricating a retrieval hit because a source is missing; mutating before the Schema loop (or explicit approval) completes; treating prose review as verification.
+Citing a graph that was not verified to cover the code; fabricating a retrieval hit because a source is missing; mutating outside the session's authority mode; treating prose review as verification.
 
 ## Verification
 
-Each command's named deliverable exists on disk (artifact paths in the skill result); capability probes show which of the five sources are actually registered; mutation postconditions from `schema.commit` hold.
+Each command's named deliverable exists on disk (artifact paths in the skill result); capability probes show which context sources are actually registered; when the Schema loop was used, its postconditions from `schema.commit` hold.

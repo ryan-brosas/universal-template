@@ -1,12 +1,12 @@
 ---
 name: open-webui-foundation
-description: "Use when porting open-webui's runtime-mutable config store, typed event bus, socket event emitter/caller pair, hybrid RAG retrieval ladder, DB-stored plugin loader, filter inlet/outlet/stream pipeline, agentic tool-call loop with streamed tool calls, incremental stream tag scanner, socket delta coalescing, mid-stream cancellation persistence, mirrored built-in-tool authz gates, access-grants ACL plane, outbound provider-proxy plane (timeout env ladders, Ollama error ladder, multi-backend model routing/resolution, OpenAI/Azure/Responses payload normalization), or the file-to-knowledge-collection ingest plane (upload admission with post-storage size cap, process bridge with knowledge auto-link, three-arm /process/file ladder, hash-dedup chunking kernel with embedding_config stamping, embed-first/bind-later collection binding, transitive file ACL with write-conferment ownership rule). Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
+description: "Use when porting open-webui's runtime-mutable config store, typed event bus, socket emitter/caller pair, hybrid RAG retrieval ladder, DB-stored plugin loader, filter inlet/outlet/stream pipeline, chat-stream machinery (agentic tool loop, tag scanner, delta coalescing, cancellation), built-in-tool authz gates, access-grants ACL plane, outbound provider-proxy plane (timeout ladders, Ollama error ladder, multi-backend routing, OpenAI/Azure/Responses normalization), file-to-knowledge ingest plane (upload admission, process bridge with knowledge auto-link, hash-dedup chunking kernel, embed-first/bind-later binding, transitive file ACL), inbound trust boundary (three-transport auth-token ladder, dual-mechanism JWT revocation, API-key gates on raw ASGI paths, hash-prefix password dispatch), or SDK-constrained MCP client lifecycle (construction-time SSL, pop_all ownership transfer, no-shield same-task teardown). Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
 ---
 
 # open-webui: Extension Runtime & Realtime Services Foundation
 
 ## Use this for
-Use when porting open-webui's runtime-mutable config store, typed event bus, socket event emitter/caller pair, hybrid RAG retrieval ladder, DB-stored plugin loader, filter inlet/outlet/stream pipeline, the chat-stream machinery (agentic tool loop, tag scanner, delta coalescing, cancellation), the access-grants ACL plane, the outbound provider-proxy plane, or the file→knowledge-collection ingest plane (upload → process → status → bind → ACL). Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval.
+Use when porting open-webui's runtime-mutable config store, typed event bus, socket event emitter/caller pair, hybrid RAG retrieval ladder, DB-stored plugin loader, filter inlet/outlet/stream pipeline, the chat-stream machinery (agentic tool loop, tag scanner, delta coalescing, cancellation), the access-grants ACL plane, the outbound provider-proxy plane, the file→knowledge-collection ingest plane (upload → process → status → bind → ACL), or the inbound trust boundary + MCP client plane (auth transports, JWT revocation algebra, API-key gates, password-hash migration, SDK-constrained client teardown). Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval.
 
 ## Load the matching source dump
 - `references/config-store.md` — How does app config persist to DB while env-seeded defaults never override persisted values?
@@ -34,6 +34,11 @@ Use when porting open-webui's runtime-mutable config store, typed event bus, soc
 - `references/knowledge-file-binding-lifecycle.md` — In what order do embed, bind-row, and destructive cleanup run when attaching, refreshing, or removing a file from a shared collection?
 - `references/kb-metadata-embedding-maintenance.md` — How do you upsert fail-soft self-description embeddings into one fixed catalog collection without exhausting the pool during admin reindex?
 - `references/transitive-file-access-resolver.md` — How do you resolve read/write on a file that arrives transitively via collections/channels/chats/models without read access laundering into write?
+- `references/auth-token-transport-ladder.md` — How do you authenticate one FastAPI dependency across header/cookie/custom-header transports without holding a DB session?
+- `references/jwt-issue-revoke-algebra.md` — How do you revoke stateless JWTs both per-token (sign-out) and per-user (IdP logout) with TTL-bounded Redis state?
+- `references/api-key-config-gates.md` — How do you gate API keys by runtime config, user permissions, AND endpoint allow-lists without trusting proxy-visible paths?
+- `references/password-hash-prefix-dispatch.md` — How do you migrate password hashing algorithms without breaking stored hashes?
+- `references/mcp-client-lifecycle.md` — How do you host MCP client sessions whose SDK forbids shielded/cross-task teardown?
 
 ## Capsule map
 - **Config store** — `config-store`: per-key dotted DB rows over a DEFAULTS dict; seeding is insert-if-absent so DB wins after first boot; oauth.* stays ephemeral unless explicitly enabled.
@@ -61,6 +66,11 @@ Use when porting open-webui's runtime-mutable config store, typed event bus, soc
 - **Knowledge binding lifecycle** — `knowledge-file-binding-lifecycle`: dual gate (KB-write ∧ file-read); embed-then-bind on add; has_file-validate-then-mutate on update; unbind-then-purge with ownership-gated destructive cleanup on remove.
 - **KB metadata embeddings** — `kb-metadata-embedding-maintenance`: fixed 'knowledge-bases' catalog; stable-id upsert; fail-soft bool returns; session-free admin reindex with counted partial success.
 - **Transitive file ACL** — `transitive-file-access-resolver`: five containment arms; write/delete conferred ONLY when the containing object's owner owns the file (CWE-863 rule); batched existence checks; group-set threading.
+- **Auth token transport ladder** — `auth-token-transport-ladder`: pure-ASGI three-transport normalization (header → token cookie → custom API-key header) into scope state; dependency re-reads all three; `sk-` prefix dispatch; delete-all-OAuth-cookies on JWT failure; scope-backed user reuse by outer audit middleware.
+- **JWT issue/revoke algebra** — `jwt-issue-revoke-algebra`: jti+iat always minted, exp optional; dual Redis revocation keys (per-token jti, per-user iat-comparison with fail-closed legacy rule); TTL = remaining token life; None-returning mirror for WebSocket handshakes.
+- **API-key config gates** — `api-key-config-gates`: one batched four-key config read; separate global-enable and per-user-permission 403 gates; endpoint allow-list enforced at the dependency layer on the raw ASGI path (CVE-2026-48710) with exact-or-`/`-prefix matching.
+- **Password hash prefix-dispatch** — `password-hash-prefix-dispatch`: verification dispatches on the stored `$argon2` prefix, not the configured algorithm; asymmetric reject-new/truncate-old 72-byte policy; off-loop crypto; boolean-failure mapping.
+- **MCP client lifecycle** — `mcp-client-lifecycle`: construction-time verify factory; bounded initialize handshake; pop_all ownership transfer; null-before-close idempotent disconnect forbidding shield/wait_for (same-task TaskGroup exit); per-request fresh clients torn down LIFO in a contained finally.
 
 ## Extending the foundation
 Add one `references/<seam>.md` capsule for one graph-selected, source-confirmed porting question. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf.

@@ -2,7 +2,7 @@
 
 ## Every project uses version control
 
-- Commit early on meaningful slices — one slice = one verifiable change (`code-discipline`, `workflow-lifecycle` dev loop).
+- Commit at natural checkpoints with a coherent, verifiable diff (`code-discipline`, `workflow-lifecycle` dev loop).
 - Do not leave work uncommitted at end of turn unless the user asked.
 
 ## Branches
@@ -36,4 +36,6 @@
 
 ## Leaf skills
 
+- `git-workflow-and-versioning` — application skill (deep Git/semver/changelog learning)
+- `awesome-guidelines/references/git-style-learning-note.md` — why behind branch/commit/merge rules
 - `push-pr`, `github-ci-workflow`, `code-discipline`, `code-review-and-quality`

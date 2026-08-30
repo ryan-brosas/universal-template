@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Cardinality estimator algebra — how are min/exp/max match counts combined through a filter tree?
 
-**Source:** Qdrant Apache-2.0 `master@74f3e85b`; Codebase Memory `ext-qdrant`. **Question:** Given per-condition estimates, what exact formulas produce must/should/min_should/must_not cardinalities, and when do primary clauses survive?
+**Source:** Qdrant Apache-2.0 `master@74f3e85b`; Codebase Memory `qdrant`. **Question:** Given per-condition estimates, what exact formulas produce must/should/min_should/must_not cardinalities, and when do primary clauses survive?
 
 ## Filter-tree estimation algebra
 **Path/Symbol:** `lib/segment/src/index/query_estimator.rs`: `adjust_to_available_vectors` (:26-66), `expected_should_estimation` (:119-131), `combine_should_estimations` (:133-154), `combine_min_should_estimations` (:161-185), `combine_must_estimations` (:187-220), `estimate_filter` (:243-282), `invert_estimation` (:328-338), `estimate_must_not` (:340-354).
@@ -39,7 +39,7 @@ invert_estimation: min = total - est.max; exp = total - est.exp; max = total - e
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "ext-qdrant", query: "estimate_filter combine_must_estimations combine_should_estimations adjust_to_available_vectors", limit: 10, fields: ["signature", "name", "file"] });
+await mcp.codebase_memory.search_graph({ project: "qdrant", query: "estimate_filter combine_must_estimations combine_should_estimations adjust_to_available_vectors", limit: 10, fields: ["signature", "name", "file"] });
 ```
 
 ## Verdict

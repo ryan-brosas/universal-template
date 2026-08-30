@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Sparse filtered search dispatch — when does the sparse engine iterate plainly instead of using the inverted index?
 
-**Source:** Qdrant Apache-2.0 `master@74f3e85b`; Codebase Memory `ext-qdrant`. **Question:** For a filtered sparse-vector search, what chooses plain iteration vs inverted-index traversal, and how is the prefiltered set shared across a query batch?
+**Source:** Qdrant Apache-2.0 `master@74f3e85b`; Codebase Memory `qdrant`. **Question:** For a filtered sparse-vector search, what chooses plain iteration vs inverted-index traversal, and how is the prefiltered set shared across a query batch?
 
 ## Cardinality-gated sparse dispatch with batch-wide prefilter cache
 **Path/Symbol:** `lib/segment/src/index/sparse_index/sparse_vector_index/read_view/search.rs`: `search` (:33-68, batch entry + IDF remap), `get_query_cardinality` (:82-96), `search_scored` (:99-151), `search_plain` (:153-207), `search_sparse` (:210-256), `search_nearest_query` (:258-300), `search_query` (:302-342).
@@ -42,7 +42,7 @@ Non-vector queries bypass the index entirely (`search_scored`): raw `BatchFilter
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "ext-qdrant", query: "search_nearest_query full_scan_threshold query_cardinality SearchContext plain_search peek_top_iter", limit: 10, fields: ["signature", "name", "file"] });
+await mcp.codebase_memory.search_graph({ project: "qdrant", query: "search_nearest_query full_scan_threshold query_cardinality SearchContext plain_search peek_top_iter", limit: 10, fields: ["signature", "name", "file"] });
 ```
 
 ## Verdict

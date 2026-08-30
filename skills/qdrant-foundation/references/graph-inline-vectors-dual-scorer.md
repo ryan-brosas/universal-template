@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Graph-with-inline-vectors dual scorer — how do quantized link vectors and full base vectors cooperate in one HNSW search?
 
-**Source:** Qdrant Apache-2.0 `master@74f3e85b`; Codebase Memory `ext-qdrant`. **Question:** When the graph stores vectors inline, which vector scores traversal and which scores the final result, and when is this path refused?
+**Source:** Qdrant Apache-2.0 `master@74f3e85b`; Codebase Memory `qdrant`. **Question:** When the graph stores vectors inline, which vector scores traversal and which scores the final result, and when is this path refused?
 
 ## Two scorers, one traversal
 **Path/Symbol:** `lib/segment/src/index/hnsw_index/hnsw/read_view/search.rs`: `search_with_vectors` closure (:88-135) vs `regular_search` (:137-170); dispatch (:172-178).
@@ -40,7 +40,7 @@ if !self.graph.has_inline_vectors() || !is_quantized_search(self.quantized_vecto
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "ext-qdrant", query: "has_inline_vectors scorer_bytes search_with_vectors link base", limit: 10, fields: ["signature", "name", "file"] });
+await mcp.codebase_memory.search_graph({ project: "qdrant", query: "has_inline_vectors scorer_bytes search_with_vectors link base", limit: 10, fields: ["signature", "name", "file"] });
 ```
 
 ## Verdict

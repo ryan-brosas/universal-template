@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # WAL segment CRC chain — how does a mmap'd WAL detect torn writes and recover a consistent prefix?
 
-**Source:** Qdrant Apache-2.0 `master@74f3e85b`; Codebase Memory `ext-qdrant`. **Question:** What is the on-disk entry framing, how is each entry's integrity chained to the previous one, and what happens to garbage after a crash?
+**Source:** Qdrant Apache-2.0 `master@74f3e85b`; Codebase Memory `qdrant`. **Question:** What is the on-disk entry framing, how is each entry's integrity chained to the previous one, and what happens to garbage after a crash?
 
 ## Chained-CRC32C mmap segments
 **Path/Symbol:** `lib/wal/src/segment.rs`: constants (:19-28), `Segment::append` (:336-375), `Segment::open` recovery loop (:265-290), `Segment::truncate` (:392-418), `Segment::entry` (:319-329); flush offset semantics :300-306.
@@ -36,7 +36,7 @@ index.push((offset + HEADER_LEN, len));
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "ext-qdrant", query: "SEGMENT_MAGIC crc32c_append reverse_bits flush_offset truncate zero", limit: 10, fields: ["signature", "name", "file"] });
+await mcp.codebase_memory.search_graph({ project: "qdrant", query: "SEGMENT_MAGIC crc32c_append reverse_bits flush_offset truncate zero", limit: 10, fields: ["signature", "name", "file"] });
 ```
 
 ## Verdict

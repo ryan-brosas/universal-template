@@ -1,10 +1,10 @@
 <!-- capsule-v2 -->
 # Lazy rule map with debug instrumentation & frozen mutation surface — how does a 270-entry registry stay zero-cost until touched?
 
-**Source:** ESLint MIT `main@dc1e7a8416937edefe04cf836ee202a6fc03bedd`; Codebase Memory project `eslint`. **Question:** What does the rules index actually do beyond `{name: () => require("./rule")}`, and which mutations are deliberately impossible?
+**Source:** ESLint MIT `main@c27bc926e496985eb7911c09eb60914b2e4b5d0f` (tag v10.9.0; re-based from dc1e7a84 in pass 14 with claims re-verified at the current pin; direct source+test fallback — Codebase Memory MCP not connected). **Question:** What does the rules index actually do beyond `{name: () => require("./rule")}`, and which mutations are deliberately impossible?
 
 ## LazyLoadingRuleMap
-**Path/Symbol:** `lib/rules/utils/lazy-loading-rule-map.js:LazyLoadingRuleMap` (:24–116) — constructor debug branch (:31–53), set-voiding (:55–60), lazy get/values/entries/forEach (:68–104), mutation freeze (:107–116).
+**Path/Symbol:** `lib/rules/utils/lazy-loading-rule-map.js:LazyLoadingRuleMap` (:24-111 at c27bc926) — class decl :24, constructor debug branch :31-53, set-voiding :56-61, lazy values/entries/forEach :78-104, mutation freeze + Symbol.iterator redirect :107-116. File is 118 lines at this pin.
 **Signature:** `new LazyLoadingRuleMap(Object.entries({ "accessor-pairs": () => require("./accessor-pairs"), ... }))`.
 **Data Shape:** map VALUES are loader thunks; every read method invokes-and-caches implicitly (require cache is the memo).
 

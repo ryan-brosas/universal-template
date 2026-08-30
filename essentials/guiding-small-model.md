@@ -5,15 +5,15 @@ philosophy that drives all our work. Treat it as an essential.
 
 ---
 
-## 1. The Core Principle: The Equivalence of Small Models
+## 1. The Core Heuristic: Small Models Punch Far Above Their Class With Ground Truth
 
-A small model (e.g., `deepseek-flash`, `deepseek-v4-flash`) is **agentically equivalent**
-to a frontier model (`sol`, `fable`, `opus`, `sonnet`). It possesses the same structural
-capacity for multi-step reasoning, loop stepping, tool calling, error recovery, and
-deterministic execution.
+A small model (e.g., `deepseek-flash`) can carry multi-step agentic work — loop stepping,
+tool calling, error recovery — when it is fed concrete ground truth. This is a working
+heuristic from practice, not a proven equivalence with frontier models; verify it per
+task instead of assuming it.
 
-### The Real Difference: Knowledge vs. Capacity
-The only fundamental difference between a small model and a massive frontier model is **knowledge volume**:
+### The Practical Difference: Knowledge Access
+The dominant gap between a small model and a massive frontier model in practice is **what it has memorized** (knowledge access), not raw agentic capacity:
 - Massive frontier models have billions of parameters that have memorized obscure library APIs,
   deprecated SDK patterns, esoteric framework configurations, and thousands of documentation pages.
 - Small models lack that encyclopedic memorization. When forced to guess an unfamiliar interface
@@ -24,8 +24,8 @@ The only fundamental difference between a small model and a massive frontier mod
 - **The Core Practice:** You **give it direct, unvarnished ground truth to work from**.
 
 When provided with concrete ground truth (real code, exact signatures, verified invariants,
-and named test probes), a small model executes with frontier-grade precision at 10x the speed,
-a fraction of the cost, and with zero hallucination.
+and named test probes), a small model executes far more reliably at a fraction of the cost —
+concrete code dramatically cuts hallucination, though no prompt input can guarantee zero errors.
 
 ---
 
@@ -45,13 +45,16 @@ a fraction of the cost, and with zero hallucination.
   the small model does not need to re-derive logic from first principles.
 * It reads the decisive source, follows the verified flow, respects the invariant,
   and confirms against the named probe.
-* The skill acts as an unbypassable shortcut that guarantees deterministic correctness.
+* The skill removes re-derivation and its error class; correctness itself is still
+  enforced by tests, compilers, and CI gates — a Markdown skill is not unbypassable.
 
-### Rule 3: Prewalk is Your Best Tool
+### Rule 3: Discovery is Your Best Tool
 * Prompt planning phases matter, but **not to micromanage or plan every step by hand**.
 * Do not write rigid step-by-step instructions telling the agent how to think or sequence basic tasks.
 * Give the agent deep repository context (file trees, symbol relationships, graph dumps)
-  and let it **search the context**. The agent will prewalk the graph and discover the seams itself.
+  and let it **search the context**. The agent will explore the graph and discover the seams
+  itself. (The source material said "prewalk"; that word now belongs to Pi Fabric's
+  `/fabric prewalk` runtime feature.)
 
 ### Rule 4: Squeeze to the Last Drop (Skimming vs. Understanding)
 * **The Skimming Trap:** Skimming a 30,000-line codebase surfaces 3–6 obvious functions.
@@ -65,9 +68,11 @@ a fraction of the cost, and with zero hallucination.
     * `bulk_utils.py` $\to$ UnionFind path compression and pointer rewriting.
     * `decorators.py` $\to$ Group fan-out and versioned prompt decorators.
     * `tracer.py` $\to$ Unified NoOp and OpenTelemetry span abstractions.
-* **The Squeeze Contract:** Every module in a target codebase must either become a
-  `<!-- capsule-v2 -->` reference OR receive an explicit `omit-with-reason` in the work record.
-  Never silently skip a subsystem.
+* **Scope the squeeze:** a module-by-module sweep is a *deliberate mining pass*
+  for building understanding on hard ports — not a default ritual, and reading
+  deeply never obligates encoding. What gets encoded stays governed by the
+  promotion threshold in `skills/code-foundations/`; most modules are correctly
+  left as source.
 
 ---
 
@@ -125,9 +130,9 @@ Every foundation reference extracted from code must conform to the canonical cap
 
 ## 5. What This Means for Our Setup
 
-- **Foundation Skill Packs (`pack-foundations`):** Squeeze external inspiration repositories
-  into canonical `<!-- capsule-v2 -->` foundation skills so `deepseek-flash` can lift proven
-  code instead of inventing unverified solutions.
+- **Reference first:** a useful external repository is normally studied as
+  project-local reference code (read the source, run its tests). Only repeated,
+  non-obvious porting knowledge graduates into a compact foundation skill.
 - **Retrieval Maps over Specs:** Use skill leaves as retrieval maps pointing to decisive source code.
 - **Continuous Learning & Persistence:** Record every pass, mined seam, and unmined target in the
   durable work record (`research.md`) so learning compounds across sessions and cron runs.

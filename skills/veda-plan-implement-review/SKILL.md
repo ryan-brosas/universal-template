@@ -1,6 +1,6 @@
 ---
 name: veda-plan-implement-review
-description: "Use when you need to plan an approach, execute it, and review the outcome — plan AND implement with the Veda Navigator model, then review the result: align on an approach with Navigator, carry it out, then close with a reviewer pass (fix P0/P1, re-review until pass). Drives `veda -S impl-TASKNAME -m gpt-5.6-sol -p navigator-plan` to align, implements with native tools, then `-p reviewer`. Navigator has read-only tools only."
+description: "Use when you need to plan an approach, execute it, and review the outcome — plan AND implement with the Veda Navigator model, then review the result: align on an approach with Navigator, carry it out, then close with a reviewer pass (fix P0/P1, re-review until pass). Drives `veda -S impl-TASKNAME -m flash -p navigator-plan` to align, implements with native tools, then `-p reviewer`. Navigator has read-only tools only."
 argument-hint: "[veda-flags]"
 ---
 
@@ -25,12 +25,12 @@ Align → implement → close with a reviewer loop until `review: pass`. Navigat
 
 - Load-bearing planning / architecture / high-risk review → `agy --model claude-opus-4-6-thinking --mode plan` (direct `agy` CLI, NOT veda/gemini).
 - Critique / follow-up → `agy --model claude-sonnet-4-6 --mode plan`.
-- Cheap discovery / context curation → `veda` + gemini (`gemini-3.6-flash-*`, `gemini-3.1-pro-low`).
+- Cheap discovery / context curation → `veda` + gemini (`gemini-3.7-flash-*`, `gemini-3.1-pro-low`).
 - `veda deep` (parallel solvers) runs on gemini and is only for "N independent attempts"; the final architecture decision still comes from claude-opus.
 
 ## Invocation — veda CLI (confirmed working)
 
-Use the veda CLI with **positional** prompts. Default backend/model now fixed in `~/.config/veda/config` (`BACKEND="agy"`, `MODEL="gemini-3.1-pro-high"`):
+Use the veda CLI with **positional** prompts. Default backend/model now fixed in `~/.config/veda/config` (`BACKEND="agy"`, `MODEL="gemini-3.7-flash-high"`):
 
 ```bash
 veda -S impl-<task> -p navigator-plan '<goal + context>'     # align (read-only)
@@ -38,15 +38,15 @@ veda -S impl-<task> -p navigator-plan '<goal + context>'     # align (read-only)
 veda -S impl-<task> -p reviewer '<diff + design contract>'   # review pass (fix P0/P1, re-review until pass)
 ```
 
-- Pin explicitly with `-b agy -m gemini-3.1-pro-high` if you ever need to override.
+- Pin explicitly with `-b agy -m gemini-3.7-flash-high` if you ever need to override.
 
 **Do NOT use `agents.run({ runner: "veda", ... })`:** broken with veda-ts 0.75.8 — pi-fabric pipes the prompt to stdin, but veda reads positionals only (`src/cli/validate.ts` throws "No prompt provided"). Use the CLI until pi-fabric fixes the runner.
 
 ## Your Task
 
-Collaborate, discuss, align, implement, and review with the Navigator model using `veda -S impl-TASKNAME -m gpt-5.6-sol -p navigator-plan`. First align on the plan with Navigator, then execute it, then close with a reviewer pass. The Navigator has **read-only tools** (`Read`, `Grep`, `Glob`, `LS`, `git status/log/diff`) but cannot edit or run mutating commands — it advises, you implement. You still provide curated context via `veda sel add` so the Navigator can verify your claims against the actual code; selection focuses attention and controls token cost.
+Collaborate, discuss, align, implement, and review with the Navigator model using `veda -S impl-TASKNAME -m flash -p navigator-plan`. First align on the plan with Navigator, then execute it, then close with a reviewer pass. The Navigator has **read-only tools** (`Read`, `Grep`, `Glob`, `LS`, `git status/log/diff`) but cannot edit or run mutating commands — it advises, you implement. You still provide curated context via `veda sel add` so the Navigator can verify your claims against the actual code; selection focuses attention and controls token cost.
 
-**Model:** `gpt-5.6-sol` is auto-detected by `veda init` from your installed harnesses. If a `-m`/`-b` (or other veda flags) was passed when this skill was invoked, use those instead of `-m gpt-5.6-sol` in every `veda` command below.
+**Model:** `flash` is auto-detected by `veda init` from your installed harnesses. If a `-m`/`-b` (or other veda flags) was passed when this skill was invoked, use those instead of `-m flash` in every `veda` command below.
 
 **Reuse the same `-S` session name** across `navigator-plan` and follow-up `resume`/`navigator-chat` so the conversation continues rather than restarting.
 
@@ -64,7 +64,7 @@ veda -p navigator-plan "The function uses `console.log`"
 # Results in: sh: console.log: command not found
 
 # GOOD - use single quotes (simplest):
-veda -S impl-auth-feature -m gpt-5.6-sol -p navigator-plan 'The function uses `console.log` to output.'
+veda -S impl-auth-feature -m flash -p navigator-plan 'The function uses `console.log` to output.'
 
 # GOOD - escape backticks in double quotes:
 veda -p navigator-plan "The function uses \`console.log\`"
@@ -77,9 +77,9 @@ veda -p navigator-plan "The function uses \`console.log\`"
 **Use a descriptive, contextual session ID** with `-S` to isolate your selection from other concurrent agents. Format: `impl-TASKNAME` where TASKNAME briefly describes the work.
 
 ```bash
-veda -S impl-auth-refactor -m gpt-5.6-sol ...    # Implementing a refactor
-veda -S impl-pricing-research -m gpt-5.6-sol ... # Researching pricing options
-veda -S impl-launch-doc -m gpt-5.6-sol ...       # Drafting a launch document
+veda -S impl-auth-refactor -m flash ...    # Implementing a refactor
+veda -S impl-pricing-research -m flash ... # Researching pricing options
+veda -S impl-launch-doc -m flash ...       # Drafting a launch document
 ```
 
 ---
@@ -142,15 +142,15 @@ veda -S impl-auth-refactor sel add "src/auth/" "src/api/users.ts"
 #
 # Lead with the USER'S EXACT WORDS (quoted verbatim), then your framing —
 # Navigator plans against the ask as given, so don't paraphrase it away:
-veda -S impl-auth-refactor -m gpt-5.6-sol -p navigator-plan \
+veda -S impl-auth-refactor -m flash -p navigator-plan \
   '<USER PROMPT, verbatim, exactly as the user wrote it>
 
 My understanding: [situation + evidence]. Proposed approach: [details]. Non-goals: [scope limits]. Key question: [your real uncertainty]. What do you think?'
 
 # 3. Continue discussion (session-scoped resume)
-veda -S impl-auth-refactor -m gpt-5.6-sol resume "What about edge case X?"
+veda -S impl-auth-refactor -m flash resume "What about edge case X?"
 # Or switch to chat mode for back-and-forth
-veda -S impl-auth-refactor -m gpt-5.6-sol -p navigator-chat "What about edge case X?"
+veda -S impl-auth-refactor -m flash -p navigator-chat "What about edge case X?"
 ```
 
 Confirm alignment before you start executing. **Once aligned, you (the Driver) proceed to implementation.** Navigator does not execute; you do.
@@ -168,7 +168,7 @@ After aligning with Navigator:
 - Escalate to the user (via `ask_user`) per the rule above: scope, cost, or direction changes, or input only the user can provide
 - You can consult Navigator mid-execution:
   ```bash
-  veda -S impl-auth-refactor -m gpt-5.6-sol -p navigator-chat "Quick question: should X handle Y this way?"
+  veda -S impl-auth-refactor -m flash -p navigator-chat "Quick question: should X handle Y this way?"
   ```
 
 Before ending your turn, check your last paragraph. If it is a plan, a list of next steps, or a promise about work you have not done ("I'll...", "let me know when..."), do that work now. End your turn only when the task is complete or you are blocked on input only the user can provide.
@@ -186,7 +186,7 @@ against the same design Navigator aligned on:
 git diff -- . ':(exclude)*.png' ':(exclude)*.jpg' ':(exclude)*.woff*' > /tmp/impl.diff
 veda -S impl-auth-refactor sel add /tmp/impl.diff
 veda -S impl-auth-refactor sel ls      # verify the diff is in selection
-veda -S impl-auth-refactor -m gpt-5.6-sol -p reviewer \
+veda -S impl-auth-refactor -m flash -p reviewer \
   'Implementation complete. Review the diff against this session's design.json (auto-attached) and report P0/P1/P2 findings. End with review: pass or review: needs-fix.'
 ```
 
@@ -209,10 +209,10 @@ Key commands:
 - `veda -S impl-TASKNAME sel add` to build context (quote globs: `"src/*.c"`)
 - `veda -S impl-TASKNAME sel add file.c:10-50` to add line-range slices
 - `veda -S impl-TASKNAME sel ls` to verify selection and token count
-- `veda -S impl-TASKNAME -m gpt-5.6-sol -p navigator-plan` for initial planning (high reasoning)
-- `veda -S impl-TASKNAME -m gpt-5.6-sol -p navigator-chat` for follow-up discussion (medium reasoning)
-- `veda -S impl-TASKNAME -m gpt-5.6-sol resume` to continue a conversation (session-scoped)
-- `veda -S impl-TASKNAME -m gpt-5.6-sol -p reviewer` for the closing review pass (P0/P1/P2, fix + re-review until `review: pass`)
+- `veda -S impl-TASKNAME -m flash -p navigator-plan` for initial planning (high reasoning)
+- `veda -S impl-TASKNAME -m flash -p navigator-chat` for follow-up discussion (medium reasoning)
+- `veda -S impl-TASKNAME -m flash resume` to continue a conversation (session-scoped)
+- `veda -S impl-TASKNAME -m flash -p reviewer` for the closing review pass (P0/P1/P2, fix + re-review until `review: pass`)
 - Output goes to stdout; use `-o file.md` to save response; don't pipe `2>&1`
 
 ## Red Flags

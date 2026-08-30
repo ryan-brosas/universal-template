@@ -9,6 +9,15 @@ OpenViking is the long-term mined-knowledge store this machine already runs.
 It ingests **hermes/pi sessions, skill-mining corpora, and repo-learning passes**
 and serves them through `viking://` URIs over MCP at `http://127.0.0.1:1933/mcp`.
 
+**Role: durable experience/context memory.** Its highest-value content is what
+is expensive to reconstruct from source: previous decisions, failed attempts
+("we tried X and it failed because Y"), lessons, project history, recurring
+edge cases, and durable non-code resources. Repo-derived corpora
+(`llm-repo-learning-*`, `*-foundation`) are retrieval shortcuts to *prior
+mining* — never a substitute for the local or `reference/` repository, which
+stays the implementation truth. Do not duplicate locally available source into
+OpenViking; add a corpus only when the mining pass itself is the asset.
+
 ## 2. Live evidence (this audit)
 
 | Fact | Value |
@@ -24,7 +33,7 @@ and serves them through `viking://` URIs over MCP at `http://127.0.0.1:1933/mcp`
 | Ingest | enabled; harnesses: hermes (`user_field: sender`, mode both) |
 | Index queue | `_system/queue` (drained asynchronously) |
 
-## 3. Corpus inventory (exact, at audit time)
+## 3. Corpus inventory (dated evidence — re-verify at runtime; do not hard-code these counts in policy)
 
 - **888 resource dirs** total under `viking://resources/`
   - `llm-repo-learning-*`: **449** (each a repo-learning pass)
@@ -71,7 +80,7 @@ The exact Discord message material **is** in OpenViking and is now source materi
 - **Verbatim threads** (byte-exact, deduped by content hash): `essentials/discord-material/raw/`
   — scanning all **2849 session archives** (session
   `20260822_231822_f198ed/history/archive_001/messages.jsonl`) surfaced **5 unique Discord
-  threads**: 2026-08-21 (Tom: code is ground truth, no specs, prewalk=best tool), 2026-08-11
+  threads**: 2026-08-21 (Tom: code is ground truth, no specs, context-first graph discovery — source wording "prewalk=best tool"), 2026-08-11
   (AGENTS.md over-restriction → steer outcomes not behavior), 2026-07-26 (stacking leverage,
   capture-into-skills ritual), 2026-07-19 (mechanical tests & quality packs), 2026-08-03
   (catch-first test & gate methodology).

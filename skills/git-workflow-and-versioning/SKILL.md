@@ -7,63 +7,54 @@ disable-model-invocation: true
 
 # Git Workflow and Versioning
 
+Application skill for Git + semver + changelog learning (`awesome-guidelines` deep ingest). Read learning notes when reasoning about *why*; use capsules for probes.
+
 ## Core Principle
 
-Treat commits as verified save points, not dumping grounds — changes stay reviewable, reversible, and shippable.
-
-## Overview
-
-Git workflow keeps changes reviewable, reversible, and shippable. Treat commits as verified save points, not dumping grounds.
+Treat commits as verified save points with **communicative messages** — history is for future readers (review, bisect, release). Shared refs are append-only; semver + changelog are the user-facing contract.
 
 ## When to Use
 
-- Any meaningful code change that may be committed, reviewed, or shipped.
-- Creating or finishing a feature branch.
-- Preparing release notes, version bumps, or changelog entries.
-- Splitting a large diff into safe review units.
-- Working in a dirty worktree where unrelated user changes may exist.
+- Commits, branches, merges, tags, releases, or changelog updates.
+- Dirty worktree with unrelated user changes.
+- Version bump decisions (which semver digit).
 
 ## When NOT to Use
 
-- Read-only investigation with no file changes.
-- Throwaway local experiments that will be discarded before reporting.
+- Read-only investigation with no VCS mutations planned.
 
 ## Process
 
-1. Inspect worktree state before editing: `git status --short`.
-2. Identify unrelated changes and leave them untouched.
-3. Keep each change atomic: one intent, one reviewable diff, one verification story.
-4. Prefer trunk-based flow: short-lived branches, small PRs, frequent integration.
-5. Use commits as save points only after verification passes or after clearly labeling partial work.
-6. Scope staging to your files only; never use `git add .` in a mixed worktree.
-7. For versioning, update the smallest required surface: package version, changelog, migration note, release tag, or docs.
-8. Before shipping, confirm status, diff summary, verification evidence, and rollback path.
+1. **Worktree** — `git status --short`; never `git add .` in a mixed tree; stage by path.
+2. **Branch** — name per `awesome-guidelines/references/git-style-branches.md` (short, lowercase, hyphens; project cap in `AGENTS.md`).
+3. **Commit unit** — one logical change; feature + tests together; `git add -p` to split (`git-style-commit-messages.md`).
+4. **Message** — editor commit for non-trivial work: subject (imperative ~50 chars or conventional `type(scope):`), blank line, body ~72 cols with **why**; run `conventional-commit.py` when catalog applies.
+5. **Before push** — tests pass; history on private branch may use fixup/squash/rebase -i; **never** force-push shared branches without explicit approval (`git-style-history-and-merge.md`).
+6. **Merge** — rebase or merge per project; `--no-ff` when policy preserves branch topology.
+7. **Release** — classify change against public API (`semver-public-api-and-bumps.md`); bump manifest; move `[Unreleased]` → `[x.y.z] - ISO-date` in CHANGELOG (`changelog-human-curation.md`); annotated tag; pre-release precedence if applicable (`semver-precedence-and-prerelease.md`).
+8. **Evidence** — status, diff summary, gates run, version/changelog/tag action or explicit skip.
 
 ## Common Rationalizations
 
-| Rationalization                          | Rebuttal                                                                 |
-|------------------------------------------|--------------------------------------------------------------------------|
-| "I'll clean up the commit later."        | Later cleanup often loses intent. Keep the diff clean while it is fresh. |
-| "This unrelated formatting is harmless." | It increases review noise and can hide real regressions.                 |
-| "One big commit is faster."              | Small verified commits are easier to review, revert, bisect, and ship.   |
-| "The worktree was already dirty."        | Dirty worktrees require more discipline, not less.                       |
+| Rationalization | Rebuttal |
+|---|---|
+| "I'll clean up the commit later." | Intent lost; rebase cost rises. |
+| "git log is our changelog." | Users can't scan merges/WIP — curate CHANGELOG. |
+| "PATCH bump for breaking API." | Destroys semver trust — MAJOR. |
+| "Force-push main to fix." | Breaks team — new forward commit instead. |
 
 ## Red Flags
 
-- Staging broad paths without reviewing the diff.
-- Mixing feature work, refactors, formatting, and dependency updates.
-- Committing generated or cache files unintentionally.
-- Version bump without changelog or release rationale.
-- Claiming clean worktree without checking status.
+- Subject with no blank line before body (breaks rebase/format-patch).
+- Version tag ≠ manifest ≠ CHANGELOG header.
+- `Deprecated` missing before `Removed` in major release.
+- Breaking change shipped as PATCH.
 
 ## Verification
 
-Before declaring git workflow complete, provide:
-
-- `git status --short` summary.
-- Diff or staged-file summary for touched files.
-- Verification commands and outcomes.
-- Commit/version/changelog action taken, or explicit reason none was needed.
+- `git status --short` and diff/staged summary cited.
+- `CHECK_RANGE=origin/main..HEAD python3 scripts/conventional-commit.py` when on catalog branch.
+- Release: semver bump matches change class; CHANGELOG section exists for version; tag name documented.
 
 ## Skill Result Contract
 
@@ -71,12 +62,20 @@ Before declaring git workflow complete, provide:
 <skill_result>
   <skill>git-workflow-and-versioning</skill>
   <status>completed|blocked|skipped</status>
-  <artifacts>Branch, commit, changelog, version file, or none</artifacts>
-  <evidence>git status/diff summary and verification commands</evidence>
-  <risks>Unrelated worktree changes, uncommitted files, release risk, or none</risks>
+  <artifacts>Branch, commits, CHANGELOG, version file, tag, or none</artifacts>
+  <evidence>git status/diff, conventional-commit, changelog/version alignment</evidence>
+  <risks>history rewrite on shared branch, semver mismatch, or none</risks>
 </skill_result>
 ```
 
 ## References
 
-N/A — no reference files; the git commands and process are inline in this skill.
+- `awesome-guidelines/references/git-style-learning-note.md`
+- `awesome-guidelines/references/semver-learning-note.md`
+- `awesome-guidelines/references/changelog-style-learning-note.md`
+- `awesome-guidelines/references/git-style-branches.md`
+- `awesome-guidelines/references/git-style-commit-messages.md`
+- `awesome-guidelines/references/git-style-history-and-merge.md`
+- `awesome-guidelines/references/semver-public-api-and-bumps.md`
+- `awesome-guidelines/references/semver-precedence-and-prerelease.md`
+- `awesome-guidelines/references/changelog-human-curation.md`

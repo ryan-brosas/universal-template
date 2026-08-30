@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # HNSW build warm start — how do you parallelize graph inserts without disconnecting the graph?
 
-**Source:** Qdrant Apache-2.0 `master@74f3e85b`; Codebase Memory `ext-qdrant`. **Question:** A porter parallelizing HNSW inserts must know why the first N points are inserted single-threaded and where deleted points are excluded.
+**Source:** Qdrant Apache-2.0 `master@74f3e85b`; Codebase Memory `qdrant`. **Question:** A porter parallelizing HNSW inserts must know why the first N points are inserted single-threaded and where deleted points are excluded.
 
 ## Parallel insert with single-threaded warm start
 **Path/Symbol:** `lib/segment/src/index/hnsw_index/hnsw/build.rs`: `HNSWIndex::build` (:53-598), `insert_point` closure (:329-348), `build_filtered_graph` (:631-716); threshold in `hnsw.rs` :33-38.
@@ -39,7 +39,7 @@ pool.install(|| points_to_index.into_par_iter().skip(first_points).try_for_each(
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "ext-qdrant", query: "SINGLE_THREADED_HNSW_BUILD_THRESHOLD link_new_point FilteredScorer new_internal", limit: 10, fields: ["signature", "name", "file"] });
+await mcp.codebase_memory.search_graph({ project: "qdrant", query: "SINGLE_THREADED_HNSW_BUILD_THRESHOLD link_new_point FilteredScorer new_internal", limit: 10, fields: ["signature", "name", "file"] });
 ```
 
 ## Verdict

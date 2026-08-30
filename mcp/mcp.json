@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "mcp-steroid": {
+      "type": "stdio",
+      "command": "/home/utopia/.mcp-steroid/bin/devrig",
+      "args": ["mcp"],
+      "lifecycle": "keep-alive"
+    }
+  }
+}

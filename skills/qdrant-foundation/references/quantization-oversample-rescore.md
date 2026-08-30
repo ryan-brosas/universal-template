@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Quantization oversample + rescore — how does a quantized segment return exact-quality top-k?
 
-**Source:** Qdrant Apache-2.0 `master@74f3e85b`; Codebase Memory `ext-qdrant`. **Question:** How are `oversampling` and `rescore` applied around a quantized HNSW search, and what are the defaults?
+**Source:** Qdrant Apache-2.0 `master@74f3e85b`; Codebase Memory `qdrant`. **Question:** How are `oversampling` and `rescore` applied around a quantized HNSW search, and what are the defaults?
 
 ## Oversampled top, optional exact rescore
 **Path/Symbol:** `lib/segment/src/index/vector_index_search_common.rs`: `is_quantized_search` (:15-25), `get_oversampled_top` (:27-45), `postprocess_search_result` (:48-91); default values in `lib/segment/src/types.rs` (`default_quantization_oversampling_value` :615).
@@ -41,7 +41,7 @@ search_result.truncate(top);
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "ext-qdrant", query: "get_oversampled_top postprocess_search_result rescore score_points truncate", limit: 10, fields: ["signature", "name", "file"] });
+await mcp.codebase_memory.search_graph({ project: "qdrant", query: "get_oversampled_top postprocess_search_result rescore score_points truncate", limit: 10, fields: ["signature", "name", "file"] });
 ```
 
 ## Verdict

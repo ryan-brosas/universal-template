@@ -55,7 +55,8 @@ At the 30-second stage:
 - The model does not debate architecture.
 - It does not invent new data structures.
 - It retrieves the proven `<!-- capsule-v2 -->` reference, mirrors its decisive source,
-  adapts the types to the new endpoint, and one-shots the implementation with zero hallucination.
+  adapts the types to the new endpoint, and one-shots the implementation with far fewer
+  wrong guesses than a from-scratch attempt.
 
 ---
 
@@ -74,10 +75,10 @@ a one-off success into a reusable template.
 
 ---
 
-## 4. The Post-Session Skill-Capture Protocol
+## 4. The Post-Session Skill-Capture Protocol (with a promotion threshold)
 
 At the end of an intensive coding session, milestone, or debugging breakthrough,
-never close the context window without executing the **Skill-Capture Workflow**:
+run a capture pass — but promote into the catalog only what will be reused:
 
 ### The Standard Operating Procedure (SOP):
 1. **The Harvest Prompt:**
@@ -86,8 +87,9 @@ never close the context window without executing the **Skill-Capture Workflow**:
    - The basic happy path is obvious and easily regenerated.
    - **The edge cases** (e.g. rate-limit handling, WebSocket reconnection backoff,
      encoding traps, memory leaks, subtle OS differences) took hours of real-world debugging.
-   - Capturing those specific edge cases into a skill guarantees that no agent will ever
-     waste time solving that exact problem again.
+   - Capture the *recurring* ones into a skill — a skill removes that class of
+     re-derivation. A one-off quirk that the fix's tests or a repo note already
+     documents does not need a catalog leaf.
 3. **Artifact Formatting:**
    - Package the learning into a standalone `SKILL.md` or a `<!-- capsule-v2 -->` reference.
    - Include the decisive source code, the flow invariants, and the test probe.
@@ -116,7 +118,7 @@ The skill-stacking methodology creates immense economic and operational leverage
                  │
                  ▼
 [5. Freeze Workflow into a Stacked Skill]
-   (Author parameterized, reusable skill pack with unbypassable gates)
+   (Author parameterized, reusable skill with unbypassable gates)
                  │
                  ▼
 [6. Autonomous Arbitrage & Execution]
@@ -135,6 +137,6 @@ The skill-stacking methodology creates immense economic and operational leverage
 ## 6. What This Means for Our Repository
 
 - **The Foundation Squeeze is Leverage Stacking:** Squeezing repos (`oh-my-pi`, `graphiti`,
-  `browser-use`, `mem0`) into `pack-foundations` is this philosophy in action.
+  `browser-use`, `mem0`) into per-repo foundation leaves (`skills/*-foundation`) is this philosophy in action.
 - **Permanent Wealth in Skills:** Every capsule added to `.pi/skills/` is permanent leverage.
 - **Compounding Flywheel:** Every task completed makes every future task faster and cheaper.

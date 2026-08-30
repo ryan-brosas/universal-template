@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # WAL lifecycle: retirement, retention, prefix truncate — how do segments rotate and get garbage-collected without losing contiguity?
 
-**Source:** Qdrant Apache-2.0 `master@74f3e85b`; Codebase Memory `ext-qdrant`. **Question:** How does the Wal move entries from open→closed segments, retain history, and validate recovery when a rename wasn't durable?
+**Source:** Qdrant Apache-2.0 `master@74f3e85b`; Codebase Memory `qdrant`. **Question:** How does the Wal move entries from open→closed segments, retain history, and validate recovery when a rename wasn't durable?
 
 ## Segment rotation with recovery-time contiguity repair
 **Path/Symbol:** `lib/wal/src/lib.rs`: `WalOptions` (:23-44, 32MiB default capacity, `retain_closed=1`), `Wal::with_options` recovery (:123-263), `retire_open_segment` (:265-292), `append` (:294-308), `truncate` (:351-402), `prefix_truncate` (:410-446), `open_segment_start_index` (:449-455), `find_closed_segment` (:457-467), `close_segment` rename (:535-546).
@@ -37,7 +37,7 @@ let retain_start_index = self.closed_segments.len().saturating_sub(self.retain_c
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "ext-qdrant", query: "retire_open_segment prefix_truncate retain_closed close_segment SegmentCreatorV2", limit: 10, fields: ["signature", "name", "file"] });
+await mcp.codebase_memory.search_graph({ project: "qdrant", query: "retire_open_segment prefix_truncate retain_closed close_segment SegmentCreatorV2", limit: 10, fields: ["signature", "name", "file"] });
 ```
 
 ## Verdict

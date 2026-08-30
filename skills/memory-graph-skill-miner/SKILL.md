@@ -109,9 +109,12 @@ Per-host drivers:
   mode's generated programs enable exactly the batching shortcuts this lane forbids);
   prompt skeleton, deployment guard, and fleet bindings in
   `references/dsh-factory-lane.md`.
-- **pi / other CLIs:** any recurring-task mechanism that can run this skill with the
-  same prompt contract. Keep the writer topology of the driving host: one lane owns
-  one repo, and shared-file writes follow the ledger discipline below.
+- **pi / other CLIs:** any recurring-task mechanism available on the host. There is NO
+  scheduler script — the trigger only wakes the model, and the model itself selects the
+  lane from the ledger (oldest `active` last-pass), claims it, runs the seven gates,
+  syncs OpenViking, and updates its own row + Status line. Task contract:
+  `references/autonomous-lane.md`. Keep the writer topology of the driving host: one
+  lane owns one repo, and shared-file writes follow the ledger discipline below.
 
 Hard rule: a lane may write only its owned row/board line and owned files. Concurrent
 lanes without a working lease surface cause lost updates on shared rows (documented
@@ -305,6 +308,12 @@ weaken the other. A run must pass both checkpoints:
   pipelines, awk/sed/jq transforms, temporary automation, generated arrays of tool
   calls, or template-filled prose for selection, discovery, extraction, counting,
   probing, parity, batch editing, authoring, or verification.
+- NEVER install or build tooling in a lane: no package/host installs
+  (pip/npm/cargo/brew/apt), no writing or generating helper scripts or
+  automation of any kind (scripts, one-liners, loops, pipelines, cron/systemd
+  units, host-config edits) — the host's existing native tools and the
+  documented `ov`/MCP surfaces are the only instruments; a missing capability
+  is recorded as a blocker, never assembled.
 - Do not delegate repository learning or capsule authoring to subagents or workflows.
   The assigned model must inspect, reason about, and author every seam itself.
 - Use native individual MCP/file calls and manually write or edit each durable artifact.
@@ -380,4 +389,5 @@ A missing evidence item means the run is partial or blocked, not complete.
 - `~/.agents/templates/foundation-skill.md` — canonical leaf structure.
 - `~/.agents/templates/foundation-capsule.md` — canonical capsule-v2 structure.
 - `references/durable-learning-ledger.md` — ledger row, Status board, and resume contract.
-- `references/dsh-factory-lane.md` — DSH Factory host adapter: preset rules, prompt skeleton, deployment guard, fleet bindings.
+- `references/dsh-factory-lane.md` — the DSH Factory host adapter (preset rules, prompt skeleton, deployment guard, fleet bindings).
+- `references/autonomous-lane.md` — the model-driven autonomous lane contract (how the trigger wakes the model; how selection, evidence, capsule authoring, OpenViking sync, and the ledger update all stay in the model's own hands).

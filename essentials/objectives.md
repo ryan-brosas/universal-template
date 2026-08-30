@@ -10,10 +10,10 @@ roadmap, skill development, testing harness, automation pipelines, and cron mara
 
 | Pillar / Methodology | Primary Strategic Objective | Target Milestone |
 | :--- | :--- | :--- |
-| **Pillar 1: Ground Truth** | 100% Inspiration Ingestion into `pack-foundations` via Two-Pass Learning | Full squeeze of all 73 inspo repos |
+| **Pillar 1: Ground Truth** | 100% Inspiration Ingestion into per-repo foundation leaves (`skills/*-foundation`) via Two-Pass Learning | Full squeeze of all 73 inspo repos |
 | **Pillar 2: Steer Outcomes** | Frictionless Conclusive PR Loop with Mechanical Gate Boundaries | Sub-30s CI checks, zero behavioral prompt bloat |
 | **Pillar 3: Stack Leverage** | Automated Post-Session Skill Capture & Tripled-Layer Viking Memory | Autonomous `/learn` workflow and OpenViking sync |
-| **Pillar 4: Mechanical Quality** | Universal + Language-Specific Quality Packs with Unbypassable Gates | Zero-defect automated gating across all projects |
+| **Pillar 4: Mechanical Quality** | Universal + Language-Specific Quality Gates with Unbypassable Walls | Zero-defect automated gating across all projects |
 | **Test Methodology** | Catch-First Verification Standard (Un-fixed RED $\to$ Fixed GREEN) | Mandatory pre-fix failure proofs on all bugfixes |
 
 ---
@@ -29,10 +29,10 @@ roadmap, skill development, testing harness, automation pipelines, and cron mara
   - **Tier 2 Targets:** `modelcontextprotocol` (12k), `servers`, `vitest` (16k), `nest` (13k), `rsbuild` (14k), `relaticle` (9k), `nodebestpractices` (6k).
   - **Tier 3 Targets:** Combined `linkedin-scrapers-foundation` mining all ~14 scraper repos into a unified suite.
 - [ ] **Objective 1.2 — 100% `<!-- capsule-v2 -->` Migration:**
-  - Audit all references across `pack-foundations` and ensure 100% adherence to the capsule-v2 contract (Source/Question, HEAD line numbers, Signature, Data Shape, decisive source, Flow, Invariant, direct test Probe, Retrieve query, Verdict).
+  - Audit all references across every emergent foundation leaf (the flat `skills/*-foundation` layout) and ensure 100% adherence to the capsule-v2 contract (Source/Question, HEAD line numbers, Signature, Data Shape, decisive source, Flow, Invariant, direct test Probe, Retrieve query, Verdict).
   - Eliminate all remaining legacy capsule-v1 markdown files.
-- [ ] **Objective 1.3 — Automated Code Graph Context Prewalk:**
-  - Standardize prewalk routines so that before planning or editing, agents automatically query `codegraphcontext` (for active project symbols) or Codebase Memory (for external prior art) rather than drafting from blank context.
+- [ ] **Objective 1.3 — Automated Code Graph Context Discovery:**
+  - Standardize discovery routines so that before planning or editing, agents query the nearest sufficient source — direct code, Fovea (active-project structure), or Codebase Memory (cross-repo prior art) — instead of drafting from blank context. One primary route per question; escalate only on a named gap.
 
 ---
 
@@ -61,10 +61,10 @@ roadmap, skill development, testing harness, automation pipelines, and cron mara
 > *"Code from scratch is cheap; code you hold is valuable."*
 
 ### Tactical Objectives:
-- [ ] **Objective 3.1 — Automated Post-Session Skill Capture:**
-  - Implement a dedicated skill-harvesting prompt workflow (`/learn` or post-session hook) that extracts newly solved edge cases, platform quirks, and error recovery patterns into new skill drafts at session close.
-- [ ] **Objective 3.2 — Domain-Specific Leverage Packs:**
-  - Build and publish high-leverage skill packs:
+- [ ] **Objective 3.1 — Post-Session Skill Harvest With A Promotion Threshold:**
+  - Implement a skill-harvesting prompt workflow (`/learn` or post-session hook) that extracts *recurring* edge cases, platform quirks, and verified recovery patterns into skill drafts. One-off details already recoverable from source stay in code, not in the catalog.
+- [ ] **Objective 3.2 — Domain-Specific Leverage Leaves:**
+  - Build and publish high-leverage single-focus skill leaves:
     - **Browser Automation Pack:** Advanced CDP manipulation, anti-bot evasion, session persistence, visual element targeting.
     - **Data Pipeline Pack:** Automated spreadsheet engineering, parquet transformations, SQLite/Turso mirrors.
     - **System Automation Pack:** Multi-agent coordination, persistent terminal management, local process supervision.
@@ -86,13 +86,13 @@ roadmap, skill development, testing harness, automation pipelines, and cron mara
     - Add detection for circular import dependencies.
     - Add detection for orphaned images, attachments, and scratch files.
     - Add schema validation for all JSON and YAML configs.
-- [ ] **Objective 4.2 — Unbypassable Mutation Boundaries:**
-  - Preserve the strict Schema commit loop (`schema.hypothesize` $\to$ `verify` $\to$ `commit`) in Pi Fabric so that no agent can write unverified code or pollute unrelated working-tree files.
-- [ ] **Objective 4.3 — Modular Language Quality Packs:**
-  - Maintain reusable, copyable quality pack templates for downstream clones:
-    - `pack-python-quality` (pytest, mypy strict, ruff, bandit).
-    - `pack-typescript-quality` (tsc, biome, effect-ts lint, vitest).
-    - `pack-rust-quality` (cargo clippy, cargo audit, cargo test).
+- [ ] **Objective 4.2 — Transactional Mutation Boundaries (opt-in):**
+  - Keep Pi Fabric's Schema transaction loop (`schema.hypothesize` $\to$ `verify` $\to$ `commit`) available for work that needs transactional/postcondition guarantees (enforce mode, explicit request, or postcondition-critical tasks) without making it a universal prerequisite for every reversible edit.
+- [ ] **Objective 4.3 — Modular Language Quality Leaves:**
+  - Maintain reusable, copyable skill leaves for downstream clones (each a `*-foundation`-canonical capsule set):
+    - python-coding-practices  (pytest, mypy, ruff, bandit).
+    - typescript-coding-standards (tsc, biome, effect-ts lint, vitest).
+    - rust-coding-practices (cargo clippy, cargo audit, cargo test).
 
 ---
 

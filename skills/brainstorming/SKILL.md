@@ -1,46 +1,45 @@
 ---
 name: brainstorming
-description: "Use when creating or developing, before writing code or implementation plans - refines rough ideas into designs through collaborative questioning, alternative exploration, and incremental validation."
+description: "Use when a rough idea needs clarification before implementation — optional collaborative questioning and variant exploration when the goal or approach is ambiguous."
 ---
 
 # Brainstorming
 
-<HARD-GATE>
-Do not write code, draft an implementation plan, or invoke `incremental-implementation` until the user has approved a design.
-</HARD-GATE>
+Optional — skip when the user gave a clear, concrete request.
 
 ## When to Use
 
-Rough idea, PRD, ADR draft, or vague feature request; "What if we…", "I'm thinking…", "Let's try…" before code; multiple plausible approaches where the choice is load-bearing.
+Rough idea, vague feature request, or multiple plausible approaches where the choice is load-bearing. "What if we…", "I'm thinking…" with real ambiguity.
 
 ## When NOT to Use
 
-Bug fixes with known root cause; mechanical refactor with a clear spec; trivial one-liner or config value. Well-defined requests do not need brainstorming.
+Bug fixes with known root cause; mechanical refactor with obvious verification; trivial one-liner; well-defined requests — go straight to `codebase-driven-development`.
 
 ## Core Principle
 
-**Classify unknowns before acting.**
-- **Known knowns** — in the prompt.
-- **Known unknowns** — ask the user.
-- **Unknown knowns** — you'd recognize the answer if you saw it. Show 2–4 cheap variants or point at a reference.
+**Classify unknowns when they exist.** Don't block implementation when they don't.
+- **Known knowns** — in the prompt; implement.
+- **Known unknowns** — ask the user (one question at a time when non-obvious).
+- **Unknown knowns** — show 2–4 cheap variants or point at a reference.
 - **Unknown unknowns** — ask the model to teach you the criteria.
 
-Map the gap before proposing. A simpler approach often exists — say so.
+A simpler approach often exists — say so.
 
 ## Workflow
 
-1. **Map unknowns** — classify the gap; state assumptions for ambiguous cases.
-2. **Variants** — for novel or design-heavy work, show 2–4 cheap variants *before* recommending one. Each names the trade-off it accepts.
-3. **Interview** — one question at a time on architecture, data model, or UX. Multiple-choice when options are genuinely live. Reference-pointing beats 200 words.
-4. **Validate** — incremental check-in: "does this match what you wanted?" before going deeper.
-5. **Hand off** — after approval, switch to `planning-and-task-breakdown` (or `incremental-implementation` for trivial slices).
+1. **Map unknowns** — only when ambiguous; state assumptions.
+2. **Variants** — for novel or design-heavy work, show 2–4 cheap variants before recommending one.
+3. **Interview** — one question at a time on architecture, data model, or UX when needed.
+4. **Validate** — check-in: "does this match what you wanted?" when ambiguity remains.
+5. **Implement** — via `codebase-driven-development` (foundations + nearest code as context).
 
 ## Cheat Sheet
 
 | Situation                                 | Default action                                   |
 |-------------------------------------------|--------------------------------------------------|
+| Clear, concrete request                   | Skip brainstorm; implement.                      |
 | Spec concrete, single-file                | Skip brainstorm, implement.                      |
-| Spec concrete, multi-file or design-heavy | One question on the riskiest unknown, then plan. |
+| Spec concrete, multi-file or design-heavy | One question on the riskiest unknown, then build. |
 | Spec vague                                | Variants first, then interview.                  |
 | "Sanity check" / "prototype"              | Use `prototype` skill.                           |
 | Multiple valid approaches                 | Show 2–4 variants with trade-offs.               |
@@ -48,11 +47,11 @@ Map the gap before proposing. A simpler approach often exists — say so.
 
 ## Red Flags
 
-Skipping variants for a design decision; asking 5 questions in one message; "we can add caching later" hand-waving in a production-bound design; starting code or plan before approval; "YAGNI" used to dismiss a stated requirement.
+Skipping variants when a design decision is genuinely load-bearing; asking 5 questions in one message when one would do; "we can add caching later" hand-waving in production-bound design.
 
 ## Anti-Patterns
 
-**The 200-word answer** when 2–4 variants surface the same trade-off; **the leading question** collapses the brainstorm; **the silent assumption** picks a stack without naming it; **premature implementation** drafts a plan before design approval.
+**The 200-word answer** when 2–4 variants surface the same trade-off; **the leading question** collapses the brainstorm; **the silent assumption** picks a stack without naming it; **blocking clear work** behind a design ritual the user didn't ask for.
 
 ## Skill Result Contract
 
@@ -60,15 +59,15 @@ Skipping variants for a design decision; asking 5 questions in one message; "we 
 <skill_result>
   <skill>brainstorming</skill>
   <status>success|partial|blocked|failure</status>
-  <evidence>Unknowns mapped, variants shown (if novel), design approved by user</evidence>
-  <artifacts>Design summary or "skipped — spec was concrete"</artifacts>
-  <risks>Unresolved questions, scope creep, premature commitment, or none</risks>
+  <evidence>Unknowns mapped when ambiguous, variants shown if novel</evidence>
+  <artifacts>Design summary or "skipped — request was concrete"</artifacts>
+  <risks>Unresolved questions, scope creep, or none</risks>
 </skill_result>
 ```
 
 ## Verification
 
-Design approved by the user before any code, plan, or `incremental-implementation`; unknowns classified; 2–4 variants shown for novel or design-heavy work; handoff made to `planning-and-task-breakdown` (or `incremental-implementation` for trivial slices).
+Unknowns classified when ambiguity existed; 2–4 variants shown for novel or design-heavy work when needed; handoff to `codebase-driven-development` without unnecessary delay.
 
 ## References
 

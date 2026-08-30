@@ -44,6 +44,12 @@
     "openviking": {
       "type": "remote",
       "url": "http://127.0.0.1:1933/mcp"
+    },
+    "mcp-steroid": {
+      "type": "stdio",
+      "command": "/home/utopia/.mcp-steroid/bin/devrig",
+      "args": ["mcp"],
+      "lifecycle": "keep-alive"
     }
   }
 }

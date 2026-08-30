@@ -1,11 +1,11 @@
-# Session Principles — prewalk, context-first, code-as-truth
+# Session Principles — discovery, context-first, code-as-truth
 
 Source: Tom, 8/21/26 (verbatim block: `~/.agents/essentials/discord-material/raw/block-001-67778e9d9668.md`).
 
 ## Small models
 
 - Small models (deepseek flash) are agentically the same as frontier models today — they lack *knowledge to work on*, not capability.
-- `prewalk`/context injection is the best tool: the prompt planning phase matters, not hand-scripting every step, but giving it context and letting it **search context**.
+- Context injection ("prewalk" in the source wording — now called discovery) is the best tool: the prompt planning phase matters, not hand-scripting every step, but giving it context and letting it **search context**.
 - Ground truth is code and skills: "deepseek makes no mistakes, because the workflow is written in code or a skill somewhere."
 - Cost-optimized: code + skills make even a cheap model reliable enough for real work (previously done with sol, now flash).
 
@@ -24,5 +24,5 @@ Source: Tom, 8/21/26 (verbatim block: `~/.agents/essentials/discord-material/raw
 ## Applying here
 
 - Session start: inject corpus context (OpenViking `*-foundation`, codebase-memory graph, own skills) as *context, not plan*.
-- Implement in small gates-verified slices; let the agent drive; gate at the end.
+- Implement toward the agreed scope; let the agent drive; gate before claiming done.
 - Capture every meaningful session into the global skill set before compaction loses the small stuff.

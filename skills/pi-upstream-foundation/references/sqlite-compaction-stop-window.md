@@ -41,6 +41,27 @@ Three upstream cases pin what the SQL twin implies:
 3. **"does not validate ancestors beyond newest-first stop bounds"** — child's `parent_id` tampered to `"missing-parent"`: bounded reads (`{stopAtId: childId}`, `{stopAtType: "message"}`) return `[childId]` without touching the parent chain; unbounded `{start: childId}` rejects `invalid_entry` "Entry missing-parent not found". Then a root↔child parent CYCLE (both parents rewritten): bounded reads still fine; unbounded rejects "Entry childId not found" — the cycle guard terminates the walk and reports the re-encountered entry as missing.
 
 **Invariant (added):** validation scope == window scope. Bounded reads are blind to payload corruption AND parent-graph tampering outside the window; only unbounded reads run chain validation, and the cycle guard converts infinite walks into `invalid_entry` instead of hangs.
+
+## Stale cache vs missing cache: two `invalid_entry` arms with different detection points
+**Path/Symbol:** witness `packages/session-backends/sqlite-node/test/branch-cache.test.ts` "fails when the private branch cache is stale" (:150-181); mechanism `repo.ts:validateCachedBranchRows` chain check (:292-310) + `branch-entries.ts:readCachedBranch` membership lookup.
+**Signature:** tamper = `UPDATE entries SET parent_id = ? WHERE session_id = ? AND id = ?` (leaf's canonical parent rewritten to skip the middle entry); assertion = `session.findEntriesOnBranch({ start: leafId, order: "oldestFirst" })` rejects `{ code: "invalid_entry" }`.
+
+### Decisive source
+```ts
+// branch-cache.test.ts:171-174 — the tamper bypasses the middle entry canonically
+await db
+	.prepare("UPDATE entries SET parent_id = ? WHERE session_id = ? AND id = ?")
+	.run(rootId, "session-1", leafId);
+// the cache rows still exist, so readCachedBranch SUCCEEDS —
+// the failure surfaces later, in validateCachedBranchRows' chain walk:
+if (current.parent_id !== previous.id) {
+	throw new SessionError("invalid_entry", `Entry ${current.parent_id} not found`);
+}
+```
+
+**Flow:** the stale case rewrites the CANONICAL parent graph under an intact cache. Membership lookup (`readCachedBranch`) still finds the leaf, so this is NOT the missing-cache arm (that arm, :83-115, deletes cache rows and fails at lookup with `invalid_fork_target` on fork / `invalid_entry` "Branch cache missing entry" on read). The unfiltered read then runs chain validation over the returned rows, the rewritten parent breaks continuity (`current.parent_id !== previous.id`), and the read rejects `invalid_entry`. Bounded reads on the same tampered tree still succeed — consistent with the validation-scope invariant above.
+**Invariant (added):** the drift alarm has two arms — missing cache fails at MEMBERSHIP LOOKUP (cache row absent), stale cache fails at CHAIN VALIDATION (cache present but inconsistent with canonical parents). Both surface as `invalid_entry`; a porter must place the chain check AFTER membership resolution and on unfiltered reads only, or one arm silently disappears.
+**Probe:** deterministic probe P2 this pass (verification.md) — transcribed membership lookup + chain walk on a rewritten-parent fixture: membership hit, chain break at the middle entry, `invalid_entry` raised; bounded read on the same fixture succeeds.
 **Probe:** deterministic probe P4 executed this pass (verification.md): transcribed boundary SQL + cycle-guarded walk on a tampered fixture reproduces all three case outcomes (one honest probe correction recorded — the cycle case requires rewriting BOTH parents, matching the test).
 
 ## Get live surrounding code

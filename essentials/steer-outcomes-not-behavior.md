@@ -68,19 +68,14 @@ anti-patterns that cause severe agent degradation:
 
 ---
 
-## 3. The Post-Training Degradation Mechanism
+## 3. Why Over-Prompting Degrades Agents (practical view)
 
-Why does behavioral over-prompting degrade modern LLMs?
-
-1. **RLHF Alignment Conflicts:** Modern models undergo extensive Reinforcement Learning
-   from Human Feedback (RLHF) to act as helpful, proactive problem-solvers.
-2. **Attention Weight Dilution:** Rigid negative rules consume high-priority attention
-   weights in the transformer layers, distracting the model from the actual technical domain logic.
-3. **Induced Timidity & Refusal Loops:** When bombarded with negative constraints, the model
-   becomes overly hesitant. It apologizes repeatedly, asks for permission for routine edits,
-   or claims tasks are impossible rather than risking a violation of a vaguely worded prompt rule.
-4. **Conclusion:** Sweeping behavioral rules harm the post-training portion of the model.
-   Keep `AGENTS.md` focused strictly on repository facts, safety boundaries, and verification commands.
+The practical mechanism, independent of any internal theory: rigid behavioral rules
+consume prompt budget the model needs for domain logic, induce hesitation (apologizing,
+asking permission for routine edits, claiming tasks are impossible), and push the model
+toward rule-lawyering instead of problem-solving. The takeaway does not depend on the
+internal mechanism: keep `AGENTS.md` focused on repository facts, safety boundaries,
+and verification commands, and let mechanical gates carry the standards.
 
 ---
 
@@ -90,11 +85,11 @@ Why does behavioral over-prompting degrade modern LLMs?
 | :--- | :--- |
 | *"Write clean code with no trailing spaces or formatting issues."* | the pi-template repo's `scripts/repo-hygiene.py` and `git diff --check` running in pre-commit hooks and CI. |
 | *"Never write dead code or unused functions."* | the pi-template repo's `scripts/dead-code.py` parsing AST and symbol references. |
-| *"Always maintain consistent skill packs and manifests."* | the pi-template repo's `scripts/check-integrity.py` asserting 1:1 parity between `packs.json` and disk. |
+| *"Always maintain consistent skill packs and manifests."* | the `~/.agents` catalog gates — `catalog-integrity.py` + `skill-validator.py` asserting one-`SKILL.md`-per-dir, valid frontmatter, and a valid MCP registry (no router/manifest files; the flat catalog IS the structure). |
 | *"Always format your commit messages properly."* | the pi-template repo's `scripts/conventional-commit.py` and `.github/workflows/pr-title.yml`. |
 | *"Ensure your code handles all errors and doesn't crash."* | Compiler strict mode (`tsc --strict`, `mypy --strict`, `cargo clippy`) and typed error channels. |
 | *"Make sure you don't break existing tests."* | Automated pytest / vitest test runners in CI. |
-| *"Do not touch files outside your assigned task."* | Schema commit guard enforcing rollback on undeclared file modifications. |
+| *"Do not touch files outside your assigned task."* | Schema *enforce*-mode commit guard (opt-in) rolling back undeclared file modifications. |
 
 ---
 

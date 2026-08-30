@@ -7,23 +7,31 @@ distilled into an authoritative, actionable guide for coding agents and develope
 
 ## The Master Axiom
 
-> **Give the small model ground truth (code definitions + skill shortcuts), let it execute freely without behavioral micromanagement, verify outcomes with unbypassable mechanical gates, and stack every hard-won output into permanent skills so leverage compounds exponentially.**
+> **Give the agent high-quality implementation evidence (real code, references, exact interfaces), keep behavioral micromanagement small, escalate stronger intelligence only when the decision justifies it, and judge outcomes with semantic, runtime, and mechanical evidence. Stack what compounds: good code, useful references, deterministic gates, and hard-won procedures.**
 
 ---
 
 ## 🏛️ Pillar 1: Code is Ground Truth, Skills are the Shortcuts
 *Source: Mentor Tom (2026-08-21)*
 
-1. **Small Model Equivalence:** Small models (`deepseek-flash`) are agentically equal
-   to frontier models; they only lack domain knowledge. Feed them concrete code rather
-   than prompt fluff.
+1. **Small Models Can Carry Delivery (heuristic, not physics):** A small model fed
+   concrete code, exact signatures, and named probes can do agentic work that would
+   otherwise demand a frontier model. This is an observed working pattern, not a proven
+   equivalence — treat "small model" claims as testable bets per task.
 2. **Code Over Markdown Specs (Docs Come Last):** Markdown specs discard type definitions and burn tokens. As Tom explicitly teaches: *do not write markdown specifications up-front*. Markdown docs should only ever be generated *after* the implementation is complete, derived directly from the working, proven code. The code is the source of truth; docs are just a downstream projection of it.
-3. **Skills Guarantee Correctness:** *"Deepseek makes no mistakes, because the workflow
-   is written in code or a skill somewhere."* A verified skill eliminates re-derivation.
-4. **Prewalk Over Micromanagement:** Give the agent deep repository context and let it
-   prewalk the code graph; never hand-plan every trivial step.
-5. **Squeeze to the Last Drop:** Deep understanding requires sweeping every internal
-   module, helper, and decorator. Use the **Two-Pass Learning Protocol** (Pass 1: Subsystem mapping, Pass 2+: Seam extraction).
+3. **Skills Remove Re-derivation:** *"Deepseek makes no mistakes, because the workflow
+   is written in code or a skill somewhere"* is the mentor's shorthand for a real effect:
+   a verified skill with a named probe removes re-derivation and the error class that
+   comes with it. A Markdown skill itself is not an unbypassable correctness guarantee —
+   correctness is enforced by tests, compilers, and CI gates.
+4. **Discovery Over Micromanagement:** Give the agent deep repository context and let it
+   explore the code graph itself (Codebase Memory / IDE navigation); never hand-plan every
+   trivial step. (The mentor's word for this was "prewalk"; that term is now reserved for
+   Pi Fabric's `/fabric prewalk` runtime feature.)
+5. **Read Deeply When It Pays:** The **Two-Pass Learning Protocol** (Pass 1:
+   subsystem mapping, Pass 2+: internal seams) is a deliberate mining pass for
+   hard ports — not a default ritual, and reading deeply never obligates
+   encoding (see the `code-foundations` promotion rules).
 
 ---
 
@@ -50,7 +58,10 @@ distilled into an authoritative, actionable guide for coding agents and develope
 2. **The Compounding Velocity Curve:** $2\text{ hours}$ (scratch) $\to 20\text{ minutes}$ (pattern) $\to 30\text{ seconds}$ (stacked skill).
 3. **Good Output Over Academic Perfection:** Preserve working output; generalize the code
    underneath without breaking the user experience.
-4. **Post-Session Skill Capture:** Always run a skill-capture pass at session close:
+4. **Post-Session Skill Harvest (with a promotion threshold):** At a meaningful
+   milestone, harvest what recurred and what cost real debugging — capture the repeatable
+   procedure, the edge case, the verified decision routine, not one-off details already
+   recoverable from source. The source prompt:
    > *"Recall what we've done and capture everything into skills in a separate folder... capture all small stuff and edge cases."*
 5. **The Leverage Loop:** Master a complex domain $\to$ repeat 2–3 times for edge cases $\to$
    freeze into skills $\to$ deploy for high-value automation.
@@ -63,7 +74,8 @@ distilled into an authoritative, actionable guide for coding agents and develope
 1. **Automate All Determinism:** Dead code, dangling exports, missing constants, and duplicate
    logic belong in automated scripts, not prompts.
 2. **Prompting for Discipline Fails:** Prompts are suggestions that decay with context length.
-   Unbypassable gates are physical laws.
+   A mechanical gate (CI job, compiler, validator) is unbypassable within its execution
+   environment — prefer moving rules into gates.
 3. **The Infinite Iteration Principle:** *"Given enough attempts against an unbypassable gate,
    the LLM has no choice but to improve the code until it passes."*
 4. **Universal & Language Quality Packs:** Deploy universal hygiene/security gates across all
@@ -89,7 +101,7 @@ distilled into an authoritative, actionable guide for coding agents and develope
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│ 1. Ground Truth & Prewalk                                   │
+│ 1. Ground Truth & Discovery                                 │
 │    - Read real code & symbols (Codebase Memory / local graph)│
 │    - Load verified skill shortcuts                          │
 └──────────────────────────────┬──────────────────────────────┘
@@ -115,7 +127,7 @@ distilled into an authoritative, actionable guide for coding agents and develope
                                │
                                ▼
 ┌─────────────────────────────────────────────────────────────┐
-│ 5. Post-Session Skill Capture                               │
+│ 5. Post-Session Skill Harvest                               │
 │    - Harvest edge cases -> write capsule-v2 -> stack leverage│
 └─────────────────────────────────────────────────────────────┘
 ```

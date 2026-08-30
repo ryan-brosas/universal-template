@@ -26,12 +26,12 @@ You orchestrate AND you plan; the worker implements. Two hard rules: you never i
 
 - Load-bearing planning / architecture / high-risk review → `agy --model claude-opus-4-6-thinking --mode plan` (direct `agy` CLI, NOT veda/gemini).
 - Critique / follow-up → `agy --model claude-sonnet-4-6 --mode plan`.
-- Cheap discovery / context curation → `veda` + gemini (`gemini-3.6-flash-*`, `gemini-3.1-pro-low`).
+- Cheap discovery / context curation → `veda` + gemini (`gemini-3.7-flash-*`, `gemini-3.1-pro-low`).
 - `veda deep` (parallel solvers) runs on gemini and is only for "N independent attempts"; the final architecture decision still comes from claude-opus.
 
 ## Invocation — veda CLI worker (confirmed working)
 
-Use the veda CLI with a **positional** prompt. Default backend/model now fixed in `~/.config/veda/config` (`BACKEND="agy"`, `MODEL="gemini-3.1-pro-high"`):
+Use the veda CLI with a **positional** prompt. Default backend/model now fixed in `~/.config/veda/config` (`BACKEND="agy"`, `MODEL="gemini-3.7-flash-high"`):
 
 ```bash
 veda -S worker-<task> -p worker 'Implement the design in <abs path to design.json>. Read it first — it is the contract. Run the named verification. End with <worker_report>.'
@@ -49,7 +49,7 @@ This skill is written from the caller's point of view: **you are the orchestrato
 
 The worker is veda's write-capable seat: `tools: all`, `sandbox: workspace-write`. It edits files, runs tests/typecheck/build, and — whenever the change alters observable behavior — proves it against the live surface (browser via `cdp`, interactive CLI via `xtui`/`tmux`, API edges via scratch probes) with artifacts. Its final message is a mandatory `<worker_report>` (Factory subagent handoff contract), which veda parses into `report.yaml` next to the raw transcript `response.yaml` in the session dir.
 
-**Model:** `gpt-5.6-sol` is auto-detected by `veda init` from your installed harnesses. If a `-m`/`-b` (or other veda flags) was passed when this skill was invoked, use those instead of `-m gpt-5.6-sol` in every `veda` command below. The worker is model-agnostic; for cheap routine orchestrations you can set a fast alias (e.g. `MODEL_ALIASES="flash=pi/neuralwatt/deepseek-v4-flash"` in `~/.config/veda/config`) and use `-m flash`.
+**Model:** `flash` is auto-detected by `veda init` from your installed harnesses. If a `-m`/`-b` (or other veda flags) was passed when this skill was invoked, use those instead of `-m flash` in every `veda` command below. The worker is model-agnostic; for cheap routine orchestrations you can set a fast alias (e.g. `MODEL_ALIASES="flash=agy/gemini-3.7-flash-high"` in `~/.config/veda/config`) and use `-m flash`.
 
 **Reuse the same `-S` session name** across the whole loop — plan, worker run, and any `resume` — so the design, selection, and `report.yaml` stay in one place and the reviewer can attach the design.
 
@@ -136,7 +136,7 @@ Keep it as rich as the task warrants: exact store schema, mutation/render signat
 By design, this loop uses **one worker run for the whole design** — not per-slice delegation. The worker reads `design.json` from the session dir (it has read tools), implements it end-to-end, and reports once. Decompose only if a single delegation genuinely exceeds one focused diff (then the coarse decomposition is the worker's job — keep the worker a pure function: task in → report out).
 
 ```bash
-veda -S task-cache-layer -p worker -m gpt-5.6-sol \
+veda -S task-cache-layer -p worker -m flash \
   'Implement the program design in full. FIRST read ${SESSION_DIR}/design.json — that file is the contract (read it, do not guess or approximate its contents). Run the verification the design names (tests/typecheck/build), and prove any observable behavior against the running surface with evidence and artifacts. Report exactly once via a <worker_report>; status "completed" only if every named verification passed. Non-goals in design.json stay non-goals.'
 ```
 
@@ -145,7 +145,7 @@ The prompt above names the **absolute path** to `design.json` (`${SESSION_DIR}/d
 ## Step 4 — Read the Report (not the prose)
 
 ```bash
-veda -S task-cache-layer -p worker -m gpt-5.6-sol '…'
+veda -S task-cache-layer -p worker -m flash '…'
 ```
 
 **Exit-code semantics (critical):** exit `0` means the delegation worked — the protocol block was well-formed — even when `report.status` is `failed` or `blocked` (a truthful negative is a successful report). A **non-zero** exit means a *protocol* failure (missing/malformed `<worker_report>`): inspect the printed tail and `response.yaml`; do not trust any partial work.
@@ -181,7 +181,7 @@ selection, then review against the same `design.json` the worker implemented:
 git diff -- . ':(exclude)*.png' ':(exclude)*.jpg' ':(exclude)*.woff*' > /tmp/orchestrate.diff
 veda -S task-cache-layer sel add /tmp/orchestrate.diff
 veda -S task-cache-layer sel ls   # verify the diff is in selection
-veda -S task-cache-layer -p reviewer -m gpt-5.6-sol \
+veda -S task-cache-layer -p reviewer -m flash \
   'Implementation complete. Review the diff against this session's design.json (auto-attached) and report P0/P1/P2 findings. End with review: pass or review: needs-fix.'
 ```
 
@@ -223,9 +223,9 @@ Onboard yourself with veda at `~/.pi/agent/docs/veda.md` before acting.
 Key commands:
 - You author the plan and `design.json` yourself (Step 2) — never via `-p navigator-plan`.
 - `veda -S task-TASKNAME sel add <files>` to build context (and add `/tmp/orchestrate.diff` before review)
-- `veda -S task-TASKNAME -p worker -m gpt-5.6-sol 'Implement design.json in full…'` to delegate the whole design (tools on, workspace-write)
+- `veda -S task-TASKNAME -p worker -m flash 'Implement design.json in full…'` to delegate the whole design (tools on, workspace-write)
 - `veda -S task-TASKNAME resume '<needs answered>'` to continue a blocked worker
-- `veda -S task-TASKNAME -p reviewer -m gpt-5.6-sol` to review the whole diff against design.json (auto-attached)
+- `veda -S task-TASKNAME -p reviewer -m flash` to review the whole diff against design.json (auto-attached)
 - Report lives at `<git-root>/.veda/sessions/task-TASKNAME/report.yaml`; read `status`, `whatWasImplemented`, `verification`, `needs`
   (fallback: `~/.config/veda/sessions/` when run outside a git repo)
 - Exit 0 = delegation OK (even status failed/blocked); non-zero = protocol failure — inspect the tail

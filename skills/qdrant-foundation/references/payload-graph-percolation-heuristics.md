@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Payload-graph percolation heuristics — when is an extra payload-filtered HNSW graph worth building?
 
-**Source:** Qdrant Apache-2.0 `master@74f3e85b`; Codebase Memory `ext-qdrant`. **Question:** When building per-field (payload-block) HNSW subgraphs for filtered search, which blocks deserve a graph and which are skipped?
+**Source:** Qdrant Apache-2.0 `master@74f3e85b`; Codebase Memory `qdrant`. **Question:** When building per-field (payload-block) HNSW subgraphs for filtered search, which blocks deserve a graph and which are skipped?
 
 ## Percolation-gated additional links
 **Path/Symbol:** `lib/segment/src/index/hnsw_index/hnsw/build.rs`: `HNSWIndex::build` additional-links section (:364-540), `condition_points` (:602-626), block heuristics (:439-498).
@@ -38,7 +38,7 @@ if !is_tenant && index_pos > 0 && let Some(required_connectivity) = required_con
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "ext-qdrant", query: "subgraph_connectivity for_each_payload_block PayloadBlockCondition merge_from_other", limit: 10, fields: ["signature", "name", "file"] });
+await mcp.codebase_memory.search_graph({ project: "qdrant", query: "subgraph_connectivity for_each_payload_block PayloadBlockCondition merge_from_other", limit: 10, fields: ["signature", "name", "file"] });
 ```
 
 ## Verdict

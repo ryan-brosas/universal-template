@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # PlannedQuery prefetch flattening — how does a nested prefetch tree become batched segment searches with staged rescoring?
 
-**Source:** Qdrant Apache-2.0 `master@74f3e85b`; Codebase Memory `ext-qdrant`. **Question:** How are recursive `ShardPrefetch`es flattened into indexed search/scroll lists, and where does each scoring query execute (shard vs collection)?
+**Source:** Qdrant Apache-2.0 `master@74f3e85b`; Codebase Memory `qdrant`. **Question:** How are recursive `ShardPrefetch`es flattened into indexed search/scroll lists, and where does each scoring query execute (shard vs collection)?
 
 ## Flatten to leaf batches + MergePlan tree
 **Path/Symbol:** `lib/shard/src/query/planned_query.rs`: struct `PlannedQuery{root_plans, searches, scrolls}` (:17-29), `MergePlan`/`Source`/`RescoreStages` (:38-103), `add` + MAX_PREFETCH_DEPTH=64 (:110-172), `root_plan_with_prefetches` (:220-298), `recurse_prefetches` (:306-366), `leaf_source_from_scoring_query` (:372-478).
@@ -41,7 +41,7 @@ Some(ScoringQuery::Formula(_)) => return Err(validation_error("cannot apply Form
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "ext-qdrant", query: "PlannedQuery MergePlan RescoreStages recurse_prefetches leaf_source_from_scoring_query", limit: 10, fields: ["signature", "name", "file"] });
+await mcp.codebase_memory.search_graph({ project: "qdrant", query: "PlannedQuery MergePlan RescoreStages recurse_prefetches leaf_source_from_scoring_query", limit: 10, fields: ["signature", "name", "file"] });
 ```
 
 ## Verdict

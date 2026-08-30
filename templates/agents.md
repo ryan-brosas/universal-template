@@ -59,7 +59,9 @@ Evidence: [paths or command output]
 
 ## Safety boundaries
 
-- Never delete a file without express written permission.
+- Normal reversible edits inside the git workspace (modify tracked source,
+  create files, delete obsolete tracked files the task requires) need no
+  repeated permission; deleting untracked or user data does.
 - Require explicit confirmation before irreversible commands. Quote the command
   and list the affected files, history, infrastructure, or data.
 - Never expose, invent, or commit credentials.

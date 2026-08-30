@@ -61,6 +61,55 @@ expect(await inspection.prepare("SELECT id FROM entries WHERE session_id = ?").a
 **Invariant:** partial forks are unobservable by construction — session row, counter, stats, entries, lanes, facts, and rebuilt cache rows are all-or-nothing. A porter who inserts the child session row BEFORE the copy loop (to make it listable early) breaks this: a failed copy leaves a ghost session with zero entries.
 **Probe:** deterministic probe P1 this pass (verification.md) transcribed trigger + two-step insert + rollback in node:sqlite — sessions row ABSENT, entries [] after rollback.
 
+## Fact selection: latest name + latest labels filtered to copied keys, read from the SOURCE before the txn
+**Path/Symbol:** `repo.ts:SqliteSessionRepository.fork` fact-selection block (:846-851 read side, :878-884 write side).
+**Signature:** `readLatestFact(db, source.id, "name", null)` + `readLatestLabelFacts(db, source.id)` evaluated OUTSIDE the write transaction; filter `labelsToCopy = latestLabels.filter(row => options.scope === "tree" || (row.key !== null && copiedIds.has(row.key)))` where `copiedIds = new Set(entries.map(e => e.id))`.
+**Data Shape:** facts copy as fresh appends into the child's log (`appendFact(db, id, allocateSeq(), "name", null, value)` / `("label", label.key, label.value)`) — the child gets its own fact history starting at the copied latest values, not a copy of the source's fact log.
+
+### Decisive source
+```ts
+const copiedIds = new Set(entries.map((entry) => entry.id));
+const latestName = readLatestFact(db, source.id, "name", null);
+const latestLabels = readLatestLabelFacts(db, source.id);
+const labelsToCopy = latestLabels.filter(
+	(row) => options.scope === "tree" || (row.key !== null && copiedIds.has(row.key)),
+);
+...
+if (latestName?.value !== undefined && latestName.value !== null) {
+	appendFact(db, id, allocateSeq(), "name", null, latestName.value);
+}
+for (const label of labelsToCopy) appendFact(db, id, allocateSeq(), "label", label.key, label.value);
+```
+
+**Flow:** the name fact ALWAYS copies when set (its key is `null`, so the branch-scope filter never drops it) and copies nothing when undefined (never set) or null (cleared — the guard is `!== undefined && !== null`). Labels copy per-key: a label on a copied entry rides the fork; a label on an excluded entry does not. Tree scope copies ALL latest labels regardless of key. Records copy NEVER — `findRecords()` is `[]` on a fresh fork (operational history is not state). Stats are recomputed from copied entries only: conformance "forks one branch with selected facts and no records" (:893-950) pins `getStats()` = `{messageCount: 3, cachedTokens: 0, uncachedTokens: 0, totalTokens: 0, costTotal: 0}` — the source's usage record does NOT ride along — and the fork is immediately writable (appendMessage bumps messageCount 3→4).
+**Invariant:** a fork carries STATE (name, labels-on-copied-entries, entry graph, lane structure) and drops HISTORY (records, usage, fact revision log). The latest-value read happens against the SOURCE before the transaction, so the copied values are a consistent snapshot; the child's fact log restarts at those values with fresh seqs.
+**Probe:** deterministic probe P1 this pass (verification.md) — transcribed the filter on the conformance fixture shape: name (key null) survives branch scope; label on copied id survives; label on excluded id drops; tree scope keeps both labels.
+
+## Tree-scope arm: lanes copy as lane-log mutations AFTER entries; the cache is rebuilt per tip, never inherited
+**Path/Symbol:** `repo.ts:SqliteSessionRepository.fork` tree arm (:813–817 read side, :880–884 write side); helpers `readLanes` (storage/lanes.ts:24–41), `readBranchTipIds` (storage/branch-tips.ts:4–7), `createInitialLane` (lanes.ts:19–24), `buildCachedBranch` (storage/branch-cache.ts:31–37).
+**Signature:** `fork(source, { scope: "tree", id })` — no `entryId`/`position` resolution, no message-target validation.
+**Data Shape:** tree reads ALL entries oldestFirst, ALL lanes, and ALL branch tip ids (`SELECT tip_id FROM branch_tips … ORDER BY tip_id`) OUTSIDE the txn; branch arm instead synthesizes ONE `main` lane via a plain INSERT with `open_operation_id = NULL`.
+
+### Decisive source
+```ts
+// read side (:813-817)
+entries.push(...readEntryRows(db, source.id, { order: "oldestFirst" }));
+lanes.push(...readLanes(db, source.id).map((row) => ({ lane: row.lane, leafId: row.leaf_id })));
+branchTips.push(...readBranchTipIds(db, source.id));
+// write side (:880-884), AFTER the entry copy loop consumed seqs 1..n
+if (options.scope === "tree") {
+	for (const lane of lanes) insertLane(db, id, allocateSeq(), lane.lane, lane.leafId);
+} else {
+	createInitialLane(db, id, "main", branchForkTargetId);
+}
+...
+for (const tip of branchTips) buildCachedBranch(db, id, tip);
+```
+
+**Flow:** `readLanes` on the SOURCE re-proves leaf referential integrity before any copy (its EXISTS-subquery check throws "Lane X points at missing entry Y" — the twin-pointer rule), so a tampered source cannot fork. Inside the single transaction the lane copy consumes its own sequence numbers AFTER the entries: a 3-entry tree gives lanes seqs 4 and 5, exactly what the conformance case "forks a complete tree with lanes and facts" (:951–977) pins — `getLog()` lane items `[{seq: 4, lane: "main", leafId: mainChild}, {seq: 5, lane: "thread", leafId: threadChild}]`, both leafIds preserved. The branch cache is then rebuilt per tip (`buildCachedBranch` walks canonical parents under a SAVEPOINT, fresh uuidv7 branch ids) — cache rows are DERIVED from the copied entries, never copied, so the child's cache cannot inherit source drift.
+**Invariant:** lanes are lane-log mutations with fresh seqs, not copied rows with source seqs — the child's merged log stays a dense 1..n total order across entries, lanes, and facts. Branch arm vs tree arm differ ONLY in what they read and which lane-insert helper runs; the transaction shape, fact selection, and per-tip rebuild are shared.
+**Probe:** deterministic probe P1 this pass (verification.md) — transcribed the tree-arm write order on a 3-entry/2-lane fixture: lane inserts land at seq 4,5 with preserved leafIds; per-tip rebuild derives fresh branch ids.
+
 ## Get live surrounding code
 **Retrieve:**
 ```ts
@@ -68,4 +117,4 @@ await mcp.codebase_memory.get_code_snippet({ project: "pi-upstream", qualified_n
 ```
 
 ## Verdict
-Adopt: id-stable/seq-fresh copying, message-target validation with at/before→parent resolution, label filtering to copied ids, derived-state recomputation inside one transaction ending with the lease claim — the transaction boundary is load-bearing: repository.test.ts proves a mid-copy abort leaves zero rows for the fork id. Adapt scope names and lane synthesis to your domain. Omit cross-session foreign keys — provenance rides `parent_session_id` metadata only.
+Adopt: id-stable/seq-fresh copying, message-target validation with at/before→parent resolution, label filtering to copied ids, derived-state recomputation inside one transaction ending with the lease claim — the transaction boundary is load-bearing: repository.test.ts proves a mid-copy abort leaves zero rows for the fork id. Adopt the fact-selection split too: state rides (latest name always; labels filtered to copied keys; tree scope unfiltered), history drops (records, usage, fact revisions), and the child's fact log restarts at the snapshot values. Adapt scope names and lane synthesis to your domain. Omit cross-session foreign keys — provenance rides `parent_session_id` metadata only.
