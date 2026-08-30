@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "codebase-memory": {
-      "command": "/home/utopia/.local/share/mise/installs/node/26.7.0/bin/codebase-memory-mcp",
+      "command": "codebase-memory-mcp",
       "args": [],
       "env": {
         "CBM_CACHE_DIR": "/mnt/hdd/utopia/.codebase-memory"
@@ -47,8 +47,10 @@
     },
     "mcp-steroid": {
       "type": "stdio",
-      "command": "/home/utopia/.mcp-steroid/bin/devrig",
-      "args": ["mcp"],
+      "command": "devrig",
+      "args": [
+        "mcp"
+      ],
       "lifecycle": "keep-alive"
     }
   }

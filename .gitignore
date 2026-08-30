@@ -7,6 +7,8 @@
 !/scripts/catalog-integrity.py
 !/scripts/dead-code.py
 !/scripts/conventional-commit.py
+!/scripts/policy-consistency.py
+!/scripts/runtime-capabilities.py
 # Skill-local helper scripts stay out of the catalog repo.
 skills/*/scripts/
 *.pyc

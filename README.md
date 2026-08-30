@@ -37,9 +37,19 @@ agents). It is the absorbed, living copy of the **pi-template** repository
   the loop. A normal task stays: inspect → implement → verify → finish.
 - **Catalog gate (this repo only)**: run the suite listed under "Finish line"
   in `AGENTS.md` (`skill-validator`, `catalog-integrity`, `catalog-quality`,
-  `repo-hygiene`, `dead-code`, `conventional-commit`, `git diff --check`) —
-  repository-specific verification for this catalog, not a universal
-  requirement. CI runs the same suite via `.github/workflows/pr-quality.yml`.
+  `repo-hygiene`, `policy-consistency`, `dead-code`, `conventional-commit`,
+  `git diff --check`) — repository-specific verification for this catalog, not
+  a universal requirement. CI runs the same suite via
+  `.github/workflows/pr-quality.yml`.
+- **Runtime probe**: `python3 scripts/runtime-capabilities.py` reports the
+  installed toolchain (gh, pi, pi-fabric, veda, agy, fovea, steroid, devrig,
+  codebase-memory, openviking, MCP registry state). Diagnostics only — not a
+  per-task step. Runtime facts stay here and in machine-local config, never
+  frozen into philosophy.
+- **Reference contract**: `<project>/reference/<repo>/` is implementation
+  prior art — see `references/reference-contract.md` (one reference first,
+  current project's tests are the acceptance authority, licensing obligations
+  when materially copying).
 - **Veda-managed skills**: `veda-plan`, `veda-plan-implement`,
   `veda-plan-implement-review`, `veda-deep-plan`, and `veda-worker` are
   installed and updated by `veda skills install` — vendor-managed assets, do
@@ -49,6 +59,23 @@ agents). It is the absorbed, living copy of the **pi-template** repository
 - **References, two meanings**: `references/` here holds global contract
   capsules; implementation prior art lives in a project's own
   `<project>/reference/<repo>/` checkouts. Don't mix them.
+
+## Canonical policy owners
+
+One rule, one owner; other documents summarize and link. Machine-readable
+policy invariants live in `scripts/policy-consistency.py` (CI-enforced).
+
+| Policy | Canonical owner |
+|---|---|
+| Global invariants, safety boundaries, routing summary | `AGENTS.md` |
+| Evidence and tool routing (NEED + HOST) | `skills/evidence-router` |
+| Normal development procedure | `skills/codebase-driven-development` |
+| Reference-repository rules | `references/reference-contract.md` |
+| Fabric execution, Schema modes, agents/Veda escalation | `skills/fabric-native-execution` |
+| Veda escalation specifics | `skills/veda-lane` |
+| Operating principles / small-model heuristics | `essentials/operating-philosophy.md` / `essentials/guiding-small-model.md` |
+| MCP registry and wiring | `mcp/servers.json` + `mcp/catalog.md` |
+| Runtime toolchain facts | `scripts/runtime-capabilities.py` (probed, never frozen into docs) |
 
 ## Source of truth
 
@@ -72,6 +99,9 @@ directly.
 MCP registry (`mcp/servers.json`, 6 servers: codebase-memory, context7, deepwiki,
 exa, openviking, mcp-steroid) is merged into: `~/.pi/agent/mcp.json`, `~/.claude.json`,
 `~/.codex/config.toml` (stdio only), `~/.config/opencode/opencode.json`.
+Registry commands are PATH-resolved (mise shims / local bin); machine-local
+values ride in env (e.g. `CBM_CACHE_DIR`) or in the local daemon URL, never
+as frozen absolute paths.
 Backups live next to each host config as `*.bak-<timestamp>`.
 
 To reproduce mounts on a fresh machine after cloning this repo to `~/.agents`:

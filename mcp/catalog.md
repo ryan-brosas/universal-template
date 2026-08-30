@@ -29,12 +29,12 @@ CANONICAL SOURCE OF TRUTH: `~/.agents/mcp/servers.json`
 
 | Server            | Kind  | Connection / command                                    | Key / env                        | Notes |
 |-------------------|-------|---------------------------------------------------------|----------------------------------|-------|
-| codebase-memory   | stdio | `codebase-memory-mcp` (mise-managed)                    | `CBM_CACHE_DIR`                  | local graph, keep-alive |
+| codebase-memory   | stdio | `codebase-memory-mcp` (PATH-resolved; mise shim)         | `CBM_CACHE_DIR` (machine-local)  | local graph, keep-alive |
 | context7          | stdio | `npx -y @upstash/context7-mcp`               | `CONTEXT7_API_KEY`               | library docs + code examples |
 | deepwiki          | stdio | `npx -y deepwiki-mcp`                        | none                             | OSS architecture pages |
 | exa               | stdio | `npx -y exa-mcp-server`                      | `EXA_API_KEY`                    | live web search |
 | openviking        | remote| `http://127.0.0.1:1933/mcp`                  | none (local daemon)              | mined-corpus retrieval; register only when the daemon runs |
-| mcp-steroid       | stdio | `/home/utopia/.mcp-steroid/bin/devrig mcp`    | none (local IDE bridge)          | JetBrains PSI/refactoring/test/debugger access via devrig |
+| mcp-steroid       | stdio | `devrig mcp` (PATH-resolved)                  | none (local IDE bridge)          | JetBrains PSI/refactoring/test/debugger access via devrig |
 
 ### Where the keys live (names only — never commit values)
 
@@ -61,6 +61,21 @@ the canonical registry; merge, don't overwrite, and never touch unrequested serv
 
 When unsure whether a CLI accepts a server scheme, skip that CLI (do not
 write anything); report it as "not wired (unsupported)".
+
+## Live wiring layers (machine-local)
+
+The canonical registry fans out through per-CLI mirrors **and** machine-local
+overlay files that this repo does not own — document them, never hand-edit
+both sides blindly:
+
+- `~/.pi/agent/mcp.json` — pi's mirror (all six servers; regenerate from the
+  canonical registry after changes).
+- `~/.mcporter/mcporter.json` — the pi-mcp-adapter layer (subset; env values
+  support `${VAR}` expansion — never store literal keys there; use env vars).
+- `~/.prime/agent/settings.json` — written by `mcp/sync-to-prime.py --apply`.
+- The IntelliJ **built-in** MCP server (`http://localhost:64442`) is a
+  separate transport from mcp-steroid; it needs `JETBRAINS_MCP_TOKEN` exported
+  or it fails auth (401) — wire the token or treat the entry as dormant.
 
 ## Host notes
 

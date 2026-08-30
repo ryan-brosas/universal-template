@@ -47,19 +47,17 @@ closes a concrete gap; verify mechanically.
 
 ## Reference workflow (prior art)
 
+Rules live in `references/reference-contract.md` (purpose, location,
+authority, one-reference default, licensing, lifecycle). The procedure:
+
 1. Inspect the current project; identify the local seam.
 2. Decide whether outside code materially reduces uncertainty.
-3. Select ONE strong reference repository and place it at
-   `<project>/reference/<repo>/` (read-only, disposable). Prefer
-   `.git/info/exclude` for local-only references instead of the shared
-   `.gitignore`; a reference is not automatically committed, skilled, or
-   indexed.
+3. Select ONE strong reference repository at `<project>/reference/<repo>/`.
 4. Map it with Fovea (explicit root) when helpful; read exact source and
    direct tests; use Steroid when exact semantics add value.
-5. Compare boundaries, decide ADOPT / ADAPT / OMIT, and implement locally.
-6. Verify against the CURRENT project's requirements and gates. When
-   materially copying implementation, inspect the license and preserve
-   required attribution.
+5. Compare boundaries, decide ADOPT / ADAPT / OMIT, implement locally.
+6. Verify against the CURRENT project's requirements and gates; record
+   provenance and license obligations in the PR's Reference / Prior Art.
 
 ## Rules
 

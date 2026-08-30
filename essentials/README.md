@@ -15,7 +15,7 @@ These documents define *how* we approach development and automation without over
 - `how-to-build-good-tests.md` — **Test & Gate Methodology:** A test is only good if it can catch (un-fixed RED $\to$ fixed GREEN). Build broad tests, expand instead of duplicating, maintain a test ledger, and promote manual catches to CI workflows.
 
 ## The Context & Memory Plane
-- `openviking-foundation.md` — **Live source material**: the OpenViking daemon, exact store layout (`/mnt/hdd/openviking/data`, 888 resource dirs), retrieval surface, and the **ingest protocol** for new source material (Discord exports, doc sets, chat logs). Discord status: found & harvested (see `discord-material/`).
+- `openviking-foundation.md` — OpenViking's role (durable experience/context memory), retrieval surface, and the **ingest protocol** for new source material (Discord exports, doc sets, chat logs). Machine facts (endpoint, storage, corpus size) are probed at runtime, not frozen here. Discord status: found & harvested (see `discord-material/`).
 - `discord-material/` — **The verbatim Discord threads** (raw/ + patterns/) these pillars were synthesized from: code-is-ground-truth (8/21), steer-outcomes-not-behavior (8/11), stacking-leverage (7/26), mechanical gates (7/19), catch-first tests (8/3). `README.md` maps each thread → its pillar doc. Quote these verbatim when developing the workflow further.
 ## How to Use in Practice
 - Read `operating-philosophy.md` before planning architecture or starting complex tasks.

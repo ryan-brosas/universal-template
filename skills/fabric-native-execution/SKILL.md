@@ -51,7 +51,7 @@ suffices.
 4. **Schema (intentional).** `off` — normal host behavior. `audit` — behavior
    unchanged; records what enforce would block (policy telemetry).
    `enforce` — strict evidence-gated transaction mode: blocks direct
-   `pi.edit`/`pi.write`/`pi.bash` and disables Prewalk; select it deliberately
+   `pi.edit`/`pi.write`/`pi.bash` and disables Fabric Prewalk; select it deliberately
    for postcondition-critical work. Schema never replaces tests, the
    compiler, IDE semantics, or review.
 
@@ -72,7 +72,7 @@ suffices.
 
 Writing repo files through `state`; building a persistence layer; dispatching
 agents or Veda as an automatic phase after every change; enabling Schema
-enforce (which disables Prewalk) without an explicit transactional need;
+enforce (which disables Fabric Prewalk) without an explicit transactional need;
 relying on a provider result without citing it.
 
 ## Verification
