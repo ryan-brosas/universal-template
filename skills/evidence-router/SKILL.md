@@ -24,6 +24,13 @@ named gap after the first route came up short.
 **NOT** — as a ceremony. Do not walk every route per task; do not run a fixed
 retrieval chain; if direct source already answers the question, stop.
 
+## Workflow
+
+1. Choose the primary route from the Routes table for the need.
+2. Escalate one step only after naming the gap.
+3. Record each finding (claim, source, call, date, confidence).
+4. Stop when one primary source answers or two independent sources agree; otherwise report the open evidence gap.
+
 ## Routes (need + host)
 
 | Need | Primary | Then | Notes |
@@ -63,7 +70,8 @@ Selection is runtime-driven: `veda models [backend]`, `veda personas`,
 never assume a persona or model exists without discovery. Never hard-code a
 model claim: select from the installed catalog at run time. Inside Fabric, the
 Veda runner is a one-shot headless child: no steering, no persistent actors, no
-recursive Fabric.
+recursive Fabric. Resolution mechanics and fallback policy live in
+`skills/model-router`; effort/mechanism selection in `skills/effort-router`.
 
 A Veda opinion is not rendered-UI evidence and not a test result. Frontend
 visual claims need actual runtime/render verification (browser, debugger,

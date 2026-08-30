@@ -28,7 +28,7 @@ escalation.
 agents, Veda, or Schema out of habit; `mesh` coordination when one process
 suffices.
 
-## The layers
+## Workflow — the layers
 
 1. **Core path (default).** `fabric_exec` with `pi.read`/`pi.edit`/`pi.write`/
    `pi.bash` and tool/MCP composition. `/fabric prewalk` continues execution
@@ -41,13 +41,17 @@ suffices.
      `fabric_exec` calls without touching repo dotfiles.
    - `compact.request` — compaction at a safe boundary.
    - Degrade to tracked files and say so when a provider is missing.
-3. **Agent escalation (deliberate).** `agents.run({ runner: "pi" })` for
-   delegation, parallel subtasks, or isolation. `agents.run({ runner:
-   "veda", persona, model })` launches the Veda CLI as a one-shot headless
-   child for frontier-model oracles (review, navigation, hard planning).
-   Veda children have no steering, no persistent actors, and no recursive
-   Fabric; select persona/model from the installed catalog (`veda personas`,
-   `veda models [backend]`), never from hard-coded names.
+3. **Agent escalation (deliberate).** Choose the mechanism with
+   `skills/effort-router` and the backend/model with `skills/model-router`.
+   `agents.run({ runner: "pi", model })` runs a **native Pi child — which may
+   use a different configured provider/model than Main** (cheaper workers,
+   stronger reviewers, rate-limit spread; options via `pi --list-models`).
+   `agents.run({ runner: "veda", persona, model })` launches the Veda CLI as
+   a one-shot headless child for alternate-provider/model oracles (review,
+   navigation, hard planning). Veda children have no steering, no persistent
+   actors, and no recursive Fabric; select persona/model from the installed
+   catalog (`veda personas`, `veda models [backend]`), never from hard-coded
+   names. Same-model children are valid when the value is context isolation.
 4. **Schema (intentional).** `off` — normal host behavior. `audit` — behavior
    unchanged; records what enforce would block (policy telemetry).
    `enforce` — strict evidence-gated transaction mode: blocks direct

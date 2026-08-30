@@ -31,6 +31,8 @@ POLICY_FILES = [
     "skills/codebase-memory/SKILL.md",
     "skills/fabric-native-execution/SKILL.md",
     "skills/veda-lane/SKILL.md",
+    "skills/effort-router/SKILL.md",
+    "skills/model-router/SKILL.md",
     "skills/workflow-lifecycle/SKILL.md",
     "skills/foundations-workflow/SKILL.md",
     "skills/github-repo-setup/SKILL.md",
