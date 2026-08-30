@@ -1,6 +1,6 @@
 ---
 name: test-generation
-description: "Use when writing, expanding, or auditing tests; converting workflow rules into gates; or deciding what to test — the catch-first methodology (scarywood75 + Sewer56, Discord 7/19 + 8/3/26): a test is only good if it catches; pre-fix must fail and post-fix pass; narrow tests are anti-patterns; expand existing tests instead of adding duplicates; produce a test ledger the LLM maintains; turn multi-use scripts into workflows; every manual catch into a mechanical test; keep files small, group into cohorts; quantify the un-fixed vs fixed versions."
+description: "Use when writing, expanding, or auditing tests, converting workflow rules into gates, or deciding what to test. Catch-first method: a test is only good if it can catch; pre-fix must fail and post-fix pass; expand existing tests instead of adding duplicates; keep files small and grouped into cohorts."
 ---
 
 # Test Generation — catch-first, ledger-based

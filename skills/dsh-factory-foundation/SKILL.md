@@ -1,6 +1,7 @@
 ---
 name: dsh-factory-foundation
 description: "Use when porting durable dependency-graph task-factory machinery: leader-elected lease-elected schedulers, ready-task claim loops bounded by concurrency, checkout-lane serialization, Agent-session binding with completion channels, orphan-requeue, and mutation-boundary domain logic."
+disable-model-invocation: true
 ---
 
 # dsh-factory: durable dependency-graph task factory

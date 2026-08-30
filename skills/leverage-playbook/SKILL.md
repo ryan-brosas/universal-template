@@ -1,6 +1,6 @@
 ---
 name: leverage-playbook
-description: "Use when running the AI development loop — prep a session, prime a small/cheap model with context, decide code-vs-markdown, close out a session, or scale work faster: give agents context and let them search context, treat code as the ground truth (not specs), promote recurring lessons into skills at session close, prefer verifiable outcome gates, and stack carried code+skills so each new build is faster than the last. Verbatim Discord source: Tom, 7/26–8/21/26."
+description: "Use when running the AI development loop: prep a session, prime a small or cheap model with context, decide code versus markdown, close out a session, or scale work faster. Covers context-fed agents, code as ground truth, promoting recurring lessons into skills at session close, and stacking carried code and skills. Verbatim Discord source: Tom, 7/26 to 8/21/26."
 ---
 
 # Leverage Playbook — context-first, code-as-truth, skills capture

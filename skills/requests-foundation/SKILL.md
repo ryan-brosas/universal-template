@@ -1,6 +1,7 @@
 ---
 name: requests-foundation
 description: "Use when porting psf/requests internals — session orchestration, transport adapter/pool plane, redirect/auth/proxy state machines, prepared-request pipeline, and response consumption contracts."
+disable-model-invocation: true
 ---
 
 # requests: Foundation

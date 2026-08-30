@@ -2,6 +2,7 @@
 name: openoutreach-foundation
 description: 'Use when building lead-generation/funnel engines: GP-active-learning qualification, count-based query-frontier walks, paid-lookup waterfalls with uncapped backoff, bounded CLI jobs with typed stop reasons, give-to-get data cooperatives, or importer-exact CSV contracts — port the mined OpenOutreach contracts.'
 license: GPL-3.0
+disable-model-invocation: true
 ---
 
 # OpenOutreach: GP-Qualified Lead Finder Foundation

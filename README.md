@@ -1,10 +1,10 @@
-# ~/.agents — the global settings area for every CLI
+# ~/.agents: the global settings area for every CLI
 
 This directory is the **global baseline** read by all agent CLIs on this
 machine (pi, Claude Code, Codex/OpenCode, opencode, agy/veda, subprocess
 agents). It is the absorbed, living copy of the **pi-template** repository
-(`~/.agents (absorbed from the retired pi-template repo)`; entry flow: `skills/project-bootstrap/SKILL.md`)
-— the workflow we set up there, made global.
+(`~/.agents (absorbed from the retired pi-template repo)`; entry flow: `skills/project-bootstrap/SKILL.md`):
+the workflow we set up there, made global.
 
 ## Layout
 
@@ -12,32 +12,34 @@ agents). It is the absorbed, living copy of the **pi-template** repository
 |---|---|
 | `skills/` | the full skill catalog (foundations + practice skills + workflow skills) |
 | `templates/` | 18 CLI-neutral format templates (adr, agents, design, foundation-capsule, foundation-skill, github-pr-ci, issue, prd, project, proposal, pull-request, readme, roadmap, skill, state, tasks, tech-stack, user) |
-| `essentials/` | the operating baseline (objectives, operating-philosophy, stack-your-leverage, steer-outcomes-not-behavior, guiding-small-model, enforce-code-quality-mechanically, how-to-build-good-tests) |
+| `essentials/` | cold rationale and decision references (operating-philosophy plus six one-page principles); read the smallest relevant file when a policy decision needs explanation |
+| `docs/roadmap.md` | current work objectives (moved out of Essentials; reviewed at milestones) |
+| `extensions/style-guard.ts` | optional Pi output-style guard (audit by default; symlinked into `~/.pi/agent/extensions/`) |
 | Entry skills (`project-bootstrap`, `brainstorming`, `goal-setup`, `prototype`, `leverage-capture`) | project entry, direction, durable goals, cheap learning, leverage classification |
-| `mcp/servers.json` | the **canonical** MCP capability registry (6 servers incl. mcp-steroid) — per-CLI configs are derived copies |
+| `mcp/servers.json` | the **canonical** MCP capability registry (6 servers incl. mcp-steroid); per-CLI configs are derived copies |
 | `references/` | distilled contract capsules (init, mcp-catalog, templates-inventory) |
 | `AGENTS.md` | the distilled pi-template agent rules, globalized |
-| `.github/workflows/pr-quality.yml` | catalog quality CI (skill-validator + diff check + PR body contract) |
+| `.github/workflows/pr-quality.yml` | catalog quality CI (the full AGENTS.md gate suite, including style lint) |
 
 ## How to use
 
-- **Enter a project**: `skills/project-bootstrap/SKILL.md` — read-only onboarding by
+- **Enter a project**: `skills/project-bootstrap/SKILL.md`: read-only onboarding by
   default; governance and greenfield modes when asked. Uses `templates/` selectively.
 - **MCP**: the canonical registry is `mcp/servers.json`; wire servers into
   whichever CLIs are configured, one requested server at a time (merging into
   each CLI's own config rather than overwriting it).
-- **Retrieval**: need-driven — one primary route, escalate on a named gap,
+- **Retrieval**: need-driven: one primary route, escalate on a named gap,
   stop when the named uncertainty is closed (`skills/evidence-router/SKILL.md`);
   the registry (codebase-memory, openviking, context7, exa, deepwiki) supplies
-  the routes. Skill authoring follows one uniform grammar —
+  the routes. Skill authoring follows one uniform grammar:
   `skills/writing-skills/SKILL.md` + `templates/skill.md`.
-- **Long-running goals (opt-in)**: `skills/goal-setup/SKILL.md` — one durable
+- **Long-running goals (opt-in)**: `skills/goal-setup/SKILL.md`: one durable
   execution contract for significant multi-session work. A normal task stays:
   inspect → implement → verify → finish.
 - **Catalog gate (this repo only)**: run the suite listed under "Finish line"
   in `AGENTS.md` (`skill-validator`, `catalog-integrity`, `catalog-quality`,
   `repo-hygiene`, `policy-consistency`, `dead-code`, `conventional-commit`,
-  `git diff --check`) — repository-specific verification for this catalog, not
+  `git diff --check`): repository-specific verification for this catalog, not
   a universal requirement. CI runs the same suite via
   `.github/workflows/pr-quality.yml`.
 - **Runtime probe + model resolution**: `python3 scripts/runtime-capabilities.py`
@@ -45,15 +47,21 @@ agents). It is the absorbed, living copy of the **pi-template** repository
   steroid, devrig, codebase-memory, openviking, MCP registry state);
   `python3 scripts/resolve-model.py --role <role> --json` resolves a chosen
   role to concrete backend/model candidates from live discovery. Diagnostics
-  only — not a per-task step. Runtime facts stay here and in `state/`
+  only; not a per-task step. Runtime facts stay here and in `state/`
   (gitignored), never frozen into philosophy or tracked config.
+- **Prose style (layered, opt-in)**: write plain technical English (kernel in
+  `AGENTS.md`); important generated prose gets
+  `python3 scripts/style-lint.py <file>`; detailed rules and the rewrite
+  procedure live in `skills/house-writing-style/SKILL.md`. The optional Pi
+  output guard (`extensions/style-guard.ts`) audits final assistant prose and
+  never rewrites by default.
 - **Reference contract**: `<project>/reference/<repo>/` is implementation
-  prior art — see `references/reference-contract.md` (one reference first,
+  prior art; see `references/reference-contract.md` (one reference first,
   current project's tests are the acceptance authority, licensing obligations
   when materially copying).
 - **Veda-managed skills**: `veda-plan`, `veda-plan-implement`,
   `veda-plan-implement-review`, `veda-deep-plan`, and `veda-worker` are
-  installed and updated by `veda skills install` — vendor-managed assets, do
+  installed and updated by `veda skills install`; vendor-managed assets, do
   not hand-edit; refresh via Veda. `veda-lane` is maintained in this repo.
   Veda itself is a CLI/runner (Fabric launches it via
   `agents.run({runner: "veda"})`), not an MCP server.
@@ -77,6 +85,7 @@ policy invariants live in `scripts/policy-consistency.py` (CI-enforced).
 | Prior-art/reference-driven implementation | `skills/reference-driven-development` |
 | Reference-repository rules | `references/reference-contract.md` |
 | Fabric execution, Schema modes, agents/Veda escalation | `skills/fabric-native-execution` |
+| Natural-language prose style (STE-inspired) | `skills/house-writing-style` + `scripts/style-lint.py` |
 | Veda escalation specifics | `skills/veda-lane` |
 | Operating principles / small-model heuristics | `essentials/operating-philosophy.md` / `essentials/guiding-small-model.md` |
 | MCP registry and wiring | `mcp/servers.json` + `mcp/catalog.md` |
@@ -85,7 +94,7 @@ policy invariants live in `scripts/policy-consistency.py` (CI-enforced).
 ## Source of truth
 
 The pi-template repo was the historical source; it is retired and fully absorbed
-here. This `~/.agents` tree IS the single global source of truth — git-backed at
+here. This `~/.agents` tree IS the single global source of truth, git-backed at
 github.com/ryan-brosas/universal-template (public). Updates are checked in here
 directly.
 

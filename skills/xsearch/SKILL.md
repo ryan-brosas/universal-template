@@ -1,6 +1,6 @@
 ---
 name: xsearch
-description: "Use when the user asks to search X (Twitter) for posts, discussions, or an author — search X via CDP and return structured results (author, handle, text, URL, timestamp) for any query. Requires browser-harness-js on PATH, a Chromium-based browser with remote debugging, and an active logged-in X session."
+description: "Use when the user asks to search X (Twitter) for posts, discussions, or an author. Returns author, handle, text, URL, and timestamp per result. Requires browser-harness-js on PATH, a Chromium browser with remote debugging, and an active logged-in X session."
 setup: bash <skill-dir>/scripts/setup
 compatibility: Requires browser-harness-js on PATH, a running Chromium browser with remote debugging (chrome://inspect or --remote-debugging-port), and an active X (Twitter) login in the browser.
 ---

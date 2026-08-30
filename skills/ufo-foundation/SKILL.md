@@ -2,6 +2,7 @@
 name: ufo-foundation
 description: Use when porting Microsoft UFO² constellation machinery — async DAG task orchestration with a ready-task claim loop, two-copy agent/orchestrator state merging with advancement-priority ladders, fail-open modification waits, dual-flag cancellation ladders, error-funneling task execution with event publication, Kahn's-algorithm DAG validation, dependency-condition promotion of newly ready tasks, status-dispatched agent state-machine rounds, fire-and-forget orchestration with typed completion-event drains, merged-base editing, fail-fast device-assignment validation, busy-device queue contracts, and device-scoped pending-task disconnect cancellation.
 when_to_use: Porting DAG schedulers, dynamic task-graph executors, agent-editable execution plans, or any orchestrator where a planner mutates the graph while an executor runs it.
+disable-model-invocation: true
 ---
 
 # ufo: Constellation DAG Orchestration Foundation

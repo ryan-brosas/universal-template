@@ -1,6 +1,7 @@
 ---
 name: os-clovy-foundation
 description: "Use when porting a sandboxed agent-runtime child process that talks to its host over versioned NDJSON JSON-RPC: frame validation, request correlation with abort hygiene, secret-redacted logging, failure classification, group-intact history compaction plus on-demand manual compaction, accept-then-settle run lifecycle with steering and cancellation, identity short-circuits, Auto-model resolution across chat-completions streams, reasoning-field wire-format duality, terminal-vs-model-visible tool error splitting, approval-preflight cache binding, stream-delta forwarding gates, SDK history/usage projection, and durable approval/clarification/secret interruption envelopes. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
+disable-model-invocation: true
 ---
 # os-clovy: Agent Runtime Foundation
 

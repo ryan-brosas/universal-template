@@ -1,6 +1,7 @@
 ---
 name: skills-foundation
 description: "Use when porting anthropics/skills contracts — progressive disclosure, trigger-description authoring, validation gate + packager exclusions + multiline parsing, eval-driven description optimizer + trigger matrix report + seven-file JSON schema plane, skill eval harness + judge pipeline + review viewer, MCP eval harness + response truncation/paging contract, OOXML unpack/edit/rezip internals, docx run-merge + redline + comment anchoring + tracked-changes acceptance + redlining validator, pptx corruption ladder + chart/slide validators + slide registration + thumbnail grids + clean GC, xlsx recalc gate + formula portability, office toolkit triplication + XSD baseline-diff gate + mc:Ignorable preprocess + validator CLI family routing + pptx order-repair hook + docx ID constraint/repair, PDF form-fill fork + coordinate systems + bbox gate + structure extraction + tool ladder + validation overlay, render-verify loop, black-box script discipline, soffice AF_UNIX shim, artifact scaffold+bundle, webapp-test server…"
+disable-model-invocation: true
 ---
 
 # Skills (anthropics): Agent-Skill Implementation Contracts

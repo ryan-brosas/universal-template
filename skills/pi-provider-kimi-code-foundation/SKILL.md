@@ -1,6 +1,7 @@
 ---
 name: pi-provider-kimi-code-foundation
 description: Use when porting Kimi Code (Moonshot K2/K3) provider machinery — vendor-constrained payload mutation pipelines, inline-threshold file uploads with stale-token refresh ladders, content-hash upload memo caches, JSON Schema type back-fill for strict validators, per-tool $defs schema dedup under byte caps, empty-response stream suppression, speculative OAuth retry around synthetic start events, layered defaults/home/project/env/runtime config merge with source attribution, JSON-pointer config validation projection, window-tracking output caps, and a resolved-config stream store with live overlay.
+disable-model-invocation: true
 ---
 
 # pi-provider-kimi-code: request-construction foundation

@@ -1,6 +1,7 @@
 ---
 name: duckdb-vectorized-foundation
 description: "Use when porting DuckDB's vectorized execution core — vector formats, expression executor, adaptive filters — or building a tuple-filter pipeline that must handle flat, constant, dictionary, sequence, and shredded encodings without materialization. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
+disable-model-invocation: true
 ---
 # DuckDB: vectorized execution core (vector formats, expression executor, adaptive filters)
 

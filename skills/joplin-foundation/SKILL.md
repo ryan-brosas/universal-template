@@ -1,6 +1,7 @@
 ---
 name: joplin-foundation
 description: 'Use when porting joplin''s offline-first sync kernel: TTL lock election over dumb targets, timestamp-LWW sync-info merges, three-step sync choreography with failsafes, conflict triage ordering, and the sync-target transport plane (backend registry, FileApi adapter contract, transport retry ladder, remote-clock offset probe, two-tier driver delta).'
+disable-model-invocation: true
 ---
 
 # joplin: offline-first sync kernel

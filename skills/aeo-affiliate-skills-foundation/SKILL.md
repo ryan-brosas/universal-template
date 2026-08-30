@@ -1,6 +1,7 @@
 ---
 name: aeo-affiliate-skills-foundation
 description: Use when porting agent skill-collection machinery from aeo-affiliate-skills — CLI-supervised localhost daemons with three-tier liveness reuse, idle self-shutdown lifecycle, TTL cache key namespacing, wide-page client-side filter adapters, markdown-corpus→registry generation coupled to invariant tests, executable documentation vocabulary contracts, pattern-grep skill eval harnesses, and agent-facing self-install bootstrap skills.
+disable-model-invocation: true
 ---
 
 # aeo-affiliate-skills: Agent Skill-Collection Foundation

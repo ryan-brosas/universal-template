@@ -1,6 +1,7 @@
 ---
 name: growchief-foundation
 description: "Use when building durable multi-account outreach automation schedulers or browser-supervised social-media bots — Growchief outreach-automation contracts: per-bot durable Temporal throttler with signal-driven queues, restriction defer-and-swap, seven-way browser race supervision, storageState session persistence, response-interception extraction, provider @Tool registry, and the delay/repeatJob/endWorkflow outcome vocabulary."
+disable-model-invocation: true
 ---
 
 # Growchief: Durable outreach-bot orchestration foundation

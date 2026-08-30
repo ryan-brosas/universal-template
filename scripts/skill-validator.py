@@ -13,6 +13,19 @@ Zero dependencies. Exit 1 if any P0, else 0.
 import os, re, sys
 from pathlib import Path
 
+try:
+    # scripts/style-lint.py has a hyphen: import by file path, not module name.
+    import importlib.util
+
+    _spec = importlib.util.spec_from_file_location(
+        "style_lint", str(Path(__file__).with_name("style-lint.py")))
+    assert _spec is not None and _spec.loader is not None
+    _mod = importlib.util.module_from_spec(_spec)
+    _spec.loader.exec_module(_mod)
+    lint_text = _mod.lint_text
+except Exception:  # noqa: BLE001
+    lint_text = None
+
 _REPO_SKILLS = str(Path(__file__).resolve().parents[1] / "skills")
 ROOT = os.environ.get("SKILLS_ROOT", _REPO_SKILLS)
 
@@ -155,6 +168,9 @@ def main():
             n_practice += 1
             for label in check_sections(body, PRACTICE_SECTIONS):
                 issues.append(("P2", f"skeleton section missing: {label}"))
+            if lint_text is not None:
+                for v in lint_text(body)[:3]:
+                    issues.append(("P2", f"style[{v['level']}] {v['rule']}: {v['message']}"))
         for sev, _ in issues:
             counts[sev] += 1
         report.append((d, issues))

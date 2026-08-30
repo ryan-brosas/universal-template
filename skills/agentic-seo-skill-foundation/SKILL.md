@@ -1,6 +1,7 @@
 ---
 name: agentic-seo-skill-foundation
 description: "Use when porting deterministic SEO/AEO/GEO audit machinery — SSRF-safe fetchers, robots/llms.txt evaluation, JSON-LD schema validation and generation, snippet-format scanning, E-E-A-T/freshness/citation content scoring, GSC decay/striking-distance tracking, AI-crawler policy matrices, authenticated GitHub repository-trust audits (provider fallback, rate-limit-aware retries, release/file-inventory scoring), the standalone-script runtime plane (non-raising fetch envelope, stdlib dotenv ladder, CLI output contract), or the orchestration pattern of an 88-script evidence layer under an LLM-first router."
+disable-model-invocation: true
 ---
 # Agentic-SEO-Skill: LLM-first SEO audit evidence-collector foundation
 

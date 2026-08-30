@@ -1,6 +1,7 @@
 ---
 name: dnd-kit-foundation
 description: "Use when porting drag-and-drop: signal-reactive drag kernel, activation constraints, collision detection, optimistic sortable reordering, auto-scroll, a11y announcements, or cross-frame feedback rendering from dnd-kit."
+disable-model-invocation: true
 ---
 
 # dnd-kit: headless drag-and-drop kernel

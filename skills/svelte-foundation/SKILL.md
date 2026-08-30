@@ -1,6 +1,7 @@
 ---
 name: svelte-foundation
 description: "Use when porting or reimplementing a push-mark/pull-verify signals runtime, a batched effect scheduler (microtask flush with synchronous escape), lazy derived caching with version counters, concurrent \"time-travelling\" async batches, a linked-list effect tree with pause/resume branch semantics, or the consumption planes over them — prop accessor factories with spread/rest proxies, store-to-signal subscription bridges, await-block flatten/context-save suspension, derived-owned effect freeze/unfreeze, and keyed-each single-pass reconciliation — as proven by svelte's client runtime (`packages/svelte/src/internal/client/{reactivity,runtime.js,dom/blocks}`). Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
+disable-model-invocation: true
 ---
 # Svelte: signals runtime & reactivity kernel foundation
 

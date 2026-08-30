@@ -1,6 +1,7 @@
 ---
 name: tailwindcss-foundation
 description: "Use when porting Tailwind CSS v4 compiler mechanics — the `compile()`/`compileAst()` incremental build kernel, `@theme` design-system ingestion and resolution, candidate parsing/compilation and its deterministic sort ladder, or the variant application protocol — into another utility-CSS engine or a host integration (Vite/PostCSS/CLI driver). Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
+disable-model-invocation: true
 ---
 # tailwindcss: v4 core compiler foundation
 

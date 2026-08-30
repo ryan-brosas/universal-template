@@ -1,6 +1,7 @@
 ---
 name: codedb-foundation
 description: "Use when building or porting codedb-style code-intelligence search engines — typo-substring trigram indexes with bloom pruning, inverted word indexes with BM25+ ranking, content-defined n-gram indexes, mmap zero-copy persistence, deterministic call/import graphs, generation-safe result caches, and tiered recall ladders for agent context tools. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
+disable-model-invocation: true
 ---
 # codedb: Code-Intelligence Search Engine Foundation
 

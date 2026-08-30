@@ -1,6 +1,6 @@
 ---
 name: rsearch
-description: "Use when the user asks to search Reddit, find discussions or posts, or gauge community sentiment on a topic — search Reddit posts through the browser via CDP. Returns structured results (title, subreddit, author, score, comments, permalink URL, selftext, media URLs) for any query, with optional subreddit restriction and sort/time filters. Requires browser-harness-js on PATH and a Chromium-based browser with remote debugging; no Reddit API key — works logged-out, and a logged-in reddit session is used automatically if present."
+description: "Use when the user asks to search Reddit, find discussions or posts, or gauge community sentiment on a topic. Searches Reddit through the browser via CDP and returns title, subreddit, author, score, comments, permalink, and selftext, with optional subreddit and sort filters. No API key; a logged-in session is used automatically if present."
 setup: bash <skill-dir>/scripts/setup
 compatibility: >-
   Requires browser-harness-js on PATH and a running Chromium browser with

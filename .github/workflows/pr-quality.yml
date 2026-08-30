@@ -65,6 +65,14 @@ jobs:
           set -o pipefail
           python3 scripts/catalog-quality.py 2>&1 | tee /tmp/catalog-quality.log
 
+      - name: House style lint
+        id: style
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/style-lint.py --selftest 2>&1 | tee /tmp/style-lint-selftest.log
+          python3 scripts/style-lint.py 2>&1 | tee /tmp/style-lint.log
+
       - name: Repo hygiene
         id: hygiene
         shell: bash
@@ -133,6 +141,8 @@ jobs:
             /tmp/catalog-integrity.log
             /tmp/catalog-quality.log
             /tmp/repo-hygiene.log
+            /tmp/style-lint-selftest.log
+            /tmp/style-lint.log
             /tmp/policy-consistency.log
             /tmp/dead-code.log
             /tmp/conventional-commit.log

@@ -1,6 +1,7 @@
 ---
 name: quickbeam-foundation
 description: "Use when porting embedded JS execution sandboxes on the BEAM (QuickJS/duktape-style engines in Elixir/Erlang), GenServer↔NIF async ref protocols, runtime/context pools with reset-on-checkin, bytecode verify-pin-evaluate pipelines with hard resource limits, optional JIT tiers over untrusted input (single-flight compile caches, validated deopt, stack dataflow verification), or TS bundler resolution ladders."
+disable-model-invocation: true
 ---
 # QuickBEAM: JavaScript-runtime-on-the-BEAM foundations
 

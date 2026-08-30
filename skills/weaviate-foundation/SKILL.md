@@ -6,6 +6,7 @@ metadata:
   source: /mnt/hdd/utopia/inspo/external/weaviate
   pin: main@adcffc5432aa797c60e3c4e479514054254fae2a
   graph-project: ext-weaviate
+disable-model-invocation: true
 ---
 
 # Weaviate Foundation

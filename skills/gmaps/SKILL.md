@@ -1,6 +1,6 @@
 ---
 name: gmaps
-description: "Use when the user asks to find local businesses, get directions/time between places (by any mode), or plan a multi-stop route order — Google Maps via CDP, three modes, all keyless (no Google Places or Directions API key, no quota): (1) local business search returning structured results (name, rating, reviews, price, category, address, hours, coords, place ID, URL) — the data the metered Google Places API sells; (2) --route for real directions (total time + distance, current traffic) for an ordered list of places, in any travel mode (--mode driving|transit|walking|cycling|flights|best, default driving); (3) --optimize for a best-effort fastest visiting order (open-path TSP, fixed start) whose edges are virtualized as straight-line distance — N parallel place lookups plus one real directions call. Requires browser-harness-js on PATH and a running Chromium-based browser with remote debugging."
+description: "Use when the user asks to find local businesses, get directions or travel time between places, or plan a multi-stop visiting order. Keyless Google Maps via CDP: structured business results, live directions in any travel mode, and a best-effort fastest route order. Requires browser-harness-js on PATH and a Chromium browser with remote debugging."
 setup: bash <skill-dir>/scripts/setup
 compatibility: >-
   Requires browser-harness-js on PATH and a running Chromium browser with remote

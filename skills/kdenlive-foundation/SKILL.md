@@ -1,6 +1,7 @@
 ---
 name: kdenlive-foundation
 description: "Use when porting kdenlive timeline document-model machinery — Fun undo-lambda composition on QUndoStack, typed move-validation with rollback, two-phase group moves on an upLink/downLink forest, functor clip insertion into playlists, refcounted snap grids with speed projection, snap-aware resize trials, group-scoped cuts with tree splits, same-track mix plant/replant ladders, speed unplant/swap/replant kernels, spacer ripples with temporary ungroup, selection-as-group-node with track locks, time-remap rebuilds, mix load recovery, zone extract/lift/insert/overwrite as single-undo ops, subtitle events on the group/snap/lock planes, paste id-remapping with post-insert rebuild, composition lifecycle with ordered field replant, guide-marker snap registries, fail-soft melt-load repair ladders, bin-load id-correspondence re-keying, self-proving consistency walks, marker-category migration folds, cut mix/fade interiors, cut-all fan-outs, group-tree partitions, group JSON codecs, paste lane elections."
+disable-model-invocation: true
 ---
 
 # kdenlive: timeline document-model foundation

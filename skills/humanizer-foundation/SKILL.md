@@ -1,6 +1,7 @@
 ---
 name: humanizer-foundation
 description: Use when building or porting an agent skill whose product is a Markdown prompt corpus — packaging one root SKILL.md for multiple agent hosts, CI-enforced cross-file consistency (three-way version parity, ordered-list vs complete-set pattern numbering, exact-string style rules), fail-loud zero-dependency package validators with imperative fix-naming messages, single-skill layout gates (rglob singleton, symlink refusal, prompt line budget), or the humanize-rewrite fact-integrity loop (two-question audit, mode-keyed return) with its 35-pattern false-positive boundary — capsule-v2 source maps with decisive excerpts and graph retrieval.
+disable-model-invocation: true
 ---
 
 # Humanizer: foundation for Markdown-prompt skill packages

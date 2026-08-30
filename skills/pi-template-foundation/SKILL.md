@@ -1,6 +1,7 @@
 ---
 name: pi-template-foundation
 description: "Use when porting or building skill-pack catalogs, progressive-disclosure routers, agent-infrastructure CI gates, repo hygiene ladders, conventional-commit checks, dependency-cycle detection, inspiration-repo smoke harnesses, or mutation-authority guards for prompt/skill/template repositories — clone-and-start agent workspaces whose product surface is configuration, not application code."
+disable-model-invocation: true
 ---
 # pi-template: agent-template governance foundation
 

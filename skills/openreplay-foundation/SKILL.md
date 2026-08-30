@@ -1,6 +1,7 @@
 ---
 name: openreplay-foundation
 description: 'Use when porting OpenReplay session-replay mechanics: privacy/sanitization ladders, network request proxies, batch/beacon transport, ingest tokens, assist remote control, or conditional capture. Source-grounded capsule map.'
+disable-model-invocation: true
 ---
 
 # OpenReplay: Session-Replay Foundation

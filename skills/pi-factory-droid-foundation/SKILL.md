@@ -1,6 +1,7 @@
 ---
 name: pi-factory-droid-foundation
 description: "Use when bridging an external CLI coding agent (Factory Droid or any subprocess-backed agent harness) into a host LLM runtime: pooling long-lived agent sessions per conversation without cross-contamination, surviving a process-wide provider registry whose closures lie about caller identity, translating foreign agent event streams onto host assistant-message blocks, converting session-cumulative token counters into honest per-turn usage, keeping auto-compact in sync with the remote harness's own context meter, and running host-executed tools inside the remote agent's own loop via a suspension bridge (rendezvous board, name aliasing, turn FSM, result envelopes). Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
+disable-model-invocation: true
 ---
 # pi-factory-droid: Factory Droid provider runtime foundation
 

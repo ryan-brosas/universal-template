@@ -1,6 +1,7 @@
 ---
 name: prefect-foundation
 description: Use when building or porting workflow engines - heartbeat liveness past blocked loops, termination-intent dispatch, cancellation ownership across process boundaries, subflow reattach ladders, client-side retry/backoff arithmetic, transactional result caching, crash taxonomies, and supervised-process exit contracts - plus fire-and-forget telemetry batching (singleton queue services on a global loop, byte-budget log upload, context-capturing event workers, websocket resend with checkpoint acks) and event-driven completion waiting (subscriber replay backfill windows, seen-id dedup, clean-vs-abnormal close policy, register-recheck waiter ladders, terminal-event fan-in singletons, heartbeat backoff loops), lossy-tolerant log-stream consumption, dual-stream queue fan-in with sentinel/straggler-drain termination, recency-cached lineage enrichment, and thread-keyed sync/async waiter primitives - capsule-v2 source maps with decisive excerpts and graph retrieval.
+disable-model-invocation: true
 ---
 # prefect: workflow-engine foundations
 

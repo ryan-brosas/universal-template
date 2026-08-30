@@ -1,6 +1,7 @@
 ---
 name: autogen-foundation
 description: "Use when porting multi-agent orchestration machinery from Microsoft AutoGen (Python): single-queue envelope runtime, topic/subscription message bus, intervention hooks at dequeue time, group-chat supervisor loops (round-robin, LLM selector, swarm handoff, DAG graph flow), FIFO ordered delivery, termination algebra, run/stream lifecycle, bounded agent tool-call loops, RPC cancellation/failure ladders, name-keyed team checkpointing, middle-out token-budget contexts, mutate-and-report memory injection, subprocess executor timeout/cancel exit codes, grpc worker/host registration handshake with request-id correlation and disconnect cleanup, streamed tool-call workbenches, and pluggable model-context recall strategies."
+disable-model-invocation: true
 ---
 
 # AutoGen: Agent Runtime & Group-Chat Foundations

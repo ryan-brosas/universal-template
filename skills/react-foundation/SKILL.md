@@ -1,6 +1,7 @@
 ---
 name: react-foundation
 description: "Use when porting cooperative time-slicing schedulers, priority-ordered task queues, delayed-task timers, macrotask yield/error-resume loops, or lane/priority-bitmap scheduling kernels modeled on React's Scheduler (`packages/scheduler`) and the react-reconciler root-scheduling plane (`ReactFiberRootScheduler`, `ReactFiberWorkLoop` render entry, `ReactFiberLane`). Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
+disable-model-invocation: true
 ---
 # React: Fiber scheduler foundation
 

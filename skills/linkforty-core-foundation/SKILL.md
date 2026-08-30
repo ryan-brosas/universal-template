@@ -1,6 +1,7 @@
 ---
 name: linkforty-core-foundation
 description: "Use when porting short-link redirect engines, deferred install attribution (click→install fingerprint matching), mobile fallback chains (Universal Links / App Links / app scheme / store / web), link-safety gating (warn interstitial vs indistinguishable block), write-time bot classification feeding analytics filters, HMAC-signed webhook delivery with capped exponential backoff, or Fastify+Postgres additive-schema bootstrap for an embeddable service — self-hosted deep-link engine foundation."
+disable-model-invocation: true
 ---
 # LinkForty core: Self-hosted deep-link engine Foundation
 

@@ -1,6 +1,7 @@
 ---
 name: open-webui-foundation
 description: "Use when porting open-webui's runtime-mutable config store, typed event bus, socket emitter/caller pair, hybrid RAG retrieval ladder, DB-stored plugin loader, filter inlet/outlet/stream pipeline, chat-stream machinery (agentic tool loop, tag scanner, delta coalescing, cancellation), built-in-tool authz gates, access-grants ACL plane, outbound provider-proxy plane (timeout ladders, Ollama error ladder, multi-backend routing, OpenAI/Azure/Responses normalization), file-to-knowledge ingest plane (upload admission, process bridge with knowledge auto-link, hash-dedup chunking kernel, embed-first/bind-later binding, transitive file ACL), inbound trust boundary (three-transport auth-token ladder, dual-mechanism JWT revocation, API-key gates on raw ASGI paths, hash-prefix password dispatch), or SDK-constrained MCP client lifecycle (construction-time SSL, pop_all ownership transfer, no-shield same-task teardown). Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
+disable-model-invocation: true
 ---
 
 # open-webui: Extension Runtime & Realtime Services Foundation

@@ -1,6 +1,7 @@
 ---
 name: superset-foundation
 description: "Use when porting Apache Superset's chart-data acquisition kernel (per-query cache-key composition under security context, cache fault-tolerance ladders, contribution-totals two-phase sync, annotation-data co-caching, cache-timeout precedence, grouping-sets emulation), its chart-data HTTP entry plane (sync/async job gate with identity-carrying submission, opaque-key cache replay with novel-SQL skip, annotation-layer permission gating, override-before-reauthorization, authorize-before-render ordering), or its Alerts & Reports execution plane (crontab-keyed state machine, WORKING concurrency guard, audit-log row promotion, retry/backoff ladder with window anchors, error-notification grace dedup, webhook SSRF peer validation and response containment). Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
+disable-model-invocation: true
 ---
 # Superset: chart-data execution & alerts/reports scheduling foundation
 

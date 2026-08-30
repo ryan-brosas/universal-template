@@ -1,20 +1,24 @@
 #!/usr/bin/env python3
-"""Catalog quality gate — anti-slop structure for skills/essentials/templates.
+"""Catalog quality gate - anti-slop structure plus the context-budget report.
 
-Ported from pi-template quality-gate.py for the absorbed ~/.agents layout:
-- every skill dir has SKILL.md; name matches folder
-- no duplicate skill names
+Checks (hard failures exit 1):
+- every skill dir has SKILL.md; name matches folder; no duplicate names
 - essentials present and indexed in essentials/README.md
 - templates inventory matches templates/ on disk
-- near-duplicate descriptions reported as warnings (non-blocking)
+- visibility policy: *-foundation hidden by default, entry skills visible,
+  internal helpers hidden (invocation-ownership model)
+- context budget: visible skill metadata vs the recorded baseline; growth is a
+  warning, growth beyond GROWTH_FAIL is an error until the baseline is updated
+  deliberately via --update-baseline
 
-Hard failures exit 1. Warnings print but do not fail.
+Warnings print but do not fail.
 """
 from __future__ import annotations
 
-import os
+import json
 import re
 import sys
+from datetime import date
 from pathlib import Path
 
 BASE = Path(__file__).resolve().parents[1]
@@ -22,6 +26,26 @@ SKILLS = BASE / "skills"
 ESSENTIALS = BASE / "essentials"
 TEMPLATES = BASE / "templates"
 INVENTORY = BASE / "references" / "templates-inventory.md"
+BASELINE = BASE / "scripts" / "context-budget-baseline.json"
+
+DESC_WARN_CHARS = 450      # visible description size worth reporting
+GROWTH_FAIL = 1.10         # unexplained growth above baseline fails CI
+TOKEN_CHARS = 4            # documented rough estimator; trend metric only
+
+# Invocation-ownership classification (validator-side policy; hosts only read
+# disable-model-invocation). Entry = a user request selects it directly.
+ENTRY_SKILLS = {
+    "project-bootstrap", "brainstorming", "goal-setup", "prototype",
+    "leverage-capture", "github-repo-setup", "github-actions-engineering",
+    "push-pr", "reference-driven-development", "writing-skills",
+    "house-writing-style", "evidence-router", "execution-router",
+}
+# Internal mechanics another skill/router selects; never startup metadata.
+INTERNAL_SKILLS = {
+    "model-resolution", "veda-lane", "fabric-native-execution",
+}
+# Foundations are cold prior-art capsules: hidden unless explicitly allowlisted.
+FOUNDATION_ALLOWLIST: set[str] = set()
 
 errors: list[str] = []
 warnings: list[str] = []
@@ -33,7 +57,7 @@ ESSENTIAL_FILES = [
     "stack-your-leverage.md",
     "enforce-code-quality-mechanically.md",
     "how-to-build-good-tests.md",
-    "objectives.md",
+    "openviking-foundation.md",
     "README.md",
 ]
 
@@ -67,12 +91,12 @@ def parse_frontmatter(text: str) -> dict[str, str]:
     return fm
 
 
-def collect_skills() -> dict[str, dict]:
+def collect_skills(skills_dir: Path = SKILLS) -> dict[str, dict]:
     skills: dict[str, dict] = {}
-    if not SKILLS.is_dir():
+    if not skills_dir.is_dir():
         errors.append("skills/ missing")
         return skills
-    for entry in sorted(SKILLS.iterdir()):
+    for entry in sorted(skills_dir.iterdir()):
         if not entry.is_dir() or entry.name.startswith("."):
             continue
         skill_md = entry / "SKILL.md"
@@ -83,11 +107,13 @@ def collect_skills() -> dict[str, dict]:
         fm = parse_frontmatter(text)
         name = fm.get("name", entry.name)
         desc = fm.get("description", "")
+        hidden = str(fm.get("disable-model-invocation", "")).strip().lower() == "true"
         if name != entry.name:
             errors.append(f"name/folder mismatch: skills/{entry.name} name={name!r}")
         if name in skills:
             errors.append(f"duplicate skill name: {name}")
-        skills[name] = {"path": str(skill_md), "desc": desc, "dir": str(entry)}
+        skills[name] = {"path": str(skill_md), "desc": desc, "dir": entry.name,
+                        "hidden": hidden}
     return skills
 
 
@@ -95,7 +121,8 @@ def check_essentials() -> None:
     for ef in ESSENTIAL_FILES:
         if not (ESSENTIALS / ef).is_file():
             errors.append(f"missing essential doc: {ef}")
-    readme = (ESSENTIALS / "README.md").read_text(encoding="utf-8") if (ESSENTIALS / "README.md").is_file() else ""
+    readme_path = ESSENTIALS / "README.md"
+    readme = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
     for ef in ESSENTIAL_FILES:
         if ef != "README.md" and ef not in readme:
             errors.append(f"essential not indexed in README: {ef}")
@@ -112,13 +139,12 @@ def check_templates_inventory() -> None:
         if p.is_file() and not p.name.startswith(".")
     )
     for name in on_disk:
-        # source.yml is an inspo ledger template; inventory may list it or omit —
+        # source.yml is an inspo ledger template; inventory may list it or omit --
         # require every non-source template to be named in the inventory body.
         if name == "source.yml":
             continue
         if name not in inv:
             errors.append(f"template not listed in inventory: {name}")
-    # Count claimed in inventory header vs format templates excluding source.yml
     claimed = re.search(r"(\d+)\s+CLI-neutral format templates", inv)
     expected = len([n for n in on_disk if n != "source.yml"])
     if claimed:
@@ -128,6 +154,97 @@ def check_templates_inventory() -> None:
                 f"templates inventory count {n} != on-disk format templates {expected} "
                 f"(excluding source.yml)"
             )
+
+
+def is_foundation(folder: str) -> bool:
+    return folder.endswith("-foundation")
+
+
+def check_visibility_policy(skills: dict[str, dict]) -> None:
+    """Visibility follows invocation ownership, not leaf-vs-router shape."""
+    for name, info in sorted(skills.items()):
+        folder, hidden = info["dir"], info["hidden"]
+        if is_foundation(folder) and not hidden and folder not in FOUNDATION_ALLOWLIST:
+            errors.append(
+                f"visible foundation (add disable-model-invocation: true or allowlist): {folder}"
+            )
+        if folder in ENTRY_SKILLS and hidden:
+            errors.append(f"entry skill must stay model-visible: {folder}")
+        if folder in INTERNAL_SKILLS and not hidden:
+            errors.append(f"internal skill must stay hidden: {folder}")
+
+
+def budget_report(skills: dict[str, dict]) -> dict:
+    visible = {n: i for n, i in skills.items() if not i["hidden"]}
+    vis_chars = sum(len(n) + len(i["desc"]) for n, i in visible.items())
+    routers = [n for n in visible if n.endswith("-router")]
+    entries = [n for n in visible if n in ENTRY_SKILLS]
+    founds = [n for n in visible if is_foundation(visible[n]["dir"])]
+    other = [n for n in visible if n not in set(routers) | set(entries) | set(founds)]
+    largest = sorted(visible.items(), key=lambda kv: -len(kv[1]["desc"]))[:8]
+    return {
+        "total": len(skills),
+        "visible": len(visible),
+        "hidden": len(skills) - len(visible),
+        "chars": vis_chars,
+        "tokens": vis_chars // TOKEN_CHARS,
+        "routers": len(routers),
+        "entries": len(entries),
+        "foundations_visible": len(founds),
+        "other_visible": len(other),
+        "largest": largest,
+    }
+
+
+def print_budget(rep: dict) -> None:
+    print("Skill catalog context budget")
+    print(f"  Total skills:                 {rep['total']}")
+    print(f"  Visible skills:               {rep['visible']}")
+    print(f"  Hidden skills:                {rep['hidden']}")
+    print("  Visible metadata:")
+    print(f"    characters:                 {rep['chars']}")
+    print(f"    estimated tokens (~{TOKEN_CHARS} c/tok, trend metric only): {rep['tokens']}")
+    print("  Visible categories:")
+    print(f"    routers:                    {rep['routers']}")
+    print(f"    user-entry:                 {rep['entries']}")
+    print(f"    foundations:                {rep['foundations_visible']}")
+    print(f"    other:                      {rep['other_visible']}")
+    print("  Largest visible descriptions:")
+    for n, i in rep["largest"]:
+        print(f"    {len(i['desc']):5d}  {n}")
+
+
+def check_budget_baseline(rep: dict, default_root: bool) -> None:
+    if not default_root:
+        return
+    for n, i in rep["largest"]:
+        if len(i["desc"]) > DESC_WARN_CHARS:
+            warnings.append(
+                f"visible description {len(i['desc'])} chars > {DESC_WARN_CHARS}: {n} "
+                f"(the body owns the workflow; keep the trigger short)"
+            )
+    if not BASELINE.is_file():
+        warnings.append(
+            "no context-budget baseline (scripts/context-budget-baseline.json); "
+            "run catalog-quality.py --update-baseline after an intentional change"
+        )
+        return
+    try:
+        data = json.loads(BASELINE.read_text(encoding="utf-8"))
+        base_chars = int(data["visible_chars"])
+    except Exception as exc:  # noqa: BLE001
+        warnings.append(f"baseline unreadable: {exc}")
+        return
+    if rep["chars"] > base_chars:
+        warnings.append(
+            f"context budget grew: {rep['chars']} > baseline {base_chars} visible chars"
+        )
+    if rep["chars"] > base_chars * GROWTH_FAIL:
+        errors.append(
+            f"context budget {rep['chars']} exceeds baseline {base_chars} by more than "
+            f"{int((GROWTH_FAIL - 1) * 100)}%; adding capabilities must not silently grow "
+            f"startup context - update the baseline deliberately via --update-baseline"
+        )
 
 
 def near_duplicate_warnings(skills: dict[str, dict]) -> None:
@@ -150,16 +267,41 @@ def near_duplicate_warnings(skills: dict[str, dict]) -> None:
 
 
 def main() -> int:
-    skills = collect_skills()
-    check_essentials()
-    check_templates_inventory()
+    update_baseline = "--update-baseline" in sys.argv
+    root_arg: str | None = None
+    if "--root" in sys.argv:
+        root_arg = sys.argv[sys.argv.index("--root") + 1]
+    skills_dir = Path(root_arg) if root_arg else SKILLS
+    default_root = skills_dir == SKILLS
+
+    skills = collect_skills(skills_dir)
+    if default_root:
+        check_essentials()
+        check_templates_inventory()
     near_duplicate_warnings(skills)
+    check_visibility_policy(skills)
+    rep = budget_report(skills)
+    print_budget(rep)
+    check_budget_baseline(rep, default_root)
 
     if errors:
         print("CATALOG QUALITY FAILURES:")
         for err in errors:
             print(f"  - {err}")
         return 1
+
+    # Baseline updates are deliberate: never on an invalid catalog (review fix).
+    if update_baseline and default_root and not errors:
+        BASELINE.write_text(
+            json.dumps({
+                "visible_chars": rep["chars"],
+                "visible_skills": rep["visible"],
+                "updated": date.today().isoformat(),
+                "note": "visible skill name+description chars; deliberate updates only",
+            }, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        print(f"baseline updated: {rep['chars']} visible chars, {rep['visible']} visible skills")
     print(f"CATALOG QUALITY OK: {len(skills)} skills, {len(ESSENTIAL_FILES)} essentials")
     for w in warnings[:40]:
         print(f"  (warn) {w}")

@@ -1,6 +1,7 @@
 ---
 name: ell-foundation
 description: "Use when porting ell (language model programming) — LMP decorators, _lstr origin tracing, lexical-closure versioning, provider SPI, SQL/alembic store, evaluations, studio; prompt-to-program frameworks that version prompts as code (lexical closures + content hashes), trace which model call produced which text fragment through arbitrary string mutations, adapt one call pipeline to many vendor APIs behind a validation-enforced provider interface, or persist/version LLM programs and invocations in SQLite/Postgres with alembic. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
+disable-model-invocation: true
 ---
 
 # ell: Language Model Programming Foundation

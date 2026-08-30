@@ -1,6 +1,7 @@
 ---
 name: rallly-foundation
 description: "Use when porting group-scheduling poll machinery — floating vs timezone-pinned option storage, auto-close/reopen ladders, guest edit-token authorization, vote aggregation and scoring, atomic booking with invite dedup, cron housekeeping (inactivity retention + purge), or per-recipient email rendering."
+disable-model-invocation: true
 ---
 # Rallly: scheduling-poll foundation
 

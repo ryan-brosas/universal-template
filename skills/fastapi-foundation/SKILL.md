@@ -1,6 +1,7 @@
 ---
 name: fastapi-foundation
 description: "Use when porting FastAPI's request machinery (Python ASGI web framework) — the dependency-injection solver and cache, signature-to-param classification, body/query validation, response dispatch and streaming (JSONL/SSE), lazy router composition with prefix/dependency inheritance, or OpenAPI schema generation — into another framework or service. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
+disable-model-invocation: true
 ---
 # FastAPI: Python ASGI web framework foundation
 

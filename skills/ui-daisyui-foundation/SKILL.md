@@ -1,6 +1,7 @@
 ---
 name: ui-daisyui-foundation
 description: Use when porting daisyUI's Tailwind-plugin machinery — plugin entry registries with include/exclude algebra, theme injection ladder over CSS-variable tokens, cascade-layer specificity ladders, hand-rolled CSS selector prefix scanning, responsive breakpoint-variant generation, and the wrapper-sandwich Tailwind compile-and-extract API.
+disable-model-invocation: true
 ---
 
 # ui-daisyui: Tailwind CSS plugin & build kernel

@@ -1,6 +1,7 @@
 ---
 name: goose-foundation
 description: "Use when porting Block's goose AI-agent provider machinery — provider trait + collect_stream fold kernel, sanitized/migrating conversation model, audience projection, bounded think-tag stream filter, thinking-effort negotiation, declarative prompt-cache semantics, fail-safe NDJSON request logging, RFC 8628 device flows, typed provider error taxonomy, retry/backoff ladder, transient-only gating, formats/* payload-mapping layer (Anthropic request/SSE fold, OpenAI chat replay coherence + stream triage, Databricks dual-dialect dispatch, Google thought-signature continuity, thinking-config table, OpenAI Responses input mapper + typed-event stream fold, Ollama XML tool-call fallback), declarative provider plane (JSON-defined engine factory, env-expanded base URLs, thin OpenAI-compatible client, completions-prefix composition, tri-effect non-streaming mode, /models failure classification, static-list fallback gate)."
+disable-model-invocation: true
 ---
 
 # goose: AI-Agent Provider Foundation

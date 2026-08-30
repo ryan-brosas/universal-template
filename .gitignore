@@ -10,6 +10,10 @@
 !/scripts/policy-consistency.py
 !/scripts/runtime-capabilities.py
 !/scripts/resolve-model.py
+!/scripts/style-lint.py
+!/scripts/foundation-search.py
+!/scripts/context-budget-baseline.json
+!/scripts/fixtures/
 # Generated runtime capability state (machine-local, never committed).
 /state/
 # Skill-local helper scripts stay out of the catalog repo.
