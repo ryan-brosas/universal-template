@@ -18,7 +18,7 @@ Entry flow for unfamiliar repositories: `skills/project-bootstrap/SKILL.md`.
 | Entry skills (`project-bootstrap`, `brainstorming`, `goal-setup`, `prototype`, `leverage-capture`) | project entry, direction, durable goals, cheap learning, leverage classification |
 | `docs/skill-catalog.md`, `docs/foundation-catalog.md` | generated human catalogs of the skill set (never hand-edit; regenerate with `scripts/skill-catalog.py`) |
 | `mcp/servers.json` | the **canonical** MCP capability registry (6 servers incl. mcp-steroid); per-CLI configs are derived copies |
-| `references/` | distilled contract capsules (init, mcp-catalog, templates-inventory) |
+| `references/` | distilled contract capsules (reference contract, MCP catalog, templates inventory) |
 | `AGENTS.md` | the global agent rules every host loads |
 | `.github/` | the CI gate suite, PR automation (labels, release notes), Dependabot, issue forms, and community files |
 
@@ -26,6 +26,10 @@ Entry flow for unfamiliar repositories: `skills/project-bootstrap/SKILL.md`.
 
 - **Normal work**: inspect current code and evidence → implement → run the
   relevant verification → finish. No lifecycle machinery required.
+- **Frontend prior art**: capture a live website with `web-reference` into
+  `reference/web/<site>/` and consume it with the same ADOPT / ADAPT / OMIT
+  loop as repository references; validate bundles with
+  `scripts/web-reference-manifest.py`.
 - **Standard baseline**: "create this repo with our standard setup",
   "production-ready", or "OSS-ready" composes `project-bootstrap` →
   `github-repo-setup` (profile from its `references/setup-matrix.md`) →
@@ -91,7 +95,7 @@ policy invariants live in `scripts/policy-consistency.py` (CI-enforced).
 | PR lifecycle (push, PR, reviews, auto-merge on request) | `skills/push-pr` |
 | Git release strategy and versioning | `skills/git-workflow-and-versioning` |
 | Prior-art/reference-driven implementation | `skills/reference-driven-development` |
-| Reference-repository rules | `references/reference-contract.md` |
+| Reference rules (repository + web) | `references/reference-contract.md` |
 | Fabric execution, Schema modes, agents/Veda escalation | `skills/fabric-native-execution` |
 | Natural-language prose style (STE-inspired) | `skills/house-writing-style` + `scripts/style-lint.py` |
 | Veda escalation specifics | `skills/veda-lane` |

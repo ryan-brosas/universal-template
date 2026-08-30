@@ -33,9 +33,10 @@ that apply everywhere.
     via `skills/model-resolution`; discover models at runtime, never
     hard-code them.
 - Reusable prior art lives in `<project>/reference/<repo>/` (read-only
-  checkout; read source and tests), not automatically a skill, index, or
-  corpus. This repo's global `references/` means contract docs; keep the two
-  apart.
+  checkout; read source and tests) and, for websites, in
+  `<project>/reference/web/<site>/` (captured by the `web-reference` skill),
+  not automatically a skill, index, or corpus. This repo's global
+  `references/` means contract docs; keep the two apart.
 
 ## Reversible work needs no permission ritual
 
@@ -88,6 +89,7 @@ python3 scripts/repo-hygiene.py
 python3 scripts/policy-consistency.py
 python3 scripts/style-lint.py --selftest   # style fixtures must pass
 python3 scripts/style-lint.py              # hard rules on the default docs scope
+python3 scripts/web-reference-manifest.py --selftest   # web reference fixtures must pass
 python3 scripts/dead-code.py
 python3 scripts/legacy-skill-report.py            # stale-pattern report (advisory)
 python3 scripts/skill-catalog.py generate --check # generated catalogs current

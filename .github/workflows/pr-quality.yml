@@ -73,6 +73,13 @@ jobs:
           python3 scripts/style-lint.py --selftest 2>&1 | tee /tmp/style-lint-selftest.log
           python3 scripts/style-lint.py 2>&1 | tee /tmp/style-lint.log
 
+      - name: Web reference manifest
+        id: webref
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 scripts/web-reference-manifest.py --selftest 2>&1 | tee /tmp/web-reference-manifest.log
+
       - name: Repo hygiene
         id: hygiene
         shell: bash

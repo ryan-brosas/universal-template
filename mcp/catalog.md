@@ -36,6 +36,13 @@ CANONICAL SOURCE OF TRUTH: `~/.agents/mcp/servers.json`
 | openviking        | remote| `http://127.0.0.1:1933/mcp`                  | none (local daemon)              | mined-corpus retrieval; register only when the daemon runs |
 | mcp-steroid       | stdio | `devrig mcp` (PATH-resolved)                  | none (local IDE bridge)          | JetBrains PSI/refactoring/test/debugger access via devrig |
 
+### Deliberately not registered (researched)
+
+| Candidate | Status | Why it is not in the registry |
+|---|---|---|
+| **OpenDesign** (Open Design; the local-first design app with a stdio MCP exposing tokens CSS, JSX components, entry HTML; upstream `github.com/vustudio/opendesign`, same-name mirrors/forks such as `Wallstreetrenegade/opendesign` exist) | not configured | Its documented wiring bakes machine-local absolute paths (`node` binary + daemon `cli.js`) into per-client snippets, which violates the portability rule above, and the command only resolves while the desktop app is installed. Revisit when the user runs it: add a PATH-resolvable `command` block to `servers.json`, then wire per-CLI. Role boundary: design workspace and design context; never the canonical site crawler and never raw-site ground truth. |
+| **Image generation** | capability, not an MCP server | On pi hosts it is the `openai_image` extension tool (pi-better-openai): generate or edit, with project-local save. Frontend media policy: `skills/web-reference/references/media.md`. No model slug is frozen into policy. |
+
 ### Where the keys live (names only — never commit values)
 
 These hosts already export or can export the needed vars; the `${VAR}` text in
