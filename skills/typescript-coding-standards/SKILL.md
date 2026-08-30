@@ -15,6 +15,7 @@ Types describe the domain and errors are data: no `any` (branded primitives, `un
 
 - **Use when:** writing, refactoring, or reviewing TypeScript code that needs strong domain modeling, typed errors, schema parsing, safe adapters, test seams, or maintainable module boundaries.
 - **NOT when:** the file has no domain surface to model — a throwaway script with no untrusted input, no external systems, and no shared types; or the code is not TypeScript.
+- **NOT when:** the question is only ESLint/tsc style (imports, `any`, formatting) — load `typescript-coding-practices` instead.
 
 ## Workflow
 

@@ -20,6 +20,6 @@ These documents define *how* we approach development and automation without over
 ## How to Use in Practice
 - Read `operating-philosophy.md` before planning architecture or starting complex tasks.
 - Track progress against `objectives.md` during milestone planning.
-- Squeezing repos into `pack-foundations` **IS** Pillar 1 & 3 in action.
+- Squeezing repos into per-repo foundation leaves (`skills/*-foundation`) **IS** Pillar 1 & 3 in action.
 - The 7-gate `foundations-workflow` and PR conclusive loops **ARE** Pillar 2 & 4 in action.
 - Catch-First testing (RED $\to$ GREEN) is the verification standard across all prompts and tools.

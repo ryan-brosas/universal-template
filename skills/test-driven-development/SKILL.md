@@ -22,7 +22,7 @@ behavior, never implementation details.
 
 ## When to Use
 
-Before any feature implementation, bug fix, or refactor that changes behavior. REQUIRED BACKGROUND for `incremental-implementation`, `code-review-and-quality`, and any feature work.
+Before any feature implementation, bug fix, or refactor that changes behavior. REQUIRED BACKGROUND for `code-review-and-quality` and any feature work.
 
 ## When NOT to Use
 
@@ -36,7 +36,7 @@ GREEN:    write the minimum code to make it pass
 REFACTOR: improve the code while keeping tests green
 ```
 
-Each cycle is small (minutes, not hours). Do not stack multiple steps before running the test.
+Run the suite during implementation; don't defer all verification to the end.
 
 ## What a Test Is
 

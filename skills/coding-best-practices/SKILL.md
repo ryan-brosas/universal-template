@@ -13,9 +13,10 @@ General coding guidance is a **map**, not a monolith. Route each topic to one le
 
 - **Use when:** starting a coding task, answering "what are best practices for X?", onboarding someone to how this catalog expects work to flow, or choosing which quality skill to load next.
 - **Use when:** the question spans naming, docs, Git, testing, security, or AI-generated code and you need the right pointer fast.
-- **NOT when:** the task is language-specific TypeScript modeling — load `typescript-coding-standards` instead.
+- **NOT when:** the task is TypeScript-only — load `typescript-coding-practices` (style/modules) and `typescript-coding-standards` (domain modeling) instead of this router alone.
 - **NOT when:** declaring work complete — load `agent-code-quality-gate` and the project gate from `AGENTS.md`.
 - **NOT when:** opening or updating a PR — load `push-pr`.
+- **NOT when:** deep Git conventions from community guides — load `awesome-guidelines`.
 - **NOT when:** authoring a new skill — load `writing-skills`.
 
 ## Workflow
@@ -34,7 +35,7 @@ General coding guidance is a **map**, not a monolith. Route each topic to one le
 | Topic | Load first | Mechanical gate |
 |---|---|---|
 | Scope, verification, design taste | `code-discipline` | project CI + `agent-code-quality-gate` |
-| Naming, formatting, readability | `references/naming-and-formatting.md` | linter/formatter in project CI |
+| Naming, formatting, readability | `references/naming-and-formatting.md` | linter/formatter + `typescript-coding-practices` / `javascript-coding-practices` when stack-specific |
 | README, docstrings, comments | `references/documentation-and-readme.md` | `repo-hygiene` (catalog) |
 | Errors, resilience | `references/error-handling-and-resilience.md` | behavior tests |
 | Git, branches, PRs | `references/git-and-collaboration.md` | `push-pr`, conventional commits |
@@ -77,3 +78,4 @@ General coding guidance is a **map**, not a monolith. Route each topic to one le
 - `references/git-and-collaboration.md` — Git, branches, commits, PRs.
 - `references/ai-assisted-coding.md` — reviewing generated code, context files, no blind trust.
 - `references/performance-and-data-efficiency.md` — profile first, vectorize/chunk when measured.
+- `awesome-guidelines` — Kristories/awesome-guidelines ingested one topic at a time (`references/ingestion-index.md`).

@@ -91,6 +91,8 @@ def main():
         dpath = os.path.join(ROOT, d)
         if not os.path.isdir(dpath):
             continue
+        if d.startswith("."):
+            continue  # e.g. .system — Codex host bundle, not a catalog skill leaf
         skill_md = os.path.join(dpath, "SKILL.md")
         issues = []
         if not os.path.isfile(skill_md):

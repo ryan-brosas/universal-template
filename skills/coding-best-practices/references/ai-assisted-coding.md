@@ -5,9 +5,9 @@
 - Review every diff: logic, security, scope, duplication, missing tests.
 - Never commit credentials, `.env` contents, or copied secrets — `repo-hygiene.py` and project secret scans are backstops, not excuses to skip review.
 
-## Prompt and slice discipline
+## Prompt and scope discipline
 
-- One slice at a time — do not "implement the whole app" in one pass (`leverage-playbook`: code is ground truth, stack skills).
+- Scope the task clearly — agree on outcome and boundaries before large diffs (`leverage-playbook`: code is ground truth, stack skills).
 - Give context pointers (files, skills, graph hits) and let the agent retrieve; do not hand-script every step.
 - Maintain project spine: `AGENTS.md`, `.pi/state.md` — context files beat repeating rules in chat.
 

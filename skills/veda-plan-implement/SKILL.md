@@ -1,6 +1,6 @@
 ---
 name: veda-plan-implement
-description: "Use when planning a refactor, debugging approach, research, analysis, writing, or any course of action before implementing — plan work by collaborating with the Veda Navigator model. Drives `veda -S plan-TASKNAME -m gpt-5.6-sol -p navigator-plan` to align on a plan; does not execute. Invoke when the user says plan, discuss, align, or wants to iterate on a plan before coding."
+description: "Use when planning a refactor, debugging approach, research, analysis, writing, or any course of action before implementing — plan work by collaborating with the Veda Navigator model. Drives `veda -S plan-TASKNAME -m flash -p navigator-plan` to align on a plan; does not execute. Invoke when the user says plan, discuss, align, or wants to iterate on a plan before coding."
 argument-hint: "[veda-flags]"
 ---
 
@@ -16,7 +16,7 @@ Align with Navigator before executing: Navigator advises (no tool access), the D
 ## Workflow
 
 1. `veda -S plan-TASKNAME sel clear` + `sel add` (full files first; slice only above 125k).
-2. `veda -S plan-TASKNAME -m gpt-5.6-sol -p navigator-plan` once — commit to a position, carry the user's ask verbatim.
+2. `veda -S plan-TASKNAME -m flash -p navigator-plan` once — commit to a position, carry the user's ask verbatim.
 3. Continue via `resume` / `-p navigator-chat` until aligned; involve the user on scope/cost/direction.
 4. Execute with native tools, checkpointing at plan-step boundaries with evidence. Stop when the task is complete or blocked on input only the user can provide.
 
@@ -25,27 +25,27 @@ Align with Navigator before executing: Navigator advises (no tool access), the D
 
 - Load-bearing planning / architecture / high-risk review → `agy --model claude-opus-4-6-thinking --mode plan` (direct `agy` CLI, NOT veda/gemini).
 - Critique / follow-up → `agy --model claude-sonnet-4-6 --mode plan`.
-- Cheap discovery / context curation → `veda` + gemini (`gemini-3.6-flash-*`, `gemini-3.1-pro-low`).
+- Cheap discovery / context curation → `veda` + gemini (`gemini-3.7-flash-*`, `gemini-3.1-pro-low`).
 - `veda deep` (parallel solvers) runs on gemini and is only for "N independent attempts"; the final architecture decision still comes from claude-opus.
 
 ## Invocation — veda CLI (confirmed working)
 
-Use the veda CLI with a **positional** prompt. The default backend/model are now fixed in `~/.config/veda/config` (`BACKEND="agy"`, `MODEL="gemini-3.1-pro-high"`) — no flags needed:
+Use the veda CLI with a **positional** prompt. The default backend/model are now fixed in `~/.config/veda/config` (`BACKEND="agy"`, `MODEL="gemini-3.7-flash-high"`) — no flags needed:
 
 ```bash
 veda -S plan-<task> -p navigator-plan '<your prompt — inline ALL relevant file contents; veda sees only what you paste>'
 ```
 
-- Pin explicitly with `-b agy -m gemini-3.1-pro-high` if you ever need to override.
+- Pin explicitly with `-b agy -m gemini-3.7-flash-high` if you ever need to override.
 - Keep one `-S` session name; follow up with `veda -S plan-<task> resume '...'` or `-p navigator-chat`. You implement afterwards with native tools.
 
 **Do NOT use `agents.run({ runner: "veda", ... })`:** broken with veda-ts 0.75.8 — pi-fabric pipes the prompt to stdin, but veda reads positionals only (`src/cli/validate.ts` throws "No prompt provided"). Use the CLI until pi-fabric fixes the runner.
 
 ## Your Task
 
-Collaborate, discuss, and align with the Navigator model on a plan using `veda -S plan-TASKNAME -m gpt-5.6-sol -p navigator-plan`. This applies to any kind of work: solving a problem, debugging, research, writing, analysis, or planning a course of action. Navigator has no tool access; everything it knows comes from the files you share via `veda sel add` and what you write in your prompts.
+Collaborate, discuss, and align with the Navigator model on a plan using `veda -S plan-TASKNAME -m flash -p navigator-plan`. This applies to any kind of work: solving a problem, debugging, research, writing, analysis, or planning a course of action. Navigator has no tool access; everything it knows comes from the files you share via `veda sel add` and what you write in your prompts.
 
-**Model:** `gpt-5.6-sol` is auto-detected by `veda init` from your installed harnesses. If a `-m`/`-b` (or other veda flags) was passed when this skill was invoked, use those instead of `-m gpt-5.6-sol` in every `veda` command below.
+**Model:** `flash` is auto-detected by `veda init` from your installed harnesses. If a `-m`/`-b` (or other veda flags) was passed when this skill was invoked, use those instead of `-m flash` in every `veda` command below.
 
 **Reuse the same `-S` session name** across `navigator-plan` and follow-up `resume`/`navigator-chat` so the conversation continues rather than restarting.
 
@@ -63,7 +63,7 @@ veda -p navigator-plan "The function uses `console.log`"
 # Results in: sh: console.log: command not found
 
 # GOOD - use single quotes (simplest):
-veda -S plan-auth-refactor -m gpt-5.6-sol -p navigator-plan 'The function uses `console.log` to output.'
+veda -S plan-auth-refactor -m flash -p navigator-plan 'The function uses `console.log` to output.'
 
 # GOOD - escape backticks in double quotes:
 veda -p navigator-plan "The function uses \`console.log\`"
@@ -76,9 +76,9 @@ veda -p navigator-plan "The function uses \`console.log\`"
 **Use a descriptive, contextual session ID** with `-S` to isolate your selection from other concurrent agents. Format: `plan-TASKNAME` where TASKNAME briefly describes the work.
 
 ```bash
-veda -S plan-auth-refactor -m gpt-5.6-sol ...    # Planning a refactor
-veda -S plan-pricing-research -m gpt-5.6-sol ... # Researching pricing options
-veda -S plan-launch-doc -m gpt-5.6-sol ...       # Drafting a launch document
+veda -S plan-auth-refactor -m flash ...    # Planning a refactor
+veda -S plan-pricing-research -m flash ... # Researching pricing options
+veda -S plan-launch-doc -m flash ...       # Drafting a launch document
 ```
 
 ---
@@ -141,15 +141,15 @@ veda -S plan-auth-refactor sel add "src/auth/" "src/api/users.ts"
 #
 # Lead with the USER'S EXACT WORDS (quoted verbatim), then your framing —
 # Navigator plans against the ask as given, so don't paraphrase it away:
-veda -S plan-auth-refactor -m gpt-5.6-sol -p navigator-plan \
+veda -S plan-auth-refactor -m flash -p navigator-plan \
   '<USER PROMPT, verbatim, exactly as the user wrote it>
 
 My understanding: [situation + evidence]. Proposed approach: [details]. Non-goals: [scope limits]. Key question: [your real uncertainty]. What do you think?'
 
 # 3. Continue discussion (session-scoped resume)
-veda -S plan-auth-refactor -m gpt-5.6-sol resume "What about edge case X?"
+veda -S plan-auth-refactor -m flash resume "What about edge case X?"
 # Or switch to chat mode for back-and-forth
-veda -S plan-auth-refactor -m gpt-5.6-sol -p navigator-chat "What about edge case X?"
+veda -S plan-auth-refactor -m flash -p navigator-chat "What about edge case X?"
 ```
 
 Confirm alignment before you start executing. **Once aligned, you (the Driver) proceed to execution.** Navigator does not execute; you do.
@@ -166,7 +166,7 @@ After aligning with Navigator:
 - Escalate to the user (via `ask_user`) per the rule above: scope, cost, or direction changes, or input only they can provide
 - You can consult Navigator mid-execution:
   ```bash
-  veda -S plan-auth-refactor -m gpt-5.6-sol -p navigator-chat "Quick question: should X handle Y this way?"
+  veda -S plan-auth-refactor -m flash -p navigator-chat "Quick question: should X handle Y this way?"
   ```
 
 Before ending your turn, check your last paragraph. If it is a plan, a list of next steps, or a promise about work you have not done ("I'll...", "let me know when..."), do that work now. End your turn only when the task is complete or you are blocked on input only the user can provide.
@@ -180,9 +180,9 @@ Key commands:
 - `veda -S plan-TASKNAME sel add` to build context (quote globs: `"src/*.c"`)
 - `veda -S plan-TASKNAME sel add file.c:10-50` to add line-range slices
 - `veda -S plan-TASKNAME sel ls` to verify selection and token count
-- `veda -S plan-TASKNAME -m gpt-5.6-sol -p navigator-plan` for initial planning (high reasoning)
-- `veda -S plan-TASKNAME -m gpt-5.6-sol -p navigator-chat` for follow-up discussion (medium reasoning)
-- `veda -S plan-TASKNAME -m gpt-5.6-sol resume` to continue a conversation (session-scoped)
+- `veda -S plan-TASKNAME -m flash -p navigator-plan` for initial planning (high reasoning)
+- `veda -S plan-TASKNAME -m flash -p navigator-chat` for follow-up discussion (medium reasoning)
+- `veda -S plan-TASKNAME -m flash resume` to continue a conversation (session-scoped)
 - Output goes to stdout; use `-o file.md` to save response
 
 Do not execute yet; all we want to do is iterate on a solid plan.

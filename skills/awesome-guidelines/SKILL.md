@@ -1,0 +1,403 @@
+---
+name: awesome-guidelines
+description: "Use when ingesting or applying Kristories/awesome-guidelines — deep-read sources, write learning notes, distill capsule-v2 references, wire application skills; one topic at a time via ingestion-index."
+---
+
+# Awesome Guidelines — deep ingestion router
+
+## Core Principle
+
+External guides become **durable context** only after deep reading, a **learning note** (audit trail), and **capsule-v2** distillation (invariants + probes). Shallow bullet summaries are not ingestion.
+
+## When to Use / NOT
+
+- **Use when:** ingesting the next row from `references/ingestion-index.md` or applying an already-`deep` topic during implementation.
+- **Use when:** Git, semver, changelog, API, language style questions and no stack-specific foundation owns it yet.
+- **NOT when:** a `*-foundation` skill already covers the stack — load that first.
+- **NOT when:** workflow ritual — use `codebase-driven-development` + project gates.
+
+## Workflow
+
+1. Open `references/ingestion-protocol.md` — three phases: **learn deep → note → skill**.
+2. Pick one `pending` row in `references/ingestion-index.md` (or open a `deep` row to apply). **Catalog ingest is complete** — only documented **skip** rows remain unless the upstream catalog grows.
+3. **Learn** — read every primary source + one secondary; extract invariants, flows, FAQ edges.
+4. **Note** — write `references/<topic>-learning-note.md` (mental model, tables, anti-patterns, skill trace).
+5. **Skill material** — one or more capsule-v2 files under `references/`; wire application skill from index.
+6. **Apply** — load application skill (`git-workflow-and-versioning`, `api-design-practices`, `json-api-practices`, `dotnet-coding-practices`, `powershell-scripting-practices`, `android-coding-practices`, `httpd-c-coding-practices`, `arduino-coding-practices`, `gnu-c-coding-practices`, `linux-kernel-coding-practices`, `mailchimp-content-practices`, `mdn-code-examples-practices`, `google-devdocs-practices`, `node-coding-practices`, `mongodb-data-practices`, `wcag-accessibility-practices`, `webappsec-coding-practices`, `javascript-project-practices`, `django-coding-practices`, `symfony-coding-practices`, `vue-coding-practices`, `angular-coding-practices`, `wordpress-coding-practices`, `drupal-coding-practices`, `magento-coding-practices`, `october-coding-practices`, `typescript-coding-practices`, `cpp-coding-practices`, `c-coding-practices`, `clojure-coding-practices`, `common-lisp-coding-practices`, `d-coding-practices`, `dart-coding-practices`, `delphi-coding-practices`, `pascal-coding-practices`, `perl-coding-practices`, `r-coding-practices`, `racket-coding-practices`, `solidity-coding-practices`, `vb-coding-practices`, `xml-markup-practices`, `elm-coding-practices`, `emacs-lisp-coding-practices`, `erlang-coding-practices`, `fsharp-coding-practices`, `fortran-coding-practices`, `groovy-coding-practices`, `haskell-coding-practices`, `julia-coding-practices`, `lua-coding-practices`, `nim-coding-practices`, `objc-coding-practices`, `elixir-coding-practices`, `shell-scripting-practices`, `frontend-markup-practices`, `sql-scripting-practices`, `markdown-writing-practices`, `python-coding-practices`, …) + capsules during work.
+7. Mark row **`deep`**; run catalog gate.
+
+## Red Flags
+
+- Capsule without learning note.
+- Shallow bullet summary marked done.
+- One mega-file per topic mixing unrelated seams.
+- Copy-paste of entire external guides.
+
+## Verification
+
+- Learning note exists and lists sources actually read.
+- Each capsule has `Flow`, `Invariant`, `Probe` (or explicit human-only probe).
+- Index row = `deep` with learning note + capsule paths + application skill.
+- `SKILLS_ROOT="$PWD/skills" python3 scripts/skill-validator.py` exit 0.
+
+## Skill Result Contract
+
+```
+<skill_result>
+  <skill>awesome-guidelines</skill>
+  <status>success|partial|blocked|failure</status>
+  <evidence>learning note path, capsule paths, index deep, gate exit 0</evidence>
+  <artifacts>references/*-learning-note.md, references/*-*.md capsules</artifacts>
+  <risks>shallow distill, missing probe, or none</risks>
+</skill_result>
+```
+
+## References
+
+- `references/ingestion-protocol.md` — learn → note → skill phases.
+- `references/ingestion-index.md` — queue and `deep` status.
+- `references/git-style-learning-note.md` — Git deep learning note.
+- `references/semver-learning-note.md` — SemVer deep learning note.
+- `references/changelog-style-learning-note.md` — Changelog deep learning note.
+- `references/git-style-branches.md` — branch naming seam.
+- `references/git-style-commit-messages.md` — subject/body and logical commits.
+- `references/git-style-history-and-merge.md` — published history and merge.
+- `references/semver-public-api-and-bumps.md` — MAJOR/MINOR/PATCH decisions.
+- `references/semver-precedence-and-prerelease.md` — pre-release ordering.
+- `references/changelog-human-curation.md` — CHANGELOG vs git log.
+- `references/api-design-learning-note.md` — API design deep learning note.
+- `references/api-design-resource-names.md` — resource name hierarchy.
+- `references/api-design-http-idempotency.md` — idempotent HTTP writes.
+- `references/api-design-errors-machine-readable.md` — stable error codes.
+- `references/api-design-pagination-and-lists.md` — list pagination from v1.
+- `references/api-design-versioning-contract.md` — api-version contract.
+- `references/shell-style-learning-note.md` — Shell deep learning note.
+- `references/shell-style-scope-and-safety.md` — when bash, SUID, globs.
+- `references/shell-style-quoting-and-arrays.md` — quoting and `"$@"`.
+- `references/shell-style-control-flow-subshells.md` — `[[ ]]`, subshell traps.
+- `references/shell-style-structure-and-errors.md` — main, errors, ShellCheck.
+- `references/frontend-style-learning-note.md` — Frontend HTML/CSS deep learning note.
+- `references/frontend-html-semantics-accessibility.md` — semantics and a11y.
+- `references/frontend-css-naming-selectors.md` — classes, intent, js hooks.
+- `references/frontend-css-structure-formatting.md` — format and media queries.
+- `references/frontend-assets-delivery.md` — HTTPS, charset, @import.
+- `references/python-style-learning-note.md` — Python deep learning note.
+- `references/python-style-layout-imports.md` — layout and imports.
+- `references/python-style-naming-modules.md` — naming and modules.
+- `references/python-style-exceptions-truthiness.md` — exceptions and truthiness.
+- `references/python-style-defaults-types-main.md` — defaults, types, main.
+- `references/javascript-style-learning-note.md` — JavaScript deep learning note.
+- `references/javascript-style-modules-exports.md` — ES modules and exports.
+- `references/javascript-style-variables-equality.md` — const/let and equality.
+- `references/javascript-style-formatting-control.md` — format and control flow.
+- `references/javascript-style-functions-disallowed.md` — functions and banned features.
+- `references/typescript-style-learning-note.md` — TypeScript deep learning note.
+- `references/typescript-style-modules-imports.md` — ES modules, import type.
+- `references/typescript-style-types-nullability.md` — any/unknown, nullability, callbacks.
+- `references/typescript-style-classes-api.md` — classes, readonly, assertions.
+- `references/typescript-style-verify.md` — tsc/eslint probes.
+- `references/go-style-learning-note.md` — Go deep learning note.
+- `references/go-style-formatting-naming.md` — gofmt and naming.
+- `references/go-style-errors-flow.md` — errors and panic.
+- `references/go-style-interfaces-apis.md` — interfaces and literals.
+- `references/go-style-concurrency-context.md` — context and goroutines.
+- `references/rust-style-learning-note.md` — Rust deep learning note.
+- `references/rust-style-formatting-naming.md` — rustfmt and naming.
+- `references/rust-style-errors-result.md` — errors and Result.
+- `references/rust-style-traits-interop.md` — traits and iterators.
+- `references/rust-style-api-predictability.md` — API predictability.
+- `references/java-style-learning-note.md` — Java deep learning note.
+- `references/java-style-formatting-imports.md` — format and imports.
+- `references/java-style-naming-types.md` — naming and types.
+- `references/java-style-exceptions-practices.md` — exceptions and practices.
+- `references/java-style-javadoc-public-api.md` — Javadoc on public API.
+- `references/php-style-learning-note.md` — PHP deep learning note.
+- `references/php-style-formatting-layout.md` — PSR-12 layout.
+- `references/php-style-files-namespaces.md` — PSR-1/PSR-4 files.
+- `references/php-style-types-comparisons.md` — strict types and ===.
+- `references/php-style-classes-design.md` — visibility, final, DI.
+- `references/ruby-style-learning-note.md` — Ruby deep learning note.
+- `references/ruby-style-formatting-layout.md` — 2-space layout.
+- `references/ruby-style-naming-files.md` — naming and files.
+- `references/ruby-style-methods-blocks.md` — methods and booleans.
+- `references/ruby-style-classes-exceptions.md` — classes and rescue.
+- `references/kotlin-style-learning-note.md` — Kotlin deep learning note.
+- `references/kotlin-style-formatting-layout.md` — 4-space layout.
+- `references/kotlin-style-naming-files.md` — naming and files.
+- `references/kotlin-style-organization-classes.md` — class layout.
+- `references/kotlin-style-idioms-api.md` — idioms and library API.
+- `references/swift-style-learning-note.md` — Swift deep learning note.
+- `references/swift-style-formatting-safety.md` — let, guard, access.
+- `references/swift-style-naming-api.md` — naming and fluency.
+- `references/swift-style-argument-labels.md` — labels and defaults.
+- `references/swift-style-documentation-types.md` — docs and types.
+- `references/csharp-style-learning-note.md` — C# deep learning note.
+- `references/csharp-style-formatting-layout.md` — Allman layout.
+- `references/csharp-style-naming-types.md` — Framework Design naming.
+- `references/csharp-style-modern-idioms.md` — modern C# idioms.
+- `references/csharp-style-exceptions-api.md` — exceptions and XML docs.
+- `references/scala-style-learning-note.md` — Scala deep learning note.
+- `references/scala-style-formatting-layout.md` — 2-space layout.
+- `references/scala-style-naming-packages.md` — naming and packages.
+- `references/scala-style-types-immutability.md` — types and immutability.
+- `references/scala-style-control-api.md` — control flow and Scaladoc.
+- `references/sql-style-learning-note.md` — SQL deep learning note.
+- `references/sql-style-naming-schema.md` — naming and schema.
+- `references/sql-style-query-layout.md` — query river layout.
+- `references/sql-style-ddl-types.md` — DDL and types.
+- `references/sql-style-query-patterns.md` — patterns and portability.
+- `references/markdown-style-learning-note.md` — Markdown deep learning note.
+- `references/markdown-style-document-layout.md` — H1, TOC, wrap.
+- `references/markdown-style-lists-code.md` — lists and fences.
+- `references/markdown-style-links-media.md` — links and alt text.
+- `references/markdown-style-tables-portability.md` — tables vs HTML.
+- `references/json-style-learning-note.md` — JSON API deep learning note.
+- `references/json-style-syntax-properties.md` — strict JSON, camelCase, plural arrays.
+- `references/json-style-types-formats.md` — enums, dates, durations, geo.
+- `references/json-style-envelope-errors.md` — apiVersion, data/error envelope.
+- `references/json-style-maps-paging.md` — maps, paging, property ordering.
+- `references/cpp-style-learning-note.md` — C++ deep learning note.
+- `references/cpp-style-formatting-headers.md` — headers, guards, IWYU.
+- `references/cpp-style-naming-types.md` — PascalCase/snake_case naming.
+- `references/cpp-style-ownership-raii.md` — smart pointers, RAII.
+- `references/cpp-style-classes-api.md` — ctors, explicit, API shape.
+- `references/c-style-learning-note.md` — C deep learning note.
+- `references/c-style-formatting-control.md` — braces, Yoda, switch.
+- `references/c-style-naming-types.md` — snake_case, globals, pointers.
+- `references/c-style-headers-modules.md` — guards, extern, layering.
+- `references/c-style-macros-safety.md` — macros, init, error checks.
+- `references/clojure-style-learning-note.md` — Clojure deep learning note.
+- `references/clojure-style-layout-namespaces.md` — indent, ns, parens.
+- `references/clojure-style-naming-types.md` — lisp-case, ?, !, dynamics.
+- `references/clojure-style-functions-idioms.md` — when, threading, arity.
+- `references/clojure-style-data-safety.md` — collections, ex-info, macros.
+- `references/lisp-style-learning-note.md` — Common Lisp deep learning note.
+- `references/lisp-style-formatting-files.md` — indent, columns, headers.
+- `references/lisp-style-naming-symbols.md` — lisp-case, *, +, predicates.
+- `references/lisp-style-packages-systems.md` — defpackage, ASDF.
+- `references/lisp-style-clos-control.md` — CLOS, when/unless.
+- `references/d-style-learning-note.md` — D deep learning note.
+- `references/d-style-formatting-layout.md` — indent, braces, imports.
+- `references/d-style-naming-types.md` — camelCase, modules.
+- `references/d-style-declarations-api.md` — alias, properties, UFCS.
+- `references/d-style-docs-testing.md` — Ddoc, unittest, attributes.
+- `references/dart-style-learning-note.md` — Dart deep learning note.
+- `references/dart-style-formatting-names.md` — format, naming, imports.
+- `references/dart-style-documentation.md` — /// docs, summaries.
+- `references/dart-style-usage-idioms.md` — null, async, collections.
+- `references/dart-style-design-api.md` — types, classes, equality.
+- `references/delphi-style-learning-note.md` — Delphi deep learning note.
+- `references/delphi-style-formatting-layout.md` — indent, begin/end.
+- `references/delphi-style-naming-types.md` — T/I/E/F/A/L.
+- `references/delphi-style-units-structure.md` — unit hierarchy, uses.
+- `references/delphi-style-resources-errors.md` — FreeAndNil, docs.
+- `references/elm-style-learning-note.md` — Elm deep learning note.
+- `references/elm-style-formatting-layout.md` — elm-format, 80 cols, declarations.
+- `references/elm-style-naming-modules.md` — names, imports, module focus.
+- `references/elm-style-types-declarations.md` — unions, custom IDs, decoders.
+- `references/elm-style-pipelines-expressions.md` — pipe, case, let, application.
+- `references/emacs-lisp-style-learning-note.md` — Emacs Lisp deep learning note.
+- `references/emacs-lisp-style-formatting-layout.md` — indent, lexical-binding, parens.
+- `references/emacs-lisp-style-naming-prefixes.md` — lisp-case, prefixes, predicates.
+- `references/emacs-lisp-style-functions-macros.md` — when/unless, quotes, macros.
+- `references/emacs-lisp-style-packages-docs.md` — require/provide, autoload, docstrings.
+- `references/erlang-style-learning-note.md` — Erlang deep learning note.
+- `references/erlang-style-formatting-modules.md` — indent, types, grouping.
+- `references/erlang-style-naming-types.md` — snake/CamelCase, specs, state.
+- `references/erlang-style-control-flow.md` — clauses, try/catch, no if.
+- `references/erlang-style-otp-security.md` — exports, OTP API, input safety.
+- `references/fsharp-style-learning-note.md` — F# deep learning note.
+- `references/fsharp-style-naming-documentation.md` — .NET names, XML, .fsi.
+- `references/fsharp-style-modules-types.md` — modules, DUs, interfaces.
+- `references/fsharp-style-functions-async.md` — Async, extensions, constraints.
+- `references/fsharp-style-dotnet-interop.md` — Func, IEnumerable, Task, null.
+- `references/fortran-style-learning-note.md` — Fortran deep learning note.
+- `references/fortran-style-formatting-layout.md` — fprettify, indent, files.
+- `references/fortran-style-naming-modules.md` — snake_case, intent, modules.
+- `references/fortran-style-arrays-types.md` — dp, assumed-shape, slices.
+- `references/fortran-style-modern-api.md` — modern std, FORD, obsolescence.
+- `references/groovy-style-learning-note.md` — Groovy deep learning note.
+- `references/groovy-style-syntax-idioms.md` — semicolons, GStrings, literals.
+- `references/groovy-style-objects-properties.md` — POGOs, with/tap, ==.
+- `references/groovy-style-collections-gdk.md` — GDK, truth, ?., ?:.
+- `references/groovy-style-typing-api.md` — public types, assert, CodeNarc.
+- `references/haskell-style-learning-note.md` — Haskell deep learning note.
+- `references/haskell-style-formatting-layout.md` — indent, 80 cols, case.
+- `references/haskell-style-naming-imports.md` — camelCase, imports, Haddock.
+- `references/haskell-style-functions-control.md` — sigs, partiality, guards.
+- `references/haskell-style-types-io.md` — strict data, IO split, Text.
+- `references/julia-style-learning-note.md` — Julia deep learning note.
+- `references/julia-style-formatting-layout.md` — JuliaFormatter, 92 cols.
+- `references/julia-style-modules-imports.md` — using, exports, modules.
+- `references/julia-style-functions-methods.md` — return, kwargs, types.
+- `references/julia-style-docs-tests.md` — docstrings, testsets.
+- `references/lua-style-learning-note.md` — Lua deep learning note.
+- `references/lua-style-formatting-layout.md` — indent, spacing, blocks.
+- `references/lua-style-naming-modules.md` — snake_case, return M.
+- `references/lua-style-functions-scope.md` — local, guards, calls.
+- `references/lua-style-tables-docs.md` — literals, LDoc, luacheck.
+- `references/nim-style-learning-note.md` — Nim NEP-1 deep learning note.
+- `references/nim-style-formatting-layout.md` — 2-space, 80 cols, multiline.
+- `references/nim-style-naming-types.md` — PascalCase, enums, init/new.
+- `references/nim-style-procedures-api.md` — result, let, proc API.
+- `references/nim-style-modules-verify.md` — std imports, styleCheck.
+- `references/objc-style-learning-note.md` — Objective-C deep learning note.
+- `references/objc-style-formatting-layout.md` — indent, braces, imports.
+- `references/objc-style-naming-prefixes.md` — prefixes, categories.
+- `references/objc-style-properties-memory.md` — copy, designated init.
+- `references/objc-style-docs-errors.md` — Doxygen, NSError.
+- `references/pascal-style-learning-note.md` — Pascal FPC/GPC deep learning note.
+- `references/pascal-style-formatting-layout.md` — indent, begin/end, spacing.
+- `references/pascal-style-naming-types.md` — keywords, T/P types.
+- `references/pascal-style-units-structure.md` — files, block order.
+- `references/pascal-style-comments-control.md` — braces, flow, -Wall.
+- `references/perl-style-learning-note.md` — Perl deep learning note.
+- `references/perl-style-formatting-layout.md` — 4-space, braces, align.
+- `references/perl-style-strict-scoping.md` — v5.36, my, naming.
+- `references/perl-style-subs-io.md` — open, args, returns.
+- `references/perl-style-anti-patterns.md` — indirect object, map/grep.
+- `references/r-style-learning-note.md` — R tidyverse/Google deep learning note.
+- `references/r-style-formatting-syntax.md` — `<-`, braces, spacing.
+- `references/r-style-naming-files.md` — snake_case, filenames.
+- `references/r-style-functions-pipes.md` — `|>`, return, control.
+- `references/r-style-docs-verify.md` — roxygen, styler, lintr.
+- `references/racket-style-learning-note.md` — Racket deep learning note.
+- `references/racket-style-formatting-textual.md` — DrRacket indent, parens.
+- `references/racket-style-naming-constructs.md` — kebab-case, cond/for.
+- `references/racket-style-modules-contracts.md` — provide, contract-out.
+- `references/racket-style-testing-verify.md` — rackunit, handlers.
+- `references/solidity-style-learning-note.md` — Solidity deep learning note.
+- `references/solidity-style-formatting-layout.md` — indent, wraps, braces.
+- `references/solidity-style-naming-natspec.md` — CapWords/mixedCase, NatSpec.
+- `references/solidity-style-contract-structure.md` — order, visibility ladder.
+- `references/solidity-style-security-verify.md` — Solcurity CEI, Slither.
+- `references/vb-style-learning-note.md` — Visual Basic .NET deep learning note.
+- `references/vb-style-formatting-layout.md` — indent, one statement per line.
+- `references/vb-style-naming-types.md` — PascalCase, m_ fields.
+- `references/vb-style-idioms-control.md` — Option Strict, Try/Catch, LINQ.
+- `references/vb-style-docs-verify.md` — XML docs, dotnet verify.
+- `references/xml-style-learning-note.md` — XML format deep learning note.
+- `references/xml-style-schema-namespaces.md` — reuse, RELAX NG, xmlns.
+- `references/xml-style-naming-values.md` — lowerCamelCase, literals.
+- `references/xml-style-elements-attributes.md` — elem vs attr rules.
+- `references/xml-style-instances-verify.md` — UTF-8, xmllint.
+- `references/dotnet-style-learning-note.md` — .NET cross-cutting deep learning note.
+- `references/dotnet-style-naming-framework.md` — FDG PascalCase, namespaces.
+- `references/dotnet-style-api-design.md` — scenarios, aggregates.
+- `references/dotnet-style-exceptions-events.md` — throw, events, dispose.
+- `references/dotnet-style-security-verify.md` — secure baseline, analyzers.
+- `references/powershell-style-learning-note.md` — PowerShell deep learning note.
+- `references/powershell-style-formatting-layout.md` — OTBS, CmdletBinding.
+- `references/powershell-style-naming-commands.md` — Verb-Noun, paths.
+- `references/powershell-style-functions-tools.md` — pipeline tools, output.
+- `references/powershell-style-errors-security.md` — try/catch, PSCredential.
+- `references/android-style-learning-note.md` — Android deep learning note.
+- `references/android-style-resources-layout.md` — drawables, layouts, strings.
+- `references/android-style-code-conventions.md` — imports, fields, logs.
+- `references/android-style-components-tests.md` — factories, keys, tests.
+- `references/android-style-architecture-verify.md` — MVP/Jetpack, lint.
+- `references/httpd-style-learning-note.md` — Apache httpd C deep learning note.
+- `references/httpd-style-formatting-indent.md` — 4-space, 80 cols, indent.
+- `references/httpd-style-functions-flow.md` — ANSI, if/switch layout.
+- `references/httpd-style-expressions-casts.md` — operators, casts.
+- `references/httpd-style-comments-verify.md` — comments, build verify.
+- `references/arduino-style-learning-note.md` — Arduino deep learning note.
+- `references/arduino-style-library-api.md` — read/write/begin, Stream API.
+- `references/arduino-style-library-structure.md` — .h/.cpp, guards, begin().
+- `references/arduino-style-sketch-code.md` — setup/loop, camelCase, braces.
+- `references/arduino-style-packaging-verify.md` — keywords, examples, compile.
+- `references/gnu-style-learning-note.md` — GNU C deep learning note.
+- `references/gnu-style-formatting-layout.md` — 79 cols, defun braces, indent.
+- `references/gnu-style-naming-files.md` — lowercase_with_underscores, enums.
+- `references/gnu-style-comments-conditionals.md` — English comments, #endif.
+- `references/gnu-style-constructs-portability.md` — braces, Gnulib, errors.
+- `references/linux-kernel-style-learning-note.md` — Linux kernel C deep learning note.
+- `references/linux-kernel-style-indent-braces.md` — tabs, 80 cols, K&R braces.
+- `references/linux-kernel-style-naming-types.md` — globals, typedefs, terms.
+- `references/linux-kernel-style-functions-goto.md` — size, prototypes, goto.
+- `references/linux-kernel-style-macros-verify.md` — macros, kernel-doc, checkpatch.
+- `references/mailchimp-style-learning-note.md` — Mailchimp content deep learning note.
+- `references/mailchimp-style-voice-tone.md` — plainspoken voice, active/positive.
+- `references/mailchimp-style-grammar-structure.md` — hierarchy, numbers, punctuation.
+- `references/mailchimp-style-inclusive-people.md` — person-first, bias-free terms.
+- `references/mailchimp-style-web-accessibility-i18n.md` — UI copy, a11y, translation.
+- `references/mdn-style-learning-note.md` — MDN code examples deep learning note.
+- `references/mdn-style-examples-principles.md` — Prettier, size, vanilla, fences.
+- `references/mdn-style-javascript-examples.md` — const/let, DOM, comments.
+- `references/mdn-style-html-examples.md` — HTML5, attrs, kebab classes.
+- `references/mdn-style-css-examples.md` — vanilla CSS, color, media queries.
+- `references/google-devdocs-style-learning-note.md` — Google devdocs deep learning note.
+- `references/google-devdocs-style-voice-person.md` — you, active voice, no please.
+- `references/google-devdocs-style-format-headings.md` — sentence case, bold UI, code font.
+- `references/google-devdocs-style-procedures-links.md` — steps, For more information see.
+- `references/google-devdocs-style-accessibility-global.md` — a11y, global English, terms.
+- `references/node-style-learning-note.md` — Node.js felixge + Microsoft platform deep learning note.
+- `references/node-style-formatting-layout.md` — 2-space, semicolons, quotes, braces.
+- `references/node-style-functions-modules.md` — small functions, requires, no prototype hacks.
+- `references/node-style-conditionals-naming.md` — ===, camelCase, predicate vars.
+- `references/node-style-platform-verify.md` — npm, PORT, Windows MAX_PATH, cross-platform.
+- `references/mongo-style-learning-note.md` — MongoDB MongoStyleGuide deep learning note.
+- `references/mongo-style-enums-booleans.md` — UPPERCASE enums, is/has booleans.
+- `references/mongo-style-dates-null-types.md` — Date vs day string, null semantics.
+- `references/mongo-style-names-ids.md` — camelCase keys, string _id.
+- `references/mongo-style-modelling-verify.md` — embed/reference, validation, indexes.
+- `references/wcag-accessibility-learning-note.md` — WCAG 2.1 Level AA deep learning note.
+- `references/wcag-perceivable-media-text.md` — alt, contrast, reflow (Principle 1).
+- `references/wcag-operable-keyboard-focus.md` — keyboard, focus, navigation (Principle 2).
+- `references/wcag-understandable-forms-language.md` — lang, forms, errors (Principle 3).
+- `references/wcag-robust-verify.md` — name/role/value, verification (Principle 4).
+- `references/webappsec-style-learning-note.md` — Mozilla WebAppSec deep learning note.
+- `references/webappsec-auth-session.md` — auth, sessions, access control.
+- `references/webappsec-input-output.md` — whitelist input, encoding, SQLi.
+- `references/webappsec-cross-domain-transport.md` — CSRF, TLS, CSP, framing.
+- `references/webappsec-uploads-errors-verify.md` — uploads, errors, QA checklist.
+- `references/js-project-learning-note.md` — elsewhen JS project guidelines deep learning note.
+- `references/js-project-git-docs.md` — git workflow, README, comments.
+- `references/js-project-env-deps-test.md` — env, lockfile, testing.
+- `references/js-project-structure-style.md` — feature folders, ESLint, logging.
+- `references/js-project-api-a11y-verify.md` — REST API, a11y setup, verify.
+- `references/django-style-learning-note.md` — Django official coding style deep learning note.
+- `references/django-style-python-imports.md` — black, isort, tests.
+- `references/django-style-templates-views.md` — DTL spacing, request param.
+- `references/django-style-models-settings.md` — model order, choices, lazy settings.
+- `references/django-style-misc-verify.md` — i18n, pre-commit verify.
+- `references/symfony-style-learning-note.md` — Symfony coding standards deep learning note.
+- `references/symfony-style-structure-control.md` — Yoda, spacing, control flow.
+- `references/symfony-style-naming-services.md` — naming matrix, FQCN services.
+- `references/symfony-style-phpdoc-exceptions.md` — PHPDoc, exceptions, license.
+- `references/symfony-style-verify.md` — PHP CS Fixer verify.
+- `references/vue-style-learning-note.md` — Vue official style guide deep learning note.
+- `references/vue-style-essential-errors.md` — Priority A: props, keys, v-if/v-for.
+- `references/vue-style-components-naming.md` — files, prefixes, casing.
+- `references/vue-style-templates-composition.md` — templates, computed, order.
+- `references/vue-style-caution-verify.md` — Priority D, eslint verify.
+- `references/angular-style-learning-note.md` — Angular 2025 style guide deep learning note.
+- `references/angular-style-naming-files.md` — kebab-case files, specs, triplets.
+- `references/angular-style-project-structure.md` — src, feature folders.
+- `references/angular-style-components-templates.md` — inject, signals, templates.
+- `references/angular-style-selectors-verify.md` — selectors, I/O, eslint.
+- `references/wordpress-style-learning-note.md` — WordPress WPCS deep learning note.
+- `references/wordpress-style-php-naming.md` — snake_case, Yoda, files, hooks.
+- `references/wordpress-style-security-escape.md` — late esc_* output, kses.
+- `references/wordpress-style-database-i18n.md` — $wpdb->prepare, gettext.
+- `references/wordpress-style-assets-verify.md` — HTML/CSS/JS, PHPCS, a11y.
+- `references/drupal-style-learning-note.md` — Drupal WPCS GitLab Pages learning note.
+- `references/drupal-style-php-naming.md` — 2-space layout, module prefixes.
+- `references/drupal-style-namespaces-types.md` — PSR-4, use, type hints.
+- `references/drupal-style-documentation-i18n.md` — docblocks, hooks, t().
+- `references/drupal-style-assets-verify.md` — YAML, Twig, JS, CI gates.
+- `references/magento-style-learning-note.md` — Adobe Commerce/Magento standards learning note.
+- `references/magento-style-php-types.md` — strict_types, PSR-12, ::class.
+- `references/magento-style-class-di.md` — SOLID, DI, composition.
+- `references/magento-style-security-exceptions.md` — SQL, XSS, exceptions.
+- `references/magento-style-layers-verify.md` — Api modules, PHPCS, ESLint.
+- `references/october-style-learning-note.md` — October CMS developer guide learning note.
+- `references/october-style-php-psr.md` — PSR-1/2/4, camelCase/snake_case.
+- `references/october-style-naming-patterns.md` — vendor, DB, MVC, views, events.
+- `references/october-style-class-exceptions.md` — visibility, Rain exceptions.
+- `references/october-style-packages-verify.md` — composer, semver, MySQL strict.
+- `references/elixir-style-learning-note.md` — Elixir deep learning note.
+- `references/elixir-style-formatting-modules.md` — mix format, module order.
+- `references/elixir-style-naming-functions.md` — snake/Camel, ?, Error.
+- `references/elixir-style-expressions-pipelines.md` — pipe, cond, unless.
+- `references/elixir-style-docs-types-errors.md` — moduledoc, spec, tests.

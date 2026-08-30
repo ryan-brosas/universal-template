@@ -28,5 +28,7 @@
 ## Leaf skills
 
 - General discipline: `code-discipline`
-- TypeScript naming/types: `typescript-coding-standards`
+- TypeScript style (modules, nullability, eslint/tsc): `typescript-coding-practices`
+- TypeScript domain modeling (branded types, schemas, errors-as-data): `typescript-coding-standards`
+- JavaScript style: `javascript-coding-practices`
 - Encode new rules: `practices-to-ci`
