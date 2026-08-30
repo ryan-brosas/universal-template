@@ -1,48 +1,30 @@
 ## Summary
 
-<!-- one or two lines that state the user-visible result -->
+<!-- what changed, stated as the user-visible result -->
 
-## Changed files
+## Why
 
-- `path`: what changed and why
-
-## Screenshots
-
-No visual result.
+<!-- the problem this solves; reference an issue when one exists -->
 
 ## Verification
 
-- `SKILLS_ROOT="$PWD/skills" python3 scripts/skill-validator.py` - pass or fail; exit N
-- `python3 scripts/catalog-integrity.py` - pass or fail; exit N
-- `python3 scripts/catalog-quality.py` - pass or fail; exit N
-- `python3 scripts/repo-hygiene.py` - pass or fail; exit N
-- `python3 scripts/dead-code.py` - pass or fail; exit N
-- `CHECK_RANGE=origin/main..HEAD python3 scripts/conventional-commit.py` - pass or fail; exit N
-- `git diff --check` - pass or fail; exit N
+<!-- only checks actually run, with results -->
 
-## CI state
+- Catalog gates: `skill-validator` / `catalog-integrity` / `catalog-quality` / `repo-hygiene` / `policy-consistency` / `dead-code` / `conventional-commit`
+- `git diff --check`
 
-- Workflow: Project quality
-- Run: pending
-- Head commit: pending
-- State: pending
+## Risks
 
-## Codebase observation
+<!-- regression / compatibility / migration / performance / security — or None identified -->
 
-- Project: None
-- Coverage: pending or skipped reason
-- Observation: one verified blast-radius statement or skipped reason
+## Reference / Prior Art
 
-## GitHub metadata
+<!-- when external code materially influenced this change: repo, path, revision, ADOPT/ADAPT/INSPIRATION. Else: N/A -->
 
-- Labels: None
-- Milestone: None
-- Assignees: None
-- Reviewers: None
-- Project: None
-- State: draft or ready
-- Base: main
+## Visual Evidence
 
-## Notes for the reviewer
+<!-- for visual changes: rendered/runtime proof. Model review is not rendered proof. Else: N/A -->
 
-None
+## Breaking Changes / Migration
+
+<!-- if applicable: what breaks and how to migrate. Else: N/A -->

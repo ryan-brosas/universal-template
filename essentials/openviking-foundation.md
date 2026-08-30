@@ -18,30 +18,16 @@ mining* — never a substitute for the local or `reference/` repository, which
 stays the implementation truth. Do not duplicate locally available source into
 OpenViking; add a corpus only when the mining pass itself is the asset.
 
-## 2. Live evidence (this audit)
+## 2. Live machine facts — probe at runtime, never freeze them here
 
-| Fact | Value |
-|---|---|
-| Daemon binary | `~/.hermes/hermes-agent/venv/bin/openviking-server` (running) |
-| Server | `http://127.0.0.1:1933` (`auth_mode: dev`, `cors_origins: *`) |
-| Storage workspace | `/mnt/hdd/openviking/data` |
-| Resource tree | `/mnt/hdd/openviking/data/viking/default/resources/` |
-| Vector DB | `vectordb/context` (backend `local`), ~3.9 GB |
-| Embedding | provider `voyage`, model `voyage-4-lite`, 2048-dim (key: env-only, never inline) |
-| Memory | version `v3`, extraction enabled |
-| Retrieval | `hotness_alpha: 0.0`, `score_propagation_alpha: 1.0` |
-| Ingest | enabled; harnesses: hermes (`user_field: sender`, mode both) |
-| Index queue | `_system/queue` (drained asynchronously) |
+Endpoint, storage paths, DB size, embedding model, binary locations, and
+corpus counts are **machine-local runtime facts**. Probe them when needed;
+do not copy them into portable philosophy:
 
-## 3. Corpus inventory (dated evidence — re-verify at runtime; do not hard-code these counts in policy)
-
-- **888 resource dirs** total under `viking://resources/`
-  - `llm-repo-learning-*`: **449** (each a repo-learning pass)
-  - `*-foundation*` (foundations + pass-N capsule leaves): **284**
-  - remainder: probes (`vk_probe`, `lrl-ingest-copy`), specific rows/passes, one-off research
-- Every indexed skill in `~/.agents/skills/` has a matching `*-foundation` corpus
-  (e.g. `browser-use-foundation`, `ai-sdk-foundation`, `linkedin-scrapers-foundation_9`)
-- Read URIs look like `viking://resources/llm-repo-learning-passX-<slug>/…`
+- Stack overview: `python3 ~/.agents/scripts/runtime-capabilities.py`
+- Daemon health: the `openviking.health` MCP tool (or the `openviking` CLI)
+- Corpus inventory: `extensions.membrowse` over `viking://resources/`
+- Dated audit snapshots live in git history, not in this document.
 
 ## 4. Retrieval surface (exact tool names)
 
@@ -61,7 +47,7 @@ Guardrails:
 - hits are **pointers not proofs** — read the source before citing
 - never cite an URIs coverage claim without `memread`-proving it exists
 - `memsearch` failing with 5xx ⇒ daemon busy/reindexing; retry `memfind` (fast) instead of assuming missing data
-- if the daemon is unreachable, drop to the filesystem store (`/mnt/hdd/openviking/data`) and note the degraded path
+- if the daemon is unreachable, drop to the machine-local filesystem store (path via `scripts/runtime-capabilities.py` / machine config) and note the degraded path
 
 ## 4. Ingest protocol (source material → essentials)
 

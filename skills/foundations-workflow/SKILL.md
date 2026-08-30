@@ -1,11 +1,15 @@
 ---
 name: foundations-workflow
-description: 'Use when turning one indexed repository into a reusable foundation skill: graph-led seam discovery, source-confirmed implementation capsules, and behavior-tested reuse contracts.'
+description: 'Use when a deliberate exception justifies mining one repository into a foundation skill: graph-led seam discovery, source-confirmed capsules, behavior-tested reuse contracts. Frozen by default while reference-driven development is the standard path.'
 disable-model-invocation: true
 ---
 # Foundations Workflow
 
-**Code is ground truth; the skill is the retrieval map.** Use Codebase Memory (or `codegraphcontext` when the repo is FalkorDB-indexed locally) to identify a high-leverage connected seam, then confirm the source and direct test that establish its contract. A capsule gives a small model enough code-shaped context to port safely without pretending Markdown replaces the code.
+**Code is ground truth; the skill is the retrieval map.** Use Fovea on the source root (or Codebase Memory across the persistent library) to identify a high-leverage connected seam, then confirm the source and direct test that establish its contract. A capsule gives a small model enough code-shaped context to port safely without pretending Markdown replaces the code.
+
+## Status: frozen by default
+
+Repository → foundation is **paused** while reference-driven development is the standard path (see `references/reference-contract.md`). A useful repository becomes project-local reference code. Mining runs only as a deliberate, named exception with a stated recurring porting question that source alone does not answer.
 
 ## Core Principle
 

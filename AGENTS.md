@@ -71,6 +71,7 @@ SKILLS_ROOT="$PWD/skills" python3 scripts/skill-validator.py   # P0 count must b
 python3 scripts/catalog-integrity.py
 python3 scripts/catalog-quality.py
 python3 scripts/repo-hygiene.py
+python3 scripts/policy-consistency.py
 python3 scripts/dead-code.py
 CHECK_RANGE="origin/main..HEAD" python3 scripts/conventional-commit.py
 git diff --check
@@ -88,14 +89,15 @@ pull_request.
 - **Prewalk** means only the Pi Fabric runtime feature: `/fabric prewalk`
   arms a continuation at a successful monitored mutation boundary and
   continues execution with the configured executor model. It adds no
-  system-prompt instruction. Never use "prewalk" for repository exploration —
+  system-prompt instruction. Never use "prewalk" for repository exploration
+  (the word belongs to Pi Fabric) —
   say discovery, graph discovery, source inspection, or evidence discovery.
 - **Schema** modes are `off` (default) / `audit` / `enforce`. In `off`/`audit`
   the `schema.*` loop is available but does not gate direct
   `pi.edit`/`pi.write`/`pi.bash`. Use the Schema loop only when the session
   runs enforce mode, the user invokes a Fabric Schema mechanism, or the task
   explicitly needs transactional/postcondition guarantees. Enforce mode blocks
-  direct mutations and disables prewalk — do not activate it silently as a
+  direct mutations and disables Fabric Prewalk — do not activate it silently as a
   universal prerequisite.
 
 ## Workflow-lifecycle is opt-in

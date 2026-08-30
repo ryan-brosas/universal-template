@@ -23,11 +23,10 @@ roadmap, skill development, testing harness, automation pipelines, and cron mara
 > *"A small model lacks knowledge, not capacity. Give it ground truth to work from."*
 
 ### Tactical Objectives:
-- [ ] **Objective 1.1 — Complete Inspiration Ingestion (43 Repos Remaining):**
-  - Execute the Two-Pass Learning Protocol on all remaining unsqueezed repos in `/mnt/hdd/utopia/inspo`.
-  - **Tier 1 Targets:** `locoagent` (21k), `cuga-agent` (21k), `nocodb` (187k), `pipeshub-ai` (127k), `teable` (53k), `grist-core` (27k), `dub` (24k).
-  - **Tier 2 Targets:** `modelcontextprotocol` (12k), `servers`, `vitest` (16k), `nest` (13k), `rsbuild` (14k), `relaticle` (9k), `nodebestpractices` (6k).
-  - **Tier 3 Targets:** Combined `linkedin-scrapers-foundation` mining all ~14 scraper repos into a unified suite.
+- [ ] **Objective 1.1 — Reference-Driven Prior Art (replaces mass ingestion):**
+  - Useful external repositories become project-local `reference/<repo>/` checkouts — read source/tests, adopt/adapt/omit. Repo → foundation mining is **frozen** while this path is validated.
+  - Deliberate foundation exceptions only: a named recurring porting question that source alone does not answer (`foundations-workflow`, one repo at a time).
+  - Existing `*-foundation` leaves are preserved pending measured triage (keep / shrink / retire per `code-foundations`).
 - [ ] **Objective 1.2 — 100% `<!-- capsule-v2 -->` Migration:**
   - Audit all references across every emergent foundation leaf (the flat `skills/*-foundation` layout) and ensure 100% adherence to the capsule-v2 contract (Source/Question, HEAD line numbers, Signature, Data Shape, decisive source, Flow, Invariant, direct test Probe, Retrieve query, Verdict).
   - Eliminate all remaining legacy capsule-v1 markdown files.
@@ -68,11 +67,9 @@ roadmap, skill development, testing harness, automation pipelines, and cron mara
     - **Browser Automation Pack:** Advanced CDP manipulation, anti-bot evasion, session persistence, visual element targeting.
     - **Data Pipeline Pack:** Automated spreadsheet engineering, parquet transformations, SQLite/Turso mirrors.
     - **System Automation Pack:** Multi-agent coordination, persistent terminal management, local process supervision.
-- [ ] **Objective 3.3 — Tripled-Layer Viking Memory Sync:**
-  - Automatically sync newly generated skills and foundation capsules into OpenViking (`/mnt/hdd/openviking/data`), maintaining:
-    - *Layer 1:* Searchable capsule resources.
-    - *Layer 2:* Living work records and process runbooks.
-    - *Layer 3:* Durable pattern memories and meta-lessons.
+- [ ] **Objective 3.3 — Experience-Grade OpenViking Sync (opt-in):**
+  - Sync only expensive-to-reconstruct experience into OpenViking: decisions, failed approaches, recurring edge cases, hard-won lessons.
+  - Never auto-duplicate locally available source repositories or generated capsules; corpus inventory is probed at runtime (`membrowse`), not frozen.
 
 ---
 
