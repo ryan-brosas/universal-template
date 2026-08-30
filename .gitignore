@@ -25,5 +25,6 @@ skills/*/scripts/
 *.pyc
 __pycache__/
 skills/omarchy
-.idea/
+.idea/*
+!.idea/dictionaries/
 .veda/
