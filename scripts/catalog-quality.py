@@ -20,7 +20,7 @@ import re
 import sys
 from datetime import date
 from pathlib import Path
-from typing import Optional
+from typing import Dict, List, Optional, Set
 
 BASE = Path(__file__).resolve().parents[1]
 SKILLS = BASE / "skills"
@@ -97,8 +97,8 @@ def classify(folder: str, hidden: bool) -> Optional[str]:
         return None
     return "internal" if folder in INTERNAL_SKILLS else "cold"
 
-errors: list[str] = []
-warnings: list[str] = []
+errors: List[str] = []
+warnings: List[str] = []
 
 ESSENTIAL_FILES = [
     "operating-philosophy.md",
@@ -112,14 +112,14 @@ ESSENTIAL_FILES = [
 ]
 
 
-def parse_frontmatter(text: str) -> dict[str, str]:
+def parse_frontmatter(text: str) -> Dict[str, str]:
     if not text.startswith("---"):
         return {}
     end = text.find("\n---", 3)
     if end == -1:
         return {}
     raw = text[4:end] if text.startswith("---\n") else text[3:end]
-    fm: dict[str, str] = {}
+    fm: Dict[str, str] = {}
     lines = raw.splitlines()
     i = 0
     while i < len(lines):
@@ -129,7 +129,7 @@ def parse_frontmatter(text: str) -> dict[str, str]:
             continue
         key, val = m.group(1), m.group(2).strip()
         j = i + 1
-        extra: list[str] = []
+        extra: List[str] = []
         while j < len(lines) and not re.match(r"^[A-Za-z0-9_-]+:\s*", lines[j]):
             extra.append(lines[j])
             j += 1
@@ -141,7 +141,7 @@ def parse_frontmatter(text: str) -> dict[str, str]:
     return fm
 
 
-def git_ignored_dirs(root: Path) -> set[str]:
+def git_ignored_dirs(root: Path) -> Set[str]:
     """Skill dirs ignored by git on this machine (machine-local skills).
 
     The budget, the baseline, and the generated catalogs must all measure the
@@ -163,8 +163,8 @@ def git_ignored_dirs(root: Path) -> set[str]:
         return set()
 
 
-def collect_skills(skills_dir: Path = SKILLS) -> dict[str, dict]:
-    skills: dict[str, dict] = {}
+def collect_skills(skills_dir: Path = SKILLS) -> Dict[str, dict]:
+    skills: Dict[str, dict] = {}
     if not skills_dir.is_dir():
         errors.append("skills/ missing")
         return skills
@@ -248,7 +248,7 @@ def check_templates_inventory() -> None:
             )
 
 
-def check_visibility_policy(skills: dict[str, dict]) -> None:
+def check_visibility_policy(skills: Dict[str, dict]) -> None:
     """Visibility follows invocation ownership, not leaf-vs-router shape."""
     for name, info in sorted(skills.items()):
         folder, hidden = info["dir"], info["hidden"]
@@ -263,11 +263,11 @@ def check_visibility_policy(skills: dict[str, dict]) -> None:
             )
 
 
-def budget_report(skills: dict[str, dict]) -> dict:
+def budget_report(skills: Dict[str, dict]) -> dict:
     visible = {n: i for n, i in skills.items() if not i["hidden"]}
     vis_chars = sum(len(n) + len(i["desc"]) for n, i in visible.items())
-    classes: dict[str, list[str]] = {}
-    unclassified_visible: list[str] = []
+    classes: Dict[str, List[str]] = {}
+    unclassified_visible: List[str] = []
     for n, i in sorted(skills.items()):
         c = classify(i["dir"], i["hidden"])
         if c is None:
@@ -345,7 +345,7 @@ def check_budget_baseline(rep: dict, default_root: bool) -> None:
         )
 
 
-def near_duplicate_warnings(skills: dict[str, dict]) -> None:
+def near_duplicate_warnings(skills: Dict[str, dict]) -> None:
     descs = [(n, i["desc"].lower()) for n, i in skills.items() if i["desc"]]
     for i in range(len(descs)):
         for j in range(i + 1, len(descs)):

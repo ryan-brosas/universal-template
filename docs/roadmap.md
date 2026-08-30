@@ -10,13 +10,13 @@ catch-first test methodology.
 
 ## Summary
 
-| Pillar / methodology | Strategic objective | Marker |
-| --- | --- | --- |
-| Ground truth | Reference-driven prior art; cold-pack fallback (no new foundations) | Every active project grounds claims in actual source, tests, and runtime probes |
-| Steer outcomes | Frictionless conclusive PR loop with mechanical gate boundaries | Fast CI checks, zero behavioral prompt bloat |
-| Stack leverage | Threshold-driven skill capture; experience-grade OpenViking sync (opt-in) | Recurring wins become skills when they prove out |
-| Mechanical quality | Gates for demonstrated deterministic regressions, where value exceeds false-positive cost | Known regression classes are mechanically defended where practical |
-| Test methodology | Catch-first verification (reproducible RED, then GREEN) | Strongest available evidence per defect class |
+| Pillar / methodology | Strategic objective                                                                       | Marker                                                                          |
+| -------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| Ground truth         | Reference-driven prior art; cold-pack fallback (no new foundations)                       | Every active project grounds claims in actual source, tests, and runtime probes |
+| Steer outcomes       | Frictionless conclusive PR loop with mechanical gate boundaries                           | Fast CI checks, zero behavioral prompt bloat                                    |
+| Stack leverage       | Threshold-driven skill capture; experience-grade OpenViking sync (opt-in)                 | Recurring wins become skills when they prove out                                |
+| Mechanical quality   | Gates for demonstrated deterministic regressions, where value exceeds false-positive cost | Known regression classes are mechanically defended where practical              |
+| Test methodology     | Catch-first verification (reproducible RED, then GREEN)                                   | Strongest available evidence per defect class                                   |
 
 ## 1. Ground truth
 

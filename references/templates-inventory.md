@@ -29,15 +29,15 @@ pack.
 
 Usage mapping (what each rendered file's template drives):
 
-| Template | Rendered into | Owner |
-| --- | --- | --- |
-| `agents.md` | project `AGENTS.md` | `project-bootstrap` (Mode B/C) |
-| `project-context.md` | `docs/project-context.md` (or repo-native location) | `project-bootstrap` (Mode B, optional) |
-| `roadmap.md` | roadmap doc | explicit user request only |
-| `skill.md` | the SKILL.md skeleton | `writing-skills`, `leverage-capture` |
-| `github-pr-ci.yml` | the project GitHub Actions quality workflow | `github-actions-engineering`, `push-pr` |
-| `pull-request.md` | the PR body template | `push-pr`, project PRs |
-| `readme.md` | the repository README | `project-bootstrap` (new repos) |
+| Template             | Rendered into                                       | Owner                                   |
+| -------------------- | --------------------------------------------------- | --------------------------------------- |
+| `agents.md`          | project `AGENTS.md`                                 | `project-bootstrap` (Mode B/C)          |
+| `project-context.md` | `docs/project-context.md` (or repo-native location) | `project-bootstrap` (Mode B, optional)  |
+| `roadmap.md`         | roadmap doc                                         | explicit user request only              |
+| `skill.md`           | the SKILL.md skeleton                               | `writing-skills`, `leverage-capture`    |
+| `github-pr-ci.yml`   | the project GitHub Actions quality workflow         | `github-actions-engineering`, `push-pr` |
+| `pull-request.md`    | the PR body template                                | `push-pr`, project PRs                  |
+| `readme.md`          | the repository README                               | `project-bootstrap` (new repos)         |
 
 ## The essentials (operating baseline)
 

@@ -19,7 +19,7 @@ import re
 import subprocess
 import sys
 from pathlib import Path
-from typing import Optional
+from typing import List, Optional, Set, Tuple
 
 BASE = Path(__file__).resolve().parents[1]
 
@@ -42,8 +42,8 @@ POLICY_FILES = [
 ]
 POLICY_FILES += sorted(str(p.relative_to(BASE)) for p in (BASE / "essentials").glob("*.md"))
 
-fails: list[str] = []
-warns: list[str] = []
+fails: List[str] = []
+warns: List[str] = []
 
 
 def read(rel: str) -> Optional[str]:
@@ -55,7 +55,7 @@ def check_fail(cid: str, rel: str, line_no: int, detail: str) -> None:
     fails.append(f"[{cid}] {rel}:{line_no}: {detail}")
 
 
-def forbid_phrase(cid: str, phrase: str, files: Optional[list[str]] = None) -> None:
+def forbid_phrase(cid: str, phrase: str, files: Optional[List[str]] = None) -> None:
     for rel in (files or POLICY_FILES):
         text = read(rel)
         if not text:
@@ -507,8 +507,8 @@ REACHABILITY_ENUMERATION_SCRIPTS = {
 }
 
 
-def _reachability_corpus(base: Path) -> list[tuple[str, Path]]:
-    corpus: list[tuple[str, Path]] = []
+def _reachability_corpus(base: Path) -> List[Tuple[str, Path]]:
+    corpus: List[Tuple[str, Path]] = []
     skills = base / "skills"
     if skills.is_dir():
         for d in sorted(skills.iterdir()):
@@ -534,7 +534,7 @@ def _reachability_corpus(base: Path) -> list[tuple[str, Path]]:
     return corpus
 
 
-def _load_internal_skills() -> set[str]:
+def _load_internal_skills() -> Set[str]:
     """One classification source: catalog-quality.py owns INTERNAL_SKILLS."""
     import importlib.util
     spec = importlib.util.spec_from_file_location(
@@ -549,7 +549,7 @@ def _load_internal_skills() -> set[str]:
         return set()
 
 
-def check_hidden_reachability(base: Path = BASE, internal: Optional[set[str]] = None) -> list[str]:
+def check_hidden_reachability(base: Path = BASE, internal: Optional[Set[str]] = None) -> List[str]:
     """Internal hidden skills need a real caller; cold ones are reachable via search.
 
     A hidden skill (disable-model-invocation: true) counts as reachable when any
@@ -566,7 +566,7 @@ def check_hidden_reachability(base: Path = BASE, internal: Optional[set[str]] = 
     if not skills_dir.is_dir():
         return []
     corpus = _reachability_corpus(base)
-    dead: list[str] = []
+    dead: List[str] = []
     for d in sorted(skills_dir.iterdir()):
         if not d.is_dir() or d.name.startswith("."):
             continue
