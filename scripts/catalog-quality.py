@@ -52,7 +52,7 @@ ENTRY_SKILLS = {
     "system-design-specification", "deprecation-and-migration",
     "improve-codebase-architecture", "farmed-test-harness", "grill-me",
     # authoring / prose gates
-    "writing-skills", "house-writing-style",
+    "writing-skills", "house-writing-style", "copywriting",
     # discovery
     "skill-catalog",
     # tool / runtime capabilities (frequent-in-coding tools only; rare
