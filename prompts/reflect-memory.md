@@ -4,6 +4,8 @@ Review this project's accumulated engineering memory and surface what we are act
 
 Use the `hindsight_reflect` tool against the project bank (default) with a synthesis query covering:
 
+`hindsight_reflect` is registered by the Pi Hindsight extension only. If it is unavailable on this host, stop and report that reflection requires Pi with the Hindsight extension; never substitute speculation for the memory pass.
+
 - repeated decisions and implementation choices
 - repeated corrections the user made to the agent
 - approaches that failed and why
@@ -11,7 +13,7 @@ Use the `hindsight_reflect` tool against the project bank (default) with a synth
 - reused implementations and recurring workflows
 - contradictions and obsolete assumptions
 
-If the user bank (`pi-engineering-judgment`) has content, reflect over it too for cross-project recurrence.
+If the configured user bank has content, reflect over it too for cross-project recurrence. Pass `global` as the `bank` option so each machine's configured user bank is selected rather than a hardcoded id.
 
 Before proposing any conclusion, actively search memory for counter-evidence. Frequency is evidence, not truth: prefer patterns with independent occurrences, consistently good outcomes, and weak or explainable counterexamples.
 
