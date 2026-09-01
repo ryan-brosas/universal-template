@@ -876,6 +876,71 @@ def check_web_reference_split() -> None:
             check_fail("WEBREF-SPLIT", "skills/reference-driven-development/SKILL.md", 1, f"crawler mechanics in reference-driven-development: {token}")
 
 
+QUALITY_COMMAND_RE = re.compile(r"python3 scripts/([a-z0-9-]+\.py)([^\n|#]*)")
+
+
+def quality_gate_commands(text: str) -> set[tuple[str, str]]:
+    """Return script and mode pairs from a repository quality command block."""
+    commands = set()
+    for match in QUALITY_COMMAND_RE.finditer(text):
+        args = match.group(2).split()
+        mode = next((arg for arg in ("--check-repo", "--selftest") if arg in args), "")
+        commands.add((match.group(1), mode))
+    return commands
+
+
+def contributing_gate_commands(text: str) -> set[tuple[str, str]]:
+    """Read the canonical fenced gate block from CONTRIBUTING.md."""
+    match = re.search(r"## Before pushing.*?```bash\n(.*?)```", text, re.S)
+    return quality_gate_commands(match.group(1)) if match else set()
+
+
+def quality_gate_parity_errors(contrib: str, workflows: dict[str, str]) -> list[str]:
+    """Report canonical repository gates missing from a workflow."""
+    expected = contributing_gate_commands(contrib)
+    if not expected:
+        return ["CONTRIBUTING.md canonical gate block is missing or empty"]
+    errors = []
+    for rel, text in workflows.items():
+        missing = sorted(expected - quality_gate_commands(text))
+        for script, mode in missing:
+            command = f"{script} {mode}".rstrip()
+            errors.append(f"{rel} missing canonical gate: {command}")
+    return errors
+
+
+def release_workflow_errors(text: str) -> list[str]:
+    """Report release boundaries that protect verification and publishing."""
+    errors = []
+    required = (
+        ("permissions:\n  contents: read", "top-level contents permission must be read-only"),
+        ("fetch-depth: 2", "checkout must fetch the tagged commit parent"),
+        ('CHECK_RANGE="$GITHUB_SHA^..$GITHUB_SHA"', "conventional range must use the tagged commit"),
+        ('git diff --check "$GITHUB_SHA^" "$GITHUB_SHA"', "whitespace check must inspect the tagged commit"),
+        ("needs: verify", "publish must depend on verification"),
+        ("permissions:\n      contents: write", "only the publish job may write releases"),
+    )
+    for phrase, detail in required:
+        if phrase not in text:
+            errors.append(detail)
+    if any(line.strip() == "git diff --check" for line in text.splitlines()):
+        errors.append("bare git diff --check only inspects the clean worktree")
+    if re.search(r"^permissions:\n  contents: write$", text, re.M):
+        errors.append("top-level contents write exposes the verification job")
+    return errors
+
+
+def check_quality_gate_parity() -> None:
+    """PR and release workflows run the canonical CONTRIBUTING gate suite."""
+    contrib = read("CONTRIBUTING.md") or ""
+    workflow_paths = (".github/workflows/pr-quality.yml", ".github/workflows/release.yml")
+    workflows = {rel: read(rel) or "" for rel in workflow_paths}
+    for detail in quality_gate_parity_errors(contrib, workflows):
+        check_fail("QUALITY-GATE-PARITY", "CONTRIBUTING.md", 1, detail)
+    for detail in release_workflow_errors(workflows[".github/workflows/release.yml"]):
+        check_fail("QUALITY-GATE-PARITY", ".github/workflows/release.yml", 1, detail)
+
+
 def check_gate_documentation() -> None:
     """CONTRIBUTING.md documents the required gate scripts for this repository.
     README/AGENTS carry no volatile template counts or retired artifacts;
@@ -1038,6 +1103,56 @@ Research load-bearing facts when the expected confidence gain justifies the cost
         else:
             print(f"FAIL AGENTS constitution missed {name}")
             ok = False
+    gate_contrib = """## Before pushing
+```bash
+python3 scripts/alpha.py --selftest
+python3 scripts/alpha.py
+python3 scripts/beta.py
+```
+"""
+    gate_good = """python3 scripts/alpha.py --selftest
+python3 scripts/alpha.py
+python3 scripts/beta.py
+"""
+    gate_missing = """python3 scripts/alpha.py
+python3 scripts/beta.py
+"""
+    if quality_gate_parity_errors(gate_contrib, {"good.yml": gate_good}):
+        print("FAIL complete quality workflow rejected")
+        ok = False
+    else:
+        print("PASS quality parity accepts the complete canonical suite")
+    missing_errors = quality_gate_parity_errors(gate_contrib, {"missing.yml": gate_missing})
+    if any("alpha.py --selftest" in error for error in missing_errors):
+        print("PASS quality parity catches a missing gate mode")
+    else:
+        print(f"FAIL quality parity missed a gate mode: {missing_errors}")
+        ok = False
+    release_good = """permissions:
+  contents: read
+fetch-depth: 2
+CHECK_RANGE="$GITHUB_SHA^..$GITHUB_SHA"
+git diff --check "$GITHUB_SHA^" "$GITHUB_SHA"
+needs: verify
+    permissions:
+      contents: write
+"""
+    release_bad = """permissions:
+  contents: write
+git diff --check
+"""
+    if release_workflow_errors(release_good):
+        print("FAIL safe release workflow fixture rejected")
+        ok = False
+    else:
+        print("PASS release workflow accepts split privileges and commit ranges")
+    bad_release_errors = release_workflow_errors(release_bad)
+    if "bare git diff --check only inspects the clean worktree" in bad_release_errors and \
+            "top-level contents write exposes the verification job" in bad_release_errors:
+        print("PASS release workflow catches unsafe privilege and range boundaries")
+    else:
+        print(f"FAIL release workflow missed unsafe boundaries: {bad_release_errors}")
+        ok = False
     print("policy-consistency selftest: PASS" if ok else "policy-consistency selftest: FAIL")
     return 0 if ok else 1
 
@@ -1083,6 +1198,7 @@ CHECKS = [
     ("README-SKILL-REFS", check_readme_skill_refs),
     ("GITHUB-OWNERSHIP", check_github_ownership),
     ("WEBREF-SPLIT", check_web_reference_split),
+    ("QUALITY-GATE-PARITY", check_quality_gate_parity),
     ("GATE-DOCS", check_gate_documentation),
 ]
 
