@@ -107,12 +107,12 @@ def check_prewalk_reserved() -> None:
 
 def check_lifecycle_optional() -> None:
     """Entry flow is opt-in; ordinary work never requires lifecycle machinery."""
-    for rel in ("AGENTS.md", "README.md"):
+    for rel in ("README.md", "skills/project-bootstrap/SKILL.md"):
         text = read(rel) or ""
         for i, line in enumerate(text.splitlines(), 1):
             if re.search(r"mandatory default", line, re.I):
                 check_fail("LIFECYCLE-OPTIONAL", rel, i, "'mandatory default' loop language")
-    require_phrase("LIFECYCLE-OPTIONAL", "AGENTS.md", "No lifecycle machinery is required for ordinary work")
+    require_phrase("LIFECYCLE-OPTIONAL", "README.md", "No lifecycle machinery")
     require_phrase("LIFECYCLE-OPTIONAL", "skills/project-bootstrap/SKILL.md", "No persistent files")
 
 
@@ -209,7 +209,11 @@ def check_mcp_portable() -> None:
 
 def check_ut_gate_scoped() -> None:
     """universal-template validators are scoped to this repo, never universal."""
-    require_phrase("UT-GATE-SCOPED", "AGENTS.md", "repository-specific checks, not a universal requirement")
+    require_phrase(
+        "UT-GATE-SCOPED",
+        "CONTRIBUTING.md",
+        "not universal requirements for other projects",
+    )
 
 
 def check_absolutes() -> None:
@@ -534,16 +538,20 @@ def check_foundation_first_class() -> None:
 
 
 def check_agents_minimal() -> None:
-    """Global AGENTS.md stays thin — detailed routing lives in skills, not the global prompt."""
+    """Global AGENTS.md stays thin — constitution only, not a handbook."""
     rel = "AGENTS.md"
     text = read(rel)
     if text is None:
         fails.append("[AGENTS-MINIMAL] AGENTS.md: file missing")
         return
+    line_count = len(text.splitlines())
+    if line_count > 55:
+        check_fail("AGENTS-MINIMAL", rel, 1, f"global AGENTS.md too long ({line_count} lines; keep under ~55)")
     banned = re.compile(
         r"Fovea|Steroid / JetBrains|foundation-pack/.*reusable architecture|"
         r"Evidence priority for non-trivial|Pi Fabric|fabric_exec|/fabric prewalk|"
-        r"pi\.edit|pi\.write|pi\.bash",
+        r"pi\.edit|pi\.write|pi\.bash|python3 scripts/|skill-validator\.py|"
+        r"Entry skills|host wiring|~/.claude|~/.codex|APPEND_SYSTEM\.md",
         re.I,
     )
     for i, line in enumerate(text.splitlines(), 1):
@@ -552,14 +560,8 @@ def check_agents_minimal() -> None:
                 "AGENTS-MINIMAL",
                 rel,
                 i,
-                "detailed evidence/foundation routing belongs in skills, not global AGENTS.md",
+                "repo-specific or detailed routing content belongs elsewhere, not global AGENTS.md",
             )
-    require_phrase("AGENTS-MINIMAL", rel, "skills/evidence-router/")
-    require_phrase(
-        "AGENTS-MINIMAL",
-        rel,
-        "Do not assume every project uses them",
-    )
 
 
 def check_evidence_router_priority() -> None:
@@ -858,15 +860,15 @@ def check_web_reference_split() -> None:
 
 
 def check_gate_documentation() -> None:
-    """Absorbed from catalog-integrity.py (deleted): AGENTS.md documents the
-    required gate scripts, and README/AGENTS carry no volatile inventory counts.
-    The canonical template inventory (references/templates-inventory.md) is the
-    only place that enumerates templates; counts there are machine-checked
-    against disk by catalog-quality.py."""
-    agents = read("AGENTS.md") or ""
+    """CONTRIBUTING.md documents the required gate scripts for this repository.
+    README/AGENTS carry no volatile inventory counts. The canonical template
+    inventory (references/templates-inventory.md) is the only place that
+    enumerates templates; counts there are machine-checked against disk by
+    catalog-quality.py."""
+    contrib = read("CONTRIBUTING.md") or ""
     for needle in ("skill-validator.py", "repo-hygiene.py", "catalog-quality.py"):
-        if needle not in agents:
-            fails.append(f"[GATE-DOCS] AGENTS.md must document the required gate script: {needle}")
+        if needle not in contrib:
+            fails.append(f"[GATE-DOCS] CONTRIBUTING.md must document the required gate script: {needle}")
     for rel in ("README.md", "AGENTS.md"):
         text = read(rel) or ""
         if re.search(r"\d+\s+CLI-neutral", text):

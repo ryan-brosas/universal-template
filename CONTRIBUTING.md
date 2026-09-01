@@ -1,8 +1,11 @@
 # Contributing
 
+Repository-specific checks for `~/.agents` (universal-template). They are not
+universal requirements for other projects.
+
 ## Before pushing
 
-Run the catalog gate suite from `AGENTS.md` (Finish line):
+Run the catalog verification suite (same as CI `quality / required`):
 
 ```bash
 SKILLS_ROOT="$PWD/skills" python3 scripts/skill-validator.py   # P0 count must be 0
@@ -11,9 +14,17 @@ python3 scripts/repo-hygiene.py
 python3 scripts/policy-consistency.py
 python3 scripts/style-lint.py --selftest
 python3 scripts/style-lint.py
+python3 scripts/web-reference-manifest.py --selftest
 python3 scripts/dead-code.py
+python3 scripts/foundation-validator.py --selftest
+python3 scripts/foundation-validator.py
+python3 scripts/reference-retrieval-fixture.py --selftest
+CHECK_RANGE="origin/main..HEAD" python3 scripts/conventional-commit.py
 git diff --check
 ```
+
+Advisory only (not CI-gated): `python3 scripts/policy-consistency.py --selftest`,
+`python3 scripts/legacy-skill-report.py`.
 
 ## Pull requests
 

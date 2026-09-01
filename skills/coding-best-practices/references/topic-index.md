@@ -21,7 +21,7 @@ Route each question to **one leaf**. This index mirrors common "complete guide" 
 | Documentation | `documentation-and-readme.md` | `markdown-writing-practices`, `google-devdocs-practices` (developer guides), `mailchimp-content-practices` (user-facing copy), `templates/readme.md`, `project-bootstrap` |
 | Error handling | `error-handling-and-resilience.md` | `quality-gate-methodology`, `testing-anti-patterns` |
 | Git & collaboration | `git-and-collaboration.md`, `awesome-guidelines` learning notes + git-style capsules | `git-workflow-and-versioning`, `push-pr` |
-| AI-assisted coding | `ai-assisted-coding.md` | `agent-code-quality-gate`, `AGENTS.md` |
+| AI-assisted coding | `ai-assisted-coding.md` | `agent-code-quality-gate`, project `AGENTS.md` |
 | Performance & data | `performance-and-data-efficiency.md` | profile first; stack-specific foundations |
 | Versioning & releases | `awesome-guidelines` semver + changelog capsules | `git-workflow-and-versioning`, release tags |
 | HTTP/JSON API design | `awesome-guidelines` api-design capsules | `api-design-practices` |
@@ -115,4 +115,4 @@ push-pr (ship with evidence)
 - **Security surface** → `security-and-hardening` (validate boundaries, secrets, OWASP map).
 - **External style catalogs** → the archived `awesome-guidelines` capsule library (read-only; no new ingestion) and the matching `*-coding-practices` leaf.
 - **Workflow shape** → `github-actions-engineering`.
-- **Catalog repo** → `AGENTS.md` gate block + `.github/workflows/pr-quality.yml`.
+- **Catalog repo** → `CONTRIBUTING.md` + `.github/workflows/pr-quality.yml`.

@@ -15,7 +15,8 @@ General coding guidance is a **map**, not a monolith. Route each topic to one le
 - **Use when:** the question spans naming, docs, Git, testing, security, or AI-generated code and you need the right pointer fast.
 - **NOT when:** a normal implementation task starts, the ordinary loop (inspect, implement, verify) needs no router; load this only when standards guidance is the actual request.
 - **NOT when:** the task is TypeScript-only, load `typescript-coding-practices` (style/modules) and `typescript-coding-standards` (domain modeling) instead of this router alone.
-- **NOT when:** declaring work complete, load `agent-code-quality-gate` and the project gate from `AGENTS.md`.
+- **NOT when:** declaring work complete, load `agent-code-quality-gate` and the
+  project's verification commands from its `AGENTS.md` or contributor docs.
 - **NOT when:** opening or updating a PR, load `push-pr`.
 - **NOT when:** deep Git conventions from community guides, load `awesome-guidelines`.
 - **NOT when:** authoring a new skill, load `writing-skills`.

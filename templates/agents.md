@@ -50,26 +50,22 @@ build or restart is required.]
 
 Evidence: [paths or command output]
 
-Do not restate global routing, tool ownership, or model policy here — load
-the relevant global skills (`evidence-router`, `execution-router`) or follow
-the project's own instructions. This file adds LOCAL information only.
+Do not restate global defaults here — project-local `AGENTS.md` adds facts
+this repository needs. Load global skills (`evidence-router`, `execution-router`)
+when they materially help.
 
 ## Safety boundaries
 
-- Normal reversible edits inside the git workspace (modify tracked source,
-  create files, delete obsolete tracked files the task requires) need no
-  repeated permission; deleting untracked or user data does.
+- Normal reversible edits inside the git workspace need no repeated permission;
+  deleting untracked or user data does.
 - Require explicit confirmation before irreversible commands. Quote the command
   and list the affected files, history, infrastructure, or data.
 - Never expose, invent, or commit credentials.
 - Preserve unrelated working-tree changes and scope staging by path.
-- Assume nothing. Before relying on any capability, verify its live state:
-  check that MCP servers and tools are actually registered and connected
-  (list them; do not assume), that websearch hits are opened and sourced
-  (do not assume relevance), and that a code-memory graph actually covers the
-  code being cited (check index coverage; do not assume it is indexed). Do not
-  assume the codebase — read the source when it matters.
 - [Add a project-specific production or data boundary only when verified.]
+
+Global dangerous-action defaults live in the user's global `AGENTS.md`; record
+here only boundaries specific to this repository.
 
 ## Repository invariants
 
@@ -97,16 +93,12 @@ philosophy into a project file — point to the global essentials instead.
 
 ## Conventions
 
-Include only conventions with a mechanical check or an external protocol, such
-as a commit-message gate, exact budget assertion, or required PR check.
+Record only conventions this repository mechanically enforces or that an
+external protocol requires (commit-message gate, budget assertion, required PR
+check). Follow the project's existing Git history when no gate exists.
 
-- Branch names: at most three hyphen-separated lowercase words, no slashes,
-  no type prefixes (`feat/`, `fix/`); `main`/`master` are the long-lived
-  branches.
-- Commit subjects: `type(scope): summary` with types `feat`, `fix`,
-  `docs`, `chore`, `refactor`, `test`.
-  [State the exact enforcement point — e.g. the golden check on unpushed
-  commits, or CI on pull-request commits.]
+- [Branch naming rule and enforcement point, if any.]
+- [Commit subject rule and enforcement point, if any.]
 
 Omit this section when no enforced convention exists.
 

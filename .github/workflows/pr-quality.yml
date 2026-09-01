@@ -1,5 +1,6 @@
 # Catalog quality CI for universal-template (~/.agents): enforces the
-# AGENTS.md gate suite, the changed-line contract, and the PR body contract.
+# Project quality: catalog verification suite (see CONTRIBUTING.md),
+# the changed-line contract, and the PR body contract.
 # The required-check contract is the job name below ("quality / required");
 # the default-branch ruleset requires exactly that name.
 
@@ -37,7 +38,7 @@ jobs:
           marker="${marker}_GATE__"
           if grep -qF "$marker" .github/workflows/pr-quality.yml; then
             echo 'The gate placeholder is still in the run step.' >&2
-            echo 'Install the exact gate from the project AGENTS.md.' >&2
+            echo 'Install the exact gate from CONTRIBUTING.md.' >&2
             exit 1
           fi
 

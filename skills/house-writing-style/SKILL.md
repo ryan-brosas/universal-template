@@ -28,7 +28,7 @@ matters, and structured machine output.
 
 ## Levels
 
-- **L0** kernel only (the AGENTS.md writing-style section): normal chat.
+- **L0** global communication defaults in `AGENTS.md`: normal chat.
 - **L1** kernel + `scripts/style-lint.py`: important generated prose and files.
 - **L2** kernel + lint + this skill's review: public docs, release notes,
  important PR and issue text.
@@ -62,7 +62,7 @@ Corporate-register verbs (`leverage`, `underscore`) in vague business use.
 
 ## Workflow
 
-1. Draft in the kernel voice (AGENTS.md, writing-style section).
+1. Draft in the global communication defaults (`AGENTS.md`, Communication section).
 2. For important prose: run `python3 scripts/style-lint.py <file>`; fix ERRORs,
  judge WARNs.
 3. For audits: lint, then apply the semantic checks in
