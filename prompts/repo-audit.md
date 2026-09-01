@@ -2,11 +2,11 @@
 
 Deep-audit the current repository for the request below.
 
-- Read applicable repository instructions and survey the current tree before editing.
-- Trace the relevant execution path, callers, validators, and configuration before proposing changes.
-- Separate confirmed findings from hypotheses; cite exact file paths and lines where available.
-- Preserve unrelated user changes. If the request asks for implementation, make the smallest end-to-end change rather than stopping at recommendations.
-- Run targeted tests and direct behavioral probes, then report results and remaining risk.
+Treat the request as a signal, not a predetermined solution. Optimize toward the Pareto frontier: increase usefulness, correctness, clarity, and evidence quality while reducing unnecessary complexity, duplication, hot context, and maintenance burden. Do not improve one dimension by materially degrading another unless the tradeoff is justified by the request or repository evidence.
+
+Inspect the applicable instructions, current structure, and relevant execution paths before judging. Separate confirmed findings from hypotheses. Preserve unrelated user changes and existing public contracts unless the request requires a change.
+
+Use your judgment to select and implement worthwhile improvements when implementation is requested. Verify the result with targeted tests and direct behavioral probes, then report the evidence and remaining risk.
 
 Request:
 $ARGUMENTS

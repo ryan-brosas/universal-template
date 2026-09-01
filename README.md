@@ -130,6 +130,16 @@ Existing instruction and skill mounts:
 Prompt shortcuts are canonical in `prompts/*.md` and use plain Markdown with
 `$ARGUMENTS`. Available names are `/repo-audit`, `/plan-work`,
 `/implement-work`, `/review-work`, `/verify-work`, and `/cleanup-code`.
+
+Write canonical prompts as short outcome contracts. State the user's intent or
+concern, select only the Pareto dimensions that define success for that task,
+and name genuine boundaries. Describe what should improve and what costs should
+fall without prescribing the implementation. Treat suggested solutions as
+signals unless the user makes them requirements, leave implementation judgment
+to the model, and require proof appropriate to the command. Keep this as natural
+language; do not turn it into scores, rubrics, routers, decision matrices,
+mandatory phases, or a second prompt framework.
+
 Install or reconcile the native surfaces with:
 
 ```bash

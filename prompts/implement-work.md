@@ -2,12 +2,11 @@
 
 Implement the request below end to end.
 
-- Turn it into concrete acceptance checks before editing.
-- Search before reading and trace current behavior, callers, and validators.
-- Preserve unrelated changes and existing public contracts unless the request requires otherwise.
-- Use the smallest coherent patch; do not add a framework or abstraction without a demonstrated need.
-- Run targeted tests and direct behavioral probes; inspect failures and iterate.
-- Finish with changed paths, checks run, and known limitations.
+Treat the user's concern and any suggested approach as signals, not a predetermined solution, unless the user explicitly makes the approach a requirement. Optimize toward the Pareto frontier: increase capability, correctness, usability, and maintainability while reducing unnecessary complexity, duplication, host-specific glue, and maintenance burden. Do not gain in one dimension by materially degrading another unless the tradeoff is justified.
+
+Preserve unrelated changes and existing public contracts unless the request requires otherwise. Inspect enough of the current behavior, callers, tests, and validators to make a sound change. Use your judgment to choose the implementation rather than adding machinery without a demonstrated need.
+
+Verify the result with targeted tests and direct behavioral probes. Inspect failures, iterate when needed, and finish with the changed paths, evidence, and known limitations.
 
 Request:
 $ARGUMENTS

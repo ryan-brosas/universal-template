@@ -123,9 +123,11 @@ Organize all mechanical enforcement into a two-layer hierarchy:
 - **Standard Mechanical Suite (pi-template repo `scripts/`):** The repo at
   `~/.agents (absorbed from the retired pi-template repo)` provides `check-integrity.py`,
   `quality-gate.py`, `dead-code.py`, `repo-hygiene.py`, and `conventional-commit.py`.
-- **Zero Prompted Discipline:** The slash-command prompts (`.pi/prompts/`) do not plead
-  with the model to be careful; they require executing deterministic commands and inspecting output.
+- **Prompted intent, mechanical proof:** Canonical prompts in `prompts/` define the
+  desired outcome, task-specific tradeoffs, and genuine boundaries while leaving
+  implementation judgment to the model. They require relevant evidence; deterministic
+  checks enforce only the properties they encode.
 - **CI is the enforcement surface:** GitHub Actions (`.github/workflows/`) runs the checks
-  that were encoded into CI — an objective, reproducible pass/fail for exactly those checks.
-  It is the boundary of what was encoded, not a global verdict on correctness; a green CI
-  does not certify anything no gate covers.
+  encoded into CI and gives an objective, reproducible result for those checks. This is
+  the boundary of what was encoded, not a global verdict on correctness. A green CI does
+  not certify anything no gate covers.

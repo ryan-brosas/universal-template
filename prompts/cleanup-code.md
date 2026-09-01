@@ -2,11 +2,11 @@
 
 Clean up the code in the scope below while preserving behavior.
 
-- Establish the current behavior and tests before editing.
-- Remove duplication, dead code, accidental complexity, and AI-shaped structure only when evidence supports it.
-- Keep public behavior, data formats, error semantics, and unrelated files unchanged.
-- Make the smallest coherent refactor, then run targeted tests and compare the resulting diff.
-- If cleanup would require a behavior change, stop and report it instead of smuggling it in.
+Treat the user's concern as a signal, not a predetermined refactor. Optimize for greater clarity, maintainability, and consistency with less duplication, accidental complexity, and maintenance burden. Do not improve those qualities by materially degrading capability, correctness, performance, public behavior, data formats, or error semantics.
+
+Establish the relevant behavior before editing. Use your judgment to choose worthwhile simplifications and leave code alone when change would not produce a clear net improvement. Preserve unrelated files.
+
+Implement the cleanup, then run targeted tests and behavioral probes and inspect the resulting diff. If a valuable improvement requires a behavior change, report the boundary instead of hiding the change inside cleanup.
 
 Scope:
 $ARGUMENTS
