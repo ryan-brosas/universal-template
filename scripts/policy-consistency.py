@@ -14,6 +14,7 @@ Zero dependencies; python3 stdlib only.
 """
 from __future__ import annotations
 
+import importlib.util
 import json
 import re
 import subprocess
@@ -615,30 +616,42 @@ def check_rdd_retrieval_surface() -> None:
     if text is None:
         fails.append("[RDD-RETRIEVAL-SURFACE] skills/reference-driven-development/SKILL.md: file missing")
         return
-    if not text.startswith("---"):
-        check_fail("RDD-RETRIEVAL-SURFACE", rel, 1, "missing frontmatter")
+    spec = importlib.util.spec_from_file_location(
+        "catalog_quality", str(Path(__file__).with_name("catalog-quality.py")))
+    if spec is None or spec.loader is None:
+        check_fail("RDD-RETRIEVAL-SURFACE", rel, 1, "catalog-quality unavailable")
         return
-    end = text.find("\n---", 3)
-    fm_block = text[4:end] if end != -1 else ""
-    desc = ""
-    for line in fm_block.splitlines():
-        if line.startswith("description:"):
-            desc = line.split(":", 1)[1].strip().strip("\"'")
-            break
-    flat = re.sub(r"\s+", " ", desc)
-    if "reference/web/" not in flat and "project-local" not in flat:
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    fm = mod.parse_frontmatter(text)
+    desc = re.sub(r"\s+", " ", str(fm.get("description", "")))
+    if "reference/web/" not in desc:
         check_fail(
             "RDD-RETRIEVAL-SURFACE",
             rel,
             1,
-            "RDD description must mention existing project-local references for retrieval",
+            "RDD description must mention reference/web/ for retrieval",
+        )
+    if "reference/<repo>/" not in desc and "reference/<repo>" not in desc:
+        check_fail(
+            "RDD-RETRIEVAL-SURFACE",
+            rel,
+            1,
+            "RDD description must mention reference/<repo>/ for retrieval",
+        )
+    if "already exists" not in desc:
+        check_fail(
+            "RDD-RETRIEVAL-SURFACE",
+            rel,
+            1,
+            "RDD description must state existing references activate the skill",
         )
 
 
 FOUNDATION_FIRST_RE = re.compile(
     r"foundation-pack/`?\s*first|"
-    r"follow stack capsules in `foundation-pack/` first|"
-    r"load stack capsules in `foundation-pack/` first",
+    r"(?:follow|load|use|consult)\s+(?:stack\s+capsules\s+in\s+)?[`']?foundation-pack[`']?\s+first|"
+    r"[`']foundation-pack/[`']?\s+before\s+(?:current\s+)?project",
     re.I,
 )
 

@@ -51,6 +51,7 @@ def validate_pack(base: Path = PACK) -> tuple[list[str], list[str]]:
             continue
         skill = d / "SKILL.md"
         if not skill.is_file():
+            p0.append(f"{d.relative_to(base.parent)}: missing SKILL.md")
             continue
         rel = skill.relative_to(base.parent)
         text = skill.read_text(encoding="utf-8", errors="replace")
@@ -58,7 +59,9 @@ def validate_pack(base: Path = PACK) -> tuple[list[str], list[str]]:
         if not fm:
             p0.append(f"{rel}: frontmatter missing or unparseable")
             continue
-        if fm.get("name") and fm.get("name") != d.name:
+        if not fm.get("name"):
+            p0.append(f"{rel}: name missing")
+        elif fm.get("name") != d.name:
             p0.append(f"{rel}: name {fm.get('name')!r} != directory {d.name!r}")
         if not str(fm.get("description", "")).strip():
             p0.append(f"{rel}: description missing")
@@ -96,6 +99,24 @@ def selftest() -> int:
             ok = False
         else:
             print("PASS broken frontmatter fails")
+        empty = root / "empty-foundation"
+        empty.mkdir()
+        p0, _ = validate_pack(root)
+        if not any("missing SKILL.md" in x for x in p0):
+            print(f"FAIL missing SKILL.md should fail, got {p0}")
+            ok = False
+        else:
+            print("PASS missing SKILL.md fails")
+        (empty / "SKILL.md").write_text(
+            "---\nname: wrong-name\ndescription: Use when testing.\n---\n# Wrong\n",
+            encoding="utf-8",
+        )
+        p0, _ = validate_pack(root)
+        if not any("!= directory" in x for x in p0):
+            print(f"FAIL name mismatch should fail, got {p0}")
+            ok = False
+        else:
+            print("PASS name mismatch fails")
     print("foundation-validator selftest: PASS" if ok else "foundation-validator selftest: FAIL")
     return 0 if ok else 1
 
