@@ -23,13 +23,10 @@ on a named gap. Foundations and skills never outrank the code they distill or
 the project they serve. Use whatever read, search, MCP, or runtime capability
 the host provides; no fixed tool chain per task.
 
-**Reusable knowledge discovery** (non-trivial work, after local grounding):
-one cheap metadata lookup over skills and foundations is usually worthwhile
-before reinventing patterns. Use `python3 scripts/skill-catalog.py
-search-leverage "<task concepts>" --limit 5` or the equivalent host search;
-inspect top candidates only; load narrowly. Discovery timing is not authority
-priority: finding a foundation early does not outrank current project code or
-project-local references. Stop searching when evidence is sufficient.
+Relevant skills and foundations are reusable leverage: discover and use them
+when they materially reduce uncertainty, with the smallest host capability
+available (filesystem search, direct reads, semantic navigation). Load only
+what helps. Do not invoke tools ceremonially.
 
 ## When to Use / NOT
 
@@ -55,7 +52,7 @@ retrieval chain; if direct source already answers the question, stop.
 | Runtime behavior | tests / debugger / runtime evidence |, | the only proof of behavior |
 | One selected inspiration repository | project-local `<project>/reference/<repo>/` | semantic navigation or direct source + tests | see `reference-driven-development`; consult when a relevant checkout already exists or the user names one |
 | Rendered visual or runtime evidence from a live website (DOM, CSS, screenshots, behavior) | existing `reference/web/<site>/` or bounded capture via `web-reference` | inspect the capture like source | capture is evidence; the current project stays the acceptance authority |
-| Stack patterns, architecture seams from accumulated implementations | applicable `foundation-pack/*-foundation` (discover via `skill-catalog.py search-foundations` or `search-leverage`) | the source/tests the foundation points at | shortcut after current project and project-local references; foundations never outrank real code |
+| Stack patterns, architecture seams from accumulated implementations | applicable `foundation-pack/*-foundation` | the source/tests the foundation points at | shortcut after current project and project-local references; foundations never outrank real code |
 | Design inspiration with no named source yet | web discovery (`gsearch` / Exa) or a design tool catalog | `web-reference` on the chosen site | propose candidates, capture only the selected ones |
 | Find which past/indexed project contains a pattern (cross-repo, cross-session) | **Codebase Memory** (`list_projects` → `search_graph` / `trace_path`) | activate the candidate under `reference/` and inspect with Fovea/source | persistent library, cold path; the graph is an index, not truth |
 | Past decisions, failed attempts, lessons, recurring edge cases | **OpenViking** (`memsearch` / `memgrep` / `memread`) | durable notes | experience memory, not a second copy of local source |

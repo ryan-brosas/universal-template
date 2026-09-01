@@ -109,13 +109,6 @@ jobs:
           set -o pipefail
           python3 scripts/reference-retrieval-fixture.py --selftest 2>&1 | tee /tmp/reference-retrieval-fixture.log
 
-      - name: Skill catalog discovery
-        id: skillcatalog
-        shell: bash
-        run: |
-          set -o pipefail
-          python3 scripts/skill-catalog.py --selftest 2>&1 | tee /tmp/skill-catalog-selftest.log
-
       - name: Conventional commits
         id: commits
         shell: bash

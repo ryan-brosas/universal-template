@@ -2,12 +2,10 @@
 
 # Skill Catalog
 
-Derived from `skills/*/SKILL.md` metadata. Discovery tools:
-`python3 scripts/skill-catalog.py search "<topic>"`,
-`python3 scripts/skill-catalog.py search-foundations "<topic>"`,
-`python3 scripts/skill-catalog.py search-leverage "<topic>"`.
+Derived from `skills/*/SKILL.md` metadata. Maintainer tool:
+`python3 scripts/skill-catalog.py search "<topic>"`.
 
-147 skills: 41 visible, 106 hidden. Visible startup metadata: ~10455 chars (~2613 tokens).
+147 skills: 41 visible, 106 hidden. Visible startup metadata: ~10383 chars (~2595 tokens).
 
 ## Entry skills
 
@@ -33,7 +31,7 @@ Direct user-facing capabilities; trigger on request.
 | [`gsearch`](../skills/gsearch/SKILL.md)                                                     | entry | visible | Use when the user asks to search the web, look something up, find a link, or research a topic. Google via CDP returns title, URL, and snippet in about a second... |
 | [`house-writing-style`](../skills/house-writing-style/SKILL.md)                             | entry | visible | Use when rewriting, polishing, or auditing natural-language prose in the house style: agent output, docs, release notes, PR and issue text, or when a style vio... |
 | [`improve-codebase-architecture`](../skills/improve-codebase-architecture/SKILL.md)         | entry | visible | Use when the user wants to improve architecture, find refactoring opportunities, consolidate tightly-coupled modules, or make a codebase more testable and AI-n... |
-| [`leverage-capture`](../skills/leverage-capture/SKILL.md)                                   | entry | visible | Use when meaningful work has finished and something may be worth preserving, classify it into code, references, gates, skills, or memory, and capture only that... |
+| [`leverage-capture`](../skills/leverage-capture/SKILL.md)                                   | entry | visible | Use when meaningful work has finished and something may be worth preserving, classify it into code, references, foundations, gates, skills, or memory, and capt... |
 | [`math-schema`](../skills/math-schema/SKILL.md)                                             | entry | visible | Use when the user studies real analysis, probability, PDEs, or the mathematics of physics and wants to reach results through their own conjectures and proofs....  |
 | [`mcp-steroid`](../skills/mcp-steroid/SKILL.md)                                             | entry | visible | Use when an MCP-capable coding agent needs native JetBrains IntelliJ APIs, semantic navigation, refactoring, inspections, tests, debugging, or IDE UI control.     |
 | [`project-bootstrap`](../skills/project-bootstrap/SKILL.md)                                 | entry | visible | Use when entering a new or unfamiliar repository, initializing a greenfield project workspace, or intentionally establishing lightweight persistent project-lev... |
@@ -41,7 +39,7 @@ Direct user-facing capabilities; trigger on request.
 | [`push-pr`](../skills/push-pr/SKILL.md)                                                     | entry | visible | Use when finished work needs to be pushed and opened or updated as a GitHub pull request, when PR review feedback must be addressed in its thread, or when an o... |
 | [`reference-driven-development`](../skills/reference-driven-development/SKILL.md)           | entry | visible | Use when outside prior art reduces uncertainty: adapting a reference repo, porting a pattern, or when a relevant project-local reference/<repo>/ or reference/w... |
 | [`security-and-hardening`](../skills/security-and-hardening/SKILL.md)                       | entry | visible | Use when auditing for security vulnerabilities, implementing auth or authz, handling secrets, or hardening against OWASP Top 10 - covers input validation, auth... |
-| [`skill-catalog`](../skills/skill-catalog/SKILL.md)                                         | entry | visible | Use when the user asks what skills exist, when finding the right skill for a topic, or during non-trivial implementation when a cheap check for relevant hidden... |
+| [`skill-catalog`](../skills/skill-catalog/SKILL.md)                                         | entry | visible | Use when the user asks what skills exist or needs to find the right skill for a topic - deterministic search over the local catalog; return candidates and load... |
 | [`system-design-specification`](../skills/system-design-specification/SKILL.md)             | entry | visible | Use when authoring formal, crash-proof system design documents and architectural specifications: scope fences and non-goals, 4-part state ontologies, mathemati... |
 | [`test-generation`](../skills/test-generation/SKILL.md)                                     | entry | visible | Use when writing, expanding, or auditing tests, converting workflow rules into gates, or deciding what to test. Catch-first method: a test is only good if it c... |
 | [`upwork-proposals`](../skills/upwork-proposals/SKILL.md)                                   | entry | visible | Use when writing an Upwork application or job proposal - concise, energetic, client-focused copy that leads with action and keeps every claim truthful             |
