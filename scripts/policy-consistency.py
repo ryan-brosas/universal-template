@@ -487,16 +487,19 @@ def check_foundation_first_class() -> None:
     )
 
 
-def check_agents_minimal() -> None:
-    """Global AGENTS.md stays thin — constitution only, not a handbook."""
+def check_agents_constitution() -> None:
+    """Global AGENTS.md stays an outcome constitution, not a routing handbook."""
     rel = "AGENTS.md"
     text = read(rel)
     if text is None:
-        fails.append("[AGENTS-MINIMAL] AGENTS.md: file missing")
+        fails.append("[AGENTS-CONSTITUTION] AGENTS.md: file missing")
         return
-    line_count = len(text.splitlines())
-    if line_count > 55:
-        check_fail("AGENTS-MINIMAL", rel, 1, f"global AGENTS.md too long ({line_count} lines; keep under ~55)")
+    for phrase in (
+        "Optimize toward the Pareto frontier.",
+        "Do not force a fixed tool sequence",
+        "Keep this file a global engineering constitution, not a mandatory execution workflow.",
+    ):
+        require_phrase("AGENTS-CONSTITUTION", rel, phrase)
     banned = re.compile(
         r"Fovea|Steroid / JetBrains|foundation-pack/.*reusable architecture|"
         r"Evidence priority for non-trivial|Pi Fabric|fabric_exec|/fabric prewalk|"
@@ -507,7 +510,7 @@ def check_agents_minimal() -> None:
     for i, line in enumerate(text.splitlines(), 1):
         if banned.search(line):
             check_fail(
-                "AGENTS-MINIMAL",
+                "AGENTS-CONSTITUTION",
                 rel,
                 i,
                 "repo-specific or detailed routing content belongs elsewhere, not global AGENTS.md",
@@ -981,7 +984,7 @@ CHECKS = [
     ("NO-ARTIFACT-PACK", check_no_artifact_pack),
     ("OBJECTIVE-DRIFT", check_objective_drift),
     ("FOUNDATION-FIRST-CLASS", check_foundation_first_class),
-    ("AGENTS-MINIMAL", check_agents_minimal),
+    ("AGENTS-CONSTITUTION", check_agents_constitution),
     ("EVIDENCE-ROUTER-PRIORITY", check_evidence_router_priority),
     ("BOOTSTRAP-REFERENCE-INVENTORY", check_bootstrap_reference_inventory),
     ("RDD-EXISTING-REFERENCES", check_rdd_existing_references),
