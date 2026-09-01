@@ -1,6 +1,0 @@
-source:
-  url: https://github.com/example/project
-  requested_ref: main
-  resolved_commit: ""
-  license: unknown
-purpose: "Why this upstream source is kept as provenance"
