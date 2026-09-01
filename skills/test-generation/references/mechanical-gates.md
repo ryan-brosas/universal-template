@@ -1,6 +1,6 @@
 # Mechanical Gate Ladder — quality packs and unbypassable gates
 
-Source: scarywood75, 7/19/26 (verbatim block: `~/.agents/essentials/discord-material/raw/block-004-4267-…md`).
+Source: scarywood75, 2026-07-19; distilled from the original discussion transcript.
 
 ## Anything mechanical → a test or gate
 

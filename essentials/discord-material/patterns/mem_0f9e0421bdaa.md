@@ -1,7 +1,0 @@
-Test/gate methodology (from scarywood75, Discord 8/3/26): 1) A test is only good if it can properly CATCH — a passing test means nothing. Test the un-fixed AND fixed versions (pre-fix should fail, post-fix should pass). 2) Don't create too many tests — a test must be BROAD, target the TYPE of bugs/gaps/issues, not specific things. 3) When something should've been caught but wasn't, EXPAND existing tests, don't create new ones (avoid duplicate/near-identical tests). 4) The LLM should maintain and update a LIST of tests and what they target, checking it every time something isn't caught. 5) Make tests for your test units (avoid duplicates, use shared functions, avoid static values/lists, avoid near-identical logic). 6) Prompt the LLM to assess the workflow every turn: turn every manual catch into mechanical tests as much as possible. 7) Every time the LLM jerry-rigs a script and uses it multiple times, turn it into a WORKFLOW. 8) You'll babysit a lot at first, but much less later. 9) Determine what YOU want/like/gaps yourself — using a GitHub repo (stars) is not the proper way to judge good code; you need mechanical tests and gates, otherwise you get mixed results (like asking a different coworker every day if someone does good work). 10) Keep files small, group changes into themed cohorts — improves pass rate, makes models think less. 11) Turn as much as possible into code (e.g. a CLI tool to verify file ordering, and have the LLM call it) — AI is good at making you think it gave proper results.
-
-<!-- MEMORY_FIELDS
-{
-  "version": 1
-}
--->

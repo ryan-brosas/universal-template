@@ -28,7 +28,7 @@ Evidence hierarchy (what backs each claim):
 | "Bug is fixed" | Regression test fails without, passes with |
 | "Shipped" | All of the above + commit / PR link |
 
-- Feed gate failures back to the model; unbypassable checks beat re-prompting (`essentials/enforce-code-quality-mechanically.md`).
+- Feed gate failures back to the model; unbypassable checks from `practices-to-ci` beat re-prompting.
 
 ## Scope and duplication
 

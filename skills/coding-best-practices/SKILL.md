@@ -7,7 +7,7 @@ description: "Use when the user explicitly asks for engineering standards, codin
 
 ## Core Principle
 
-General coding guidance is a **map**, not a monolith. Route each topic to one leaf skill or one mechanical gate, steer outcomes with checks, not walls of prose (see `essentials/steer-outcomes-not-behavior.md`).
+General coding guidance is a **map**, not a monolith. Route each topic to one leaf skill or one mechanical gate; steer outcomes with checks, not walls of prose.
 
 ## When to Use / NOT
 
@@ -50,7 +50,7 @@ General coding guidance is a **map**, not a monolith. Route each topic to one le
 
 - **HARD-GATE:** Prompting for something mechanically enforceable instead of adding a CI check (`practices-to-ci`).
 - Loading this router and then ignoring the cited leaf, the router has no rules of its own beyond routing.
-- Treating DRY/KISS/YAGNI/SOLID as behavioral walls; use them as decision hints, then verify with gates (see `essentials/steer-outcomes-not-behavior.md`).
+- Treating DRY/KISS/YAGNI/SOLID as behavioral walls; use them as decision hints, then verify with project gates.
 - A "best practices" answer with no named skill, no gate command, and no evidence.
 
 ## Verification
@@ -62,7 +62,7 @@ General coding guidance is a **map**, not a monolith. Route each topic to one le
 
 ## References
 
-- `references/topic-index.md`, full topic table and essentials pointers.
+- `references/topic-index.md`, full topic-to-skill and gate table.
 - `references/naming-and-formatting.md`, names, conventions, comments, whitespace.
 - `references/documentation-and-readme.md`, README, docstrings, why-not-what comments.
 - `references/error-handling-and-resilience.md`, errors at boundaries, tests over try/except alone.

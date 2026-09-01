@@ -1,12 +1,9 @@
 # Roadmap - current work objectives
 
-Moved from `essentials/objectives.md`: Essentials keep durable principles; the
-working backlog lives here. Reviewed at major milestones, not on a schedule.
+This working backlog is reviewed at major milestones, not on a schedule.
 Progress for significant multi-session work is recorded in the `goal-setup`
-goal artifact and reconciled against Git and the project tracker.
-
-Derived from the essentials pillars (`essentials/README.md`) and the
-catch-first test methodology.
+goal artifact and reconciled against Git and the project tracker. Its themes
+follow the engineering constitution and catch-first test methodology.
 
 ## Summary
 

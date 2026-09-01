@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Repo-hygiene check — mechanical anti-slop for the global skill catalog.
 
-Ported from the absorbed pi-template gate (practices-to-ci / essentials Pillar 4).
+Ported from the absorbed pi-template gate and owned by `practices-to-ci`.
 Enforces:
 - no trailing whitespace
 - files end with a newline
@@ -152,7 +152,7 @@ def check_file(path: Path) -> None:
 
     # Typos: top-level docs + practice SKILL.md only.
     typo_target = False
-    if rel in {"AGENTS.md", "README.md"} or rel.startswith("essentials/"):
+    if rel in {"AGENTS.md", "README.md"}:
         typo_target = True
     if rel.startswith("skills/") and rel.endswith("/SKILL.md"):
         typo_target = True

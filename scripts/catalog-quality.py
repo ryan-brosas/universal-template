@@ -4,7 +4,6 @@
 
 These checks fail (exit 1) when:
 - a skill directory lacks `SKILL.md`, the name does not match, or names repeat;
-- the essentials are missing or not indexed in `essentials/README.md`;
 - a required template is missing from `templates/`;
 - a visible skill stays unclassified;
 - visible metadata grows beyond the recorded baseline; a deliberate
@@ -24,7 +23,6 @@ from typing import Dict, List, Optional, Set
 
 BASE = Path(__file__).resolve().parents[1]
 SKILLS = BASE / "skills"
-ESSENTIALS = BASE / "essentials"
 TEMPLATES = BASE / "templates"
 BASELINE = BASE / "scripts" / "context-budget-baseline.json"
 
@@ -96,17 +94,6 @@ def classify(folder: str, hidden: bool) -> Optional[str]:
 
 errors: List[str] = []
 warnings: List[str] = []
-
-ESSENTIAL_FILES = [
-    "operating-philosophy.md",
-    "guiding-small-model.md",
-    "steer-outcomes-not-behavior.md",
-    "stack-your-leverage.md",
-    "enforce-code-quality-mechanically.md",
-    "how-to-build-good-tests.md",
-    "openviking-foundation.md",
-    "README.md",
-]
 
 # Active skill and documentation consumers depend on these templates. This is
 # a required-file contract, not a hand-maintained inventory: templates/ remains
@@ -212,18 +199,6 @@ def collect_skills(skills_dir: Path = SKILLS) -> Dict[str, dict]:
         skills[name] = {"path": str(skill_md), "desc": desc, "dir": entry.name,
                         "hidden": hidden}
     return skills
-
-
-def check_essentials() -> None:
-    for ef in ESSENTIAL_FILES:
-        if not (ESSENTIALS / ef).is_file():
-            errors.append(f"missing essential doc: {ef}")
-    readme_path = ESSENTIALS / "README.md"
-    readme = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
-    for ef in ESSENTIAL_FILES:
-        if ef != "README.md" and ef not in readme:
-            errors.append(f"essential not indexed in README: {ef}")
-
 
 def check_visibility_policy(skills: Dict[str, dict]) -> None:
     """Visibility follows invocation ownership, not leaf-vs-router shape."""
@@ -403,7 +378,6 @@ def main() -> int:
 
     skills = collect_skills(skills_dir)
     if default_root:
-        check_essentials()
         check_templates()
         check_generated_catalogs()
     near_duplicate_warnings(skills)
@@ -430,7 +404,7 @@ def main() -> int:
             encoding="utf-8",
         )
         print(f"baseline updated: {rep['chars']} visible chars, {rep['visible']} visible skills")
-    print(f"CATALOG QUALITY OK: {len(skills)} skills, {len(ESSENTIAL_FILES)} essentials")
+    print(f"CATALOG QUALITY OK: {len(skills)} skills")
     for w in warnings[:40]:
         print(f"  (warn) {w}")
     if len(warnings) > 40:

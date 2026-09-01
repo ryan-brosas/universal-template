@@ -1,6 +1,6 @@
 # Test Ledger Protocol
 
-Source: scarywood75, 8/3/26 (verbatim block: `~/.agents/essentials/discord-material/raw/block-005-7d5a8007ea1f.md`).
+Source: scarywood75, 2026-08-03; distilled from the original discussion transcript.
 
 ## Why a ledger
 
