@@ -46,7 +46,8 @@ that apply everywhere.
   `reference/` and `reference/web/` when relevant; then applicable
   foundations and skills as shortcuts; then additional source/docs/web on a
   named gap. Foundations and skills never outrank the code they distill or
-  the project they serve.
+  the project they serve. Use whatever read, search, MCP, or runtime
+  capability the host provides; no fixed tool chain per task.
 
 ## Reversible work needs no permission ritual
 
@@ -188,7 +189,8 @@ deterministic linter live in `skills/house-writing-style/` and
   outrank foundations; the source a foundation points at remains the
   authority. Create or expand a foundation only when reusable understanding
   is cheaper to retrieve than to re-derive (not for every repo, site, or
-  session). Discovery: plain `grep -ril "<topic>" foundation-pack/`.
+  session). Discovery: search `foundation-pack/` by topic through the
+  filesystem or any search capability the host provides.
 - `templates/`: CLI-neutral format templates; canonical inventory (the only
   place that enumerates them) in `references/templates-inventory.md`.
   `essentials/`: cold

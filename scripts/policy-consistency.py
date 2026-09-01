@@ -524,6 +524,11 @@ def check_foundation_first_class() -> None:
         "references/reference-contract.md",
         "References vs foundations",
     )
+    require_phrase(
+        "FOUNDATION-FIRST-CLASS",
+        "AGENTS.md",
+        "no fixed tool chain",
+    )
 
 
 def check_bootstrap_reference_inventory() -> None:
@@ -537,6 +542,11 @@ def check_bootstrap_reference_inventory() -> None:
     for token in ("reference/", "reference/web/"):
         if token not in flat:
             check_fail("BOOTSTRAP-REFERENCE-INVENTORY", rel, 1, f"missing bounded inventory for {token!r}")
+    require_phrase(
+        "BOOTSTRAP-REFERENCE-INVENTORY",
+        rel,
+        "filesystem listing",
+    )
 
 
 def check_rdd_existing_references() -> None:

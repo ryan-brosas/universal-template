@@ -32,10 +32,10 @@ Inspect enough to answer: *What is this? How do I run it? How do I test it? Wher
 Read, as relevant: repo root, local `AGENTS.md`/instructions, README, manifests, lockfiles, language/runtime files, project structure, main entrypoints, real build/test/lint commands (run them, a command you have not run is not verified), existing CI, current dirty state, docs, obvious generated/vendor directories. Route deeper questions through `evidence-router`, direct source for small repos, Fovea for large active codebases, Steroid for exact semantics, Codebase Memory only when cross-repo discovery closes a gap. Recent Git history only when useful.
 
 **Project-local prior art (cheap inventory):** when `reference/` or
-`reference/web/` exists at the repo root, list top-level entries only (no
-bulk read): `reference/<name>/` checkouts and `reference/web/<site>/`
-captures. Note what reusable assets exist so later work can consult them;
-do not ingest every reference during onboarding.
+`reference/web/` exists at the repo root, list top-level entry names only
+(filesystem listing; no bulk read): `reference/<name>/` checkouts and
+`reference/web/<site>/` captures. Note what reusable assets exist so later
+work can consult them; do not ingest every reference during onboarding.
 
 **Output, a compact session summary (conversation, not files):**
 
