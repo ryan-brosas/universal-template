@@ -7,7 +7,7 @@ Derived from `skills/*/SKILL.md` metadata. Discovery tools:
 `python3 scripts/skill-catalog.py search-foundations "<topic>"`,
 `python3 scripts/skill-catalog.py search-leverage "<topic>"`.
 
-146 skills: 40 visible, 106 hidden. Visible startup metadata: ~10152 chars (~2538 tokens).
+147 skills: 41 visible, 106 hidden. Visible startup metadata: ~10455 chars (~2613 tokens).
 
 ## Entry skills
 
@@ -20,6 +20,7 @@ Direct user-facing capabilities; trigger on request.
 | [`cdp`](../skills/cdp/SKILL.md)                                                             | entry | visible | Use when the user wants to automate, script, or inspect a Chromium-based browser through the DevTools Protocol. Runs JS snippets through the browser-harness-js... |
 | [`code-cleanup`](../skills/code-cleanup/SKILL.md)                                           | entry | visible | Use when behavior works but the diff is noisy, repetitive, over-complicated, or AI-shaped - lock behavior first, simplify the changed code, and re-verify witho... |
 | [`coding-best-practices`](../skills/coding-best-practices/SKILL.md)                         | entry | visible | Use when the user explicitly asks for engineering standards, coding best practices, quality guidance, or help selecting a quality procedure or leaf skill, rout... |
+| [`copywriting`](../skills/copywriting/SKILL.md)                                             | entry | visible | Use when writing, rewriting, or auditing conversion-focused landing pages, homepages, product or pricing pages, sales pages, emails, ads, headlines, CTAs, valu... |
 | [`debugging-and-error-recovery`](../skills/debugging-and-error-recovery/SKILL.md)           | entry | visible | Use when tests fail, builds break, behavior is unexpected, or multiple fix attempts have not worked.                                                               |
 | [`deprecation-and-migration`](../skills/deprecation-and-migration/SKILL.md)                 | entry | visible | Use when deprecating APIs, migrating between library versions, removing legacy code, or planning breaking changes, covers deprecation notices, migration guides... |
 | [`farmed-test-harness`](../skills/farmed-test-harness/SKILL.md)                             | entry | visible | Use when writing tests for code that talks to HTTP/LLM/external services, reuse the farmed test harness (cassette recording/replay, client error handling, pyte... |
