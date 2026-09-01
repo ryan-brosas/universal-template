@@ -5,7 +5,7 @@
 Derived from `skills/*/SKILL.md` metadata. Discovery tool:
 `python3 scripts/skill-catalog.py search "<topic>"`.
 
-146 skills: 40 visible, 106 hidden. Visible startup metadata: ~10001 chars (~2500 tokens).
+146 skills: 40 visible, 106 hidden. Visible startup metadata: ~10067 chars (~2516 tokens).
 
 ## Entry skills
 
@@ -36,7 +36,7 @@ Direct user-facing capabilities; trigger on request.
 | [`project-bootstrap`](../skills/project-bootstrap/SKILL.md)                                 | entry | visible | Use when entering a new or unfamiliar repository, initializing a greenfield project workspace, or intentionally establishing lightweight persistent project-lev... |
 | [`prototype`](../skills/prototype/SKILL.md)                                                 | entry | visible | Use when the user wants to prototype, sanity-check a data model or state machine, mock up a UI, explore design options, or says 'prototype this', 'spike this',... |
 | [`push-pr`](../skills/push-pr/SKILL.md)                                                     | entry | visible | Use when finished work needs to be pushed and opened or updated as a GitHub pull request, when PR review feedback must be addressed in its thread, or when an o... |
-| [`reference-driven-development`](../skills/reference-driven-development/SKILL.md)           | entry | visible | Use when implementation should be grounded in outside prior art, adapting an external implementation, comparing against a reference repository, or porting a kn... |
+| [`reference-driven-development`](../skills/reference-driven-development/SKILL.md)           | entry | visible | Use when outside prior art reduces uncertainty: adapting a reference repo, porting a pattern, or when a relevant project-local reference/<repo>/ or reference/w... |
 | [`security-and-hardening`](../skills/security-and-hardening/SKILL.md)                       | entry | visible | Use when auditing for security vulnerabilities, implementing auth or authz, handling secrets, or hardening against OWASP Top 10 - covers input validation, auth... |
 | [`skill-catalog`](../skills/skill-catalog/SKILL.md)                                         | entry | visible | Use when the user asks what skills exist or needs to find the right skill for a topic - deterministic search over the local catalog; return candidates and load... |
 | [`system-design-specification`](../skills/system-design-specification/SKILL.md)             | entry | visible | Use when authoring formal, crash-proof system design documents and architectural specifications: scope fences and non-goals, 4-part state ontologies, mathemati... |

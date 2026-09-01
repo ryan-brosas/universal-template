@@ -24,7 +24,7 @@ verification afterward. Never fabricate a failing test to satisfy process.
 
 ## When to Use
 
-Before feature implementation, bug fixes, or refactors that change testable behavior. REQUIRED BACKGROUND for `code-review-and-quality` and any feature work. Documentation-only changes and pure configuration need the project's normal verification, not a RED step.
+Before feature implementation, bug fixes, or refactors that change testable behavior. Pair with `code-review-and-quality` when review is in scope. Documentation-only changes and pure configuration need the project's normal verification, not a RED step.
 
 ## When NOT to Use
 

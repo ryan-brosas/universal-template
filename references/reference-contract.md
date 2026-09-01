@@ -14,13 +14,15 @@ live in their owners.
   (rendered HTML, CSS, screenshots, archives), produced by the `web-reference`
   skill and validated by `scripts/web-reference-manifest.py`.
 - **Approved design artifact**: an approved design state (for example an
-  OpenDesign project) — target design evidence, authoritative only after
-  explicit approval.
+  OpenDesign project) — target design evidence for the intended visual or UX
+  outcome after explicit approval; it does not override project acceptance
+  gates.
 
-All three are evidence, never authority. The same ADOPT / ADAPT / OMIT decision
-applies per concern. A web reference records source, capture date, scope,
-evidence inventory, and coverage gaps in its `manifest.json`; brand assets,
-logos, and proprietary media are never copied into the project.
+All three are prior-art evidence, not acceptance authority. The same ADOPT /
+ADAPT / OMIT decision applies per concern. A web reference records source,
+capture date, scope, evidence inventory, and coverage gaps in its
+`manifest.json`; brand assets, logos, and proprietary media are never copied
+into the project.
 
 ## Authority
 
@@ -53,6 +55,14 @@ code or captured frontend evidence for inspection and adaptation.
 from strong implementations (architecture, patterns, seams, pointers).
 Foundations never outrank the source they came from; project-local references
 outrank generic foundations when both apply.
+
+**Foundation provenance (forward rule for new or materially touched
+foundations):** record portable upstream identity (`owner/repo` or canonical
+URL), exact source revision (commit/tag/ref), and license when known.
+Machine-local checkout paths are secondary convenience only. When a foundation
+points at source that is not available locally, resolve the portable identity,
+acquire or reuse it under `<project>/reference/<repo>/`, and inspect source and
+tests before load-bearing claims.
 
 ## License
 

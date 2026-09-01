@@ -26,10 +26,10 @@ catch-first test methodology.
   implementation foundations (architecture, patterns, seams) separate from
   the active skill catalog; create or expand one only when reusable
   understanding is cheaper to retrieve than to re-derive.
-- **Reference contract adherence.** New `references/` capsules follow
-  `references/reference-contract.md` (source, decisive excerpts, retrieval
-  queries, verdict). Existing capsules are maintained as they are touched; no
-  bulk migration.
+- **Reference contract adherence.** New contract capsules under this repo's
+  global `references/` directory follow `references/reference-contract.md`
+  where applicable. Project-local prior art lives at `<project>/reference/` and
+  `<project>/reference/web/`; do not confuse the two trees.
 - **Automated code-graph context discovery.** Before planning or editing,
   query the nearest sufficient source: direct code, Fovea (active-project
   structure), or Codebase Memory (cross-repo prior art). One primary route per

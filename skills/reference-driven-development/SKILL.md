@@ -1,6 +1,6 @@
 ---
 name: reference-driven-development
-description: "Use when implementation should be grounded in outside prior art, adapting an external implementation, comparing against a reference repository, or porting a known pattern into the current codebase."
+description: "Use when outside prior art reduces uncertainty: adapting a reference repo, porting a pattern, or when a relevant project-local reference/<repo>/ or reference/web/<site>/ already exists and would materially help—even without an explicit use-this-reference request."
 ---
 
 # Reference-Driven Development
@@ -20,9 +20,12 @@ When outside code materially reduces uncertainty, use ONE strong reference repos
 1. **Ground locally**, inspect the current project and identify the seam; decide whether outside code materially reduces uncertainty (if not, stop, implement directly).
 2. **Notice existing references**, if `reference/` or `reference/web/` exists, scan top-level names and open only candidates relevant to the seam (bounded listing, not bulk ingestion).
 3. **Select the reference**, place or reuse it at the conventional path. Code references: ONE strong repository at `<project>/reference/<repo>/`; add a second only after naming the gap the first left. Web references: synthesis may combine several captured sites when each contributes a named quality. Full rules: `~/.agents/references/reference-contract.md` (kinds, authority, defaults, licensing, lifecycle).
-4. **Check freshness when it matters**, for a checkout reference, inspect
-   current revision and working-tree state with whatever VCS or filesystem
-   evidence the host provides; do not destructively update a dirty reference.
+4. **Check freshness when it matters**, for a checkout reference, record the
+   current revision and working-tree state; inspect configured upstream/remote
+   when VCS and network capability exist; compare local revision to upstream
+   metadata without mutating a dirty or diverged checkout. If freshness cannot
+   be established, cite exact revision and mark freshness unknown or stale; do
+   not treat unknown freshness as current.
 5. **Read it as code, not docs**, use project-graph or semantic navigation
    MCP tools when helpful; read the exact source and its direct tests.
 6. **Compare boundaries**, local vs reference; decide ADOPT / ADAPT / OMIT per concern; never blind-copy.
