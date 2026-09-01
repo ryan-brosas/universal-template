@@ -2,10 +2,12 @@
 
 # Skill Catalog
 
-Derived from `skills/*/SKILL.md` metadata. Discovery tool:
-`python3 scripts/skill-catalog.py search "<topic>"`.
+Derived from `skills/*/SKILL.md` metadata. Discovery tools:
+`python3 scripts/skill-catalog.py search "<topic>"`,
+`python3 scripts/skill-catalog.py search-foundations "<topic>"`,
+`python3 scripts/skill-catalog.py search-leverage "<topic>"`.
 
-146 skills: 40 visible, 106 hidden. Visible startup metadata: ~10067 chars (~2516 tokens).
+146 skills: 40 visible, 106 hidden. Visible startup metadata: ~10152 chars (~2538 tokens).
 
 ## Entry skills
 
@@ -38,7 +40,7 @@ Direct user-facing capabilities; trigger on request.
 | [`push-pr`](../skills/push-pr/SKILL.md)                                                     | entry | visible | Use when finished work needs to be pushed and opened or updated as a GitHub pull request, when PR review feedback must be addressed in its thread, or when an o... |
 | [`reference-driven-development`](../skills/reference-driven-development/SKILL.md)           | entry | visible | Use when outside prior art reduces uncertainty: adapting a reference repo, porting a pattern, or when a relevant project-local reference/<repo>/ or reference/w... |
 | [`security-and-hardening`](../skills/security-and-hardening/SKILL.md)                       | entry | visible | Use when auditing for security vulnerabilities, implementing auth or authz, handling secrets, or hardening against OWASP Top 10 - covers input validation, auth... |
-| [`skill-catalog`](../skills/skill-catalog/SKILL.md)                                         | entry | visible | Use when the user asks what skills exist or needs to find the right skill for a topic - deterministic search over the local catalog; return candidates and load... |
+| [`skill-catalog`](../skills/skill-catalog/SKILL.md)                                         | entry | visible | Use when the user asks what skills exist, when finding the right skill for a topic, or during non-trivial implementation when a cheap check for relevant hidden... |
 | [`system-design-specification`](../skills/system-design-specification/SKILL.md)             | entry | visible | Use when authoring formal, crash-proof system design documents and architectural specifications: scope fences and non-goals, 4-part state ontologies, mathemati... |
 | [`test-generation`](../skills/test-generation/SKILL.md)                                     | entry | visible | Use when writing, expanding, or auditing tests, converting workflow rules into gates, or deciding what to test. Catch-first method: a test is only good if it c... |
 | [`upwork-proposals`](../skills/upwork-proposals/SKILL.md)                                   | entry | visible | Use when writing an Upwork application or job proposal - concise, energetic, client-focused copy that leads with action and keeps every claim truthful             |

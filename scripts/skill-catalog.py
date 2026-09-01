@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""skill-catalog.py — deterministic discovery over the local skill catalog.
+"""skill-catalog.py — deterministic discovery over skills and foundations.
 
-Visible skills are deliberately few; everything else (specialists, internal
-mechanics) stays hidden and is found here:
+Visible skills are deliberately few; hidden/cold skills and foundation-pack
+leaves stay out of startup metadata and are found here:
 
-    list / search / show / stats / generate
+    list / search / search-foundations / search-leverage / show / stats / generate
 
-Classification (entry / router / internal / cold / vendor) is owned by
-catalog-quality.py; this tool reports it and generates the human catalogs.
+Metadata search only until a candidate earns a read. Classification (entry /
+router / internal / cold / vendor) is owned by catalog-quality.py.
 Zero dependencies.
 """
 from __future__ import annotations
@@ -15,12 +15,15 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
+import os
 import re
 import sys
+import tempfile
 from pathlib import Path
 
 BASE = Path(__file__).resolve().parents[1]
-SKILLS = BASE / "skills"
+SKILLS = Path(os.environ.get("SKILLS_ROOT", str(BASE / "skills")))
+FOUNDATION_PACK = Path(os.environ.get("FOUNDATION_PACK", str(BASE / "foundation-pack")))
 DOCS = BASE / "docs"
 TOKEN_CHARS = 4
 DESC_TRUNC = 160
@@ -47,11 +50,13 @@ STOPWORDS = {
 }
 
 
-def scan() -> list[dict]:
-    # One owner for the tracked-set rule: catalog-quality.git_ignored_dirs.
-    local_dirs = _CQ.git_ignored_dirs(SKILLS)
+def scan(*, skills_dir: Path | None = None) -> list[dict]:
+    root = skills_dir or SKILLS
+    local_dirs = _CQ.git_ignored_dirs(root)
     out: list[dict] = []
-    for d in sorted(SKILLS.iterdir()):
+    if not root.is_dir():
+        return out
+    for d in sorted(root.iterdir()):
         if not d.is_dir() or d.name.startswith("."):
             continue
         sm = d / "SKILL.md"
@@ -76,32 +81,87 @@ def scan() -> list[dict]:
     return out
 
 
+def scan_foundations(*, pack_dir: Path | None = None) -> list[dict]:
+    """Frontmatter metadata only; foundation bodies are not indexed deeply."""
+    root = pack_dir or FOUNDATION_PACK
+    out: list[dict] = []
+    if not root.is_dir():
+        return out
+    for d in sorted(root.iterdir()):
+        if not d.is_dir() or not d.name.endswith("-foundation"):
+            continue
+        sm = d / "SKILL.md"
+        if not sm.is_file():
+            continue
+        text = sm.read_text(encoding="utf-8", errors="replace")
+        fm = parse_frontmatter(text)
+        stem = d.name[: -len("-foundation")] if d.name.endswith("-foundation") else d.name
+        out.append({
+            "name": fm.get("name", d.name),
+            "stem": stem,
+            "desc": fm.get("description", ""),
+            "path": str(sm),
+        })
+    return out
+
+
 def tokens(query: str) -> list[str]:
     return [t for t in re.findall(r"[a-z0-9]+", query.lower())
             if t not in STOPWORDS and len(t) > 1]
 
 
-def score_skill(skill: dict, toks: list[str], query_low: str) -> tuple[float, list[str]]:
+def _normalize_query(query: str) -> str:
+    q_low = re.sub(r"[^a-z0-9 ]", " ", query.lower()).strip()
+    return " ".join(q_low.split())
+
+
+def word_tokens(text: str) -> set[str]:
+    """Whole-word tokens; avoids matching ``ui`` inside ``arduino``."""
+    return {chunk for chunk in re.split(r"[^a-z0-9]+", text.lower()) if chunk}
+
+
+def _phrase_in_text(phrase: str, text: str) -> bool:
+    if not phrase or len(phrase) <= 3:
+        return False
+    pattern = r"\b" + r"\s+".join(re.escape(w) for w in phrase.split()) + r"\b"
+    return re.search(pattern, text.lower()) is not None
+
+
+def score_metadata(
+    item: dict,
+    toks: list[str],
+    query_low: str,
+    *,
+    include_body: bool = False,
+) -> tuple[float, list[str]]:
     s = 0.0
     why: list[str] = []
-    name_low = skill["name"].lower()
-    desc_low = skill["desc"].lower()
+    name_low = item["name"].lower()
+    desc_low = item["desc"].lower()
+    stem_low = item.get("stem", "").lower()
+    name_tokens = word_tokens(name_low)
+    stem_tokens = word_tokens(stem_low) if stem_low else set()
+    desc_tokens = word_tokens(desc_low)
+    body_tokens = word_tokens(item.get("body_low", "")[:20000]) if include_body else set()
     if query_low and query_low == name_low:
         s += 12.0
         why.append("exact name")
     for t in toks:
-        if t in name_low:
+        if t in name_tokens:
             s += 4.0
             why.append("name:" + t)
-        if t in desc_low:
+        if stem_tokens and t in stem_tokens:
+            s += 3.5
+            why.append("stem:" + t)
+        if t in desc_tokens:
             s += 2.0
             why.append("desc:" + t)
-        if t in skill["body_low"]:
+        if include_body and t in body_tokens:
             s += 0.5
-    if query_low and len(query_low) > 3 and query_low in desc_low:
+    if query_low and _phrase_in_text(query_low, desc_low):
         s += 5.0
         why.append("desc phrase")
-    if query_low and query_low in name_low:
+    if query_low and _phrase_in_text(query_low, name_low):
         s += 6.0
         why.append("name phrase")
     seen: set[str] = set()
@@ -109,18 +169,34 @@ def score_skill(skill: dict, toks: list[str], query_low: str) -> tuple[float, li
     return s, why
 
 
-def search(skills: list[dict], query: str, limit: int) -> list[dict]:
+def score_skill(skill: dict, toks: list[str], query_low: str) -> tuple[float, list[str]]:
+    return score_metadata(skill, toks, query_low, include_body=True)
+
+
+def _rank(items: list[dict], query: str, limit: int, *, include_body: bool) -> list[dict]:
     toks = tokens(query)
-    q_low = re.sub(r"[^a-z0-9 ]", " ", query.lower()).strip()
-    q_low = " ".join(q_low.split())
+    q_low = _normalize_query(query)
     scored = []
-    for sk in skills:
-        s, why = score_skill(sk, toks, q_low)
+    for item in items:
+        s, why = score_metadata(item, toks, q_low, include_body=include_body)
         if s > 0:
-            scored.append({"score": s, "why": why, **{k: sk[k] for k in
-                          ("name", "cls", "hidden", "desc", "path")}})
+            row = {"score": s, "why": why, "name": item["name"], "desc": item["desc"], "path": item["path"]}
+            if "cls" in item:
+                row["cls"] = item["cls"]
+                row["hidden"] = item["hidden"]
+            if "stem" in item:
+                row["stem"] = item["stem"]
+            scored.append(row)
     scored.sort(key=lambda x: -x["score"])
     return scored[:limit]
+
+
+def search(skills: list[dict], query: str, limit: int) -> list[dict]:
+    return _rank(skills, query, limit, include_body=True)
+
+
+def search_foundations(foundations: list[dict], query: str, limit: int) -> list[dict]:
+    return _rank(foundations, query, limit, include_body=False)
 
 
 def related(skills: list[dict], name: str, limit: int = 8) -> list[str]:
@@ -159,7 +235,6 @@ def stats(skills: list[dict]) -> dict:
 
 
 def _clean(desc: str) -> str:
-    """Generated docs stay house-style clean: no em dashes in prose."""
     return desc.replace("\u2014", "-")
 
 
@@ -173,7 +248,6 @@ def _md_row(s: dict) -> str:
 
 
 def _align_md_table(rows: list[str]) -> list[str]:
-    """Pipe-align a markdown table block (JetBrains MarkdownIncorrectTableFormatting)."""
     parts = [[c.strip() for c in r.split("|")[1:-1]] for r in rows]
     ncols = max(len(c) for c in parts)
     parts = [c + [""] * (ncols - len(c)) for c in parts]
@@ -196,8 +270,10 @@ def build_skill_catalog_md(skills: list[dict]) -> str:
         "",
         "# Skill Catalog",
         "",
-        "Derived from `skills/*/SKILL.md` metadata. Discovery tool:",
-        "`python3 scripts/skill-catalog.py search \"<topic>\"`.",
+        "Derived from `skills/*/SKILL.md` metadata. Discovery tools:",
+        "`python3 scripts/skill-catalog.py search \"<topic>\"`,",
+        "`python3 scripts/skill-catalog.py search-foundations \"<topic>\"`,",
+        "`python3 scripts/skill-catalog.py search-leverage \"<topic>\"`.",
         "",
     ]
     st = stats(skills)
@@ -226,6 +302,20 @@ def build_skill_catalog_md(skills: list[dict]) -> str:
     return "\n".join(lines)
 
 
+def _print_skill_hits(hits: list[dict]) -> None:
+    for h in hits:
+        vis = "hidden" if h.get("hidden") else "visible"
+        reason = ", ".join(h["why"][:4])
+        cls = h.get("cls") or "unclassified"
+        print(f"  {h['score']:6.1f}  {h['name']:40} {cls:9} {vis:7} {reason}")
+
+
+def _print_foundation_hits(hits: list[dict]) -> None:
+    for h in hits:
+        reason = ", ".join(h["why"][:4])
+        print(f"  {h['score']:6.1f}  {h['name']:40} {reason}")
+
+
 def cmd_list(skills: list[dict], args) -> int:
     rows = skills
     if args.visible:
@@ -252,14 +342,46 @@ def cmd_search(skills: list[dict], args) -> int:
         print(json.dumps(hits, indent=2))
         return 0
     if not hits:
-        print(f"no matches for: {args.query!r}")
+        print(f"no skill matches for: {args.query!r}")
         return 0
-    print(f"catalog candidates for: {args.query!r}")
-    for h in hits:
-        vis = "hidden" if h["hidden"] else "visible"
-        reason = ", ".join(h["why"][:4])
-        print(f"  {h['score']:6.1f}  {h['name']:40} {h['cls'] or 'unclassified':9} {vis:7} {reason}")
+    print(f"skill candidates for: {args.query!r}")
+    _print_skill_hits(hits)
     print("Load only the candidate you need (skills/<name>/SKILL.md).")
+    return 0
+
+
+def cmd_search_foundations(foundations: list[dict], args) -> int:
+    hits = search_foundations(foundations, args.query, args.limit)
+    if args.json:
+        print(json.dumps(hits, indent=2))
+        return 0
+    if not hits:
+        print(f"no foundation matches for: {args.query!r}")
+        return 0
+    print(f"foundation candidates for: {args.query!r}")
+    _print_foundation_hits(hits)
+    print("Load only useful matches (foundation-pack/<name>/SKILL.md); then follow source pointers.")
+    return 0
+
+
+def cmd_search_leverage(skills: list[dict], foundations: list[dict], args) -> int:
+    skill_hits = search(skills, args.query, args.limit)
+    foundation_hits = search_foundations(foundations, args.query, args.limit)
+    if args.json:
+        print(json.dumps({"skills": skill_hits, "foundations": foundation_hits}, indent=2))
+        return 0
+    print(f"leverage candidates for: {args.query!r}")
+    print("skills:")
+    if skill_hits:
+        _print_skill_hits(skill_hits)
+    else:
+        print("  (none)")
+    print("foundations:")
+    if foundation_hits:
+        _print_foundation_hits(foundation_hits)
+    else:
+        print("  (none)")
+    print("Search broadly; load narrowly. Read only candidates that materially help.")
     return 0
 
 
@@ -290,7 +412,7 @@ def cmd_show(skills: list[dict], args) -> int:
         print(f"related:       {', '.join(payload['related'])}")
     print(f"description:   {payload['description']}")
     if not payload["model_visible"]:
-        print("(hidden skills are not in startup metadata; search or explicit invocation finds them)")
+        print("(hidden skills are not in startup metadata; search finds them on demand)")
     return 0
 
 
@@ -314,9 +436,6 @@ def cmd_stats(skills: list[dict], args) -> int:
 
 
 def build_docs(skills: list[dict]) -> dict[str, str]:
-    """The generated catalog covers the tracked catalog only: machine-local
-    (git-ignored) skills are excluded so a clean CI checkout regenerates
-    byte-identical docs."""
     pub = [s for s in skills if not s.get("local")]
     return {
         DOCS / "skill-catalog.md": build_skill_catalog_md(pub),
@@ -344,7 +463,87 @@ def cmd_generate(skills: list[dict], args) -> int:
     return 0
 
 
+def selftest() -> int:
+    ok = True
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        skills_dir = root / "skills"
+        pack_dir = root / "foundation-pack"
+        (skills_dir / "dashboard-patterns").mkdir(parents=True)
+        (skills_dir / "unrelated-noise-skill").mkdir(parents=True)
+        (skills_dir / "dashboard-patterns" / "SKILL.md").write_text(
+            "---\nname: dashboard-patterns\ndescription: Use when building dashboard settings pages and layout patterns.\n"
+            "disable-model-invocation: true\n---\n# Dashboard patterns\n",
+            encoding="utf-8",
+        )
+        (skills_dir / "unrelated-noise-skill" / "SKILL.md").write_text(
+            "---\nname: unrelated-noise-skill\ndescription: Use when parsing COBOL batch files.\n"
+            "disable-model-invocation: true\n---\n# Noise\n",
+            encoding="utf-8",
+        )
+        (pack_dir / "dashboard-settings-foundation").mkdir(parents=True)
+        (pack_dir / "unrelated-noise-foundation").mkdir(parents=True)
+        (pack_dir / "dashboard-settings-foundation" / "SKILL.md").write_text(
+            "---\nname: dashboard-settings-foundation\ndescription: Dashboard settings UI seams and form validation patterns.\n---\n",
+            encoding="utf-8",
+        )
+        (pack_dir / "unrelated-noise-foundation" / "SKILL.md").write_text(
+            "---\nname: unrelated-noise-foundation\ndescription: Legacy mainframe terminal emulation.\n---\n",
+            encoding="utf-8",
+        )
+        skills = scan(skills_dir=skills_dir)
+        foundations = scan_foundations(pack_dir=pack_dir)
+        query = "dashboard settings page"
+        skill_hits = search(skills, query, 5)
+        foundation_hits = search_foundations(foundations, query, 5)
+        if not skill_hits or skill_hits[0]["name"] != "dashboard-patterns":
+            print(f"FAIL skill search expected dashboard-patterns first, got {skill_hits}")
+            ok = False
+        else:
+            print("PASS skill metadata search ranks relevant hidden skill")
+        if any(h["name"] == "unrelated-noise-skill" for h in skill_hits[:2]):
+            print(f"FAIL noise skill ranked too high: {skill_hits[:2]}")
+            ok = False
+        if not foundation_hits or foundation_hits[0]["name"] != "dashboard-settings-foundation":
+            print(f"FAIL foundation search expected dashboard-settings-foundation first, got {foundation_hits}")
+            ok = False
+        else:
+            print("PASS foundation metadata search ranks relevant foundation")
+        if any(h["name"] == "unrelated-noise-foundation" for h in foundation_hits[:2]):
+            print(f"FAIL noise foundation ranked too high: {foundation_hits[:2]}")
+            ok = False
+        (skills_dir / "arduino-trap").mkdir(exist_ok=True)
+        (skills_dir / "arduino-trap" / "SKILL.md").write_text(
+            "---\nname: arduino-trap\ndescription: Use when programming Arduino microcontroller hardware.\n"
+            "disable-model-invocation: true\n---\n# Trap\n",
+            encoding="utf-8",
+        )
+        (pack_dir / "react-foundation").mkdir(exist_ok=True)
+        (pack_dir / "react-foundation" / "SKILL.md").write_text(
+            "---\nname: react-foundation\ndescription: React component patterns and UI composition.\n---\n",
+            encoding="utf-8",
+        )
+        skills = scan(skills_dir=skills_dir)
+        foundations = scan_foundations(pack_dir=pack_dir)
+        ui_hits = search(skills, "ui", 3)
+        if ui_hits and ui_hits[0]["name"] == "arduino-trap":
+            print(f"FAIL short token ui matched substring inside arduino: {ui_hits}")
+            ok = False
+        else:
+            print("PASS short token ui avoids arduino substring trap")
+        react_hits = search_foundations(foundations, "react ui", 3)
+        if not react_hits or react_hits[0]["name"] != "react-foundation":
+            print(f"FAIL react ui expected react-foundation first, got {react_hits}")
+            ok = False
+        else:
+            print("PASS react ui ranks react-foundation first")
+    print("skill-catalog selftest: PASS" if ok else "skill-catalog selftest: FAIL")
+    return 0 if ok else 1
+
+
 def main() -> int:
+    if "--selftest" in sys.argv:
+        return selftest()
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -353,9 +552,17 @@ def main() -> int:
     p.add_argument("--hidden", action="store_true")
     p.add_argument("--class", dest="klass", choices=CLASSES)
     p.add_argument("--json", action="store_true")
-    p = sub.add_parser("search", help="scored catalog search")
+    p = sub.add_parser("search", help="scored skill catalog search (metadata + light body)")
     p.add_argument("query")
     p.add_argument("--limit", type=int, default=8)
+    p.add_argument("--json", action="store_true")
+    p = sub.add_parser("search-foundations", help="scored foundation-pack search (metadata only)")
+    p.add_argument("query")
+    p.add_argument("--limit", type=int, default=8)
+    p.add_argument("--json", action="store_true")
+    p = sub.add_parser("search-leverage", help="search skills and foundations together")
+    p.add_argument("query")
+    p.add_argument("--limit", type=int, default=5)
     p.add_argument("--json", action="store_true")
     p = sub.add_parser("show", help="inspect one skill")
     p.add_argument("name")
@@ -366,8 +573,17 @@ def main() -> int:
     p.add_argument("--check", action="store_true", help="verify generated docs are current")
     args = ap.parse_args()
     skills = scan()
-    return {"list": cmd_list, "search": cmd_search, "show": cmd_show,
-            "stats": cmd_stats, "generate": cmd_generate}[args.cmd](skills, args)
+    foundations = scan_foundations()
+    dispatch = {
+        "list": lambda: cmd_list(skills, args),
+        "search": lambda: cmd_search(skills, args),
+        "search-foundations": lambda: cmd_search_foundations(foundations, args),
+        "search-leverage": lambda: cmd_search_leverage(skills, foundations, args),
+        "show": lambda: cmd_show(skills, args),
+        "stats": lambda: cmd_stats(skills, args),
+        "generate": lambda: cmd_generate(skills, args),
+    }
+    return dispatch[args.cmd]()
 
 
 if __name__ == "__main__":
