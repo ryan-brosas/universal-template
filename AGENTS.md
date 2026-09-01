@@ -8,39 +8,20 @@ Codex/OpenCode, opencode, agy/veda, subprocess agents).
 disagree with anything below, follow the project. This file only sets defaults
 that apply everywhere.
 
-## Ground truth & routing
+## Ground truth
 
 - Source, tests, compiler/runtime behavior, and project requirements outrank
-  summaries, graphs, skills, and model opinions. Graphs and corpora are
-  navigation indexes, not source of truth; confirm cited code in real source.
-- Route by need to the smallest capability that closes the gap
-  (`skills/evidence-router/`); connected is not mandatory, and no fixed
-  retrieval chain runs per task:
-  - **Fovea**: active working-set map of the current project (orientation,
-    feature location, impact/blast radius); then read exact source.
-  - **MCP Steroid / JetBrains**: a semantic quality layer for non-trivial
-    changes: usages, symbol resolution, types, inheritance, overrides, call
-    hierarchy, rename/move, change signature, inspections, project model,
-    debugger evidence. Preflight before editing and a targeted check after;
-    it never replaces source reads, the compiler, or tests. Skip when the
-    change is trivial or the IDE is unavailable.
-  - **Fabric**: execution and orchestration: `fabric_exec`, `/fabric
-    prewalk` (its real Fabric meaning only), agents/Veda runner when the
-    task benefits, Schema audit (observes) / enforce (intentionally strict)
-    when selected.
-  - **Codebase Memory**: persistent cross-repo structural library (cold path).
-  - **OpenViking**: durable experience/context: decisions, failed attempts,
-    lessons; not a second copy of local source.
-  - **Veda**: an execution adapter and oracle lane (alternate backend,
-    model, or persona when the execution decision justifies it). Route the
-    mechanism through `skills/execution-router`, resolve models mechanically
-    via `skills/model-resolution`; discover models at runtime, never
-    hard-code them.
-- Reusable prior art lives in `<project>/reference/<repo>/` (read-only
-  checkout; read source and tests) and, for websites, in
-  `<project>/reference/web/<site>/` (captured by the `web-reference` skill),
-  not automatically a skill, index, or corpus. This repo's global
-  `references/` means contract docs; keep the two apart.
+  summaries, graphs, skills, and model opinions.
+- Route by need through the owning skills; connected is not mandatory, and no
+  fixed retrieval chain runs per task:
+  - `skills/evidence-router/`: where evidence comes from
+  - `skills/execution-router/`: how work is executed
+  - `skills/reference-driven-development/`: outside prior art when it helps
+  - `skills/project-bootstrap/`: entering an unfamiliar repository
+
+Evidence paths (`reference/`, `reference/web/`, `foundation-pack/`), MCP
+capabilities, and detailed routing live in those skills and in `README.md` /
+`references/reference-contract.md`. Do not assume every project uses them.
 
 ## Reversible work needs no permission ritual
 
@@ -104,26 +85,6 @@ pull_request. `python3 scripts/policy-consistency.py --selftest` and
 required suite: the selftest is a regression fixture, and the legacy report is
 a migration queue, not a gate.
 
-## Pi Fabric: runtime features stay runtime features
-
-- `fabric_exec`, `/fabric prewalk`, Schema, agents, providers are Pi Fabric
-  runtime mechanisms. Verify their behavior against the installed pi-fabric
-  docs (`docs/agents.md`, `docs/schema-enforcement.md`) before writing policy
-  about them.
-- **Prewalk** means only the Pi Fabric runtime feature: `/fabric prewalk`
-  arms a continuation at a successful monitored mutation boundary and
-  continues execution with the configured executor model. It adds no
-  system-prompt instruction. Never use "prewalk" for repository exploration
-  (the word belongs to Pi Fabric):
-  say discovery, graph discovery, source inspection, or evidence discovery.
-- **Schema** modes are `off` (default) / `audit` / `enforce`. In `off`/
-  `audit` the `schema.*` loop is available but does not gate direct
-  `pi.edit`/`pi.write`/`pi.bash`.
-- Use the Schema loop only when the session runs enforce mode, the user
-  invokes a Fabric Schema mechanism, or the task needs transactional or
-  postcondition guarantees. Enforce mode blocks direct mutations and disables
-  Fabric Prewalk; do not activate it silently as a universal prerequisite.
-
 ## Entry architecture
 
 The normal loop is: task → inspect current code/evidence → implement → run
@@ -134,8 +95,9 @@ Entry skills, each earning its own trigger:
 
 - `project-bootstrap`: entering an unfamiliar repository (read-only
   onboarding by default), greenfield setup, or intentional lightweight
-  project governance. Idempotent; never generates `.pi/` artifact packs or a
-  user profile.
+  project governance. Idempotent; never generates default host artifact packs
+  or a user profile. Host runtime config (for pi: `~/.pi/` and project
+  `.pi/` when the project uses it) is outside this global tree.
 - `brainstorming`: ambiguous direction: ground in the repo, frame, explore
   real alternatives, decide. No planning files by default.
 - `goal-setup`: durable execution contract for significant/multi-session
@@ -170,26 +132,9 @@ deterministic linter live in `skills/house-writing-style/` and
 
 ## Global layout & host wiring (facts)
 
-- `skills/`: one directory per skill, `SKILL.md` with `name` +
-  trigger-first `description` ≤1024 chars. Grammar: `skills/writing-skills/`;
-  skeleton: `templates/skill.md`. Visibility follows invocation ownership:
-  entry skills stay model-visible; internal helpers stay hidden
-  (`disable-model-invocation: true`).
-- `foundation-pack/`: temporary cold prior-art capsules (`*-foundation`,
-  moved out of the active catalog); search only when project/reference
-  evidence is insufficient (plain `grep -ril "<topic>" foundation-pack/`).
-  The source they point at is the authority. The pack is retired over
-  time; no new foundations.
-- `templates/`: CLI-neutral format templates; canonical inventory (the only
-  place that enumerates them) in `references/templates-inventory.md`.
-  `essentials/`: cold
-  rationale and decision references: read the smallest relevant file when a
-  policy decision needs explanation; current objectives live in
-  `docs/roadmap.md`. `mcp/servers.json`: canonical MCP registry (per-CLI
-  configs are derived copies; fix drift here, never in the mirrors).
-  `references/`: contract capsules.
-- Host mounts: pi reads `~/.agents/skills` natively; Claude Code
-  (`~/.claude/skills`, `~/.claude/CLAUDE.md`), DSH (`~/.dsh/skills`), Codex
-  (`~/.codex/skills`, `~/.codex/AGENTS.md`), OpenCode
-  (`~/.config/opencode/skills`, `~/.config/opencode/AGENTS.md`), and Gemini
-  CLI (`~/.gemini/GEMINI.md`) read this tree via symlinks/additive merges.
+Layout, policy owners, and MCP registry: `README.md`. Host mounts: pi reads
+`~/.agents/skills` natively; Claude Code (`~/.claude/skills`,
+`~/.claude/CLAUDE.md`), DSH (`~/.dsh/skills`), Codex (`~/.codex/skills`,
+`~/.codex/AGENTS.md`), OpenCode (`~/.config/opencode/skills`,
+`~/.config/opencode/AGENTS.md`), and Gemini CLI (`~/.gemini/GEMINI.md`) read
+this tree via symlinks/additive merges.

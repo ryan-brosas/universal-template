@@ -41,6 +41,19 @@ POLICY_FILES = [
     "skills/github-repo-setup/SKILL.md",
 ]
 POLICY_FILES += sorted(str(p.relative_to(BASE)) for p in (BASE / "essentials").glob("*.md"))
+FOUNDATION_POLICY_FILES = POLICY_FILES + [
+    "docs/roadmap.md",
+    "references/reference-contract.md",
+    # Routing/capture skills that govern foundation-pack usage (not the pack leaves).
+    "skills/awesome-guidelines/SKILL.md",
+    "skills/evidence-router/SKILL.md",
+    "skills/frontend-markup-practices/SKILL.md",
+    "skills/leverage-capture/SKILL.md",
+    "skills/project-bootstrap/SKILL.md",
+    "skills/reference-driven-development/SKILL.md",
+    "skills/skill-catalog/SKILL.md",
+    "skills/writing-skills/SKILL.md",
+]
 
 fails: List[str] = []
 warns: List[str] = []
@@ -78,19 +91,17 @@ def require_phrase(cid: str, rel: str, phrase: str) -> None:
 # One entry per invariant; keep descriptions imperative.
 
 def check_prewalk_reserved() -> None:
-    """'prewalk' in policy docs only with its real Fabric meaning or as marked source wording."""
-    allow = re.compile(r"fabric|source wording|source material|mentor", re.I)
+    """'prewalk' in global policy docs is forbidden; pi Fabric owns the term in fabric-native-execution."""
+    skip = {"skills/fabric-native-execution/SKILL.md"}
     for rel in POLICY_FILES:
+        if rel in skip:
+            continue
         text = read(rel)
         if not text:
             continue
-        lines = text.splitlines()
-        for i, line in enumerate(lines):
-            if not re.search(r"prewalk", line, re.I):
-                continue
-            context = " ".join(lines[max(0, i - 1): i + 2])  # markdown wraps mid-sentence
-            if not allow.search(context):
-                check_fail("PREWALK-RESERVED", rel, i + 1, "generic 'prewalk' use (reserved for /fabric prewalk)")
+        for i, line in enumerate(text.splitlines(), 1):
+            if re.search(r"prewalk", line, re.I):
+                check_fail("PREWALK-RESERVED", rel, i + 1, "'prewalk' belongs in pi host config/skills, not global policy")
 
 
 def check_lifecycle_optional() -> None:
@@ -471,15 +482,14 @@ def check_no_user_profile() -> None:
 
 
 def check_no_artifact_pack() -> None:
-    """Bootstrap must not generate the .pi artifact pack (project/tech-stack/roadmap/state/user)."""
+    """Bootstrap must not generate default host artifact packs."""
     rel = "skills/project-bootstrap/SKILL.md"
     text = read(rel)
     if text is None:
         return
-    banned = re.compile(r"\.pi/(project|tech-stack|roadmap|state|user)\.md", re.I)
-    for i, line in enumerate(text.splitlines(), 1):
-        if banned.search(line):
-            check_fail("NO-ARTIFACT-PACK", rel, i, "default .pi artifact pack is retired; persistent context is selective")
+    require_phrase("NO-ARTIFACT-PACK", rel, "host artifact packs")
+    if re.search(r"\.pi/(project|tech-stack|roadmap|state|user)\.md.*by default", text, re.I):
+        check_fail("NO-ARTIFACT-PACK", rel, 1, "name host artifact packs generically; pi paths are examples only")
 
 
 def check_objective_drift() -> None:
@@ -492,6 +502,110 @@ def check_objective_drift() -> None:
         for i, line in enumerate(text.splitlines(), 1):
             if banned.search(line):
                 check_fail("OBJECTIVE-DRIFT", rel, i, "obsolete quality/capture objective resurfaced")
+
+
+def check_foundation_first_class() -> None:
+    """Foundations are durable leverage — not scheduled retirement or a no-new-foundations ban."""
+    banned_phrases = (
+        "no new foundations",
+        "retired over time",
+        "temporary cold prior-art",
+        "foundation creation is frozen",
+    )
+    for phrase in banned_phrases:
+        for rel in FOUNDATION_POLICY_FILES:
+            text = read(rel)
+            if not text:
+                continue
+            for i, line in enumerate(text.splitlines(), 1):
+                if phrase.lower() in line.lower():
+                    check_fail("FOUNDATION-FIRST-CLASS", rel, i, f"obsolete foundation policy: {phrase!r}")
+    require_phrase(
+        "FOUNDATION-FIRST-CLASS",
+        "references/reference-contract.md",
+        "References vs foundations",
+    )
+    require_phrase(
+        "FOUNDATION-FIRST-CLASS",
+        "README.md",
+        "accumulated implementation foundations",
+    )
+
+
+def check_agents_minimal() -> None:
+    """Global AGENTS.md stays thin — detailed routing lives in skills, not the global prompt."""
+    rel = "AGENTS.md"
+    text = read(rel)
+    if text is None:
+        fails.append("[AGENTS-MINIMAL] AGENTS.md: file missing")
+        return
+    banned = re.compile(
+        r"Fovea|Steroid / JetBrains|foundation-pack/.*reusable architecture|"
+        r"Evidence priority for non-trivial|Pi Fabric|fabric_exec|/fabric prewalk|"
+        r"pi\.edit|pi\.write|pi\.bash",
+        re.I,
+    )
+    for i, line in enumerate(text.splitlines(), 1):
+        if banned.search(line):
+            check_fail(
+                "AGENTS-MINIMAL",
+                rel,
+                i,
+                "detailed evidence/foundation routing belongs in skills, not global AGENTS.md",
+            )
+    require_phrase("AGENTS-MINIMAL", rel, "skills/evidence-router/")
+    require_phrase(
+        "AGENTS-MINIMAL",
+        rel,
+        "Do not assume every project uses them",
+    )
+
+
+def check_evidence_router_priority() -> None:
+    """evidence-router owns the global evidence priority chain."""
+    rel = "skills/evidence-router/SKILL.md"
+    text = read(rel)
+    if text is None:
+        fails.append("[EVIDENCE-ROUTER-PRIORITY] skills/evidence-router/SKILL.md: file missing")
+        return
+    for phrase in ("Evidence priority", "no fixed tool chain", "foundation-pack/"):
+        if phrase not in re.sub(r"\s+", " ", text):
+            check_fail("EVIDENCE-ROUTER-PRIORITY", rel, 1, f"missing {phrase!r}")
+
+
+def check_bootstrap_reference_inventory() -> None:
+    """Project bootstrap must surface existing project-local reference assets."""
+    rel = "skills/project-bootstrap/SKILL.md"
+    text = read(rel)
+    if text is None:
+        fails.append("[BOOTSTRAP-REFERENCE-INVENTORY] skills/project-bootstrap/SKILL.md: file missing")
+        return
+    flat = re.sub(r"\s+", " ", text)
+    for token in ("reference/", "reference/web/"):
+        if token not in flat:
+            check_fail("BOOTSTRAP-REFERENCE-INVENTORY", rel, 1, f"missing bounded inventory for {token!r}")
+    require_phrase(
+        "BOOTSTRAP-REFERENCE-INVENTORY",
+        rel,
+        "filesystem listing",
+    )
+
+
+def check_rdd_existing_references() -> None:
+    """Reference-driven development activates when project-local references already exist."""
+    rel = "skills/reference-driven-development/SKILL.md"
+    text = read(rel)
+    if text is None:
+        fails.append("[RDD-EXISTING-REFERENCES] skills/reference-driven-development/SKILL.md: file missing")
+        return
+    flat = re.sub(r"\s+", " ", text)
+    if "reference/web/" not in flat or "already exists" not in flat:
+        check_fail(
+            "RDD-EXISTING-REFERENCES",
+            rel,
+            1,
+            "reference-driven-development must activate on existing project-local references",
+        )
 
 
 # Real callers for reachability: another SKILL.md or its references, top-level
@@ -770,6 +884,15 @@ def selftest() -> int:
             ok = False
         else:
             print("PASS production classification: reachable with a real caller")
+    required_foundation_policy = {
+        "skills/skill-catalog/SKILL.md",
+        "skills/writing-skills/SKILL.md",
+    }
+    if not required_foundation_policy.issubset(set(FOUNDATION_POLICY_FILES)):
+        print(f"FAIL FOUNDATION_POLICY_FILES missing {required_foundation_policy - set(FOUNDATION_POLICY_FILES)}")
+        ok = False
+    else:
+        print("PASS foundation policy scope includes routing skills")
     print("policy-consistency selftest: PASS" if ok else "policy-consistency selftest: FAIL")
     return 0 if ok else 1
 
@@ -808,6 +931,11 @@ CHECKS = [
     ("NO-USER-PROFILE", check_no_user_profile),
     ("NO-ARTIFACT-PACK", check_no_artifact_pack),
     ("OBJECTIVE-DRIFT", check_objective_drift),
+    ("FOUNDATION-FIRST-CLASS", check_foundation_first_class),
+    ("AGENTS-MINIMAL", check_agents_minimal),
+    ("EVIDENCE-ROUTER-PRIORITY", check_evidence_router_priority),
+    ("BOOTSTRAP-REFERENCE-INVENTORY", check_bootstrap_reference_inventory),
+    ("RDD-EXISTING-REFERENCES", check_rdd_existing_references),
     ("HIDDEN-REACHABILITY", check_hidden_reachability),
     ("PR-OWNERSHIP", check_pr_ownership),
     ("README-SKILL-REFS", check_readme_skill_refs),

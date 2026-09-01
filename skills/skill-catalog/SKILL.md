@@ -18,9 +18,9 @@ startup metadata stays small.
  skills".
 - **Use when:** a hidden or cold capability is suspected and startup metadata
  does not show it.
-- **Use when:** the user asks to search the cold legacy foundation pack,
- plain `grep -ril "<topic>" foundation-pack/` is enough (the pack is not
- part of the active catalog).
+- **Use when:** the user asks to search accumulated foundations in
+ `foundation-pack/`; filesystem search or any host search capability is
+ enough (the pack is separate from the active skill catalog).
 - **NOT when:** a visible skill already matches the request directly, invoke
  that skill.
 - **NOT when:** choosing evidence sources or execution shape, `evidence-router`
@@ -56,6 +56,6 @@ startup metadata stays small.
 
 - `scripts/skill-catalog.py`, deterministic catalog tool (list, search, show,
  stats, generate).
-- `foundation-pack/`, cold legacy capsules; search with plain `grep`,
- not the catalog.
+- `foundation-pack/`, accumulated implementation foundations; discover through
+ filesystem search, not the skill catalog.
 - `docs/skill-catalog.md`, generated human catalog.

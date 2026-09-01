@@ -12,7 +12,7 @@ catch-first test methodology.
 
 | Pillar / methodology | Strategic objective                                                                       | Marker                                                                          |
 | -------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| Ground truth         | Reference-driven prior art; cold-pack fallback (no new foundations)                       | Every active project grounds claims in actual source, tests, and runtime probes |
+| Ground truth         | Project source first; project-local references; foundations and skills as leverage        | Every active project grounds claims in actual source, tests, and runtime probes   |
 | Steer outcomes       | Frictionless conclusive PR loop with mechanical gate boundaries                           | Fast CI checks, zero behavioral prompt bloat                                    |
 | Stack leverage       | Threshold-driven skill capture; experience-grade OpenViking sync (opt-in)                 | Recurring wins become skills when they prove out                                |
 | Mechanical quality   | Gates for demonstrated deterministic regressions, where value exceeds false-positive cost | Known regression classes are mechanically defended where practical              |
@@ -22,10 +22,10 @@ catch-first test methodology.
 
 - **Reference-driven prior art (replaces mass ingestion).** Useful external
   repositories become project-local `reference/<repo>/` checkouts: read source
-  and tests, adopt, adapt, or omit. The legacy `*-foundation` leaves moved to
-  `foundation-pack/`; they stay cold, are searched only when
-  project/reference evidence is insufficient, and are retired over time. No
-  new foundations are created.
+  and tests, adopt, adapt, or omit. `foundation-pack/` holds accumulated
+  implementation foundations (architecture, patterns, seams) separate from
+  the active skill catalog; create or expand one only when reusable
+  understanding is cheaper to retrieve than to re-derive.
 - **Reference contract adherence.** New `references/` capsules follow
   `references/reference-contract.md` (source, decisive excerpts, retrieval
   queries, verdict). Existing capsules are maintained as they are touched; no
@@ -71,11 +71,10 @@ catch-first test methodology.
   `style-lint.py`) with structural skill-visibility checks, dangling
   cross-skill reference detection, and portable-path validation for new config
   surfaces.
-- **Transactional mutation boundaries (opt-in).** Keep Pi Fabric's Schema
-  transaction loop available for work that needs transactional or
-  postcondition guarantees (enforce mode, explicit request, or
-  postcondition-critical tasks) without making it a universal prerequisite for
-  every reversible edit.
+- **Transactional mutation boundaries (opt-in).** Host-specific execution
+  guards (pi: `skills/fabric-native-execution/` and project or `~/.pi/`
+  config) stay opt-in for work that needs transactional or postcondition
+  guarantees, not a universal prerequisite for every reversible edit.
 - **Modular language quality leaves (as needed).** Reusable, copyable practice
   leaves for downstream clones following the reference contract: Python
   (pytest, mypy, ruff, bandit), TypeScript (tsc, biome, vitest), Rust (cargo

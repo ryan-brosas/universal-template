@@ -30,13 +30,13 @@ distilled into an authoritative, actionable guide for coding agents and develope
    correctness is enforced by tests, compilers, and CI gates.
 4. **Discovery Over Micromanagement:** Give the agent deep repository context and let it
    explore the code graph itself (Codebase Memory / IDE navigation); never hand-plan every
-   trivial step. (The mentor's word for this was "prewalk"; that term is now reserved for
-   Pi Fabric's `/fabric prewalk` runtime feature.)
+   trivial step.
 5. **Read Deeply When It Pays:** Multi-pass mining (subsystem map first,
    internal seams after) is a deliberate pass for hard ports — not a default
    ritual, and reading deeply never obligates encoding (working prior art
-   stays project-local reference code; legacy foundations sit cold in
-   `foundation-pack/` and are retired over time).
+   stays project-local reference code; accumulated foundations in
+   `foundation-pack/` are reusable leverage, separate from the active skill
+   catalog).
 
 ---
 

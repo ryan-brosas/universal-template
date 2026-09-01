@@ -97,9 +97,11 @@ Core principle: do not ship work that cannot be verified, explained, or rolled b
 
 `finishing-a-development-branch` was removed as a separate optional skill. Keep merge/PR/cleanup choices, release handoff, rollback planning, and completion evidence in this canonical shipping workflow.
 
-## Pi Fabric Boundaries
+## Host execution boundaries
 
-**Verification**, cite direct behavioral probes and recorded outputs. Pi Fabric Schema transactional mutation is opt-in (enforce mode or explicit request); ordinary fixes need only the project verification.
+**Verification**, cite direct behavioral probes and recorded outputs. On pi
+hosts, transactional mutation guards live in `skills/fabric-native-execution/`
+and project or `~/.pi/` config; ordinary fixes need only the project verification.
 
 ## References
 

@@ -31,12 +31,19 @@ Inspect enough to answer: *What is this? How do I run it? How do I test it? Wher
 
 Read, as relevant: repo root, local `AGENTS.md`/instructions, README, manifests, lockfiles, language/runtime files, project structure, main entrypoints, real build/test/lint commands (run them, a command you have not run is not verified), existing CI, current dirty state, docs, obvious generated/vendor directories. Route deeper questions through `evidence-router`, direct source for small repos, Fovea for large active codebases, Steroid for exact semantics, Codebase Memory only when cross-repo discovery closes a gap. Recent Git history only when useful.
 
+**Project-local prior art (cheap inventory):** when `reference/` or
+`reference/web/` exists at the repo root, list top-level entry names only
+(filesystem listing; no bulk read): `reference/<name>/` checkouts and
+`reference/web/<site>/` captures. Note what reusable assets exist so later
+work can consult them; do not ingest every reference during onboarding.
+
 **Output, a compact session summary (conversation, not files):**
 
 ```
 Project / Type / Stack / Package+runtime
 Run / Test / Build (verified commands)
 Key paths · Important boundaries · Current state · Known traps
+Reference assets · (when present: names under reference/ and reference/web/)
 ```
 
 No persistent files. No roadmap, user profile, project encyclopedia, tech-stack cache, or architecture summary. The user asked to enter the project, not document it.
@@ -65,7 +72,10 @@ Inspect → compare → update only what is stale. Preserve hand-written decisio
 
 ## Red Flags
 
-- Creating `.pi/` artifact packs (project/tech-stack/roadmap/state/user) by default. HARD-GATE, those are not default project state.
+- Creating default host artifact packs by default (for pi: `.pi/project.md`,
+  `.pi/state.md`, and similar). HARD-GATE. Host runtime state belongs under
+  the host config (e.g. `~/.pi/` for pi) or explicit project governance, not
+  automatic bootstrap output.
 - Creating a user-profile/personal-preference file in a repository. HARD-GATE.
 - Persisting machine-recoverable facts (versions, commands, branch, dirty state, dependency lists), detect them when needed instead.
 - Running GitHub or CI setup as an automatic side effect of local bootstrap.

@@ -34,7 +34,7 @@ Author with both open; change one, align the other.
 
 - `name`: kebab-case, identical to the directory name.
 - `description`: trigger-first, `Use when <condition>`, then the capability; under 1024 characters, aim for ≤ 512. Triggers must be mutually exclusive between skills so retrieval never ties.
-- `disable-model-invocation`: visibility follows invocation ownership. Hide a skill when a router or another skill selects it, or when it is intentionally cold or manual; entry skills that a user request selects directly stay model-visible. Legacy `*-foundation` capsules live outside the catalog in `foundation-pack/` and are never model-visible.
+- `disable-model-invocation`: visibility follows invocation ownership. Hide a skill when a router or another skill selects it, or when it is intentionally cold or manual; entry skills that a user request selects directly stay model-visible. `*-foundation` capsules live outside the active catalog in `foundation-pack/` and are never model-visible.
 - YAML-safe: quote long values; avoid unescaped colons/hashes.
 
 ## 2. Uniform anatomy (fixed section order)

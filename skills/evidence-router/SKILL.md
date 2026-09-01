@@ -15,6 +15,14 @@ Pick one primary route per need, escalate only after naming the gap, and stop
 when evidence is sufficient. Connected is not mandatory: never query a system
 merely because it is reachable.
 
+**Evidence priority** for non-trivial work (trivial edits may use project
+source alone): current project source/tests first; then project-local
+`reference/` and `reference/web/` when relevant; then applicable foundations
+in `foundation-pack/` and skills as shortcuts; then additional source/docs/web
+on a named gap. Foundations and skills never outrank the code they distill or
+the project they serve. Use whatever read, search, MCP, or runtime capability
+the host provides; no fixed tool chain per task.
+
 ## When to Use / NOT
 
 **Use**, deciding where evidence for a question should come from; closing a
@@ -37,8 +45,9 @@ retrieval chain; if direct source already answers the question, stop.
 | Orient the active Pi repository (feature location, neighborhoods, symbols, impact, changed-code context) | **Fovea** (`fovea_sketch` → `fovea_focus` → `fovea_dwell`) | the exact source windows it names | navigation/context, not correctness proof; skip when direct reading is cheaper |
 | Exact semantic/type/call information (usages, inheritance, refactor safety, inspections) | **MCP Steroid / JetBrains** (`steroid_*`) | source | also the runtime lane: debugger, test runner, expression evaluation |
 | Runtime behavior | tests / debugger / runtime evidence |, | the only proof of behavior |
-| One selected inspiration repository | project-local `<project>/reference/<repo>/` | Fovea on that root, then source + tests | see `reference-driven-development` for the workflow |
-| Rendered visual or runtime evidence from a live website (DOM, CSS, screenshots, behavior) | **web-reference** (bounded capture) | inspect the capture like source | capture is evidence; the current project stays the acceptance authority |
+| One selected inspiration repository | project-local `<project>/reference/<repo>/` | semantic navigation or direct source + tests | see `reference-driven-development`; consult when a relevant checkout already exists or the user names one |
+| Rendered visual or runtime evidence from a live website (DOM, CSS, screenshots, behavior) | existing `reference/web/<site>/` or bounded capture via `web-reference` | inspect the capture like source | capture is evidence; the current project stays the acceptance authority |
+| Stack patterns, architecture seams from accumulated implementations | applicable `foundation-pack/*-foundation` | the source/tests the foundation points at | shortcut after current project and project-local references; foundations never outrank real code |
 | Design inspiration with no named source yet | web discovery (`gsearch` / Exa) or a design tool catalog | `web-reference` on the chosen site | propose candidates, capture only the selected ones |
 | Find which past/indexed project contains a pattern (cross-repo, cross-session) | **Codebase Memory** (`list_projects` → `search_graph` / `trace_path`) | activate the candidate under `reference/` and inspect with Fovea/source | persistent library, cold path; the graph is an index, not truth |
 | Past decisions, failed attempts, lessons, recurring edge cases | **OpenViking** (`memsearch` / `memgrep` / `memread`) | durable notes | experience memory, not a second copy of local source |

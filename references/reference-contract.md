@@ -44,9 +44,15 @@ recorded in the PR's Reference / Prior Art section.
 
 References are normally read-only, local, and disposable. Prefer
 `.git/info/exclude` for local-only references instead of the shared
-`.gitignore`. A reference is never automatically promoted into a skill,
-foundation, index, or corpus; the legacy `*-foundation` leaves are frozen in
-`foundation-pack/` and retired over time, and no new foundations are created.
+`.gitignore`. A reference checkout or web capture is never automatically
+promoted into a skill, foundation, index, or corpus.
+
+**References vs foundations:** `<project>/reference/` holds actual external
+code or captured frontend evidence for inspection and adaptation.
+`foundation-pack/<x>-foundation/` holds reusable understanding distilled
+from strong implementations (architecture, patterns, seams, pointers).
+Foundations never outrank the source they came from; project-local references
+outrank generic foundations when both apply.
 
 ## License
 

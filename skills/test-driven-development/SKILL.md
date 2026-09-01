@@ -90,4 +90,6 @@ N/A, no reference files; the loop and rationalization table are fully specified 
 
 ## Pi Fabric Boundaries
 
-Tests are direct behavioral probes (black-box first). Pi Fabric's Schema transactional mutation loop is opt-in (enforce mode or explicit request), never a prerequisite for ordinary test edits.
+Tests are direct behavioral probes (black-box first). On pi hosts, transactional
+mutation guards live in `skills/fabric-native-execution/` and project or `~/.pi/`
+config; they are opt-in, never a prerequisite for ordinary test edits.

@@ -11,7 +11,7 @@ Entry flow for unfamiliar repositories: `skills/project-bootstrap/SKILL.md`.
 | Path                                                                                               | Contents                                                                                                                                            |
 | -------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `skills/`                                                                                          | the active skill catalog (practice + workflow skills)                                                                                               |
-| `foundation-pack/`                                                                                 | temporary cold prior-art capsules (legacy `*-foundation`); search only when project/reference evidence is insufficient                              |
+| `foundation-pack/`                                                                                 | accumulated implementation foundations (`*-foundation`), separate from the active skill catalog; project source and `reference/` outrank them       |
 | `templates/`                                                                                       | CLI-neutral format templates (plus `source.yml`, the inspo ledger); canonical list in `references/templates-inventory.md`                           |
 | `essentials/`                                                                                      | cold rationale and decision references, indexed in `essentials/README.md`; read the smallest relevant file when a policy decision needs explanation |
 | `docs/roadmap.md`                                                                                  | current work objectives (reviewed at milestones)                                                                                                    |
@@ -97,7 +97,7 @@ policy invariants live in `scripts/policy-consistency.py` (CI-enforced).
 | Git release strategy and versioning                                                      | `skills/git-workflow-and-versioning`                                       |
 | Prior-art/reference-driven implementation                                                | `skills/reference-driven-development`                                      |
 | Reference rules (repository + web)                                                       | `references/reference-contract.md`                                         |
-| Fabric execution, Schema modes, agents/Veda escalation                                   | `skills/fabric-native-execution`                                           |
+| Fabric execution, Schema modes, agents/Veda escalation (pi host)                         | `skills/fabric-native-execution` + project/`~/.pi/` config                 |
 | Natural-language prose style (STE-inspired)                                              | `skills/house-writing-style` + `scripts/style-lint.py`                     |
 | Veda escalation specifics                                                                | `skills/veda-lane`                                                         |
 | Operating principles / small-model heuristics                                            | `essentials/operating-philosophy.md` / `essentials/guiding-small-model.md` |
