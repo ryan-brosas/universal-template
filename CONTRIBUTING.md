@@ -16,6 +16,7 @@ python3 scripts/style-lint.py --selftest
 python3 scripts/style-lint.py
 python3 scripts/web-reference-manifest.py --selftest
 python3 scripts/dead-code.py
+python3 scripts/foundation-validator.py --selftest
 python3 scripts/foundation-validator.py
 python3 scripts/reference-retrieval-fixture.py --selftest
 CHECK_RANGE="origin/main..HEAD" python3 scripts/conventional-commit.py
