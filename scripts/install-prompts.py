@@ -3,7 +3,8 @@
 
 Markdown-capable hosts receive relative symlinks to the canonical files. Gemini
 CLI receives generated TOML because its custom-command format is different.
-Existing user files are never overwritten; a conflict is reported instead.
+Existing unmanaged files are never overwritten or removed; a conflict is reported instead.
+Obsolete installer-managed entries are removed only when they are provable.
 """
 from __future__ import annotations
 
@@ -135,6 +136,88 @@ def _link(source: Path, target: Path, mutate: bool, errors: list[str]) -> str:
     return "created"
 
 
+def _generated_source_name(path: Path) -> str | None:
+    """Return the canonical source named by a generated Gemini adapter."""
+    if path.is_symlink() or not path.is_file():
+        return None
+    try:
+        with path.open(encoding="utf-8") as stream:
+            line = stream.readline().rstrip("\n")
+    except OSError:
+        return None
+    if not line.startswith(GENERATED_PREFIX) or not line.endswith("."):
+        return None
+    source_name = line[len(GENERATED_PREFIX) : -1]
+    source = Path(source_name)
+    if (
+        source.name != source_name
+        or source.suffix != ".md"
+        or not NAME_RE.fullmatch(source.stem)
+    ):
+        return None
+    return source_name
+
+
+def _managed_markdown_target(target: Path) -> bool:
+    if not target.is_symlink():
+        return False
+    try:
+        source = target.resolve(strict=False)
+    except OSError:
+        return False
+    return (
+        source.parent == PROMPTS.resolve()
+        and source.name == target.name
+        and NAME_RE.fullmatch(source.stem) is not None
+    )
+
+
+def _obsolete_targets(
+    directory: Path, extension: str, expected_names: set[str]
+) -> list[Path]:
+    if not directory.is_dir():
+        return []
+    candidates = directory.glob(f"*{extension}")
+    if extension == ".md":
+        return sorted(
+            path
+            for path in candidates
+            if path.name not in expected_names and _managed_markdown_target(path)
+        )
+
+    obsolete: list[Path] = []
+    for path in candidates:
+        source_name = _generated_source_name(path)
+        if (
+            source_name is not None
+            and path.name == Path(source_name).with_suffix(".toml").name
+            and path.name not in expected_names
+        ):
+            obsolete.append(path)
+    return sorted(obsolete)
+
+
+def _remove_obsolete(
+    directory: Path,
+    extension: str,
+    expected_names: set[str],
+    mutate: bool,
+    errors: list[str],
+) -> int:
+    actions = 0
+    for target in _obsolete_targets(directory, extension, expected_names):
+        if not mutate:
+            errors.append(f"obsolete managed prompt: {target}")
+            continue
+        try:
+            target.unlink()
+        except OSError as exc:
+            errors.append(f"cannot remove obsolete prompt {target}: {exc}")
+        else:
+            actions += 1
+    return actions
+
+
 def _description(text: str, fallback: str) -> str:
     for line in text.splitlines():
         line = line.strip()
@@ -148,6 +231,37 @@ def _description(text: str, fallback: str) -> str:
 def _toml_string(value: str) -> str:
     # JSON string escaping is the same escaping subset accepted by TOML basic strings.
     return json.dumps(value, ensure_ascii=False)
+
+
+def _parse_generated_toml(text: str) -> dict[str, str]:
+    """Parse the exact two-string TOML shape emitted by this script."""
+    lines = text.splitlines()
+    if not lines or not lines[0].startswith(GENERATED_PREFIX):
+        raise ValueError("missing generated adapter marker")
+    values: dict[str, str] = {}
+    for line in lines[1:]:
+        if not line.strip():
+            continue
+        key, separator, encoded = line.partition(" = ")
+        if separator != " = " or key not in {"description", "prompt"}:
+            raise ValueError(f"unexpected generated adapter line: {line!r}")
+        if key in values:
+            raise ValueError(f"duplicate generated adapter key: {key}")
+        value = json.loads(encoded)
+        if not isinstance(value, str):
+            raise ValueError(f"generated adapter key is not a string: {key}")
+        values[key] = value
+    if set(values) != {"description", "prompt"}:
+        raise ValueError("generated adapter is missing a required string")
+    return values
+
+
+def _parse_adapter(text: str) -> dict[str, str]:
+    try:
+        import tomllib
+    except ModuleNotFoundError:
+        return _parse_generated_toml(text)
+    return tomllib.loads(text)
 
 
 def _gemini_adapter(source: Path) -> str:
@@ -197,11 +311,12 @@ def sync(home: Path, mutate: bool, force_all: bool, use_environment: bool) -> tu
     actions = 0
     files = prompt_files()
     targets = host_targets(home, use_environment)
-    for host, executable, directory, extension in targets:
+    for _, executable, directory, extension in targets:
         if not _enabled(executable, force_all):
             continue
         if not _ensure_directory(directory, mutate, errors):
             continue
+        expected_names = {f"{source.stem}{extension}" for source in files}
         for source in files:
             target = directory / f"{source.stem}{extension}"
             if extension == ".toml":
@@ -210,6 +325,9 @@ def sync(home: Path, mutate: bool, force_all: bool, use_environment: bool) -> tu
                 result = _link(source, target, mutate, errors)
             if result in {"created", "updated"}:
                 actions += 1
+        actions += _remove_obsolete(
+            directory, extension, expected_names, mutate, errors
+        )
     return actions, errors
 
 
@@ -239,9 +357,7 @@ def _selftest() -> int:
                     return 1
                 if extension == ".toml":
                     try:
-                        import tomllib
-
-                        data = tomllib.loads(target.read_text(encoding="utf-8"))
+                        data = _parse_adapter(target.read_text(encoding="utf-8"))
                     except Exception as exc:  # noqa: BLE001
                         print(f"selftest: invalid TOML {target}: {exc}", file=sys.stderr)
                         return 1
@@ -251,9 +367,47 @@ def _selftest() -> int:
                     if data.get("prompt") != expected:
                         print(f"selftest: adapter drift {target}", file=sys.stderr)
                         return 1
+        sample_source = prompt_files()[0]
+        fallback_data = _parse_generated_toml(_gemini_adapter(sample_source))
+        fallback_expected = sample_source.read_text(encoding="utf-8").replace(
+            "$ARGUMENTS", "{{args}}"
+        )
+        if fallback_data.get("prompt") != fallback_expected:
+            print("selftest: Python 3.10 TOML fallback drift", file=sys.stderr)
+            return 1
+        stale_markdown = home / ".claude" / "commands" / "renamed-away.md"
+        stale_markdown.symlink_to(
+            os.path.relpath(PROMPTS / stale_markdown.name, stale_markdown.parent.resolve())
+        )
+        stale_gemini = home / ".gemini" / "commands" / "renamed-away.toml"
+        stale_gemini.write_text(
+            f"{GENERATED_PREFIX}{stale_markdown.name}.\n"
+            'description = "old"\n'
+            'prompt = "old"\n',
+            encoding="utf-8",
+        )
+        unmanaged_gemini = home / ".gemini" / "commands" / "user-owned.toml"
+        unmanaged_gemini.write_text('prompt = "user-owned"\n', encoding="utf-8")
+        _, stale_check_errors = sync(home, False, True, False)
+        for target in (stale_markdown, stale_gemini):
+            if not any(
+                "obsolete managed prompt" in error and str(target) in error
+                for error in stale_check_errors
+            ):
+                print(f"selftest: stale mount was not reported: {target}", file=sys.stderr)
+                return 1
+        _, stale_remove_errors = sync(home, True, True, False)
+        if (
+            stale_remove_errors
+            or _exists(stale_markdown)
+            or _exists(stale_gemini)
+            or unmanaged_gemini.read_text(encoding="utf-8") != 'prompt = "user-owned"\n'
+        ):
+            print("selftest: stale managed mount was not removed safely", file=sys.stderr)
+            return 1
         conflict_target = home / ".claude" / "commands" / "repo-audit.md"
         conflict_target.unlink()
-        conflict_target.write_text("user-owned\\n", encoding="utf-8")
+        conflict_target.write_text("user-owned\n", encoding="utf-8")
         _, conflict_errors = sync(home, True, True, False)
         if not any(
             "conflicting file (left unchanged)" in error
@@ -262,7 +416,7 @@ def _selftest() -> int:
         ):
             print("selftest: unmanaged-file conflict was not rejected", file=sys.stderr)
             return 1
-        if conflict_target.read_text(encoding="utf-8") != "user-owned\\n":
+        if conflict_target.read_text(encoding="utf-8") != "user-owned\n":
             print("selftest: unmanaged-file conflict was overwritten", file=sys.stderr)
             return 1
         print(f"PROMPT INSTALLER SELFTEST PASS ({actions} generated entries)")

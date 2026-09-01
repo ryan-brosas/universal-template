@@ -11,6 +11,7 @@ Run the catalog verification suite (same as CI `quality / required`):
 SKILLS_ROOT="$PWD/skills" python3 scripts/skill-validator.py   # P0 count must be 0
 python3 scripts/install-prompts.py --check-repo
 python3 scripts/install-prompts.py --selftest
+python3 scripts/render-prompt.py --selftest
 python3 scripts/catalog-quality.py --selftest
 python3 scripts/catalog-quality.py
 python3 scripts/repo-hygiene.py

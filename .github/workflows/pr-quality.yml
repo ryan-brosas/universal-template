@@ -68,6 +68,7 @@ jobs:
           {
             python3 scripts/install-prompts.py --check-repo
             python3 scripts/install-prompts.py --selftest
+            python3 scripts/render-prompt.py --selftest
           } 2>&1 | tee /tmp/prompt-surface.log
 
       - name: House style lint

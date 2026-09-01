@@ -149,9 +149,10 @@ python3 scripts/install-prompts.py
 | Veda                 | no native user prompt directory                            | `render-prompt.py` fallback     |
 
 Markdown hosts share the same source file. Gemini's TOML adapter is the only
-format translation; unmanaged host files are never overwritten. Run
+format translation; unmanaged host files are never overwritten or removed. Run
 `python3 scripts/install-prompts.py --check` after installation to find missing,
-stale, or conflicting mounts.
+stale, conflicting, or obsolete mounts. Install mode removes only obsolete
+entries identified as this installer's symlinks or generated adapters.
 
 For DSH or Veda, render the same prompt explicitly:
 
