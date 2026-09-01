@@ -457,13 +457,35 @@ def check_objective_drift() -> None:
                 check_fail("OBJECTIVE-DRIFT", rel, i, "obsolete quality/capture objective resurfaced")
 
 
-FOUNDATION_AUTOMATION = re.compile(
-    r"\b(?:index(?: the project)? (?:only )?when (?:the )?(?:repository|project) is absent|"
-    r"create a foundation after (?:a|every|each) project|"
-    r"(?:completed|active|owned) projects? (?:are|is) automatically "
-    r"(?:indexed|ingested|promoted))\b",
+FOUNDATION_ACTION = re.compile(
+    r"\b(?:index(?:es|ed|ing)?|ingest(?:s|ed|ing)?|promot(?:e|es|ed|ing)|"
+    r"creat(?:e|es|ed|ing) (?:a |the )?foundations?)\b",
     re.I,
 )
+FOUNDATION_AUTOMATIC_TRIGGER = re.compile(
+    r"\b(?:automatically|by default|without (?:an )?explicit user request|"
+    r"after (?:a|every|each) project)\b",
+    re.I,
+)
+FOUNDATION_ABSENCE_TRIGGER = re.compile(
+    r"\b(?:if|when|whenever)\b.{0,100}\b(?:absent|missing|unindexed|not indexed)\b",
+    re.I,
+)
+FOUNDATION_NEGATION = re.compile(
+    r"\b(?:do not|don't|never|must not|is not|are not)\b.{0,60}"
+    r"\b(?:automatically|by default|index|ingest|promot|creat)\w*\b",
+    re.I,
+)
+
+
+def foundation_automation_violation(text: str) -> bool:
+    """Return whether a policy clause makes project capture automatic."""
+    for clause in re.split(r"[.;!?\n]+", text):
+        if not FOUNDATION_ACTION.search(clause) or FOUNDATION_NEGATION.search(clause):
+            continue
+        if FOUNDATION_AUTOMATIC_TRIGGER.search(clause) or FOUNDATION_ABSENCE_TRIGGER.search(clause):
+            return True
+    return False
 
 
 def check_foundation_lifecycle() -> None:
@@ -472,8 +494,10 @@ def check_foundation_lifecycle() -> None:
         text = read(rel)
         if not text:
             continue
-        normalized = re.sub(r"\s+", " ", text)
-        if FOUNDATION_AUTOMATION.search(normalized):
+        scannable = re.sub(
+            r"^## Red Flags\b.*?(?=^## |\Z)", "", text, flags=re.M | re.S
+        )
+        if foundation_automation_violation(scannable):
             check_fail(
                 "FOUNDATION-LIFECYCLE",
                 rel,
@@ -1137,22 +1161,31 @@ def selftest() -> int:
         ok = False
     else:
         print("PASS foundation policy scope includes routing skills")
-    lifecycle_good = (
-        "Active owned projects remain source; an explicit user request after a "
-        "stable milestone may promote reusable understanding."
-    )
+    lifecycle_good = {
+        "explicit promotion": (
+            "Active owned projects remain source; an explicit user request after a "
+            "stable milestone may promote reusable understanding."
+        ),
+        "negated automatic indexing": "Never automatically index an active project.",
+        "negated default ingestion": "A finished project is not ingested by default.",
+    }
     lifecycle_bad = {
         "absent index": "Index the project when the repository is absent.",
+        "conditional absent index": "If the project is absent, index it.",
+        "adverb-first indexing": "Automatically index the project.",
         "automatic foundation": "Create a foundation after every project.",
+        "plural foundations": "Create foundations automatically.",
         "completed-project ingestion": "Completed projects are automatically ingested.",
+        "default ingestion": "Ingest completed projects by default.",
     }
-    if FOUNDATION_AUTOMATION.search(lifecycle_good):
-        print("FAIL foundation lifecycle rejected explicit manual promotion")
-        ok = False
-    else:
-        print("PASS foundation lifecycle accepts explicit manual promotion")
+    for name, fixture in lifecycle_good.items():
+        if foundation_automation_violation(fixture):
+            print(f"FAIL foundation lifecycle rejected {name}")
+            ok = False
+        else:
+            print(f"PASS foundation lifecycle accepts {name}")
     for name, fixture in lifecycle_bad.items():
-        if FOUNDATION_AUTOMATION.search(fixture):
+        if foundation_automation_violation(fixture):
             print(f"PASS foundation lifecycle rejects {name}")
         else:
             print(f"FAIL foundation lifecycle missed {name}")
