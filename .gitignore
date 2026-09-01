@@ -18,6 +18,8 @@
 !/scripts/web-reference-manifest.py
 !/scripts/foundation-validator.py
 !/scripts/reference-retrieval-fixture.py
+!/scripts/install-prompts.py
+!/scripts/render-prompt.py
 !/scripts/context-budget-baseline.json
 !/scripts/fixtures/
 # Generated runtime capability state (machine-local, never committed).

@@ -60,6 +60,16 @@ jobs:
           python3 scripts/catalog-quality.py --selftest 2>&1 | tee /tmp/catalog-quality-selftest.log
           python3 scripts/catalog-quality.py 2>&1 | tee /tmp/catalog-quality.log
 
+      - name: Prompt surface
+        id: prompts
+        shell: bash
+        run: |
+          set -o pipefail
+          {
+            python3 scripts/install-prompts.py --check-repo
+            python3 scripts/install-prompts.py --selftest
+          } 2>&1 | tee /tmp/prompt-surface.log
+
       - name: House style lint
         id: style
         shell: bash
@@ -160,6 +170,7 @@ jobs:
             /tmp/skill-validator.log
             /tmp/catalog-quality-selftest.log
             /tmp/catalog-quality.log
+            /tmp/prompt-surface.log
             /tmp/repo-hygiene.log
             /tmp/style-lint-selftest.log
             /tmp/style-lint.log

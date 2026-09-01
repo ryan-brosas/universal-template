@@ -1,9 +1,10 @@
 # ~/.agents: the global configuration baseline for AI coding agent CLIs
 
-This directory is the **global baseline** read by every agent CLI on this
-machine (pi, Claude Code, Codex/OpenCode, opencode, agy/veda, subprocess
-agents): a skill catalog with deterministic gates, CLI-neutral templates,
-policy documents, and the wiring that makes one setup serve many CLIs.
+This directory is the **global baseline** for the configured agent CLIs on
+this machine (pi, Claude Code, Codex/OpenCode, Gemini/Antigravity, Cursor Agent,
+DSH, Veda, and subprocess agents): a skill catalog with deterministic gates,
+CLI-neutral templates, reusable user prompts, policy documents, and the wiring
+that makes one setup serve many CLIs.
 Entry flow for unfamiliar repositories: `skills/project-bootstrap/SKILL.md`.
 
 ## Layout
@@ -13,6 +14,7 @@ Entry flow for unfamiliar repositories: `skills/project-bootstrap/SKILL.md`.
 | `skills/` | the active skill catalog (practice + workflow skills) |
 | `foundation-pack/` | accumulated implementation foundations (`*-foundation`), separate from the active skill catalog; project source and `reference/` outrank them |
 | `templates/` | CLI-neutral format templates; the filesystem is the inventory and `scripts/catalog-quality.py` checks structural invariants |
+| `prompts/` | plain-Markdown reusable user prompts; `scripts/install-prompts.py` derives native CLI mounts |
 | `essentials/` | cold rationale and decision references, indexed in `essentials/README.md`; read the smallest relevant file when a policy decision needs explanation |
 | `docs/` | human-facing documentation, current objectives, and generated skill catalog |
 | `extensions/style-guard.ts` | optional Pi output-style guard (audit by default; symlinked into `~/.pi/agent/extensions/`) |
@@ -26,6 +28,9 @@ Entry flow for unfamiliar repositories: `skills/project-bootstrap/SKILL.md`.
 
 - **Normal work**: inspect current code and evidence → implement → run the
   relevant verification → finish. No lifecycle machinery required.
+- **Prompt shortcuts**: use the canonical files in `prompts/`; run
+  `python3 scripts/install-prompts.py` to install or reconcile native mounts,
+  `--check` to audit host mounts, and `--check-repo` to validate canonical prompts.
 - **Frontend prior art**: capture a live website with `web-reference` into
   `reference/web/<site>/` and consume it with the same ADOPT / ADAPT / OMIT
   loop as repository references; validate bundles with
@@ -81,6 +86,7 @@ policy invariants live in `scripts/policy-consistency.py` (CI-enforced).
 | Policy                                                                                   | Canonical owner                                                            |
 | ---------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
 | Global agent defaults (user-wide constitution)                                           | `AGENTS.md`                                                                |
+| Reusable user prompt shortcuts                                                          | `prompts/` + `scripts/install-prompts.py` + `scripts/render-prompt.py`      |
 | Evidence capability map (cold reference)                                                 | `skills/evidence-router`                                                   |
 | Execution escalation reference (cold)                                                    | `skills/execution-router`                                                  |
 | Backend/model resolution (mechanical, runtime-discovered; internal)                      | `skills/model-resolution` + `scripts/resolve-model.py`                     |
@@ -106,17 +112,53 @@ This tree is the single global source of truth, git-backed at
 github.com/ryan-brosas/universal-template (public). Updates are checked in
 here directly; releases are cut as `vX.Y.Z` tags.
 
-## Host mounts (how every CLI reads this)
+## Host mounts (how configured CLIs read this)
+
+Existing instruction and skill mounts:
 
 | Host        | Mount                                                                  | Points at                                         |
 | ----------- | ---------------------------------------------------------------------- | ------------------------------------------------- |
 | pi          | native discovery                                                       | `~/.agents/skills` (no `.pi/agent/skills` needed) |
-| Claude Code | `~/.claude/skills` → symlink                                           | `~/.agents/skills`                                |
-| Claude Code | `~/.claude/CLAUDE.md` → symlink                                        | `~/.agents/AGENTS.md`                             |
-| DSH         | `~/.dsh/skills` → symlink                                              | `~/.agents/skills`                                |
+| Claude Code | `~/.claude/skills`, `~/.claude/CLAUDE.md` → symlinks                   | `~/.agents/skills`, `~/.agents/AGENTS.md`         |
 | Codex       | `~/.codex/skills`, `~/.codex/AGENTS.md` → symlinks                     | `~/.agents/*`                                     |
 | OpenCode    | `~/.config/opencode/skills`, `~/.config/opencode/AGENTS.md` → symlinks | `~/.agents/*`                                     |
-| Gemini CLI  | `~/.gemini/GEMINI.md` → symlink                                        | `~/.agents/AGENTS.md`                             |
+| Gemini CLI  | native skills discovery; `~/.gemini/GEMINI.md` → symlink               | `~/.agents/skills`, `~/.agents/AGENTS.md`         |
+| DSH         | no verified global `~/.dsh/skills` mount on this host                 | use its profile configuration                     |
+| Cursor Agent | no shared instruction mount is managed here                            | prompt commands are mounted below                 |
+| Veda        | runner-specific personas and skills                                    | no native user-prompt directory                   |
+
+Prompt shortcuts are canonical in `prompts/*.md` and use plain Markdown with
+`$ARGUMENTS`. Available names are `/repo-audit`, `/plan-work`,
+`/implement-work`, `/review-work`, `/verify-work`, and `/cleanup-code`.
+Install or reconcile the native surfaces with:
+
+```bash
+python3 scripts/install-prompts.py
+```
+
+| Host                 | Native prompt surface                                      | Invocation                     |
+| -------------------- | ---------------------------------------------------------- | ------------------------------ |
+| pi                   | `~/.pi/agent/prompts/*.md` → symlinks                     | `/repo-audit`                   |
+| Claude Code          | `~/.claude/commands/*.md` → symlinks                      | `/repo-audit`                   |
+| Codex                | `~/.codex/prompts/*.md` → symlinks                        | `/prompts:repo-audit`           |
+| OpenCode             | `~/.config/opencode/commands/*.md` → symlinks             | `/repo-audit`                   |
+| Cursor Agent         | `~/.cursor/commands/*.md` → symlinks                      | `/repo-audit`                   |
+| Gemini CLI           | `~/.gemini/commands/*.toml` → generated adapters          | `/repo-audit`                   |
+| Antigravity (`agy`)  | `~/.gemini/config/global_workflows/*.md` → symlinks       | `/repo-audit`                   |
+| DSH                  | no native global prompt directory verified                 | `render-prompt.py` fallback     |
+| Veda                 | no native user prompt directory                            | `render-prompt.py` fallback     |
+
+Markdown hosts share the same source file. Gemini's TOML adapter is the only
+format translation; unmanaged host files are never overwritten. Run
+`python3 scripts/install-prompts.py --check` after installation to find missing,
+stale, or conflicting mounts.
+
+For DSH or Veda, render the same prompt explicitly:
+
+```bash
+dsh --profile headless "$(python3 scripts/render-prompt.py repo-audit 'scope or task')"
+veda "$(python3 scripts/render-prompt.py repo-audit 'scope or task')"
+```
 
 MCP registry (`mcp/servers.json`, 6 servers: codebase-memory, context7, deepwiki,
 exa, openviking, mcp-steroid) is merged into: `~/.pi/agent/mcp.json`, `~/.claude.json`,
@@ -126,6 +168,9 @@ values ride in env (e.g. `CBM_CACHE_DIR`) or in the local daemon URL, never
 as frozen absolute paths.
 Backups live next to each host config as `*.bak-<timestamp>`.
 
-To reproduce mounts on a fresh machine after cloning this repo to `~/.agents`:
-create the symlinks above, then merge `mcp/servers.json` blocks into each host
-config (additive only, never overwrite unrequested servers).
+To reproduce this setup on a fresh machine after cloning this repo to `~/.agents`,
+create the instruction/skill symlinks above and run
+`python3 scripts/install-prompts.py`; it skips hosts whose executable is not on
+PATH and never overwrites existing unmanaged prompt files. Then merge `mcp/servers.json`
+blocks into each host config (additive only, never overwrite unrequested
+servers).
