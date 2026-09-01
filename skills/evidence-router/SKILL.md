@@ -15,6 +15,14 @@ Pick one primary route per need, escalate only after naming the gap, and stop
 when evidence is sufficient. Connected is not mandatory: never query a system
 merely because it is reachable.
 
+**Evidence priority** for non-trivial work (trivial edits may use project
+source alone): current project source/tests first; then project-local
+`reference/` and `reference/web/` when relevant; then applicable foundations
+in `foundation-pack/` and skills as shortcuts; then additional source/docs/web
+on a named gap. Foundations and skills never outrank the code they distill or
+the project they serve. Use whatever read, search, MCP, or runtime capability
+the host provides; no fixed tool chain per task.
+
 ## When to Use / NOT
 
 **Use**, deciding where evidence for a question should come from; closing a

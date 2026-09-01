@@ -50,8 +50,9 @@ build or restart is required.]
 
 Evidence: [paths or command output]
 
-Do not restate global routing, tool ownership, or model policy here — the
-user's global `AGENTS.md` owns those. This file adds LOCAL information only.
+Do not restate global routing, tool ownership, or model policy here — load
+the relevant global skills (`evidence-router`, `execution-router`) or follow
+the project's own instructions. This file adds LOCAL information only.
 
 ## Safety boundaries
 

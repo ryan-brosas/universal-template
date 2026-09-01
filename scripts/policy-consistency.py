@@ -516,19 +516,54 @@ def check_foundation_first_class() -> None:
                     check_fail("FOUNDATION-FIRST-CLASS", rel, i, f"obsolete foundation policy: {phrase!r}")
     require_phrase(
         "FOUNDATION-FIRST-CLASS",
-        "AGENTS.md",
-        "accumulated implementation foundations",
-    )
-    require_phrase(
-        "FOUNDATION-FIRST-CLASS",
         "references/reference-contract.md",
         "References vs foundations",
     )
     require_phrase(
         "FOUNDATION-FIRST-CLASS",
-        "AGENTS.md",
-        "no fixed tool chain",
+        "README.md",
+        "accumulated implementation foundations",
     )
+
+
+def check_agents_minimal() -> None:
+    """Global AGENTS.md stays thin — detailed routing lives in skills, not the global prompt."""
+    rel = "AGENTS.md"
+    text = read(rel)
+    if text is None:
+        fails.append("[AGENTS-MINIMAL] AGENTS.md: file missing")
+        return
+    banned = re.compile(
+        r"Fovea|Steroid / JetBrains|foundation-pack/.*reusable architecture|"
+        r"Evidence priority for non-trivial",
+        re.I,
+    )
+    for i, line in enumerate(text.splitlines(), 1):
+        if banned.search(line):
+            check_fail(
+                "AGENTS-MINIMAL",
+                rel,
+                i,
+                "detailed evidence/foundation routing belongs in skills, not global AGENTS.md",
+            )
+    require_phrase("AGENTS-MINIMAL", rel, "skills/evidence-router/")
+    require_phrase(
+        "AGENTS-MINIMAL",
+        rel,
+        "Do not assume every project uses them",
+    )
+
+
+def check_evidence_router_priority() -> None:
+    """evidence-router owns the global evidence priority chain."""
+    rel = "skills/evidence-router/SKILL.md"
+    text = read(rel)
+    if text is None:
+        fails.append("[EVIDENCE-ROUTER-PRIORITY] skills/evidence-router/SKILL.md: file missing")
+        return
+    for phrase in ("Evidence priority", "no fixed tool chain", "foundation-pack/"):
+        if phrase not in re.sub(r"\s+", " ", text):
+            check_fail("EVIDENCE-ROUTER-PRIORITY", rel, 1, f"missing {phrase!r}")
 
 
 def check_bootstrap_reference_inventory() -> None:
@@ -881,6 +916,8 @@ CHECKS = [
     ("NO-ARTIFACT-PACK", check_no_artifact_pack),
     ("OBJECTIVE-DRIFT", check_objective_drift),
     ("FOUNDATION-FIRST-CLASS", check_foundation_first_class),
+    ("AGENTS-MINIMAL", check_agents_minimal),
+    ("EVIDENCE-ROUTER-PRIORITY", check_evidence_router_priority),
     ("BOOTSTRAP-REFERENCE-INVENTORY", check_bootstrap_reference_inventory),
     ("RDD-EXISTING-REFERENCES", check_rdd_existing_references),
     ("HIDDEN-REACHABILITY", check_hidden_reachability),

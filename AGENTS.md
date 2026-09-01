@@ -8,46 +8,20 @@ Codex/OpenCode, opencode, agy/veda, subprocess agents).
 disagree with anything below, follow the project. This file only sets defaults
 that apply everywhere.
 
-## Ground truth & routing
+## Ground truth
 
 - Source, tests, compiler/runtime behavior, and project requirements outrank
-  summaries, graphs, skills, and model opinions. Graphs and corpora are
-  navigation indexes, not source of truth; confirm cited code in real source.
-- Route by need to the smallest capability that closes the gap
-  (`skills/evidence-router/`); connected is not mandatory, and no fixed
-  retrieval chain runs per task:
-  - **Fovea**: active working-set map of the current project (orientation,
-    feature location, impact/blast radius); then read exact source.
-  - **MCP Steroid / JetBrains**: a semantic quality layer for non-trivial
-    changes: usages, symbol resolution, types, inheritance, overrides, call
-    hierarchy, rename/move, change signature, inspections, project model,
-    debugger evidence. Preflight before editing and a targeted check after;
-    it never replaces source reads, the compiler, or tests. Skip when the
-    change is trivial or the IDE is unavailable.
-  - **Fabric**: execution and orchestration: `fabric_exec`, `/fabric
-    prewalk` (its real Fabric meaning only), agents/Veda runner when the
-    task benefits, Schema audit (observes) / enforce (intentionally strict)
-    when selected.
-  - **Codebase Memory**: persistent cross-repo structural library (cold path).
-  - **OpenViking**: durable experience/context: decisions, failed attempts,
-    lessons; not a second copy of local source.
-  - **Veda**: an execution adapter and oracle lane (alternate backend,
-    model, or persona when the execution decision justifies it). Route the
-    mechanism through `skills/execution-router`, resolve models mechanically
-    via `skills/model-resolution`; discover models at runtime, never
-    hard-code them.
-- Reusable prior art lives in `<project>/reference/<repo>/` (read-only
-  checkout; read source and tests) and, for websites, in
-  `<project>/reference/web/<site>/` (captured by the `web-reference` skill),
-  not automatically a skill, index, or corpus. This repo's global
-  `references/` means contract docs; keep the two apart.
-- Evidence priority for non-trivial work (trivial edits may use project
-  source alone): current project source/tests first; then project-local
-  `reference/` and `reference/web/` when relevant; then applicable
-  foundations and skills as shortcuts; then additional source/docs/web on a
-  named gap. Foundations and skills never outrank the code they distill or
-  the project they serve. Use whatever read, search, MCP, or runtime
-  capability the host provides; no fixed tool chain per task.
+  summaries, graphs, skills, and model opinions.
+- Route by need through the owning skills; connected is not mandatory, and no
+  fixed retrieval chain runs per task:
+  - `skills/evidence-router/`: where evidence comes from
+  - `skills/execution-router/`: how work is executed
+  - `skills/reference-driven-development/`: outside prior art when it helps
+  - `skills/project-bootstrap/`: entering an unfamiliar repository
+
+Evidence paths (`reference/`, `reference/web/`, `foundation-pack/`), MCP
+capabilities, and detailed routing live in those skills and in `README.md` /
+`references/reference-contract.md`. Do not assume every project uses them.
 
 ## Reversible work needs no permission ritual
 
@@ -111,7 +85,7 @@ pull_request. `python3 scripts/policy-consistency.py --selftest` and
 required suite: the selftest is a regression fixture, and the legacy report is
 a migration queue, not a gate.
 
-## Pi Fabric: runtime features stay runtime features
+## Pi Fabric (pi host only)
 
 - `fabric_exec`, `/fabric prewalk`, Schema, agents, providers are Pi Fabric
   runtime mechanisms. Verify their behavior against the installed pi-fabric
@@ -177,30 +151,9 @@ deterministic linter live in `skills/house-writing-style/` and
 
 ## Global layout & host wiring (facts)
 
-- `skills/`: one directory per skill, `SKILL.md` with `name` +
-  trigger-first `description` ≤1024 chars. Grammar: `skills/writing-skills/`;
-  skeleton: `templates/skill.md`. Visibility follows invocation ownership:
-  entry skills stay model-visible; internal helpers stay hidden
-  (`disable-model-invocation: true`).
-- `foundation-pack/`: accumulated implementation foundations (`*-foundation`,
-  separate from the active skill catalog); reusable architecture, patterns,
-  seams, edge cases, and pointers distilled from strong implementations.
-  Current project source/tests and project-local `reference/` evidence
-  outrank foundations; the source a foundation points at remains the
-  authority. Create or expand a foundation only when reusable understanding
-  is cheaper to retrieve than to re-derive (not for every repo, site, or
-  session). Discovery: search `foundation-pack/` by topic through the
-  filesystem or any search capability the host provides.
-- `templates/`: CLI-neutral format templates; canonical inventory (the only
-  place that enumerates them) in `references/templates-inventory.md`.
-  `essentials/`: cold
-  rationale and decision references: read the smallest relevant file when a
-  policy decision needs explanation; current objectives live in
-  `docs/roadmap.md`. `mcp/servers.json`: canonical MCP registry (per-CLI
-  configs are derived copies; fix drift here, never in the mirrors).
-  `references/`: contract capsules.
-- Host mounts: pi reads `~/.agents/skills` natively; Claude Code
-  (`~/.claude/skills`, `~/.claude/CLAUDE.md`), DSH (`~/.dsh/skills`), Codex
-  (`~/.codex/skills`, `~/.codex/AGENTS.md`), OpenCode
-  (`~/.config/opencode/skills`, `~/.config/opencode/AGENTS.md`), and Gemini
-  CLI (`~/.gemini/GEMINI.md`) read this tree via symlinks/additive merges.
+Layout, policy owners, and MCP registry: `README.md`. Host mounts: pi reads
+`~/.agents/skills` natively; Claude Code (`~/.claude/skills`,
+`~/.claude/CLAUDE.md`), DSH (`~/.dsh/skills`), Codex (`~/.codex/skills`,
+`~/.codex/AGENTS.md`), OpenCode (`~/.config/opencode/skills`,
+`~/.config/opencode/AGENTS.md`), and Gemini CLI (`~/.gemini/GEMINI.md`) read
+this tree via symlinks/additive merges.
