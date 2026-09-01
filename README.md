@@ -96,6 +96,7 @@ policy invariants live in `scripts/policy-consistency.py` (CI-enforced).
 | PR lifecycle (push, PR, reviews, auto-merge on request)                                  | `skills/push-pr`                                                           |
 | Git release strategy and versioning                                                      | `skills/git-workflow-and-versioning`                                       |
 | Prior-art/reference-driven implementation                                                | `skills/reference-driven-development`                                      |
+| Skill and foundation discovery (metadata search; load narrowly)                          | `skills/skill-catalog` + `scripts/skill-catalog.py`                        |
 | Reference rules (repository + web)                                                       | `references/reference-contract.md`                                         |
 | Fabric execution, Schema modes, agents/Veda escalation (pi host)                         | `skills/fabric-native-execution` + project/`~/.pi/` config                 |
 | Natural-language prose style (STE-inspired)                                              | `skills/house-writing-style` + `scripts/style-lint.py`                     |
