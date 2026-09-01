@@ -94,6 +94,21 @@ jobs:
           set -o pipefail
           python3 scripts/dead-code.py 2>&1 | tee /tmp/dead-code.log
 
+      - name: Foundation validator
+        id: foundation
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 scripts/foundation-validator.py --selftest 2>&1 | tee /tmp/foundation-validator-selftest.log
+          python3 scripts/foundation-validator.py 2>&1 | tee /tmp/foundation-validator.log
+
+      - name: Reference retrieval fixture
+        id: refretrieval
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 scripts/reference-retrieval-fixture.py --selftest 2>&1 | tee /tmp/reference-retrieval-fixture.log
+
       - name: Conventional commits
         id: commits
         shell: bash

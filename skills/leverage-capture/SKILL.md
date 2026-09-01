@@ -28,17 +28,23 @@ Preserve reusable value in its cheapest appropriate representation, not everythi
 
 Route each candidate to the *cheapest* class that preserves it. Do not force a skill when a gate, a line of code, or a memory entry does the job. Aesthetic preferences are not gates; only demonstrated regression classes with acceptable false-positive cost become gates.
 
-## Threshold questions (all must roughly hold for SKILL/GATE)
+## Threshold questions (all must roughly hold for SKILL, GATE, or FOUNDATION)
 
 1. Would this be re-derived at real cost without it?
 2. Is it stable enough to document (not mid-flip)?
 3. Is the representation cheaper than the re-derivation?
 
+**FOUNDATION promotion:** create or expand a foundation only when reusable
+architecture, seams, patterns, edge cases, or decisions are expensive enough
+to rediscover that preserving them is cheaper than re-derivation. Record
+portable upstream identity and revision so the foundation reconnects to real
+source; see `references/reference-contract.md`.
+
 ## Workflow
 
 1. Recall what the session/work produced (diffs, decisions, failures).
 2. List candidates; classify each; drop the NOT-WORTH-SAVING ones explicitly.
-3. Promote each survivor in its native form. Skill candidates follow the catalog authoring rules; gate candidates need a demonstrated regression and a low-false-positive check; memory candidates go to session memory, not repo files.
+3. Promote each survivor in its native form. Skill candidates follow the catalog authoring rules; gate candidates need a demonstrated regression and a low-false-positive check; foundation candidates follow `references/reference-contract.md` provenance rules and land in `foundation-pack/<x>-foundation/`; memory candidates go to session memory, not repo files.
 4. Report: classified list, where each survivor landed, and what was deliberately not saved.
 
 ## Red Flags
@@ -50,7 +56,7 @@ Route each candidate to the *cheapest* class that preserves it. Do not force a s
 
 ## Verification
 
-Each survivor exists in its claimed form (code compiles/used; gate fails on the regression class and passes clean cases; skill passes the validator; memory entry retrievable). The not-saved list is explicit.
+Each survivor exists in its claimed form (code compiles/used; gate fails on the regression class and passes clean cases; skill passes the validator; foundation has SKILL.md with portable provenance and cited capsules on disk; memory entry retrievable). The not-saved list is explicit.
 
 ## References
 

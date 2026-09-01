@@ -19,8 +19,8 @@ counts or listing retired files as current.
 `github-pr-ci.yml` `issue.md` `prd.md` `project-context.md` `proposal.md`
 `pull-request.md` `readme.md` `roadmap.md` `skill.md` `tasks.md`
 
-Plus `source.yml` (the inspo ledger; tracked separately from the format
-templates).
+Plus `source.yml` (optional upstream provenance stub; not part of the format
+template count).
 
 Retired in the entry-architecture refactor (recoverable from Git history):
 project.md, tech-stack.md, state.md, user.md — persistent project artifacts

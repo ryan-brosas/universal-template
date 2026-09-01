@@ -5,8 +5,8 @@ description: "Use when choosing where to get evidence for a coding question: rou
 
 # Evidence Router
 
-Route by NEED + HOST to the smallest capability that closes the gap. Pick ONE
-primary route per question, escalate only after naming the gap, and stop when
+Route by NEED + HOST to the smallest useful evidence set that closes the gap.
+Pick a primary route per need, escalate after naming the gap, and stop when
 evidence is sufficient.
 
 ## Core Principle
@@ -62,10 +62,12 @@ an execution decision (`skills/execution-router`), resolved mechanically by
 
 ## Escalation rule
 
-Escalate one step only after naming the gap ("Fovea shows the neighborhood but
-not the type hierarchy" → Steroid). Never run two routes for the same need up
-front. On non-Pi hosts Fovea may be absent, Codebase Memory or direct source
-then covers orientation.
+Escalate one step only after naming the gap ("orientation shows the
+neighborhood but not the type hierarchy" → semantic navigation). Do not walk
+every connected system for the same need. Different needs may use different
+capabilities in parallel when each closes a distinct gap (for example source
+for code plus JetBrains for exact usages); the anti-pattern is ceremonial
+retrieval, not using two tools that obviously help different questions.
 
 ## Model consultation (not evidence)
 

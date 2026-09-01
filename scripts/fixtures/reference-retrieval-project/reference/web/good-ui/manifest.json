@@ -1,0 +1,6 @@
+{
+  "source": "https://example.com/dashboard",
+  "captured_at": "2026-09-01",
+  "scope": "dashboard settings page",
+  "coverage_gaps": ["mobile breakpoints"]
+}

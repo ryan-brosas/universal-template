@@ -75,6 +75,8 @@ python3 scripts/style-lint.py --selftest   # style fixtures must pass
 python3 scripts/style-lint.py              # hard rules on the default docs scope
 python3 scripts/web-reference-manifest.py --selftest   # web reference fixtures must pass
 python3 scripts/dead-code.py
+python3 scripts/foundation-validator.py
+python3 scripts/reference-retrieval-fixture.py --selftest
 CHECK_RANGE="origin/main..HEAD" python3 scripts/conventional-commit.py
 git diff --check
 ```

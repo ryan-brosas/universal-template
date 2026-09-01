@@ -608,6 +608,59 @@ def check_rdd_existing_references() -> None:
         )
 
 
+def check_rdd_retrieval_surface() -> None:
+    """RDD description is the retrieval surface; it must mention existing project-local references."""
+    rel = "skills/reference-driven-development/SKILL.md"
+    text = read(rel)
+    if text is None:
+        fails.append("[RDD-RETRIEVAL-SURFACE] skills/reference-driven-development/SKILL.md: file missing")
+        return
+    if not text.startswith("---"):
+        check_fail("RDD-RETRIEVAL-SURFACE", rel, 1, "missing frontmatter")
+        return
+    end = text.find("\n---", 3)
+    fm_block = text[4:end] if end != -1 else ""
+    desc = ""
+    for line in fm_block.splitlines():
+        if line.startswith("description:"):
+            desc = line.split(":", 1)[1].strip().strip("\"'")
+            break
+    flat = re.sub(r"\s+", " ", desc)
+    if "reference/web/" not in flat and "project-local" not in flat:
+        check_fail(
+            "RDD-RETRIEVAL-SURFACE",
+            rel,
+            1,
+            "RDD description must mention existing project-local references for retrieval",
+        )
+
+
+FOUNDATION_FIRST_RE = re.compile(
+    r"foundation-pack/`?\s*first|"
+    r"follow stack capsules in `foundation-pack/` first|"
+    r"load stack capsules in `foundation-pack/` first",
+    re.I,
+)
+
+
+def check_foundation_priority_inversion(*, base: Path | None = None) -> None:
+    """Active skills must not instruct generic foundation-pack before project/reference evidence."""
+    root = base or BASE
+    skills_dir = root / "skills"
+    if not skills_dir.is_dir():
+        return
+    for skill_md in sorted(skills_dir.glob("*/SKILL.md")):
+        rel = str(skill_md.relative_to(root))
+        for i, line in enumerate(skill_md.read_text(encoding="utf-8").splitlines(), 1):
+            if FOUNDATION_FIRST_RE.search(line):
+                check_fail(
+                    "FOUNDATION-PRIORITY",
+                    rel,
+                    i,
+                    "generic foundation-pack before project/reference (see evidence-router priority)",
+                )
+
+
 # Real callers for reachability: another SKILL.md or its references, top-level
 # policy, runtime scripts, and CI config. Generated views (docs/skill-catalog.md),
 # inventories, roadmap, and templates are NOT
@@ -893,6 +946,33 @@ def selftest() -> int:
         ok = False
     else:
         print("PASS foundation policy scope includes routing skills")
+    # Foundation-priority regression: bad skill fails, good skill passes.
+    with tempfile.TemporaryDirectory() as td:
+        base = Path(td)
+        (base / "skills" / "priority-probe-bad").mkdir(parents=True)
+        (base / "skills" / "priority-probe-good").mkdir(parents=True)
+        (base / "skills" / "priority-probe-bad" / "SKILL.md").write_text(
+            "---\nname: priority-probe-bad\ndescription: Use when testing.\n---\n"
+            "follow stack capsules in `foundation-pack/` first\n",
+            encoding="utf-8",
+        )
+        (base / "skills" / "priority-probe-good" / "SKILL.md").write_text(
+            "---\nname: priority-probe-good\ndescription: Use when testing.\n---\n"
+            "after current project code, consult applicable stack capsules in `foundation-pack/`.\n",
+            encoding="utf-8",
+        )
+        fails_before = len(fails)
+        check_foundation_priority_inversion(base=base)
+        new_fails = [f for f in fails[fails_before:] if "priority-probe-bad" in f]
+        if len(new_fails) != 1:
+            print(f"FAIL foundation-priority should flag bad probe once, got {new_fails}")
+            ok = False
+        else:
+            print("PASS foundation-priority catches generic foundation-first instruction")
+        if any("priority-probe-good" in f for f in fails[fails_before:]):
+            print("FAIL foundation-priority should not flag corrected ordering")
+            ok = False
+        fails[:] = fails[:fails_before]
     print("policy-consistency selftest: PASS" if ok else "policy-consistency selftest: FAIL")
     return 0 if ok else 1
 
@@ -936,6 +1016,8 @@ CHECKS = [
     ("EVIDENCE-ROUTER-PRIORITY", check_evidence_router_priority),
     ("BOOTSTRAP-REFERENCE-INVENTORY", check_bootstrap_reference_inventory),
     ("RDD-EXISTING-REFERENCES", check_rdd_existing_references),
+    ("RDD-RETRIEVAL-SURFACE", check_rdd_retrieval_surface),
+    ("FOUNDATION-PRIORITY", check_foundation_priority_inversion),
     ("HIDDEN-REACHABILITY", check_hidden_reachability),
     ("PR-OWNERSHIP", check_pr_ownership),
     ("README-SKILL-REFS", check_readme_skill_refs),
