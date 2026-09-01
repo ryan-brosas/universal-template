@@ -279,7 +279,9 @@ For each claim, record:
 
 The VoC package is ready for handoff only when:
 
-- [ ] One Reader and triggering context are specified, not generic.
+- [ ] Audience candidate(s) and triggering context are specified, not generic.
+      One Reader selection happens in `messaging-positioning.md`; research
+      delivers candidates, pains, and phrase evidence, not a finalized reader.
 - [ ] Each of the top three pains has at least two supporting fragments.
 - [ ] Every claim in the inventory has a proof type or a gap flag.
 - [ ] The phrase bank holds at least ten entries spanning at least four of the

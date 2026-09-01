@@ -79,7 +79,7 @@ Stopping rules:
 | Signal | Rule |
 |---|---|
 | Target action completed | suppress remaining emails in that flow; route to the post-action state |
-| Unsubscribe or spam complaint | immediate hard suppression across all flows; do not send an apology |
+| Unsubscribe or spam complaint | suppress marketing and other consent-based flows immediately; honor legal/channel suppression rules; do not send a marketing apology. Required transactional, confirmation, receipt, password-reset, and support messages may still send when law, contract, or product safety requires them |
 | Escalation cap reached with no response | enter a pause state; set a re-engagement trigger with a cooldown before the next attempt |
 | Purchased or completed state | suppress upsell and reactivation for that product; keep support and relevant cross-sell |
 
@@ -101,6 +101,10 @@ you.
 
 - **Suppression inheritance:** a suppressed parent segment (purchased Product X)
 suppresses child segments unless the override is documented.
+- **Marketing vs transactional:** list-unsubscribe and spam complaints suppress
+  marketing and nurture flows. Transactional, receipt, security, and required
+  service messages follow separate rules and may still send when legally or
+  operationally required.
 - **Segment triage:** fold a segment into its parent with a conditional block
   when the only difference is a merge tag. Split a segment that mixes roles
   with materially different jobs.
