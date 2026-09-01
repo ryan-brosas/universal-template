@@ -20,13 +20,15 @@ A persistent cross-project library, not a default step: the graph is an index, n
 ## When to Use / NOT
 
 - **Use when:** the question spans repositories or sessions, finding which indexed project holds a pattern, comparing a reference candidate, cross-service structure, or non-Pi environments where Fovea is unavailable.
-- **NOT when:** the active project just needs orientation (use Fovea or direct source). Do not index every current project merely because the MCP is connected, index when the user asks or to grow the persistent reference library. Never call `codebase-memory_delete_project` without explicit user approval, and do not write ADRs or ingest traces unless requested (see Boundaries).
+- **NOT when:** the active project just needs orientation (use Fovea or direct source). Do not index a current or active owned project merely because the MCP is connected. Index creation requires an explicit user request; a finished project is not ingested by default. Never call `codebase-memory_delete_project` without explicit user approval, and do not write ADRs or ingest traces unless requested (see Boundaries).
 
 ## Workflow
 
 1. Connect to the `codebase-memory` MCP and read its server instructions.
-2. Call `codebase-memory_list_projects` before first use. Index only when the
- repository is absent or after a named large external update.
+2. Call `codebase-memory_list_projects` before first use. If the repository is
+ absent, use direct source or a project-local reference unless the user
+ explicitly requests index creation. Re-index an existing library entry only
+ after a named large external update or an explicit request.
 3. Orient with `codebase-memory_get_architecture`; request only needed aspects.
 4. Find definitions with `codebase-memory_search_graph`. Use natural-language,
  regex-name, or semantic search; narrow before paginating `has_more` results.
@@ -64,6 +66,7 @@ closed.
 - Treating the first page as complete (truncation fields unchecked).
 - Negative or exhaustive claims without `codebase-memory_check_index_coverage`.
 - Cloning or re-indexing another repository after the evidence gap is closed.
+- Automatically indexing an active or newly completed owned project.
 
 ## Verification
 

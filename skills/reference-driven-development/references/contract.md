@@ -49,6 +49,11 @@ References are normally read-only, local, and disposable. Prefer
 `.gitignore`. A reference checkout or web capture is never automatically
 promoted into a skill, foundation, index, or corpus.
 
+Active owned projects remain direct source while work is in progress. After a
+stable milestone, only an explicit user decision may promote expensive,
+reusable understanding into a foundation or persistent index. Completion alone
+never triggers ingestion, and no promotion is the default.
+
 **References vs foundations:** `<project>/reference/` holds actual external
 code or captured frontend evidence for inspection and adaptation.
 `foundation-pack/<x>-foundation/` holds reusable understanding distilled

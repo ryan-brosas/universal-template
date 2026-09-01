@@ -457,29 +457,46 @@ def check_objective_drift() -> None:
                 check_fail("OBJECTIVE-DRIFT", rel, i, "obsolete quality/capture objective resurfaced")
 
 
-def check_foundation_first_class() -> None:
-    """Foundations are durable leverage — not scheduled retirement or a no-new-foundations ban."""
-    banned_phrases = (
-        "no new foundations",
-        "retired over time",
-        "temporary cold prior-art",
-        "foundation creation is frozen",
-    )
-    for phrase in banned_phrases:
-        for rel in FOUNDATION_POLICY_FILES:
-            text = read(rel)
-            if not text:
-                continue
-            for i, line in enumerate(text.splitlines(), 1):
-                if phrase.lower() in line.lower():
-                    check_fail("FOUNDATION-FIRST-CLASS", rel, i, f"obsolete foundation policy: {phrase!r}")
+FOUNDATION_AUTOMATION = re.compile(
+    r"\b(?:index(?: the project)? (?:only )?when (?:the )?(?:repository|project) is absent|"
+    r"create a foundation after (?:a|every|each) project|"
+    r"(?:completed|active|owned) projects? (?:are|is) automatically "
+    r"(?:indexed|ingested|promoted))\b",
+    re.I,
+)
+
+
+def check_foundation_lifecycle() -> None:
+    """Foundations are earned and removable; owned-project capture is explicit."""
+    for rel in FOUNDATION_POLICY_FILES:
+        text = read(rel)
+        if not text:
+            continue
+        normalized = re.sub(r"\s+", " ", text)
+        if FOUNDATION_AUTOMATION.search(normalized):
+            check_fail(
+                "FOUNDATION-LIFECYCLE",
+                rel,
+                1,
+                "project indexing or foundation promotion must be explicit",
+            )
     require_phrase(
-        "FOUNDATION-FIRST-CLASS",
+        "FOUNDATION-LIFECYCLE",
         "skills/reference-driven-development/references/contract.md",
-        "References vs foundations",
+        "Active owned projects remain direct source",
     )
     require_phrase(
-        "FOUNDATION-FIRST-CLASS",
+        "FOUNDATION-LIFECYCLE",
+        "skills/leverage-capture/SKILL.md",
+        "Owned-project promotion requires an explicit user request after a stable milestone",
+    )
+    require_phrase(
+        "FOUNDATION-LIFECYCLE",
+        "skills/codebase-memory/SKILL.md",
+        "Index creation requires an explicit user request",
+    )
+    require_phrase(
+        "FOUNDATION-LIFECYCLE",
         "README.md",
         "accumulated implementation foundations",
     )
@@ -1120,6 +1137,26 @@ def selftest() -> int:
         ok = False
     else:
         print("PASS foundation policy scope includes routing skills")
+    lifecycle_good = (
+        "Active owned projects remain source; an explicit user request after a "
+        "stable milestone may promote reusable understanding."
+    )
+    lifecycle_bad = {
+        "absent index": "Index the project when the repository is absent.",
+        "automatic foundation": "Create a foundation after every project.",
+        "completed-project ingestion": "Completed projects are automatically ingested.",
+    }
+    if FOUNDATION_AUTOMATION.search(lifecycle_good):
+        print("FAIL foundation lifecycle rejected explicit manual promotion")
+        ok = False
+    else:
+        print("PASS foundation lifecycle accepts explicit manual promotion")
+    for name, fixture in lifecycle_bad.items():
+        if FOUNDATION_AUTOMATION.search(fixture):
+            print(f"PASS foundation lifecycle rejects {name}")
+        else:
+            print(f"FAIL foundation lifecycle missed {name}")
+            ok = False
     # Foundation-priority regression: bad skill fails, good skill passes.
     with tempfile.TemporaryDirectory() as td:
         base = Path(td)
@@ -1306,7 +1343,7 @@ CHECKS = [
     ("NO-USER-PROFILE", check_no_user_profile),
     ("NO-ARTIFACT-PACK", check_no_artifact_pack),
     ("OBJECTIVE-DRIFT", check_objective_drift),
-    ("FOUNDATION-FIRST-CLASS", check_foundation_first_class),
+    ("FOUNDATION-LIFECYCLE", check_foundation_lifecycle),
     ("AGENTS-CONSTITUTION", check_agents_constitution),
     ("EVIDENCE-ROUTER-PRIORITY", check_evidence_router_priority),
     ("BOOTSTRAP-REFERENCE-INVENTORY", check_bootstrap_reference_inventory),
