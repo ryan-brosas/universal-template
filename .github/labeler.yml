@@ -13,9 +13,6 @@ area:github:
 area:templates:
   - changed-files:
       - any-glob-to-any-file: templates/**
-area:essentials:
-  - changed-files:
-      - any-glob-to-any-file: essentials/**
 area:docs:
   - changed-files:
       - any-glob-to-any-file: docs/**

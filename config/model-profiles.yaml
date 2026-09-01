@@ -2,8 +2,8 @@
 #
 # This file holds which models are PREFERRED per lane. It never records
 # runtime state: no auth status, no dated quirks, no availability — that is
-# discovered live by scripts/resolve-model.py and scripts/runtime-capabilities.py,
-# or recorded in dated files under audits/.
+# discovered live by scripts/resolve-model.py and scripts/runtime-capabilities.py.
+# Durable lessons belong in memory; generated machine state belongs in state/.
 #
 # Resolve every entry against runtime discovery before use:
 #   python3 ~/.agents/scripts/resolve-model.py --role <role> --json

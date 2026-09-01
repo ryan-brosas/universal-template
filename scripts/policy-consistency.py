@@ -5,9 +5,9 @@ This file is the SINGLE machine-readable enumeration of cross-document policy
 invariants. Each check below states one invariant; do not restate policy in a
 second hand-maintained philosophy document — add or extend a check here.
 
-Scope: policy documents only (AGENTS, README, essentials, routing/workflow
-skills, mcp registry, PR template). Coded prior-art archives and verbatim
-archives (foundation-pack/, essentials/discord-material) are exempt by design.
+Scope: policy documents only (AGENTS, README, routing/workflow skills, MCP
+registry, and PR template). Coded prior-art archives in foundation-pack/ are
+exempt by design.
 
 FAIL = exit 1 (CI gate). WARN = printed, non-blocking.
 Zero dependencies; python3 stdlib only.
@@ -24,7 +24,6 @@ from typing import List, Optional, Set, Tuple
 
 BASE = Path(__file__).resolve().parents[1]
 
-# essentials/*.md is policy as a set (globbed below) — new essentials docs are covered automatically.
 POLICY_FILES = [
     "AGENTS.md",
     "README.md",
@@ -40,7 +39,6 @@ POLICY_FILES = [
     "skills/model-resolution/SKILL.md",
     "skills/github-repo-setup/SKILL.md",
 ]
-POLICY_FILES += sorted(str(p.relative_to(BASE)) for p in (BASE / "essentials").glob("*.md"))
 FOUNDATION_POLICY_FILES = POLICY_FILES + [
     "docs/roadmap.md",
     "skills/reference-driven-development/references/contract.md",
@@ -231,7 +229,7 @@ def check_absolutes() -> None:
 
 def check_portable_paths() -> None:
     """WARN: portable policy docs should not pin machine-specific /home/ or /mnt/ paths."""
-    files = ["AGENTS.md", "README.md", *sorted(str(p.relative_to(BASE)) for p in (BASE / "essentials").glob("*.md"))]
+    files = ["AGENTS.md", "README.md"]
     for rel in files:
         text = read(rel)
         if not text:
@@ -255,8 +253,8 @@ def check_pr_template() -> None:
 
 
 def check_no_mass_ingestion() -> None:
-    """Essentials never promise automated mass ingestion of external repos."""
-    for rel in ("essentials/README.md", "docs/roadmap.md"):
+    """The roadmap never promises automated mass ingestion of external repos."""
+    for rel in ("docs/roadmap.md",):
         text = read(rel)
         if text is None:
             continue
@@ -322,7 +320,7 @@ def check_profiles_stable_prefs() -> None:
     banned = re.compile(r"20\d\d-\d\d|unauthenticated|/login|broken|auth state", re.I)
     for i, line in enumerate(text.splitlines(), 1):
         if banned.search(line):
-            check_fail("PROFILES-STABLE-PREFS", rel, i, "model-profiles.yaml must hold stable preferences only (runtime state goes to state/ or audits/)")
+            check_fail("PROFILES-STABLE-PREFS", rel, i, "model-profiles.yaml must hold stable preferences only (runtime state goes to state/ or memory)")
 
 
 def check_resolver_checkout_local() -> None:
@@ -448,8 +446,8 @@ def check_no_artifact_pack() -> None:
 
 
 def check_objective_drift() -> None:
-    """Essentials never promise zero defects, universal code-taste metrics, or automatic per-session capture."""
-    for rel in ("docs/roadmap.md", "essentials/operating-philosophy.md"):
+    """The roadmap never promises zero defects, universal metrics, or automatic capture."""
+    for rel in ("docs/roadmap.md",):
         text = read(rel)
         if text is None:
             continue
@@ -1013,7 +1011,7 @@ def check_quality_gate_parity() -> None:
 def check_gate_documentation() -> None:
     """CONTRIBUTING.md documents the required gate scripts for this repository.
     README/AGENTS carry no volatile template counts or retired artifacts;
-    catalog-quality.py checks the actual templates/ and essentials/ directories."""
+    catalog-quality.py checks the actual templates directory."""
     contrib = read("CONTRIBUTING.md") or ""
     for needle in ("skill-validator.py", "repo-hygiene.py", "catalog-quality.py"):
         if needle not in contrib:

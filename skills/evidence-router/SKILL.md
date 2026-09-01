@@ -20,10 +20,14 @@ tool chain.
 | Live site capture | `reference/web/<site>/` or `web-reference` |
 | Stack patterns from prior implementations | `foundation-pack/*-foundation` + cited source |
 | Cross-repo pattern index | Codebase Memory → activate candidate under `reference/` |
-| Past attempts / lessons | OpenViking |
+| Past attempts / lessons | OpenViking (see `references/openviking.md`) |
 | Current library docs | official docs / Context7 |
 | External facts / advisories | Exa or read-only fetch |
 | GitHub repo overview | DeepWiki → repository |
 
 Model output is not evidence until verified against source/tests/runtime.
 For execution or model escalation, see `execution-router` and `model-resolution`.
+
+## References
+
+- `references/openviking.md`, retrieval, capture, and degraded-path boundaries

@@ -10,8 +10,8 @@ Route each question to **one leaf**. This index mirrors common "complete guide" 
 | KISS — simplest working solution | `code-discipline` | Do not ban helpers; remove dead code with gates |
 | YAGNI | `code-discipline`, `code-review-and-quality` | Do not block needed prerequisites for "end-to-end" stubs |
 | SOLID / separation of concerns | `code-discipline`, language foundations | OOP-specific; adapt to your stack |
-| Steer outcomes, not behavior | `essentials/steer-outcomes-not-behavior.md` | Convert repeated failures into CI checks |
-| Mechanical enforcement | `essentials/enforce-code-quality-mechanically.md`, `practices-to-ci` | Regex/lint/test beats prompting |
+| Steer outcomes, not behavior | `code-discipline` | Convert repeated failures into CI checks |
+| Mechanical enforcement | `practices-to-ci` | Regex/lint/test beats prompting |
 
 ## Topic files in this skill
 
