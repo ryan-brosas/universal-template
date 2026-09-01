@@ -122,17 +122,6 @@ Removal without notice; `@deprecated` without runtime warning. no migration guid
 - Migration guide ships with a codemod tested on real code, not just samples.
 - Both old and new paths still work during the deprecation period.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>deprecation-and-migration</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>…</evidence>
-  <artifacts>…</artifacts>
-  <risks>…</risks>
-</skill_result>
-```
 
 ## References
 

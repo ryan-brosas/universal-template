@@ -95,17 +95,6 @@ Reading summary without JSON (loses precision). running fallow but not acting on
 
 Run typecheck + tests after cleanup, and confirm the diff didn't grow unrelated changes. Compare the re-run JSON to the saved baseline: complexity down, no new dead code, no new dupes.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>fallow</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>…</evidence>
-  <artifacts>…</artifacts>
-  <risks>…</risks>
-</skill_result>
-```
 
 ## References
 

@@ -63,17 +63,6 @@ Cross-cutting application skill for Framework Design Guidelines + secure coding 
 - `dotnet build` + tests on touched projects
 - Capsule checklist on public API additions
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>dotnet-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>public API diff, analyzer/build output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>legacy serializer, weak input validation, or FDG naming drift</risks>
-</skill_result>
-```
 
 ## References
 

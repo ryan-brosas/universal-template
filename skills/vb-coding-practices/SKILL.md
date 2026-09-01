@@ -60,17 +60,6 @@ VB.NET quality is **Framework-aligned naming plus Strict options and readable bl
 - Public API XML doc spot-check
 - Capsule checklist on legacy-vs-.NET naming boundary
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>vb-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>vb diff, dotnet build/format/test output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>Strict off waiver, Hungarian drift, missing XML, or none</risks>
-</skill_result>
-```
 
 ## References
 

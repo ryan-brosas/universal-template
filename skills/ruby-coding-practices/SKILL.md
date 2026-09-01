@@ -49,17 +49,6 @@ Ruby readability is **RuboCop-community layout plus idiomatic naming and explici
 - Autoload/Zeitwerk check if namespace/files touched
 - Capsule checklist on public API review
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>ruby-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>ruby diff, rubocop output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>namespace lookup, silent rescue, bang without safe method, or none</risks>
-</skill_result>
-```
 
 ## References
 

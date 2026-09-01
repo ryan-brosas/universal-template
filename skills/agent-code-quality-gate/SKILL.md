@@ -91,17 +91,6 @@ Skipping the gate; "I checked, it's fine" (no evidence); scope creep unmarked; t
 
 Run the 5 checks against the diff: scope, duplication, behavior tests, verification evidence (named command ran, exit 0, output captured), regressions. Any failed check means the work is not done.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>agent-code-quality-gate</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>5-check gate run on the diff; named verification command exit 0 with captured output</evidence>
-  <artifacts>Gate result: pass, or tagged findings ([blocker]/[should-fix]/[nit]/[question])</artifacts>
-  <risks>Skipped checks, truncated output, undocumented overrides, or none</risks>
-</skill_result>
-```
 
 ## References
 

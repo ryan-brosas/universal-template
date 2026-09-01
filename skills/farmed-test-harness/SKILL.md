@@ -85,17 +85,6 @@ When writing tests for code that:
 
 Duplicating the farmed harness instead of expanding it; narrow near-identical tests instead of broad assertions; a cassette replayed without verifying it caught what you expect; slow tests ungated behind `--run_slow`, blocking CI.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>farmed-test-harness</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>…</evidence>
-  <artifacts>…</artifacts>
-  <risks>…</risks>
-</skill_result>
-```
 
 ## References
 

@@ -70,17 +70,6 @@ Did I find at least one `[delete]` / `[simplify]`? (If not, the review was shall
 
 Typecheck + lint + relevant test pass in one pass; every `[blocker]` names the violated invariant and the smallest fix; Bloat Review produced at least one `[delete]` or `[simplify]`.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>code-review-and-quality</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>Tagged findings, verification run, delete-list (Bloat)</evidence>
-  <artifacts>Review with tagged findings</artifacts>
-  <risks>Untested claims, scope creep, LGTM-by-default, none</risks>
-</skill_result>
-```
 
 ## References
 

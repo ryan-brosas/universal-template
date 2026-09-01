@@ -50,17 +50,6 @@ Clojure readability is **consistent layout + idiomatic expressions**, namespaces
 - `clojure -M:test` or `lein test` / `bb test`
 - Capsule checklist on namespace review
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>clojure-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>clj diff, fmt/lint/test output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>ns collision, shadowed core, leaky macro, or none</risks>
-</skill_result>
-```
 
 ## References
 

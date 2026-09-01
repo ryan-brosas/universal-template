@@ -59,17 +59,6 @@ local npm dependencies, or obsolete provider names.
 
 Evidence ledger holds the exact query, cited results, access date, and confidence; official, dated, versioned sources preferred.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>codex-websearch</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>Exact query, cited results, access date, and confidence</evidence>
-  <artifacts>Compact evidence ledger</artifacts>
-  <risks>Unavailable host extension, stale source, or none</risks>
-</skill_result>
-```
 
 ## References
 

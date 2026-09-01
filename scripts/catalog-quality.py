@@ -5,7 +5,6 @@
 These checks fail (exit 1) when:
 - a skill directory lacks `SKILL.md`, the name does not match, or names repeat;
 - the essentials are missing or not indexed in `essentials/README.md`;
-- the templates inventory does not match `templates/` on disk;
 - a visible skill stays unclassified;
 - visible metadata grows beyond the recorded baseline; a deliberate
   refresh with the update-baseline flag resets it.
@@ -24,8 +23,6 @@ from typing import Dict, List, Optional, Set
 BASE = Path(__file__).resolve().parents[1]
 SKILLS = BASE / "skills"
 ESSENTIALS = BASE / "essentials"
-TEMPLATES = BASE / "templates"
-INVENTORY = BASE / "references" / "templates-inventory.md"
 BASELINE = BASE / "scripts" / "context-budget-baseline.json"
 
 DESC_WARN_CHARS = 450      # visible description size worth reporting
@@ -42,7 +39,6 @@ ENTRY_SKILLS = {
     # flow entries
     "project-bootstrap", "brainstorming", "goal-setup", "prototype",
     "leverage-capture", "reference-driven-development",
-    "using-git-worktrees", "zoom-out",
     # GitHub / delivery
     "github-repo-setup", "github-actions-engineering", "push-pr",
     "git-workflow-and-versioning", "github-contribution-opportunities",
@@ -62,13 +58,12 @@ ENTRY_SKILLS = {
     "upwork-proposals", "omarchy", "math-schema",
     "mcp-steroid",
 }
-# Automatic dispatch points: visible because a state or phase routes to them.
-ROUTER_SKILLS = {
-    "evidence-router", "execution-router",
-}
+# Cold references formerly routed automatically; kept searchable, not hot.
+ROUTER_SKILLS: set[str] = set()
 # Internally invoked mechanics: never in model start-up metadata.
 INTERNAL_SKILLS = {
     "model-resolution", "veda-lane", "fabric-native-execution",
+    "evidence-router", "execution-router",
     "code-discipline", "agent-code-quality-gate",
     "code-review-and-quality", "quality-gate-methodology",
     "test-driven-development", "source-driven-development",
@@ -191,23 +186,6 @@ def collect_skills(skills_dir: Path = SKILLS) -> Dict[str, dict]:
     return skills
 
 
-def check_essentials_inventory() -> None:
-    """The templates-inventory essentials list must match the essentials directory."""
-    if not INVENTORY.is_file():
-        return
-    inv = INVENTORY.read_text(encoding="utf-8")
-    m = re.search(r"## The essentials.*?(?=\n## |\Z)", inv, re.S)
-    if not m:
-        errors.append("templates-inventory.md missing 'The essentials' section")
-        return
-    claimed = set(re.findall(r"`([a-zA-Z0-9._-]+\.md)`", m.group(0)))
-    on_disk = {p.name for p in ESSENTIALS.glob("*.md")}
-    for name in sorted(claimed - on_disk):
-        errors.append(f"inventory lists nonexistent essential: {name}")
-    for name in sorted(on_disk - claimed):
-        errors.append(f"essential not listed in templates-inventory.md: {name}")
-
-
 def check_essentials() -> None:
     for ef in ESSENTIAL_FILES:
         if not (ESSENTIALS / ef).is_file():
@@ -217,34 +195,6 @@ def check_essentials() -> None:
     for ef in ESSENTIAL_FILES:
         if ef != "README.md" and ef not in readme:
             errors.append(f"essential not indexed in README: {ef}")
-
-
-def check_templates_inventory() -> None:
-    if not INVENTORY.is_file():
-        errors.append("missing references/templates-inventory.md")
-        return
-    inv = INVENTORY.read_text(encoding="utf-8")
-    on_disk = sorted(
-        p.name
-        for p in TEMPLATES.iterdir()
-        if p.is_file() and not p.name.startswith(".")
-    )
-    for name in on_disk:
-        # The `source.yml` ledger template may be listed or omitted by the inventory;
-        # every other template must be named in the inventory body.
-        if name == "source.yml":
-            continue
-        if name not in inv:
-            errors.append(f"template not listed in inventory: {name}")
-    claimed = re.search(r"(\d+)\s+CLI-neutral format templates", inv)
-    expected = len([n for n in on_disk if n != "source.yml"])
-    if claimed:
-        n = int(claimed.group(1))
-        if n != expected:
-            errors.append(
-                f"templates inventory count {n} != on-disk format templates {expected} "
-                f"(excluding source.yml)"
-            )
 
 
 def check_visibility_policy(skills: Dict[str, dict]) -> None:
@@ -403,8 +353,6 @@ def main() -> int:
     skills = collect_skills(skills_dir)
     if default_root:
         check_essentials()
-        check_templates_inventory()
-        check_essentials_inventory()
         check_generated_catalogs()
     near_duplicate_warnings(skills)
     check_visibility_policy(skills)

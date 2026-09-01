@@ -144,17 +144,6 @@ Assuming a hardcoded script path; uploading secret files (`.env*`, credentials, 
 
 Output contains a `Preview URL` and a `Claim URL`; the stdout JSON parses with `previewUrl`, `claimUrl`, `deploymentId`.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>vercel-deploy-claimable</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>commands run, outputs inspected, artifacts produced</evidence>
-  <artifacts>files written / commands run</artifacts>
-  <risks>known risks, untested paths, or none</risks>
-</skill_result>
-```
 
 ## References
 

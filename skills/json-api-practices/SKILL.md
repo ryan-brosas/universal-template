@@ -47,17 +47,6 @@ JSON APIs are **strict JSON with predictable names and envelopes**, camelCase pr
 - Contract tests for envelope + error shape
 - Capsule checklist on API review
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>json-api-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>json diff, schema validation output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>invalid JSON, reserved name clash, bad date format, or none</risks>
-</skill_result>
-```
 
 ## References
 

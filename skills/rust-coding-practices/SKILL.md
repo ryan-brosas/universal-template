@@ -45,17 +45,6 @@ Rust quality is **rustfmt-mechanical + API-guidelines semantic**, formatted code
 - Doctests pass with `?` pattern
 - Capsule checklist on public API review
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>rust-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>rs diff, fmt/clippy/test output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>empty error type, doc unwrap, orphan trait gap, or none</risks>
-</skill_result>
-```
 
 ## References
 

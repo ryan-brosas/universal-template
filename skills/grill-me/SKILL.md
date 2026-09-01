@@ -76,17 +76,6 @@ No assumptions stated. "I'll figure it out later" as a crutch. "everyone agrees"
 
 After 10–15 questions, the plan is either stronger or abandoned, and the answers are documented, not left in chat.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>grill-me</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>…</evidence>
-  <artifacts>…</artifacts>
-  <risks>…</risks>
-</skill_result>
-```
 
 ## References
 

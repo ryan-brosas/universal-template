@@ -220,17 +220,6 @@ URI encoding uses `encodeURIComponent()` in JS and output formatting is done via
 
 `--json` mode always emits valid JSON, a 0-result query returns `[]`. Confirm each `url` is the publisher's direct link, not a `news.google.com/articles/<id>` wrapper. If results come back empty, check with a screenshot for a consent/cookie wall before concluding there is no coverage.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>gnews</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>…</evidence>
-  <artifacts>…</artifacts>
-  <risks>…</risks>
-</skill_result>
-```
 
 ## References
 

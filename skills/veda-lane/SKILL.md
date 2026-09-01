@@ -56,17 +56,6 @@ Veda output is advisory. Probe availability instead of trusting claims (no hard-
 - Structured outputs parsed where applicable (`report.yaml`, review status).
 - Load-bearing findings verified against source/tests; fallback honestly reported when Veda is unavailable.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>veda-lane</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>probe results, lane invoked, parsed outputs, verification notes</evidence>
-  <artifacts>report.yaml / review findings / session artifacts under .veda/sessions</artifacts>
-  <risks>unverified model claims, fabricated outputs, or none</risks>
-</skill_result>
-```
 
 ## References
 

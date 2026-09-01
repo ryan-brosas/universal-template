@@ -74,17 +74,6 @@ Perl maintainability is **lexical scope + checked I/O**, strict warnings on, 3-a
 - Head-of-file strict/v5.36 audit
 - Capsule checklist on open-or-die and indirect-object grep
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>perl-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>pl/pm diff, perlcritic/perltidy/prove output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>global leak, open injection, indirect object bug, or none</risks>
-</skill_result>
-```
 
 ## References
 

@@ -58,17 +58,6 @@ MDN example quality is **copy-paste-safe teaching code**, short vanilla snippets
 - Capsule probes on new JS DOM insertion and CSS validity
 - Optional: MDN yari/build or repo lint scripts if present in target repo
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>mdn-code-examples-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>example diff, prettier/lint output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>invalid copy-paste snippet or wrong fence language</risks>
-</skill_result>
-```
 
 ## References
 

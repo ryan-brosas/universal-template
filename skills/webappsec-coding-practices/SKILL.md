@@ -61,17 +61,6 @@ Secure web apps **validate all request data**, **encode at output boundaries**, 
 - Upload test cases (extension spoof, archive size)
 - Pair with `npm audit`/dependency check from `security-and-hardening`
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>webappsec-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>diff, header/cookie audit, QA probe results</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>IDOR, missing CSRF, or upload content-type bypass</risks>
-</skill_result>
-```
 
 ## References
 

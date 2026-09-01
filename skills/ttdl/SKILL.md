@@ -197,17 +197,6 @@ All paths relative to `<skill-dir>`.
 - Audio is present and not silent (codec classification worked); `--info` reports the expected title/author/duration/resolution.
 - The output stays pure HEVC + AAC (`-c copy`, no re-encode), QuickTime/iOS-friendly as-is.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill><name></skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>…</evidence>
-  <artifacts>…</artifacts>
-  <risks>…</risks>
-</skill_result>
-```
 
 ## References
 

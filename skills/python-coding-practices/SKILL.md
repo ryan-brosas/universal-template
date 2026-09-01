@@ -44,17 +44,6 @@ Python readability is **enforced consistency plus semantic footgun avoidance**, 
 - Import module without env/network side effects.
 - Capsule checklist on review.
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>python-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>py diff, ruff/mypy output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>mutable default, broad except, missing types, or none</risks>
-</skill_result>
-```
 
 ## References
 

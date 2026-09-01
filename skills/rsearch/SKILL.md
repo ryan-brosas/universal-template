@@ -124,17 +124,6 @@ Link posts carry the external target in `url_overridden_by_dest` (pretty output 
 - A persistent error after the built-in retries means real rate-limiting, wait a bit or
  check the login state before retrying.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill><name></skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>…</evidence>
-  <artifacts>…</artifacts>
-  <risks>…</risks>
-</skill_result>
-```
 
 ## References
 

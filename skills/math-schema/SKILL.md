@@ -199,17 +199,6 @@ Correct course the moment you catch yourself in one.
 
 Label every claim: HYPOTHESIZED for an untested falsifiable claim, SUPPORTED for numeric or special-case evidence, PROVEN for a finished derivation or a Lean theorem. COMMITTED requires a complete proof or a green `lake build`. The regression guard tests one older COMMITTED entry per session: VERIFIED true with the evidence, REVOKED with the broken dependency named, or parked as HYPOTHESIZED if untestable today.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>math-schema</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>…</evidence>
-  <artifacts>…</artifacts>
-  <risks>…</risks>
-</skill_result>
-```
 
 ## References
 

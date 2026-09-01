@@ -97,17 +97,6 @@ Refactor without tests; no baseline; "I think this is better" (no metric); "rewr
 
 Tests pass after each step (behavior preserved); the measured metric, cyclomatic complexity, coupling, build time, improved versus the recorded baseline. Stop when tests are easy to write, build time decreased, new features easy, onboarding faster, and AI tools navigate.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>improve-codebase-architecture</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>…</evidence>
-  <artifacts>…</artifacts>
-  <risks>…</risks>
-</skill_result>
-```
 
 ## References
 

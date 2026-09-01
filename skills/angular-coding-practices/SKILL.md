@@ -57,17 +57,6 @@ Angular apps stay navigable with **feature-first `src/` layout**, **kebab-case c
 - Selector hyphen + app prefix audit on new components
 - Capsule probes in review notes
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>angular-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>diff, ng lint/test output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>selector collision, DOM I/O name clash, or structure drift</risks>
-</skill_result>
-```
 
 ## References
 

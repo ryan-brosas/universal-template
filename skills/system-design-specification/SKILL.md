@@ -94,17 +94,6 @@ Specify how long-running loops park at effect boundaries in test mode (`drive: "
 - Boundary testing mode (`drive: "manual"`, `peekAction()`, `executeAction()`) is
  specified so long-running loops park at effect boundaries for deterministic tests.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill><name></skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>…</evidence>
-  <artifacts>…</artifacts>
-  <risks>…</risks>
-</skill_result>
-```
 
 ## References
 - `references/trace-calculus-grammar.md`, 6-letter trace grammar ($E, R, L, G, H, X$) for unambiguous async sequence notation.

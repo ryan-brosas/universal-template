@@ -63,17 +63,6 @@ Machine XML quality is **schema-first reuse with lowerCamelCase names and elemen
 - lowerCamelCase name audit on new symbols
 - Capsule checklist on element-vs-attribute choices
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>xml-markup-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>xml/rng diff, xmllint/validator output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>namespace churn, mixed content, or unvalidated instance</risks>
-</skill_result>
-```
 
 ## References
 

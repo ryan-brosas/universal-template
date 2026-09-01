@@ -57,17 +57,6 @@ Vue maintainability is **tiered style guide discipline**, Priority A prevents er
 - Manual v-for key and scoped style spot check
 - Capsule probes cited in review notes
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>vue-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>vue diff, eslint output, test log</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>keyless list, prop mutation, or Priority A violation</risks>
-</skill_result>
-```
 
 ## References
 

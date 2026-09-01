@@ -1,109 +1,50 @@
 ---
-purpose: Source template for the AGENTS.md file /init generates.
-updated: 2026-08-16
+purpose: Source template for project-local AGENTS.md (/init or bootstrap).
+updated: 2026-09-01
 ---
 
 # AGENTS.md template
 
-Render a short operational file. Each instruction must describe a verified
-repository fact, a measurable outcome, an irreversible-action boundary, or a
-specific trap that automation cannot express.
+Render only repository-specific facts the model cannot cheaply infer from the
+tree. Global defaults live in the user's global `AGENTS.md`; do not restate them.
 
 ## How to render
 
-1. Discover the repository's real commands and run them before naming them.
-2. Select one canonical completion command. If none exists, list the verified
-   command set and mark the missing aggregate check.
-3. Record repository-specific invariants with file or command evidence.
-4. Record generated-file ownership, cache invalidation rules, packaging traps,
-   and deployment checks only when local evidence proves them.
-5. Include destructive-action and secret boundaries. Keep other workflow and
-   style preferences out of the rendered file unless a checker enforces them.
-6. Merge verified user-authored constraints. Remove stale generated guidance
-   only with user approval.
-7. Preview material changes before writing.
-8. Keep the rendered file short. Durable non-obvious context lives in the
-   project's context file (e.g. `docs/project-context.md`) when one exists —
-   link to it; never recreate global routing or tool ownership here.
+1. Discover and run real build/test/lint commands before naming them.
+2. Pick one canonical verification command when the repo has one.
+3. Record non-obvious invariants, generated files, traps, and project-specific
+   dangerous operations only when verified.
+4. Omit empty sections. Link durable context (e.g. `docs/project-context.md`)
+   instead of duplicating it.
 
-Do not copy generic coding doctrine, research philosophy, prose rules, planning
-rituals, or examples from another repository. Do not invent commands.
+Do not copy generic coding doctrine, router skills, or examples from other repos.
 
 ---
 
 # Agent Rules
 
-## Golden rule: check when done
+## Check
 
 ```sh
 [verified check command]
 ```
 
-[State exactly what the command runs, what a green result proves, and whether a
-build or restart is required.]
+[What it runs, what green proves, restart/build notes if any.]
 
-## Repository facts
+## Project rules
 
-- [What this repository ships and who uses it.]
-- [Runtime, language, and package manager facts proven by manifests or config.]
-- [Where the durable context record lives, if one exists.]
+- [Non-obvious invariant with file, test, or workflow evidence.]
+- [Generated-file ownership / regeneration command, if any.]
+- [Compatibility, packaging, or security boundary the repo enforces.]
 
-Evidence: [paths or command output]
+## Traps
 
-Do not restate global defaults here — project-local `AGENTS.md` adds facts
-this repository needs. Load global skills (`evidence-router`, `execution-router`)
-when they materially help.
+- [Cache key, migration step, deploy difference, or local-only behavior.]
 
-## Safety boundaries
+Omit when none verified.
 
-- Normal reversible edits inside the git workspace need no repeated permission;
-  deleting untracked or user data does.
-- Require explicit confirmation before irreversible commands. Quote the command
-  and list the affected files, history, infrastructure, or data.
-- Never expose, invent, or commit credentials.
-- Preserve unrelated working-tree changes and scope staging by path.
-- [Add a project-specific production or data boundary only when verified.]
+## Dangerous project operations
 
-Global dangerous-action defaults live in the user's global `AGENTS.md`; record
-here only boundaries specific to this repository.
+- [Production, data, credential, or infra boundary specific to this repo.]
 
-## Repository invariants
-
-- [A dependency, compatibility, generation, security, or packaging rule that a
-  checker enforces.]
-- [A stable runtime or ownership boundary with its check.]
-
-Evidence: [validator, test, workflow, manifest, or config]
-
-## Operational traps
-
-- [Cache invalidation trigger and exact version key.]
-- [Generated source and regeneration command.]
-- [Packaging, publication, migration, or deployment behavior that differs from
-  local development.]
-
-Omit this section when no verified trap exists.
-
-## Product map (only when non-obvious)
-
-- `[path]`: [responsibility]
-
-Omit when the layout is self-explanatory from the tree. Never copy global
-philosophy into a project file — point to the global essentials instead.
-
-## Conventions
-
-Record only conventions this repository mechanically enforces or that an
-external protocol requires (commit-message gate, budget assertion, required PR
-check). Follow the project's existing Git history when no gate exists.
-
-- [Branch naming rule and enforcement point, if any.]
-- [Commit subject rule and enforcement point, if any.]
-
-Omit this section when no enforced convention exists.
-
-## Verification evidence
-
-A completion claim requires the exit code and inspected output from the golden
-check. If CI or deployment exists, state the exact watch or live verification
-command.
+Omit when none beyond global defaults.

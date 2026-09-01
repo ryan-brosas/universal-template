@@ -8,20 +8,19 @@ Entry flow for unfamiliar repositories: `skills/project-bootstrap/SKILL.md`.
 
 ## Layout
 
-| Path                                                                                               | Contents                                                                                                                                            |
-| -------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `skills/`                                                                                          | the active skill catalog (practice + workflow skills)                                                                                               |
-| `foundation-pack/`                                                                                 | accumulated implementation foundations (`*-foundation`), separate from the active skill catalog; project source and `reference/` outrank them       |
-| `templates/`                                                                                       | CLI-neutral format templates; canonical list in `references/templates-inventory.md`                                                                 |
-| `essentials/`                                                                                      | cold rationale and decision references, indexed in `essentials/README.md`; read the smallest relevant file when a policy decision needs explanation |
-| `docs/roadmap.md`                                                                                  | current work objectives (reviewed at milestones)                                                                                                    |
-| `extensions/style-guard.ts`                                                                        | optional Pi output-style guard (audit by default; symlinked into `~/.pi/agent/extensions/`)                                                         |
-| Entry skills (`project-bootstrap`, `brainstorming`, `goal-setup`, `prototype`, `leverage-capture`) | project entry, direction, durable goals, cheap learning, leverage classification                                                                    |
-| `docs/skill-catalog.md`                                                                            | generated human catalog of the active skills (never hand-edit; regenerate with `scripts/skill-catalog.py`)                                          |
-| `mcp/servers.json`                                                                                 | the **canonical** MCP capability registry (6 servers incl. mcp-steroid); per-CLI configs are derived copies                                         |
-| `references/`                                                                                      | distilled contract capsules (reference contract, MCP catalog, templates inventory)                                                                  |
-| `AGENTS.md`                                                                                        | the global agent rules every host loads                                                                                                             |
-| `.github/`                                                                                         | the CI gate suite, PR automation (labels, release notes), Dependabot, issue forms, and community files                                              |
+| Path | Contents |
+| --- | --- |
+| `skills/` | the active skill catalog (practice + workflow skills) |
+| `foundation-pack/` | accumulated implementation foundations (`*-foundation`), separate from the active skill catalog; project source and `reference/` outrank them |
+| `templates/` | CLI-neutral format templates; the filesystem is the inventory and `scripts/catalog-quality.py` checks structural invariants |
+| `essentials/` | cold rationale and decision references, indexed in `essentials/README.md`; read the smallest relevant file when a policy decision needs explanation |
+| `docs/` | human-facing documentation, current objectives, and generated skill catalog |
+| `extensions/style-guard.ts` | optional Pi output-style guard (audit by default; symlinked into `~/.pi/agent/extensions/`) |
+| Entry skills (`project-bootstrap`, `brainstorming`, `goal-setup`, `prototype`, `leverage-capture`) | project entry, direction, durable goals, cheap learning, leverage classification |
+| `mcp/` | the shared MCP registry (`servers.json`) and human-facing host-wiring docs (`catalog.md`); per-CLI configs are derived copies |
+| `scripts/` | deterministic repository maintenance and CI gates |
+| `AGENTS.md` | the global agent rules every host loads |
+| `.github/` | the CI gate suite, PR automation (labels, release notes), Dependabot, issue forms, and community files |
 
 ## How to use
 
@@ -41,10 +40,8 @@ Entry flow for unfamiliar repositories: `skills/project-bootstrap/SKILL.md`.
   catalog queries or catalog edits; not for ordinary project work elsewhere.
 - **Enter a project**: `skills/project-bootstrap/SKILL.md`: read-only
   onboarding by default; governance and greenfield modes when asked.
-- **Unclear direction**: `skills/brainstorming/SKILL.md`. **Durable major
-  goal**: `skills/goal-setup/SKILL.md`. **Prior art**:
-  `skills/reference-driven-development/SKILL.md`. **Complex execution**:
-  `skills/execution-router/SKILL.md`.
+- **Complex execution**: `skills/fabric-native-execution/SKILL.md` when multi-agent
+  isolation is already required.
 - **GitHub operations**: repository setup and remote audit
   (`skills/github-repo-setup`, `python3 scripts/github-audit.py`); CI and
   workflows (`skills/github-actions-engineering`); the PR lifecycle
@@ -54,11 +51,10 @@ Entry flow for unfamiliar repositories: `skills/project-bootstrap/SKILL.md`.
 - **MCP**: the canonical registry is `mcp/servers.json`; wire servers into
   whichever CLIs are configured, one requested server at a time (merging into
   each CLI's own config rather than overwriting it).
-- **Retrieval**: need-driven: one primary route, escalate on a named gap,
-  stop when the named uncertainty is closed (`skills/evidence-router/SKILL.md`);
-  the registry (codebase-memory, openviking, context7, exa, deepwiki) supplies
-  the routes. Skill authoring follows one uniform grammar:
-  `skills/writing-skills/SKILL.md` + `templates/skill.md`.
+- **Retrieval**: inspect current project source first; use project references,
+  foundations, skills, and MCPs when they materially help. Cold capability maps:
+  `skills/evidence-router/SKILL.md`, `skills/execution-router/SKILL.md`. Skill
+  authoring: `skills/writing-skills/SKILL.md` + `templates/skill.md`.
 - **Catalog gate (this repo only)**: run the suite in `CONTRIBUTING.md`
   (repository-specific verification for this catalog, not a universal
   requirement). CI runs the same suite as the `quality / required` check via
@@ -84,10 +80,9 @@ policy invariants live in `scripts/policy-consistency.py` (CI-enforced).
 
 | Policy                                                                                   | Canonical owner                                                            |
 | ---------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| Universal execution invariants (session-loaded constitution)                             | `APPEND_SYSTEM.md`                                                         |
-| Global agent defaults (user-wide constitution)                                              | `AGENTS.md`                                                                |
-| Evidence and tool routing (NEED + HOST)                                                  | `skills/evidence-router`                                                   |
-| Execution shape (Main/child/parallel/RLM/actor, write isolation)                         | `skills/execution-router`                                                  |
+| Global agent defaults (user-wide constitution)                                           | `AGENTS.md`                                                                |
+| Evidence capability map (cold reference)                                                 | `skills/evidence-router`                                                   |
+| Execution escalation reference (cold)                                                    | `skills/execution-router`                                                  |
 | Backend/model resolution (mechanical, runtime-discovered; internal)                      | `skills/model-resolution` + `scripts/resolve-model.py`                     |
 | GitHub Actions CI/CD (workflow files, check contract, release workflow)                  | `skills/github-actions-engineering`                                        |
 | GitHub repository remote state (metadata, labels, rulesets, security, releases settings) | `skills/github-repo-setup` + `scripts/github-audit.py`                     |
@@ -97,7 +92,7 @@ policy invariants live in `scripts/policy-consistency.py` (CI-enforced).
 | Prior-art/reference-driven implementation                                                | `skills/reference-driven-development`                                      |
 | Skill catalog maintenance (generated docs, explicit catalog queries)                     | `scripts/skill-catalog.py` + `docs/skill-catalog.md`                       |
 | Catalog verification (this repository only)                                              | `CONTRIBUTING.md` + `.github/workflows/pr-quality.yml`                     |
-| Reference rules (repository + web)                                                       | `references/reference-contract.md`                                         |
+| Reference rules (repository + web)                                                       | `skills/reference-driven-development/references/contract.md`                                         |
 | Fabric execution, Schema modes, agents/Veda escalation (pi host)                         | `skills/fabric-native-execution` + project/`~/.pi/` config                 |
 | Natural-language prose style (STE-inspired)                                              | `skills/house-writing-style` + `scripts/style-lint.py`                     |
 | Veda escalation specifics                                                                | `skills/veda-lane`                                                         |

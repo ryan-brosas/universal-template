@@ -62,17 +62,6 @@ Product copy quality is **clear, person-first, and scannable**, plainspoken voic
 - For localized strings: translation checklist (SVO, repeated parallel verbs, ambiguity scan)
 - Optional: accessibility review (alt text, form labels, no direction-only instructions)
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>mailchimp-content-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>copy diff, review checklist output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>non-inclusive terms, click-here links, or i18n ambiguity</risks>
-</skill_result>
-```
 
 ## References
 

@@ -78,16 +78,7 @@ A label alone treated as permission. sparse maintainer history turned into a pro
 
 Every claim carries claim, source tool, exact call, URL or context, date, and confidence, no source, no claim. Disposition READY requires wanted, collision-free, reproducible, bounded, and verifiable, with the smallest testable change and its test command confirmed.
 
-## Skill Result Contract
 
-<skill_result>
- <skill>github-contribution-opportunities</skill>
- <status>success|partial|blocked|failure</status>
- <evidence>Sources, dates, commands, ranked candidates, top-candidate dossier</evidence>
- <artifacts>Evidence table and optional unsent maintainer-comment draft</artifacts>
- <risks>Collisions, attribution, policy gaps, spam risk, or none</risks>
- <next_action>One read-only step or one exact mutation awaiting approval</next_action>
-</skill_result>
 
 ## References
 

@@ -50,17 +50,6 @@ Delphi quality is **PascalCase clarity + unit hierarchy + deterministic cleanup*
 - XML documentation compile (if enabled)
 - Capsule checklist on new units
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>delphi-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>pas diff, build/test output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>leak, silent except, unit coupling, or none</risks>
-</skill_result>
-```
 
 ## References
 

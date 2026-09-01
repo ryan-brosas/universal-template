@@ -49,17 +49,6 @@ C# readability is **Framework Design naming plus modern idioms enforced by Edito
 - Analyzer/StyleCop/IDE rules per `.editorconfig`
 - Capsule checklist on public API review
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>csharp-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>cs diff, dotnet format/analyzer output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>context using, broad catch, missing XML, or none</risks>
-</skill_result>
-```
 
 ## References
 

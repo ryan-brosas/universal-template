@@ -37,17 +37,24 @@ Author with both open; change one, align the other.
 - `disable-model-invocation`: visibility follows invocation ownership. Hide a skill when a router or another skill selects it, or when it is intentionally cold or manual; entry skills that a user request selects directly stay model-visible. `*-foundation` capsules live outside the active catalog in `foundation-pack/` and are never model-visible.
 - YAML-safe: quote long values; avoid unescaped colons/hashes.
 
-## 2. Uniform anatomy (fixed section order)
+## 2. Minimum useful content (conditional anatomy)
 
-1. Core Principle, the invariant
-2. When to Use / NOT, triggers + anti-triggers (the retrieval gate)
-3. Workflow, a numbered imperative recipe ending in a stop condition
-4. Red Flags, the never-list; mark load-bearing bans with `EXTREMELY-IMPORTANT` / `HARD-GATE`
-5. Verification, the exact command, expected output, and evidence base
-6. (Optional) Skill Result Contract, the `<skill_result>` block ONLY when downstream automation consumes structured output; do not add XML ceremony otherwise
-7. References, capsule markers only
+Every skill needs good frontmatter and the minimum body that earns its load.
+Add sections only when they carry non-obvious value:
 
-Fixed order makes a catalog of hundreds of skills predictable: an agent that knows the order finds any section without scanning the whole document.
+| Skill kind | Usually needs |
+|---|---|
+| Tool / capability | When to use, how to invoke, stop condition |
+| Reference / map | What it contains, where to look |
+| Complex procedure | When/not, workflow, verification, references |
+| Cognitive nudge | Probably should not be a skill |
+
+Common sections when earned: Core Principle, When to Use / NOT, Workflow, Red
+Flags, Verification, References. Skip empty or generic sections. Do not force
+uniform boilerplate.
+
+Structured `<skill_result>` output only when a real downstream consumer parses
+it. Human-read skills return normal prose.
 
 ## 3. Progressive disclosure
 
@@ -83,7 +90,7 @@ For load-bearing behavioral skills, keep the adversarial protocol: RED, a subage
 ## 7. Verification gate (before you mark it done)
 
 1. `name` and `description` present; description ≤ 1024 chars and trigger-first.
-2. Sections in the fixed order; every `references/` line has a real file.
+2. Required sections present for the skill kind; every `references/` line has a real file.
 3. Leaf body within budget; no orphan relative paths.
 4. Validation per skill type (RED/GREEN log for load-bearing behavioral skills).
 5. No duplicate skill names; the loader picks up the skill.
@@ -110,17 +117,6 @@ Bible (cannot load), Tutorial (belongs in docs), Summarizer (rehashes platform r
 - `references/claude-search-optimization.md`, search/description optimization notes
 - `anthropic-best-practices.md`, `persuasion-principles.md`, `graphviz-conventions.dot`, supporting style assets
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>writing-skills</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>template + rules applied, RED/GREEN runs</evidence>
-  <artifacts>new/edited SKILL.md + filled template</artifacts>
-  <risks>unverified behavior, description over budget, missing capsule</risks>
-</skill_result>
-```
 
 ## Related
 

@@ -39,17 +39,6 @@ A test is only good if it can **properly catch**. Pass means nothing; a suite is
 - The test ledger contains the test name + the failure-type it targets, and shows no near-duplicate entry (expand-don't-duplicate).
 - Anything mechanical/deterministic was turned into a test or an unbypassable gate, not prompt-only prose (`references/mechanical-gates.md`).
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill><name></skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>…</evidence>
-  <artifacts>…</artifacts>
-  <risks>…</risks>
-</skill_result>
-```
 
 ## References
 

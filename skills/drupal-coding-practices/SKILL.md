@@ -58,17 +58,6 @@ Drupal maintainability is **always-current handbook discipline plus typed PSR-4 
 - Docblock spot-check on new hooks/classes
 - WCAG checklist on changed UI (`wcag-accessibility-practices`)
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>drupal-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>diff, phpcs/phpstan/eslint output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>missing docblock, untranslated string, or PHPCS violation</risks>
-</skill_result>
-```
 
 ## References
 

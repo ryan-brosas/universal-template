@@ -51,17 +51,6 @@ Elixir quality is **formatter-mechanical + explicit modules**, ordered attribute
 - ExDoc build for public packages
 - Capsule checklist on new modules
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>elixir-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>ex diff, format/test/credo output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>spec drift, pipe abuse, doc gap, or none</risks>
-</skill_result>
-```
 
 ## References
 

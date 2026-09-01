@@ -69,17 +69,6 @@ closed.
 
 Exact source confirmation before editing; coverage checked for cited paths/scopes before negative or exhaustive claims; blast radius identified before editing; after editing, trust source, IDE diagnostics, and behavioral checks over stale graph output.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>codebase-memory</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>Bounded graph calls, exact source confirmation, and coverage checks</evidence>
-  <artifacts>Architecture map, trace, blast-radius report, or capability matrix</artifacts>
-  <risks>Stale index, partial coverage, truncated graph, or none</risks>
-</skill_result>
-```
 
 ## References
 

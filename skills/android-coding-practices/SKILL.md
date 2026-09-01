@@ -58,17 +58,6 @@ Android quality is **prefixed resources + factory-based navigation + layered UI/
 - Package boundary check: UI does not import data IO directly
 - Capsule checklist on factory methods for new Activities/Fragments
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>android-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>android diff, lint/test output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>layer leak, resource naming drift, or missing factories</risks>
-</skill_result>
-```
 
 ## References
 

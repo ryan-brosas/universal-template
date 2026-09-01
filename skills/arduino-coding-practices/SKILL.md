@@ -55,17 +55,6 @@ Arduino quality is **beginner-first APIs and compile-ready packaging**, camelCas
 - `keywords.txt` tab-separated spot check
 - Optional: compare API to Adafruit high-level wrapper pattern (one call → one user value)
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>arduino-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>library/sketch diff, compile output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>ctor HW init, pointer API, or missing example compile</risks>
-</skill_result>
-```
 
 ## References
 

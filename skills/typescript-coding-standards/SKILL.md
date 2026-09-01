@@ -134,17 +134,6 @@ Business code depends on `UserRepo`, not `pg`. Tests use in-memory `UserRepo`.
 - Scan for red flags: no `any` in production, no untyped `JSON.parse`, no `try/catch` around `await`, no `Date.now()` in logic, no leftover `console.log`, no `data: any`, no circular imports.
 - Tests exercise behavior through test seams, in-memory implementations of the domain interfaces, not mocks of what they test (Adapters, Common Mistakes).
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill><name></skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>…</evidence>
-  <artifacts>…</artifacts>
-  <risks>…</risks>
-</skill_result>
-```
 
 ## References
 

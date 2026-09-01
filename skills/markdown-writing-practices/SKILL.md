@@ -48,17 +48,6 @@ Documentation Markdown is **maintainable plain text**, one H1, wrapped prose, fe
 - Render preview spot-check for TOC, fences, tables
 - Capsule checklist on doc review
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>markdown-writing-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>md diff, markdownlint output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>fragile links, missing alt, HTML drift, or none</risks>
-</skill_result>
-```
 
 ## References
 

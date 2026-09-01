@@ -70,17 +70,6 @@ R analysis quality is **consistent formatting + pipe-clear data flow**, `<-` and
 - Roxygen coverage on new exports
 - Capsule checklist on declared baseline (tidyverse vs Google)
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>r-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>R diff, styler/lintr/test output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>baseline drift, namespace collision, pipe unreadability, or none</risks>
-</skill_result>
-```
 
 ## References
 

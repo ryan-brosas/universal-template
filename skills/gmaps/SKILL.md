@@ -287,17 +287,6 @@ Per call: search ~2-3 s (feed render + scrolls); route ~2-3 s; optimize ~5-9 s (
 
 Search results carry `name, rating, review_count, price, category, address, hours, lat, lng, place_id, url` (missing fields are `null`). Route JSON carries `duration`, `distance`, `via`, `tolls`, `waypoints`, and `url`. Optimize reports `straight_line_total_km` plus the real route for the chosen order, with the best-effort note attached. If results come back empty, open the search URL in the browser once to clear a consent/cookie wall.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>gmaps</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>…</evidence>
-  <artifacts>…</artifacts>
-  <risks>…</risks>
-</skill_result>
-```
 
 ## References
 

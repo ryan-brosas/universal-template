@@ -362,17 +362,6 @@ All paths are relative to `/Users/monotykamary/VCS/working-remote/open-source/br
 
 `browser-harness-js --status` prints health JSON (version, uptime, connected, sessionId) or exits 1 if down; errors go to stderr with exit code 1, detect failure with `$?`; for recordings, retain the exact returned directory and stop only after verifying the outcome.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>cdp</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>--status health JSON; raw result content on stdout; errors on stderr with exit 1</evidence>
-  <artifacts>CDP session state, screenshots/traces, recordings, or exported video</artifacts>
-  <risks>Server down between calls, stale target, unconsented recording, or none</risks>
-</skill_result>
-```
 
 ## References
 

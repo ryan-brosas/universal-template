@@ -19,7 +19,7 @@ Preserve reusable value in its cheapest appropriate representation, not everythi
 | Class | Test | Where it lands |
 |---|---|---|
 | **CODE** | Reusable implementation? | Actual code / library / project template |
-| **REFERENCE** | Upstream implementation or website worth keeping? | `reference/<repo>/` checkout or `reference/web/<site>/` capture per `reference-contract` |
+| **REFERENCE** | Upstream implementation or website worth keeping? | `reference/<repo>/` checkout or `reference/web/<site>/` capture per the `reference-driven-development` contract |
 | **FOUNDATION** | Reusable architecture/patterns/seams cheaper to retrieve than re-derive? | `foundation-pack/<x>-foundation/` (earned; not automatic from every repo) |
 | **GATE** | Deterministic regression class with low false positives? | Test / lint / CI check / validator script |
 | **SKILL** | Repeated procedure or hard-won operational method? | Skill leaf in the catalog (follows `writing-skills`) |
@@ -38,13 +38,13 @@ Route each candidate to the *cheapest* class that preserves it. Do not force a s
 architecture, seams, patterns, edge cases, or decisions are expensive enough
 to rediscover that preserving them is cheaper than re-derivation. Record
 portable upstream identity and revision so the foundation reconnects to real
-source; see `references/reference-contract.md`.
+source; see `../reference-driven-development/references/contract.md`.
 
 ## Workflow
 
 1. Recall what the session/work produced (diffs, decisions, failures).
 2. List candidates; classify each; drop the NOT-WORTH-SAVING ones explicitly.
-3. Promote each survivor in its native form. Skill candidates follow the catalog authoring rules; gate candidates need a demonstrated regression and a low-false-positive check; foundation candidates follow `references/reference-contract.md` provenance rules and land in `foundation-pack/<x>-foundation/`; memory candidates go to session memory, not repo files.
+3. Promote each survivor in its native form. Skill candidates follow the catalog authoring rules; gate candidates need a demonstrated regression and a low-false-positive check; foundation candidates follow `../reference-driven-development/references/contract.md` provenance rules and land in `foundation-pack/<x>-foundation/`; memory candidates go to session memory, not repo files.
 4. Report: classified list, where each survivor landed, and what was deliberately not saved.
 
 ## Red Flags
@@ -61,5 +61,5 @@ Each survivor exists in its claimed form (code compiles/used; gate fails on the 
 ## References
 
 - `../writing-skills/SKILL.md`, skill authoring grammar
-- `~/.agents/references/reference-contract.md`, reference-checkout rules
+- `../reference-driven-development/references/contract.md`, reference-checkout rules
 - `../goal-setup/SKILL.md`, where multi-session decisions already live

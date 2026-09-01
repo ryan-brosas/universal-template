@@ -59,17 +59,6 @@ Symfony PHP reads uniformly, **PSR-12 via PHP CS Fixer**, **Yoda identical compa
 - debug:container for new service ids
 - Capsule checklist on exceptions and Yoda compares
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>symfony-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>diff, php-cs-fixer output, test log</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>Yoda miss, service id drift, or exception format regression</risks>
-</skill_result>
-```
 
 ## References
 

@@ -44,17 +44,6 @@ Bash is for **thin orchestration**, quote aggressively, avoid subshell traps, ch
 - Manual: args with spaces, empty optional flags, failing command path.
 - Capsule checklist on review.
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>shell-scripting-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>script diff, shellcheck output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>subshell bug, quoting hole, or scope creep — or none</risks>
-</skill_result>
-```
 
 ## References
 

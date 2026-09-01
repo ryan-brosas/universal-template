@@ -196,7 +196,6 @@ def default_scope() -> list[Path]:
     return [
         BASE / "AGENTS.md",
         BASE / "README.md",
-        BASE / "APPEND_SYSTEM.md",
         BASE / "docs",
         BASE / "skills" / "house-writing-style",
     ]

@@ -19,7 +19,10 @@ additional permission. Read, search, edit tracked source, create project files,
 refactor, run project checks, inspect Git state, and make locally reversible
 changes as needed.
 
-Preserve unrelated user changes.
+Preserve unrelated user changes. Inspect artifacts before content-dependent
+claims. Keep filesystem discovery bounded to the current repository/workspace
+plus task-relevant paths. Prefer reversible Git and filesystem operations when
+outcomes match.
 
 Confirmation (quote the exact command and its blast radius, then wait for the
 user) is required before destructive operations involving untracked or user

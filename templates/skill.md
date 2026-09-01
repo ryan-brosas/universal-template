@@ -1,44 +1,39 @@
 # skill.md — canonical SKILL.md template
 
-Copy as `<skill-dir>/SKILL.md` and fill every block. The `writing-skills` grammar governs the details; this file is the mandated skeleton for every skill in this catalog.
+Copy as `<skill-dir>/SKILL.md` and fill only what earns its place. The
+`writing-skills` grammar governs details; omit empty sections.
 
 ---
 name: <kebab-case-name>
 description: "Use when <trigger> — the <capability unlocked>. Trigger-first; total under 1024 characters."
-# Leaves only: disable-model-invocation: true (routers + core safety skills omit it)
+# Hide cold/manual skills: disable-model-invocation: true
 ---
 
 # <Readable Title>
 
 ## Core Principle
-One or two sentences: the invariant the loaded skill holds.
+One or two sentences when the skill guards a non-obvious invariant.
 
 ## When to Use / NOT
-- **Use when:** <precise trigger conditions — the retrieval hook>
-- **NOT when:** <boundary cases — prevents wasteful loads>
+- **Use when:** <precise trigger>
+- **NOT when:** <boundary>
 
 ## Workflow
-Numbered imperative steps, ending in a stop condition or the final output.
-1. …
-2. …
+Numbered steps ending in a stop condition. Omit for pure reference maps.
 
 ## Red Flags
-- **Never do:** <constraints>; mark load-bearing rules with `EXTREMELY-IMPORTANT` / `HARD-GATE`.
+Load-bearing bans only. Mark with `EXTREMELY-IMPORTANT` / `HARD-GATE` when needed.
 
 ## Verification
-The exact check(s) before claiming it works: command, expected output, how to cite the evidence.
-
-## Skill Result Contract (only when downstream automation consumes it)
-
-Delete this section when a human reads the output — do not emit XML ceremony by default.
+Exact command(s) and expected evidence. Omit when obvious from workflow.
 
 ## References
-- `references/<capsule>.md` — what the capsule adds (probes, invariants, sources).
+- `references/<capsule>.md` — what the capsule adds.
 
-One capsule per deep seam; keep the leaf under ~600 words.
+Keep leaf bodies under ~600 words; depth lives in capsules.
 
 ## Notes for the author (delete after filling)
-- name must equal the folder name, kebab-case.
-- description: "Use when …" is the mandatory first phrase; it is what the retriever matches.
-- Required order = Core Principle → When to Use / NOT → Workflow → Red Flags → Verification → References (Result Contract optional — only for machine-consumed output). Do not reorder.
-- Every `references/` line must point to a real file in `references/`.
+- `name` must equal the folder name (kebab-case).
+- Description must start with `Use when …`.
+- Add `<skill_result>` XML only when a machine parses the output.
+- Every `references/` line must point to a real file.

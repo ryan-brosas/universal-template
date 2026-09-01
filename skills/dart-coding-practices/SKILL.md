@@ -52,17 +52,6 @@ Dart quality is **Effective Dart consistency**, formatted mechanically, document
 - `dart doc` or doc coverage review
 - Capsule checklist on public API
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>dart-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>dart diff, analyze/test output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>null unsafety, doc drift, API extendability leak, or none</risks>
-</skill_result>
-```
 
 ## References
 

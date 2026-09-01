@@ -45,17 +45,6 @@ Java readability is **mechanical Google format plus explicit API contracts**, fo
 - Checkstyle or equivalent on changed modules
 - Capsule checklist on public API review
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>java-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>java diff, format/checkstyle output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>star import, silent catch, missing override, or none</risks>
-</skill_result>
-```
 
 ## References
 

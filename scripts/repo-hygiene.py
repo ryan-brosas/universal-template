@@ -152,7 +152,7 @@ def check_file(path: Path) -> None:
 
     # Typos: top-level docs + practice SKILL.md only.
     typo_target = False
-    if rel in {"AGENTS.md", "README.md"} or rel.startswith("essentials/") or rel.startswith("references/"):
+    if rel in {"AGENTS.md", "README.md"} or rel.startswith("essentials/"):
         typo_target = True
     if rel.startswith("skills/") and rel.endswith("/SKILL.md"):
         typo_target = True

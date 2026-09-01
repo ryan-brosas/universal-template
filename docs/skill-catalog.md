@@ -5,7 +5,7 @@
 Derived from `skills/*/SKILL.md` metadata. Maintainer tool:
 `python3 scripts/skill-catalog.py search "<topic>"`.
 
-147 skills: 41 visible, 106 hidden. Visible startup metadata: ~10383 chars (~2595 tokens).
+146 skills: 37 visible, 109 hidden. Visible startup metadata: ~9507 chars (~2376 tokens).
 
 ## Entry skills
 
@@ -43,19 +43,8 @@ Direct user-facing capabilities; trigger on request.
 | [`system-design-specification`](../skills/system-design-specification/SKILL.md)             | entry | visible | Use when authoring formal, crash-proof system design documents and architectural specifications: scope fences and non-goals, 4-part state ontologies, mathemati... |
 | [`test-generation`](../skills/test-generation/SKILL.md)                                     | entry | visible | Use when writing, expanding, or auditing tests, converting workflow rules into gates, or deciding what to test. Catch-first method: a test is only good if it c... |
 | [`upwork-proposals`](../skills/upwork-proposals/SKILL.md)                                   | entry | visible | Use when writing an Upwork application or job proposal - concise, energetic, client-focused copy that leads with action and keeps every claim truthful             |
-| [`using-git-worktrees`](../skills/using-git-worktrees/SKILL.md)                             | entry | visible | Use when starting feature work that needs isolation from current workspace or before executing implementation plans - creates isolated git worktrees with smart... |
 | [`web-reference`](../skills/web-reference/SKILL.md)                                         | entry | visible | Use when a live website or web page should be captured and studied as frontend, visual, layout, interaction, or design-system prior art for implementation.        |
 | [`writing-skills`](../skills/writing-skills/SKILL.md)                                       | entry | visible | Use when authoring, editing, or verifying any SKILL.md in this catalog: canonical template, frontmatter grammar, uniform anatomy, progressive disclosure, and t... |
-| [`zoom-out`](../skills/zoom-out/SKILL.md)                                                   | entry | visible | Use when unfamiliar with a section of code or needing to understand how it fits into the bigger picture.                                                           |
-
-## Routers
-
-Automatic dispatch points; visible on purpose.
-
-| Skill                                                     | Class  | Visible | Description                                                                                                                                                        |
-| --------------------------------------------------------- | ------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [`evidence-router`](../skills/evidence-router/SKILL.md)   | router | visible | Use when choosing where to get evidence for a coding question: route by need and host to the smallest capable evidence source, Fovea, Steroid/JetBrains, source... |
-| [`execution-router`](../skills/execution-router/SKILL.md) | router | visible | Use when deciding HOW a task should be executed before starting it: Main directly, an isolated child, bounded parallel workers, an alternate-model oracle, recu... |
 
 ## Internal
 
@@ -70,6 +59,8 @@ Invoked by other skills or system components; hidden from startup metadata.
 | [`codex-websearch`](../skills/codex-websearch/SKILL.md)                     | internal | hidden  | Use when you need current web facts, documentation discovery, or cited search results through the installed Codex web-search extension.                            |
 | [`defense-in-depth`](../skills/defense-in-depth/SKILL.md)                   | internal | hidden  | Use when invalid data causes failures deep in execution, requiring validation at multiple system layers - validates at every layer data passes through to make...  |
 | [`documentation-and-adrs`](../skills/documentation-and-adrs/SKILL.md)       | internal | hidden  | Use when writing technical documentation, Architecture Decision Records (ADRs), API docs, or project READMEs, covers documentation structure, ADR format, and k... |
+| [`evidence-router`](../skills/evidence-router/SKILL.md)                     | internal | hidden  | Use when choosing an unfamiliar external evidence source and project source or references are insufficient - cold capability map for MCPs, references, and web.    |
+| [`execution-router`](../skills/execution-router/SKILL.md)                   | internal | hidden  | Use when Main alone is insufficient and child, parallel, RLM, actor, or alternate-model execution is already justified - cold escalation reference.                |
 | [`fabric-native-execution`](../skills/fabric-native-execution/SKILL.md)     | internal | hidden  | Use when working inside Pi Fabric: core fabric_exec execution first, native providers (memory, state, compact) as helpers, and deliberate escalation to agents/... |
 | [`fallow`](../skills/fallow/SKILL.md)                                       | internal | hidden  | Use when analyzing code quality, finding dead code, detecting duplication, assessing complexity, checking blast radius, or cleaning up a TS or JS codebase with... |
 | [`grill-with-docs`](../skills/grill-with-docs/SKILL.md)                     | internal | hidden  | Use when user wants to stress-test a plan against their project's language and documented decisions.                                                               |
@@ -167,6 +158,7 @@ Rare specialists; searchable here, not loaded every session.
 | [`ttdl`](../skills/ttdl/SKILL.md)                                                     | cold  | hidden  | Use when the user wants to download or save a TikTok video (with or without audio) to disk. Browser-native capture, no yt-dlp: the page plays the video and ttd... |                                                                                |
 | [`typescript-coding-practices`](../skills/typescript-coding-practices/SKILL.md)       | cold  | hidden  | Use when authoring or reviewing TypeScript style, named ES module exports, import type, unknown over any, nullable-at-use-site, optional params over overload s... |                                                                                |
 | [`typescript-coding-standards`](../skills/typescript-coding-standards/SKILL.md)       | cold  | hidden  | Use when writing, refactoring, or reviewing TypeScript code that needs strong domain modeling, typed errors, schema parsing, safe adapters, test seams, or main... |                                                                                |
+| [`using-git-worktrees`](../skills/using-git-worktrees/SKILL.md)                       | cold  | hidden  | Use when parallel or conflicting work in the same repo needs a separate checkout without stashing - sibling worktree; verify the branch is not already checked...  |                                                                                |
 | [`vb-coding-practices`](../skills/vb-coding-practices/SKILL.md)                       | cold  | hidden  | Use when authoring or reviewing Visual Basic.NET, Option Strict/Explicit, 4-space layout, Framework PascalCase naming, Try/Catch idioms, XML docs on public API... |                                                                                |
 | [`vercel-deploy-claimable`](../skills/vercel-deploy-claimable/SKILL.md)               | cold  | hidden  | Use when the user requests a Vercel deployment action like deploy my app, deploy to production, create a preview deployment, or push this live. Returns a previ... |                                                                                |
 | [`vue-coding-practices`](../skills/vue-coding-practices/SKILL.md)                     | cold  | hidden  | Use when authoring or reviewing Vue 3 SFCs, Priority A multi-word components, typed props, keyed v-for, scoped styles, naming conventions, template simplicity,... |                                                                                |

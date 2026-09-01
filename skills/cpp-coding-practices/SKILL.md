@@ -47,17 +47,6 @@ C++ quality is **header discipline + explicit ownership + readable names**, powe
 - cpplint / clang-tidy on changed files
 - Capsule checklist on API review
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>cpp-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>cc/h diff, format/lint output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>ownership bug, ODR/include leak, implicit conversion, or none</risks>
-</skill_result>
-```
 
 ## References
 

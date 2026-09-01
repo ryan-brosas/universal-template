@@ -75,17 +75,6 @@ Test passes when body is empty; test asserts only `toHaveBeenCalled`; `_method` 
 - A test must fail for the right reason: break the code in the way the test targets and confirm the failure names that cause, a test that passes with an empty body, or only asserts `toHaveBeenCalled`, is a tautology (Iron Laws, Red Flags).
 - Scan for the red-flag shapes before shipping: `_method` in prod, unscoped `jest.mock`, shared `beforeEach` mutation, tests depending on each other, snapshot of a snapshot, private testing via cast.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill><name></skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>…</evidence>
-  <artifacts>…</artifacts>
-  <risks>…</risks>
-</skill_result>
-```
 
 ## References
 

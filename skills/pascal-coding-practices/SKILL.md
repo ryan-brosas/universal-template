@@ -63,17 +63,6 @@ Pascal library quality is **dialect-picked layout + ordered units**, declare FPC
 - Uses-cycle and interface-order review on new units
 - Capsule checklist on spacing profile declaration in AGENTS/project docs
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>pascal-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>pas diff, fpc/fpsonar output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>spacing drift, unit cycle, undefined loop behavior, or none</risks>
-</skill_result>
-```
 
 ## References
 

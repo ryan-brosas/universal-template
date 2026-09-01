@@ -12,6 +12,8 @@ CANONICAL SOURCE OF TRUTH: `~/.agents/mcp/servers.json`
   derived copies written only when the user requests a specific server.
 - To wire a server: copy that server's block from `servers.json` into the target
   CLI's own config (see per-CLI wiring below), one server at a time.
+- Prefer a dry-run-style preview before writing, and back up a host config
+  before its first write.
 - Never touch servers you didn't request. Never store token **values** anywhere —
   only env var **names** (`${EXA_API_KEY}`, `${CONTEXT7_API_KEY}`, `bearerTokenEnv`).
   The actual key values live only in shell env / a daemon env file.

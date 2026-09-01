@@ -91,17 +91,6 @@ No sample test before full run. no verification of output; `pdftotext` on scanne
 - For batches: confirm error handling caught encrypted/corrupted files instead of one
  bad PDF killing the run.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill><name></skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>…</evidence>
-  <artifacts>…</artifacts>
-  <risks>…</risks>
-</skill_result>
-```
 
 ## References
 

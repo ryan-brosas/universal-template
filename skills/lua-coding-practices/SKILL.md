@@ -54,17 +54,6 @@ Lua quality is **local scope + explicit modules**, return a table, require into 
 - busted/luaunit test run (project harness)
 - Capsule checklist on `return M` module pattern
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>lua-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>lua diff, luacheck/LDoc/test output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>global leak, module pollution, precedence bug, or none</risks>
-</skill_result>
-```
 
 ## References
 

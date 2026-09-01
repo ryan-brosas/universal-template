@@ -195,17 +195,6 @@ Open-ended opening questions instead of a committed position; paraphrasing the u
 
 Alignment confirmed before execution starts; every checkpoint cites evidence ("step N done, verified by X"); contradictions are pasted verbatim and asked "repair or switch?".
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>veda-plan-implement</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>commands run, outputs inspected, artifacts produced</evidence>
-  <artifacts>files written / commands run</artifacts>
-  <risks>known risks, untested paths, or none</risks>
-</skill_result>
-```
 
 ## References
 

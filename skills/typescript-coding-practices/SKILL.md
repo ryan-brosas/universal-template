@@ -46,17 +46,6 @@ TypeScript maintainability is **typed modules with honest nullability**, named e
 - ESLint (`@typescript-eslint/no-explicit-any`, `no-non-null-assertion`, import rules) on changed paths
 - Capsule checklist in `typescript-style-verify.md`
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>typescript-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>ts diff, tsc/eslint output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>default export drift, any leakage, nullable alias spread, or none</risks>
-</skill_result>
-```
 
 ## References
 

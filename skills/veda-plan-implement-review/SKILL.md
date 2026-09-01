@@ -223,17 +223,6 @@ Letting the reviewer persona fix code (it has no tools); skipping the re-review 
 
 The diff is in selection (`sel ls` shows it); the reviewer ends with `review: pass` (no P0/P1 findings) against the session's `design.json`.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>veda-plan-implement-review</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>commands run, outputs inspected, artifacts produced</evidence>
-  <artifacts>files written / commands run</artifacts>
-  <risks>known risks, untested paths, or none</risks>
-</skill_result>
-```
 
 ## References
 

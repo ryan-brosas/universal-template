@@ -59,17 +59,6 @@ Haskell quality is **explicit equational modules**, typed total functions in pur
 - Haddock build for libraries
 - Capsule checklist on export list + signatures
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>haskell-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>hs diff, format/HLint/build/Haddock output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>partiality bug, space leak, IO ordering, or none</risks>
-</skill_result>
-```
 
 ## References
 

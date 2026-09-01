@@ -50,17 +50,6 @@ Scala readability is **official layout/naming plus functional safety**, immutabl
 - Compile + tests for touched projects
 - Capsule checklist on public API review
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>scala-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>scala diff, scalafmt/scalafix output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>return in closure, Option.get, missing public type, or none</risks>
-</skill_result>
-```
 
 ## References
 

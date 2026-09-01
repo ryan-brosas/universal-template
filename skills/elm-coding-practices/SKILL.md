@@ -51,17 +51,6 @@ Elm quality is **regular layout plus compiler support**, formatted mechanically,
 - `elm-review` (project rules)
 - Capsule checklist on module `exposing` lists
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>elm-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>elm diff, format/test/review output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>ID confusion, import ambiguity, diff churn, or none</risks>
-</skill_result>
-```
 
 ## References
 
