@@ -115,6 +115,18 @@ def _normalize_query(query: str) -> str:
     return " ".join(q_low.split())
 
 
+def word_tokens(text: str) -> set[str]:
+    """Whole-word tokens; avoids matching ``ui`` inside ``arduino``."""
+    return {chunk for chunk in re.split(r"[^a-z0-9]+", text.lower()) if chunk}
+
+
+def _phrase_in_text(phrase: str, text: str) -> bool:
+    if not phrase or len(phrase) <= 3:
+        return False
+    pattern = r"\b" + r"\s+".join(re.escape(w) for w in phrase.split()) + r"\b"
+    return re.search(pattern, text.lower()) is not None
+
+
 def score_metadata(
     item: dict,
     toks: list[str],
@@ -127,25 +139,29 @@ def score_metadata(
     name_low = item["name"].lower()
     desc_low = item["desc"].lower()
     stem_low = item.get("stem", "").lower()
+    name_tokens = word_tokens(name_low)
+    stem_tokens = word_tokens(stem_low) if stem_low else set()
+    desc_tokens = word_tokens(desc_low)
+    body_tokens = word_tokens(item.get("body_low", "")[:20000]) if include_body else set()
     if query_low and query_low == name_low:
         s += 12.0
         why.append("exact name")
     for t in toks:
-        if t in name_low:
+        if t in name_tokens:
             s += 4.0
             why.append("name:" + t)
-        if stem_low and t in stem_low:
+        if stem_tokens and t in stem_tokens:
             s += 3.5
             why.append("stem:" + t)
-        if t in desc_low:
+        if t in desc_tokens:
             s += 2.0
             why.append("desc:" + t)
-        if include_body and t in item.get("body_low", ""):
+        if include_body and t in body_tokens:
             s += 0.5
-    if query_low and len(query_low) > 3 and query_low in desc_low:
+    if query_low and _phrase_in_text(query_low, desc_low):
         s += 5.0
         why.append("desc phrase")
-    if query_low and query_low in name_low:
+    if query_low and _phrase_in_text(query_low, name_low):
         s += 6.0
         why.append("name phrase")
     seen: set[str] = set()
@@ -496,6 +512,31 @@ def selftest() -> int:
         if any(h["name"] == "unrelated-noise-foundation" for h in foundation_hits[:2]):
             print(f"FAIL noise foundation ranked too high: {foundation_hits[:2]}")
             ok = False
+        (skills_dir / "arduino-trap").mkdir(exist_ok=True)
+        (skills_dir / "arduino-trap" / "SKILL.md").write_text(
+            "---\nname: arduino-trap\ndescription: Use when programming Arduino microcontroller hardware.\n"
+            "disable-model-invocation: true\n---\n# Trap\n",
+            encoding="utf-8",
+        )
+        (pack_dir / "react-foundation").mkdir(exist_ok=True)
+        (pack_dir / "react-foundation" / "SKILL.md").write_text(
+            "---\nname: react-foundation\ndescription: React component patterns and UI composition.\n---\n",
+            encoding="utf-8",
+        )
+        skills = scan(skills_dir=skills_dir)
+        foundations = scan_foundations(pack_dir=pack_dir)
+        ui_hits = search(skills, "ui", 3)
+        if ui_hits and ui_hits[0]["name"] == "arduino-trap":
+            print(f"FAIL short token ui matched substring inside arduino: {ui_hits}")
+            ok = False
+        else:
+            print("PASS short token ui avoids arduino substring trap")
+        react_hits = search_foundations(foundations, "react ui", 3)
+        if not react_hits or react_hits[0]["name"] != "react-foundation":
+            print(f"FAIL react ui expected react-foundation first, got {react_hits}")
+            ok = False
+        else:
+            print("PASS react ui ranks react-foundation first")
     print("skill-catalog selftest: PASS" if ok else "skill-catalog selftest: FAIL")
     return 0 if ok else 1
 
