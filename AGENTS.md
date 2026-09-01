@@ -41,6 +41,12 @@ that apply everywhere.
   `<project>/reference/web/<site>/` (captured by the `web-reference` skill),
   not automatically a skill, index, or corpus. This repo's global
   `references/` means contract docs; keep the two apart.
+- Evidence priority for non-trivial work (trivial edits may use project
+  source alone): current project source/tests first; then project-local
+  `reference/` and `reference/web/` when relevant; then applicable
+  foundations and skills as shortcuts; then additional source/docs/web on a
+  named gap. Foundations and skills never outrank the code they distill or
+  the project they serve.
 
 ## Reversible work needs no permission ritual
 
@@ -175,11 +181,14 @@ deterministic linter live in `skills/house-writing-style/` and
   skeleton: `templates/skill.md`. Visibility follows invocation ownership:
   entry skills stay model-visible; internal helpers stay hidden
   (`disable-model-invocation: true`).
-- `foundation-pack/`: temporary cold prior-art capsules (`*-foundation`,
-  moved out of the active catalog); search only when project/reference
-  evidence is insufficient (plain `grep -ril "<topic>" foundation-pack/`).
-  The source they point at is the authority. The pack is retired over
-  time; no new foundations.
+- `foundation-pack/`: accumulated implementation foundations (`*-foundation`,
+  separate from the active skill catalog); reusable architecture, patterns,
+  seams, edge cases, and pointers distilled from strong implementations.
+  Current project source/tests and project-local `reference/` evidence
+  outrank foundations; the source a foundation points at remains the
+  authority. Create or expand a foundation only when reusable understanding
+  is cheaper to retrieve than to re-derive (not for every repo, site, or
+  session). Discovery: plain `grep -ril "<topic>" foundation-pack/`.
 - `templates/`: CLI-neutral format templates; canonical inventory (the only
   place that enumerates them) in `references/templates-inventory.md`.
   `essentials/`: cold

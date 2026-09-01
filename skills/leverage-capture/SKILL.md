@@ -20,6 +20,7 @@ Preserve reusable value in its cheapest appropriate representation, not everythi
 |---|---|---|
 | **CODE** | Reusable implementation? | Actual code / library / project template |
 | **REFERENCE** | Upstream implementation or website worth keeping? | `reference/<repo>/` checkout or `reference/web/<site>/` capture per `reference-contract` |
+| **FOUNDATION** | Reusable architecture/patterns/seams cheaper to retrieve than re-derive? | `foundation-pack/<x>-foundation/` (earned; not automatic from every repo) |
 | **GATE** | Deterministic regression class with low false positives? | Test / lint / CI check / validator script |
 | **SKILL** | Repeated procedure or hard-won operational method? | Skill leaf in the catalog (follows `writing-skills`) |
 | **MEMORY** | Historical decision, failure, or context worth recall? | Session/OpenViking memory entry, not a file in the repo |

@@ -41,6 +41,10 @@ POLICY_FILES = [
     "skills/github-repo-setup/SKILL.md",
 ]
 POLICY_FILES += sorted(str(p.relative_to(BASE)) for p in (BASE / "essentials").glob("*.md"))
+FOUNDATION_POLICY_FILES = POLICY_FILES + [
+    "docs/roadmap.md",
+    "references/reference-contract.md",
+]
 
 fails: List[str] = []
 warns: List[str] = []
@@ -494,6 +498,64 @@ def check_objective_drift() -> None:
                 check_fail("OBJECTIVE-DRIFT", rel, i, "obsolete quality/capture objective resurfaced")
 
 
+def check_foundation_first_class() -> None:
+    """Foundations are durable leverage — not scheduled retirement or a no-new-foundations ban."""
+    banned_phrases = (
+        "no new foundations",
+        "retired over time",
+        "temporary cold prior-art",
+        "foundation creation is frozen",
+    )
+    for phrase in banned_phrases:
+        for rel in FOUNDATION_POLICY_FILES:
+            text = read(rel)
+            if not text:
+                continue
+            for i, line in enumerate(text.splitlines(), 1):
+                if phrase.lower() in line.lower():
+                    check_fail("FOUNDATION-FIRST-CLASS", rel, i, f"obsolete foundation policy: {phrase!r}")
+    require_phrase(
+        "FOUNDATION-FIRST-CLASS",
+        "AGENTS.md",
+        "accumulated implementation foundations",
+    )
+    require_phrase(
+        "FOUNDATION-FIRST-CLASS",
+        "references/reference-contract.md",
+        "References vs foundations",
+    )
+
+
+def check_bootstrap_reference_inventory() -> None:
+    """Project bootstrap must surface existing project-local reference assets."""
+    rel = "skills/project-bootstrap/SKILL.md"
+    text = read(rel)
+    if text is None:
+        fails.append("[BOOTSTRAP-REFERENCE-INVENTORY] skills/project-bootstrap/SKILL.md: file missing")
+        return
+    flat = re.sub(r"\s+", " ", text)
+    for token in ("reference/", "reference/web/"):
+        if token not in flat:
+            check_fail("BOOTSTRAP-REFERENCE-INVENTORY", rel, 1, f"missing bounded inventory for {token!r}")
+
+
+def check_rdd_existing_references() -> None:
+    """Reference-driven development activates when project-local references already exist."""
+    rel = "skills/reference-driven-development/SKILL.md"
+    text = read(rel)
+    if text is None:
+        fails.append("[RDD-EXISTING-REFERENCES] skills/reference-driven-development/SKILL.md: file missing")
+        return
+    flat = re.sub(r"\s+", " ", text)
+    if "reference/web/" not in flat or "already exists" not in flat:
+        check_fail(
+            "RDD-EXISTING-REFERENCES",
+            rel,
+            1,
+            "reference-driven-development must activate on existing project-local references",
+        )
+
+
 # Real callers for reachability: another SKILL.md or its references, top-level
 # policy, runtime scripts, and CI config. Generated views (docs/skill-catalog.md),
 # inventories, roadmap, and templates are NOT
@@ -808,6 +870,9 @@ CHECKS = [
     ("NO-USER-PROFILE", check_no_user_profile),
     ("NO-ARTIFACT-PACK", check_no_artifact_pack),
     ("OBJECTIVE-DRIFT", check_objective_drift),
+    ("FOUNDATION-FIRST-CLASS", check_foundation_first_class),
+    ("BOOTSTRAP-REFERENCE-INVENTORY", check_bootstrap_reference_inventory),
+    ("RDD-EXISTING-REFERENCES", check_rdd_existing_references),
     ("HIDDEN-REACHABILITY", check_hidden_reachability),
     ("PR-OWNERSHIP", check_pr_ownership),
     ("README-SKILL-REFS", check_readme_skill_refs),
