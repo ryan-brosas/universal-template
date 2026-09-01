@@ -69,17 +69,6 @@ Solidity quality is **consistent layout + documented public API + security-aware
 - Slither (or Solhint) on PR diff
 - Capsule checklist: CEI on value-moving functions
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>solidity-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>sol diff, forge test/Slither output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>CEI gap, missing NatSpec, or reentrancy path unreviewed</risks>
-</skill_result>
-```
 
 ## References
 

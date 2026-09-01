@@ -57,17 +57,6 @@ GNU C quality is **tool-friendly layout plus explicit documentation and checked 
 - Capsule probes on new conditionals and error paths
 - Cross-check: not mixing httpd 4-space or kernel tab style
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>gnu-c-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>c diff, make check output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>defun brace drift, missing #endif comments, unchecked alloc</risks>
-</skill_result>
-```
 
 ## References
 

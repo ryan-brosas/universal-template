@@ -97,17 +97,6 @@ covered with a regression test?
 - Confirm correctness is preserved: tests still pass and no behavior changed.
 - Add a regression test so the optimization cannot silently regress.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill><name></skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>…</evidence>
-  <artifacts>…</artifacts>
-  <risks>…</risks>
-</skill_result>
-```
 
 ## References
 

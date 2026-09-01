@@ -177,17 +177,6 @@ Running without an X login (login wall, zero results); skipping `Page.setLifecyc
 
 Results parse as JSON with the five fields per item; count ≤ requested; permalinks return the focus tweet's author/handle/text/time.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>xsearch</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>commands run, outputs inspected, artifacts produced</evidence>
-  <artifacts>files written / commands run</artifacts>
-  <risks>known risks, untested paths, or none</risks>
-</skill_result>
-```
 
 ## References
 

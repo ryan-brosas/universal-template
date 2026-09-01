@@ -53,17 +53,6 @@ Groovy quality is **idiomatic expressiveness with typed public seams**, GDK and 
 - Spock/JUnit tests on changed modules
 - Capsule checklist on public method signatures
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>groovy-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>groovy diff, CodeNarc/lint/build/test output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>accidental def return, null NPE, weak public API, or none</risks>
-</skill_result>
-```
 
 ## References
 

@@ -44,17 +44,6 @@ JavaScript maintainability is **explicit modules and lint-enforced habits**, nam
 - Prettier/clang-format check if configured
 - Capsule checklist on review
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>javascript-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>js diff, eslint output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>default export drift, mutable export, ASI bug, or none</risks>
-</skill_result>
-```
 
 ## References
 

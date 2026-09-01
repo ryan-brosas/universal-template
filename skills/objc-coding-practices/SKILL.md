@@ -61,17 +61,6 @@ Objective-C quality is **prefixed, documented headers with explicit ownership**,
 - Public header Doxygen/nil-contract audit
 - Capsule checklist on prefix + designated initializer chain
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>objc-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>objc diff, clang-format/analyzer output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>retain cycle, mutable leak, init subclass bug, or none</risks>
-</skill_result>
-```
 
 ## References
 

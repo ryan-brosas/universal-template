@@ -48,17 +48,6 @@ Kotlin readability is **official formatter mechanics plus immutability-first idi
 - Compile + tests for touched modules
 - Capsule checklist on public API review
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>kotlin-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>kotlin diff, ktlint/detekt output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>wildcard import, mutable API surface, missing library types, or none</risks>
-</skill_result>
-```
 
 ## References
 

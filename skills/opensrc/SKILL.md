@@ -68,17 +68,6 @@ Reading source without a question (drift); assuming docs are right (verify); rea
 - Check the version (`package.json`, `git log`) so the source you read matches the
  installed behavior.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill><name></skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>…</evidence>
-  <artifacts>…</artifacts>
-  <risks>…</risks>
-</skill_result>
-```
 
 ## References
 

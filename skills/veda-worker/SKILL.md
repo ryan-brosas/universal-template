@@ -241,17 +241,6 @@ Reaching for an editor or a patch (that work belongs in a worker delegation). ca
 
 Exit 0 with a well-formed `report.yaml` (`status`, `whatWasImplemented`, `verification`, `needs`); evidence entries name real commands/flags/artifacts; the closing reviewer ends with `review: pass` against `design.json`.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>veda-worker</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>commands run, outputs inspected, artifacts produced</evidence>
-  <artifacts>files written / commands run</artifacts>
-  <risks>known risks, untested paths, or none</risks>
-</skill_result>
-```
 
 ## References
 

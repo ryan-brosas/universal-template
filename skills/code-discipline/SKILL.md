@@ -90,17 +90,6 @@ then return here for scope and verification. They complement
 - The same fact stored in two places.
 - Business logic inlined in controllers, tools, or components.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>code-discipline</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>CI green, comments resolved, work committed; operations attempted with quoted errors</evidence>
-  <artifacts>Scoped change with regression test and verification output</artifacts>
-  <risks>Scope widening, uncommitted work, duplicated facts, or none</risks>
-</skill_result>
-```
 
 ## References
 

@@ -52,17 +52,6 @@ Emacs Lisp quality is **namespace-safe, load-safe regularity**, lexical scoping,
 - `byte-compile-file` with warnings treated as errors (project policy)
 - Capsule checklist on public `defun` docstrings
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>emacs-lisp-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>el diff, checkdoc/package-lint/byte-compile output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>namespace collision, load-time side effects, byte-compile failure, or none</risks>
-</skill_result>
-```
 
 ## References
 

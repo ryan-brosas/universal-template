@@ -47,17 +47,6 @@ Any experience, start date, credential, client name, or URL not provided by the 
 
 Scenario: a client needs a virtual assistant who can start Monday and handle email triage. Rubric: client need named; energy present; every claim traces to user facts; no invented link; under 150 words. Must pass twice, including one run with no details supplied, which returns placeholders or one question.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill><name></skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>…</evidence>
-  <artifacts>…</artifacts>
-  <risks>…</risks>
-</skill_result>
-```
 
 ## References
 

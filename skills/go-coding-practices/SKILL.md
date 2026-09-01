@@ -45,17 +45,6 @@ Go code should be **gofmt-clear, error-explicit, and concurrency-obvious**, inte
 - Tests include error paths; shutdown/cancel tests for workers
 - Capsule checklist on review
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>go-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>go diff, test/vet/lint output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>panic path, goroutine leak, ignored err, or none</risks>
-</skill_result>
-```
 
 ## References
 

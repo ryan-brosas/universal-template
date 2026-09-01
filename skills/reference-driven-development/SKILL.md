@@ -19,7 +19,7 @@ When outside code materially reduces uncertainty, use ONE strong reference repos
 
 1. **Ground locally**, inspect the current project and identify the seam; decide whether outside code materially reduces uncertainty (if not, stop, implement directly).
 2. **Notice existing references**, if `reference/` or `reference/web/` exists, scan top-level names and open only candidates relevant to the seam (bounded listing, not bulk ingestion).
-3. **Select the reference**, place or reuse it at the conventional path. Code references: ONE strong repository at `<project>/reference/<repo>/`; add a second only after naming the gap the first left. Web references: synthesis may combine several captured sites when each contributes a named quality. Full rules: `~/.agents/references/reference-contract.md` (kinds, authority, defaults, licensing, lifecycle).
+3. **Select the reference**, place or reuse it at the conventional path. Code references: ONE strong repository at `<project>/reference/<repo>/`; add a second only after naming the gap the first left. Web references: synthesis may combine several captured sites when each contributes a named quality. Full rules: `references/contract.md` (kinds, authority, defaults, licensing, lifecycle).
 4. **Check freshness when it matters**, for a checkout reference, record the
    current revision and working-tree state; inspect configured upstream/remote
    when VCS and network capability exist; compare local revision to upstream
@@ -67,5 +67,5 @@ never become foundations (see the reference contract).
 
 ## References
 
-- `~/.agents/references/reference-contract.md`, canonical reference-checkout contract
+- `references/contract.md`, canonical reference-checkout contract
 - `../push-pr/SKILL.md`, PR creation records the Reference/Prior-Art section

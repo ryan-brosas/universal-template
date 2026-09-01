@@ -48,17 +48,6 @@ Swift readability is **clarity at the point of use**, safe bindings, fluent name
 - Build + tests for touched modules
 - Capsule checklist on public API review
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>swift-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>swift diff, lint/format output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>force unwrap, ambiguous label, missing docs, or none</risks>
-</skill_result>
-```
 
 ## References
 

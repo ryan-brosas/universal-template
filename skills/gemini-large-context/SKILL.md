@@ -52,17 +52,6 @@ Unscoped selections, jumping to `gemini-pro` without a named gap, asking Veda to
 
 Capture long Veda output with `-o` to disposable `/tmp` storage, or persist to `.pi/work/` only through a Schema transaction. Keep source paths, exact calls, dates, and confidence levels in the final evidence ledger.
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>gemini-large-context</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>Paths scoped, tier selected by need, output captured and synthesized</evidence>
-  <artifacts>Budgeted research packet or synthesized findings</artifacts>
-  <risks>Unscoped scan, unnecessary high-tier usage, authentication, rate limits, or none</risks>
-</skill_result>
-```
 
 ## References
 

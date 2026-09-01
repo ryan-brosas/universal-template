@@ -47,17 +47,6 @@ PHP readability is **PSR mechanical layout plus strict typed APIs**, side-effect
 - PHPStan/Psalm at project level on touched namespaces
 - Capsule checklist on public API review
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>php-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>php diff, cs-fixer/pint/phpcs output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>side-effect file, loose compare, singleton, or none</risks>
-</skill_result>
-```
 
 ## References
 

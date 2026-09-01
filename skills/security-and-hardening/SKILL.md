@@ -101,17 +101,6 @@ Plain-text passwords; md5/sha1; SQL string concat; "trust the frontend" authz; s
 - Confirm secure headers are present in responses and security events (failed logins,
  denials) are logged without secret values.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill><name></skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>…</evidence>
-  <artifacts>…</artifacts>
-  <risks>…</risks>
-</skill_result>
-```
 
 ## References
 

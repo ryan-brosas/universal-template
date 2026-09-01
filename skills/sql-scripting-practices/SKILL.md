@@ -47,17 +47,6 @@ SQL readability is **consistent relational naming plus scannable layout**, river
 - migration apply or `EXPLAIN` on touched queries
 - Capsule checklist on schema/query review
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>sql-scripting-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>sql diff, linter/formatter output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>injection, non-portable DDL, unreadable layout, or none</risks>
-</skill_result>
-```
 
 ## References
 

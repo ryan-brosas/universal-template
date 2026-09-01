@@ -58,17 +58,6 @@ Magento extension quality is **PSR-12 mechanics plus Magento2 PHPCS security sni
 - DocBlock spot-check on new public API
 - di.xml preference/plugin review for new services
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>magento-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>diff, phpcs/eslint output, di.xml changes</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>superglobal use, unescaped output, or PHPCS Magento2 violation</risks>
-</skill_result>
-```
 
 ## References
 

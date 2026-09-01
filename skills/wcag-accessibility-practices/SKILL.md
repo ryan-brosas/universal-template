@@ -59,17 +59,6 @@ Accessible web content satisfies **WCAG 2.1 Level AA**, perceivable without visi
 - Screen reader sample (NVDA/VoiceOver) on new widgets
 - Failures mapped to WCAG 2.1 SC ids in review notes
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>wcag-accessibility-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>a11y report, SC mapping, fix diff</artifacts>
-  <evidence>learning note + capsule probes + manual keyboard pass</evidence>
-  <risks>keyboard trap, missing alt, or AA gap in untested flow</risks>
-</skill_result>
-```
 
 ## References
 

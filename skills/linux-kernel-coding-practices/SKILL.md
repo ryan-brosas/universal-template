@@ -59,17 +59,6 @@ Kernel C quality is **checkpatch-clean tab layout and maintainable control flow*
 - Subsystem `make` / `make CHECK=1` / `kselftest` as applicable
 - Capsule probes on new gotos, exports, and alloc calls
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>linux-kernel-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>kernel patch/diff, checkpatch output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>space indent, bad goto cleanup, or checkpatch failures</risks>
-</skill_result>
-```
 
 ## References
 

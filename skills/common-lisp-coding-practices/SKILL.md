@@ -49,17 +49,6 @@ Common Lisp quality is **idiomatic names + explicit packages + documented CLOS**
 - SLIME/common-lisp-indent style check
 - Capsule checklist on package export list
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>common-lisp-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>lisp diff, asdf test output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>package leak, CLOS protocol drift, or none</risks>
-</skill_result>
-```
 
 ## References
 

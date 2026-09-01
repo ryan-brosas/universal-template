@@ -70,17 +70,6 @@ Racket quality is **DrRacket-readable text + explicit module contracts**, kebab-
 - Handler predicate precision review
 - Capsule checklist on kebab-case + top-down module layout
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>racket-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>rkt diff, raco test/indent output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>contract gap, indent drift, swallowed exception, or none</risks>
-</skill_result>
-```
 
 ## References
 

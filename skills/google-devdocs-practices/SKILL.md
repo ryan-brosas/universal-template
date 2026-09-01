@@ -65,17 +65,6 @@ Google devdoc quality is **you-focused clarity built for translation**, active c
 - Optional: accessibility lint (alt, heading order) on rendered HTML
 - Cross-check project-specific style overrides first in reference hierarchy
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>google-devdocs-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>doc diff, review checklist output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>non-you voice, vague links, or heading hierarchy drift</risks>
-</skill_result>
-```
 
 ## References
 

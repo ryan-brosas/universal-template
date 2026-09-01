@@ -53,17 +53,6 @@ F# library quality is **audience-shaped APIs**, F#-facing modules and unions int
 - Reflect or C# snippet compile against public API
 - Capsule checklist on F#-facing vs vanilla.NET audience
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>fsharp-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>fs diff, format/build/C# interop output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>breaking interop, representation leak, FSharpFunc surface, or none</risks>
-</skill_result>
-```
 
 ## References
 

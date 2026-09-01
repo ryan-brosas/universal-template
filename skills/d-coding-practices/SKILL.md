@@ -51,17 +51,6 @@ D quality is **dstyle naming + explicit types/docs + tested modules**, propertie
 - ddox/Ddoc generation for public modules
 - Capsule checklist on review
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>d-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>d diff, dub test/coverage output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>undocumented API, UFCS misuse, missing @safe, or none</risks>
-</skill_result>
-```
 
 ## References
 

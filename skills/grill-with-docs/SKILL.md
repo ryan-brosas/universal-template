@@ -117,17 +117,6 @@ A glossary conflict in `CONTEXT.md` not called out immediately. vague or overloa
 
 Shared understanding reached, each branch of the design tree resolved one-by-one; `CONTEXT.md` updated inline with every resolved term; any ADR created satisfies all three conditions (hard to reverse, surprising without context, real trade-off).
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>grill-with-docs</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>…</evidence>
-  <artifacts>…</artifacts>
-  <risks>…</risks>
-</skill_result>
-```
 
 ## References
 

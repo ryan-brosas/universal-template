@@ -48,17 +48,6 @@ C quality is **explicit scope, explicit control flow, explicit failures**, the l
 - Link test: header included from multiple `.c` files without duplicate symbols
 - Capsule checklist on review
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>c-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>c/h diff, warning/analyzer output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>unchecked error, header ODR, macro side effect, or none</risks>
-</skill_result>
-```
 
 ## References
 

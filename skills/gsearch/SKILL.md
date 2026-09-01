@@ -184,17 +184,6 @@ URI encoding uses `encodeURIComponent()` in JS and output formatting is done via
 
 Results parse as `{ title, url, snippet }`; `--json` emits valid JSON. If results come back empty, check with a screenshot for a consent/cookie wall before concluding there are no hits.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>gsearch</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>…</evidence>
-  <artifacts>…</artifacts>
-  <risks>…</risks>
-</skill_result>
-```
 
 ## References
 

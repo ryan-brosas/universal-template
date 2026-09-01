@@ -45,17 +45,6 @@ Application skill for HTML/CSS learning (from the archived `awesome-guidelines` 
 - Stylelint rules aligned with capsules.
 - Grep: `.js-` absent from CSS; `@import` absent from production entry CSS.
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>frontend-markup-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>HTML/CSS diffs, validator output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>greedy selectors, a11y gap, insecure assets, or none</risks>
-</skill_result>
-```
 
 ## References
 

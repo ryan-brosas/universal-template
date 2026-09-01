@@ -48,17 +48,6 @@ Public APIs are **contracts for retrying clients**, resource names stable, write
 - Contract tests: missing `api-version`, duplicate retry, pagination walk, stable error codes.
 - Breaking-change review against version/deprecation rules.
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>api-design-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>OpenAPI/proto deltas, checklist against capsules</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>unpaginated list, unstable errors, non-idempotent POST, or none</risks>
-</skill_result>
-```
 
 ## References
 

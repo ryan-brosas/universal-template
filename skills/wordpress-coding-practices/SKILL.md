@@ -55,17 +55,6 @@ WordPress maintainability is **ecosystem-safe PHP plus late escaping**, snake_ca
 - i18n grep: new user strings use text domain + translator comments
 - WCAG AA checklist on changed UI (`wcag-accessibility-practices`)
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>wordpress-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>diff, phpcs output, optional eslint log</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>unescaped output, unprepared SQL, or i18n miss</risks>
-</skill_result>
-```
 
 ## References
 

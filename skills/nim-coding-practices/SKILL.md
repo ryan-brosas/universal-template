@@ -57,17 +57,6 @@ Nim library quality is **guessable names + mechanical layout**, PascalCase types
 - 80-column and 2-space spot check on changed hunks
 - Capsule checklist on public API naming (`fileExists`, `initFoo`, `newFoo`)
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>nim-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>nim diff, styleCheck/test output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>naming drift, API guessability loss, styleCheck failure, or none</risks>
-</skill_result>
-```
 
 ## References
 

@@ -99,17 +99,6 @@ so the later review can test it.
 
 Every cell marked H or O; every output labeled hypothesis, observed, or verified; deliverables present: journey map, experience map, service blueprint, seam inventory, prioritized hypotheses.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>app-experience-mapping</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>Every cell marked H/O; every output labeled hypothesis, observed, or verified</evidence>
-  <artifacts>Journey map, experience map, service blueprint, seam inventory, prioritized hypotheses</artifacts>
-  <risks>Hypotheses reported as fact, seams missed, or none</risks>
-</skill_result>
-```
 
 ## References
 

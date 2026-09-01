@@ -60,17 +60,6 @@ Maintainable JS projects combine **feature-branch discipline**, **env-driven con
 - API README or OpenAPI for HTTP services
 - lighthouse/axe or jsx-a11y in CI for UI projects
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>javascript-project-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>tree diff, package.json, CI config, README</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>secret leak, dependency drift, or missing test/a11y gate</risks>
-</skill_result>
-```
 
 ## References
 

@@ -140,17 +140,6 @@ Per call: `Target.createTarget(about:blank, background)` → `Target.attachToTar
 
 Each statement object carries `period_end`, `fiscal_year`, `fiscal_period`, `form`, `filed`, `accession`, and `filing_url`, trace any figure back to the SEC filing. `price` returns `regularMarketPrice` with a true day-over-day `change`. On a Yahoo rate-limit error, back off and retry.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>findata</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>…</evidence>
-  <artifacts>…</artifacts>
-  <risks>…</risks>
-</skill_result>
-```
 
 ## References
 

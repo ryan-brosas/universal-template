@@ -54,17 +54,6 @@ Erlang quality is **pattern-visible modules + crash-loud bugs**, explicit export
 - `rebar3 eunit` or Common Test on changed modules
 - Capsule checklist on exported `-spec` list
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>erlang-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>erl diff, Elvis/dialyzer/xref/test output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>atom exhaustion, silent match failure, OTP coupling, or none</risks>
-</skill_result>
-```
 
 ## References
 

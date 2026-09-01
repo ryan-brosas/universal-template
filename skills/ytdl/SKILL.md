@@ -182,17 +182,6 @@ Background tabs (flaky autoplay, the player must start in foreground or MediaSou
 
 Output file exists at the target path; `ffprobe` shows the expected streams (video+audio unless `-q audio`) and a duration matching `--info`.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>ytdl</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>commands run, outputs inspected, artifacts produced</evidence>
-  <artifacts>files written / commands run</artifacts>
-  <risks>known risks, untested paths, or none</risks>
-</skill_result>
-```
 
 ## References
 

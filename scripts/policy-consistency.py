@@ -26,7 +26,6 @@ BASE = Path(__file__).resolve().parents[1]
 
 # essentials/*.md is policy as a set (globbed below) — new essentials docs are covered automatically.
 POLICY_FILES = [
-    "APPEND_SYSTEM.md",
     "AGENTS.md",
     "README.md",
     "skills/evidence-router/SKILL.md",
@@ -44,7 +43,7 @@ POLICY_FILES = [
 POLICY_FILES += sorted(str(p.relative_to(BASE)) for p in (BASE / "essentials").glob("*.md"))
 FOUNDATION_POLICY_FILES = POLICY_FILES + [
     "docs/roadmap.md",
-    "references/reference-contract.md",
+    "skills/reference-driven-development/references/contract.md",
     # Routing/capture skills that govern foundation-pack usage (not the pack leaves).
     "skills/awesome-guidelines/SKILL.md",
     "skills/evidence-router/SKILL.md",
@@ -268,7 +267,7 @@ def check_no_mass_ingestion() -> None:
 
 
 def check_router_visibility() -> None:
-    """Top-level *-router skills must stay model-visible (they route automatically)."""
+    """*-router skills are cold references; they must stay hidden from startup metadata."""
     skills_dir = BASE / "skills"
     if not skills_dir.is_dir():
         return
@@ -279,8 +278,13 @@ def check_router_visibility() -> None:
         text = read(rel)
         if text is None:
             continue
-        if re.search(r"^disable-model-invocation:\s*true", text, re.M):
-            check_fail("ROUTER-VISIBILITY", rel, 1, "router skill has disable-model-invocation: true — a router must be model-visible")
+        if not re.search(r"^disable-model-invocation:\s*true", text, re.M):
+            check_fail(
+                "ROUTER-VISIBILITY",
+                rel,
+                1,
+                "router skills are cold references — set disable-model-invocation: true",
+            )
 
 
 def check_evidence_router_scope() -> None:
@@ -289,7 +293,7 @@ def check_evidence_router_scope() -> None:
     text = read(rel)
     if text is None:
         return
-    banned = re.compile(r"veda\b|\bagy\b|codex|claude|opus|gemini|gpt-|deepseek|qwen|disable-model-invocation", re.I)
+    banned = re.compile(r"veda\b|\bagy\b|codex|claude|opus|gemini|gpt-|deepseek|qwen", re.I)
     for i, line in enumerate(text.splitlines(), 1):
         if banned.search(line):
             check_fail("EVIDENCE-ROUTER-SCOPE", rel, i, "evidence-router must not carry provider/model selection content")
@@ -384,66 +388,12 @@ def check_router_refs_resolve() -> None:
 
 
 
-def check_append_no_api_recipes() -> None:
-    """APPEND_SYSTEM.md carries invariants only — no GitHub API/GraphQL recipes."""
-    text = read("APPEND_SYSTEM.md")
-    if text is None:
-        fails.append("[APPEND-NO-API-RECIPES] APPEND_SYSTEM.md: file missing")
-        return
-    banned = re.compile(r"resolveReviewThread|api\.github\.com|in_reply_to|graphql|/repos/", re.I)
-    for i, line in enumerate(text.splitlines(), 1):
-        if banned.search(line):
-            check_fail("APPEND-NO-API-RECIPES", "APPEND_SYSTEM.md", i, "GitHub API recipe belongs in the GitHub skill, not APPEND")
-
-
-def check_append_no_model_slugs() -> None:
-    """APPEND_SYSTEM.md never names model/provider routing specifics."""
-    text = read("APPEND_SYSTEM.md")
-    if text is None:
-        return
-    banned = re.compile(r"\b(agy|veda|claude|codex|copilot|deepseek|qwen|pi/|gemini)\b", re.I)
-    for i, line in enumerate(text.splitlines(), 1):
-        if banned.search(line):
-            check_fail("APPEND-NO-MODEL-SLUGS", "APPEND_SYSTEM.md", i, "model/provider specifics belong in routing skills, not APPEND")
-
-
-def check_append_no_commitlint_mandate() -> None:
-    """APPEND never mandates a specific commitlint standard — convention is discovered per repository."""
-    forbid_phrase("APPEND-NO-COMMITLINT-MANDATE", "commitlint standards", files=["APPEND_SYSTEM.md"])
-
-
-def check_append_no_tool_coupling() -> None:
-    """APPEND invariants are tool-neutral — never coupled to a tool literally named 'read'."""
-    text = read("APPEND_SYSTEM.md")
-    if text is None:
-        return
-    banned = re.compile(r"\bread tool\b|\bthe read tool\b", re.I)
-    for i, line in enumerate(text.splitlines(), 1):
-        if banned.search(line):
-            check_fail("APPEND-NO-TOOL-COUPLING", "APPEND_SYSTEM.md", i, "artifact inspection must stay tool-neutral")
-
-
-def check_append_compact() -> None:
-    """APPEND stays a small execution constitution (~13 invariants), not a second AGENTS."""
-    text = read("APPEND_SYSTEM.md")
-    if text is None:
-        return
-    nonempty = sum(1 for line in text.splitlines() if line.strip())
-    if nonempty > 60:
-        check_fail("APPEND-COMPACT", "APPEND_SYSTEM.md", 1, f"{nonempty} non-empty lines — APPEND must stay under 60; move detail to AGENTS/skills/gates")
-
-
-def check_append_bounded_search() -> None:
-    """APPEND's filesystem rule must allow repository-root traversal while bounding discovery."""
-    require_phrase("APPEND-BOUNDED-SEARCH", "APPEND_SYSTEM.md", "repository/workspace")
-    require_phrase("APPEND-BOUNDED-SEARCH", "APPEND_SYSTEM.md", "repo root")
-
-
 def check_agents_safety_core() -> None:
-    """AGENTS.md must retain the operational destructive-confirmation core — hosts load AGENTS, not APPEND."""
+    """AGENTS.md must retain the operational destructive-confirmation core."""
     require_phrase("AGENTS-SAFETY-CORE", "AGENTS.md", "Confirmation (quote the exact command")
     require_phrase("AGENTS-SAFETY-CORE", "AGENTS.md", "Never expose, invent, or commit credentials")
     require_phrase("AGENTS-SAFETY-CORE", "AGENTS.md", "history rewrites: `git reset --hard`, `git clean -fd`, force-push")
+    require_phrase("AGENTS-SAFETY-CORE", "AGENTS.md", "bounded to the current repository")
 
 
 
@@ -470,8 +420,8 @@ def check_init_routing() -> None:
     if re.search(r"codebase memory first|search_graph on the covered project|run through the context layer first", text, re.I):
         check_fail("INIT-ROUTING", rel, 1, "bootstrap mandates a CodeMemory-first ritual instead of need-driven routing")
     flat = re.sub(r"\s+", " ", text)
-    if "evidence-router" not in flat:
-        check_fail("INIT-ROUTING", rel, 1, "bootstrap must reference need-driven evidence routing")
+    if "direct source first" not in flat and "evidence-router" not in flat:
+        check_fail("INIT-ROUTING", rel, 1, "bootstrap must prefer direct source before optional capability maps")
 
 
 def check_no_user_profile() -> None:
@@ -527,7 +477,7 @@ def check_foundation_first_class() -> None:
                     check_fail("FOUNDATION-FIRST-CLASS", rel, i, f"obsolete foundation policy: {phrase!r}")
     require_phrase(
         "FOUNDATION-FIRST-CLASS",
-        "references/reference-contract.md",
+        "skills/reference-driven-development/references/contract.md",
         "References vs foundations",
     )
     require_phrase(
@@ -551,7 +501,7 @@ def check_agents_minimal() -> None:
         r"Fovea|Steroid / JetBrains|foundation-pack/.*reusable architecture|"
         r"Evidence priority for non-trivial|Pi Fabric|fabric_exec|/fabric prewalk|"
         r"pi\.edit|pi\.write|pi\.bash|python3 scripts/|skill-validator\.py|"
-        r"Entry skills|host wiring|~/.claude|~/.codex|APPEND_SYSTEM\.md",
+        r"Entry skills|host wiring|~/.claude|~/.codex",
         re.I,
     )
     for i, line in enumerate(text.splitlines(), 1):
@@ -694,7 +644,7 @@ def check_foundation_not_in_startup_catalog() -> None:
 # policy, runtime scripts, and CI config. Generated views (docs/skill-catalog.md),
 # inventories, roadmap, and templates are NOT
 # callers — a generated index must never make a dead skill look reachable.
-REACHABILITY_CALLER_PARTS = ("AGENTS.md", "APPEND_SYSTEM.md", "README.md", "CONTRIBUTING.md")
+REACHABILITY_CALLER_PARTS = ("AGENTS.md", "README.md", "CONTRIBUTING.md")
 # Catalog machinery that enumerates skill names by design (classification sets,
 # visibility policy, discovery, migration patterns). Every internal skill name
 # appears there, so counting it as a caller makes the gate self-satisfying.
@@ -839,9 +789,9 @@ def check_pr_ownership() -> None:
 
 def check_web_reference_split() -> None:
     """web-reference owns site capture; the contract recognizes web references; rdd stays crawler-free."""
-    contract_text = read("references/reference-contract.md") or ""
+    contract_text = read("skills/reference-driven-development/references/contract.md") or ""
     if "web reference" not in contract_text.lower():
-        fails.append("[WEBREF-SPLIT] references/reference-contract.md: required phrase missing: 'web reference'")
+        fails.append("[WEBREF-SPLIT] skills/reference-driven-development/references/contract.md: required phrase missing: 'web reference'")
     rel = "skills/web-reference/SKILL.md"
     text = read(rel)
     if text is None:
@@ -861,10 +811,8 @@ def check_web_reference_split() -> None:
 
 def check_gate_documentation() -> None:
     """CONTRIBUTING.md documents the required gate scripts for this repository.
-    README/AGENTS carry no volatile inventory counts. The canonical template
-    inventory (references/templates-inventory.md) is the only place that
-    enumerates templates; counts there are machine-checked against disk by
-    catalog-quality.py."""
+    README/AGENTS carry no volatile template counts or retired artifacts;
+    catalog-quality.py checks the actual templates/ and essentials/ directories."""
     contrib = read("CONTRIBUTING.md") or ""
     for needle in ("skill-validator.py", "repo-hygiene.py", "catalog-quality.py"):
         if needle not in contrib:
@@ -872,9 +820,7 @@ def check_gate_documentation() -> None:
     for rel in ("README.md", "AGENTS.md"):
         text = read(rel) or ""
         if re.search(r"\d+\s+CLI-neutral", text):
-            fails.append(f"[GATE-DOCS] {rel} states a template count; point at references/templates-inventory.md instead")
-        if "references/templates-inventory.md" not in text and rel == "README.md":
-            fails.append("[GATE-DOCS] README.md must point at references/templates-inventory.md as the canonical template inventory")
+            fails.append(f"[GATE-DOCS] {rel} must not state a template count; templates/ is authoritative")
         for retired in ("project.md", "state.md", "tech-stack.md", "user.md"):
             if retired in text:
                 fails.append(f"[GATE-DOCS] {rel} lists retired template as current: {retired}")
@@ -1028,12 +974,6 @@ CHECKS = [
     ("RESOLVER-CHECKOUT-LOCAL", check_resolver_checkout_local),
     ("RUNTIME-JSON", check_runtime_json),
     ("ROUTER-REFS-RESOLVE", check_router_refs_resolve),
-    ("APPEND-NO-API-RECIPES", check_append_no_api_recipes),
-    ("APPEND-NO-MODEL-SLUGS", check_append_no_model_slugs),
-    ("APPEND-NO-COMMITLINT-MANDATE", check_append_no_commitlint_mandate),
-    ("APPEND-NO-TOOL-COUPLING", check_append_no_tool_coupling),
-    ("APPEND-COMPACT", check_append_compact),
-    ("APPEND-BOUNDED-SEARCH", check_append_bounded_search),
     ("AGENTS-SAFETY-CORE", check_agents_safety_core),
     ("STALE-AGENTS-TEMPLATE", check_stale_agents_template),
     ("INIT-ROUTING", check_init_routing),

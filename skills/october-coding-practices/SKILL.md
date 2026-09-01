@@ -57,17 +57,6 @@ October maintainability is **PSR layout plus marketplace naming discipline**, ca
 - MySQL `STRICT_TRANS_TABLES` enabled in dev environment
 - Exception type spot-check on new throw sites
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>october-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>diff, composer.json, migration list, phpcs output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>naming collision, wrong exception type, or publish metadata miss</risks>
-</skill_result>
-```
 
 ## References
 

@@ -120,17 +120,6 @@ Doc rot (> 6 months); ADR without context or consequences; runbook without comma
 - ADR carries Context, Decision, Consequences, and Alternatives considered.
 - Docs link to code; examples run; nothing is 6+ months untouched without delete-or-update.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>documentation-and-adrs</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>…</evidence>
-  <artifacts>…</artifacts>
-  <risks>…</risks>
-</skill_result>
-```
 
 ## References
 

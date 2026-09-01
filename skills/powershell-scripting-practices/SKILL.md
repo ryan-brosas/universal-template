@@ -60,17 +60,6 @@ PowerShell quality is **advanced functions emitting pipeline objects with explic
 - Failure-path test with `-ErrorAction Stop` behavior
 - Capsule checklist on tool vs controller split
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>powershell-scripting-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>ps1/psm1 diff, PSScriptAnalyzer output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>non-terminating errors, plain credentials, or Write-Host output</risks>
-</skill_result>
-```
 
 ## References
 

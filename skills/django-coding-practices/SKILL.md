@@ -58,17 +58,6 @@ Django code reads as **one codebase**, black-formatted Python, isort import grou
 - Model structure checklist on changed models
 - i18n grep on new user-facing strings
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>django-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>diff, pre-commit output, test log</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>import-time settings, i18n miss, or DTL spacing drift</risks>
-</skill_result>
-```
 
 ## References
 

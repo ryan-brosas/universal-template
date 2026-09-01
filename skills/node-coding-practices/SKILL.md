@@ -63,17 +63,6 @@ Node quality is **small modules with strict style and reproducible npm packaging
 - Capsule probes on server PORT and require placement
 - Native addon: document/build verify on Windows if `node-gyp` in tree
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>node-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>js diff, eslint/npm output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>prototype hack, npm packaging drift, or native build gap</risks>
-</skill_result>
-```
 
 ## References
 

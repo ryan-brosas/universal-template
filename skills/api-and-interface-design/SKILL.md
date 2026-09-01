@@ -102,17 +102,6 @@ Schema after impl (backwards); no version; generic errors; no idempotency; no pa
 
 Generated docs from the schema match what you ship; every error carries machine-readable `code`, human-readable `message`, `details`, and `traceId`; version is explicit; rate limits visible via headers; no stack traces, internal paths, or secrets in responses.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>api-and-interface-design</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>Schema written, types generated, boundary validation in place; generated docs match shipped API</evidence>
-  <artifacts>API contract: schema, versioning strategy, error shape, idempotency, pagination, rate limits</artifacts>
-  <risks>Unversioned breaks, generic errors, hand-written docs, or none</risks>
-</skill_result>
-```
 
 ## References
 

@@ -54,17 +54,6 @@ httpd C quality is **reviewer-readable layout plus generic C safety**, ANSI sign
 - `-Wall`/project warning flags on changed translation units
 - Capsule checklist on cast/flow samples
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>httpd-c-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>c diff, build/warning output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>layout drift, cast spacing, or unchecked error path</risks>
-</skill_result>
-```
 
 ## References
 

@@ -63,17 +63,6 @@ Mongo schema quality is **self-documenting BSON aligned to read patterns**, expl
 - `explain()` on primary read paths; index list matches filters/sorts
 - Capsule probes cited in review notes
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>mongodb-data-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>schema diff, validator JSON, index list</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>enum ambiguity, null overload, or unbounded embed growth</risks>
-</skill_result>
-```
 
 ## References
 

@@ -54,17 +54,6 @@ Fortran quality is **modern-standard clarity**, explicit modules, assumed-shape 
 - `ctest` / project test runner
 - Capsule checklist on `public ::` export lists
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>fortran-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>f90 diff, fprettify/FORD/build/test output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>kind mismatch, silent integer division, stride perf, or none</risks>
-</skill_result>
-```
 
 ## References
 

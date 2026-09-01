@@ -90,17 +90,6 @@ report is advisory, verify load-bearing findings against source/tests before
 acting. Schema enforce: only `committed` postconditions count, and never as a
 substitute for behavior verification.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>fabric-native-execution</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>…</evidence>
-  <artifacts>…</artifacts>
-  <risks>…</risks>
-</skill_result>
-```
 
 ## References
 

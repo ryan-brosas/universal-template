@@ -95,17 +95,6 @@ Needs Improvement, or Fail. Any Critical finding makes the verdict Fail.
 
 Every finding carries evidence: screen, control, step, observed behavior, console or runtime output, viewport width, exact copy, and the user blocked. Verdict Pass/Needs Improvement/Fail; any Critical finding makes the verdict Fail.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>black-box-experience-review</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>Findings with screen, step, observed behavior, runtime output, viewport, exact copy</evidence>
-  <artifacts>Severity-rated findings and verdict: Pass, Needs Improvement, or Fail</artifacts>
-  <risks>Critical finding under-rated, coverage gaps, or none</risks>
-</skill_result>
-```
 
 ## References
 

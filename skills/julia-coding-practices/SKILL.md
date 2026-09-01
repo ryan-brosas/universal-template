@@ -57,17 +57,6 @@ Julia package quality is **formatter-enforced consistency + explicit module APIs
 - Exported names have docstrings (manual or tool-assisted)
 - Capsule checklist on main module exports
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>julia-coding-practices</skill>
-  <status>success|partial|blocked|failure</status>
-  <artifacts>jl diff, JuliaFormatter/test output</artifacts>
-  <evidence>learning note + capsule probes cited</evidence>
-  <risks>accidental implicit return, global perf hit, API drift, or none</risks>
-</skill_result>
-```
 
 ## References
 

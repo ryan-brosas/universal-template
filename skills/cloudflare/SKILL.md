@@ -151,17 +151,6 @@ Node.js APIs (`fs`, `Buffer`, `child_process`); large bundles; secrets in toml; 
 
 `wrangler dev` runs locally with simulated bindings; bundle stays small (red flag > 1MB); `compatibility_date` set; secrets absent from `wrangler.toml` and git; no Node.js APIs (`fs`, `Buffer`, `child_process`) imported.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>cloudflare</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>`wrangler dev` runs with simulated bindings; bundle small; compatibility_date set</evidence>
-  <artifacts>Worker code, wrangler.toml bindings, secrets via CLI</artifacts>
-  <risks>Node.js APIs, secrets in toml, huge bundle, or none</risks>
-</skill_result>
-```
 
 ## References
 

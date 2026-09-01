@@ -80,17 +80,6 @@ Core principle: do not ship work that cannot be verified, explained, or rolled b
 - Rollback plan is documented.
 - Final action is approved when irreversible.
 
-## Skill Result Contract
-
-```xml
-<skill_result>
-  <skill>shipping-and-launch</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>Verification commands, acceptance audit, review status, rollback plan</evidence>
-  <artifacts>Changelog, PR, release notes, handoff, or none</artifacts>
-  <risks>Open findings, skipped checks, deployment risk, or none</risks>
-</skill_result>
-```
 
 
 ## Consolidated Branch Completion

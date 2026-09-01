@@ -88,17 +88,6 @@ Validation only at network (deep code trusts the type, gets garbage); validation
 
 Each boundary has a schema or constraint; anything from outside the type system (network, queue, file, env, DB) is validated; DB constraints exist as a safety net; failed validation is a typed error, not an exception.
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill>defense-in-depth</skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>Each boundary validated; DB constraints present; validation failures are typed errors</evidence>
-  <artifacts>Layer map with schemas/constraints per boundary</artifacts>
-  <risks>Single-point validation, `as any` skips, missing env/queue validation, or none</risks>
-</skill_result>
-```
 
 ## References
 

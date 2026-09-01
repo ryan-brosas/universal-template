@@ -224,17 +224,6 @@ Do not execute yet; all we want to do is converge on a solid plan.
 - Substituting the model routing: load-bearing architecture decisions come from claude-opus via agy, not `veda deep` on gemini (Model routing).
 - Generic `-S` session names under multi-agent concurrency (Session Naming).
 
-## Skill Result Contract
-
-```
-<skill_result>
-  <skill><name></skill>
-  <status>success|partial|blocked|failure</status>
-  <evidence>…</evidence>
-  <artifacts>…</artifacts>
-  <risks>…</risks>
-</skill_result>
-```
 
 ## References
 
