@@ -59,16 +59,15 @@ Entry flow for unfamiliar repositories: `skills/project-bootstrap/SKILL.md`.
   the registry (codebase-memory, openviking, context7, exa, deepwiki) supplies
   the routes. Skill authoring follows one uniform grammar:
   `skills/writing-skills/SKILL.md` + `templates/skill.md`.
-- **Catalog gate (this repo only)**: run the suite listed under "Finish line"
-  in `AGENTS.md`: repository-specific verification for this catalog, not a
-  universal requirement. CI runs the same suite as the `quality / required`
-  check via `.github/workflows/pr-quality.yml`.
+- **Catalog gate (this repo only)**: run the suite in `CONTRIBUTING.md`
+  (repository-specific verification for this catalog, not a universal
+  requirement). CI runs the same suite as the `quality / required` check via
+  `.github/workflows/pr-quality.yml`.
 - **Runtime probe + model resolution**: `python3 scripts/runtime-capabilities.py`
   reports the installed toolchain; `python3 scripts/resolve-model.py --role
   <role> --json` resolves a role to concrete backend/model candidates from
   live discovery. Diagnostics only; not a per-task step.
-- **Prose style (layered, opt-in)**: write plain technical English (kernel in
-  `AGENTS.md`); important generated prose gets
+- **Prose style (layered, opt-in)**: important generated prose gets
   `python3 scripts/style-lint.py <file>`; detailed rules and the rewrite
   procedure live in `skills/house-writing-style/SKILL.md`. The optional Pi
   output guard (`extensions/style-guard.ts`) audits final assistant prose and
@@ -86,7 +85,7 @@ policy invariants live in `scripts/policy-consistency.py` (CI-enforced).
 | Policy                                                                                   | Canonical owner                                                            |
 | ---------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
 | Universal execution invariants (session-loaded constitution)                             | `APPEND_SYSTEM.md`                                                         |
-| Global engineering policy, routing summary, machine wiring                               | `AGENTS.md`                                                                |
+| Global agent defaults (user-wide constitution)                                              | `AGENTS.md`                                                                |
 | Evidence and tool routing (NEED + HOST)                                                  | `skills/evidence-router`                                                   |
 | Execution shape (Main/child/parallel/RLM/actor, write isolation)                         | `skills/execution-router`                                                  |
 | Backend/model resolution (mechanical, runtime-discovered; internal)                      | `skills/model-resolution` + `scripts/resolve-model.py`                     |
@@ -97,6 +96,7 @@ policy invariants live in `scripts/policy-consistency.py` (CI-enforced).
 | Git release strategy and versioning                                                      | `skills/git-workflow-and-versioning`                                       |
 | Prior-art/reference-driven implementation                                                | `skills/reference-driven-development`                                      |
 | Skill catalog maintenance (generated docs, explicit catalog queries)                     | `scripts/skill-catalog.py` + `docs/skill-catalog.md`                       |
+| Catalog verification (this repository only)                                              | `CONTRIBUTING.md` + `.github/workflows/pr-quality.yml`                     |
 | Reference rules (repository + web)                                                       | `references/reference-contract.md`                                         |
 | Fabric execution, Schema modes, agents/Veda escalation (pi host)                         | `skills/fabric-native-execution` + project/`~/.pi/` config                 |
 | Natural-language prose style (STE-inspired)                                              | `skills/house-writing-style` + `scripts/style-lint.py`                     |
