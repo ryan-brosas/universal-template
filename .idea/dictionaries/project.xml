@@ -1,9 +1,21 @@
 <component name="ProjectDictionaryState">
   <dictionary name="project">
     <words>
-      <w>findata</w><w>gmaps</w><w>gnews</w><w>rsearch</w><w>xsearch</w>
-      <w>ttdl</w><w>ytdl</w><w>gemini</w><w>inspo</w><w>devrig</w>
-      <w>noqa</w><w>BLE001</w><w>python3</w><w>env</w><w>usr</w>
+      <w>BLE001</w>
+      <w>devrig</w>
+      <w>env</w>
+      <w>findata</w>
+      <w>gemini</w>
+      <w>gmaps</w>
+      <w>gnews</w>
+      <w>inspo</w>
+      <w>noqa</w>
+      <w>python3</w>
+      <w>rsearch</w>
+      <w>ttdl</w>
+      <w>usr</w>
+      <w>xsearch</w>
+      <w>ytdl</w>
     </words>
   </dictionary>
 </component>

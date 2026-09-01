@@ -72,7 +72,10 @@ Inspect → compare → update only what is stale. Preserve hand-written decisio
 
 ## Red Flags
 
-- Creating `.pi/` artifact packs (project/tech-stack/roadmap/state/user) by default. HARD-GATE, those are not default project state.
+- Creating default host artifact packs by default (for pi: `.pi/project.md`,
+  `.pi/state.md`, and similar). HARD-GATE. Host runtime state belongs under
+  the host config (e.g. `~/.pi/` for pi) or explicit project governance, not
+  automatic bootstrap output.
 - Creating a user-profile/personal-preference file in a repository. HARD-GATE.
 - Persisting machine-recoverable facts (versions, commands, branch, dirty state, dependency lists), detect them when needed instead.
 - Running GitHub or CI setup as an automatic side effect of local bootstrap.

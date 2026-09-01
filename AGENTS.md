@@ -85,26 +85,6 @@ pull_request. `python3 scripts/policy-consistency.py --selftest` and
 required suite: the selftest is a regression fixture, and the legacy report is
 a migration queue, not a gate.
 
-## Pi Fabric (pi host only)
-
-- `fabric_exec`, `/fabric prewalk`, Schema, agents, providers are Pi Fabric
-  runtime mechanisms. Verify their behavior against the installed pi-fabric
-  docs (`docs/agents.md`, `docs/schema-enforcement.md`) before writing policy
-  about them.
-- **Prewalk** means only the Pi Fabric runtime feature: `/fabric prewalk`
-  arms a continuation at a successful monitored mutation boundary and
-  continues execution with the configured executor model. It adds no
-  system-prompt instruction. Never use "prewalk" for repository exploration
-  (the word belongs to Pi Fabric):
-  say discovery, graph discovery, source inspection, or evidence discovery.
-- **Schema** modes are `off` (default) / `audit` / `enforce`. In `off`/
-  `audit` the `schema.*` loop is available but does not gate direct
-  `pi.edit`/`pi.write`/`pi.bash`.
-- Use the Schema loop only when the session runs enforce mode, the user
-  invokes a Fabric Schema mechanism, or the task needs transactional or
-  postcondition guarantees. Enforce mode blocks direct mutations and disables
-  Fabric Prewalk; do not activate it silently as a universal prerequisite.
-
 ## Entry architecture
 
 The normal loop is: task → inspect current code/evidence → implement → run
@@ -115,8 +95,9 @@ Entry skills, each earning its own trigger:
 
 - `project-bootstrap`: entering an unfamiliar repository (read-only
   onboarding by default), greenfield setup, or intentional lightweight
-  project governance. Idempotent; never generates `.pi/` artifact packs or a
-  user profile.
+  project governance. Idempotent; never generates default host artifact packs
+  or a user profile. Host runtime config (for pi: `~/.pi/` and project
+  `.pi/` when the project uses it) is outside this global tree.
 - `brainstorming`: ambiguous direction: ground in the repo, frame, explore
   real alternatives, decide. No planning files by default.
 - `goal-setup`: durable execution contract for significant/multi-session

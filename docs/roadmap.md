@@ -71,11 +71,10 @@ catch-first test methodology.
   `style-lint.py`) with structural skill-visibility checks, dangling
   cross-skill reference detection, and portable-path validation for new config
   surfaces.
-- **Transactional mutation boundaries (opt-in).** Keep Pi Fabric's Schema
-  transaction loop available for work that needs transactional or
-  postcondition guarantees (enforce mode, explicit request, or
-  postcondition-critical tasks) without making it a universal prerequisite for
-  every reversible edit.
+- **Transactional mutation boundaries (opt-in).** Host-specific execution
+  guards (pi: `skills/fabric-native-execution/` and project or `~/.pi/`
+  config) stay opt-in for work that needs transactional or postcondition
+  guarantees, not a universal prerequisite for every reversible edit.
 - **Modular language quality leaves (as needed).** Reusable, copyable practice
   leaves for downstream clones following the reference contract: Python
   (pytest, mypy, ruff, bandit), TypeScript (tsc, biome, vitest), Rust (cargo

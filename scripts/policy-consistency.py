@@ -82,19 +82,17 @@ def require_phrase(cid: str, rel: str, phrase: str) -> None:
 # One entry per invariant; keep descriptions imperative.
 
 def check_prewalk_reserved() -> None:
-    """'prewalk' in policy docs only with its real Fabric meaning or as marked source wording."""
-    allow = re.compile(r"fabric|source wording|source material|mentor", re.I)
+    """'prewalk' in global policy docs is forbidden; pi Fabric owns the term in fabric-native-execution."""
+    skip = {"skills/fabric-native-execution/SKILL.md"}
     for rel in POLICY_FILES:
+        if rel in skip:
+            continue
         text = read(rel)
         if not text:
             continue
-        lines = text.splitlines()
-        for i, line in enumerate(lines):
-            if not re.search(r"prewalk", line, re.I):
-                continue
-            context = " ".join(lines[max(0, i - 1): i + 2])  # markdown wraps mid-sentence
-            if not allow.search(context):
-                check_fail("PREWALK-RESERVED", rel, i + 1, "generic 'prewalk' use (reserved for /fabric prewalk)")
+        for i, line in enumerate(text.splitlines(), 1):
+            if re.search(r"prewalk", line, re.I):
+                check_fail("PREWALK-RESERVED", rel, i + 1, "'prewalk' belongs in pi host config/skills, not global policy")
 
 
 def check_lifecycle_optional() -> None:
@@ -475,15 +473,14 @@ def check_no_user_profile() -> None:
 
 
 def check_no_artifact_pack() -> None:
-    """Bootstrap must not generate the .pi artifact pack (project/tech-stack/roadmap/state/user)."""
+    """Bootstrap must not generate default host artifact packs."""
     rel = "skills/project-bootstrap/SKILL.md"
     text = read(rel)
     if text is None:
         return
-    banned = re.compile(r"\.pi/(project|tech-stack|roadmap|state|user)\.md", re.I)
-    for i, line in enumerate(text.splitlines(), 1):
-        if banned.search(line):
-            check_fail("NO-ARTIFACT-PACK", rel, i, "default .pi artifact pack is retired; persistent context is selective")
+    require_phrase("NO-ARTIFACT-PACK", rel, "host artifact packs")
+    if re.search(r"\.pi/(project|tech-stack|roadmap|state|user)\.md.*by default", text, re.I):
+        check_fail("NO-ARTIFACT-PACK", rel, 1, "name host artifact packs generically; pi paths are examples only")
 
 
 def check_objective_drift() -> None:
@@ -535,7 +532,8 @@ def check_agents_minimal() -> None:
         return
     banned = re.compile(
         r"Fovea|Steroid / JetBrains|foundation-pack/.*reusable architecture|"
-        r"Evidence priority for non-trivial",
+        r"Evidence priority for non-trivial|Pi Fabric|fabric_exec|/fabric prewalk|"
+        r"pi\.edit|pi\.write|pi\.bash",
         re.I,
     )
     for i, line in enumerate(text.splitlines(), 1):

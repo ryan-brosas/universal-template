@@ -97,7 +97,7 @@ policy invariants live in `scripts/policy-consistency.py` (CI-enforced).
 | Git release strategy and versioning                                                      | `skills/git-workflow-and-versioning`                                       |
 | Prior-art/reference-driven implementation                                                | `skills/reference-driven-development`                                      |
 | Reference rules (repository + web)                                                       | `references/reference-contract.md`                                         |
-| Fabric execution, Schema modes, agents/Veda escalation                                   | `skills/fabric-native-execution`                                           |
+| Fabric execution, Schema modes, agents/Veda escalation (pi host)                         | `skills/fabric-native-execution` + project/`~/.pi/` config                 |
 | Natural-language prose style (STE-inspired)                                              | `skills/house-writing-style` + `scripts/style-lint.py`                     |
 | Veda escalation specifics                                                                | `skills/veda-lane`                                                         |
 | Operating principles / small-model heuristics                                            | `essentials/operating-philosophy.md` / `essentials/guiding-small-model.md` |
