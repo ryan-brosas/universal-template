@@ -44,6 +44,15 @@ POLICY_FILES += sorted(str(p.relative_to(BASE)) for p in (BASE / "essentials").g
 FOUNDATION_POLICY_FILES = POLICY_FILES + [
     "docs/roadmap.md",
     "references/reference-contract.md",
+    # Routing/capture skills that govern foundation-pack usage (not the pack leaves).
+    "skills/awesome-guidelines/SKILL.md",
+    "skills/evidence-router/SKILL.md",
+    "skills/frontend-markup-practices/SKILL.md",
+    "skills/leverage-capture/SKILL.md",
+    "skills/project-bootstrap/SKILL.md",
+    "skills/reference-driven-development/SKILL.md",
+    "skills/skill-catalog/SKILL.md",
+    "skills/writing-skills/SKILL.md",
 ]
 
 fails: List[str] = []
@@ -875,6 +884,15 @@ def selftest() -> int:
             ok = False
         else:
             print("PASS production classification: reachable with a real caller")
+    required_foundation_policy = {
+        "skills/skill-catalog/SKILL.md",
+        "skills/writing-skills/SKILL.md",
+    }
+    if not required_foundation_policy.issubset(set(FOUNDATION_POLICY_FILES)):
+        print(f"FAIL FOUNDATION_POLICY_FILES missing {required_foundation_policy - set(FOUNDATION_POLICY_FILES)}")
+        ok = False
+    else:
+        print("PASS foundation policy scope includes routing skills")
     print("policy-consistency selftest: PASS" if ok else "policy-consistency selftest: FAIL")
     return 0 if ok else 1
 
