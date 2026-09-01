@@ -876,6 +876,140 @@ def check_web_reference_split() -> None:
             check_fail("WEBREF-SPLIT", "skills/reference-driven-development/SKILL.md", 1, f"crawler mechanics in reference-driven-development: {token}")
 
 
+QUALITY_COMMAND_RE = re.compile(r"python3 scripts/([a-z0-9-]+\.py)([^\n|#]*)")
+GIT_DIFF_CHECK_RE = re.compile(r"(?m)^[ \t]*git[ \t]+diff[ \t]+--check(?:[ \t]|$)")
+
+
+def workflow_mapping_block(text: str, path: tuple[str, ...]) -> Optional[str]:
+    """Return a mapping body from the indentation-stable subset used by workflows."""
+    block = text
+    indent = 0
+    for key in path:
+        lines = block.splitlines()
+        marker = re.compile(rf"^{' ' * indent}{re.escape(key)}:\s*(?:#.*)?$")
+        start = next((index for index, line in enumerate(lines) if marker.match(line)), None)
+        if start is None:
+            return None
+        body = []
+        for line in lines[start + 1:]:
+            stripped = line.lstrip()
+            if stripped and not stripped.startswith("#"):
+                current_indent = len(line) - len(stripped)
+                if current_indent <= indent:
+                    break
+            body.append(line)
+        block = "\n".join(body)
+        indent += 2
+    return block
+
+
+def workflow_mapping(text: str, path: tuple[str, ...]) -> Optional[dict[str, str]]:
+    """Read direct scalar children of a workflow mapping."""
+    block = workflow_mapping_block(text, path)
+    if block is None:
+        return None
+    indent = len(path) * 2
+    values = {}
+    pattern = re.compile(rf"^{' ' * indent}([A-Za-z0-9_-]+):\s*([^#\n]+?)\s*(?:#.*)?$")
+    for line in block.splitlines():
+        match = pattern.match(line)
+        if match:
+            values[match.group(1)] = match.group(2).strip("'\"")
+    return values
+
+
+def workflow_scalar(block: str, key: str, indent: int) -> Optional[str]:
+    """Read a direct scalar from an already scoped workflow block."""
+    pattern = re.compile(rf"^{' ' * indent}{re.escape(key)}:\s*([^#\n]+?)\s*(?:#.*)?$", re.M)
+    match = pattern.search(block)
+    return match.group(1).strip("'\"") if match else None
+
+
+def quality_gate_commands(text: str) -> set[tuple[str, str]]:
+    """Return canonical command and mode pairs from an executable command block."""
+    commands = set()
+    for match in QUALITY_COMMAND_RE.finditer(text):
+        args = match.group(2).split()
+        mode = next((arg for arg in ("--check-repo", "--selftest") if arg in args), "")
+        commands.add((match.group(1), mode))
+    if GIT_DIFF_CHECK_RE.search(text):
+        commands.add(("git diff", "--check"))
+    return commands
+
+
+def contributing_gate_commands(text: str) -> set[tuple[str, str]]:
+    """Read the canonical fenced gate block from CONTRIBUTING.md."""
+    match = re.search(r"## Before pushing.*?```bash\n(.*?)```", text, re.S)
+    return quality_gate_commands(match.group(1)) if match else set()
+
+
+def workflow_gate_block(rel: str, text: str) -> str:
+    """Scope known workflow gates to the job that owns verification."""
+    job = "verify" if rel.endswith("release.yml") else "quality" if rel.endswith("pr-quality.yml") else ""
+    return workflow_mapping_block(text, ("jobs", job)) or "" if job else text
+
+
+def quality_gate_parity_errors(contrib: str, workflows: dict[str, str]) -> list[str]:
+    """Report canonical repository gates missing from their verification job."""
+    expected = contributing_gate_commands(contrib)
+    if not expected:
+        return ["CONTRIBUTING.md canonical gate block is missing or empty"]
+    errors = []
+    for rel, text in workflows.items():
+        missing = sorted(expected - quality_gate_commands(workflow_gate_block(rel, text)))
+        for command_name, mode in missing:
+            command = f"{command_name} {mode}".rstrip()
+            errors.append(f"{rel} missing canonical gate: {command}")
+    return errors
+
+
+def release_workflow_errors(text: str) -> list[str]:
+    """Report structurally scoped release verification and publishing boundaries."""
+    errors = []
+    top_permissions = workflow_mapping(text, ("permissions",))
+    if top_permissions != {"contents": "read"}:
+        errors.append("top-level contents permission must be read-only")
+
+    verify = workflow_mapping_block(text, ("jobs", "verify"))
+    publish = workflow_mapping_block(text, ("jobs", "publish"))
+    if verify is None:
+        errors.append("verification job is missing")
+    else:
+        verify_permissions = workflow_mapping(text, ("jobs", "verify", "permissions")) or top_permissions or {}
+        if verify_permissions.get("contents") != "read" or "write" in verify_permissions.values():
+            errors.append("verification job must not have write permission")
+        required_verify = (
+            (re.compile(r"(?m)^\s*fetch-depth:\s*2\s*(?:#.*)?$"), "checkout must fetch the tagged commit parent"),
+            (re.compile(r'(?m)^\s*CHECK_RANGE="\$GITHUB_SHA\^\.\.\$GITHUB_SHA"\s+python3\s+scripts/conventional-commit\.py\s*$'), "conventional range must use the tagged commit"),
+            (re.compile(r'(?m)^\s*git\s+diff\s+--check\s+"\$GITHUB_SHA\^"\s+"\$GITHUB_SHA"\s*$'), "whitespace check must inspect the tagged commit"),
+        )
+        for pattern, detail in required_verify:
+            if not pattern.search(verify):
+                errors.append(detail)
+        if any(line.strip() == "git diff --check" for line in verify.splitlines()):
+            errors.append("bare git diff --check only inspects the clean worktree")
+
+    if publish is None:
+        errors.append("publish job is missing")
+    else:
+        if workflow_scalar(publish, "needs", 4) != "verify":
+            errors.append("publish must depend on verification")
+        if workflow_mapping(text, ("jobs", "publish", "permissions")) != {"contents": "write"}:
+            errors.append("publish job must have contents write permission")
+    return errors
+
+
+def check_quality_gate_parity() -> None:
+    """PR and release workflows run the canonical CONTRIBUTING gate suite."""
+    contrib = read("CONTRIBUTING.md") or ""
+    workflow_paths = (".github/workflows/pr-quality.yml", ".github/workflows/release.yml")
+    workflows = {rel: read(rel) or "" for rel in workflow_paths}
+    for detail in quality_gate_parity_errors(contrib, workflows):
+        check_fail("QUALITY-GATE-PARITY", "CONTRIBUTING.md", 1, detail)
+    for detail in release_workflow_errors(workflows[".github/workflows/release.yml"]):
+        check_fail("QUALITY-GATE-PARITY", ".github/workflows/release.yml", 1, detail)
+
+
 def check_gate_documentation() -> None:
     """CONTRIBUTING.md documents the required gate scripts for this repository.
     README/AGENTS carry no volatile template counts or retired artifacts;
@@ -1038,6 +1172,110 @@ Research load-bearing facts when the expected confidence gain justifies the cost
         else:
             print(f"FAIL AGENTS constitution missed {name}")
             ok = False
+    gate_contrib = """## Before pushing
+```bash
+python3 scripts/alpha.py --selftest
+python3 scripts/alpha.py
+python3 scripts/beta.py
+git diff --check
+```
+"""
+    gate_good = """python3 scripts/alpha.py --selftest
+python3 scripts/alpha.py
+python3 scripts/beta.py
+git diff --check "$BASE...$HEAD"
+"""
+    gate_missing_mode = """python3 scripts/alpha.py
+python3 scripts/beta.py
+git diff --check "$BASE...$HEAD"
+"""
+    gate_missing_diff = """python3 scripts/alpha.py --selftest
+python3 scripts/alpha.py
+python3 scripts/beta.py
+git diff --cached --check
+"""
+    if quality_gate_parity_errors(gate_contrib, {"good.yml": gate_good}):
+        print("FAIL complete quality workflow rejected")
+        ok = False
+    else:
+        print("PASS quality parity accepts the complete canonical suite")
+    missing_errors = quality_gate_parity_errors(gate_contrib, {"missing.yml": gate_missing_mode})
+    if any("alpha.py --selftest" in error for error in missing_errors):
+        print("PASS quality parity catches a missing gate mode")
+    else:
+        print(f"FAIL quality parity missed a gate mode: {missing_errors}")
+        ok = False
+    diff_errors = quality_gate_parity_errors(gate_contrib, {"missing.yml": gate_missing_diff})
+    if any("git diff --check" in error for error in diff_errors):
+        print("PASS quality parity catches a missing changed-line gate")
+    else:
+        print(f"FAIL quality parity missed the changed-line gate: {diff_errors}")
+        ok = False
+    gate_wrong_scope = """jobs:
+  verify:
+    steps:
+      - run: |
+          python3 scripts/alpha.py --selftest
+          python3 scripts/alpha.py
+          python3 scripts/beta.py
+  publish:
+    steps:
+      - run: git diff --check
+"""
+    scoped_errors = quality_gate_parity_errors(
+        gate_contrib, {".github/workflows/release.yml": gate_wrong_scope}
+    )
+    if any("git diff --check" in error for error in scoped_errors):
+        print("PASS quality parity rejects a changed-line gate outside verification")
+    else:
+        print(f"FAIL quality parity accepted a publish-only changed-line gate: {scoped_errors}")
+        ok = False
+    release_good = """permissions:
+  contents: read
+jobs:
+  verify:
+    steps:
+      - uses: actions/checkout@sha
+        with:
+          fetch-depth: 2
+      - run: |
+          CHECK_RANGE="$GITHUB_SHA^..$GITHUB_SHA" python3 scripts/conventional-commit.py
+          git diff --check "$GITHUB_SHA^" "$GITHUB_SHA"
+  publish:
+    needs: verify
+    permissions:
+      contents: write
+"""
+    release_bad = """permissions:
+  contents: read
+jobs:
+  verify:
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@sha
+        with:
+          fetch-depth: 2
+      - run: |
+          CHECK_RANGE="$GITHUB_SHA^..$GITHUB_SHA" python3 scripts/conventional-commit.py
+          git diff --check "$GITHUB_SHA^" "$GITHUB_SHA"
+  publish:
+    # needs: verify
+    steps: []
+"""
+    if release_workflow_errors(release_good):
+        print("FAIL safe release workflow fixture rejected")
+        ok = False
+    else:
+        print("PASS release workflow accepts split privileges and commit ranges")
+    bad_release_errors = release_workflow_errors(release_bad)
+    if "verification job must not have write permission" in bad_release_errors and \
+            "publish must depend on verification" in bad_release_errors and \
+            "publish job must have contents write permission" in bad_release_errors:
+        print("PASS release workflow catches wrong-scope permissions and dependency text")
+    else:
+        print(f"FAIL release workflow missed wrong-scope boundaries: {bad_release_errors}")
+        ok = False
     print("policy-consistency selftest: PASS" if ok else "policy-consistency selftest: FAIL")
     return 0 if ok else 1
 
@@ -1083,6 +1321,7 @@ CHECKS = [
     ("README-SKILL-REFS", check_readme_skill_refs),
     ("GITHUB-OWNERSHIP", check_github_ownership),
     ("WEBREF-SPLIT", check_web_reference_split),
+    ("QUALITY-GATE-PARITY", check_quality_gate_parity),
     ("GATE-DOCS", check_gate_documentation),
 ]
 

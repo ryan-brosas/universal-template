@@ -1,11 +1,7 @@
-# Publishes a versioned GitHub release for a pushed vX.Y.Z tag: runs the same
-# gate suite PRs run, then creates the release with GitHub-generated notes
-# (categories from .github/release.yml). The tag is the single release
-# authority; this workflow never publishes on plain pushes.
-#
-# The gate commands are intentionally inlined rather than shared via a
-# reusable workflow: a caller/callee pair would rename this check to
-# 'job / sub-job', and the required-check name must stay stable.
+# Publishes a versioned GitHub release for a pushed vX.Y.Z tag. The tag is
+# the single release authority; plain pushes never publish. Verification uses
+# the canonical suite in CONTRIBUTING.md before a write-scoped job creates the
+# release with notes categorized by .github/release.yml.
 name: release
 
 on:
@@ -13,40 +9,57 @@ on:
     tags: ["v*.*.*"]
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: release-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
-  release:
-    name: release
+  verify:
+    name: verify release
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Check out the repository
+      - name: Check out the tagged commit
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 2
           persist-credentials: false
 
       - name: Install YAML checker
         run: pip install --user pyyaml==6.0.3  # pinned; bump deliberately
 
-      - name: Run the catalog gate suite
+      - name: Run the canonical repository gates
         shell: bash
         run: |
           set -euo pipefail
           SKILLS_ROOT="${GITHUB_WORKSPACE}/skills" python3 scripts/skill-validator.py
+          python3 scripts/install-prompts.py --check-repo
+          python3 scripts/install-prompts.py --selftest
+          python3 scripts/render-prompt.py --selftest
+          python3 scripts/catalog-quality.py --selftest
           python3 scripts/catalog-quality.py
           python3 scripts/repo-hygiene.py
           python3 scripts/policy-consistency.py
           python3 scripts/style-lint.py --selftest
           python3 scripts/style-lint.py
+          python3 scripts/web-reference-manifest.py --selftest
           python3 scripts/dead-code.py
-          CHECK_RANGE="$GITHUB_REF_NAME^..$GITHUB_REF_NAME" python3 scripts/conventional-commit.py
-          git diff --check
+          python3 scripts/foundation-validator.py --selftest
+          python3 scripts/foundation-validator.py
+          python3 scripts/reference-retrieval-fixture.py --selftest
+          CHECK_RANGE="$GITHUB_SHA^..$GITHUB_SHA" python3 scripts/conventional-commit.py
+          git diff --check "$GITHUB_SHA^" "$GITHUB_SHA"
 
+  publish:
+    name: publish release
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
       - name: Publish the release with generated notes
         env:
           GH_TOKEN: ${{ github.token }}
