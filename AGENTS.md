@@ -77,7 +77,6 @@ python3 scripts/web-reference-manifest.py --selftest   # web reference fixtures 
 python3 scripts/dead-code.py
 python3 scripts/foundation-validator.py
 python3 scripts/reference-retrieval-fixture.py --selftest
-python3 scripts/skill-catalog.py --selftest
 CHECK_RANGE="origin/main..HEAD" python3 scripts/conventional-commit.py
 git diff --check
 ```

@@ -36,9 +36,9 @@ Entry flow for unfamiliar repositories: `skills/project-bootstrap/SKILL.md`.
   `github-repo-setup` (profile from its `references/setup-matrix.md`) →
   `github-actions-engineering` → `git-workflow-and-versioning` when versioned.
   "Start a new project" stays bootstrap-only.
-- **Skill catalog navigation**: `python3 scripts/skill-catalog.py search
-  "github release"` (or `list`, `show`, `stats`) returns scored candidates with
-  class and visibility without loading the catalog.
+- **Skill catalog maintenance** (this repo only): `python3 scripts/skill-catalog.py
+  search "github release"` (or `list`, `show`, `stats`, `generate`) for explicit
+  catalog queries or catalog edits; not for ordinary project work elsewhere.
 - **Enter a project**: `skills/project-bootstrap/SKILL.md`: read-only
   onboarding by default; governance and greenfield modes when asked.
 - **Unclear direction**: `skills/brainstorming/SKILL.md`. **Durable major
@@ -96,7 +96,7 @@ policy invariants live in `scripts/policy-consistency.py` (CI-enforced).
 | PR lifecycle (push, PR, reviews, auto-merge on request)                                  | `skills/push-pr`                                                           |
 | Git release strategy and versioning                                                      | `skills/git-workflow-and-versioning`                                       |
 | Prior-art/reference-driven implementation                                                | `skills/reference-driven-development`                                      |
-| Skill and foundation discovery (metadata search; load narrowly)                          | `skills/skill-catalog` + `scripts/skill-catalog.py`                        |
+| Skill catalog maintenance (generated docs, explicit catalog queries)                     | `scripts/skill-catalog.py` + `docs/skill-catalog.md`                       |
 | Reference rules (repository + web)                                                       | `references/reference-contract.md`                                         |
 | Fabric execution, Schema modes, agents/Veda escalation (pi host)                         | `skills/fabric-native-execution` + project/`~/.pi/` config                 |
 | Natural-language prose style (STE-inspired)                                              | `skills/house-writing-style` + `scripts/style-lint.py`                     |

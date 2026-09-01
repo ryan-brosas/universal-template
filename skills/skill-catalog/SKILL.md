@@ -1,69 +1,56 @@
 ---
 name: skill-catalog
-description: "Use when the user asks what skills exist, when finding the right skill for a topic, or during non-trivial implementation when a cheap check for relevant hidden skills or foundations would reduce uncertainty - deterministic metadata search; load only selected matches."
+description: "Use when the user asks what skills exist or needs to find the right skill for a topic - deterministic search over the local catalog; return candidates and load only the chosen skill."
 ---
 
 # Skill Catalog
 
 ## Core Principle
 
-**Search broadly. Load narrowly.** Discovery is a deterministic metadata query,
-not a model memory test. Hidden skills and foundation-pack leaves stay out of
-startup context but remain cheap to find on demand. Search returns scored
-candidates; read only the few that materially help.
+This skill is for **explicit catalog queries and ~/.agents maintenance**, not
+for ordinary coding work in another repository. Search returns scored
+candidates; load only the chosen skill. Hidden specialists stay out of startup
+metadata but remain available through host skill discovery.
 
 ## When to Use / NOT
 
-- **User-facing catalog search:** "what skills do we have?", "find a skill for
- CI", "show GitHub skills".
-- **Internal relevance discovery:** during non-trivial implementation, after
- grounding in the current project (and any project-local `reference/` assets),
- run one cheap metadata lookup before reinventing patterns:
- `python3 scripts/skill-catalog.py search-leverage "<task concepts>" --limit 5`.
-- **Foundation-only lookup:** `python3 scripts/skill-catalog.py
- search-foundations "<stack or pattern>" --limit 8`.
-- **NOT when:** a trivial/local edit and current project source already answer
- the question.
-- **NOT when:** a visible skill already matches directly, invoke that skill.
+- **Use when:** "what skills do we have?", "find a skill for CI", "show GitHub
+ skills", or maintaining the catalog in `~/.agents`.
+- **NOT when:** implementing in an arbitrary project repository. Use host skill
+ discovery, read relevant `SKILL.md` files directly, and reason about fit.
+- **NOT when:** a visible skill already matches the request directly, invoke
+ that skill.
 - **NOT when:** choosing evidence sources or execution shape, `evidence-router`
  and `execution-router` own those decisions.
 
-## Workflow
+Foundations live in `foundation-pack/`, outside this catalog. Inspect them with
+host filesystem or search capabilities when they may help; do not route through
+this script during normal project work.
 
-1. **Cheap discovery (non-trivial work):**
- `python3 scripts/skill-catalog.py search-leverage "<concepts>" --limit 5`
- returns scored skill and foundation candidates (metadata only).
-2. **Skill-only or foundation-only** when the need is obvious:
- `search "<topic>"` or `search-foundations "<topic>"`.
-3. **Inspect before loading:** `python3 scripts/skill-catalog.py show <name>`
- for one skill's class, visibility, path, and related skills.
-4. **Load narrowly:** open only the chosen `skills/<name>/SKILL.md` or
- `foundation-pack/<name>/SKILL.md`; follow foundation source pointers to real
- code when implementation details matter.
-5. After catalog edits: `python3 scripts/skill-catalog.py generate` refreshes
- the human catalog; CI fails on stale generated docs.
+## Workflow (catalog maintenance only)
+
+When working on `~/.agents` or answering an explicit catalog question:
+
+1. `python3 scripts/skill-catalog.py search "<topic>" --limit 8`
+2. Narrow when useful: `list --visible`, `list --hidden`, `list --class cold`.
+3. `python3 scripts/skill-catalog.py show <name>` before loading.
+4. Load only the chosen candidate (`skills/<name>/SKILL.md`).
+5. After catalog edits: `python3 scripts/skill-catalog.py generate`
 
 ## Red Flags
 
-- Pasting the catalog or every match into context instead of returning candidates.
-- Loading every candidate that matched; read the best one first, stop when enough.
-- Hand-editing `docs/skill-catalog.md`, it is generated from skill metadata.
-- Skipping discovery on non-trivial work because the user did not say "check
- foundation-pack" or "find a skill".
-- Treating discovery timing as authority priority; project source and project-local
- references still outrank generic skills and foundations.
+- Invoking catalog scripts during ordinary project implementation elsewhere.
+- Pasting the catalog into context instead of returning a few candidates.
+- Loading every candidate that matched.
+- Hand-editing `docs/skill-catalog.md`.
 
 ## Verification
 
-- `python3 scripts/skill-catalog.py stats` exits 0 with counts.
+- `python3 scripts/skill-catalog.py stats` exits 0.
 - `python3 scripts/skill-catalog.py generate --check` exits 0 after regeneration.
-- `python3 scripts/skill-catalog.py --selftest` passes ranked fixture discovery.
 
 ## References
 
-- `scripts/skill-catalog.py`, list / search / search-foundations /
- search-leverage / show / stats / generate.
-- `foundation-pack/`, accumulated implementation foundations; metadata search
- via `search-foundations` or `search-leverage`, not startup metadata.
-- `docs/skill-catalog.md`, generated human catalog (skills only; foundations
- stay outside the active catalog by design).
+- `scripts/skill-catalog.py`, list / search / show / stats / generate.
+- `foundation-pack/`, accumulated implementation foundations; inspect directly.
+- `docs/skill-catalog.md`, generated human catalog.

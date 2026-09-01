@@ -674,47 +674,6 @@ def check_foundation_priority_inversion(*, base: Path | None = None) -> None:
                 )
 
 
-def check_leverage_discovery() -> None:
-    """Non-trivial work may cheaply discover skills and foundations; search broadly, load narrowly."""
-    rel_er = "skills/evidence-router/SKILL.md"
-    text_er = read(rel_er)
-    if text_er is None:
-        fails.append("[LEVERAGE-DISCOVERY] skills/evidence-router/SKILL.md: file missing")
-        return
-    flat_er = re.sub(r"\s+", " ", text_er)
-    if "search-leverage" not in flat_er and "Reusable knowledge discovery" not in flat_er:
-        check_fail(
-            "LEVERAGE-DISCOVERY",
-            rel_er,
-            1,
-            "evidence-router must document cheap reusable knowledge discovery",
-        )
-    rel_sc = "skills/skill-catalog/SKILL.md"
-    text_sc = read(rel_sc)
-    if text_sc is None:
-        fails.append("[LEVERAGE-DISCOVERY] skills/skill-catalog/SKILL.md: file missing")
-        return
-    flat_sc = re.sub(r"\s+", " ", text_sc)
-    if "Search broadly" not in flat_sc or "search-leverage" not in flat_sc:
-        check_fail(
-            "LEVERAGE-DISCOVERY",
-            rel_sc,
-            1,
-            "skill-catalog must document search broadly / search-leverage",
-        )
-    script = read("scripts/skill-catalog.py")
-    if script is None:
-        fails.append("[LEVERAGE-DISCOVERY] scripts/skill-catalog.py: file missing")
-        return
-    if "search-leverage" not in script or "search-foundations" not in script:
-        check_fail(
-            "LEVERAGE-DISCOVERY",
-            "scripts/skill-catalog.py",
-            1,
-            "skill-catalog.py must implement foundation/leverage search",
-        )
-
-
 def check_foundation_not_in_startup_catalog() -> None:
     """Foundations stay outside generated skill catalog entries."""
     gen = read("docs/skill-catalog.md")
@@ -1086,7 +1045,6 @@ CHECKS = [
     ("RDD-EXISTING-REFERENCES", check_rdd_existing_references),
     ("RDD-RETRIEVAL-SURFACE", check_rdd_retrieval_surface),
     ("FOUNDATION-PRIORITY", check_foundation_priority_inversion),
-    ("LEVERAGE-DISCOVERY", check_leverage_discovery),
     ("FOUNDATION-NOT-STARTUP", check_foundation_not_in_startup_catalog),
     ("HIDDEN-REACHABILITY", check_hidden_reachability),
     ("PR-OWNERSHIP", check_pr_ownership),

@@ -1,6 +1,6 @@
 ---
 name: leverage-capture
-description: "Use when meaningful work has finished and something may be worth preserving, classify it into code, references, gates, skills, or memory, and capture only that, in the cheapest appropriate form."
+description: "Use when meaningful work has finished and something may be worth preserving, classify it into code, references, foundations, gates, skills, or memory, and capture only that, in the cheapest appropriate form."
 ---
 
 # Capture Reusable Value
