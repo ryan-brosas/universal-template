@@ -2,11 +2,9 @@
 
 Create an implementation-ready plan for the request below without modifying files, external state, or history.
 
-- Inspect current source, instructions, tests, and relevant configuration first.
-- State scope, non-goals, execution path, acceptance checks, and verification commands.
-- Resolve ambiguity from repository evidence; ask only when a material choice cannot be inferred.
-- Prefer the smallest reversible design and name the files and symbols likely to change.
-- Do not claim checks or facts you have not run or observed.
+Treat the requested outcome or concern as intent, not a predetermined implementation. Optimize for a plan that increases correctness, feasibility, clarity, and maintainability while reducing unnecessary complexity, risk, churn, and maintenance cost. Do not simplify one dimension by shifting material cost into another.
+
+Ground the plan in the current source, instructions, tests, and configuration. Use your judgment to choose the design and level of detail. State genuine boundaries, acceptance conditions, likely change points, and decisive verification without adding ceremony that does not help execution.
 
 Request:
 $ARGUMENTS

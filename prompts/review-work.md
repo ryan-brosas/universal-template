@@ -2,10 +2,11 @@
 
 Review the current changes for the scope below.
 
-- Inspect the actual diff and relevant surrounding code before judging.
-- Report only actionable, evidence-backed findings, ordered by severity; include file and line, impact, and a concrete fix or repro.
-- Check correctness, regressions, security, public interfaces, tests, documentation/configuration consistency, and unnecessary complexity.
-- Do not edit files, rewrite history, or claim a check passed unless you ran it.
+Treat the stated concern as a lead, not a conclusion. Optimize for stronger defect detection, actionability, and evidence while reducing false positives, noise, and behavioral steering. Do not improve brevity by hiding material risk or improve coverage by reporting speculative findings.
+
+Inspect the actual diff and enough surrounding code to judge correctness, regressions, security, interfaces, tests, configuration, documentation, and complexity. Use your judgment about what is material. Report only actionable, evidence-backed findings, ordered by severity, with precise locations and a concrete fix or reproduction path.
+
+Do not edit files, rewrite history, or claim checks you did not run.
 
 Scope:
 $ARGUMENTS
