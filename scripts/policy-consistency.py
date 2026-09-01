@@ -487,16 +487,76 @@ def check_foundation_first_class() -> None:
     )
 
 
-def check_agents_minimal() -> None:
-    """Global AGENTS.md stays thin — constitution only, not a handbook."""
+AGENTS_WORKFLOW_PATTERNS = (
+    (
+        "procedural handbook section",
+        re.compile(
+            r"^#{1,6}\s+(?:mandatory\s+)?(?:workflow|execution phases?|phases?|"
+            r"tool chain|router|decision matrix|scoring (?:engine|matrix))\s*$",
+            re.I | re.M,
+        ),
+    ),
+    (
+        "fixed tool sequence",
+        re.compile(
+            r"\b(?:always|must|shall|required to)\s+(?:first\s+)?"
+            r"(?:use|invoke|call|query|run)\b[^\n]{0,120}"
+            r"\b(?:then|followed by|before)\b",
+            re.I,
+        ),
+    ),
+    (
+        "mandatory router",
+        re.compile(r"\broute\s+(?:every|all)\s+(?:task|request|change)\b", re.I),
+    ),
+    (
+        "scoring system",
+        re.compile(r"\bscore\s+(?:every|each|all)\s+(?:task|request|change)\b", re.I),
+    ),
+    (
+        "unconditional delegation",
+        re.compile(
+            r"\b(?:always\s+delegate|delegate\s+(?:every|all)\s+"
+            r"(?:task|request|change)|use\s+(?:an?\s+)?agents?\s+for\s+"
+            r"(?:every|all)\s+(?:task|request|change))\b",
+            re.I,
+        ),
+    ),
+    (
+        "unconditional research",
+        re.compile(
+            r"\b(?:always\s+research|research\s+(?:every|all)\s+"
+            r"(?:task|request|change)|browse\s+the\s+web\s+for\s+"
+            r"(?:every|all)\s+(?:task|request|change))\b",
+            re.I,
+        ),
+    ),
+)
+
+
+def agents_workflow_violations(text: str) -> list[tuple[int, str]]:
+    """Return workflow-handbook forms that violate constitutional autonomy."""
+    violations = []
+    for detail, pattern in AGENTS_WORKFLOW_PATTERNS:
+        match = pattern.search(text)
+        if match:
+            violations.append((text.count("\n", 0, match.start()) + 1, detail))
+    return violations
+
+
+def check_agents_constitution() -> None:
+    """Global AGENTS.md stays an outcome constitution, not a routing handbook."""
     rel = "AGENTS.md"
     text = read(rel)
     if text is None:
-        fails.append("[AGENTS-MINIMAL] AGENTS.md: file missing")
+        fails.append("[AGENTS-CONSTITUTION] AGENTS.md: file missing")
         return
-    line_count = len(text.splitlines())
-    if line_count > 55:
-        check_fail("AGENTS-MINIMAL", rel, 1, f"global AGENTS.md too long ({line_count} lines; keep under ~55)")
+    for phrase in (
+        "Optimize toward the Pareto frontier.",
+        "Do not force a fixed tool sequence",
+        "Keep this file a global engineering constitution, not a mandatory execution workflow.",
+    ):
+        require_phrase("AGENTS-CONSTITUTION", rel, phrase)
     banned = re.compile(
         r"Fovea|Steroid / JetBrains|foundation-pack/.*reusable architecture|"
         r"Evidence priority for non-trivial|Pi Fabric|fabric_exec|/fabric prewalk|"
@@ -507,11 +567,18 @@ def check_agents_minimal() -> None:
     for i, line in enumerate(text.splitlines(), 1):
         if banned.search(line):
             check_fail(
-                "AGENTS-MINIMAL",
+                "AGENTS-CONSTITUTION",
                 rel,
                 i,
                 "repo-specific or detailed routing content belongs elsewhere, not global AGENTS.md",
             )
+    for line_no, detail in agents_workflow_violations(text):
+        check_fail(
+            "AGENTS-CONSTITUTION",
+            rel,
+            line_no,
+            f"mandatory workflow form belongs in an owning capability: {detail}",
+        )
 
 
 def check_evidence_router_priority() -> None:
@@ -948,6 +1015,29 @@ def selftest() -> int:
             print("FAIL foundation-priority should not flag corrected ordering")
             ok = False
         fails[:] = fails[:fails_before]
+    agents_good = """# Constitution
+Use tools that materially improve confidence. Use agents when delegation helps.
+Research load-bearing facts when the expected confidence gain justifies the cost.
+"""
+    agents_bad = {
+        "mandatory phases": "## Mandatory workflow\nPhase 1: inspect\nPhase 2: implement\n",
+        "fixed tool chain": "Always use Context7, then Exa before editing.\n",
+        "router": "Route every task through the execution router.\n",
+        "scoring matrix": "## Scoring matrix\nScore every change from 1 to 5.\n",
+        "delegation": "Always delegate every task to an agent.\n",
+        "research": "Research every task before editing.\n",
+    }
+    if agents_workflow_violations(agents_good):
+        print("FAIL outcome-oriented AGENTS guidance was classified as a workflow")
+        ok = False
+    else:
+        print("PASS outcome-oriented AGENTS guidance stays valid")
+    for name, fixture in agents_bad.items():
+        if agents_workflow_violations(fixture):
+            print(f"PASS AGENTS constitution rejects {name}")
+        else:
+            print(f"FAIL AGENTS constitution missed {name}")
+            ok = False
     print("policy-consistency selftest: PASS" if ok else "policy-consistency selftest: FAIL")
     return 0 if ok else 1
 
@@ -981,7 +1071,7 @@ CHECKS = [
     ("NO-ARTIFACT-PACK", check_no_artifact_pack),
     ("OBJECTIVE-DRIFT", check_objective_drift),
     ("FOUNDATION-FIRST-CLASS", check_foundation_first_class),
-    ("AGENTS-MINIMAL", check_agents_minimal),
+    ("AGENTS-CONSTITUTION", check_agents_constitution),
     ("EVIDENCE-ROUTER-PRIORITY", check_evidence_router_priority),
     ("BOOTSTRAP-REFERENCE-INVENTORY", check_bootstrap_reference_inventory),
     ("RDD-EXISTING-REFERENCES", check_rdd_existing_references),
