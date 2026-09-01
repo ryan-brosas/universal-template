@@ -17,6 +17,8 @@ BASE = Path(__file__).resolve().parents[1]
 PACK = BASE / "foundation-pack"
 
 MACHINE_LOCAL = re.compile(r"/mnt/|/home/[^/]+/inspo|\.skill-mining-work/", re.I)
+UNPROMOTED_NOTES = re.compile(r"internal working notes|no upstream VCS", re.I)
+EXPLICIT_PROMOTION = "explicit-user"
 CITED_REF = re.compile(r"`references/([^`]+)`")
 
 
@@ -65,6 +67,11 @@ def validate_pack(base: Path = PACK) -> tuple[list[str], list[str]]:
             p0.append(f"{rel}: name {fm.get('name')!r} != directory {d.name!r}")
         if not str(fm.get("description", "")).strip():
             p0.append(f"{rel}: description missing")
+        promotion = fm.get("promotion")
+        if promotion and promotion != EXPLICIT_PROMOTION:
+            p0.append(f"{rel}: unsupported promotion marker {promotion!r}")
+        if UNPROMOTED_NOTES.search(text) and promotion != EXPLICIT_PROMOTION:
+            p0.append(f"{rel}: internal working notes require promotion: {EXPLICIT_PROMOTION}")
         refs_dir = d / "references"
         disk = {f.name for f in refs_dir.glob("*.md")} if refs_dir.is_dir() else set()
         for cited in _cited_refs(text):
@@ -117,6 +124,34 @@ def selftest() -> int:
             ok = False
         else:
             print("PASS name mismatch fails")
+        notes = root / "notes-foundation"
+        notes.mkdir()
+        (notes / "SKILL.md").write_text(
+            "---\nname: notes-foundation\ndescription: Use when testing.\n---\n"
+            "# Notes\n\n## Provenance\nUser-authored internal working notes; no upstream VCS.\n",
+            encoding="utf-8",
+        )
+        p0, _ = validate_pack(root)
+        if any("working notes" in error for error in p0):
+            print("PASS internal working notes fail promotion")
+        else:
+            print(f"FAIL internal working notes should fail promotion, got {p0}")
+            ok = False
+        promoted = root / "promoted-notes-foundation"
+        promoted.mkdir()
+        (promoted / "SKILL.md").write_text(
+            "---\nname: promoted-notes-foundation\ndescription: Use when testing.\n"
+            "promotion: explicit-user\n---\n# Promoted notes\n\n"
+            "## Provenance\nDerived from historical internal working notes; no upstream VCS.\n",
+            encoding="utf-8",
+        )
+        p0, _ = validate_pack(root)
+        promoted_errors = [error for error in p0 if "promoted-notes-foundation" in error]
+        if promoted_errors:
+            print(f"FAIL explicit working-note promotion should pass, got {promoted_errors}")
+            ok = False
+        else:
+            print("PASS explicit working-note promotion passes")
     print("foundation-validator selftest: PASS" if ok else "foundation-validator selftest: FAIL")
     return 0 if ok else 1
 

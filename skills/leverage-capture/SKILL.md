@@ -36,9 +36,12 @@ Route each candidate to the *cheapest* class that preserves it. Do not force a s
 
 **FOUNDATION promotion:** create or expand a foundation only when reusable
 architecture, seams, patterns, edge cases, or decisions are expensive enough
-to rediscover that preserving them is cheaper than re-derivation. Record
-portable upstream identity and revision so the foundation reconnects to real
-source; see `../reference-driven-development/references/contract.md`.
+to rediscover that preserving them is cheaper than re-derivation. Active owned
+projects remain source, not capture candidates. Owned-project promotion
+requires an explicit user request after a stable milestone; finishing a project
+does not trigger promotion. External implementations remain demand-driven.
+Record portable upstream identity and revision so the foundation reconnects to
+real source; see `../reference-driven-development/references/contract.md`.
 
 ## Workflow
 
@@ -53,10 +56,11 @@ source; see `../reference-driven-development/references/contract.md`.
 - Forcing everything into a skill.
 - Aesthetic code-taste rules promoted to gates without demonstrated regressions.
 - Saving what source/Git/manifests already say.
+- Automatically indexing or promoting an active or newly completed owned project.
 
 ## Verification
 
-Each survivor exists in its claimed form (code compiles/used; gate fails on the regression class and passes clean cases; skill passes the validator; foundation has SKILL.md with portable provenance and cited capsules on disk; memory entry retrievable). The not-saved list is explicit.
+Each survivor exists in its claimed form (code compiles/used; gate fails on the regression class and passes clean cases; skill passes the validator; foundation has SKILL.md with portable provenance and cited capsules on disk; owned-project promotion records the explicit post-milestone request; memory entry retrievable). The not-saved list is explicit.
 
 ## References
 

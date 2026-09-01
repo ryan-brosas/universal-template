@@ -13,13 +13,13 @@ tool chain.
 
 | Need | Capability |
 |---|---|
-| Repo orientation / neighborhoods | Fovea (`fovea_sketch` → `fovea_focus` → `fovea_dwell`) |
+| Active or owned repo orientation / neighborhoods | Direct source + Fovea (`fovea_sketch` → `fovea_focus` → `fovea_dwell`) |
 | Exact usages / types / refactor safety | MCP Steroid / JetBrains (`steroid_*`) + source |
 | Runtime behavior | tests, debugger, runtime output |
 | Named inspiration repo | project `reference/<repo>/` + source/tests |
 | Live site capture | `reference/web/<site>/` or `web-reference` |
 | Stack patterns from prior implementations | `foundation-pack/*-foundation` + cited source |
-| Cross-repo pattern index | Codebase Memory → activate candidate under `reference/` |
+| Explicitly retained cross-repo pattern index | Codebase Memory → activate candidate under `reference/` |
 | Past attempts / lessons | OpenViking (see `references/openviking.md`) |
 | Current library docs | official docs / Context7 |
 | External facts / advisories | Exa or read-only fetch |

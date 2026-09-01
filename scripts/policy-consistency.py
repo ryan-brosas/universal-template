@@ -457,29 +457,70 @@ def check_objective_drift() -> None:
                 check_fail("OBJECTIVE-DRIFT", rel, i, "obsolete quality/capture objective resurfaced")
 
 
-def check_foundation_first_class() -> None:
-    """Foundations are durable leverage — not scheduled retirement or a no-new-foundations ban."""
-    banned_phrases = (
-        "no new foundations",
-        "retired over time",
-        "temporary cold prior-art",
-        "foundation creation is frozen",
-    )
-    for phrase in banned_phrases:
-        for rel in FOUNDATION_POLICY_FILES:
-            text = read(rel)
-            if not text:
-                continue
-            for i, line in enumerate(text.splitlines(), 1):
-                if phrase.lower() in line.lower():
-                    check_fail("FOUNDATION-FIRST-CLASS", rel, i, f"obsolete foundation policy: {phrase!r}")
+FOUNDATION_ACTION = re.compile(
+    r"\b(?:index(?:es|ed|ing)?|ingest(?:s|ed|ing)?|promot(?:e|es|ed|ing)|"
+    r"creat(?:e|es|ed|ing) (?:a |the )?foundations?)\b",
+    re.I,
+)
+FOUNDATION_AUTOMATIC_TRIGGER = re.compile(
+    r"\b(?:automatically|by default|without (?:an )?explicit user request|"
+    r"after (?:a|every|each) project)\b",
+    re.I,
+)
+FOUNDATION_ABSENCE_TRIGGER = re.compile(
+    r"\b(?:if|when|whenever)\b.{0,100}\b(?:absent|missing|unindexed|not indexed)\b",
+    re.I,
+)
+FOUNDATION_NEGATION = re.compile(
+    r"\b(?:do not|don't|never|must not|is not|are not)\b.{0,60}"
+    r"\b(?:automatically|by default|index|ingest|promot|creat)\w*\b",
+    re.I,
+)
+
+
+def foundation_automation_violation(text: str) -> bool:
+    """Return whether a policy clause makes project capture automatic."""
+    for clause in re.split(r"[.;!?\n]+", text):
+        if not FOUNDATION_ACTION.search(clause) or FOUNDATION_NEGATION.search(clause):
+            continue
+        if FOUNDATION_AUTOMATIC_TRIGGER.search(clause) or FOUNDATION_ABSENCE_TRIGGER.search(clause):
+            return True
+    return False
+
+
+def check_foundation_lifecycle() -> None:
+    """Foundations are earned and removable; owned-project capture is explicit."""
+    for rel in FOUNDATION_POLICY_FILES:
+        text = read(rel)
+        if not text:
+            continue
+        scannable = re.sub(
+            r"^## Red Flags\b.*?(?=^## |\Z)", "", text, flags=re.M | re.S
+        )
+        if foundation_automation_violation(scannable):
+            check_fail(
+                "FOUNDATION-LIFECYCLE",
+                rel,
+                1,
+                "project indexing or foundation promotion must be explicit",
+            )
     require_phrase(
-        "FOUNDATION-FIRST-CLASS",
+        "FOUNDATION-LIFECYCLE",
         "skills/reference-driven-development/references/contract.md",
-        "References vs foundations",
+        "Active owned projects remain direct source",
     )
     require_phrase(
-        "FOUNDATION-FIRST-CLASS",
+        "FOUNDATION-LIFECYCLE",
+        "skills/leverage-capture/SKILL.md",
+        "Owned-project promotion requires an explicit user request after a stable milestone",
+    )
+    require_phrase(
+        "FOUNDATION-LIFECYCLE",
+        "skills/codebase-memory/SKILL.md",
+        "Index creation requires an explicit user request",
+    )
+    require_phrase(
+        "FOUNDATION-LIFECYCLE",
         "README.md",
         "accumulated implementation foundations",
     )
@@ -1120,6 +1161,35 @@ def selftest() -> int:
         ok = False
     else:
         print("PASS foundation policy scope includes routing skills")
+    lifecycle_good = {
+        "explicit promotion": (
+            "Active owned projects remain source; an explicit user request after a "
+            "stable milestone may promote reusable understanding."
+        ),
+        "negated automatic indexing": "Never automatically index an active project.",
+        "negated default ingestion": "A finished project is not ingested by default.",
+    }
+    lifecycle_bad = {
+        "absent index": "Index the project when the repository is absent.",
+        "conditional absent index": "If the project is absent, index it.",
+        "adverb-first indexing": "Automatically index the project.",
+        "automatic foundation": "Create a foundation after every project.",
+        "plural foundations": "Create foundations automatically.",
+        "completed-project ingestion": "Completed projects are automatically ingested.",
+        "default ingestion": "Ingest completed projects by default.",
+    }
+    for name, fixture in lifecycle_good.items():
+        if foundation_automation_violation(fixture):
+            print(f"FAIL foundation lifecycle rejected {name}")
+            ok = False
+        else:
+            print(f"PASS foundation lifecycle accepts {name}")
+    for name, fixture in lifecycle_bad.items():
+        if foundation_automation_violation(fixture):
+            print(f"PASS foundation lifecycle rejects {name}")
+        else:
+            print(f"FAIL foundation lifecycle missed {name}")
+            ok = False
     # Foundation-priority regression: bad skill fails, good skill passes.
     with tempfile.TemporaryDirectory() as td:
         base = Path(td)
@@ -1306,7 +1376,7 @@ CHECKS = [
     ("NO-USER-PROFILE", check_no_user_profile),
     ("NO-ARTIFACT-PACK", check_no_artifact_pack),
     ("OBJECTIVE-DRIFT", check_objective_drift),
-    ("FOUNDATION-FIRST-CLASS", check_foundation_first_class),
+    ("FOUNDATION-LIFECYCLE", check_foundation_lifecycle),
     ("AGENTS-CONSTITUTION", check_agents_constitution),
     ("EVIDENCE-ROUTER-PRIORITY", check_evidence_router_priority),
     ("BOOTSTRAP-REFERENCE-INVENTORY", check_bootstrap_reference_inventory),

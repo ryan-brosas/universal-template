@@ -49,6 +49,11 @@ References are normally read-only, local, and disposable. Prefer
 `.gitignore`. A reference checkout or web capture is never automatically
 promoted into a skill, foundation, index, or corpus.
 
+Active owned projects remain direct source while work is in progress. After a
+stable milestone, only an explicit user decision may promote expensive,
+reusable understanding into a foundation or persistent index. Completion alone
+never triggers ingestion, and no promotion is the default.
+
 **References vs foundations:** `<project>/reference/` holds actual external
 code or captured frontend evidence for inspection and adaptation.
 `foundation-pack/<x>-foundation/` holds reusable understanding distilled
@@ -58,8 +63,10 @@ outrank generic foundations when both apply.
 
 **Foundation provenance (forward rule for new or materially touched
 foundations):** record portable upstream identity (`owner/repo` or canonical
-URL), exact source revision (commit/tag/ref), and license when known.
-Machine-local checkout paths are secondary convenience only. When a foundation
+URL), exact source revision (commit/tag/ref), and license when known. A
+foundation explicitly promoted from owned material without upstream VCS records
+`promotion: explicit-user` in its frontmatter. Machine-local checkout paths
+are secondary convenience only. When a foundation
 points at source that is not available locally, resolve the portable identity,
 acquire or reuse it under `<project>/reference/<repo>/`, and inspect source and
 tests before load-bearing claims.

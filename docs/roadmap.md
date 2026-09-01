@@ -22,7 +22,10 @@ follow the engineering constitution and catch-first test methodology.
   and tests, adopt, adapt, or omit. `foundation-pack/` holds accumulated
   implementation foundations (architecture, patterns, seams) separate from
   the active skill catalog; create or expand one only when reusable
-  understanding is cheaper to retrieve than to re-derive.
+  understanding is cheaper to retrieve than to re-derive. Active owned projects
+  stay in project source; completion creates no ingestion or mining backlog.
+  Only an explicit user decision after a stable milestone may promote reusable
+  understanding. Absorbed, stale, or low-value foundations may be pruned.
 - **Reference contract adherence.** The durable contract lives with
   `reference-driven-development` at
   `skills/reference-driven-development/references/contract.md`.
@@ -30,8 +33,9 @@ follow the engineering constitution and catch-first test methodology.
   `<project>/reference/web/`; do not confuse the two trees.
 - **Automated code-graph context discovery.** Before planning or editing,
   query the nearest sufficient source: direct code, Fovea (active-project
-  structure), or Codebase Memory (cross-repo prior art). One primary route per
-  question; escalate only on a named gap.
+  structure), or an explicitly retained Codebase Memory entry (cross-repo prior
+  art). Do not auto-index current projects. One primary route per question;
+  escalate only on a named gap.
 
 ## 2. Steer outcomes, not behavior
 
