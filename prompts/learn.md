@@ -11,7 +11,11 @@ is true. Keep findings compact, cited, and useful for the active project.
 - `/learn --auto foundation-pack`: run a bounded, sequential revision campaign
   over one eligible Foundation Pack source group at a time.
 - `/learn --auto foundation-pack continue`: resume the campaign. Read the
-  latest `docs/plans/inspo-learning-*.md` `Next target` first; finish that
+  coordinator deterministically: consider `docs/plans/inspo-learning-*.md`
+  in ascending `(repo pin)` order and take the first record whose group has
+  no COMPLETE or SATURED terminal disposition recorded. A record that already
+  records COMPLETE or SATURED for its pinned seams is closed: do not re-enter
+  or re-approve it. Use that record's `Next target` first, finish that
   seam, then chain on to the next eligible source group.
 - `/learn --auto foundation-pack --loops N` (alias `--loop N`): process at
   most N source groups in this run (unbounded means "until a real stop", not

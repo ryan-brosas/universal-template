@@ -1,6 +1,6 @@
 # gRPC client transport ladder — Bruno's grpc-client.js contracts
 
-**Source:** bruno (MIT), `main@675965612ff11b23bc9b6c9541110aa1b0287bcb2967`; Codebase Memory `ext-bruno` ready (27,553n/96,755e). **Question:** When porting a gRPC-capable request tool, what URL, TLS, proxy, reflection, and stream-lifecycle contracts must hold?
+**Source:** bruno (MIT), `main@675965612ff11b23bc9b6c9541110a287bcb2967`; Codebase Memory `ext-bruno` ready (27,553n/96,755e). **Question:** When porting a gRPC-capable request tool, what URL, TLS, proxy, reflection, and stream-lifecycle contracts must hold?
 
 **Path/Symbol:** `packages/bruno-requests/src/grpc/grpc-client.js` (1,077L) `GrpcClient`, `grpcMessageGenerator.js`, `grpc-client.spec.js` (718L direct tests, present at pin).
 
