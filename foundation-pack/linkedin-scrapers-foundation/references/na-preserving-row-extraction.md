@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 |# NA-preserving row extraction — how do I scrape Sales Nav list cards field-by-field so a broken card yields a complete-but-partial row instead of losing the prospect?
 
-**Source:** maximo3k-sales-nav-scraper GPL-3 `main@bdcd2e5` (2024-07-01); Codebase Memory `maximo3k-sales-nav-scraper`. **Question:** when each result card has 5 independently-missing fields, what per-card contract keeps the output schema total (every row, all columns) and the pagination loop honest about the last page?
+**Source:** maximo3k-sales-nav-scraper GPL-3 `main@bdcd2e5` (2024-07-01); Codebase Memory entry withdrawn in the 2026-09 stale-index cleanup, evidence grounded in the recorded checkout. **Question:** when each result card has 5 independently-missing fields, what per-card contract keeps the output schema total (every row, all columns) and the pagination loop honest about the last page?
 
 ## Pre-initialized NA fields + scrollIntoView + re-find by index + three-way Next gate
 **Path/Symbol:** `prospect_scraper_sales_navigator.py:scroll_extract` (:57–122), `scrape_results_page` (:124–153), `write_results_to_csv` (:22–29).
@@ -40,8 +40,8 @@ def write_results_to_csv(results, filename):
 ```
 **Flow:** wait `.artdeco-list` (+4 s settle) → collect card elements → per card: scrollIntoView → visibility wait → re-find by index → five scoped field reads with NA fallbacks → append row → flush batch to CSV → Next-button trichotomy → repeat.
 **Invariant:** every iteration appends exactly one schema-complete row — extraction failure degrades FIELD VALUES ("NA"), never ROW COUNT, so downstream join/analysis code never sees ragged data; the header is written on the empty-file probe (`tell()==0`) not on path existence, so appending to an existing file never duplicates headers; pagination stops on DISABLED-or-ABSENT next (both terminal states distinguished only in logs) — it never guesses a page count; elements are re-queried after scroll because Sales Nav's virtualized list invalidates earlier references.
-**Probe:** repo has no automated tests — coverage caveat. Deterministic probes: `grep -c '"NA"' prospect_scraper_sales_navigator.py` ⇒ 10 (5 defaults + 5 except-path re-lists); `grep -n "tell() == 0" prospect_scraper_sales_navigator.py` ⇒ :25; graph anchor `scrape_results_page` resolves in project `maximo3k-sales-nav-scraper`.
-**Retrieve:** `await mcp.codebase_memory.search_graph({ project: "maximo3k-sales-nav-scraper", query: "scroll_extract scrape_results_page write_results_to_csv artdeco", limit: 5 });`
+**Probe:** repo has no automated tests — coverage caveat. Deterministic probes: `grep -c '"NA"' prospect_scraper_sales_navigator.py` ⇒ 10 (5 defaults + 5 except-path re-lists); `grep -n "tell() == 0" prospect_scraper_sales_navigator.py` ⇒ :25; `scrape_results_page` anchor confirmed in the recorded checkout (`grep -n` at pin `bdcd2e5`).
+**Retrieve:** graph entry withdrawn; re-probe the pinned checkout instead, e.g. `grep -n "scroll_extract|scrape_results_page|write_results_to_csv" prospect_scraper_sales_navigator.py`.
 
 ## Verdict
 Adopt: pre-initialized NA defaults inside the per-item try scope, the tell()==0 header probe for append-mode CSVs, index-based element re-find after scroll, and the enabled/disabled/absent Next trichotomy. Adapt field selectors to current Sales Nav markup (`data-anonymize` attributes rotate); swap print-noise for the string-outcome-channel ledger. Omit the hard-coded 4 s/1 s sleeps in favor of humanization-scroll's bounded disciplines when porting at scale. Contrast: hassan variant extracts IDENTITY from row attributes and treats fields other than name as optional; this pattern extracts the FULL FIELD SET and treats identity as just another nullable column — choose based on whether the consumer needs canonical URLs (hassan) or wide rows (this). dedupe-applied-tracking cites this file's writer; THIS capsule covers its reader-side completeness contract.
