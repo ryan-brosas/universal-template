@@ -5,7 +5,7 @@
 Derived from `skills/*/SKILL.md` metadata. Maintainer tool:
 `python3 scripts/skill-catalog.py search "<topic>"`.
 
-146 skills: 37 visible, 109 hidden. Visible startup metadata: ~9507 chars (~2376 tokens).
+147 skills: 38 visible, 109 hidden. Visible startup metadata: ~9689 chars (~2422 tokens).
 
 ## Entry skills
 
@@ -26,11 +26,12 @@ Direct user-facing capabilities; trigger on request.
 | [`github-actions-engineering`](../skills/github-actions-engineering/SKILL.md)               | entry | visible | Use when designing, creating, auditing, repairing, hardening, or optimizing GitHub Actions CI/CD: set up CI for a project, fix a failing workflow, secure or sp... |
 | [`github-contribution-opportunities`](../skills/github-contribution-opportunities/SKILL.md) | entry | visible | Use when finding and qualifying legitimate GitHub pull-request contribution opportunities in open-source repositories before claiming or implementing work.        |
 | [`github-repo-setup`](../skills/github-repo-setup/SKILL.md)                                 | entry | visible | Use when setting up, governing, or auditing GitHub for a project: create the repository or wire origin, set description and topics, apply namespaced labels, ad... |
-| [`goal-setup`](../skills/goal-setup/SKILL.md)                                               | entry | visible | Use when significant, ambiguous, high-risk, or multi-session work needs a durable execution contract with explicit scope, completion criteria, key decisions, a... |
+| [`goal-setup`](../skills/goal-setup/SKILL.md)                                               | entry | visible | Use when a roughly four-day-or-longer effort needs a compact post-code work record for recovery, handoff, or an explicit user, project, or external coordinatio... |
 | [`grill-me`](../skills/grill-me/SKILL.md)                                                   | entry | visible | Use when you have a rough idea, ADR, PRD, or spec that needs to survive scrutiny before code is written.                                                           |
 | [`gsearch`](../skills/gsearch/SKILL.md)                                                     | entry | visible | Use when the user asks to search the web, look something up, find a link, or research a topic. Google via CDP returns title, URL, and snippet in about a second... |
 | [`house-writing-style`](../skills/house-writing-style/SKILL.md)                             | entry | visible | Use when rewriting, polishing, or auditing natural-language prose in the house style: agent output, docs, release notes, PR and issue text, or when a style vio... |
 | [`improve-codebase-architecture`](../skills/improve-codebase-architecture/SKILL.md)         | entry | visible | Use when the user wants to improve architecture, find refactoring opportunities, consolidate tightly-coupled modules, or make a codebase more testable and AI-n... |
+| [`inspo-qualify`](../skills/inspo-qualify/SKILL.md)                                         | entry | visible | Use when an active project needs external GitHub prior art: discover or assess one candidate, then clone and full-index it in Codebase Memory only after explic... |
 | [`leverage-capture`](../skills/leverage-capture/SKILL.md)                                   | entry | visible | Use when meaningful work has finished and something may be worth preserving, classify it into code, references, foundations, gates, skills, or memory, and capt... |
 | [`math-schema`](../skills/math-schema/SKILL.md)                                             | entry | visible | Use when the user studies real analysis, probability, PDEs, or the mathematics of physics and wants to reach results through their own conjectures and proofs....  |
 | [`mcp-steroid`](../skills/mcp-steroid/SKILL.md)                                             | entry | visible | Use when an MCP-capable coding agent needs native JetBrains IntelliJ APIs, semantic navigation, refactoring, inspections, tests, debugging, or IDE UI control.     |

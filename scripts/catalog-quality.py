@@ -39,7 +39,7 @@ TOKEN_CHARS = 4            # documented rough estimator; trend metric only
 ENTRY_SKILLS = {
     # flow entries
     "project-bootstrap", "brainstorming", "goal-setup", "prototype",
-    "leverage-capture", "reference-driven-development",
+    "leverage-capture", "reference-driven-development", "inspo-qualify",
     # GitHub / delivery
     "github-repo-setup", "github-actions-engineering", "push-pr",
     "git-workflow-and-versioning", "github-contribution-opportunities",
