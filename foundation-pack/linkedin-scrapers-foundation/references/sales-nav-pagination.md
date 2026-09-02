@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Sales Nav pagination & scroll — how do I walk Sales Navigator result pages and load lazy cards without losing rows?
 
-**Source:** maximo3k-sales-nav-scraper GPL-3 `main@bdcd2e5197929f78631ab127d2fd10cee18807ca`; hassan-sales-nav-profiles-scraper NO-LICENSE `main@e294ac09` (learn-only, pattern recorded not copied); linvo-scraper MIT `main@cfbe91080c7347591dee44a26f55d74bba734da2`. Codebase Memory projects `maximo3k-sales-nav-scraper`, `hassan-sales-nav-profiles-scraper`, `linvo-scraper`. **Question:** which element gates page-turns, which container scrolls, and what waits must precede extraction?
+**Source:** maximo3k-sales-nav-scraper GPL-3 `main@bdcd2e5197929f78631ab127d2fd10cee18807ca`; hassan-sales-nav-profiles-scraper NO-LICENSE `main@e294ac09` (learn-only, pattern recorded not copied); linvo-scraper MIT `main@cfbe91080c7347591dee44a26f55d74bba734da2`. Codebase Memory projects `hassan-sales-nav-profiles-scraper`, `linvo-scraper` (maximo3k entry dropped in the 2026-09 stale-index cleanup; its evidence is source-pinned in this capsule and `na-preserving-row-extraction.md`). **Question:** which element gates page-turns, which container scrolls, and what waits must precede extraction?
 
 ## scrape_results_page loop + container scroll
 **Path/Symbol:** `prospect_scraper_sales_navigator.py:scrape_results_page` (:124–153), `scroll_extract` (:57–122); hassan variant: `linkedin_scraper.py:main` (:116–170 two-stage readiness + one-shot collection, :237–251 page gate); linvo API-side variant: `lib/linkedin/linkedin.sales.page.service.ts:LinkedinSalesPageService.pagesTask` (:15–197).
@@ -45,12 +45,13 @@ pages: Math.ceil((paging.total > 2500 ? 2500 : paging.total) / 25)   // hard cap
 
 **Flow:** wait for list → settle wait → collect cards → per card: scrollIntoView → visibility wait → RE-LOCATE element by index (stale-reference defense) → extract fields with NA defaults → append batch to CSV → click enabled Next or stop. hassan rhythm: DCL goto → 20 s anchor gate (timeout ⇒ stop) → container scroll ×10 @3 s → 5 s settle → ONE `.all()` snapshot → islanded rows → enabled-Next click or stop.
 **Invariant:** four defenses against virtualized/lazy lists — (1) scroll the results CONTAINER not the window (hassan), (2) re-find elements after any scroll (maximo3k :74; hassan collects ONE `.all()` snapshot only AFTER scroll+settle completes, never during scrolling), (3) trust the pagination button's enabled state over result counts, (4) navigation event ≠ data-completeness: hassan's `domcontentloaded` goto is safe ONLY because an explicit 20 s anchor-selector wait (:149) is the actual gate — compensate a weak nav event with a strong element gate, or pay idle-readiness (contrast networkidle2-readiness-gate, whose null-preserving consumers cannot distinguish missing-vs-empty and therefore need networkidle). Termination is three OBSERVED STATES (anchor-wait timeout :149–152, zero-element post-scroll snapshot :168–170, disabled/absent Next :243–248), never a page counter — sales-nav-lead-identity pins stop #1 for the identity flow. Linvo's cap at 2500 mirrors LinkedIn's own search ceiling.
-**Probe:** no tests in either repo — coverage caveat recorded (source-grounded). Cross-check: linvo `pagesTask` resolves in graph (`LinkedinSalesPageService.pagesTask`); maximo3k symbols resolve (`scroll_extract`, `write_results_to_csv`). hassan greps executed at pin `e294ac09c9b9`: `wait_until=` ⇒ :116 only; `for _ in range(10)` ⇒ :159 only; `time.sleep(5)` ⇒ :164 only; `No profiles found` ⇒ :169 only.
+**Probe:** no tests in either repo — coverage caveat recorded (source-grounded). Cross-check: linvo `pagesTask` resolves in graph (`LinkedinSalesPageService.pagesTask`); maximo3k symbols pinned from the recorded checkout (`scroll_extract`, `write_results_to_csv`). hassan greps executed at pin `e294ac09c9b9`: `wait_until=` ⇒ :116 only; `for _ in range(10)` ⇒ :159 only; `time.sleep(5)` ⇒ :164 only; `No profiles found` ⇒ :169 only.
 
 ## Get live surrounding code
 **Retrieve:**
 ```ts
-await mcp.codebase_memory.search_graph({ project: "maximo3k-sales-nav-scraper", query: "scrape_results_page", limit: 5 });
+// maximo3k index removed 2026-09: probe the pinned checkout via
+// `grep -n "scrape_results_page" prospect_scraper_sales_navigator.py` (pin 67596561...).
 await mcp.codebase_memory.search_graph({ project: "linvo-scraper", query: "pagesTask", limit: 5 });
 // hassan (executed pass 2): name_pattern "^main$" ⇒ …linkedin_scraper.main Function :33–259
 ```

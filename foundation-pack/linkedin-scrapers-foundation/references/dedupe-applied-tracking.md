@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Dedupe & applied-state tracking — how do I never re-apply to or re-scrape the same item across runs?
 
-**Source:** Auto_job_applier_linkedIn MIT `main@0ca5550` (`get_applied_job_ids` :163–176 + in-loop guards); LinkedIn-Easy-Apply-Bot Apache-2.0 (`get_appliedIDs` :158–173, timestamp window); EasyApplyJobsBot CC-BY-NC (`linkJobApply` appliedOfferIds sweep :182–195); maximo3k GPL-3 (append-mode CSV with header-on-first-write). Codebase Memory projects of the same names. **Question:** what persistence shape makes cross-run dedupe reliable when the source of truth is a flat file?
+**Source:** Auto_job_applier_linkedIn MIT `main@0ca5550` (`get_applied_job_ids` :163–176 + in-loop guards); LinkedIn-Easy-Apply-Bot Apache-2.0 (`get_appliedIDs` :158–173, timestamp window); EasyApplyJobsBot `linkJobApply` appliedOfferIds sweep :182–195; maximo3k GPL-3 (append-mode CSV with header-on-first-write, index withdrawn 2026-09). **Question:** what persistence shape makes cross-run dedupe reliable when the source of truth is a flat file?
 
 ## CSV-as-state + pre-click guards
 **Path/Symbol:** `runAiBot.py:get_applied_job_ids` (:163–176), guard at :877–881; `easyapplybot.py:get_appliedIDs` (:158–173) with 48-hour window at :167; `linkedin.py:linkJobApply` DOM-sweep variant (:182–195); `prospect_scraper_sales_navigator.py:write_results_to_csv` (:22–29).
@@ -29,7 +29,8 @@ if job_id in applied_jobs or find_by_class(driver, "jobs-s-apply__application-li
 **Retrieve:**
 ```ts
 await mcp.codebase_memory.search_graph({ project: "Auto_job_applier_linkedIn", query: "get_applied_job_ids", limit: 5 });
-await mcp.codebase_memory.search_graph({ project: "maximo3k-sales-nav-scraper", query: "write_results_to_csv", limit: 5 });
+// maximo3k entry withdrawn 2026-09; re-probe the pinned checkout with
+// `grep -n "write_results_to_csv" prospect_scraper_sales_navigator.py`.
 ```
 
 ## Verdict
