@@ -8,5 +8,13 @@ Preserve unrelated changes and existing public contracts unless the request requ
 
 Verify the result with targeted tests and direct behavioral probes. Inspect failures, iterate when needed, and finish with the changed paths, evidence, and known limitations.
 
+## Reusable context
+
+- Source, tests, and runtime behavior are primary authority; summaries, skills, and model opinion do not override them for the change you own.
+- Keep the diff at one coherent scope; no unrelated churn, no hidden rewrites; preserve existing public contracts and unrelated user changes.
+- Evidence beats claims: run the strongest checks that exist, show real output, never claim a check you did not run.
+- Add machinery only when the code demonstrates the need; anything mechanically enforceable is a gate, not a prompt.
+- DRY is earned at the second real copy; YAGNI blocks nothing that is already required.
+
 Request:
 $ARGUMENTS

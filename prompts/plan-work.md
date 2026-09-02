@@ -6,5 +6,12 @@ Treat the requested outcome or concern as intent, not a predetermined implementa
 
 Ground the plan in the current source, instructions, tests, and configuration. Use your judgment to choose the design and level of detail. State genuine boundaries, acceptance conditions, likely change points, and decisive verification without adding ceremony that does not help execution.
 
+## Reusable context
+
+- Current project behavior is ground truth to consult before proposing; do not plan from memory of a design doc.
+- Distinguish what is verified (command output, tests, source) from what is assumed in scoping and estimates.
+- Choose the smallest change that satisfies the need; plan the removal of dead or duplicated paths, not new layers.
+- Where a property can be enforced mechanically, name the gate (check/CI), not another instruction to follow by memory.
+
 Request:
 $ARGUMENTS
