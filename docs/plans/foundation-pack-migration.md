@@ -7,7 +7,7 @@ Closed 2026-09-02 for the current checkout. All 194 Foundation Pack leaves recei
 | Disposition | Leaves | Verified outcome |
 | --- | ---: | --- |
 | retain | 85 | Recorded project exists; checkout is a Git root at the recorded pin; full-mode index, status, coverage, and graph probe succeeded. |
-| revise | 2 | `dub-foundation` and `grist-core-foundation` have checkouts beyond their recorded pins; their capsules require source/test review before revision. |
+| revise → retained | 2 | `dub-foundation` and `grist-core-foundation` had checkouts beyond their recorded pins; revise closure (2026-09-02): checkout HEAD == recorded pin, origin behind 0, refs==loaders, validator 0 fail per leaf. |
 | defer | 107 | 82 identities are absent from the current graph, 21 leaves lack Codebase Memory provenance, 1 root is missing, and 3 leaves lack a parseable source pin. |
 
 The pilot `aeo-affiliate-skills-foundation` was verified at its exact MIT source pin: `bun run test:registry` and `bun run test:docs` passed. Its full index is ready, with only the pre-existing documented partial HTML ranges.
