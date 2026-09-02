@@ -29,6 +29,18 @@ The 109 `revise`/`defer` leaves are an explicit source-recovery backlog. They re
 
 ## Next target
 
-Resume with a fresh census-aware triage (2026-09-02 update). The live Codebase Memory census has 168 projects. Leaves with no census entry AND no checkout on disk are the recovery backlog: 49 leaves have a checkout but missing index (recoverable by re-indexing at their recorded pin), and a small class has neither (`mcp-spec-and-servers`, `jetbrains-internals`, the `dsh-*` family, `pi-autoresearch`, `pi-supervisor`, `pi-messenger-swarm`, `roo-foundation`).
+Corrected census-aware triage (2026-09-02 review). The live census has 168
+projects; a per-leaf scan of every recorded Codebase identifier plus a
+checkout sweep shows 190 of 194 leaves are either census-indexed or have a
+git checkout. The residual backlog is exactly 4 internal-only leaves:
+`dsh-factory-foundation`, `pi-autoresearch-foundation`,
+`pi-messenger-swarm-foundation`, and `pi-supervisor-foundation`, whose
+indexes were removed in the prior stale-index cleanup (#35).
 
-Do not demote silently: every deferred leaf must either (a) be recovered through /inspo approval, index + direct-test pin verification, or (b) have its recorded identity checked for liveness with a written demotion note if the source is gone. Gates (foundation-validator, catalog-quality) stay green throughout.
+Recover those four through /inspo approval and re-index at the recorded
+pin. Family aliases (`mcp-spec-and-servers` to modelcontextprotocol and
+servers, `jetbrains-internals` to the jetbrains-* family, `roo-foundation`
+to Roo-Code, `dnd-kit` to ui-dnd-kit) are indexed and are not missing; do
+not classify by leaf name alone. Never demote silently: any unindexed leaf
+without a checkout gets a written liveness note first. Gates stay green
+throughout.
