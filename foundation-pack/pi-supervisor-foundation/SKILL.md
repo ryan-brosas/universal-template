@@ -99,3 +99,6 @@ Revalidate `mnt-hdd-utopia-inspo-external-ext-pi-supervisor` before porting: run
 
 ## Boundaries
 Adopt pure contracts: signal predicates, decision parser, tier algebra, compaction pipeline (pure functions over message arrays), clipping toolkit, epoch race gate. Adapt host-specific integration: pi ExtensionAPI event names, sendUserMessage delivery channels, sessionManager.getBranch entry journal, TUI widget registration, ps-based process detection. Omit product behavior: pi-fabric broker events unless you run a compatible bus, SUPERVISOR.md CLI plumbing details, media/screenshots, release tooling.
+
+## Recovery (2026-09-02)
+Re-indexed at the recorded pin in full mode: Codebase Memory project `mnt-hdd-utopia-inspo-external-ext-pi-supervisor` is ready (504n/1304e, 0 skipped; parse_partial matches the capsule-documented caveat). Resolves the residual-backlog entry from the foundation-pack-migration work record.

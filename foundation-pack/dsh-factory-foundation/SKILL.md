@@ -52,3 +52,6 @@ Revalidate `mnt-hdd-utopia-inspo-external-ext-dsh-factory` before porting: run `
 
 ## Boundaries
 Adopt the lease/claim/monitor scheduler contract, the CAS store sequence, and the fail-loud mutation boundary; adapt checkout-lane tooling, agent-runtime binding, and event names to the host; omit the client-UI transport specifics and cordis lifecycle plumbing.
+
+## Recovery (2026-09-02)
+Re-indexed at the recorded pin in full mode: Codebase Memory project `mnt-hdd-utopia-inspo-external-ext-dsh-factory` is ready (900n/3408e, 0 skipped; parse_partial matches the capsule-documented caveat). Resolves the residual-backlog entry from the foundation-pack-migration work record.
