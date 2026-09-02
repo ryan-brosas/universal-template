@@ -12,7 +12,7 @@ Closed 2026-09-02 for the current checkout. All 194 Foundation Pack leaves recei
 
 ## What changed on re-triage (2026-09-02)
 
-Re-evaluated the 107-leave `defer` bucket against the live census and on-disk checkouts, using every recorded Codebase identifier (not the leaf-name only), so a leaf is evidenced when its project id exists in the census or its root is a real git checkout. Result: **190 of 194 leaves are evidenced**; a true residual of **4 internal-only leaves** remain for recovery:
+Re-evaluated the 107-leave `defer` bucket against the live census and on-disk checkouts, using every recorded Codebase identifier (not the leaf-name only), so a leaf is evidenced when its project id exists in the census or its root is a real git checkout. Result: **190 of 194 leaves were evidenced** at that point; the 4 internal-only leaves were then recovered (below):
 
 - `dsh-factory-foundation`
 - `pi-autoresearch-foundation`
@@ -23,7 +23,9 @@ Family-alias names (e.g. `mcp-spec-and-servers` → modelcontextprotocol + serve
 
 ## Next target
 
-Recover the 4 residual leaves through `/inspo` approval and re-index at their recorded pins. Never demote silently: any not-indexed leaf without a checkout gets a written liveness note first. Keep the gates (foundation-validator, catalog-quality) green throughout.
+Resolved 2026-09-02: the four residual leaves were re-indexed at their recorded pins in full mode and are ready in the Codebase Memory census (`mnt-hdd-utopia-inspo-external-ext-dsh-factory` 900n/3408e, `...-pi-autoresearch-harness` 658n/1508e, `...-pi-messenger-swarm` 2493n/5802e, `...-pi-supervisor` 504n/1304e; 0 skipped each, parse_partial per capsule caveat). Each leaf carries a dated recovery note. No residual backlog remains: all 194 leaves are now evidenced.
+
+Keep gates (foundation-validator, catalog-quality) green; never demote silently in future passes.
 
 ## Source and evidence
 

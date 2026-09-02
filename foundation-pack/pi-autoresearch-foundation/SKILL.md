@@ -60,3 +60,6 @@ Revalidate `mnt-hdd-utopia-inspo-external-ext-pi-autoresearch-harness` before po
 
 ## Boundaries
 Adopt pure contracts: JSONL protocol, MAD formula, segment arithmetic, run-lock predicate, protected-file ordering, stop ladders, tri-state shortcut grammar. Adapt host-specific integration: pi ExtensionAPI events (before_agent_start/session_before_compact/ui.custom), pi-tui rendering, HTTP transport/port env names, Windows bash resolution. Omit product-specific behavior: npm publish packaging, GitHub Actions CI, logo/template assets, the davebcn87 upstream fork lineage details.
+
+## Recovery (2026-09-02)
+Re-indexed at the recorded pin in full mode: Codebase Memory project `mnt-hdd-utopia-inspo-external-ext-pi-autoresearch-harness` is ready (658n/1508e, 0 skipped; parse_partial matches the capsule-documented caveat). Resolves the residual-backlog entry from the foundation-pack-migration work record.

@@ -70,3 +70,6 @@ Revalidate `mnt-hdd-utopia-inspo-external-ext-pi-messenger-swarm` before porting
 
 ## Boundaries
 Adopt the pure contracts: unified JSONL channel format, event-sourced task fold, write-verify-claim registry, PID-liveness janitorship, cascade algorithm, identity ladder, scroll math, status cascade, prompt protocol clauses. Adapt host-specific integration: pi ExtensionAPI hooks, `@earendil-works/pi-tui` overlay rendering, the `pi --mode json` child invocation, shell-alias PATH injection, env-var names. Omit product behavior: the TUI visual design, emoji vocabularies, default thresholds (3 spawns / 10min stall / 900s stuck / 50-event retention) as sacred values, and the legacy global-mode path (`PI_MESSENGER_GLOBAL=1`) which exists only for backwards compatibility.
+
+## Recovery (2026-09-02)
+Re-indexed at the recorded pin in full mode: Codebase Memory project `mnt-hdd-utopia-inspo-external-ext-pi-messenger-swarm` is ready (2493n/5802e, 0 skipped; parse_partial matches the capsule-documented caveat). Resolves the residual-backlog entry from the foundation-pack-migration work record.
