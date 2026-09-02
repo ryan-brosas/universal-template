@@ -139,4 +139,4 @@ reason]`.
 ---
 
 _Update this file when phases complete or roadmap changes._
-_Use `pi-fabric` plan extensions to create detailed plans for active phases._
+_Drive active work from source, tests, and verified outcomes; update this roadmap only when the requested roadmap or a completed phase changes._

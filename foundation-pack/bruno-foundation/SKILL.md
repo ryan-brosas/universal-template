@@ -28,6 +28,7 @@ Use when porting an HTTP/API client engine: reusing TLS agents without leaking s
 - `references/timeline-agent-instrumentation.md` — subclass-wrapped agents logging DNS/TLS/ALPN events to a locally captured array (survives cached-agent repointing), errors carry partial timelines.
 - `references/expression-interpolation.md` — compile-cached template literals: literal short-circuit ladder incl. MAX_SAFE_INTEGER string guard, keyword-filtered context destructuring.
 - `references/ipc-clean-json.md` — realm-safe JSON sanitizer for cross-process payloads: circular refs, duck-typed Errors, typed-array envelopes, fail-open wrapper.
+- `references/grpc-client-transport.md` — gRPC transport ladder: URL grammar (unix/pipe grpcs default), insecure-for-local + fail-closed rejectUnauthorized TLS, manual HTTP CONNECT proxy replication, stream-type dispatch, single-fire event latch, close-on-complete channel discipline.
 
 ## Capsule map
 - **Agent reuse** — `agent-cache-lru`: Map keyed by classId+TLS hashes+proxy+hostname(nulled under proxy); LRU delete/re-set touch; evict ⇒ `.destroy()`; `ca` → cached shared SecureContext appended over OpenSSL defaults (pfx/cert/key build combined contexts).
@@ -48,9 +49,10 @@ Use when porting an HTTP/API client engine: reusing TLS agents without leaking s
 - **Connection telemetry** — `timeline-agent-instrumentation`: subclass captures `this.timeline` into a local at createConnection entry; logs ALPN offer, CA counts, DNS, cipher suite, peer cert; thrown errors get `.timeline` attached; wrapper classes WeakMap-memoized.
 - **Expression runtime** — `expression-interpolation`: expression compilation cached per raw string with globals shimmed from globalThis; template ladder short-circuits literals and >MAX_SAFE_INTEGER numbers.
 - **Cross-process payloads** — `ipc-clean-json`: cleanJson makes sandbox objects Electron-transmittable via realm-safe Error duck-typing, WeakSet cycles, typed-array envelopes, fail-open wrapper.
+- **gRPC plane** — `grpc-client-transport`: Bruno-specific gRPC client (unix/named-pipe/TCP URL ladder, proto-loader long→string precision, reflection v1/v1alpha fallback, stream method dispatch, close-on-complete channels).
 
 ## Extending the foundation
-Add one `references/<seam>.md` capsule for one graph-selected, source-confirmed porting question — pass-2 candidates: gRPC client unary/stream call machine (`packages/bruno-requests/src/grpc/grpc-client.js` 1,077L + spec 718L), node-vm sandbox CJS loader (`packages/bruno-js/src/sandbox/node-vm/cjs-loader.js`), bru shims (`sandbox/quickjs/shims/bru.js` 580L), error-formatter (752L + spec 1,073L), assert-runtime (585L), collection transpiler units (`bruno-lang`), import converters OpenAPI/Postman (`bruno-converters`). Add one matching loader line and map entry; keep evidence in the capsule, not this leaf.
+Add one `references/<seam>.md` capsule for one graph-selected, source-confirmed porting question — pass-2 candidates: node-vm sandbox CJS loader (`packages/bruno-js/src/sandbox/node-vm/cjs-loader.js`), bru shims (`sandbox/quickjs/shims/bru.js` 580L), error-formatter (752L + spec 1,073L), assert-runtime (585L), collection transpiler units (`bruno-lang`), import converters OpenAPI/Postman (`bruno-converters`). Add one matching loader line and map entry; keep evidence in the capsule, not this leaf.
 
 ## Provenance
 bruno (MIT), `main@675965612ff11b23bc9b6c9541110a287bcb2967` (= base_sha, first pass, zero drift); Codebase Memory project `ext-bruno` (ready, root `/mnt/hdd/utopia/inspo/external/bruno`, branch main@same sha, 27,553 nodes / 96,755 edges, FULL mode, generation 2026-08-23T11:39:47Z generation_matches=true; parse_partial ×12 = JSX story pages/Dockerfiles/malformed-import FIXTURES — none cited; not_indexed ×32 = images/.env BY DESIGN).

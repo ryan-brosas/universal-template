@@ -1,6 +1,6 @@
 # Plan the requested work
 
-Create an implementation-ready plan for the request below without modifying files, external state, or history.
+Create an implementation-ready plan for the request below in this conversation without modifying files, external state, or history. Do not create or propose a repository planning artifact merely because the user asks for a plan. A durable post-code work record is appropriate only when the work is expected to run for roughly four days or longer with meaningful recovery or handoff needs, or when the user, project, or an external coordinator explicitly requires a durable record.
 
 Treat the requested outcome or concern as intent, not a predetermined implementation. Optimize for a plan that increases correctness, feasibility, clarity, and maintainability while reducing unnecessary complexity, risk, churn, and maintenance cost. Do not simplify one dimension by shifting material cost into another.
 

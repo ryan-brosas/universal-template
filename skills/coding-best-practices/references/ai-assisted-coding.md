@@ -9,7 +9,7 @@
 
 - Scope the task clearly — agree on outcome and boundaries before large diffs; code is ground truth, captured skills stack leverage.
 - Give context pointers (files, skills, graph hits) and let the agent retrieve; do not hand-script every step.
-- Maintain the project spine: `AGENTS.md` (plus a durable goal artifact for multi-session work) — context files beat repeating rules in chat.
+- Maintain the project spine: `AGENTS.md` plus, only when a roughly four-day-or-longer run needs recovery or handoff or explicit coordination requires it, a compact post-code work record — source and context files beat repeating rules in chat.
 
 ## Verification over self-report
 

@@ -80,7 +80,8 @@ python3 scripts/skill-catalog.py search "github release"
 ```
 
 Reusable prompts include `/repo-audit`, `/plan-work`, `/implement-work`,
-`/review-work`, `/verify-work`, and `/cleanup-code`. Host invocation syntax can
+`/review-work`, `/verify-work`, `/cleanup-code`, and `/learn`. `/inspo` qualifies
+external prior art; `/learn` investigates an approved source. Host invocation syntax can
 differ; `scripts/render-prompt.py` provides the fallback for hosts without a
 native prompt directory.
 

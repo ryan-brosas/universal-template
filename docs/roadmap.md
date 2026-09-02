@@ -1,9 +1,7 @@
 # Roadmap - current work objectives
 
 This working backlog is reviewed at major milestones, not on a schedule.
-Progress for significant multi-session work is recorded in the `goal-setup`
-goal artifact and reconciled against Git and the project tracker. Its themes
-follow the engineering constitution and catch-first test methodology.
+Progress is normally recoverable from source, Git, the project tracker, and scoped memory. A compact `goal-setup` post-code work record is reserved for a roughly four-day-or-longer run with meaningful recovery/handoff needs, or an explicit user, project, or external coordination requirement. Its themes follow the engineering constitution and catch-first test methodology.
 
 ## Summary
 
@@ -101,5 +99,4 @@ follow the engineering constitution and catch-first test methodology.
    requested; no autonomous marathons by default.
 2. Interactive sessions use this file to prioritize prompt refinements, skill
    authoring, and PR loops.
-3. Durable progress for significant multi-session work lives in the
-   `goal-setup` goal artifact, reconciled against Git and the project tracker.
+3. Durable progress stays in source, Git, the project tracker, and scoped memory by default. Use a compact `goal-setup` post-code work record only for qualified long-running or handoff-heavy work, or an explicit user, project, or external coordination requirement; reconcile it against Git and the project tracker.
