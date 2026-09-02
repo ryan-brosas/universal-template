@@ -8,5 +8,12 @@ Inspect the actual change and use your judgment to select the smallest decisive 
 
 Do not modify files or external state unless the request explicitly asks for a fix.
 
+## Reusable context
+
+- Trust runtime evidence over claims: run the smallest decisive test and report its real output.
+- Cover material behavior; skip redundant suites and state untested paths plainly.
+- A failing check is evidence of a defect, not a reason to weaken it; investigate to root cause first.
+- Where a property is mechanically checkable, prefer the gate and record its command and exit, not a hand-wave.
+
 Scope:
 $ARGUMENTS

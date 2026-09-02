@@ -8,5 +8,12 @@ Inspect the actual diff and enough surrounding code to judge correctness, regres
 
 Do not edit files, rewrite history, or claim checks you did not run.
 
+## Reusable context
+
+- Judge the actual code, callers, tests, and runtime, not the summary: source and observed behavior decide what is material.
+- Flag only actionable findings with a precise location and a concrete fix; suppress noise and unsupported speculation.
+- Weight correctness, security, and regression risk over style; a claim without evidence is a question, not a verdict.
+- Prefer proposed checks or tests as the fix where they exist; a silent assertion is worth less than a run that fails.
+
 Scope:
 $ARGUMENTS
