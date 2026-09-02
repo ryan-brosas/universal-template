@@ -66,4 +66,4 @@ Each survivor exists in its claimed form (code compiles/used; gate fails on the 
 
 - `../writing-skills/SKILL.md`, skill authoring grammar
 - `../reference-driven-development/references/contract.md`, reference-checkout rules
-- `../goal-setup/SKILL.md`, where multi-session decisions already live
+- `../goal-setup/SKILL.md`, where qualified long-run post-code work state may live

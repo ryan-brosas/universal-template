@@ -1,77 +1,67 @@
 ---
 name: goal-setup
-description: "Use when significant, ambiguous, high-risk, or multi-session work needs a durable execution contract with explicit scope, completion criteria, key decisions, and verification."
+description: "Use when a roughly four-day-or-longer effort needs a compact post-code work record for recovery, handoff, or an explicit user, project, or external coordination requirement."
 ---
 
 # Goal Setup
 
 ## Core Principle
 
-Some work needs a durable coordination contract, a migration that spans days, a risky architecture change, cross-agent or cross-team execution. Goal setup captures exactly that contract in ONE artifact; it never manufactures planning ceremony for ordinary work.
+Most implementation should proceed from source, tests, examples, and the conversation. `goal-setup` exists only when a genuinely long-running effort needs durable recovery or handoff state that those surfaces cannot cheaply provide. It records verified work after it happens; it does not manufacture an implementation specification before coding.
 
-Separation of jobs: **brainstorming** decides what to do · **goal-setup** defines what counts as done · implementation does it.
+Separation of jobs: **brainstorming** decides what to do · implementation proves it in code and tests · **goal-setup** preserves only qualified long-run post-code state.
 
 ## When to Use / NOT
 
-- **Use when:** multi-day migration; significant architecture change; major feature; risky production change; multi-agent/cross-team coordination; an explicit user request for an implementation plan.
-- **NOT when:** typo fixes, small bugs, isolated features, obvious refactors, dependency updates. Duration, ambiguity, risk, coordination, or irreversible decisions earn this skill, nothing else does. Ordinary feature work goes straight to implementation.
+- **Use when:** work is expected to run for roughly four days or longer **and** needs meaningful recovery or handoff beyond source, Git, the project tracker, and scoped memory; or the user, repository/project policy, an external tracker, an ADR process, a compliance rule, or a cross-team coordinator explicitly requires a durable record.
+- **NOT when:** the user merely asks for a plan; the work is ambiguous, high-risk, or multi-session; a feature, migration, refactor, or production change is still manageable from source and normal project tracking; or no verified pass exists yet. Those conditions call for conversation, direct implementation, or the existing coordinator—not a repository plan file.
 
 ## Workflow
 
-1. **Check for an existing coordination system.** If the project uses GitHub Issues/milestones, Linear, Jira, or similar, anchor the goal there and keep the local artifact thin, do not duplicate project management into Markdown.
-2. **Choose the artifact location by repository convention**, `docs/plans/<goal>.md` by default; adapt to `docs/adr/`, `design/`, or whatever the project already uses. Never force a tool-specific directory onto a project with its own organization.
-3. **Write ONE artifact** (create the directory only when it does not exist):
+1. **Start from current truth.** Inspect the relevant source, tests, examples, project tracker, and local instructions. Decide and implement in conversation; do not create a local artifact before the first verified pass unless the user, repository/project policy, or an external coordinator requires one.
+2. **Prove the record is earned.** Confirm the expected duration/recovery or handoff need, and check whether an existing tracker already owns the coordination. Keep the tracker authoritative; do not duplicate it into Markdown.
+3. **Choose the native location.** Use the repository’s established work-record or coordination location. If none exists, ask before inventing a directory; do not default to `docs/plans/`.
+4. **Write one compact post-code record** after a verified pass:
 
 ````markdown
-# Goal: <name>
+# Work record: <name>
 
-## Outcome
-<the end state, one paragraph>
+## Verified pass
+<what changed or was proven>
 
-## Scope
-<what this goal covers>
+## Source and evidence
+<paths, tests, runtime evidence, and source pin when material>
 
-## Non-goals
-<explicitly out of scope — prevents drift>
+## Decision and counter-evidence
+<what was chosen and why meaningful alternatives were rejected>
 
-## Accepted facts / constraints
-<decisions, constraints, and traps that are expensive to reconstruct>
+## Omitted or unresolved
+<what was intentionally not done or still needs evidence>
 
-## Done when
-<concrete, verifiable completion criteria — the gates that prove it>
-
-## Important decisions
-<chosen direction + rejected alternatives, appended as made>
-
-## Execution outline
-<cohort/phase list — coarse, not a task tracker>
-
-## Verification
-<how each phase and the whole goal are verified>
-
-## Open risks
-<known unknowns and mitigations>
+## Next target
+<only when the run continues>
 ````
 
-4. **During execution:** update only meaningful state, decisions made, risks closed, criteria met. Never turn the goal file into a Git/state cache (branch, dirty state, last commit are recoverable from Git).
-5. **Close:** when the Done-when criteria are verifiably met, mark the goal closed (one line + evidence). Exceptional reusable lessons → `leverage-capture`.
+5. **Maintain only expensive-to-reconstruct state.** Append verified outcomes, meaningful decisions, and the next target. Never copy source facts, pseudo-code, task decomposition, Git state, or tracker contents into the record.
+6. **Close or remove.** When the work no longer needs durable recovery or handoff, mark the outcome with its evidence. Remove an unneeded local record when project policy permits; reusable lessons go through `leverage-capture`.
 
-Only split into multiple files when real scale demands it (rare; each split must name its seam).
+Only split records when a real handoff boundary demands it; each split must name that boundary.
 
 ## Red Flags
 
-- Creating a six-file planning package by default. HARD-GATE, one artifact.
-- Goal artifacts for ordinary single-session work.
-- Duplicating an existing tracker (Issues/Linear/Jira) into Markdown.
-- Goal file as Git-state cache (branch/commit/dirty-state entries).
-- Done-when criteria that no gate can verify.
+- Creating a plan, design document, or work record merely because the user asked to plan. HARD-GATE.
+- Creating a record before a verified pass without an explicit user, project, or external coordination requirement.
+- Treating ambiguity, risk, or multiple sessions as sufficient reason for an artifact.
+- Duplicating an existing tracker into Markdown.
+- Work record as a Git-state cache, source mirror, pseudo-code specification, or task tracker.
+- Recording claims that lack source, test, runtime, or explicit manual-check evidence.
 
 ## Verification
 
-The goal artifact exists at the repository-conventional location; every Done-when criterion maps to a runnable verification or explicit manual check; the coordination system (if any) is referenced, not duplicated. On resume: read the goal artifact + Git state, never a stale global state file.
+The record, if created, has a qualified long-run/handoff or external-coordination justification, lives at the repository-conventional location, and contains only verified post-code state. Every evidence claim points to a runnable verification or explicit manual check. On resume, read current source, Git state, and the authoritative tracker first; use the record only for the irrecoverable context it preserves.
 
 ## References
 
-- `../brainstorming/SKILL.md`, the direction decision that precedes this
-- `../leverage-capture/SKILL.md`, post-goal knowledge classification
+- `../brainstorming/SKILL.md`, conversational direction decision
+- `../leverage-capture/SKILL.md`, post-work knowledge classification
 - `~/.agents/templates/roadmap.md`, only when a multi-goal product roadmap is explicitly requested

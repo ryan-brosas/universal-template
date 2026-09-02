@@ -43,7 +43,7 @@ Then route:
 
 - **clear + normal** → implement directly
 - **needs runnable learning** → `prototype`
-- **durable / high-risk / multi-session** → `goal-setup`
+- **roughly four-day-or-longer run with real recovery/handoff needs, or an explicit user, project, or external coordination requirement** → `goal-setup` after the first verified pass unless that requirement needs the record sooner
 
 ## Question policy
 
@@ -51,21 +51,21 @@ Ask the **fewest high-value questions** required to close load-bearing uncertain
 
 ## Artifact policy
 
-Normal brainstorming: the conversation is the artifact, no `design.md`, `brainstorm.md`, or `plan.md` by default. When the work turns out durable/high-risk/multi-session, promote the decided frame into `goal-setup` (one artifact, there).
+Normal brainstorming: the conversation is the artifact, no `design.md`, `brainstorm.md`, or `plan.md` by default. High risk, ambiguity, or multiple sessions alone do not earn a file. Promote only a genuinely long-running or handoff-heavy effort into `goal-setup`, and only as a compact post-code work record after its first verified pass.
 
 ## Red Flags
 
 - Asking questions the repository already answers. HARD-GATE.
 - Manufacturing variant ceremony when one consistent option exists.
-- Writing planning files for normal brainstorming.
+- Writing planning files because the work is ambiguous, risky, or spans multiple sessions.
 - Blocking clear work behind a design ritual the user did not ask for.
 - Silent assumptions, pick and name the stack/approach explicitly.
 
 ## Verification
 
-The exchange ends with a stated decision (or an explicit blocked-on-user note listing the exact missing decisions), grounded in inspected repository truth, with the next step routed. No planning files exist unless promotion to `goal-setup` happened.
+The exchange ends with a stated decision (or an explicit blocked-on-user note listing the exact missing decisions), grounded in inspected repository truth, with the next step routed. No planning files exist unless a qualified long-running or handoff need promotes verified work into `goal-setup`.
 
 ## References
 
 - `../prototype/SKILL.md`, cheap runnable learning
-- `../goal-setup/SKILL.md`, durable execution contract
+- `../goal-setup/SKILL.md`, qualified long-run post-code work record
