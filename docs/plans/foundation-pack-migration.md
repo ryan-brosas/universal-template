@@ -29,4 +29,6 @@ The 109 `revise`/`defer` leaves are an explicit source-recovery backlog. They re
 
 ## Next target
 
-No active target. Resume only when a later source-recovery effort supplies pinned upstream source and direct-test evidence for a deferred or revised leaf.
+Resume with a fresh census-aware triage (2026-09-02 update). The live Codebase Memory census has 168 projects. Leaves with no census entry AND no checkout on disk are the recovery backlog: 49 leaves have a checkout but missing index (recoverable by re-indexing at their recorded pin), and a small class has neither (`mcp-spec-and-servers`, `jetbrains-internals`, the `dsh-*` family, `pi-autoresearch`, `pi-supervisor`, `pi-messenger-swarm`, `roo-foundation`).
+
+Do not demote silently: every deferred leaf must either (a) be recovered through /inspo approval, index + direct-test pin verification, or (b) have its recorded identity checked for liveness with a written demotion note if the source is gone. Gates (foundation-validator, catalog-quality) stay green throughout.
