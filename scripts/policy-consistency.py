@@ -506,7 +506,8 @@ PROJECTION_AUTO_TRIGGER = re.compile(
 PROJECTION_VERB_NEGATION = re.compile(
     r"\b(?:do not|don't|not|never|no)\s+(?:be\s+|automatically\s+|"
     r"automatically\s+be\s+)?(?:creat\w|writ\w|stor\w|persist\w|reflect\w|"
-    r"sync\w|inject\w|promot\w|retain\w|summari[sz]\w|compil\w)", re.I,
+    r"sync\w|inject\w|promot\w|retain\w|summari[sz]\w|compil\w|"
+    r"replac\w|overwrit\w|discard\w|delet\w|eras\w|drop\w)", re.I,
 )
 PROJECTION_OBJECT_NEGATION = re.compile(
     r"\b(?:no|not|never)\s+(?:an?\s+|the\s+)?(?:derived\s+|permanent\s+|"
@@ -545,14 +546,36 @@ PROJECTION_PROVIDER = re.compile(
 PROJECTION_CONTRAST = re.compile(r"\b(?:but|however|whereas|while|though)\b", re.I)
 
 
+def _windowed(term: re.Match, subject: re.Pattern, segment: str, window: int = 90) -> Optional[str]:
+    """Return the segment slice pairing one term match with its nearest subject."""
+    lo = max(0, term.start() - window)
+    hi = min(len(segment), term.end() + window)
+    return segment[lo:hi] if subject.search(segment[lo:hi]) else None
+
+
+def _pair_span(segment: str, anchor: re.Match, subject: re.Pattern, window: int = 90) -> Optional[Tuple[int, int]]:
+    """Return the tightest (start, end) span pairing anchor with a subject."""
+    best: Optional[Tuple[int, int]] = None
+    for match in subject.finditer(segment):
+        gap = max(anchor.start() - match.end(), match.start() - anchor.end())
+        if gap < 0 or gap > window:
+            continue
+        span = (min(anchor.start(), match.start()), max(anchor.end(), match.end()))
+        if best is None or (span[1] - span[0]) < (best[1] - best[0]):
+            best = span
+    return best
+
+
 def _projection_segment_violation(segment: str) -> Optional[str]:
     """Classify one contrastive segment; modifiers bind locally to it.
 
     Canonical capture is not an exemption: it is accepted because capture
     verbs and event objects are absent from the derived-memory, promotion,
     provider, and authority categories, so every category still runs.
+    Softeners and negations apply only inside the span pairing them with
+    the provider or action they actually modify.
     """
-    if PROJECTION_HISTORY_DESTROY.search(segment):
+    if PROJECTION_HISTORY_DESTROY.search(segment) and not PROJECTION_VERB_NEGATION.search(segment):
         return "history-replacement"
     auto = (
         bool(PROJECTION_ACTION.search(segment))
@@ -564,14 +587,24 @@ def _projection_segment_violation(segment: str) -> Optional[str]:
     )
     if auto and not (PROJECTION_VERB_NEGATION.search(segment) or PROJECTION_OBJECT_NEGATION.search(segment) or PROJECTION_STRONG_SOFTEN.search(segment)):
         return "automatic-derived-memory"
-    if (PROJECTION_MEMORY_SUBJECT.search(segment) or PROJECTION_PROVIDER.search(segment)) and PROJECTION_AUTHORITY.search(segment):
-        if PROJECTION_NOT_OPTIONAL.search(segment):
+    for term in PROJECTION_AUTHORITY.finditer(segment):
+        span = _pair_span(segment, term, PROJECTION_MEMORY_SUBJECT) or _pair_span(segment, term, PROJECTION_PROVIDER)
+        if span is None:
+            continue
+        span_text = segment[span[0]:span[1]]
+        if PROJECTION_NOT_OPTIONAL.search(span_text):
             return "memory-as-authority"
-        if not (PROJECTION_AUTHORITY_NEGATION.search(segment) or PROJECTION_STRONG_SOFTEN.search(segment)):
-            return "memory-as-authority"
-    if PROJECTION_PROVIDER.search(segment) and PROJECTION_REQUIRE.search(segment):
-        if not (PROJECTION_REQUIRE_NEGATION.search(segment) or PROJECTION_STRONG_SOFTEN.search(segment)):
-            return "provider-required"
+        if PROJECTION_AUTHORITY_NEGATION.search(span_text) or PROJECTION_STRONG_SOFTEN.search(span_text):
+            continue
+        return "memory-as-authority"
+    for term in PROJECTION_REQUIRE.finditer(segment):
+        span = _pair_span(segment, term, PROJECTION_PROVIDER)
+        if span is None:
+            continue
+        span_text = segment[span[0]:span[1]]
+        if PROJECTION_REQUIRE_NEGATION.search(span_text) or PROJECTION_STRONG_SOFTEN.search(span_text):
+            continue
+        return "provider-required"
     return None
 
 
@@ -603,10 +636,12 @@ def projection_paragraphs(text: str) -> List[Tuple[int, str]]:
         if not stripped:
             flush(line_no)
             continue
-        if stripped.startswith(("#", "|", ">")) or re.match(r"^\s*(?:[-*+]|\d+[.)])\s+", line):
+        if stripped.startswith(("#", "|", ">")):
             flush(line_no)
             out.append((line_no, stripped))
             continue
+        if re.match(r"^\s*(?:[-*+]|\d+[.)])\s+", line):
+            flush(line_no)
         if not buf:
             start = line_no
         buf.append(stripped)
@@ -1483,6 +1518,7 @@ def selftest() -> int:
         "Promote a procedure only after explicit user intent and supporting evidence.",
         "Current source and tests establish what is true now.",
         "Rebuild the index from a named Git revision.",
+        "Never delete raw events; the log is append-only.",
     )
     projection_bad = {
         "automatic-derived-memory": "Automatically store a generated memory after every session.",
@@ -1504,6 +1540,8 @@ def selftest() -> int:
         "capture-mixed-store": "Append the raw events to the log and automatically store the summary as permanent memory.",
         "capture-mixed-destroy": "Append raw events, then overwrite the session history with the summary.",
         "not-required-but-authoritative": "Codebase Memory is not required but is the authoritative project memory.",
+        "optional-but-mandatory-provider": "OpenViking is optional and Hindsight is mandatory for ordinary work.",
+        "wrapped-authority": "Codebase Memory is not required\nbut is the authoritative project memory.",
     }
     for fixture in projection_good:
         hits = projection_violations(fixture)
