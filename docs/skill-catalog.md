@@ -5,7 +5,7 @@
 Derived from `skills/*/SKILL.md` metadata. Maintainer tool:
 `python3 scripts/skill-catalog.py search "<topic>"`.
 
-151 skills: 37 visible, 114 hidden. Visible startup metadata: ~10074 chars (~2518 tokens).
+152 skills: 38 visible, 114 hidden. Visible startup metadata: ~10475 chars (~2618 tokens).
 
 ## Entry skills
 
@@ -34,6 +34,7 @@ Direct user-facing capabilities; trigger on request.
 | [`npm-trusted-publishing`](../skills/npm-trusted-publishing/SKILL.md)                       | entry | visible | Use when setting up npm publishing from GitHub Actions for a package, adding a publish job or workflow, or answering 'how do I publish this to npm' - the AI do... |
 | [`pencil`](../skills/pencil/SKILL.md)                                                       | entry | visible | Use when copying Figma or inspo into Paper, ripping a Figma file onto a Paper canvas, setting Paper tokens from Figma, or when the user says pencil, paper skil... |
 | [`pi-package-development`](../skills/pi-package-development/SKILL.md)                       | entry | visible | Use when creating, editing, structuring, testing, or shipping a pi package or pi extension (package.json pi manifest, pi-package keyword, peerDependencies, bun... |
+| [`pi-provider-contracts`](../skills/pi-provider-contracts/SKILL.md)                         | entry | visible | Use when building, debugging, or auditing the runtime behavior of a pi provider extension: registerProvider auth and apiKey semantics, refreshModels catalog li... |
 | [`pixel-perfect`](../skills/pixel-perfect/SKILL.md)                                         | entry | visible | Use when a design copy must match its source pixel-perfectly - Paper↔Figma fidelity checks, fixing 'it looks off' or 'not accurate' feedback, verifying fills,...  |
 | [`project-bootstrap`](../skills/project-bootstrap/SKILL.md)                                 | entry | visible | Use when entering a new or unfamiliar repository, initializing a greenfield project workspace, or intentionally establishing lightweight persistent project-lev... |
 | [`prototype`](../skills/prototype/SKILL.md)                                                 | entry | visible | Use when the user wants to prototype, sanity-check a data model or state machine, mock up a UI, explore design options, or says 'prototype this', 'spike this',... |

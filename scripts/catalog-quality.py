@@ -59,6 +59,8 @@ ENTRY_SKILLS = {
     # Workflows landed from the pending-arrivals queue (#45 pre-registered them).
     "npm-trusted-publishing", "pencil", "pi-package-development",
     "pixel-perfect", "ship-pr",
+    # Provider-extension runtime contract specialist (landed from local draft).
+    "pi-provider-contracts",
 }
 # Cold references formerly routed automatically; kept searchable, not hot.
 ROUTER_SKILLS: set[str] = set()
