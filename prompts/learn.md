@@ -6,12 +6,14 @@ the conversation and creates no artifact.
 
 1. Inspect the current project's source, tests, and the relevant seam. State
    the exact unanswered question.
-2. Consult one approved reference repository or indexed source. Do not clone,
-   index, or ingest a new source during the pass; source approval belongs to
-   `/inspo` and `inspo-qualify`.
-3. Locate the relevant implementation and its direct tests.
-4. Confirm every material conclusion in exact source. A structural index is a
-   map, not evidence.
+2. Consult one approved reference repository or indexed source. Verify its
+   identity and revision still match the approval; if they drift, stop and
+   report the mismatch. Do not clone, index, or ingest a new source during
+   the pass; source approval belongs to `/inspo` and `inspo-qualify`.
+3. Locate the relevant implementation and its direct tests. Read both, and
+   record any missing or unrun test coverage.
+4. Confirm every material conclusion in exact source and test code. A
+   structural index is a map, not evidence.
 5. Compare the reference boundary with the current project's boundary.
 6. Recommend ADOPT, ADAPT, or OMIT.
 7. Implement nothing and create no artifact unless the user requests it.
