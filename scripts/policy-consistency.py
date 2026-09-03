@@ -488,6 +488,29 @@ def foundation_automation_violation(text: str) -> bool:
     return False
 
 
+FOUNDATION_EXPANSION_ACTION = re.compile(
+    r"\b(?:expand(?:s|ed|ing)?|archiv(?:e|es|ed|ing))\b[^.;!?\n]{0,40}?\bfoundations?\b",
+    re.I,
+)
+FOUNDATION_STUDY_TRIGGER = re.compile(
+    r"\bstud(?:y|ies|ying|ied)\b|\binspect(?:s|ed|ing|ion)?\b|"
+    r"\breview(?:s|ed|ing)?\b|\bread(?:s|ing)?\b|\blearn(?:s|ed|ing)?\b",
+    re.I,
+)
+
+
+def foundation_study_creation_violation(text: str) -> bool:
+    """Return whether a policy clause grows foundations from repository study."""
+    for clause in re.split(r"[.;!?\n]+", text):
+        if not FOUNDATION_ACTION.search(clause) and not FOUNDATION_EXPANSION_ACTION.search(clause):
+            continue
+        if FOUNDATION_NEGATION.search(clause):
+            continue
+        if FOUNDATION_STUDY_TRIGGER.search(clause):
+            return True
+    return False
+
+
 def check_foundation_lifecycle() -> None:
     """Foundations are earned and removable; owned-project capture is explicit."""
     for rel in FOUNDATION_POLICY_FILES:
@@ -524,6 +547,33 @@ def check_foundation_lifecycle() -> None:
         "README.md",
         "accumulated implementation foundations",
     )
+
+
+def check_foundation_freeze() -> None:
+    """Foundation growth is demand-driven: study creates nothing; retrieval triages."""
+    require_phrase(
+        "FOUNDATION-FREEZE",
+        "docs/roadmap.md",
+        "No new repository-derived foundation is created merely because a repository was studied",
+    )
+    require_phrase(
+        "FOUNDATION-FREEZE",
+        "docs/roadmap.md",
+        "triaged only when a real project retrieves it",
+    )
+    forbid_phrase("FOUNDATION-FREEZE", "--auto foundation-pack", FOUNDATION_POLICY_FILES)
+    for rel in FOUNDATION_POLICY_FILES:
+        text = read(rel)
+        if not text:
+            continue
+        scannable = re.sub(r"^## Red Flags\b.*?(?=^## |\Z)", "", text, flags=re.M | re.S)
+        if foundation_study_creation_violation(scannable):
+            check_fail(
+                "FOUNDATION-FREEZE",
+                rel,
+                1,
+                "policy must not create or expand foundations from repository study or inspection",
+            )
 
 
 AGENTS_WORKFLOW_PATTERNS = (
@@ -1190,6 +1240,31 @@ def selftest() -> int:
         else:
             print(f"FAIL foundation lifecycle missed {name}")
             ok = False
+    freeze_good = (
+        "No new repository-derived foundation is created merely because a "
+        "repository was studied.",
+        "Study the repository; the pass recommends and creates no artifact.",
+        "An existing leaf is triaged only when a real project retrieves it.",
+    )
+    freeze_bad = {
+        "study-time creation": "Creating a foundation after studying a repository "
+        "documents the architecture.",
+        "review-time expansion": "Expand the foundation pack once the repository is reviewed.",
+        "reading-time promotion": "Promote foundations after reading the upstream source.",
+        "inspection archive": "Archive the foundation when the code is inspected.",
+    }
+    for fixture in freeze_good:
+        if foundation_study_creation_violation(fixture):
+            print(f"FAIL foundation freeze flagged a negated statement: {fixture[:60]}")
+            ok = False
+        else:
+            print("PASS foundation freeze accepts a negated statement")
+    for name, fixture in freeze_bad.items():
+        if foundation_study_creation_violation(fixture):
+            print(f"PASS foundation freeze rejects {name}")
+        else:
+            print(f"FAIL foundation freeze missed {name}")
+            ok = False
     # Foundation-priority regression: bad skill fails, good skill passes.
     with tempfile.TemporaryDirectory() as td:
         base = Path(td)
@@ -1384,6 +1459,7 @@ CHECKS = [
     ("RDD-RETRIEVAL-SURFACE", check_rdd_retrieval_surface),
     ("FOUNDATION-PRIORITY", check_foundation_priority_inversion),
     ("FOUNDATION-NOT-STARTUP", check_foundation_not_in_startup_catalog),
+    ("FOUNDATION-FREEZE", check_foundation_freeze),
     ("HIDDEN-REACHABILITY", check_hidden_reachability),
     ("PR-OWNERSHIP", check_pr_ownership),
     ("README-SKILL-REFS", check_readme_skill_refs),
