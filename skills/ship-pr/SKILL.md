@@ -13,7 +13,7 @@ One evidence path from working tree to merge: gates before push, a PR body built
 - **NOT when:** a single step is asked for (push only, PR only, feedback only, merge only); `push-pr` owns those; or the target repo has no quality gate (report the verification gap, do not invent CI).
 
 ## Workflow
-1. **Scope and branch.** Inspect the diff; split scoped conventional commits (data, behavior, tests, docs are separate concerns). Branch off `main`. Never commit unrelated churn.
+1. **Scope and branch.** Inspect the diff; split scoped conventional commits (data, behavior, tests, docs are separate concerns). Discover the repository's default or requested base branch, then branch from it. Never commit unrelated churn.
 2. **Gates before push.** Run the repo's verification on the committed tree (record commands + exit codes) and `git diff --check <base>..HEAD`. A red gate blocks the push.
 3. **PR.** Discover the repo's PR template and fill it from real evidence (commands, exit codes, probe output). Write the body through `mktemp`, never shell-interpolated. `gh pr create --base <base>`; if a PR exists for the branch, update it instead.
 4. **Watch CI.** `gh pr checks <n> --watch` to a final state. A green review-bot check is not "no findings"; fetch the threads.
