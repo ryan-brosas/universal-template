@@ -24,6 +24,14 @@ Progress is normally recoverable from source, Git, the project tracker, and scop
   stay in project source; completion creates no ingestion or mining backlog.
   Only an explicit user decision after a stable milestone may promote reusable
   understanding. Absorbed, stale, or low-value foundations may be pruned.
+  **Foundation freeze.** No new repository-derived foundation is created
+  merely because a repository was studied; a study pass recommends
+  ADOPT, ADAPT, or OMIT and creates no artifact. An existing leaf is
+  triaged only when a real project retrieves it: keep it when it supplied
+  a non-obvious invariant that was expensive to reconstruct, and retire
+  source summaries, unused encyclopedic maps, and material recoverable
+  from source or Codebase Memory. Git history preserves retired material;
+  do not move it into another searchable archive.
 - **Reference contract adherence.** The durable contract lives with
   `reference-driven-development` at
   `skills/reference-driven-development/references/contract.md`.
