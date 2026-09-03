@@ -56,8 +56,7 @@ ENTRY_SKILLS = {
     # `web-reference`, plus rare utilities: `findata`, `gmaps`, `gnews`,
     # `rsearch`, `xsearch`, `ttdl`, `ytdl`, `gemini-large-context`
 
-    # Pending untracked arrivals, pre-registered so the local gate stays green
-    # until their own PR lands; on a clean checkout they simply do not exist.
+    # Workflows landed from the pending-arrivals queue (#45 pre-registered them).
     "npm-trusted-publishing", "pencil", "pi-package-development",
     "pixel-perfect", "ship-pr",
 }
