@@ -5,7 +5,7 @@
 Derived from `skills/*/SKILL.md` metadata. Maintainer tool:
 `python3 scripts/skill-catalog.py search "<topic>"`.
 
-146 skills: 32 visible, 114 hidden. Visible startup metadata: ~8235 chars (~2058 tokens).
+151 skills: 37 visible, 114 hidden. Visible startup metadata: ~10082 chars (~2520 tokens).
 
 ## Entry skills
 
@@ -31,11 +31,16 @@ Direct user-facing capabilities; trigger on request.
 | [`improve-codebase-architecture`](../skills/improve-codebase-architecture/SKILL.md)         | entry | visible | Use when the user wants to improve architecture, find refactoring opportunities, consolidate tightly-coupled modules, or make a codebase more testable and AI-n... |
 | [`inspo-qualify`](../skills/inspo-qualify/SKILL.md)                                         | entry | visible | Use when an active project needs external GitHub prior art: discover or assess one candidate, then clone and full-index it in Codebase Memory only after explic... |
 | [`leverage-capture`](../skills/leverage-capture/SKILL.md)                                   | entry | visible | Use when meaningful work has finished and something may be worth preserving, classify it into code, references, foundations, gates, skills, or memory, and capt... |
+| [`npm-trusted-publishing`](../skills/npm-trusted-publishing/SKILL.md)                       | entry | visible | Use when setting up npm publishing from GitHub Actions for a package, adding a publish job or workflow, or answering 'how do I publish this to npm' - the AI do... |
+| [`pencil`](../skills/pencil/SKILL.md)                                                       | entry | visible | Use when copying Figma or inspo into Paper, ripping a Figma file onto a Paper canvas, setting Paper tokens from Figma, or when the user says pencil, paper skil... |
+| [`pi-package-development`](../skills/pi-package-development/SKILL.md)                       | entry | visible | Use when creating, editing, structuring, testing, or shipping a pi package or pi extension (package.json pi manifest, pi-package keyword, peerDependencies, bun... |
+| [`pixel-perfect`](../skills/pixel-perfect/SKILL.md)                                         | entry | visible | Use when a design copy must match its source pixel-perfectly - Paper↔Figma fidelity checks, fixing 'it looks off' or 'not accurate' feedback, verifying fills,...  |
 | [`project-bootstrap`](../skills/project-bootstrap/SKILL.md)                                 | entry | visible | Use when entering a new or unfamiliar repository, initializing a greenfield project workspace, or intentionally establishing lightweight persistent project-lev... |
 | [`prototype`](../skills/prototype/SKILL.md)                                                 | entry | visible | Use when the user wants to prototype, sanity-check a data model or state machine, mock up a UI, explore design options, or says 'prototype this', 'spike this',... |
 | [`push-pr`](../skills/push-pr/SKILL.md)                                                     | entry | visible | Use when finished work needs to be pushed and opened or updated as a GitHub pull request, when PR review feedback must be addressed in its thread, or when an o... |
 | [`reference-driven-development`](../skills/reference-driven-development/SKILL.md)           | entry | visible | Use when outside prior art reduces uncertainty: adapting a reference repo, porting a pattern, or when a relevant project-local reference/<repo>/ or reference/w... |
 | [`security-and-hardening`](../skills/security-and-hardening/SKILL.md)                       | entry | visible | Use when auditing for security vulnerabilities, implementing auth or authz, handling secrets, or hardening against OWASP Top 10 - covers input validation, auth... |
+| [`ship-pr`](../skills/ship-pr/SKILL.md)                                                     | entry | visible | Use when the user wants a change shipped autonomously end to end: commit, push, open the PR, watch CI, triage and address bot/human review comments in-thread,...  |
 | [`skill-catalog`](../skills/skill-catalog/SKILL.md)                                         | entry | visible | Use when the user asks what skills exist or needs to find the right skill for a topic - deterministic search over the local catalog; return candidates and load... |
 | [`system-design-specification`](../skills/system-design-specification/SKILL.md)             | entry | visible | Use when authoring formal, crash-proof system design documents and architectural specifications: scope fences and non-goals, 4-part state ontologies, mathemati... |
 | [`test-generation`](../skills/test-generation/SKILL.md)                                     | entry | visible | Use when writing, expanding, or auditing tests, converting workflow rules into gates, or deciding what to test. Catch-first method: a test is only good if it c... |
