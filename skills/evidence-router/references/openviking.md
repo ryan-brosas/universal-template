@@ -1,9 +1,11 @@
 # OpenViking evidence and memory
 
-OpenViking is the durable experience store for decisions, failed attempts,
-recurring edge cases, and lessons that are expensive to reconstruct. It is a
-retrieval aid, not implementation authority: current project source, tests,
-and runtime behavior still decide what is true.
+OpenViking is an optional rebuildable cache over past experience: decisions,
+failed attempts, recurring edge cases, and lessons that are expensive to
+reconstruct. It is never the canonical owner of source facts, skills, or
+session history, and it is never automatically synchronized or injected:
+current project source, tests, and runtime behavior still decide what is
+true.
 
 ## Retrieval
 
@@ -34,5 +36,5 @@ fact that a runtime probe can recover.
 5. Route reusable code, gates, skills, references, or foundations through
    `leverage-capture` instead of building a second prose archive.
 
-If OpenViking is unavailable, use the nearest authoritative local source and
-state the degraded evidence path.
+If OpenViking is unavailable, fall back to the nearest reliable local source
+and state the degraded evidence path.

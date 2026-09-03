@@ -457,6 +457,98 @@ def check_objective_drift() -> None:
                 check_fail("OBJECTIVE-DRIFT", rel, i, "obsolete quality/capture objective resurfaced")
 
 
+PROJECTION_AUTO = re.compile(
+    r"\b(?:retain(?:s|ed|ing)?|reflect(?:s|ed|ing|ion)?|summari[sz]e(?:s|d)?|"
+    r"sync(?:s|ed|ing)?|inject(?:s|ed|ing)?|creat(?:e|es|ed|ing)|"
+    r"writ(?:e|es|ten|ing)|promot(?:e|es|ed|ing))\b", re.I,
+)
+PROJECTION_AUTO_TRIGGER = re.compile(
+    r"\b(?:automatically|by default|every (?:session|task|request|change)|"
+    r"each (?:session|task|request|change)|all (?:sessions|tasks))\b", re.I,
+)
+PROJECTION_STRONG_SOFTEN = re.compile(
+    r"\b(?:never|without|optional|opt-in|on demand|disposable|"
+    r"temporary|rebuildable|explicit(?:ly)?|only when|only after|default first|"
+    r"do not|don't)\b", re.I,
+)
+PROJECTION_AUTHORITY_NEGATION = re.compile(
+    r"\b(?:not|no|never)\s+(?:an?\s+|the\s+)?(?:independent\s+)?"
+    r"(?:source of truth|canonical|authorit(?:y|ative))", re.I,
+)
+PROJECTION_NOT_OPTIONAL = re.compile(r"\bnot\s+optional\b", re.I)
+PROJECTION_AUTHORITY = re.compile(
+    r"\b(?:source of truth|canonical (?:owner|truth|authority)|authorit(?:y|ative)|outranks?)\b",
+    re.I,
+)
+PROJECTION_MEMORY_SUBJECT = re.compile(
+    r"\b(?:memor(?:y|ies)|generated (?:memory|summary)|structural index|"
+    r"codebase memory|hindsight|openviking|fabric recall)\b", re.I,
+)
+PROJECTION_REQUIRE = re.compile(
+    r"\b(?:requires?|must (?:use|run|load)|mandatory|prerequisite|blocked? without)\b", re.I,
+)
+PROJECTION_PROVIDER = re.compile(
+    r"\b(?:hindsight|openviking|fabric recall|codebase memory)\b", re.I,
+)
+
+
+def projection_lifecycle_violation(text: str) -> Optional[str]:
+    """Return which projection invariant one document violates, or None.
+
+    Session evidence is canonical; recall, reflection, and indexes are
+    disposable projections; promotion is explicit. A clause violates the
+    model only when it pairs a projection action with an automatic trigger,
+    a provider with a hard requirement, or memory/index vocabulary with
+    authority language, and no optional/negated context softens it.
+    """
+    for clause in re.split(r"[.;!?\n]+", text):
+        auto = bool(PROJECTION_AUTO.search(clause)) and bool(PROJECTION_AUTO_TRIGGER.search(clause))
+        required = bool(PROJECTION_PROVIDER.search(clause)) and bool(PROJECTION_REQUIRE.search(clause))
+        authority = bool(PROJECTION_MEMORY_SUBJECT.search(clause)) and bool(PROJECTION_AUTHORITY.search(clause))
+        if not (auto or required or authority):
+            continue
+        if PROJECTION_NOT_OPTIONAL.search(clause):
+            return "asserted-required-provider" if required else "automatic projection"
+        if PROJECTION_STRONG_SOFTEN.search(clause):
+            continue
+        if authority and PROJECTION_AUTHORITY_NEGATION.search(clause):
+            continue
+        if auto:
+            return "automatic projection"
+        if required:
+            return "provider-required"
+        return "memory-as-authority"
+    return None
+
+
+def projection_scope_files() -> List[str]:
+    files = list(dict.fromkeys(POLICY_FILES + FOUNDATION_POLICY_FILES))
+    files.extend(["mcp/catalog.md", "skills/evidence-router/references/openviking.md"])
+    for path in sorted((BASE / "prompts").glob("*.md")):
+        files.append("prompts/" + path.name)
+    return files
+
+
+def check_projection_lifecycle() -> None:
+    """Session evidence is canonical; projections are disposable; promotion is explicit."""
+    for rel in projection_scope_files():
+        text = read(rel)
+        if not text:
+            continue
+        scannable = re.sub(r"^## Red Flags\b.*?(?=^## |\Z)", "", text, flags=re.M | re.S)
+        violation = projection_lifecycle_violation(scannable)
+        if violation:
+            check_fail("PROJECTION-LIFECYCLE", rel, 1, f"{violation} phrasing in projection policy")
+    require_phrase("PROJECTION-LIFECYCLE", "prompts/reflect-session.md", "read-only projection")
+    require_phrase("PROJECTION-LIFECYCLE", "prompts/compile-skill.md", "disable-model-invocation: true")
+    require_phrase("PROJECTION-LIFECYCLE", "prompts/compile-skill.md", "explicit promotion request")
+    require_phrase(
+        "PROJECTION-LIFECYCLE",
+        "skills/fabric-native-execution/SKILL.md",
+        "No memory write or synchronization step is required after ordinary work.",
+    )
+
+
 FOUNDATION_ACTION = re.compile(
     r"\b(?:index(?:es|ed|ing)?|ingest(?:s|ed|ing)?|promot(?:e|es|ed|ing)|"
     r"creat(?:e|es|ed|ing) (?:a |the )?foundations?)\b",
@@ -561,7 +653,8 @@ def check_foundation_freeze() -> None:
         "docs/roadmap.md",
         "triaged only when a real project retrieves it",
     )
-    forbid_phrase("FOUNDATION-FREEZE", "--auto foundation-pack", FOUNDATION_POLICY_FILES)
+    forbid_phrase("FOUNDATION-FREEZE", "--auto foundation-pack", FOUNDATION_POLICY_FILES + ["prompts/learn.md"])
+    forbid_phrase("FOUNDATION-FREEZE", "--loop", ["prompts/learn.md"])
     for rel in FOUNDATION_POLICY_FILES:
         text = read(rel)
         if not text:
@@ -1265,6 +1358,35 @@ def selftest() -> int:
         else:
             print(f"FAIL foundation freeze missed {name}")
             ok = False
+    projection_good = (
+        "Search project-scoped JSONL on demand.",
+        "Reflection is temporary and disposable.",
+        "OpenViking is an optional rebuildable cache.",
+        "Codebase Memory is a derived index, confirmed against current source.",
+        "Promote a procedure only after explicit user intent and supporting evidence.",
+        "Current source and tests establish what is true now.",
+    )
+    projection_bad = {
+        "auto-retain": "Automatically retain and reflect on every session.",
+        "provider-required": "Hindsight requires project memory for ordinary work.",
+        "memory-authority": "OpenViking is the source of truth for project facts.",
+        "auto-skill": "Reflect on every session and automatically create a skill.",
+        "index-authority": "The structural index outranks current source.",
+        "bare-create": "Automatically create a skill after every session.",
+        "not-optional inversion": "OpenViking is not optional and authoritative.",
+    }
+    for fixture in projection_good:
+        if projection_lifecycle_violation(fixture):
+            print(f"FAIL projection lifecycle flagged accepted text: {fixture[:60]}")
+            ok = False
+        else:
+            print("PASS projection lifecycle accepts disposable-projection text")
+    for name, fixture in projection_bad.items():
+        if projection_lifecycle_violation(fixture):
+            print(f"PASS projection lifecycle rejects {name}")
+        else:
+            print(f"FAIL projection lifecycle missed {name}")
+            ok = False
     # Foundation-priority regression: bad skill fails, good skill passes.
     with tempfile.TemporaryDirectory() as td:
         base = Path(td)
@@ -1460,6 +1582,7 @@ CHECKS = [
     ("FOUNDATION-PRIORITY", check_foundation_priority_inversion),
     ("FOUNDATION-NOT-STARTUP", check_foundation_not_in_startup_catalog),
     ("FOUNDATION-FREEZE", check_foundation_freeze),
+    ("PROJECTION-LIFECYCLE", check_projection_lifecycle),
     ("HIDDEN-REACHABILITY", check_hidden_reachability),
     ("PR-OWNERSHIP", check_pr_ownership),
     ("README-SKILL-REFS", check_readme_skill_refs),

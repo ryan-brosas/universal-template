@@ -9,7 +9,7 @@ Progress is normally recoverable from source, Git, the project tracker, and scop
 | -------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
 | Ground truth         | Project source first; project-local references; foundations and skills as leverage        | Every active project grounds claims in actual source, tests, and runtime probes   |
 | Steer outcomes       | Frictionless conclusive PR loop with mechanical gate boundaries                           | Fast CI checks, zero behavioral prompt bloat                                    |
-| Stack leverage       | Threshold-driven skill capture; experience-grade OpenViking sync (opt-in)                 | Recurring wins become skills when they prove out                                |
+| Stack leverage       | Threshold-driven skill capture; event-sourced context projections (opt-in)                | Recurring wins become skills when they prove out                                |
 | Mechanical quality   | Gates for demonstrated deterministic regressions, where value exceeds false-positive cost | Known regression classes are mechanically defended where practical              |
 | Test methodology     | Catch-first verification (reproducible RED, then GREEN)                                   | Strongest available evidence per defect class                                   |
 
@@ -59,17 +59,19 @@ Progress is normally recoverable from source, Git, the project tracker, and scop
 ## 3. Build stacked advantage
 
 - **Threshold-driven skill capture.** At a meaningful milestone, classify
-  recurring wins through `leverage-capture` (code, reference, gate, skill,
-  memory, or not worth saving). Capture is threshold-driven, never automatic;
+  recurring wins through `leverage-capture` (code, reference, foundation,
+  gate, skill, project note, or not worth saving). Capture is threshold-driven, never automatic;
   one-off details recoverable from source stay in code.
 - **Domain-specific skill leaves (as demand appears).** High-value
   single-focus leaves for downstream clones, whether browser automation,
   data pipelines, or multi-agent coordination. Build on observed need, not
   speculation.
-- **Experience-grade OpenViking sync (opt-in).** Sync only
-  expensive-to-reconstruct experience: decisions, failed approaches, recurring
-  edge cases, hard-won lessons. Never auto-duplicate locally available source
-  repositories or generated capsules; corpus inventory is probed at runtime.
+- **Event-sourced context projections (opt-in).** Retrieve bounded evidence
+  from current source and project-scoped session history; generate reflections
+  and context views on demand; promote only accepted code, gates, skills, or
+  rare minimal notes. Optional caches such as OpenViking remain rebuildable,
+  non-authoritative, and never synchronized or injected automatically;
+  corpus inventory is probed at runtime.
 
 ## 4. Enforce mechanically
 

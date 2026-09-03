@@ -6,16 +6,17 @@ disable-model-invocation: true
 
 # Codebase Memory
 
-Codebase Memory is the **persistent structural / cross-project discovery
-surface**: a long-lived library of indexed repositories for cross-session and
-cross-repository questions. It is not a prerequisite for normal Pi work,
-Fovea owns the active working-set map, and direct source owns truth. Its
-graph is an index, not source of truth: confirm exact code in the JetBrains
-IDE or direct source before editing or making exhaustive claims.
+Codebase Memory is a persistent operational index over explicitly indexed
+repositories: conceptually a rebuildable projection of source, safe to
+recreate from its canonical repositories. It is not historical experience
+memory, not authority for current code, and not required for active-project
+orientation. Fovea owns the active working-set map, and direct source owns
+truth: confirm exact code in the JetBrains IDE or direct source before
+editing or making exhaustive claims.
 
 ## Core Principle
 
-A persistent cross-project library, not a default step: the graph is an index, not source of truth, confirm exact code in the JetBrains IDE or direct source before editing or making exhaustive claims.
+A rebuildable cross-repository index, not a default step: the graph is a derived projection of source, never historical memory, confirmed against exact current source and tests before use.
 
 ## When to Use / NOT
 

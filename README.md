@@ -48,6 +48,19 @@ flowchart LR
 references provide need-driven capabilities, while scripts derive host formats
 and enforce repository contracts. Project-local policy always wins.
 
+## Context model
+
+```text
+source/tests/runtime = current software truth
+session events       = historical work evidence
+recall/reflection    = disposable projections
+code/gates/skills    = reviewed durable promotions
+```
+
+Nothing loads or searches session history by default. Projections are
+disposable; only reviewed code, gates, skills, and rare minimal project notes
+persist.
+
 ## Install
 
 ### Run from source
@@ -80,10 +93,14 @@ python3 scripts/skill-catalog.py search "github release"
 ```
 
 Reusable prompts include `/repo-audit`, `/plan-work`, `/implement-work`,
-`/review-work`, `/verify-work`, `/cleanup-code`, and `/learn`. `/inspo` qualifies
-external prior art; `/learn` investigates an approved source. Host invocation syntax can
-differ; `scripts/render-prompt.py` provides the fallback for hosts without a
-native prompt directory.
+`/review-work`, `/verify-work`, `/cleanup-code`, `/learn`, `/recall-session`,
+`/reflect-session`, and `/compile-skill`. `/inspo` qualifies external prior
+art; `/learn` investigates one approved source; `/recall-session` answers one
+historical question from project-scoped session evidence; `/reflect-session`
+derives temporary evidence-linked lessons; `/compile-skill` compiles a proven
+procedure into a hidden skill candidate on explicit request. Host invocation
+syntax can differ; `scripts/render-prompt.py` provides the fallback for hosts
+without a native prompt directory.
 
 Repository maintainers should run the verification suite in `CONTRIBUTING.md`.
 Versioned releases use `vX.Y.Z` tags and GitHub-generated notes categorized by

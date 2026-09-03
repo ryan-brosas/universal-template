@@ -20,9 +20,9 @@ transactional mutation.
 
 ## When to Use / NOT
 
-**Use**, any Pi Fabric work: normal code-mode execution; durable session
-state or cross-session recall via providers; deliberate delegation or review
-escalation.
+**Use**, any Pi Fabric work: normal code-mode execution; conditional recall
+or short-lived coordination state via providers; deliberate delegation or
+review escalation.
 
 **NOT**, replacing the project's tracked files with runtime state; running
 agents, Veda, or Schema out of habit; `mesh` coordination when one process
@@ -34,13 +34,17 @@ suffices.
  `pi.bash` and tool/MCP composition. `/fabric prewalk` continues execution
  after a mutation boundary when armed. This is normal development.
 2. **Native providers (helpers).**
- - `memory.recall` / `memory.expand`, past decisions and session recall
- before re-deriving them.
+ - `memory.recall` / `memory.expand` (when available): conditional retrieval
+ and projection helpers over historical session evidence. Provider output is
+ not canonical truth; a recalled code claim is checked against current
+ source, and recall is never a default first step.
  - `state.get` / `state.put` / `state.list`, short-lived coordination
  values (active work ID, handoff payloads) that survive across
  `fabric_exec` calls without touching repo dotfiles.
  - `compact.request`, compaction at a safe boundary.
- - Degrade to tracked files and say so when a provider is missing.
+ - Degrade to current source, Git, accessible session history, or an
+ explicitly supplied transcript when a provider is missing, and say so. No
+ memory write or synchronization step is required after ordinary work.
 3. **Agent escalation (deliberate).** Choose the mechanism with
  `skills/execution-router` (its runner-compatibility table applies here:
  native runners are pi/claude/veda; RLM and recursive Fabric require the Pi
@@ -77,7 +81,7 @@ suffices.
 
 ## Red Flags
 
-Writing repo files through `state`; building a persistence layer; dispatching
+Writing repo files through `state`; building a persistence or memory-sync layer; treating recalled output as canonical truth; dispatching
 agents or Veda as an automatic phase after every change; enabling Schema
 enforce (which disables Fabric Prewalk) without an explicit transactional need;
 relying on a provider result without citing it.

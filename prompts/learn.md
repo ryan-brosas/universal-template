@@ -1,26 +1,47 @@
-# Learn from an approved source
+# Learn from one approved source
 
-Investigate one named uncertainty that matters to the active project. This is
-a bounded evidence pass on one already approved source. It normally stays in
-the conversation and creates no artifact.
+Investigate one named uncertainty that matters to the active project. Source and
+tests establish truth; the result is a bounded evidence pass, not a knowledge
+capture campaign.
 
-1. Inspect the current project's source, tests, and the relevant seam. State
-   the exact unanswered question.
-2. Consult one approved reference repository or indexed source. Verify its
-   identity and revision still match the approval; if they drift, stop and
-   report the mismatch. Do not clone, index, or ingest a new source during
-   the pass; source approval belongs to `/inspo` and `inspo-qualify`.
-3. Locate the relevant implementation and its direct tests. Read both, and
-   record any missing or unrun test coverage.
-4. Confirm every material conclusion in exact source and test code. A
-   structural index is a map, not evidence.
-5. Compare the reference boundary with the current project's boundary.
-6. Recommend ADOPT, ADAPT, or OMIT.
-7. Implement nothing and create no artifact unless the user requests it.
+## Method
 
-Do not create a foundation, skill, summary, or memory entry automatically.
-A study pass ends with a recommendation. Repeated work, not repository
-study, earns durable capture through the `leverage-capture` skill.
+1. Inspect the active project's relevant source, tests, and runtime boundary.
+2. State the exact unanswered question.
+3. Use one approved project-local reference or indexed external source when
+   outside prior art can materially answer it. Verify its identity and revision
+   still match the approval; if they drift, stop and report the mismatch.
+4. Use direct search, AST-aware tools, Fovea, or Codebase Memory only to locate
+   the relevant implementation and tests.
+5. Confirm every material conclusion in exact source and direct tests.
+6. Compare the reference boundary with the active project's requirements,
+   ownership, lifecycle, failure modes, and verification.
+7. Recommend exactly one disposition: ADOPT, ADAPT, or OMIT.
+8. Stop when the named uncertainty is resolved or the available evidence cannot
+   resolve it.
+
+## Output
+
+    Question:
+    Active-project evidence:
+    Reference and revision:
+    Exact source/test evidence:
+    Relevant similarity:
+    Important differences:
+    Coverage or execution caveats:
+    Disposition:
+    Reason:
+
+## Rules
+
+- One question and normally one reference per invocation.
+- Do not clone, index, ingest, or re-index without explicit approval.
+- Do not create or expand a Foundation merely because a repository was studied.
+- Do not create a skill, memory, note, summary, or campaign record
+  automatically.
+- Keep ordinary findings in the conversation.
+- Direct source and tests outrank structural maps and generated explanations.
 
 Request:
+
 $ARGUMENTS
