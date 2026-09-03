@@ -20,7 +20,7 @@ import re
 import subprocess
 import sys
 from pathlib import Path
-from typing import List, Optional, Set, Tuple
+from typing import List, NamedTuple, Optional, Set, Tuple
 
 BASE = Path(__file__).resolve().parents[1]
 
@@ -457,14 +457,61 @@ def check_objective_drift() -> None:
                 check_fail("OBJECTIVE-DRIFT", rel, i, "obsolete quality/capture objective resurfaced")
 
 
-PROJECTION_AUTO = re.compile(
-    r"\b(?:retain(?:s|ed|ing)?|reflect(?:s|ed|ing|ion)?|summari[sz]e(?:s|d)?|"
-    r"sync(?:s|ed|ing)?|inject(?:s|ed|ing)?|creat(?:e|es|ed|ing)|"
-    r"writ(?:e|es|ten|ing)|promot(?:e|es|ed|ing))\b", re.I,
+class ProjectionViolation(NamedTuple):
+    kind: str
+    line_no: int
+    detail: str
+
+
+# Canonical event capture: appending or recording raw events into an
+# append-only project-scoped log is the canonical channel, never a violation.
+PROJECTION_CAPTURE_VERB = re.compile(
+    r"\b(?:append(?:s|ed|ing)?|record(?:s|ed|ing)?|captur(?:e|es|ed|ing)|"
+    r"writ(?:e|es|ten|ing)|log(?:s|ged|ging)?|ingest(?:s|ed|ing)?)\b", re.I,
+)
+PROJECTION_EVENT_OBJECT = re.compile(
+    r"\b(?:raw\s+|immutable\s+|session\s+|append-only\s+|source-linked\s+|"
+    r"project-scoped\s+)*(?:events?|jsonl|event[- ]log|session logs?|"
+    r"compactioncompleted)\b", re.I,
+)
+PROJECTION_HISTORY_DESTROY = re.compile(
+    r"\b(?:replac(?:e|es|ed|ing)|overwrit(?:e|s|ing|ten)|discard(?:s|ed|ing)?|"
+    r"delet(?:e|es|ed|ing)|eras(?:e|es|ed|ing)|drop(?:s|ped|ping)?)\b"
+    r"[^.;]{0,60}?\b(?:original\s+|canonical\s+|raw\s+|immutable\s+)?"
+    r"(?:event history|session history|session jsonl|event log|event-log|"
+    r"raw events|jsonl)\b", re.I,
+)
+PROJECTION_ACTION = re.compile(
+    r"\b(?:stor(?:e|es|ed|ing)|persist(?:s|ed|ing|ent)?|sav(?:e|es|ed|ing)|"
+    r"retain(?:s|ed|ing)?|keep(?:s|ing)?|reflect(?:s|ed|ing|ion)?|"
+    r"summari[sz](?:e|es|ed|ing)|sync(?:s|ed|ing)?|inject(?:s|ed|ing)?|"
+    r"creat(?:e|es|ed|ing)|writ(?:e|es|ten|ing)|compil(?:e|es|ed|ing)|"
+    r"promot(?:e|es|ed|ing))\b", re.I,
+)
+PROJECTION_DERIVED_OBJECT = re.compile(
+    r"\b(?:memor(?:y|ies)|reflection(?:s)?|summary|summaries|conclusion(?:s)?|"
+    r"lesson(?:s)?|observation(?:s)?|projection(?:s)?|result(?:s)?|"
+    r"skill(?:s)?|note(?:s)?|foundation(?:s)?|gate(?:s)?)\b", re.I,
+)
+PROJECTION_AUTO_INTRANSITIVE = re.compile(
+    r"\b(?:retain(?:s|ed|ing)?|reflect(?:s|ed|ing|ion)?|"
+    r"summari[sz](?:e|es|ed|ing))\b", re.I,
 )
 PROJECTION_AUTO_TRIGGER = re.compile(
-    r"\b(?:automatically|by default|every (?:session|task|request|change)|"
-    r"each (?:session|task|request|change)|all (?:sessions|tasks))\b", re.I,
+    r"\b(?:automatically|by default|"
+    r"(?:every|each)\s+(?:completed\s+|finished\s+)?(?:session|task|request|change)|"
+    r"all\s+(?:sessions|tasks)|"
+    r"(?:after|following|on)\s+(?:every|each)\s+(?:completed\s+)?session)\b", re.I,
+)
+PROJECTION_VERB_NEGATION = re.compile(
+    r"\b(?:do not|don't|not|never|no)\s+(?:be\s+|automatically\s+|"
+    r"automatically\s+be\s+)?(?:creat\w|writ\w|stor\w|persist\w|reflect\w|"
+    r"sync\w|inject\w|promot\w|retain\w|summari[sz]\w|compil\w)", re.I,
+)
+PROJECTION_OBJECT_NEGATION = re.compile(
+    r"\b(?:no|not|never)\s+(?:an?\s+|the\s+)?(?:derived\s+|permanent\s+|"
+    r"durable\s+|generated\s+|automatic\s+|new\s+)*(?:memory|memories|"
+    r"reflection|summary|projection|skill|note|conclusion)\b", re.I,
 )
 PROJECTION_STRONG_SOFTEN = re.compile(
     r"\b(?:never|without|optional|opt-in|on demand|disposable|"
@@ -485,40 +532,65 @@ PROJECTION_MEMORY_SUBJECT = re.compile(
     r"codebase memory|hindsight|openviking|fabric recall)\b", re.I,
 )
 PROJECTION_REQUIRE = re.compile(
-    r"\b(?:requires?|must (?:use|run|load)|mandatory|prerequisite|blocked? without)\b", re.I,
+    r"\b(?:requires?|must(?:\s+be)?\s+(?:used|run|loaded|use|load)|"
+    r"mandatory|prerequisite|blocker|blocked? without)\b", re.I,
+)
+PROJECTION_REQUIRE_NEGATION = re.compile(
+    r"\b(?:not|never|no)\s+(?:an?\s+|the\s+)?"
+    r"(?:mandatory|required|requirement|prerequisite|blocker)\b", re.I,
 )
 PROJECTION_PROVIDER = re.compile(
     r"\b(?:hindsight|openviking|fabric recall|codebase memory)\b", re.I,
 )
+PROJECTION_CONTRAST = re.compile(r"\b(?:but|however|whereas|while|though)\b", re.I)
 
 
-def projection_lifecycle_violation(text: str) -> Optional[str]:
-    """Return which projection invariant one document violates, or None.
-
-    Session evidence is canonical; recall, reflection, and indexes are
-    disposable projections; promotion is explicit. A clause violates the
-    model only when it pairs a projection action with an automatic trigger,
-    a provider with a hard requirement, or memory/index vocabulary with
-    authority language, and no optional/negated context softens it.
-    """
-    for clause in re.split(r"[.;!?\n]+", text):
-        auto = bool(PROJECTION_AUTO.search(clause)) and bool(PROJECTION_AUTO_TRIGGER.search(clause))
-        required = bool(PROJECTION_PROVIDER.search(clause)) and bool(PROJECTION_REQUIRE.search(clause))
-        authority = bool(PROJECTION_MEMORY_SUBJECT.search(clause)) and bool(PROJECTION_AUTHORITY.search(clause))
-        if not (auto or required or authority):
-            continue
-        if PROJECTION_NOT_OPTIONAL.search(clause):
-            return "asserted-required-provider" if required else "automatic projection"
-        if PROJECTION_STRONG_SOFTEN.search(clause):
-            continue
-        if authority and PROJECTION_AUTHORITY_NEGATION.search(clause):
-            continue
-        if auto:
-            return "automatic projection"
-        if required:
+def _projection_segment_violation(segment: str) -> Optional[str]:
+    """Classify one contrastive segment; modifiers bind locally to it."""
+    if PROJECTION_CAPTURE_VERB.search(segment) and PROJECTION_EVENT_OBJECT.search(segment):
+        return None
+    if PROJECTION_HISTORY_DESTROY.search(segment):
+        return "history-replacement"
+    auto = (
+        bool(PROJECTION_ACTION.search(segment))
+        and bool(PROJECTION_DERIVED_OBJECT.search(segment))
+        and bool(PROJECTION_AUTO_TRIGGER.search(segment))
+    ) or (
+        bool(PROJECTION_AUTO_INTRANSITIVE.search(segment))
+        and bool(PROJECTION_AUTO_TRIGGER.search(segment))
+    )
+    if auto and not (PROJECTION_VERB_NEGATION.search(segment) or PROJECTION_OBJECT_NEGATION.search(segment) or PROJECTION_STRONG_SOFTEN.search(segment)):
+        return "automatic-derived-memory"
+    if PROJECTION_PROVIDER.search(segment) and PROJECTION_REQUIRE.search(segment):
+        if not (PROJECTION_REQUIRE_NEGATION.search(segment) or PROJECTION_STRONG_SOFTEN.search(segment)):
             return "provider-required"
-        return "memory-as-authority"
+        return None
+    if (PROJECTION_MEMORY_SUBJECT.search(segment) or PROJECTION_PROVIDER.search(segment)) and PROJECTION_AUTHORITY.search(segment):
+        if PROJECTION_NOT_OPTIONAL.search(segment):
+            return "memory-as-authority"
+        if not (PROJECTION_AUTHORITY_NEGATION.search(segment) or PROJECTION_STRONG_SOFTEN.search(segment)):
+            return "memory-as-authority"
     return None
+
+
+def projection_violations(text: str) -> List[ProjectionViolation]:
+    """Scan policy text and report every projection violation with its line.
+
+    Lines split into sentences, sentences split at contrastive boundaries
+    (but, however, whereas, while, though), and each segment is classified
+    independently so a softener applies only to the provider or action it
+    actually modifies.
+    """
+    out: List[ProjectionViolation] = []
+    for line_no, line in enumerate(text.splitlines(), 1):
+        for sentence in re.split(r"[.!?]+", line):
+            for segment in PROJECTION_CONTRAST.split(sentence):
+                if not segment.strip():
+                    continue
+                kind = _projection_segment_violation(segment)
+                if kind:
+                    out.append(ProjectionViolation(kind, line_no, segment.strip()[:120]))
+    return out
 
 
 def projection_scope_files() -> List[str]:
@@ -536,9 +608,8 @@ def check_projection_lifecycle() -> None:
         if not text:
             continue
         scannable = re.sub(r"^## Red Flags\b.*?(?=^## |\Z)", "", text, flags=re.M | re.S)
-        violation = projection_lifecycle_violation(scannable)
-        if violation:
-            check_fail("PROJECTION-LIFECYCLE", rel, 1, f"{violation} phrasing in projection policy")
+        for violation in projection_violations(scannable):
+            check_fail("PROJECTION-LIFECYCLE", rel, violation.line_no, f"{violation.kind}: {violation.detail}")
     require_phrase("PROJECTION-LIFECYCLE", "prompts/reflect-session.md", "read-only projection")
     require_phrase("PROJECTION-LIFECYCLE", "prompts/compile-skill.md", "disable-model-invocation: true")
     require_phrase("PROJECTION-LIFECYCLE", "prompts/compile-skill.md", "explicit promotion request")
@@ -1359,6 +1430,11 @@ def selftest() -> int:
             print(f"FAIL foundation freeze missed {name}")
             ok = False
     projection_good = (
+        "The host automatically appends raw events to an immutable session log.",
+        "Raw project-scoped JSONL may be captured automatically; no derived memory is created automatically.",
+        "When the token threshold is crossed, append a source-linked CompactionCompleted event and project subsequent context from the checkpoint plus the event-log tail.",
+        "When the configured context threshold is crossed, derive later context from that checkpoint plus the remaining event-log tail.",
+        "A reflection may be generated on demand from selected event ranges.",
         "Search project-scoped JSONL on demand.",
         "Reflection is temporary and disposable.",
         "OpenViking is an optional rebuildable cache.",
@@ -1367,26 +1443,43 @@ def selftest() -> int:
         "Current source and tests establish what is true now.",
     )
     projection_bad = {
-        "auto-retain": "Automatically retain and reflect on every session.",
+        "automatic-derived-memory": "Automatically store a generated memory after every session.",
+        "auto-sync-provider": "Reflect on every session and persist the result to OpenViking.",
+        "automatic-promotion": "Automatically create a skill after each completed session.",
+        "automatic-injection": "Automatically inject every historical projection into each task.",
+        "history-replacement": "After compaction, discard the original event history and retain only the summary.",
+        "jsonl-overwrite": "At the threshold, overwrite the session JSONL with the compacted summary.",
+        "mixed-optional-mandatory": "OpenViking is optional for retrieval, but Hindsight is mandatory for ordinary work.",
+        "mixed-negation-requirement": "Do not use Hindsight by default, but Codebase Memory must be loaded before every task.",
+        "mixed-optional-authoritative": "Fabric recall is optional for lookup, while OpenViking is the authoritative project memory.",
+        "index-authority": "The structural index outranks current project source.",
         "provider-required": "Hindsight requires project memory for ordinary work.",
         "memory-authority": "OpenViking is the source of truth for project facts.",
-        "auto-skill": "Reflect on every session and automatically create a skill.",
-        "index-authority": "The structural index outranks current source.",
-        "bare-create": "Automatically create a skill after every session.",
         "not-optional inversion": "OpenViking is not optional and authoritative.",
+        "auto-skill": "Reflect on every session and automatically create a skill.",
+        "bare-create": "Automatically create a skill after every session.",
+        "auto-retain": "Automatically retain and reflect on every session.",
     }
     for fixture in projection_good:
-        if projection_lifecycle_violation(fixture):
-            print(f"FAIL projection lifecycle flagged accepted text: {fixture[:60]}")
+        hits = projection_violations(fixture)
+        if hits:
+            print(f"FAIL projection lifecycle flagged accepted text: {hits[0].kind} :: {fixture[:60]}")
             ok = False
         else:
-            print("PASS projection lifecycle accepts disposable-projection text")
+            print("PASS projection lifecycle accepts canonical-or-disposable text")
     for name, fixture in projection_bad.items():
-        if projection_lifecycle_violation(fixture):
-            print(f"PASS projection lifecycle rejects {name}")
+        hits = projection_violations(fixture)
+        if hits:
+            print(f"PASS projection lifecycle rejects {name} ({hits[0].kind})")
         else:
             print(f"FAIL projection lifecycle missed {name}")
             ok = False
+    line_hits = projection_violations("Keep ordinary findings in the conversation.\n\nAutomatically store a generated memory after every session.\n")
+    if line_hits and line_hits[0].line_no == 3:
+        print("PASS projection lifecycle reports the violating line")
+    else:
+        print(f"FAIL projection lifecycle line reporting: {line_hits}")
+        ok = False
     # Foundation-priority regression: bad skill fails, good skill passes.
     with tempfile.TemporaryDirectory() as td:
         base = Path(td)

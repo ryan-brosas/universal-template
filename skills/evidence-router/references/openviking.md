@@ -23,18 +23,33 @@ tool availability and corpus inventory at runtime; endpoints, paths, models,
 and corpus counts are machine-local state and do not belong in repository
 policy.
 
-## Capture
+## Materialization
 
-Add material only when the experience itself is cheaper to retrieve than to
-reconstruct. Do not duplicate an available repository, generated artifact, or
-fact that a runtime probe can recover.
+OpenViking material is a derived representation over canonical evidence, not a
+hand-maintained conclusion database.
 
-1. Add the source with the available OpenViking ingestion operation.
-2. Wait for indexing to finish before semantic retrieval.
-3. Retrieve against the narrow target resource and verify the source text.
-4. Preserve provenance with the stored resource or memory entry.
-5. Route reusable code, gates, skills, references, or foundations through
-   `leverage-capture` instead of building a second prose archive.
+| Aspect | Contract |
+|---|---|
+| Canonical input | Current source at a Git revision, or project-scoped session JSONL |
+| Derived representation | Indexed views and retrieval pointers over that input |
+| Provenance | Source identity sufficient to reproduce or audit the material |
+| Invalidation | Material is stale once the canonical input changes |
+| Regeneration | Re-materialize from the canonical input; never hand-edit the cache |
+
+Materialize on demand or under an explicitly approved workflow. Never
+automatically synchronize every session into OpenViking, and never inject
+materialized context into unrelated tasks or projects.
+
+Session-derived provenance records `source_type: session-jsonl`, `project`,
+`session_id`, `event_range`, `projector`, and `projector_version`.
+Source-derived provenance records `source_type: git`, `repository`,
+`revision`, `paths`, `projector`, and `projector_version`. Any equivalent
+serialization that preserves auditability is acceptable.
+
+Do not hand-maintain a cached conclusion: correct the canonical source or the
+projector, erase the stale materialization, and regenerate it. Route reusable
+code, gates, skills, references, or foundations through `leverage-capture`
+instead of building a second prose archive.
 
 If OpenViking is unavailable, fall back to the nearest reliable local source
 and state the degraded evidence path.
