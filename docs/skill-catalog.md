@@ -5,7 +5,7 @@
 Derived from `skills/*/SKILL.md` metadata. Maintainer tool:
 `python3 scripts/skill-catalog.py search "<topic>"`.
 
-151 skills: 37 visible, 114 hidden. Visible startup metadata: ~10082 chars (~2520 tokens).
+151 skills: 37 visible, 114 hidden. Visible startup metadata: ~10074 chars (~2518 tokens).
 
 ## Entry skills
 
@@ -30,7 +30,7 @@ Direct user-facing capabilities; trigger on request.
 | [`house-writing-style`](../skills/house-writing-style/SKILL.md)                             | entry | visible | Use when rewriting, polishing, or auditing natural-language prose in the house style: agent output, docs, release notes, PR and issue text, or when a style vio... |
 | [`improve-codebase-architecture`](../skills/improve-codebase-architecture/SKILL.md)         | entry | visible | Use when the user wants to improve architecture, find refactoring opportunities, consolidate tightly-coupled modules, or make a codebase more testable and AI-n... |
 | [`inspo-qualify`](../skills/inspo-qualify/SKILL.md)                                         | entry | visible | Use when an active project needs external GitHub prior art: discover or assess one candidate, then clone and full-index it in Codebase Memory only after explic... |
-| [`leverage-capture`](../skills/leverage-capture/SKILL.md)                                   | entry | visible | Use when meaningful work has finished and something may be worth preserving, classify it into code, references, foundations, gates, skills, or memory, and capt... |
+| [`leverage-capture`](../skills/leverage-capture/SKILL.md)                                   | entry | visible | Use when work has finished and something may be worth preserving: classify it into code, references, foundations, gates, skills, project notes, or nothing, and... |
 | [`npm-trusted-publishing`](../skills/npm-trusted-publishing/SKILL.md)                       | entry | visible | Use when setting up npm publishing from GitHub Actions for a package, adding a publish job or workflow, or answering 'how do I publish this to npm' - the AI do... |
 | [`pencil`](../skills/pencil/SKILL.md)                                                       | entry | visible | Use when copying Figma or inspo into Paper, ripping a Figma file onto a Paper canvas, setting Paper tokens from Figma, or when the user says pencil, paper skil... |
 | [`pi-package-development`](../skills/pi-package-development/SKILL.md)                       | entry | visible | Use when creating, editing, structuring, testing, or shipping a pi package or pi extension (package.json pi manifest, pi-package keyword, peerDependencies, bun... |

@@ -35,7 +35,7 @@ CANONICAL SOURCE OF TRUTH: `~/.agents/mcp/servers.json`
 | context7          | stdio | `npx -y @upstash/context7-mcp`               | `CONTEXT7_API_KEY`               | library docs + code examples |
 | deepwiki          | stdio | `npx -y deepwiki-mcp`                        | none                             | OSS architecture pages |
 | exa               | stdio | `npx -y exa-mcp-server`                      | `EXA_API_KEY`                    | live web search |
-| openviking        | remote| `http://127.0.0.1:1933/mcp`                  | none (local daemon)              | mined-corpus retrieval; register only when the daemon runs |
+| openviking        | remote| `http://127.0.0.1:1933/mcp`                  | none (local daemon)              | optional rebuildable projection/cache over mined corpus; register only when the daemon runs; never canonical, never auto-synced, never a blocker |
 | mcp-steroid       | stdio | `devrig mcp` (PATH-resolved)                  | none (local IDE bridge)          | JetBrains PSI/refactoring/test/debugger access via devrig |
 
 ### Deliberately not registered (researched)
