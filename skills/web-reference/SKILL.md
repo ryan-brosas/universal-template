@@ -1,5 +1,6 @@
 ---
 name: web-reference
+disable-model-invocation: true
 description: "Use when a live website or web page should be captured and studied as frontend, visual, layout, interaction, or design-system prior art for implementation."
 ---
 

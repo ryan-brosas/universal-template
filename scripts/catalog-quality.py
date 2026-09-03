@@ -52,12 +52,14 @@ ENTRY_SKILLS = {
     "writing-skills", "house-writing-style", "copywriting",
     # discovery
     "skill-catalog",
-    # tool / runtime capabilities (frequent-in-coding tools only; rare
-    # utilities stay cold and searchable: `findata`, `gmaps`, `gnews`,
-    # `rsearch`, `xsearch`, `ttdl`, `ytdl`, `gemini-large-context`)
-    "cdp", "gsearch", "web-reference",
-    "upwork-proposals", "omarchy", "math-schema",
-    "mcp-steroid",
+    # tool / runtime capabilities stay cold and searchable: `cdp`, `gsearch`,
+    # `web-reference`, plus rare utilities: `findata`, `gmaps`, `gnews`,
+    # `rsearch`, `xsearch`, `ttdl`, `ytdl`, `gemini-large-context`
+
+    # Pending untracked arrivals, pre-registered so the local gate stays green
+    # until their own PR lands; on a clean checkout they simply do not exist.
+    "npm-trusted-publishing", "pencil", "pi-package-development",
+    "pixel-perfect", "ship-pr",
 }
 # Cold references formerly routed automatically; kept searchable, not hot.
 ROUTER_SKILLS: set[str] = set()

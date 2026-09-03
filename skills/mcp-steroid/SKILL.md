@@ -1,5 +1,6 @@
 ---
 name: mcp-steroid
+disable-model-invocation: true
 description: Use when an MCP-capable coding agent needs native JetBrains IntelliJ APIs, semantic navigation, refactoring, inspections, tests, debugging, or IDE UI control.
 ---
 
