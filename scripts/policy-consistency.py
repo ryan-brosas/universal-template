@@ -546,9 +546,12 @@ PROJECTION_CONTRAST = re.compile(r"\b(?:but|however|whereas|while|though)\b", re
 
 
 def _projection_segment_violation(segment: str) -> Optional[str]:
-    """Classify one contrastive segment; modifiers bind locally to it."""
-    if PROJECTION_CAPTURE_VERB.search(segment) and PROJECTION_EVENT_OBJECT.search(segment):
-        return None
+    """Classify one contrastive segment; modifiers bind locally to it.
+
+    Canonical capture is not an exemption: it is accepted because capture
+    verbs and event objects are absent from the derived-memory, promotion,
+    provider, and authority categories, so every category still runs.
+    """
     if PROJECTION_HISTORY_DESTROY.search(segment):
         return "history-replacement"
     auto = (
@@ -561,35 +564,73 @@ def _projection_segment_violation(segment: str) -> Optional[str]:
     )
     if auto and not (PROJECTION_VERB_NEGATION.search(segment) or PROJECTION_OBJECT_NEGATION.search(segment) or PROJECTION_STRONG_SOFTEN.search(segment)):
         return "automatic-derived-memory"
-    if PROJECTION_PROVIDER.search(segment) and PROJECTION_REQUIRE.search(segment):
-        if not (PROJECTION_REQUIRE_NEGATION.search(segment) or PROJECTION_STRONG_SOFTEN.search(segment)):
-            return "provider-required"
-        return None
     if (PROJECTION_MEMORY_SUBJECT.search(segment) or PROJECTION_PROVIDER.search(segment)) and PROJECTION_AUTHORITY.search(segment):
         if PROJECTION_NOT_OPTIONAL.search(segment):
             return "memory-as-authority"
         if not (PROJECTION_AUTHORITY_NEGATION.search(segment) or PROJECTION_STRONG_SOFTEN.search(segment)):
             return "memory-as-authority"
+    if PROJECTION_PROVIDER.search(segment) and PROJECTION_REQUIRE.search(segment):
+        if not (PROJECTION_REQUIRE_NEGATION.search(segment) or PROJECTION_STRONG_SOFTEN.search(segment)):
+            return "provider-required"
     return None
+
+
+def projection_paragraphs(text: str) -> List[Tuple[int, str]]:
+    """Return (start line, joined text) for each scannable paragraph.
+
+    Consecutive prose lines join so wrapped policy cannot evade detection;
+    headings, table rows, list items, and blockquotes scan as their own
+    units, and fenced code is protected like any other authored span.
+    """
+    out: List[Tuple[int, str]] = []
+    buf: List[str] = []
+    start = 1
+    fenced = False
+
+    def flush(line_no: int) -> None:
+        if buf:
+            out.append((start, " ".join(buf)))
+            buf.clear()
+
+    for line_no, line in enumerate(text.splitlines(), 1):
+        stripped = line.strip()
+        if stripped.startswith("```"):
+            fenced = not fenced
+            flush(line_no)
+            continue
+        if fenced:
+            continue
+        if not stripped:
+            flush(line_no)
+            continue
+        if stripped.startswith(("#", "|", ">")) or re.match(r"^\s*(?:[-*+]|\d+[.)])\s+", line):
+            flush(line_no)
+            out.append((line_no, stripped))
+            continue
+        if not buf:
+            start = line_no
+        buf.append(stripped)
+    flush(len(text.splitlines()) + 1)
+    return out
 
 
 def projection_violations(text: str) -> List[ProjectionViolation]:
     """Scan policy text and report every projection violation with its line.
 
-    Lines split into sentences, sentences split at contrastive boundaries
-    (but, however, whereas, while, though), and each segment is classified
-    independently so a softener applies only to the provider or action it
-    actually modifies.
+    Paragraphs split into sentences, sentences split at contrastive
+    boundaries (but, however, whereas, while, though), and each segment is
+    classified independently so a softener applies only to the provider or
+    action it actually modifies. Wrapped paragraphs report their first line.
     """
     out: List[ProjectionViolation] = []
-    for line_no, line in enumerate(text.splitlines(), 1):
-        for sentence in re.split(r"[.!?]+", line):
+    for start_line, paragraph in projection_paragraphs(text):
+        for sentence in re.split(r"[.!?]+", paragraph):
             for segment in PROJECTION_CONTRAST.split(sentence):
                 if not segment.strip():
                     continue
                 kind = _projection_segment_violation(segment)
                 if kind:
-                    out.append(ProjectionViolation(kind, line_no, segment.strip()[:120]))
+                    out.append(ProjectionViolation(kind, start_line, segment.strip()[:120]))
     return out
 
 
@@ -1441,6 +1482,7 @@ def selftest() -> int:
         "Codebase Memory is a derived index, confirmed against current source.",
         "Promote a procedure only after explicit user intent and supporting evidence.",
         "Current source and tests establish what is true now.",
+        "Rebuild the index from a named Git revision.",
     )
     projection_bad = {
         "automatic-derived-memory": "Automatically store a generated memory after every session.",
@@ -1459,6 +1501,9 @@ def selftest() -> int:
         "auto-skill": "Reflect on every session and automatically create a skill.",
         "bare-create": "Automatically create a skill after every session.",
         "auto-retain": "Automatically retain and reflect on every session.",
+        "capture-mixed-store": "Append the raw events to the log and automatically store the summary as permanent memory.",
+        "capture-mixed-destroy": "Append raw events, then overwrite the session history with the summary.",
+        "not-required-but-authoritative": "Codebase Memory is not required but is the authoritative project memory.",
     }
     for fixture in projection_good:
         hits = projection_violations(fixture)
