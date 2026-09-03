@@ -25,7 +25,7 @@ When a skill qualifies:
 - Write the smallest procedure that changes behavior.
 - Include no raw transcript, source dump, secret, credential, client identifier,
   or current repository inventory.
-- Create it as hidden/manual by default with
+- Create it as a hidden/manual candidate with
   `disable-model-invocation: true`.
 - Do not make it model-visible without an explicit request and successful
   trigger/collision testing.

@@ -459,16 +459,23 @@ def check_objective_drift() -> None:
 
 PROJECTION_AUTO = re.compile(
     r"\b(?:retain(?:s|ed|ing)?|reflect(?:s|ed|ing|ion)?|summari[sz]e(?:s|d)?|"
-    r"sync(?:s|ed|ing)?|inject(?:s|ed|ing)?)\b", re.I,
+    r"sync(?:s|ed|ing)?|inject(?:s|ed|ing)?|creat(?:e|es|ed|ing)|"
+    r"writ(?:e|es|ten|ing)|promot(?:e|es|ed|ing))\b", re.I,
 )
 PROJECTION_AUTO_TRIGGER = re.compile(
     r"\b(?:automatically|by default|every (?:session|task|request|change)|"
     r"each (?:session|task|request|change)|all (?:sessions|tasks))\b", re.I,
 )
-PROJECTION_SOFTEN = re.compile(
-    r"\b(?:not|no|never|without|optional|opt-in|on demand|disposable|"
-    r"temporary|rebuildable|explicit(?:ly)?|only when|only after|default first)\b", re.I,
+PROJECTION_STRONG_SOFTEN = re.compile(
+    r"\b(?:never|without|optional|opt-in|on demand|disposable|"
+    r"temporary|rebuildable|explicit(?:ly)?|only when|only after|default first|"
+    r"do not|don't)\b", re.I,
 )
+PROJECTION_AUTHORITY_NEGATION = re.compile(
+    r"\b(?:not|no|never)\s+(?:an?\s+|the\s+)?(?:independent\s+)?"
+    r"(?:source of truth|canonical|authorit(?:y|ative))", re.I,
+)
+PROJECTION_NOT_OPTIONAL = re.compile(r"\bnot\s+optional\b", re.I)
 PROJECTION_AUTHORITY = re.compile(
     r"\b(?:source of truth|canonical (?:owner|truth|authority)|authorit(?:y|ative)|outranks?)\b",
     re.I,
@@ -498,18 +505,25 @@ def projection_lifecycle_violation(text: str) -> Optional[str]:
         auto = bool(PROJECTION_AUTO.search(clause)) and bool(PROJECTION_AUTO_TRIGGER.search(clause))
         required = bool(PROJECTION_PROVIDER.search(clause)) and bool(PROJECTION_REQUIRE.search(clause))
         authority = bool(PROJECTION_MEMORY_SUBJECT.search(clause)) and bool(PROJECTION_AUTHORITY.search(clause))
-        if (auto or required or authority) and not PROJECTION_SOFTEN.search(clause):
-            if auto:
-                return "automatic projection"
-            if required:
-                return "provider-required"
-            return "memory-as-authority"
+        if not (auto or required or authority):
+            continue
+        if PROJECTION_NOT_OPTIONAL.search(clause):
+            return "asserted-required-provider" if required else "automatic projection"
+        if PROJECTION_STRONG_SOFTEN.search(clause):
+            continue
+        if authority and PROJECTION_AUTHORITY_NEGATION.search(clause):
+            continue
+        if auto:
+            return "automatic projection"
+        if required:
+            return "provider-required"
+        return "memory-as-authority"
     return None
 
 
 def projection_scope_files() -> List[str]:
     files = list(dict.fromkeys(POLICY_FILES + FOUNDATION_POLICY_FILES))
-    files.append("mcp/catalog.md")
+    files.extend(["mcp/catalog.md", "skills/evidence-router/references/openviking.md"])
     for path in sorted((BASE / "prompts").glob("*.md")):
         files.append("prompts/" + path.name)
     return files
@@ -521,7 +535,8 @@ def check_projection_lifecycle() -> None:
         text = read(rel)
         if not text:
             continue
-        violation = projection_lifecycle_violation(text)
+        scannable = re.sub(r"^## Red Flags\b.*?(?=^## |\Z)", "", text, flags=re.M | re.S)
+        violation = projection_lifecycle_violation(scannable)
         if violation:
             check_fail("PROJECTION-LIFECYCLE", rel, 1, f"{violation} phrasing in projection policy")
     require_phrase("PROJECTION-LIFECYCLE", "prompts/reflect-session.md", "read-only projection")
@@ -1357,6 +1372,8 @@ def selftest() -> int:
         "memory-authority": "OpenViking is the source of truth for project facts.",
         "auto-skill": "Reflect on every session and automatically create a skill.",
         "index-authority": "The structural index outranks current source.",
+        "bare-create": "Automatically create a skill after every session.",
+        "not-optional inversion": "OpenViking is not optional and authoritative.",
     }
     for fixture in projection_good:
         if projection_lifecycle_violation(fixture):
