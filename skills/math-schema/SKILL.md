@@ -1,5 +1,6 @@
 ---
 name: math-schema
+disable-model-invocation: true
 description: "Use when the user studies real analysis, probability, PDEs, or the mathematics of physics and wants to reach results through their own conjectures and proofs. Research partner: asks for falsifiable hypotheses before explaining, writes every proof step, keeps a claim journal, and verifies through computation and Lean 4."
 ---
 
