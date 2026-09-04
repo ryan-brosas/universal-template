@@ -2,8 +2,9 @@
 
 # Skill Catalog
 
-Derived from `skills/*/SKILL.md` metadata for human browsing.
+Derived from operational `skills/*/SKILL.md` metadata for human browsing.
 Models discover skills from the filesystem or the host's native skill surface.
+Cold foundations are excluded; see `foundation-catalog.md`.
 
 153 skills: 38 visible, 115 hidden. Visible startup metadata: ~10315 chars (~2578 tokens).
 

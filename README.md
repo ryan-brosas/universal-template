@@ -18,7 +18,7 @@ agent at this checkout and ask it to connect the baseline to the hosts available
 on the current machine. The canonical content is plain Markdown and JSON:
 
 - `AGENTS.md`: global engineering instructions
-- `skills/`: need-driven capabilities
+- `skills/`: operational capabilities plus manual, hidden `kind: foundation` evidence leaves
 - `prompts/`: reusable workflows
 - `templates/`: project and contribution templates
 - `mcp/servers.json`: portable MCP declarations
@@ -38,8 +38,11 @@ Then have the active coding agent perform this bounded setup:
    inventory. Do not assume that an installed executable is configured.
 2. Inspect each detected host's current instruction, skill, and prompt surfaces.
    Prefer current host documentation or runtime help over remembered paths.
-3. Link `AGENTS.md`, `skills/`, and canonical prompt Markdown directly where the
-   host supports those formats.
+3. Inspect the host's skill discovery behavior before linking `skills/`. A host
+   that eagerly scans the tree or whose hidden-field behavior is unverified must
+   receive a host-owned filtered symlink view containing only operational leaves
+   (frontmatter without `kind: foundation`), never the unified root. Only a host
+   proven to discover lazily without scanning the full tree may use the root.
 4. Generate a host adapter only when the host requires a different format. The
    adapter must name its canonical source under `prompts/` and remain derived.
 5. Preserve every unmanaged file. Replace or remove only links and adapters
@@ -50,6 +53,24 @@ Then have the active coding agent perform this bounded setup:
 This is the ordinary setup path. It uses the agent's native filesystem and host
 capabilities, not Python.
 
+### Skill exposure on eager hosts
+
+`skills/` is the one canonical source tree; do not copy it or maintain a second
+foundation tree. For eager or unverified hosts, create a host-owned directory of
+symlinks to operational skill directories only, configure the host to scan that
+directory, and disable its automatic `~/.agents/skills` scan where supported.
+Reconcile links from current frontmatter and preserve unmanaged host files.
+Maintainers can inspect the exact filtered set with:
+
+```sh
+python3 scripts/skill-catalog.py list --kind skill --json
+```
+
+Foundations remain cold and explicit: use catalog search/show, open the selected
+`skills/<name>-foundation/SKILL.md`, inspect its `references/index.md`, then load
+one matching capsule. See `docs/foundation-skill-v1.md` for measured host
+behavior and limitations.
+
 ### Optional compatibility installer
 
 Maintainers who want the legacy reconciler may run:
@@ -58,8 +79,9 @@ Maintainers who want the legacy reconciler may run:
 python3 scripts/install-prompts.py
 ```
 
-It creates relative links for Markdown-capable hosts and generated TOML for
-Gemini CLI. `--check` audits installed mounts without changing them, and
+It installs prompts only; it does not expose skills. It creates relative links
+for Markdown-capable hosts and generated TOML for Gemini CLI. `--check` audits
+installed mounts without changing them, and
 `--home <sandbox>` supports isolated testing. This helper is optional; Python
 is not required to consume or maintain the canonical content.
 
@@ -80,10 +102,12 @@ project notes become durable promotions.
 
 ## Usage
 
-Use host-native skill discovery or search `skills/*/SKILL.md` directly. Read the
-frontmatter descriptions, choose the smallest relevant capability, and load only
-that skill and the references it names. `docs/skill-catalog.md` is an optional
-generated view for human browsing, not required model context.
+Use host-native operational-skill discovery or search `skills/*/SKILL.md`
+directly. Read frontmatter, choose the smallest relevant capability, and load
+only that skill and the references it names. `kind: foundation` leaves are cold,
+historical evidence: select one explicitly and load one matching capsule.
+`docs/skill-catalog.md` and `docs/foundation-catalog.md` are separate optional
+generated views for human browsing, not required model context.
 
 Reusable prompts include `/repo-audit`, `/plan-work`, `/implement-work`,
 `/review-work`, `/verify-work`, `/cleanup-code`, `/learn`, `/recall-session`,
@@ -106,7 +130,9 @@ Python helpers.
 - Engineering constitution: `AGENTS.md`
 - Contribution and verification contract: `CONTRIBUTING.md`
 - Maintainer tool ownership: `docs/maintainer-tooling.md`
-- Human skill catalog: `docs/skill-catalog.md`
+- Human operational skill catalog: `docs/skill-catalog.md`
+- Human foundation catalog: `docs/foundation-catalog.md`
+- Foundation migration and host probes: `docs/foundation-skill-v1.md`
 - Current objectives: `docs/roadmap.md`
 - MCP registry and host wiring: `mcp/catalog.md`
 - Security policy: `SECURITY.md`

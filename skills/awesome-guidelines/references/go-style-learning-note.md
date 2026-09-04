@@ -10,7 +10,7 @@
 | [Effective Go](https://go.dev/doc/effective_go) | Multiple returns for errors; `if err := …; err != nil`; defer cleanup; comma-ok; small interfaces (`-er` suffix); accept interfaces at API boundary |
 | [Uber Go Style Guide](https://github.com/uber-go/guide/blob/master/style.md) | Don't panic in production; defer for cleanup; avoid mutable globals; goroutine lifecycle; no `*interface` |
 
-**Not duplicated here:** Standard project layout (directory scaffolding) — adopt per repo; not a style invariant. RPC/framework specifics — use stack capsules in `foundation-pack/`.
+**Not duplicated here:** Standard project layout (directory scaffolding) — adopt per repo; not a style invariant. RPC/framework specifics — use stack capsules in `skills/*-foundation`.
 
 ## Mental model
 

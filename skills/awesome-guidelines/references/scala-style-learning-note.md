@@ -10,7 +10,7 @@
 | [Databricks Scala Guide](https://github.com/databricks/scala-style-guide) (secondary) | 100-char lines; rule of 30; explicit types on public methods; `override` always; immutable case classes; avoid `return` in closures; avoid `null`/`Option.get`; symbolic methods banned except arithmetic; `@tailrec` when recursive |
 | [Scala Best Practices](https://github.com/alexandru/scala-best-practices) (secondary) | no `return`; immutable data; no `var` in case class; no catch `Throwable`; explicit public return types; case classes final |
 
-**Not duplicated here:** Akka actor/Cake pattern chapters — use stack capsules in `foundation-pack/`. Full Scalafmt config — project formatter wins.
+**Not duplicated here:** Akka actor/Cake pattern chapters — use stack capsules in `skills/*-foundation`. Full Scalafmt config — project formatter wins.
 
 ## Mental model
 

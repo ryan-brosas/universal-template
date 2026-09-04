@@ -1,0 +1,679 @@
+<!-- Preserved from the pre-foundation-skill-v1 loader. Detail remains historical and revision-pinned. -->
+
+# pydantic-ai: Agent Runtime Foundation
+
+## Use this for
+Use when porting or building an agent runtime's core machinery: deferred/external tool calls, human-in-the-loop approval, pause/resume envelopes, end-strategy winner selection, retry budgets, barrier-segmented parallel execution, tool-reveal bookkeeping, usage/cost accounting and limits, structured-output schema resolution, output-function dispatch under hooks, capability middleware with ordering constraints, decorator hook registries, model-faking test doubles, typed message-part promotion on replay, toolset composition (wrapper/combined/prefixed/renamed/prepared/filtered/dynamic/approval/external), capability fan-out and wrapper stacking, agent-graph node state machines (response classification, stream handoff), streaming partial→final validation, profile-driven request normalization, compaction wire boundaries and standing-prompt retention, untrusted-history sanitization, tool-reveal state ladders and availability-delta projection, streamed response lifecycle states, recursive multimodal rehydration inside tool returns, retry-prompt and INVALID_JSON wire envelopes, realtime speech→text projection, and local web-fetch/subagent delegation tools. Capability-plane contracts: event-stream observer/processor wrapping, priority pending-message drains with terminate-time redirect, native-or-local tool pairing with unless_native exclusion, URL-stable MCP capability ids, byte-stable deferred-capability catalogs, scoped tool prefixing, selector-gated definition rewrites, opt-in content-filter escalation, system-prompt reinjection, bounded thread executors, per-step model selection/resolution chains, and inline deferred-call handlers. Cross-cutting infrastructure contracts: shared concurrency limiters with queue backpressure and whole-stream slot holds, NamedSpec short-form config round-trips, ContextVar-scoped registry inheritance for nested spec loads, wrapper-agent policy side-doors (realtime open + signaling), RFC-9562 monotonic UUIDv7 generation, version-gated SDK compat field readers, unterminated-tag thinking splits, two-pass XML prompt formatting with once-only field metadata, lazy-inference embedder facades, three-plane tool-search strategies, canonical tool-choice folding, MCP sampling settings namespacing, opaque reasoning-details codecs, embedding template-method normalization, mid-run enqueue assembly with terminal-request validation, best-effort response pricing that never fails a run, the durable-execution shared kernel (string-only model round-trip with credential-leak rejection, per-run executing-toolset rejection, replay-unit enqueue/cancel guards, live-vs-replay event-stream split, id-keyed toolset wrapper registry), the durability-engine adapter plane (entry-point guard ladders + override sandwiches, anyio-shielded cancel forwarding, boundary-guarded context rehydration with loud omitted-field errors, sequence-keyed and value-addressed cache keys, legacy-replay dual paths, non-retryable config layering), static tool-choice deadlock gates, instructions normalization pipelines, capability settings folds, dual-plane prepare hooks with no-add/no-rename validation, parsed-docstring wire contracts, dual-family HTTP error bridges, optional-dependency timeout contracts, transport-level tenacity retries honoring Retry-After, deadline-enforced sync-callback dispatch with abandon-on-cancel, session cancellation translated into typed resumable exceptions, nested sync-run deadlock guards, registry-backed model-name suggestion ladders, blank-text output classification, tool-results-first history sorting, schema-generator falsy-value discipline, version-gated OTel role vocabularies, terminal enum-ref Literal resolution, visibility-gated unknown-tool retry messages, exact-host URL capability allowlists, and replayed-history hardening for partially-rejected provider turns. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval.
+
+## Load the matching source dump
+- `./deferred-tool-envelope.md` — DeferredToolRequests/Results data shapes and the single-boundary normalization contract.
+- `./deferred-collection-resolution.md` — stub vs collect vs inline-resolve ladder inside one step.
+- `./approval-result-dispatch.md` — approve/deny/override-args result variants and their re-validation rule.
+- `./end-strategies-retry-wins.md` — early/graceful/exhaustive ordering plus the retry-wins suppression invariant.
+- `./parallel-barrier-execution.md` — segment-around-barrier scheduling, ordered events, cancel-and-drain cleanup.
+- `./validate-execute-retry-budget.md` — validate/execute split, ValidatedToolCall carrier, budget asymmetry rules.
+- `./availability-refusals.md` — "not available yet" corrective retries and the one-free-refusal carve-out.
+- `./declarative-deferral-handle-call.md` — kind-based deferral conversion and the handle_call return contract.
+- `./toolset-approval-wrappers.md` — ExternalToolset + ApprovalRequiredToolset minimal surfaces.
+- `./resume-path.md` — splicing DeferredToolResults into history without double-execution.
+- `./subagent-cancel-isolation.md` — positional cancellation identity for nested agent runs.
+- `./tool-reveal-guardrails.md` — deterministic tool-reveal dedup and capability-load gating.
+- `./tool-return-normalizer.md` — build_tool_return_part's three outputs and loud-failure inputs.
+- `./output-type-integration.md` — the pause envelope as a declared output type.
+- `./usage-accounting.md` — inclusive token buckets, unknown-cost semantics, limit checks at three boundaries.
+- `./function-model-contract.md` — FunctionModel/AgentInfo: scripting the model from a plain function.
+- `./function-model-callable-instances.md` — callable-instance FunctionModels: name fallback, partial-unwrapping async routing, executor observability, stream return-shape contract.
+- `./test-model-simulator.md` — TestModel's history-driven tools-then-output state machine.
+- `./output-schema-build.md` — OutputSchema.build dispatch ladder and sentinel peeling.
+- `./output-semantic-envelope.md` — hooks see semantic values; validation sees dict envelopes.
+- `./union-output-dispatch.md` — kind-trust → type-scan → passthrough union execution.
+- `./output-toolset-lowering.md` — output types as tools: naming, dedup, retry overrides.
+- `./structured-dict-output.md` — schema-only outputs via a dual-hook runtime class.
+- `./capability-hook-ladder.md` — before/wrap/after × validate/execute; where deferral is legal.
+- `./hooks-registry.md` — decorator registry: pipe vs middleware vs error-ladder dispatch.
+- `./capability-ordering.md` — declarative ordering constraints resolved by stable topo sort.
+- `./capability-run-isolation.md` — for_run copies and model-gated deferred loading.
+- `./message-part-narrowing.md` — best-effort typed-part promotion with kind-stripping.
+- `./toolset-wrapper-delegation.md` — the AbstractToolset contract and identity-preserving wrapper delegation.
+- `./combined-toolset-merge.md` — flattening toolsets with loud name-conflict detection and source-tool routing.
+- `./prefixed-toolset-rewrite.md` — name-prefixing with call-time de-prefixing (incl. ctx.tool_name).
+- `./renamed-toolset-map.md` — inverted rename map with collision guards and call-time reversal.
+- `./prepared-toolset-guard.md` — prepare-function rewriting with no-add/no-rename guard.
+- `./toolset-prepare-wrappers.md` — Filtered/SetMetadata/DeferredLoading/IncludeReturnSchemas prepare wrappers.
+- `./approval-external-toolsets.md` — call-time approval gating and external-tool placeholders.
+- `./dynamic-toolset-lifecycle.md` — factory-evaluated toolset with detach-before-exit lifecycle.
+- `./capability-owned-toolset.md` — capability-id stamping and deferred-capability searchability gating.
+- `./combined-capability-fanout.md` — before-forward / after-wrap-error-reverse capability fan-out.
+- `./wrapper-capability-identity.md` — transparent capability wrapper with identity adoption on rebind.
+- `./get-wrapper-toolset-stacking.md` — reverse-order capability wrapper stacking around the toolset.
+- `./call-tools-node-classify.md` — the response-classification ladder that ends or continues a run.
+- `./model-request-stream-handoff.md` — cooperative task/consumer stream handoff with drain-on-cancel.
+- `./stream-partial-validation.md` — allow_partial ladder and the final partial_output=False call.
+- `./stream-output-dispatch.md` — tool→deferred→image→text streaming output-type dispatch.
+- `./prepare-request-normalization.md` — profile-driven request normalization and output-mode resolution.
+- `./user-prompt-node-routing.md` — UserPromptNode's history-adoption and next-node routing ladder.
+- `./deferred-results-injection.md` — deferred tool-results delivery with override-is-error and 'skip' sentinels.
+- `./dynamic-prompt-reevaluation.md` — ref-preserving in-place refresh of dynamic system prompts.
+- `./continuation-merge.md` — suspended→complete continuation loop: dual ceilings, per-segment pricing, cancel-before-raise.
+- `./tool-search-corpus.md` — ToolSearchToolset: hidden vs searchable split, undiscovered-first ranking, history-derived reveal ledger.
+- `./function-toolset-prepare.md` — per-tool prepare contexts keyed by storage name plus the durable no-reprepare rebuild.
+- `./function-toolset-registration.md` — option inheritance at registration, loud conflicts, timeout→ModelRetry.
+- `./output-hook-engine.md` — output validate/process hook ladders with error-hook recovery rules.
+- `./output-schema-taxonomy.md` — OutputSchema.build sentinel-peeling dispatch into the schema-class taxonomy.
+- `./request-parameters-assembly.md` — graph-side request assembly with the scoped corpus-empty native-tool drop.
+- `./model-request-prep.md` — request prep ordering: hooks mutate first, dual resume pins, in-place history swap, cleanup→reveal→prepare_messages.
+- `./resume-request-prep.md` — resume-path prep: suspended tail kept on wire, dropped from history; verbatim instruction rehydration.
+- `./continuation-primitives.md` — merge-mode taxonomy (marker/id/model), replace-vs-accumulate folding, dual ceilings, transient marker pop.
+- `./streamed-continuation-composite.md` — segment stitching: shared-decision reindexing, per-segment pricing, detach-vs-cancel state machine.
+- `./shielded-job-teardown.md` — ensure_future+shield cancel ladder that survives scope cancellation without leaking the job or masking errors.
+- `./parts-manager-string-buffering.md` — append-only string buffers with read-time materialization and atomic rollback.
+- `./tool-call-upgrade-ladder.md` — delta→part upgrade contract: eventless until complete, one PartStart per part, vendor-id routing.
+- `./single-arg-tool-schema.md` — flat wire schema over a wrap validator; accepted-keys envelope disambiguation; pre-*args positional fields.
+- `./tool-visibility-states.md` — visible/deferred/withheld/via_history taxonomy; None-vs-empty authoring distinction; declared-view exclusion.
+- `./compaction-wire-trim.md` — provider-exact compaction boundary + standing-prompt rebuild with planted-stamp retention.
+- `./tool-return-content-rehydrate.md` — recursive multimodal rehydration via kind+field discriminator with passthrough fallback.
+- `./retry-prompt-rendering.md` — ValidationError vs ModelRetry rendering; `input` excluded only when already in context.
+- `./tool-args-invalid-json.md` — INVALID_JSON envelope for malformed args; verbatim object bytes preserved for caching.
+- `./streamed-state-machine.md` — suspended > complete > interrupted > incomplete precedence; guard suppresses only own teardown errors.
+- `./untrusted-history-sanitize.md` — client-history strip order; dangling tail resolved AFTER empty-message drops.
+- `./instruction-part-sorting.md` — stable static-before-dynamic sort; join collapses whitespace to None.
+- `./availability-delta-render.md` — delta dual render (mechanism exchange vs fact-only announcement); collision-seeded synthetic ids.
+- `./reveal-state-ladder.md` — is_tool_available ladder: load-as-reveal + additive AnchoredEvidence widening.
+- `./native-swap-resolution.md` — per-tool visibility decision table; corpus-empty drop ToolSearchTool-specific; ids recomputed post-drop.
+- `./legacy-reveal-translation.md` — three-signal fabricated-exchange recognition; genuine searches never rewritten; fail closed.
+- `./speech-part-projection.md` — realtime speech → prompt/text projection; ephemeral interruption marker, never persisted.
+- `./web-fetch-content-ladder.md` — markdown-first Accept, four content shapes, every failure a ModelRetry.
+- `./subagent-fallback-delegation.md` — sync/async/awaitable fallback resolution; UnexpectedModelBehavior→ModelRetry; image-only guard.
+- `./griffe-doc-descriptions.md` — Sphinx→Google→NumPy docstring inference; returns section flips description to XML.
+- `./ssrf-safe-download.md` — SSRF-safe bounded download: protocol gate, resolve-then-validate every hop, transition-embedding defense, redirect credential stripping, gzip size-capped streaming.
+- `./cancellation-attribution.md` — first-party vs external cancellation: count/uncancel attribution, external-wins race, baseline-free resolve.
+- `./instrumented-model-wrapper.md` — OTel wrapper handing the wrapped model the ORIGINAL (non-idempotent-prepare) messages; incremental message-JSON cache.
+- `./fallback-model-chain.md` — fallback chain: handler auto-detection, per-model profile re-prepare, response-rejection cost carry, continuation pin + rewind + replace stamp.
+- `./sync-stream-bridge.md` — long-lived owner task bridging an async streaming CM to sync code on the caller's event loop.
+- `./direct-model-api.md` — imperative model API; reverse-scan instructions→instruction_parts bridge.
+- `./function-signature-dedup.md` — tool signatures for LLMs: structural type dedup + render-time prefix via ContextVar.
+- `./run-binding-handoff.md` — handle-before-run cancellation ownership via ContextVar binding, consume-once for nested runs.
+- `./run-cancelled-recovery.md` — RunCancelled.from_cancellation: attach partial state, traverse cause/context chain, re-raise external cancels.
+- `./native-tool-registry.md` — __init_subclass__ auto-registry + pydantic discriminated union; unique_id/optional semantics.
+- `./otel-message-json-cache.md` — otel message json cache: incremental serialization caching for OTel spans.
+- `./instrumentation-context-capture.md` — instrumentation context capture: runtime span scoping and metadata extraction.
+- `./binary-content-redaction-walk.md` — binary content redaction walk: recursive traversal redacting sensitive binary parts.
+- `./telemetry-control-flow-spans.md` — telemetry control flow spans: root and child trace span lifecycle.
+- `./chat-span-lifecycle.md` — chat span lifecycle: message boundary timing and error tagging.
+- `./decorator-hook-registry.md` — decorator hook registry: registration order and async hook dispatch.
+- `./event-stream-teed-observer.md` — ProcessEventStream dual forms: observer tee vs global processor; plain-task pump that survives cross-task stream resumption.
+- `./pending-message-drain-redirect.md` — 'asap'/'when_idle' priority drains at request-build plus terminate-time ModelRequestNode redirect so enqueued messages are never lost.
+- `./native-or-local-tool-base.md` — NativeOrLocalTool construction-validation ladder and unless_native mutual-exclusion stamping between native and local tools.
+- `./websearch-subclass-anatomy.md` — WebSearch subclass anatomy: kind-as-unique_id, lazy strategy imports naming pip groups, requires-native constraint predicates.
+- `./mcp-capability-url-ids.md` — MCP capability: one URL-derived stable id chain tying local unless_native tags to what's actually advertised natively.
+- `./deferred-capability-catalog-stability.md` — byte-stable deferred-capability catalog instruction; loaded entries stay listed to keep the prompt-cache prefix warm.
+- `./capability-bundle-late-registration.md` — Capability bundling without subclassing: live empty toolset return keeps post-construction decorator tools visible.
+- `./prefix-tools-scoped-namespacing.md` — PrefixTools namespaces ONLY the wrapped capability's tools; callable toolsets materialized via DynamicToolset.
+- `./selector-gated-definition-rewriters.md` — IncludeToolReturnSchemas/SetToolMetadata: tri-state default-vs-explicit rewrites behind PreparedToolsets.
+- `./content-filter-reinject-prompt-pair.md` — opt-in ContentFilterError escalation preserving partial bodies; conservative system-prompt reinjection with explicit strip mode.
+- `./thread-executor-history-dispatch.md` — run-scoped bounded thread executors; four-shape sync/async × ctx/no-ctx history-processor dispatch.
+- `./model-selection-resolution-chain.md` — per-step SelectModel hooks; consultative first-non-None-wins ResolveModelId chains; sorted deduped availability deltas.
+- `./deferred-handler-none-chaining.md` — HandleDeferredToolCalls inline resolution; None declines down the chain and bubbling stays intact.
+- `./concurrency-limiter-kernel.md` — shared ConcurrencyLimiter: acquire_nowait fast path, locked check-and-register backpressure, OTel waiting spans.
+- `./concurrency-model-wrapper.md` — ConcurrencyLimitedModel gates request/count_tokens/request_stream; slot held across whole stream; identity-shared pools.
+- `./named-spec-roundtrip.md` — NamedSpec three short forms; string-keyed-dict long-form carve-out; registry override semantics; schema-type generation.
+- `./capability-spec-nested-context.md` — ContextVar-scoped capability registry inheritance so nested from_spec reuses custom types and template context.
+- `./wrapper-agent-side-doors.md` — transparent agent delegation; realtime signaling/session are policy side-doors an iter()-only wrapper misses; UNSET-sentinel override forwarding.
+- `./uuid7-monotonic-polyfill.md` — RFC 9562 Method 1 UUIDv7: 42-bit counter, clock-regression bump, overflow reseed under one lock.
+- `./sdk-generation-compat-readers.md` — distribution-version SDK-generation gate; snake/camel dual-spelling field readers; silent-None trap compensated by CI pins.
+- `./tagged-thinking-splitter.md` — inline `<think>` splitting where unterminated tags degrade to plain text, never errors or data loss.
+- `./format-as-xml-two-pass.md` — pre-walk collects Field metadata before serialization; 'once' attribute emission keyed on Class.field; rootless rendering.
+- `./embedder-facade-lazy-instrument.md` — Embedder defers provider inference to first use, overrides via ContextVar, instruments per-resolution; query/document input_type axis.
+- `./tool-search-native-strategies.md` — tool discovery's three planes (server-side/client-executed/local) behind one strategy union with hidden internal 'custom'.
+- `./tool-choice-canonical-resolver.md` — user tool_choice folded with output tools into a five-value canonical form; loud pre-flight validation.
+- `./mcp-sampling-model.md` — MCP sampling as a Model: mcp_-prefixed settings namespace for collision-free merges; assistant-role-or-fail.
+- `./reasoning-details-codec.md` — OpenRouter reasoning_details ↔ ThinkingPart codec keeping encrypted payloads opaque across history round-trips.
+- `./embedding-model-abc-contract.md` — prepare_embed template-method normalization; loud count_tokens failure; uniformly tested disabled-request guard.
+- `./enqueue-assembly-contract.md` — variadic enqueue items coalesce into ordered messages that must terminate in a ModelRequest.
+- `./best-effort-pricing-ladder.md` — URL→provider-name price resolution; expected misses silent, unexpected failures warn; set cost never overwritten.
+- `./durable-model-roundtrip.md` — only strings cross the durable boundary; unregistered instances rejected with credential-leak explanation.
+- `./runtime-toolset-rejection.md` — per-run executing toolsets rejected inside durable containers; identity-set diff isolates new leaves.
+- `./durable-unit-guards.md` — EnqueueGuard/CancelGuard stand-ins make replay-divergent calls fail loud at both argument and ambient chokepoints.
+- `./durable-event-stream-split.md` — stream events delivered live in-boundary are filtered from workflow-side replay dispatch; yields never filtered.
+- `./durable-toolset-registry.md` — id-keyed wrapper registry with same-instance reuse, collision refusal, and innermost ordering.
+- `./langchain-tool-proxy.md` — foreign-tool adaptation: schema closed + required recomputed from args details; defaults merged in the proxy closure.
+- `./fixed-param-tool-factory.md` — _UNSET sentinel + partial with explicit __signature__ excision hides developer-fixed params from the LLM schema.
+- `./userwarning-deprecation-channel.md` — UserWarning-base deprecations visible by default; aggregators suppress internal re-warnings category-scoped.
+- `./model-display-label.md` — pure hyphen-split derivation: leading GPT uppercase, adjacent digit runs dot-joined, vendor path stripped.
+- `./spec-template-validation.md` — hint-directed TypeAdapter validation compiles TemplateStr only where declared; plain strings stay literal.
+- `./recorded-result-unwrap.md` — whitelist unwrap normalizes replayed control-flow carriers from both recording eras; config metadata validated loudly.
+- `./temporal-agent-workflow-surface.md` — entry-point guard ladder (token → in_workflow → ContextVar gate) plus the four-leg in-workflow override sandwich.
+- `./anyio-shielded-activity-executor.md` — start+shield+exactly-one-graceful-cancel activity execution prevents anyio scope livelock.
+- `./run-context-boundary-guard.md` — four-class field taxonomy across a serialize/replay boundary; un-carried fields raise instead of lying with defaults.
+- `./prefect-sequence-keyed-events.md` — engine-native per-run counters key content-identical events distinctly yet reproduce on retries for cache replay.
+- `./value-addressed-cache-keys.md` — task keys hash values not pickle memo layout; exhaustive hand-authored RunContext projection enforced by a CI test.
+- `./dbos-legacy-replay-compat.md` — ContextVar-flagged dual paths keep wrapper-era recorded step sequences replayable byte-for-byte.
+- `./activity-config-nonretryable-layering.md` — user retry policies replace wholesale, so re-normalize the non-retryable set after every merge; copy before mutate.
+- `./static-tool-choice-gate.md` — 'required'/list raise on the static merged baseline only; callable layers are trusted to vary per step.
+- `./instructions-normalization-pipeline.md` — normalize→prepare→resolve; TemplateStr rides the callable branch; toolset parts dynamic-by-default via one shared helper.
+- `./capability-model-settings-fold.md` — per-capability ModelSettings compose by open-dict key merge; None = no opinion; scalar-only classes stay spec-serializable.
+- `./prepare-tools-dual-plane.md` — sync-or-async prepare hooks validated against add/rename; function vs output planes kept separate with plane-correct budgets.
+- `./model-settings-wire-contract.md` — "Supported by" docstring bullets are parsed by CI against actual wire behavior; sent ≠ honored.
+- `./dual-family-error-bridge.md` — migrating httpx→httpx2 under users: dual-inheritance exception bridge with explicit `Exception.__init__` and generator-scoped translation.
+- `./timeout-migration-contract.md` — optional-dependency settings fields: alias degradation, isinstance-gated field rebuilds, stacklevel-tuned deprecation warnings.
+- `./tenacity-transport-replay.md` — transport-level retries: config-as-decorator-kwargs, manual request back-reference, close-before-reraise, replayable-body constraint.
+- `./retry-after-wait-ladder.md` — Retry-After parsing ladder: seconds→HTTP-date discrimination, asctime naive-date UTC pin (#7711), double max_wait clamp, never-raise fallback degradation.
+- `./sync-hook-timeout-dispatch.md` — real deadlines for blocking sync callbacks: fail_after + abandon-on-cancel paired contexts, thread dispatch with await_maybe.
+- `./session-cancellation-translation.md` — CancelledError → typed RunCancelled with full resume state: resolve-or-reattach fork, setup-phase recording, re-assert at finalize.
+- `./nested-sync-run-guard.md` — dispatch-time ContextVar flagging rejects nested sync agent runs with a migration-prescribing message.
+- `./model-name-suggestion-ladder.md` — "did you mean" over a model registry: descending-cutoff ladder, namespace scoping, hint-field-not-new-type, pickle message rebuild.
+- `./blank-text-output-ladder.md` — empty vs blank-text vs thinking-only classification and the ordered gates (token-limit → content-filter → allows-none → retry).
+- `./tool-results-first-sort.md` — tail-scoped stable sort putting tool results first while standing system prompts keep their position-sensitive slot.
+- `./testmodel-generator-falsy-fixes.md` — membership tests not truthiness in schema-driven generators; inclusive-bound equality early return; seam-registered fake cancellation.
+- `./instrumentation-v6-roles.md` — version-gated per-part role keying introduces the GenAI `tool` message role without breaking older consumers.
+- `./enum-ref-literal-resolution.md` — terminal enum `$ref`s resolve inline as `Literal[...]`; composition-key disjointness defines terminality.
+- `./unknown-tool-retry-message.md` — unknown-tool retries enumerate only visibility-gated tools, with a search-hint branch for fully-deferred surfaces.
+- `./video-url-host-allowlist.md` — exact-host capability predicates: ownership ≠ resolvability; dual-reader coupling documented before extension.
+- `./anthropic-replay-hardening.md` — replayed-history repair: global pair scan + positional legality + cache-boundary relocation + no-fake-results rule.
+- `./ui-event-stream-transform-spine.md` — one stateful async generator drives every protocol: bookkeeping-before-dispatch ordering, emit-before-track open-part rule, cleanup ordered by client drop point, finally-aclose.
+- `./load-capability-retry-budget.md` — framework-injected meta-tool inherits the agent's tool retry budget; load failures are ModelRetry feedback; tool_kind routing + reserved-name guard.
+- `./span-query-zero-bound-guards.md` — truthy-min / is-not-None-max asymmetry for optional numeric bounds in dict query DSLs so `0` means "cap of zero", not "unlimited".
+- `./cohere-zero-arg-call-keep.md` — provider tool-call mapping gates on presence fields only; falsy-but-legitimate payloads preserved verbatim or calls vanish into retry spirals (#7720).
+- `./gateway-profile-routing-table.md` — gateway vendor-prefix → delegate-to-vendor-profile → merge-over-universal-baseline; a missing row is silent capability loss (#7551).
+- `./deepseek-r1-alias-ladder.md` — exact-match bare aliases (`'r1'`) before family prefixes on ONE additive classification line; alias knowledge lives in the vendor profile function (#7723).
+- `./vercel-ai-reasoning-id-tolerance.md` — accept-and-quarantine foreign client IDs via optional exclude_if fields; nested providerMetadata id stays the content identity (#7706).
+- `./ui-synthetic-part-end-on-abort.md` — delta journal + synthetic part-end on error/cancel so a client never sees a stuck streaming part; cleanup failures never replace the stream error (#7675).
+- `./ui-pending-tool-closeout.md` — dispatched-but-finished tool calls closed as 'interrupted' vs 'failed' by classify-on-the-exception; FinalResultEvent backup promotion for output tools.
+- `./ui-turn-state-machine.md` — deduped request/response turn transitions derived from event meaning; assignment between close-old and open-new hooks.
+- `./ui-three-shape-callback-dispatch.md` — sync/async/async-generator callback ladder; executor branch honors returned iterators/awaitables so no form is silently dropped.
+- `./ui-untrusted-history-sanitize-gate.md` — per-source trust split: client history sanitized (system prompts/file URLs/uploads) while server history is trusted; compaction markers dropped as truncation attacks; HITL resolved-id carve-out.
+- `./ui-standalone-encoder-contract.md` — run_input=None standalone encoding for queue/websocket/durable transports; starlette stays optional behind an actionable import.
+- `./ui-cancel-state-ownership.md` — store-then-callback RunCancelled ownership; exception carries full resume payload; completion and cancellation mutually exclusive.
+- `./strict-abc-meta.md` — definition-time TypeError for unimplemented inherited abstract methods; own-namespace carve-out keeps intentional abstract layers legal.
+- `./evaluator-spec-short-forms.md` — as_spec three-form ladder (None/tuple/dict) with first-field + string-keyed-dict guards; default-exclusion by ==.
+- `./run-evaluator-failure-envelope.md` — crashing or invalid-typed evaluators become EvaluatorFailure rows; revalidate_instances='always' adapter; pinned span name.
+- `./evaluator-context-error-field.md` — span-tree unavailability stored AS a value and raised at property access; graceful failing scores instead of crashes.
+- `./tool-span-discriminator.md` — v2/v3+ tool-span classifier: deferral marker exclusion, output-function discrimination by name vs logfire.msg prefix, status-based failure filtering, start-time ordering.
+- `./trajectory-scoring-modes.md` — exact / LCS-F1 in_order / multiset-F1 any_order with empty-pair=1.0 rule and score-reproducible reason strings.
+- `./argument-occurrence-ladder.md` — first/last/0-based-index selection over repeated calls plus five-rung graceful failure ladder; runtime int guard for dataclass Literal.
+- `./budget-evaluator-defaults.md` — MaxToolCalls counts failed attempts BY DEFAULT while correctness evaluators exclude them; MaxModelRequests prefers ctx.metrics['requests'] over identical-criteria span count.
+- `./llm-judge-output-slots.md` — False-sentinel score/assertion slots fan one GradingOutput into named entries; include_both suffixing _score/_pass; four prompt variants share section order Input→Output→ExpectedOutput→Rubric.
+- `./geval-dual-validation.md` — score_range validated at construction AND against the judge response; out-of-range raises into the failure envelope rather than clamping.
+- `./report-evaluator-data-plumbing.md` — shared literal-keyed extractors feed four statistical evaluators; per-pair silent skipping; empty/degenerate arms return empty chart + NaN ScalarResult; full-resolution AUC vs downsampled display.
+- `./multi-run-aggregation.md` — source_case_name grouping with two-level averaging; documented flat-vs-grouped divergence in diff tables; label distribution averaging.
+- `./number-diff-render-ladder.md` — percentage-vs-multiplier relative diffs with small-base drop rule; atol+rtol significance; kind-inverted increase/decrease styles; µs→us ascii fallback.
+- `./report-diff-render.md` — sorted union partition into diff/added/removed rows; missing side renders [i]<missing>[/i]; console owns ascii_only glyph fallbacks.
+- `./report-evaluator-contract.md` — experiment-wide second evaluator axis sharing only the serialization base; analyses append + isolated failures on the report.
+- `./eval-dataset-wire-roundtrip.md` — runtime/wire split; YAML comment vs JSON `$schema` key channels; idempotent schema sidecar.
+- `./eval-registry-build-load-contract.md` — build_registry/load_from_registry kernel: validate-first customs, setdefault defaults, teaching errors.
+- `./eval-loader-exceptiongroup-triage.md` — accumulate-then-ExceptionGroup loading with count-in-header and first-three payload truncation.
+- `./evaluator-dataclass-own-dict-gate.md` — custom evaluator eligibility = subclass AND own-dict @dataclass decoration (inherited decoration rejected).
+- `./eval-case-lifecycle-teardown-contract.md` — setup→task→prepare_context→evaluators→teardown(result); teardown errors propagate by contract; post-teardown duration rewrite.
+- `./sync-eval-loop-repair.md` — closed/missing loop self-repair, own-task interrupt drain, indexed ordered task-group gather.
+- `./eval-repeat-dual-name-expansion.md` — repeat expansion grammar `[i/n]`; source_case_name None iff single-run; positional fallback names.
+- `./online-sampling-modes.md` — one seed per call; correlated subset property vs independent union; bool/float/callable rate ladder; skip-vs-propagate sampling errors.
+- `./online-dispatch-sink-grouping.md` — id()-keyed sink groups; two-phase parallel collect then batched submit; non-blocking semaphore drops; on_error dedup by handler identity.
+- `./online-background-dispatch-ladder.md` — caller-loop task vs copy-context background thread; three registries under one lock; snapshot drain that never propagates eval failures.
+- `./online-run-on-errors-gate.md` — per-evaluator opt-in; exception becomes ctx.output; fire-and-forget dispatch then re-raise the original.
+- `./task-run-ambient-context.md` — CURRENT_TASK_RUN accumulator with yielded kwargs closure; silent no-op outside runs; zero-suppressed increments; nesting guard in should_evaluate.
+- `./call-span-extract-args-ladder.md` — one bind+apply_defaults capture feeds sampling AND span attrs; extract_args resolved at decoration (str→1-tuple, empty→False, unknown→ValueError); default records nothing.
+- `./call-span-logfire-gate.md` — decoration-time RuntimeError for logfire-dependent options; dual-backend span opening keeps evaluator parenting; record_return swallows attribute failures.
+- `./otel-eval-result-event-contract.md` — one gen_ai.evaluation.result event per outcome; standard-vs-extension attribute table; failure = error.type + WARN + no score; lazy no-op logger.
+- `./otel-score-downcast-ladder.md` — bool→dual value+label, numeric→value only, str→label only, non-scalar→neither; bool branch must precede int branch.
+- `./otel-baggage-precedence.md` — per-dispatch baggage snapshot seeded first so gen_ai.*/error.type always win on conflict; include_baggage opt-out.
+- `./span-tree-rebuild-from-flat-spans.md` — start-time sort before linking; orphan-tolerant root election (missing parent → extra root); loud add_child identity asserts; status name mapping.
+- `./span-node-dual-predicate-surface.md` — SpanQuery dict and ad-hoc lambda accepted at every traversal entry; single callable dispatch inside matches; one generator per direction with list/next/is-not-None wrappers.
+- `./span-attr-json-sequence-matching.md` — plain-equality fast path; dict/list query vs JSON-string storage with RecursionError guard; list query vs tuple storage; coercion flows one direction only.
+- `./span-query-or-exclusivity-eval-order.md` — or_ exclusive at its level (mixing raises ValueError); combinator-first then cheapest-first condition order documented in the TypedDict; per-call @cache locals for shared subtree walks.
+- `./span-query-stop-recursing-pruning.md` — boundary-included pruning (yield before stop check) in both directions; quantifiers see pruned sets, count guards see unpruned sets.
+- `./eval-context-source-replay.md` — protocol with concrete fetch default derived from fetch_many; input-order contract is docstring-only; span-ID-only boundary keeps the eval plane storage-agnostic.
+- `./run-evaluators-ordered-fanout.md` — task-group fan-out with index-slot writes; ordered reassembly partitions failures from results; multi-result evaluators flatten positionally.
+- `./traceparent-parse-zero-id-rejection.md` — total W3C parser (None in → None out); strict only on arity and zero IDs; absent parent is a legal steady state downstream.
+- `./llm-dataset-generation.md` — one schema builder feeds both prompt and loader; str-output detour + fence strip; generated artifact must pass the production loader.
+
+## Capsule map
+- **Deferred envelope** — `deferred-tool-envelope.md`: two-envelope pause/resume pair normalized at one boundary (`to_tool_call_results`).
+- **Step-final deferral ladder** — `deferred-collection-resolution.md`: skip-on-resume → validate-before-collect → stub-if-final → inline-handler → emit-as-output.
+- **Approval dispatch** — `approval-result-dispatch.md`: four result variants; overridden args are re-validated as a new call; denial is a value.
+- **End strategies** — `end-strategies-retry-wins.md`: three strategies; function-tool retries revoke non-streamed wins by identity-replaced status part.
+- **Parallel execution** — `parallel-barrier-execution.md`: barriers segment parallel batches; history order decoupled from completion order.
+- **Retry budget** — `validate-execute-retry-budget.md`: validation failures consume budget, `ToolFailed` doesn't, raw mode touches nothing.
+- **Availability refusals** — `availability-refusals.md`: action-naming "not available yet" prompts; first refusal free, run-scoped.
+- **Declarative deferral** — `declarative-deferral-handle-call.md`: `ToolDefinition.defer` converted to raised exceptions at one shared boundary.
+- **Toolset wrappers** — `toolset-approval-wrappers.md`: definition-level kind stamping; approval gate via context flag.
+- **Resume path** — `resume-path.md`: last-response scan, override-is-an-error, `'skip'` sentinel for settled calls.
+- **Cancellation isolation** — `subagent-cancel-isolation.md`: `RunCancelled` in a tool body is always a nested run's → failed return part.
+- **Tool reveals** — `tool-reveal-guardrails.md`: assembly-time dedup in emission order; capability-owned names must load first.
+- **Result normalization** — `tool-return-normalizer.md`: nested-ToolReturn rejection, user-content split, typed-kind promotion.
+- **Output-type integration** — `output-type-integration.md`: envelope in output union; rejected from native/prompted modes.
+- **Usage accounting** — `usage-accounting.md`: inclusive buckets, cost-as-None, >=/> limit asymmetry.
+- **Function model** — `function-model-contract.md`: AgentInfo snapshot + sync/async/delta-stream fake-model contract.
+- **Callable instances** — `function-model-callable-instances.md`: class-name fallback, partial-unwrapping async dispatch, executor-routing observability, stream return-shape contract.
+- **Test simulator** — `test-model-simulator.md`: history-driven two-step state machine with schema-derived args.
+- **Schema build** — `output-schema-build.md`: flatten → sentinel peel → single-strategy enforcement ladder.
+- **Semantic envelope** — `output-semantic-envelope.md`: one peel/re-wrap boundary between hooks and validation dicts.
+- **Union dispatch** — `union-output-dispatch.md`: kind-trust ladder with multi-arg-function skip rule.
+- **Output toolset** — `output-toolset-lowering.md`: sanitized deterministic tool names; separate retry budget axis.
+- **Structured dict** — `structured-dict-output.md`: permissive dict validation under an authoritative user schema.
+- **Hook ladder** — `capability-hook-ladder.md`: symmetric lifecycle lattice; deferral legality positions; cancellation terminality.
+- **Hooks registry** — `hooks-registry.md`: three dispatch shapes; reversed wrap chaining; accumulating deferred handlers.
+- **Capability ordering** — `capability-ordering.md`: outermost/innermost tiers + wraps/wrapped_by via graphlib topo sort.
+- **Run isolation** — `capability-run-isolation.md`: per-run copies and load_capability-gated contribution.
+- **Part narrowing** — `message-part-narrowing.md`: promote-or-strip promotion keyed by tool_kind, never tool_name.
+- **Toolset wrapper contract** — `toolset-wrapper-delegation.md`: ABC contract + identity-preserving delegation (get_tools/call_tool/instructions/apply).
+- **Toolset merge** — `combined-toolset-merge.md`: flatten with loud conflict; call routes to source toolset.
+- **Toolset prefix** — `prefixed-toolset-rewrite.md`: prefix on get, de-prefix (incl. ctx.tool_name) on call.
+- **Toolset rename** — `renamed-toolset-map.md`: inverted map; collision raises; swap is not a collision.
+- **Toolset prepare** — `prepared-toolset-guard.md`: rewrite in place; no add/rename; shell preserved.
+- **Prepare wrappers** — `toolset-prepare-wrappers.md`: filter-at-get + metadata/defer/return-schema flag flips.
+- **Approval/external** — `approval-external-toolsets.md`: call-time approval gate; external tools non-callable.
+- **Dynamic toolset** — `dynamic-toolset-lifecycle.md`: factory cadence; detach-before-exit/register-after-enter.
+- **Capability-owned toolset** — `capability-owned-toolset.md`: id stamping; gated deferred tools unssearchable.
+- **Capability fan-out** — `combined-capability-fanout.md`: before=forward, after/wrap/error=reverse; deferred skip.
+- **Capability wrapper** — `wrapper-capability-identity.md`: transparent delegation; identity adoption on rebind.
+- **Wrapper stacking** — `get-wrapper-toolset-stacking.md`: reverse-order fold; None means no wrapper.
+- **CallTools classify** — `call-tools-node-classify.md`: empty/None/length → tool-precedence → image → text → retry.
+- **Stream handoff** — `model-request-stream-handoff.md`: two-event handoff; set-done + drain on cancel.
+- **Stream partial** — `stream-partial-validation.md`: partial-then-final; exactly one partial_output=False.
+- **Stream dispatch** — `stream-output-dispatch.md`: tool→deferred→image→text; no retry mid-stream.
+- **Request normalize** — `prepare-request-normalization.md`: profile-driven mode resolution + field resets.
+- **User-prompt routing** — `user-prompt-node-routing.md`: adopt captured list; interrupted-repair; part reuse; suspended dispatch.
+- **Deferred results** — `deferred-results-injection.md`: reverse-scan splice; override is UserError; settled calls 'skip'.
+- **Dynamic prompts** — `dynamic-prompt-reevaluation.md`: refresh by `dynamic_ref`, ref preserved, whole-list replacement.
+- **Continuation merge** — `continuation-merge.md`: echo the suspended tail; dual ceilings; per-segment cost; cancel before raise.
+- **Tool search corpus** — `tool-search-corpus.md`: hidden≠searchable; undiscovered-first trim; ledger re-derived post-compaction.
+- **Function prepare** — `function-toolset-prepare.md`: ctx keyed on storage name; 3-level retries; durable rebuild never re-prepares.
+- **Function registration** — `function-toolset-registration.md`: None-means-inherit; conflicts at registration; timeout→ModelRetry.
+- **Output hooks** — `output-hook-engine.md`: validate/process ladders; ModelRetry skips recovery hook; one wrap boundary.
+- **Schema taxonomy** — `output-schema-taxonomy.md`: peel sentinels → exclusive markers → single schema class out.
+- **Request assembly** — `request-parameters-assembly.md`: kind split + factory native tools; optional ToolSearchTool dropped only when corpus-less.
+- **Request prep** — `model-request-prep.md`: hooks mutate → validate → slice-assign history with dual resume pins → cleanup → reveal state → prepare_messages (identity-guarded re-clean).
+- **Resume prep** — `resume-request-prep.md`: wire keeps the suspended tail, history drops it; reverse-scan pin of the triggering request; instructions rehydrated verbatim.
+- **Continuation primitives** — `continuation-primitives.md`: one merge_mode decision drives merging + both ceilings + stream reindexing; transient replace marker popped after honoring.
+- **Streamed continuation** — `streamed-continuation-composite.md`: lazy offset resolution matches eventual merge; post-sleep cancel re-check; detach records resumable 'suspended'.
+- **Job teardown** — `shielded-job-teardown.md`: shield the cancel, drain it on scope cancellation, never let teardown errors mask the original abort.
+- **String buffering** — `parts-manager-string-buffering.md`: metadata-only deltas mutate parts, content rides a join-on-read buffer with snapshot-length rollback on failure.
+- **Tool-call upgrade** — `tool-call-upgrade-ladder.md`: None event while incomplete; PartStart at same index on upgrade; construction-time tool-kind promotion.
+- **Single-arg schema** — `single-arg-tool-schema.md`: model's schema flat on the wire, `{name: value}` out of the validator; accepted-keys ladder for round-trips.
+- **Visibility states** — `tool-visibility-states.md`: four wire states per tool name; declared views exclude both absence states; None≠{} authoring.
+- **Compaction trim** — `compaction-wire-trim.md`: provider-exact boundary predicate; standing prompt rebuilt unless planted-stamp provenance.
+- **Return rehydrate** — `tool-return-content-rehydrate.md`: kind+field gate routes dicts into multimodal validation; ValidationError degrades to passthrough.
+- **Retry rendering** — `retry-prompt-rendering.md`: one construction path; fenced JSON dump with input-exclusion keyed on context duplication.
+- **Args envelope** — `tool-args-invalid-json.md`: malformed args degrade to `{INVALID_JSON: raw}`; valid object bytes returned verbatim for cache stability.
+- **Stream state** — `streamed-state-machine.md`: suspended > complete > interrupted > incomplete; transport errors suppressed only when we cancelled.
+- **History sanitize** — `untrusted-history-sanitize.md`: strip system prompts/schemes/uploads recursively, then resolve dangling tails post-drop.
+- **Instruction sort** — `instruction-part-sorting.md`: stable two-class sort (static first) makes the cached prefix possible.
+- **Delta render** — `availability-delta-render.md`: schema-withholding models get the exchange mechanism; others get fact-only prose; ids seeded against history.
+- **Reveal ladder** — `reveal-state-ladder.md`: always-visible → load-is-reveal → undiscovered-denial → owner-loaded; anchored evidence widens additively.
+- **Native swap** — `native-swap-resolution.md`: fallback shedding + corpus-empty drop + full visibility table in one module-level resolver.
+- **Legacy translation** — `legacy-reveal-translation.md`: prefix+adjacency+subset recognition; malformed shapes leave the genuine exchange untouched.
+- **Speech projection** — `speech-part-projection.md`: audio/transcript → prompt/text; barge-in marker written per-request, never stored.
+- **Web fetch ladder** — `web-fetch-content-ladder.md`: markdown-first Accept; JSON pretty-fenced with verbatim fallback; all failures ModelRetry.
+- **Subagent fallback** — `subagent-fallback-delegation.md`: callable model resolution incl. awaitables; subagent failure is the caller's retryable error.
+- **Docstring extraction** — `griffe-doc-descriptions.md`: style inference by marker probing; returns section promotes description to XML.
+- **SSRF-safe download** — `ssrf-safe-download.md`: protocol gate first; resolve-then-validate every hop; transition-embedding defense; redirect credential strip; gzip size-capped streaming.
+- **Cancellation attribution** — `cancellation-attribution.md`: count/uncancel; external-wins race; baseline-free resolve; Py3.10 degraded path.
+- **Instrumented wrapper** — `instrumented-model-wrapper.md`: hand originals (non-idempotent prepare); incremental message-JSON cache keyed by parts identity.
+- **Fallback chain** — `fallback-model-chain.md`: handler auto-detect; per-model re-prepare; rejected-cost carry; continuation pin + rewind + replace stamp (before-yield vs after-yield).
+- **Sync stream bridge** — `sync-stream-bridge.md`: long-lived owner task; cancel scopes never straddle tasks; loop affinity preserved.
+- **Direct model API** — `direct-model-api.md`: thin schema-translation surface; reverse-scan instructions→instruction_parts bridge.
+- **Function-signature dedup** — `function-signature-dedup.md`: structural equality dedup; render-time prefix via ContextVar; keyword-only params.
+- **Run binding** — `run-binding-handoff.md`: handle owns controller before lazy run; ContextVar handoff; consume-once for nested runs.
+- **RunCancelled recovery** — `run-cancelled-recovery.md`: attach partial state to exception; traverse cause/context; re-raise external cancels.
+- **Native-tool registry** — `native-tool-registry.md`: __init_subclass__ auto-registry; pydantic discriminated union; unique_id/optional semantics.
+- **Instrumentation & caching** — `otel-message-json-cache.md`, `instrumentation-context-capture.md`, `binary-content-redaction-walk.md`, `telemetry-control-flow-spans.md`, `chat-span-lifecycle.md`, `decorator-hook-registry.md`: OTel span cache, context capture, binary redaction traversal, control flow spans, chat span lifecycle, and decorator hook registry.
+- **Event-stream observer/processor** — `event-stream-teed-observer.md`: probe-by-return-type dual forms; plain-task pump; cancel-and-drain teardown on every abandoned path.
+- **Pending-message drain** — `pending-message-drain-redirect.md`: 'asap' into each request + terminate-time asap-then-when_idle redirect; last message becomes the new ModelRequestNode.
+- **Native-or-local base** — `native-or-local-tool-base.md`: five-step construction validation ladder; unless_native stamping; constraint fields suppress local.
+- **WebSearch subclass** — `websearch-subclass-anatomy.md`: kind-as-unique_id; None-skipping native kwargs; lazy strategy imports with pip-group errors; requires-native predicate.
+- **MCP capability** — `mcp-capability-url-ids.md`: single id chain (explicit → native instance → host+slug) pairing local tags with the native advertisement; serializable from_spec subset.
+- **Deferred catalog stability** — `deferred-capability-catalog-stability.md`: never filter loaded entries from prompt-prefix instructions; bounce redundant loads in the tool instead.
+- **Capability bundle** — `capability-bundle-late-registration.md`: live empty FunctionToolset return; id stamped only on synthesized toolsets; decorators delegate to one instance.
+- **Scoped prefixing** — `prefix-tools-scoped-namespacing.md`: prefix wrapped-subtree names at listing AND call time; None passthrough; metadata inheritance-with-override.
+- **Selector rewriters** — `selector-gated-definition-rewriters.md`: capability-level flags are defaults (`None` = unconfigured); pure replace() rewrites; four-shape ToolSelector vocabulary.
+- **Filter escalation & prompt reinjection** — `content-filter-reinject-prompt-pair.md`: opt-in typed error carrying serialized partial response; presence-scan default, explicit strip-and-prepend mode.
+- **Executor & dispatch** — `thread-executor-history-dispatch.md`: ambient bounded executor for sync callbacks; await_maybe-after-executor dispatch across four callable shapes.
+- **Model selection/resolution** — `model-selection-resolution-chain.md`: per-step get_model hook; resolvers decline via None; deferred loads record sorted deduped ToolAvailabilityDeltaParts.
+- **Inline deferral handler** — `deferred-handler-none-chaining.md`: resolve inside the run when you can; None declines; full-decline preserves pause-and-surface semantics.
+- **Concurrency kernel** — `concurrency-limiter-kernel.md`: int/limit/limiter/None normalization; locked queue-check-then-register; finally-decrement; shared by identity.
+- **Concurrency model wrapper** — `concurrency-model-wrapper.md`: all three model surfaces gated; stream slot held for the entire response; None → unwrap.
+- **NamedSpec round-trip** — `named-spec-roundtrip.md`: `'Name'`/`{Name: arg}`/`{Name: {kwargs}}` forms; dict-shaped single positional args fall back to long form; customs override defaults silently.
+- **Capability spec context** — `capability-spec-nested-context.md`: registry+instantiate set on a ContextVar for the load, reset in finally; nested loads inherit or fall back to defaults.
+- **Wrapper agent** — `wrapper-agent-side-doors.md`: full 1:1 delegation; policy must gate iter + realtime open + signaling resolve; UNSET sentinels forward untouched.
+- **UUIDv7 polyfill** — `uuid7-monotonic-polyfill.md`: fresh-ms seed / same-ms increment / clock-regression bump / overflow advance, all under one lock.
+- **SDK compat readers** — `sdk-generation-compat-readers.md`: version-gated generation detection; snake→camel getattr fallback; silent-None semantics pinned against real v2 models in CI.
+- **Thinking splitter** — `tagged-thinking-splitter.md`: closed tags become ThinkingParts; unterminated tags degrade to TextPart; total function, no data loss.
+- **XML formatter** — `format-as-xml-two-pass.md`: metadata pre-walk before dump; title/description attributes once per field path; root_tag=None joins top children.
+- **Embedder facade** — `embedder-facade-lazy-instrument.md`: string-until-first-use inference; ContextVar override; per-call instrumentation with ClassVar global default.
+- **Tool-search strategies** — `tool-search-native-strategies.md`: server-side vs client-executed vs local planes; 'custom' is internal-only; 'keywords' Literal pins the local algorithm.
+- **Tool-choice resolver** — `tool-choice-canonical-resolver.md`: five canonical values; output tools folded wholesale; auto degrades to required when direct output is barred.
+- **MCP sampling model** — `mcp-sampling-model.md`: mcp_-prefixed settings keys merge safely; assistant-role-or-UnexpectedModelBehavior; max_tokens fallback default.
+- **Reasoning-details codec** — `reasoning-details-codec.md`: text/summary/encrypted project onto content/signature; provider_details stays opaque and round-trips byte-faithfully.
+- **Embedding ABC** — `embedding-model-abc-contract.md`: prepare_embed owns normalize+merge; count_tokens fails loud; every backend tested against the disabled-request guard.
+- **Enqueue assembly** — `enqueue-assembly-contract.md`: three ordered buckets (content/parts/messages); lone-string collapse; empty→None; must end in ModelRequest.
+- **Best-effort pricing** — `best-effort-pricing-ladder.md`: api_url→name lookup fallback; LookupError/ValueError silent, other exceptions warn; set cost immutable; snapshot preloaded off the loop.
+- **Durable model round-trip** — `durable-model-roundtrip.md`: string-only boundary; reserved `'default'`; shallowest-match wrapper peel; unregistered instance = loud rejection, never rebuild-from-id.
+- **Runtime toolset rejection** — `runtime-toolset-rejection.md`: function/mcp/dynamic kinds rejected per-run in-container (engine tables differ); construction-vs-runtime identity diff; metadata opt-out channel.
+- **Durable unit guards** — `durable-unit-guards.md`: type-compatible guard stand-ins refuse enqueue/cancel inside replayed units; both yielded and ambient contexts guarded.
+- **Durable event stream** — `durable-event-stream-split.md`: ModelResponseStreamEvents filtered from workflow-side dispatch (already delivered live); every event still yielded; aclose in finally.
+- **Durable toolset registry** — `durable-toolset-registry.md`: id-keyed wrappers registered once at bind; same-instance reuse; distinct-instance collision raises; innermost ordering load-bearing.
+- **LangChain proxy** — `langchain-tool-proxy.md`: patch foreign schema (additionalProperties=False, sorted required); defaults live in the kwargs-only proxy closure.
+- **Fixed-param factory** — `fixed-param-tool-factory.md`: _UNSET ≠ None; partial binds developer knobs; explicit __signature__ excision removes them from the generated schema.
+- **Deprecation channel** — `userwarning-deprecation-channel.md`: UserWarning base for runtime visibility; aggregators silence internal re-warnings with scoped catch_warnings; messages carry replacement pointers.
+- **Display label** — `model-display-label.md`: pure derivation — strip vendor path, uppercase leading gpt, dot-join adjacent digit runs, capitalize the rest.
+- **Spec templates** — `spec-template-validation.md`: from_spec hints gate everything; only TemplateStr-bearing params go through TypeAdapter with deps context; hint-resolution failure degrades to noop.
+- **Recorded unwrap** — `recorded-result-unwrap.md`: whitelist of five control-flow carriers unwrapped on replay; plain values pass through; per-tool durable config metadata validated loudly.
+- **Workflow surface** — `temporal-agent-workflow-surface.md`: reject token → in_workflow check → ContextVar-gated delegation; override sandwich swaps model/toolsets/sleep/threads together.
+- **Shielded executor** — `anyio-shielded-activity-executor.md`: shield keeps cancellation on OUR task; forward exactly one graceful cancel; resolution wait inside a shielded scope.
+- **Boundary-guarded context** — `run-context-boundary-guard.md`: rehydrate typed sets via adapter table; un-carried guarded fields raise with escape-hatch instructions; availability snapshots taken at dispatch.
+- **Sequence-keyed events** — `prefect-sequence-keyed-events.md`: per-run dynamic-key counters make identical events each fire and retries replay.
+- **Value-addressed keys** — `value-addressed-cache-keys.md`: tool identity = (toolset id, def) over the JSON path; exhaustive context projection test-enforced; framework ids normalize, caller ids don't.
+- **Legacy replay compat** — `dbos-legacy-replay-compat.md`: legacy flag + handler ContextVars mirror wrapper-era delivery so old recordings recover; run-scoped caches never process-shared.
+- **Config layering** — `activity-config-nonretryable-layering.md`: merged retry policies re-normalized with permanent-error types; copy-on-normalize protects shared caller objects.
+- **Tool-choice gate** — `static-tool-choice-gate.md`: static required/list is a UserError at run entry; callable settings layers exempt as step-adaptive.
+- **Instructions pipeline** — `instructions-normalization-pipeline.md`: static strings pass, callables+TemplateStr defer through SystemPromptRunner; toolset parts normalized dynamic-by-default in one shared helper.
+- **Settings fold** — `capability-model-settings-fold.md`: capabilities contribute ModelSettings by key merge; None vanishes; ThinkingLevel maps down provider ladders.
+- **Prepare hooks** — `prepare-tools-dual-plane.md`: await-if-awaitable callables; result validated no-add/no-rename; output plane mirrors function plane with its own budget.
+- **Wire contract docs** — `model-settings-wire-contract.md`: docstring "Supported by" bullets machine-checked against wire behavior; unified keys document mapping table + precedence.
+- **Dual-family error bridge** — `dual-family-error-bridge.md`: diamond-MRO-safe dual-inheritance errors; `_request` backing-field pokes; translation inside the streaming generator; subclass identity deliberately dropped.
+- **Timeout migration** — `timeout-migration-contract.md`: alias collapses onto float without legacy httpx; isinstance-gated four-bucket Timeout rebuild; numbers/sentinels pass through untouched; warning lands on the user's call site via counted stacklevels.
+- **Tenacity transport** — `tenacity-transport-replay.md`: RetryConfig is decorator kwargs (tenacity defaults differ from intuition); response closed before every validator reraise; non-replayable bodies can't be retried.
+- **Retry-After wait** — `retry-after-wait-ladder.md`: int-seconds first (ValueError IS the format discriminator), then HTTP-date delta vs UTC now, both clamped to max_wait, fallback strategy on total failure.
+- **Sync-hook timeout** — `sync-hook-timeout-dispatch.md`: anyio shields by default so fail_after alone can't time out a blocking sync fn; abandon dial scoped tightly around deadline-armed calls; plain defs may return awaitables.
+- **Session cancellation** — `session-cancellation-translation.md`: controller phases record→bind→resolve/release; foreign cancels attach-and-reraise, never convert; resume state rides inside the exception; nested-run cancellations surface the OUTER history.
+- **Nested-sync guard** — `nested-sync-run-guard.md`: flag set at callback dispatch covers both worker-thread (copied context) and inline disable_threads modes; error prescribes the async migration.
+- **Name suggestion** — `model-name-suggestion-ladder.md`: 0.90 qualified-id → 0.80 name → 0.70 normalized-name cutoffs; gateway ids demoted in ties; provider hints ride ModelHTTPError.suggested_model_id (exact body-match detection only); __setstate__ reapplies the message suffix.
+- **Blank-text ladder** — `blank-text-output-ladder.md`: adapters preserve zero-content TextParts so "empty" means no parts; thinking-only excludes blank-text-only; content_filter fires on blank text too; allows-none accepts any no-text shape.
+- **Results-first sort** — `tool-results-first-sort.md`: one shared sort key across merge + announcement paths; head exemption sized by _standing_system_prompt_count on FIRST kept request only.
+- **Generator falsy fixes** — `testmodel-generator-falsy-fixes.md`: `'const' in schema` not walrus; min==max early return; test double declares its cancel exception through get_stream_cancel_errors instead of importing httpx internals.
+- **OTel v6 roles** — `instrumentation-v6-roles.md`: version lives INSIDE the groupby key function so ≤v5 rendering is bit-compatible; tool-naming retries count as tool responses, nameless ones don't; least-bad vocabulary assignments carry written justification.
+- **Enum ref resolution** — `enum-ref-literal-resolution.md`: Pydantic emits enums as non-object defs; bare names would reference undefined classes; terminality = enum present AND no composition keys.
+- **Unknown-tool message** — `unknown-tool-retry-message.md`: enumeration gate ≡ hiding gate; middle branch converts deferred-toolset dead ends into search actions.
+- **YouTube hosts** — `video-url-host-allowlist.md`: exact tuple, music.youtube.com deliberately excluded (Google 400s it); same membership read by download_item so extension changes every provider.
+- **Anthropic replay hardening** — `anthropic-replay-hardening.md`: drop unpaired native calls except in-flight-MCP-legal windows; tool_search always retried; cache_control relocates to nearest preceding carrier; empty turns deleted; empty signatures degrade to tagged text; sampling rides extra_body with explicit-entry precedence.
+- **UI transform spine** — `ui-event-stream-transform-spine.md`: one stateful async generator per request drives all protocol translation; bookkeeping-before-dispatch; emit-before-track; cleanup ordered by client drop point; finally-aclose both paths.
+- **Synthetic part end** — `ui-synthetic-part-end-on-abort.md`: delta journal + index gate + apply-fold replay yields a truthful part-end on abort (#7675); cleanup exceptions swallowed, never replacing the stream error.
+- **Pending tool closeout** — `ui-pending-tool-closeout.md`: interrupted-vs-failed outcome ladder classified by isinstance(exc, RunCancelled) alone; output-tool FinalResultEvent backup promoted before closeout.
+- **Turn state machine** — `ui-turn-state-machine.md`: deduped None/request/response transitions derived from event meaning; assignment between close-old and open-new hooks.
+- **Three-shape callbacks** — `ui-three-shape-callback-dispatch.md`: asyncgen → async-callable → executor-with-honored-return ladder; no callback form silently dropped.
+- **Untrusted-history gate** — `ui-untrusted-history-sanitize-gate.md`: client messages sanitized, server history trusted; compaction markers dropped as truncation attacks; HITL resolved-id re-admission.
+- **Standalone encoder** — `ui-standalone-encoder-contract.md`: run_input=None encoding for non-HTTP transports; request-derived values hoisted to plain fields; starlette optional.
+- **Cancel state ownership** — `ui-cancel-state-ownership.md`: store-on-instance BEFORE on_cancel dispatch; RunCancelled carries full resume payload; completion XOR cancellation.
+- **Meta-tool retry budget** — `load-capability-retry-budget.md`: framework-injected `load_capability` inherits `ctx.max_retries` (#6937); ModelRetry-as-feedback for unknown/already-loaded ids; tool_kind routing with reserved-name guard.
+- **Zero-bound query guards** — `span-query-zero-bound-guards.md`: `is not None` for max-bounds vs truthiness for min-bounds in the SpanQuery DSL; falsy-0 previously meant unlimited (#6934).
+- **Zero-arg call keep** — `cohere-zero-arg-call-keep.md`: presence-only guard on provider tool-call mapping; `None`/`''` arguments preserved verbatim or zero-arg tools vanish into retry spirals (#7720).
+- **Gateway profile table** — `gateway-profile-routing-table.md`: vendor-prefix → vendor profile fn → merge over OpenAI-transformer baseline; missing groq row silently dropped groq behavior (#7551).
+- **R1 alias ladder** — `deepseek-r1-alias-ladder.md`: exact-match bare alias `'r1'` (Bedrock) added to the r1 classification line before prefix matches (#7723).
+- **Client ID tolerance** — `vercel-ai-reasoning-id-tolerance.md`: optional `exclude_if` id field accepts AI SDK client ids without touching the providerMetadata identity mapping (#7706).
+- **Strict ABC meta** — `strict-abc-meta.md`: definition-time enforcement with own-namespace carve-out so abstract base layers can exist.
+- **Spec short forms** — `evaluator-spec-short-forms.md`: three serialization forms guarded by first-field and string-keyed-dict checks.
+- **Failure envelope** — `run-evaluator-failure-envelope.md`: evaluator exceptions/invalid types become failure rows; always-revalidate adapter; span name pinned for dashboards.
+- **Context error field** — `evaluator-context-error-field.md`: unavailable telemetry stored as an error value, raised at access; consumers degrade to failing scores.
+- **Tool-span classifier** — `tool-span-discriminator.md`: five-rule v2/v3+ discriminator (deferral marker, output-fn by name vs msg prefix); attempts sorted by start time.
+- **Trajectory modes** — `trajectory-scoring-modes.md`: exact/LCS-F1/multiset-F1 semantics with empty-pair=1.0 and reproducible reasons.
+- **Argument occurrence** — `argument-occurrence-ladder.md`: first/last/index selection + graceful no-call/no-index/no-args/bad-json/non-object ladder.
+- **Budget defaults** — `budget-evaluator-defaults.md`: failed-attempt counting asymmetry between budget and correctness evaluators; metrics-first request count.
+- **Judge slots** — `llm-judge-output-slots.md`: False-sentinel score/assertion fan-out with _score/_pass suffixing under include_both.
+- **GEval validation** — `geval-dual-validation.md`: construction-time config checks + post-response range guard; out-of-range raises rather than clamps.
+- **Report plumbing** — `report-evaluator-data-plumbing.md`: shared extractors, silent per-pair skipping, chart+NaN degradation, full-res AUC vs downsampled display.
+- **Multi-run aggregation** — `multi-run-aggregation.md`: source_case_name groups, two-level averages, documented diff-table flat-average divergence.
+- **Number diffs** — `number-diff-render-ladder.md`: percentage→multiplier ladder with small-base drop, atol+rtol significance, kind-inverted styles.
+- **Diff render** — `report-diff-render.md`: added/removed partition, <missing> cells, console-owned ascii_only fallbacks.
+- **ReportEvaluator axis** — `report-evaluator-contract.md`: whole-report evaluators appending analyses with isolated failures.
+- **Dataset wire round-trip** — `eval-dataset-wire-roundtrip.md`: dataclass-in-model runtime vs extra-forbid wire models; `$schema` rides a YAML comment or first-key JSON injection; idempotent sidecar writes.
+- **Registry build/load** — `eval-registry-build-load-contract.md`: customs validate-then-register with dupes raising; defaults setdefault; unknown-name errors enumerate choices + prescribe the kwarg.
+- **Loader ExceptionGroup** — `eval-loader-exceptiongroup-triage.md`: per-spec accumulation across three loops; header counts all, payload carries first three.
+- **Own-dict dataclass gate** — `evaluator-dataclass-own-dict-gate.md`: eligibility needs the decorator on the class itself, not inherited from a parent.
+- **Lifecycle teardown** — `eval-case-lifecycle-teardown-contract.md`: setup/prepare_context failures become case failures yet teardown still runs; teardown's own errors abort; total_duration rewritten post-teardown.
+- **Sync loop repair** — `sync-eval-loop-repair.md`: replace-closed/create-missing loops; interrupt drains OUR task only; ordered gather via index slots over default-arg lambdas.
+- **Repeat dual naming** — `eval-repeat-dual-name-expansion.md`: `[run/total]` display names plus source_case_name grouping key, None iff single-run; unnamed cases get positional names without mutation.
+- **Online sampling** — `online-sampling-modes.md`: shared per-call seed makes correlated rates a subset guarantee; sampling errors skip the evaluator (or propagate when unhandled) before the function runs.
+- **Online dispatch grouping** — `online-dispatch-sink-grouping.md`: one batched SinkPayload per (group, sink); drops notify via on_max_concurrency; a shared on_error fires once per sink failure.
+- **Background dispatch ladder** — `online-background-dispatch-ladder.md`: running-loop probe decides task vs context-copied thread; wait_for_evaluations snapshots all registries under one lock and swallows eval exceptions.
+- **run_on_errors gate** — `online-run-on-errors-gate.md`: only opted-in evaluators see raised calls, with the exception as output; the wrapper always re-raises afterwards.
+- **Task-run ambient context** — `task-run-ambient-context.md`: ContextVar accumulator + silent no-op public API; span-tree metrics extracted after reset; third should_evaluate clause suppresses nested online eval.
+- **Call-span arg recording** — `call-span-extract-args-ladder.md`: one bind+apply_defaults capture feeds sampling and span attrs; name validation at decoration time; default records nothing.
+- **Call-span logfire gate** — `call-span-logfire-gate.md`: refuse library-dependent recording at decoration; raw-OTel fallback preserves evaluator parenting; return recording never breaks the call.
+- **Eval-result event contract** — `otel-eval-result-event-contract.md`: one event per outcome under one name; failures discriminated by error.type + WARN + score-absence; free when no SDK.
+- **Score downcast ladder** — `otel-score-downcast-ladder.md`: bools get both value and label for dual-axis queries; exactly one attr for other scalars; bool check precedes int check.
+- **Baggage precedence** — `otel-baggage-precedence.md`: ambient snapshot merged first so semconv attrs win on conflict; snapshot once per dispatch, not per event.
+- **Span-tree rebuild** — `span-tree-rebuild-from-flat-spans.md`: sort by start time before linking; missing parent becomes an extra root, never a lost subtree; cross-trace/mis-parented spans crash at build time.
+- **Dual predicate surface** — `span-node-dual-predicate-surface.md`: serializable dict queries and ad-hoc lambdas share every traversal entry; dispatch happens once, in matches.
+- **Hostile attribute matching** — `span-attr-json-sequence-matching.md`: coercion flows query-shape→stored-shape only; stored strings never deserialize against primitive queries; parse failure is a non-match, never an exception.
+- **Query-DSL evaluation order** — `span-query-or-exclusivity-eval-order.md`: OR exclusive per level — mixing raises instead of guessing precedence; schema field order documents evaluation order.
+- **Stop-recursing pruning** — `span-query-stop-recursing-pruning.md`: boundary node included in both directions; some/all/no quantifiers iterate pruned sets while count guards stay unpruned.
+- **Replay context source** — `eval-context-source-replay.md`: single fetch derived from batch fetch via a concrete protocol default; input-order contract is docstring-only; only span IDs cross the boundary.
+- **Ordered evaluator fan-out** — `run-evaluators-ordered-fanout.md`: index-slot writes + ordered reassembly give input-order results from concurrent execution; failures partitioned, never interleaved.
+- **Traceparent parsing** — `traceparent-parse-zero-id-rejection.md`: total parser — malformed or zero-ID ambient input yields None, never an exception; strict only where parenting would corrupt.
+- **LLM dataset generation** — `llm-dataset-generation.md`: one schema builder feeds prompt and loader; layered fence defense; artifact must pass the production loader.
+
+## Extending the foundation
+Add one `./<seam>.md` capsule for one graph-selected, source-confirmed porting question. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf.
+
+## Provenance
+pydantic-ai (MIT), `/mnt/hdd/utopia/inspo/pydantic-ai` (relocated from `inspo/frameworks/` after pass 18), `main@a5b5fb7a247f863599d61dfa9159bc2ebc786255`; Codebase Memory project `mnt-hdd-utopia-inspo-pydantic-ai` (full mode, 30,991 nodes / 221,461 edges, re-indexed in place at a5b5fb7 2026-08-24; parse_partial = 2 non-source files only; Codebase Memory MCP unreachable in passes 20-23 — direct source+test reading fallback per AGENTS.md, recorded in work records). Pass 23 (DEDICATED LANE miner-pydantic-ai, 2026-08-28, zero drift at `a5b5fb7a` — `git rev-list --count a5b5fb7a..HEAD` = 0): pass-22 NEXT-PASS TARGETS #2+#3 — stored-context replay plane + traceparent parsing + LLM dataset generation mined (`online.py` :269-335 EvaluatorContextSource/run_evaluators + `online_capability.py` :32-48/:143 _parse_traceparent + `generation.py` WHOLE 87L + `tests/evals/test_online.py` :134-144/:246-298/:800-860 + `tests/evals/test_online_capability.py` :517-570 + `tests/evals/test_dataset.py` :1702-1708) — +4 capsule-v2 (215 → 219): eval-context-source-replay (concrete fetch default derived from fetch_many; docstring-only order contract; ID-only boundary), run-evaluators-ordered-fanout (index-slot writes + ordered reassembly; failure partition; multi-result flatten), traceparent-parse-zero-id-rejection (total parser; strict only on arity/zero IDs; absent parent legal), llm-dataset-generation (one schema builder for prompt+loader; str-output detour pinned to pydantic#12145; fence strip; same-loader round-trip). GATE-5 REAL RUNNER at pin: repo .venv pytest tests/evals/test_online.py -k run_evaluators/context_source/fetch → 8 passed; test_online_capability.py -k traceparent/span_reference → 4 passed (incl. @needs_logfire valid-reference test); test_dataset.py -k generate_dataset → 1 passed. EVIDENCE MODE: Codebase Memory MCP unreachable this session (stdio env reference unavailable at transport open) → direct source+test reading fallback per AGENTS.md, recorded in verification.md. With passes 20-22 the ENTIRE pydantic_evals online/span/emit/dataset plane is now cited; no material uncited surface remains in pydantic_evals at this pin. Pass 22 (DEDICATED LANE miner-pydantic-ai, 2026-08-28, zero drift at `a5b5fb7a` — `git rev-list --count a5b5fb7a..HEAD` = 0): pass-21 NEXT-PASS TARGET #3 — otel/span_tree.py query engine mined whole-file (579L) + tests/evals/test_otel.py WHOLE (1043L, 29 tests) — +5 capsule-v2 (210 → 215): span-tree-rebuild-from-flat-spans (start-time sort before linking; orphan-tolerant root election; loud add_child asserts), span-node-dual-predicate-surface (SpanQuery|SpanPredicate at every traversal entry; single callable dispatch in matches), span-attr-json-sequence-matching (one-direction coercion; RecursionError-guarded JSON parse; list-vs-tuple), span-query-or-exclusivity-eval-order (or_ exclusive per level; combinator-first cheapest-first order documented in TypedDict; per-call @cache locals), span-query-stop-recursing-pruning (boundary-included pruning both directions; pruned quantifiers vs unpruned counts). GATE-5 REAL RUNNER at pin: repo .venv pytest tests/evals/test_otel.py → 29 passed. span_tree.py now FULLY cited (with span-query-zero-bound-guards from pass 17). Pass 21 (DEDICATED LANE miner-pydantic-ai, 2026-08-27, zero drift at `a5b5fb7a` — `git rev-list --count a5b5fb7a..HEAD` = 0): pass-20 NEXT-PASS TARGETS #2+#3 — online call-span recording plane + _otel_emit emission plane mined whole-file (`online.py` :338-412/:566-593/:685-694/:760-769 + `_otel_emit.py` WHOLE 243L + `tests/evals/test_otel_emit.py` 347L all 17 tests + `tests/evals/test_online.py` :2131-2445) — +5 capsule-v2 (205 → 210): call-span-extract-args-ladder (decoration-time name validation; str→1-tuple; empty→False; privacy-by-default), call-span-logfire-gate (decoration-time RuntimeError; dual-backend span opening; fail-soft record_return), otel-eval-result-event-contract (one event per outcome; standard-vs-extension attrs; failure = error.type + WARN + no score; lazy no-op logger), otel-score-downcast-ladder (bool dual value+label; bool-before-int ordering invariant), otel-baggage-precedence (snapshot-first merge so gen_ai.*/error.type win; per-dispatch snapshot). GATE-5 REAL RUNNER at pin: repo .venv pytest test_otel_emit.py → 17 passed; test_online.py -k call_span/extract_args/record_return/baggage → 14 passed. EVIDENCE MODE: Codebase Memory MCP unreachable this session (stdio env reference unavailable at transport open) → direct source+test reading fallback per AGENTS.md, recorded in verification.md. OMITTED-WITH-REASON pass 21: otel/span_tree.py query engine (579L, separate subsystem; guards already cited by span-query-zero-bound-guards), generation.py stored-context replay fetchers, online_capability.py traceparent parsing detail (basic wrap_run cited pass 20). Pass 20 (DEDICATED LANE miner-pydantic-ai, 2026-08-26, zero drift at `a5b5fb7a` — `git rev-list --count a5b5fb7a..HEAD` = 0): pass-19 NEXT-PASS TARGETS #2+#3 — online-sampling plane + task-run ambient-context plane mined whole-file (`pydantic_evals/pydantic_evals/online.py` 970L + `_online.py` 512L + `online_capability.py` 180L + `_task_run.py` 77L + `otel/_context_subtree.py` whole + `dataset.py:set_eval_attribute/increment_eval_metric` :1263-1284) — +5 capsule-v2 (200 → 205): online-sampling-modes (one seed per call; correlated subset property; bool/float/callable ladder; skip-vs-propagate sampling errors), online-dispatch-sink-grouping (id()-keyed sink groups; two-phase parallel collect → batched submit; non-blocking semaphore drops; on_error dedup by handler identity), online-background-dispatch-ladder (running-loop probe → caller-loop task vs copy-context non-daemon thread; three registries under one lock; snapshot drain that swallows eval failures), online-run-on-errors-gate (per-evaluator opt-in; exception as ctx.output; dispatch-then-re-raise), task-run-ambient-context (CURRENT_TASK_RUN accumulator with yielded kwargs closure; silent no-op outside runs; zero-suppressed increments; span-tree metric extraction after reset; third should_evaluate clause = nesting guard). GATE-5 REAL RUNNER at pin: repo .venv pytest tests/evals/test_online.py + test_online_capability.py → 124 passed; test_dataset.py -k eval_metric/eval_attribute → 1 passed. EVIDENCE MODE: Codebase Memory MCP unreachable this session (stdio env reference unavailable at transport open) → direct source+test reading fallback per AGENTS.md, recorded in verification.md. OMITTED-WITH-REASON pass 20: online.py extract_args/call-span recording plane (:338-413 + tests :2131-2352), _otel_emit.py emission attribute tables (only build_parent_context cited), otel/span_tree.py query engine (579L, separate subsystem), generation.py/_task_run consumer side. Pass 19 (DEDICATED LANE miner-pydantic-ai, 2026-08-25, zero drift at `a5b5fb7a` — `git rev-list --count a5b5fb7a..HEAD` = 0): standing conditional dataset-porting question POSED per pass-16 precedent → file-backed Dataset plane mined whole-file (`pydantic_evals/pydantic_evals/dataset.py` 1354L + `lifecycle.py` 113L + `_utils.py` 158L + shared registry kernel `pydantic_ai/_spec.py` build_registry/load_from_registry/build_schema_types) — +7 capsule-v2 (194 → 201): eval-dataset-wire-roundtrip ($schema dual-channel), eval-registry-build-load-contract, eval-loader-exceptiongroup-triage (first-3 truncation), evaluator-dataclass-own-dict-gate (inherited-decoration rejection), eval-case-lifecycle-teardown-contract (propagating teardown), sync-eval-loop-repair (closed-loop repair + interrupt drain), eval-repeat-dual-name-expansion ([i/n] + source_case_name sentinel). GATE-5 REAL RUNNER at pin: repo .venv pytest tests/evals/test_dataset.py 74 passed + test_multi_run.py/test_spec.py 42 passed — after repairing the venv (editable .pth files pointed at pre-move `/mnt/hdd/utopia/inspo/frameworks/pydantic-ai`) via the repo's own Makefile recipe `uv sync --frozen --all-extras --no-extra mcp-tasks --all-packages`. Coverage stdin-JSON ×7 no_recorded_issue generation_matches=true. Work record now persisted at /mnt/hdd/utopia/inspo/pydantic-ai-work/{state,research,verification}.md. OMITTED-WITH-REASON pass 19: online sampling plane (online.py/_online.py/online_capability.py) + _task_run/generation/_otel_emit deferred as NEXT-PASS TARGETS. Pass 18 (DEDICATED LANE, 2026-08-24, zero drift at `a5b5fb7a`): pydantic_evals EVALUATORS/REPORTING plane mined whole-file (`evaluators/{_base,context,evaluator,_run_evaluator,spec,common,agentic,report_common,report_evaluator,llm_as_a_judge}.py` ~2.6kL + `reporting/{__init__,analyses,render_numbers}.py` ~2.0kL) — +16 capsule-v2 (178 → 194): strict-ABC metaclass, spec short-form ladder, failure envelope, error-field context, span discriminator, trajectory/argument/budget evaluator semantics, judge slots, GEval dual validation, report-evaluator axis + data plumbing, multi-run aggregation, number-diff ladders, diff rendering. GATE-5 REAL RUNNER at pin: repo .venv pytest 18+177+27 = 222 passed. Coverage stdin-JSON ×16 no_recorded_issue generation_matches=true; graph retrievals rank-1 line-exact on cited symbols. Pass 13 (DEDICATED LANE): upstream drift re-entry — pulled `b3cdbc96`→`fde1bbb6` (53 commits) and mined the diff whole-file: `_http.py` NEW module + `retries.py` httpx2 migration + dual-family error bridge (`_ssrf.py`), sync-hook timeout dispatch (hooks.py+`_utils.py` abandon-on-cancel), session cancellation translation (agent/__init__), model-name suggestion ladder (models/__init__+exceptions+anthropic detection), blank-text output ladder (_agent_graph), tool-results-first sort (messages+_agent_graph+models/__init__), TestModel generator falsy fixes (models/test.py), instrumentation v6 roles (models/instrumented.py), terminal enum-ref Literal (function_signature.py), unknown-tool retry message (tool_manager.py), VideoUrl host allowlist (messages.py), Anthropic replay hardening incl. `_drop_unpaired_native_tool_calls` superseding `_collect_orphan_tool_search_call_ids` (models/anthropic.py) — 16 new capsule-v2 refs (147 → 163). Pass 11 (DEDICATED LANE): 10 new capsule-v2 refs from a fresh citation-vs-inventory grep at unchanged HEAD — `_enqueue.py` whole (enqueue assembly), `_cost.py` whole (best-effort pricing ladder), durable-exec shared kernel (`_base.py` + `_runtime_toolsets.py` + `durable_exec/_toolset.py`: model round-trip, runtime-toolset rejection, unit guards, event-stream split, toolset registry, recorded-result unwrap), `ext/langchain.py` whole, `common_tools/tavily.py` whole (+ exa composition folded in), `_warnings.py`, `models/_abstract.py`, `_template.py` (123 refs). Pass 3 (DEDICATED LANE): 17 new capsule-v2 refs — toolset composition, capability fan-out/wrapper stacking, agent-graph nodes, streaming validation, request normalization (27 → 44 refs). Pass 4 (DEDICATED LANE): 10 new capsule-v2 refs — UserPromptNode routing/deferred-injection/dynamic-prompts, continuation merge, tool-search corpus, FunctionToolset prepare+registration, output hook engine + schema taxonomy, request-parameters assembly (44 → 54 refs). Pass 5 (DEDICATED LANE): 9 new capsule-v2 refs — ModelRequestNode request/resume prep, continuation primitives + streamed composite + shielded teardown (models/_continuation.py whole-file), parts-manager string buffering + tool-call upgrade ladder (_parts_manager.py whole-file), single-arg tool schema (_function_schema.py whole-file), ToolVisibility states (54 → 63 refs). Pass 6 (DEDICATED LANE): 15 new capsule-v2 refs — messages.py whole-file remainder (compaction wire trim, tool-return content rehydration, retry-prompt rendering, INVALID_JSON args envelope, untrusted-history sanitization, instruction sorting), models/__init__.py whole-file remainder (streamed state machine, availability-delta dual render, native swap resolution, legacy reveal translation, speech projection), _run_context.py whole (reveal-state ladder), common_tools/ sweep (web-fetch content ladder, subagent fallback delegation), _griffe.py doc descriptions (63 → 78 refs); retries.py omitted-with-reason (generic tenacity wrappers below the porting bar, pass-5 note upheld). Pass 7 (DEDICATED LANE): 10 new capsule-v2 refs from the mechanical citation-vs-inventory grep — _ssrf.py whole (safe_download primitive, transition-embedding defense, bounded gzip streaming), _cancel.py whole (first-party/external cancellation attribution, RunBinding handoff), models/instrumented.py whole (non-idempotent-prepare original-handoff + incremental message-JSON cache), models/fallback.py whole (fallback chain, continuation pin + rewind + replace stamp), _sync_stream.py whole (SyncStreamBridge loop-affinity bridge), direct.py (instruction bridge), function_signature.py (structural type dedup + render-time prefix), exceptions.py RunCancelled.from_cancellation (partial-state recovery), native_tools/__init__.py (auto-registry + discriminated union) (78 → 88 refs); tavily/exa/duckduckgo omitted-with-reason (standard API wrappers, no distinct contract beyond subagent-fallback-delegation). Pass 9 (DEDICATED LANE): mechanical citation-vs-inventory grep over `capabilities/` at unchanged HEAD `b3cdbc96` exposed 17 never-cited files (~1,900L) — all read whole-file; 13 new capsule-v2 refs: ProcessEventStream dual-form event-stream wrapping (plain-task pump, cancel-and-drain teardown), PendingMessageDrainCapability priority drains + terminate-time redirect, NativeOrLocalTool base validation ladder + unless_native stamping, WebSearch subclass anatomy, MCP URL-derived id chain, byte-stable deferred-capability catalog, Capability live-empty-toolset bundling, PrefixTools scoped namespacing, IncludeToolReturnSchemas/SetToolMetadata selector-gated rewriters (merged pair), RaiseContentFilterError/ReinjectSystemPrompt (merged pair), UseThreadExecutor/ProcessHistory dispatch (merged pair), SelectModel/ResolveModelId/native-tool spec/delta recording (merged quad), HandleDeferredToolCalls None-chaining (88 → 94 → 107 refs). Pass 10 (DEDICATED LANE, [DONE:157]): re-entry at unchanged HEAD `b3cdbc96`; mechanical citation-vs-inventory grep over all 283 slim source files exposed the never-entered cross-cutting seam plane (concurrency/spec/wrapper-agent/embeddings/native-tools + small internals); all read whole-file → 15 new capsule-v2 refs: ConcurrencyLimiter locked check-and-register backpressure kernel (concurrency.py whole) + ConcurrencyLimitedModel all-surfaces gating (models/concurrency.py), NamedSpec short-form round-trip with string-keyed-dict carve-out (_spec.py whole), ContextVar-scoped capability registry inheritance for nested from_spec (agent/spec.py + agent/__init__.py:_capabilities_from_spec), WrapperAgent transparent delegation + realtime side-door gating contract (agent/wrapper.py), RFC-9562 monotonic uuid7 polyfill (_uuid.py), SDK-version-gated MCP compat field readers with silent-None CI pins (_mcp_compat.py), unterminated-tag thinking splitter (_thinking_part.py), two-pass format_as_xml field metadata walk (format_prompt.py), Embedder lazy-inference/ContextVar-override/read-time-instrumentation facade (embeddings/__init__.py) + EmbeddingModel prepare_embed template-method contract (embeddings/base.py), ToolSearchTool three-plane strategy union with hidden 'custom' (native_tools/_tool_search.py), resolve_tool_choice canonical five-form folding output tools (models/_tool_choice.py), MCPSamplingModel mcp_-prefixed settings namespace (models/mcp_sampling.py), reasoning_details↔ThinkingPart opaque codec (models/_reasoning_details.py) (107 → 123 refs; parity verified mechanically). Pass 12 (DEDICATED LANE): re-entry at unchanged HEAD `b3cdbc96`; fresh citation-vs-inventory grep over all slim source files exposed the durable-exec provider-adapters plane plus capabilities/core long tail — all read whole-file → 12 new capsule-v2 refs: TemporalAgent workflow surface (entry-point guard ladder, four-leg override sandwich, per-event handler activities), anyio-shielded activity executor (livelock-proof cancel forwarding), TemporalRunContext guarded rehydration (four-class field taxonomy; un-carried fields raise; dispatch-time availability snapshots; EnqueueGuard install), PrefectDurability sequence-keyed event tasks (task_run_dynamic_keys counters), Prefect value-addressed cache keys (PrefectAgentInputs projection exhaustiveness test; pickle-memo hashing fix), DBOSDurability legacy-replay compat (ContextVar-flagged dual paths; run-scoped tool-defs caches), activity-config non-retryable layering (_merge_activity_config re-normalization), static tool_choice gate (baseline-only validation in agent/__init__.py), instructions normalization pipeline (_instructions.py whole), Thinking capability + settings fold (capabilities/thinking.py + CombinedCapability merge tests), PrepareTools/PrepareOutputTools dual-plane hooks (capabilities/prepare_tools.py whole), ModelSettings parsed-docstring wire contract (settings.py). COUNT ERRATUM: pass-11's commit message said "123→133" but its commit carried 13 refs and disk held 135 at pass start — pass 11 actually landed 123→135; this pass starts from that on-disk truth. Pass 15 (DEDICATED LANE, 2026-08-24): zero upstream drift (all four lane repos origin-fetched behind=0) → closure-hold converted by POSING the standing conditional #4 porting question (UI streaming) — read `ui/_event_stream.py` (917L) and `ui/_adapter.py` whole-file; +8 capsule-v2 (163 → 171): transform spine, synthetic part-end on abort (#7675 delta-journal fix), pending-tool interrupted/failed closeout, turn state machine, three-shape callback dispatch, untrusted-history sanitize gate, standalone-encoder run_input=None contract, cancel-state ownership. GATE-5 REAL RUNNER: repo .venv pytest at pin — GREEN 11/11 targeted #7675 suites (test_ui.py :961/:977/:999/:1018/:1042/:1075/:1100), RED proven by `git checkout 897d40c^ -- pydantic_ai_slim/pydantic_ai/ui/_event_stream.py` → 5 failed / 3 passed → restored to fde1bbb6 byte-clean (git status empty); full sanitize -k suite 18 passed. Boundaries amended: transport-neutral UIEventStream kernel now ADOPTED (protocol codecs still omitted). Pass 16 (DEDICATED LANE, 2026-08-24): zero upstream drift (origin-fetched behind=0) → closure-hold converted by POSING standing conditional #2 porting question (FunctionModel callable-instance semantics, upstream commit 855f441 #7589 already inside the pin) — read `models/function.py` whole + `_utils.py` executor/await_maybe plane; refreshed stale sibling `function-model-contract.md` against source (its decisive excerpt still showed the pre-855f441 `inspect.iscoroutinefunction` branch; re-pinned all spans :52-247/:250-272/:275-303/:419-477, probe lines :142/:651/:146) and authored NEW `function-model-callable-instances.md`: construction-time `getattr('__name__', class-name)` name fallback (partial → `function:partial:`), call-time partial-unwrapping `is_async_callable` event-loop-vs-thread dispatch with `await_maybe` convergence (output identical both arms — routing pinned only by shut-down-executor observability), stream-side called-not-awaited return-shape contract (async def __call__ RETURNING an iterator never runs; peek fails ValueError), +1 capsule-v2 (171 → 172). GATE-5 REAL RUNNER: repo .venv pytest at pin — full `tests/models/test_model_function.py` 25 passed incl. all 7 new callable-instance tests. Coverage no_recorded_issue ×3 cited paths; graph rank#1 line-exact on new tests. Pass 17 (DEDICATED LANE, 2026-08-24): DRIFT RE-ENTRY — pulled `fde1bbb6`→`a5b5fb7a` (7 commits, #7723/#6937/#7711/#6934/#7551/#7720/#7706); graph re-indexed in place (no twin), content-verified via new test_deep_seek_r1_model_profile resolution. +6 NEW capsule-v2 (172 → 178): load-capability-retry-budget (`toolsets/_deferred_capability_loader.py` meta-tool now inherits ctx.max_retries, ModelRetry-as-feedback, tool_kind routing), span-query-zero-bound-guards (`pydantic_evals/otel/span_tree.py` truthy-min vs is-not-None-max asymmetry; ZERO prior capsules on the pydantic_evals plane — new entry point), cohere-zero-arg-call-keep (falsy arguments no longer drops zero-arg tool calls into retry spirals), gateway-profile-routing-table (Vercel gateway vendor table gained groq; delegate+merge-over-baseline), deepseek-r1-alias-ladder (bare Bedrock alias r1 exact-match), vercel-ai-reasoning-id-tolerance (optional exclude_if client-id quarantined from providerMetadata identity). REFRESHED retry-after-wait-ladder to a5b5fb7a: asctime naive-datetime→UTC pin rule (#7711) as invariant #5, decisive excerpt updated, probe :618–638. GATE-5 REAL RUNNER repo .venv pytest at a5b5fb7a: asctime + capability-budget 2 passed; test_otel -k descendants/ancestors/child_count/span_node_matches 7 passed; vercel_ai reasoning trio 4 passed 1 skipped; cohere suite SKIPPED honestly (optional cohere pkg absent; source verified by direct read); bedrock/resolution-matrix r1 pins SKIPPED (boto3 absent) with direct behavioral checks instead: deepseek_model_profile('r1') all-three-fields True vs chat False; VercelProvider.model_profile('groq/llama-3.3-70b-versatile') returns groq_* keys. OMITTED-WITH-REASON pass 17: pydantic_evals evaluators/reporting planes (mined pass 18), docs churn. NEXT-PASS TARGETS (pass 19+, ONLY past `a5b5fb7a` drift or fresh named question): (1) git log --oneline a5b5fb7a..HEAD FIRST — diff-driven seams only; (2) pydantic_evals dataset.py/_online/online_capability/lifecycle planes IF a dataset-porting question emerges (evaluators+reporting now done); (3) else squeezed-to-last-drop for cycle at 194/194 v2 @ a5b5fb7a. |
+
+## Full view (memory graph)
+Revalidate `mnt-hdd-utopia-inspo-pydantic-ai` before porting: run `index_status`, `check_index_coverage`, `search_graph`, `trace_path`, and `get_code_snippet`. Record the graph root, branch, commit, mode, node/edge counts, freshness, and any coverage caveats; source and direct tests decide shipped claims.
+
+## Boundaries
+Adopt the pure runtime contracts (envelope shapes, dispatch ladders, budget rules, scheduling invariants, usage semantics, schema-resolution ladders, middleware ordering) plus the cross-boundary infrastructure kernels (best-effort pricing taxonomy, string-only durable model round-trip, runtime-toolset rejection diff, replay-unit guards, live-vs-replay event split, id-keyed wrapper registry, whitelist recorded-result unwrap) and the durability-engine adapter patterns (entry-point guard ladders, shielded cancel forwarding, boundary-guarded context rehydration, sequence/value-addressed cache keys, legacy-replay dual paths, non-retryable config layering); adapt the pydantic-ai-specific integration points (RunContext fields, graph nodes, message-part classes, pydantic schema hooks, engine nouns in guard messages) to your host; omit provider/model adapters, realtime sessions and protocol codecs, profiles/* vendor shells, and the docs/examples surface — EXCEPT the transport-neutral UIEventStream kernel (pass 15), whose abort-closeout/turn/callback/sanitize contracts are protocol-agnostic and adoptable for any streamed UI; per-protocol codecs (AG-UI, vercel_ai, _web encoders) remain omitted. The per-engine Temporal/Prefect/DBOS adapter CLASSES are product glue, but their portable invariants (documented above) are exactly what a porter needs to build an engine adapter for any other durable runtime.
+
+## Reference-file inventory
+
+Every preserved capsule/reference file in this foundation:
+
+- [`activity-config-nonretryable-layering.md`](./activity-config-nonretryable-layering.md)
+- [`anthropic-replay-hardening.md`](./anthropic-replay-hardening.md)
+- [`anyio-shielded-activity-executor.md`](./anyio-shielded-activity-executor.md)
+- [`approval-external-toolsets.md`](./approval-external-toolsets.md)
+- [`approval-result-dispatch.md`](./approval-result-dispatch.md)
+- [`argument-occurrence-ladder.md`](./argument-occurrence-ladder.md)
+- [`availability-delta-render.md`](./availability-delta-render.md)
+- [`availability-refusals.md`](./availability-refusals.md)
+- [`best-effort-pricing-ladder.md`](./best-effort-pricing-ladder.md)
+- [`binary-content-redaction-walk.md`](./binary-content-redaction-walk.md)
+- [`blank-text-output-ladder.md`](./blank-text-output-ladder.md)
+- [`budget-evaluator-defaults.md`](./budget-evaluator-defaults.md)
+- [`call-span-extract-args-ladder.md`](./call-span-extract-args-ladder.md)
+- [`call-span-logfire-gate.md`](./call-span-logfire-gate.md)
+- [`call-tools-node-classify.md`](./call-tools-node-classify.md)
+- [`cancellation-attribution.md`](./cancellation-attribution.md)
+- [`capability-bundle-late-registration.md`](./capability-bundle-late-registration.md)
+- [`capability-hook-ladder.md`](./capability-hook-ladder.md)
+- [`capability-model-settings-fold.md`](./capability-model-settings-fold.md)
+- [`capability-ordering.md`](./capability-ordering.md)
+- [`capability-owned-toolset.md`](./capability-owned-toolset.md)
+- [`capability-run-isolation.md`](./capability-run-isolation.md)
+- [`capability-spec-nested-context.md`](./capability-spec-nested-context.md)
+- [`chat-span-lifecycle.md`](./chat-span-lifecycle.md)
+- [`cohere-zero-arg-call-keep.md`](./cohere-zero-arg-call-keep.md)
+- [`combined-capability-fanout.md`](./combined-capability-fanout.md)
+- [`combined-toolset-merge.md`](./combined-toolset-merge.md)
+- [`compaction-wire-trim.md`](./compaction-wire-trim.md)
+- [`concurrency-limiter-kernel.md`](./concurrency-limiter-kernel.md)
+- [`concurrency-model-wrapper.md`](./concurrency-model-wrapper.md)
+- [`content-filter-reinject-prompt-pair.md`](./content-filter-reinject-prompt-pair.md)
+- [`continuation-merge.md`](./continuation-merge.md)
+- [`continuation-primitives.md`](./continuation-primitives.md)
+- [`dbos-legacy-replay-compat.md`](./dbos-legacy-replay-compat.md)
+- [`declarative-deferral-handle-call.md`](./declarative-deferral-handle-call.md)
+- [`decorator-hook-registry.md`](./decorator-hook-registry.md)
+- [`deepseek-r1-alias-ladder.md`](./deepseek-r1-alias-ladder.md)
+- [`deferred-capability-catalog-stability.md`](./deferred-capability-catalog-stability.md)
+- [`deferred-collection-resolution.md`](./deferred-collection-resolution.md)
+- [`deferred-handler-none-chaining.md`](./deferred-handler-none-chaining.md)
+- [`deferred-results-injection.md`](./deferred-results-injection.md)
+- [`deferred-tool-envelope.md`](./deferred-tool-envelope.md)
+- [`direct-model-api.md`](./direct-model-api.md)
+- [`dual-family-error-bridge.md`](./dual-family-error-bridge.md)
+- [`durable-event-stream-split.md`](./durable-event-stream-split.md)
+- [`durable-model-roundtrip.md`](./durable-model-roundtrip.md)
+- [`durable-toolset-registry.md`](./durable-toolset-registry.md)
+- [`durable-unit-guards.md`](./durable-unit-guards.md)
+- [`dynamic-prompt-reevaluation.md`](./dynamic-prompt-reevaluation.md)
+- [`dynamic-toolset-lifecycle.md`](./dynamic-toolset-lifecycle.md)
+- [`embedder-facade-lazy-instrument.md`](./embedder-facade-lazy-instrument.md)
+- [`embedding-model-abc-contract.md`](./embedding-model-abc-contract.md)
+- [`end-strategies-retry-wins.md`](./end-strategies-retry-wins.md)
+- [`enqueue-assembly-contract.md`](./enqueue-assembly-contract.md)
+- [`enum-ref-literal-resolution.md`](./enum-ref-literal-resolution.md)
+- [`eval-case-lifecycle-teardown-contract.md`](./eval-case-lifecycle-teardown-contract.md)
+- [`eval-context-source-replay.md`](./eval-context-source-replay.md)
+- [`eval-dataset-wire-roundtrip.md`](./eval-dataset-wire-roundtrip.md)
+- [`eval-loader-exceptiongroup-triage.md`](./eval-loader-exceptiongroup-triage.md)
+- [`eval-registry-build-load-contract.md`](./eval-registry-build-load-contract.md)
+- [`eval-repeat-dual-name-expansion.md`](./eval-repeat-dual-name-expansion.md)
+- [`evaluator-context-error-field.md`](./evaluator-context-error-field.md)
+- [`evaluator-dataclass-own-dict-gate.md`](./evaluator-dataclass-own-dict-gate.md)
+- [`evaluator-spec-short-forms.md`](./evaluator-spec-short-forms.md)
+- [`event-stream-teed-observer.md`](./event-stream-teed-observer.md)
+- [`fallback-model-chain.md`](./fallback-model-chain.md)
+- [`fixed-param-tool-factory.md`](./fixed-param-tool-factory.md)
+- [`format-as-xml-two-pass.md`](./format-as-xml-two-pass.md)
+- [`function-model-callable-instances.md`](./function-model-callable-instances.md)
+- [`function-model-contract.md`](./function-model-contract.md)
+- [`function-signature-dedup.md`](./function-signature-dedup.md)
+- [`function-toolset-prepare.md`](./function-toolset-prepare.md)
+- [`function-toolset-registration.md`](./function-toolset-registration.md)
+- [`gateway-profile-routing-table.md`](./gateway-profile-routing-table.md)
+- [`get-wrapper-toolset-stacking.md`](./get-wrapper-toolset-stacking.md)
+- [`geval-dual-validation.md`](./geval-dual-validation.md)
+- [`griffe-doc-descriptions.md`](./griffe-doc-descriptions.md)
+- [`hooks-registry.md`](./hooks-registry.md)
+- [`instruction-part-sorting.md`](./instruction-part-sorting.md)
+- [`instructions-normalization-pipeline.md`](./instructions-normalization-pipeline.md)
+- [`instrumentation-context-capture.md`](./instrumentation-context-capture.md)
+- [`instrumentation-v6-roles.md`](./instrumentation-v6-roles.md)
+- [`instrumented-model-wrapper.md`](./instrumented-model-wrapper.md)
+- [`langchain-tool-proxy.md`](./langchain-tool-proxy.md)
+- [`legacy-reveal-translation.md`](./legacy-reveal-translation.md)
+- [`llm-dataset-generation.md`](./llm-dataset-generation.md)
+- [`llm-judge-output-slots.md`](./llm-judge-output-slots.md)
+- [`load-capability-retry-budget.md`](./load-capability-retry-budget.md)
+- [`mcp-capability-url-ids.md`](./mcp-capability-url-ids.md)
+- [`mcp-sampling-model.md`](./mcp-sampling-model.md)
+- [`message-part-narrowing.md`](./message-part-narrowing.md)
+- [`model-display-label.md`](./model-display-label.md)
+- [`model-name-suggestion-ladder.md`](./model-name-suggestion-ladder.md)
+- [`model-request-prep.md`](./model-request-prep.md)
+- [`model-request-stream-handoff.md`](./model-request-stream-handoff.md)
+- [`model-selection-resolution-chain.md`](./model-selection-resolution-chain.md)
+- [`model-settings-wire-contract.md`](./model-settings-wire-contract.md)
+- [`multi-run-aggregation.md`](./multi-run-aggregation.md)
+- [`named-spec-roundtrip.md`](./named-spec-roundtrip.md)
+- [`native-or-local-tool-base.md`](./native-or-local-tool-base.md)
+- [`native-swap-resolution.md`](./native-swap-resolution.md)
+- [`native-tool-registry.md`](./native-tool-registry.md)
+- [`nested-sync-run-guard.md`](./nested-sync-run-guard.md)
+- [`number-diff-render-ladder.md`](./number-diff-render-ladder.md)
+- [`online-background-dispatch-ladder.md`](./online-background-dispatch-ladder.md)
+- [`online-dispatch-sink-grouping.md`](./online-dispatch-sink-grouping.md)
+- [`online-run-on-errors-gate.md`](./online-run-on-errors-gate.md)
+- [`online-sampling-modes.md`](./online-sampling-modes.md)
+- [`otel-baggage-precedence.md`](./otel-baggage-precedence.md)
+- [`otel-eval-result-event-contract.md`](./otel-eval-result-event-contract.md)
+- [`otel-message-json-cache.md`](./otel-message-json-cache.md)
+- [`otel-score-downcast-ladder.md`](./otel-score-downcast-ladder.md)
+- [`output-hook-engine.md`](./output-hook-engine.md)
+- [`output-schema-build.md`](./output-schema-build.md)
+- [`output-schema-taxonomy.md`](./output-schema-taxonomy.md)
+- [`output-semantic-envelope.md`](./output-semantic-envelope.md)
+- [`output-toolset-lowering.md`](./output-toolset-lowering.md)
+- [`output-type-integration.md`](./output-type-integration.md)
+- [`parallel-barrier-execution.md`](./parallel-barrier-execution.md)
+- [`parts-manager-string-buffering.md`](./parts-manager-string-buffering.md)
+- [`pending-message-drain-redirect.md`](./pending-message-drain-redirect.md)
+- [`prefect-sequence-keyed-events.md`](./prefect-sequence-keyed-events.md)
+- [`prefix-tools-scoped-namespacing.md`](./prefix-tools-scoped-namespacing.md)
+- [`prefixed-toolset-rewrite.md`](./prefixed-toolset-rewrite.md)
+- [`prepare-request-normalization.md`](./prepare-request-normalization.md)
+- [`prepare-tools-dual-plane.md`](./prepare-tools-dual-plane.md)
+- [`prepared-toolset-guard.md`](./prepared-toolset-guard.md)
+- [`reasoning-details-codec.md`](./reasoning-details-codec.md)
+- [`recorded-result-unwrap.md`](./recorded-result-unwrap.md)
+- [`renamed-toolset-map.md`](./renamed-toolset-map.md)
+- [`report-diff-render.md`](./report-diff-render.md)
+- [`report-evaluator-contract.md`](./report-evaluator-contract.md)
+- [`report-evaluator-data-plumbing.md`](./report-evaluator-data-plumbing.md)
+- [`request-parameters-assembly.md`](./request-parameters-assembly.md)
+- [`resume-path.md`](./resume-path.md)
+- [`resume-request-prep.md`](./resume-request-prep.md)
+- [`retry-after-wait-ladder.md`](./retry-after-wait-ladder.md)
+- [`retry-prompt-rendering.md`](./retry-prompt-rendering.md)
+- [`reveal-state-ladder.md`](./reveal-state-ladder.md)
+- [`run-binding-handoff.md`](./run-binding-handoff.md)
+- [`run-cancelled-recovery.md`](./run-cancelled-recovery.md)
+- [`run-context-boundary-guard.md`](./run-context-boundary-guard.md)
+- [`run-evaluator-failure-envelope.md`](./run-evaluator-failure-envelope.md)
+- [`run-evaluators-ordered-fanout.md`](./run-evaluators-ordered-fanout.md)
+- [`runtime-toolset-rejection.md`](./runtime-toolset-rejection.md)
+- [`sdk-generation-compat-readers.md`](./sdk-generation-compat-readers.md)
+- [`selector-gated-definition-rewriters.md`](./selector-gated-definition-rewriters.md)
+- [`session-cancellation-translation.md`](./session-cancellation-translation.md)
+- [`shielded-job-teardown.md`](./shielded-job-teardown.md)
+- [`single-arg-tool-schema.md`](./single-arg-tool-schema.md)
+- [`span-attr-json-sequence-matching.md`](./span-attr-json-sequence-matching.md)
+- [`span-node-dual-predicate-surface.md`](./span-node-dual-predicate-surface.md)
+- [`span-query-or-exclusivity-eval-order.md`](./span-query-or-exclusivity-eval-order.md)
+- [`span-query-stop-recursing-pruning.md`](./span-query-stop-recursing-pruning.md)
+- [`span-query-zero-bound-guards.md`](./span-query-zero-bound-guards.md)
+- [`span-tree-rebuild-from-flat-spans.md`](./span-tree-rebuild-from-flat-spans.md)
+- [`spec-template-validation.md`](./spec-template-validation.md)
+- [`speech-part-projection.md`](./speech-part-projection.md)
+- [`ssrf-safe-download.md`](./ssrf-safe-download.md)
+- [`static-tool-choice-gate.md`](./static-tool-choice-gate.md)
+- [`stream-output-dispatch.md`](./stream-output-dispatch.md)
+- [`stream-partial-validation.md`](./stream-partial-validation.md)
+- [`streamed-continuation-composite.md`](./streamed-continuation-composite.md)
+- [`streamed-state-machine.md`](./streamed-state-machine.md)
+- [`strict-abc-meta.md`](./strict-abc-meta.md)
+- [`structured-dict-output.md`](./structured-dict-output.md)
+- [`subagent-cancel-isolation.md`](./subagent-cancel-isolation.md)
+- [`subagent-fallback-delegation.md`](./subagent-fallback-delegation.md)
+- [`sync-eval-loop-repair.md`](./sync-eval-loop-repair.md)
+- [`sync-hook-timeout-dispatch.md`](./sync-hook-timeout-dispatch.md)
+- [`sync-stream-bridge.md`](./sync-stream-bridge.md)
+- [`tagged-thinking-splitter.md`](./tagged-thinking-splitter.md)
+- [`task-run-ambient-context.md`](./task-run-ambient-context.md)
+- [`telemetry-control-flow-spans.md`](./telemetry-control-flow-spans.md)
+- [`temporal-agent-workflow-surface.md`](./temporal-agent-workflow-surface.md)
+- [`tenacity-transport-replay.md`](./tenacity-transport-replay.md)
+- [`test-model-simulator.md`](./test-model-simulator.md)
+- [`testmodel-generator-falsy-fixes.md`](./testmodel-generator-falsy-fixes.md)
+- [`thread-executor-history-dispatch.md`](./thread-executor-history-dispatch.md)
+- [`timeout-migration-contract.md`](./timeout-migration-contract.md)
+- [`tool-args-invalid-json.md`](./tool-args-invalid-json.md)
+- [`tool-call-upgrade-ladder.md`](./tool-call-upgrade-ladder.md)
+- [`tool-choice-canonical-resolver.md`](./tool-choice-canonical-resolver.md)
+- [`tool-results-first-sort.md`](./tool-results-first-sort.md)
+- [`tool-return-content-rehydrate.md`](./tool-return-content-rehydrate.md)
+- [`tool-return-normalizer.md`](./tool-return-normalizer.md)
+- [`tool-reveal-guardrails.md`](./tool-reveal-guardrails.md)
+- [`tool-search-corpus.md`](./tool-search-corpus.md)
+- [`tool-search-native-strategies.md`](./tool-search-native-strategies.md)
+- [`tool-span-discriminator.md`](./tool-span-discriminator.md)
+- [`tool-visibility-states.md`](./tool-visibility-states.md)
+- [`toolset-approval-wrappers.md`](./toolset-approval-wrappers.md)
+- [`toolset-prepare-wrappers.md`](./toolset-prepare-wrappers.md)
+- [`toolset-wrapper-delegation.md`](./toolset-wrapper-delegation.md)
+- [`traceparent-parse-zero-id-rejection.md`](./traceparent-parse-zero-id-rejection.md)
+- [`trajectory-scoring-modes.md`](./trajectory-scoring-modes.md)
+- [`ui-cancel-state-ownership.md`](./ui-cancel-state-ownership.md)
+- [`ui-event-stream-transform-spine.md`](./ui-event-stream-transform-spine.md)
+- [`ui-pending-tool-closeout.md`](./ui-pending-tool-closeout.md)
+- [`ui-standalone-encoder-contract.md`](./ui-standalone-encoder-contract.md)
+- [`ui-synthetic-part-end-on-abort.md`](./ui-synthetic-part-end-on-abort.md)
+- [`ui-three-shape-callback-dispatch.md`](./ui-three-shape-callback-dispatch.md)
+- [`ui-turn-state-machine.md`](./ui-turn-state-machine.md)
+- [`ui-untrusted-history-sanitize-gate.md`](./ui-untrusted-history-sanitize-gate.md)
+- [`union-output-dispatch.md`](./union-output-dispatch.md)
+- [`unknown-tool-retry-message.md`](./unknown-tool-retry-message.md)
+- [`untrusted-history-sanitize.md`](./untrusted-history-sanitize.md)
+- [`usage-accounting.md`](./usage-accounting.md)
+- [`user-prompt-node-routing.md`](./user-prompt-node-routing.md)
+- [`userwarning-deprecation-channel.md`](./userwarning-deprecation-channel.md)
+- [`uuid7-monotonic-polyfill.md`](./uuid7-monotonic-polyfill.md)
+- [`validate-execute-retry-budget.md`](./validate-execute-retry-budget.md)
+- [`value-addressed-cache-keys.md`](./value-addressed-cache-keys.md)
+- [`vercel-ai-reasoning-id-tolerance.md`](./vercel-ai-reasoning-id-tolerance.md)
+- [`video-url-host-allowlist.md`](./video-url-host-allowlist.md)
+- [`web-fetch-content-ladder.md`](./web-fetch-content-ladder.md)
+- [`websearch-subclass-anatomy.md`](./websearch-subclass-anatomy.md)
+- [`wrapper-agent-side-doors.md`](./wrapper-agent-side-doors.md)
+- [`wrapper-capability-identity.md`](./wrapper-capability-identity.md)

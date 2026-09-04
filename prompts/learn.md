@@ -8,9 +8,11 @@ capture campaign.
 
 1. Inspect the active project's relevant source, tests, and runtime boundary.
 2. State the exact unanswered question.
-3. Use one approved project-local reference or indexed external source when
-   outside prior art can materially answer it. Verify its identity and revision
-   still match the approval; if they drift, stop and report the mismatch.
+3. Use one approved project-local reference, indexed external source, or one
+   explicitly selected `skills/*-foundation` capsule when outside prior art can
+   materially answer it. Verify its identity and revision still match the
+   approval; if they drift, stop and report the mismatch. A foundation is
+   historical evidence, not a procedure or timeless truth.
 4. Use direct search, AST-aware tools, Fovea, or Codebase Memory only to locate
    the relevant implementation and tests.
 5. Confirm every material conclusion in exact source and direct tests.
@@ -36,8 +38,9 @@ capture campaign.
 
 - One question and normally one reference per invocation.
 - Do not clone, index, ingest, or re-index without explicit approval.
-- Do not create or expand a Foundation merely because a repository was studied.
-- Do not create a skill, memory, note, summary, or campaign record
+- Ordinary `/learn` creates no artifact. Do not create or expand a foundation
+  merely because a repository or capsule was studied.
+- Do not create a skill, memory, note, summary, index, or campaign record
   automatically.
 - Keep ordinary findings in the conversation.
 - Direct source and tests outrank structural maps and generated explanations.

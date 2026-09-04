@@ -4,7 +4,7 @@
 Pass 1: eligibility check only; group BLOCKED on missing index. Pass 2 (2026-09-02,
 approved --loop run): external restore APPROVED, `ext-copilotkit` indexed full
 mode, and the `channels-telegram` grammY long-poll plane mined COMPLETE into
-`foundation-pack/copilotkit-foundation/references/telegram-long-poll-loop-guard.md`
+`skills/copilotkit-foundation/references/telegram-long-poll-loop-guard.md`
 (loader line + capsule map entry wired in the same tree).
 
 ## Source and evidence

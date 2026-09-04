@@ -9,9 +9,9 @@
 | [Django coding style](https://docs.djangoproject.com/en/stable/internals/contributing/writing-code/coding-style/) (primary) | Python black/PEP8, imports, templates, views, models, settings laziness, i18n, pre-commit |
 | Django `coding-style.txt` in django/django (primary mirror) | Full normative text for templates, model ordering, choices enums |
 | `python-coding-practices` (secondary) | Generic PEP 8/Google — Django adds 88-col black, import groups, Django-specific tests |
-| `foundation-pack/django-foundation` (secondary) | Framework patterns — this skill is **style/conventions** for Django code review |
+| `skills/django-foundation` (secondary) | Framework patterns — this skill is **style/conventions** for Django code review |
 
-**Scope:** **Django project and app code** (Python, templates, contributing-style tests). **Not:** full ORM architecture (`foundation-pack/django-foundation`). **JS in Django admin:** see linked Django JS style doc — out of scope unless admin JS patch.
+**Scope:** **Django project and app code** (Python, templates, contributing-style tests). **Not:** full ORM architecture (`skills/django-foundation`). **JS in Django admin:** see linked Django JS style doc — out of scope unless admin JS patch.
 
 ## Mental model
 
@@ -126,4 +126,4 @@ Django style is **black-formatted Python + grouped imports + template whitespace
 | assertRaisesMessage | general exception idioms |
 | Lazy settings | import-time side effects |
 
-App architecture: `foundation-pack/django-foundation`.
+App architecture: `skills/django-foundation`.

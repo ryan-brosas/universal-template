@@ -1,0 +1,38 @@
+---
+name: pydantic-ai-harness-foundation
+description: "Use when building a pydantic-ai agent harness: capability/toolset abstractions, context-window compaction, spend budgets, planning stores, subagent model menus, tool-output size bands, browser-use delegation plus Playwright browser and You.com web-research capabilities, sandboxed filesystem/shell hardening, runtime-authored capabilities, code-execution REPL driving, and exposing an agent over the Agent Client Protocol (ACP) to editors — turn commit/cancel discipline, approval scopes, byte-bounded streaming, session persistence, editor-native fs/terminal tools."
+kind: foundation
+invocation: manual
+disable-model-invocation: true
+---
+# Pydantic AI Harness Foundation
+
+## Foundation contract
+
+This is a cold, source-specific foundation, not an operational procedure. It is
+historical, revision-pinned evidence rather than timeless guidance. Current
+project source, tests, requirements, and runtime behavior outrank this
+projection and decide what ships.
+
+## Provenance and revision
+
+- Source record: `pydantic-ai-harness`; portable upstream identity, license, coverage caveats, and retrieval history are preserved in the index.
+- Recorded revision: `main@76db3dec`.
+- Full provenance, coverage caveats, boundaries, and preserved evidence:
+  `references/index.md`.
+
+## Topic map
+
+- Representative topics: Compaction; Compaction strategies; Recall;
+  Guardrails; Durability; Retrieval capabilities; Sandboxing; Spend.
+- Scope and retrieval questions: `references/index.md#use-this-for`.
+- Complete capsule chooser: `references/index.md#load-the-matching-source-dump`.
+- Detailed grouped map: `references/index.md#capsule-map`.
+- Source limitations and portability boundaries: `references/index.md#boundaries`.
+
+## Retrieval
+
+Open the index, choose one capsule matching the active question, and load only
+that capsule. Revalidate its cited source and revision before relying on it. Do
+not bulk-load the inventory, treat historical claims as current truth, or apply
+this foundation as a procedure.

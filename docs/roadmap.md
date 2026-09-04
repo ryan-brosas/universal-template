@@ -17,9 +17,10 @@ Progress is normally recoverable from source, Git, the project tracker, and proj
 
 - **Reference-driven prior art (replaces mass ingestion).** Useful external
   repositories become project-local `reference/<repo>/` checkouts: read source
-  and tests, adopt, adapt, or omit. `foundation-pack/` holds accumulated
-  implementation foundations (architecture, patterns, seams) separate from
-  the active skill catalog; create or expand one only when reusable
+  and tests, adopt, adapt, or omit. `skills/` is the one capability tree;
+  `kind: foundation` leaves hold accumulated, source-specific implementation
+  evidence (architecture, patterns, seams) while remaining excluded from the
+  operational catalog and startup metadata. Create or expand one only when reusable
   understanding is cheaper to retrieve than to re-derive. Active owned projects
   stay in project source; completion creates no ingestion or mining backlog.
   Only an explicit user decision after a stable milestone may promote reusable

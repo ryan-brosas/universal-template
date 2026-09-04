@@ -1,8 +1,8 @@
-# Work record: Foundation Pack migration
+# Work record: historical foundation migration
 
 ## Verified pass
 
-Closed 2026-09-02 for the current checkout. All 194 Foundation Pack leaves received a provenance disposition; every safely retained exact-pin source was re-indexed in Codebase Memory with `mode: "full"` and verified with coverage plus an architecture-graph probe. The disposition table is the adoption snapshot for the migration pass.
+Closed 2026-09-02 for the current checkout. All 194 foundation leaves received a provenance disposition; every safely retained exact-pin source was re-indexed in Codebase Memory with `mode: "full"` and verified with coverage plus an architecture-graph probe. The disposition table is the adoption snapshot for the migration pass.
 
 | Disposition (snapshot) | Leaves | Evidence here |
 | --- | ---: | --- |
@@ -29,7 +29,7 @@ Keep exact metadata, reference, and repository contract checks green; never demo
 
 ## Source and evidence
 
-- Foundation claims: `foundation-pack/`
+- Foundation claims: `skills/*-foundation/`
 - Structural verification: foundation metadata and references through `scripts/skill-validator.py`
 - Snapshot triage bank: `foundation-pack-migration-triage-2026-09-02`
 - Retention/deferral based on direct source, tests, recorded pins, index coverage, and bounded probes. Codebase Memory stays a retrieval surface, never the source of truth.

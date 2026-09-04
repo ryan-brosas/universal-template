@@ -9,7 +9,7 @@
 | [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html) | 2-space indent, 100 cols, K&R braces, no wildcard imports, one class per file, naming (UpperCamelCase/lowerCamelCase/UPPER_SNAKE_CASE), deterministic camelCase for acronyms, `@Override`, don't ignore caught exceptions, qualify statics, Javadoc on public API |
 | [Alibaba Java Coding Guidelines](https://alibaba.github.io/Alibaba-Java-Coding-Guidelines/) (secondary) | `@Override` mandatory, `equals` on constant, POJO wrapper types, override hashCode with equals, collection footguns, exception/logging discipline, no magic values |
 
-**Not duplicated here:** Spring/EE stack patterns — use `foundation-pack/*-foundation` when stack is known. Full Alibaba layer naming (DO/DTO/VO) — optional enterprise convention, not universal.
+**Not duplicated here:** Spring/EE stack patterns — use `skills/*-foundation` when stack is known. Full Alibaba layer naming (DO/DTO/VO) — optional enterprise convention, not universal.
 
 ## Mental model
 

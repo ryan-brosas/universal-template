@@ -10,7 +10,7 @@
 | [.NET Naming Guidelines](https://learn.microsoft.com/en-us/dotnet/standard/design-guidelines/naming-guidelines) + [Capitalization](https://learn.microsoft.com/en-us/dotnet/standard/design-guidelines/capitalization-conventions) + [General naming](https://learn.microsoft.com/en-us/dotnet/standard/design-guidelines/general-naming-conventions) | PascalCase types/members; camelCase parameters; `I` prefix interfaces; no underscores/Hungarian; CLR type names in API; compound word table (`FileName`, `LogOn`); case-insensitive CLR constraint |
 | [Names of Classes, Structs, Interfaces](https://learn.microsoft.com/en-us/dotnet/standard/design-guidelines/names-of-classes-structs-and-interfaces) (secondary) | nouns for types; `I` interfaces; `Exception`/`EventArgs`/`Attribute` suffixes; generic `T`/`TSession`; enum singular/plural rules |
 
-**Not duplicated here:** Full `.editorconfig` matrix — project EditorConfig wins. ASP.NET/Blazor patterns — use stack capsules in `foundation-pack/`.
+**Not duplicated here:** Full `.editorconfig` matrix — project EditorConfig wins. ASP.NET/Blazor patterns — use stack capsules in `skills/*-foundation`.
 
 ## Mental model
 

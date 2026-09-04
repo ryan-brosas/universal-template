@@ -9,7 +9,7 @@
 | [Microsoft F# component design guidelines](https://learn.microsoft.com/en-us/dotnet/fsharp/style-guide/component-design-guidelines) (primary) | .NET naming table; XML docs; `.fsi` for stable APIs; F#-facing vs vanilla .NET library split; modules/namespaces; hide record/union reps; interfaces over inheritance; `Async`/`AsyncCompute`; extension members; union trees; limit SRTP/inline constraints; avoid custom operators; interop: `Func`, TryGetValue, `IEnumerable`, `Task`, null checks, no currying/tuples |
 | [F# Component Design Guidelines v14 (PDF)](https://fsharp.org/specs/component-design-guidelines/fsharp-design-guidelines-v14.pdf) (secondary) | confirms dual-audience design; five principles alignment; CompiledName for .NET consumers |
 
-**Not duplicated here:** Full .NET Framework Design Guidelines — follow as fallback. WPF/WinForms UI patterns — use stack capsules in `foundation-pack/`.
+**Not duplicated here:** Full .NET Framework Design Guidelines — follow as fallback. WPF/WinForms UI patterns — use stack capsules in `skills/*-foundation`.
 
 ## Mental model
 

@@ -1,0 +1,425 @@
+<!-- Preserved from the pre-foundation-skill-v1 loader. Detail remains historical and revision-pinned. -->
+
+
+# codebase-memory-mcp: code-graph engine — store, pipeline, MCP, and daemon kernel
+
+## Use this for
+Building or porting any local-first code-intelligence engine that turns a repo into a queryable symbol/edge graph served to AI agents: SQLite-backed graph storage with WAL discipline and integrity quarantine, staging→seal→atomic-rename publication with ADR capture, closure-budgeted incremental replanning, an MCP tool surface with token-frugal TOON emission and read-only profiles, an account-wide daemon with exact-build version cohorts and frozen wire envelopes, crash-containing index supervisors, adaptive watchers, and the C foundation primitives (arenas, interning, lock registries, subprocess classification) underneath. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval.
+
+## Load the matching source dump
+
+Store & SQLite core
+- `./query-open-immutable-fallback.md` — why must read queries never mutate the DB file?
+- `./wal-pragma-ladder.md` — sharing a graph DB across processes without SIGBUS or starved WAL.
+- `./integrity-verdict-three-way.md` — HEALTHY/CORRUPT/UNOPENABLE verdict classes pinned per test.
+- `./seal-for-atomic-publish.md` — making a staging DB self-contained before atomic rename.
+- `./generation-cursor-staleness.md` — pagination tokens detecting graph changes underneath.
+- `./integrity-verdict-quarantine.md` — corrupt vs lost-lock-race verdicts.
+- `./store-resolve-ladder.md` — project name → store handle without ghosts or stale verdicts.
+- `./rowscan-error-discipline.md` — SCANCHK: terminal step rc must equal SQLITE_DONE.
+- `./cached-statement-release.md` — reset-before-park rule un-deadlocking WAL↔DELETE switches.
+- `./passive-checkpoint-policy.md` — checkpoint WITHOUT truncating live-reader WALs.
+- `./bulk-write-wal-invariants.md` — relax synchronous, never journal_mode.
+- `./page-cache-slab.md` — contiguous slab fixing per-request page-cache pinning.
+- `./store-transaction-trio.md` — BEGIN IMMEDIATE commit/rollback contract.
+- `./store-idle-release.md` — TTL store release + pristine-memory fast valve.
+- `./store-swap-visibility.md` — cached handles detecting atomic DB replacement.
+- `./store-restore-copy.md` — rowid-preserving store-to-store copy.
+- `./bfs-shortest-path-cte.md` — recursive CTE traversal with self-loop guards.
+- `./edge-props-commutative-merge.md` — deterministic parallel edge-property merging.
+- `./ac-lz4-batch-scan.md` — Aho-Corasick over LZ4 buffers with thread-local reuse.
+- `./architecture-orientation-endpoint.md` — bounded whole-repo orientation summaries.
+- `./cypher-parse-boundary.md` — typed AST + parameterized codegen parse boundary.
+- `./cypher-execution-deadline.md` — budgeted execution with hot-loop deadline checks.
+- `./cypher-crossjoin-guards.md` — plan-time cartesian-product refusal.
+- `./ignore-precedence-negation.md` — signed match-result ignore ladder with safety core.
+- `./project-name-derivation.md` — path→project-name safe-set mapping with hash suffix.
+
+Nodes & queries
+- `./node-qn-identity.md` — (project, qualified_name) identity + FK cascade semantics.
+- `./batch-edge-upsert.md` — prepared batch inserts with UNIQUE coalescing.
+- `./qn-suffix-lookup.md` — dot-boundary suffix matching without false positives.
+- `./node-overlap-lookup.md` — line-range symbol lookup excluding containers.
+- `./batch-qn-resolution.md` — 500-QN resolution in one prepared pass, 0 = missing.
+- `./dependent-files-closure.md` — reverse deps minus self-reference and container noise.
+- `./file-hash-detection.md` — sha256-authoritative change detection with metadata fast-paths.
+- `./project-upsert-generation.md` — reindex idempotence driving mutation counters.
+- `./url-path-edge-lookup.md` — JSON-property edge queries and when they're acceptable.
+- `./node-degree-semantics.md` — single-edge-count degree API.
+- `./multitype-bfs.md` — direction+type-array traversal with budgets and edge provenance.
+- `./pagination-total-order.md` — unique tiebreaker before LIMIT/OFFSET.
+- `./degree-filter-sql.md` — derived-table fan-in/out filters + conditional count stripping.
+- `./entry-point-exclusion.md` — double-negation keeping dead code visible.
+- `./like-hint-prefilter.md` — advisory LIKE hints under decisive regex predicates.
+- `./search-label-filters.md` — parameterized NOT IN exclusion + runtime schema introspection.
+- `./file-pattern-substring.md` — documented substring file filters (#200).
+- `./empty-filter-omission.md` — omit-empty-arm dynamic WHERE construction.
+- `./case-folding-boundary.md` — flag-gated folding, hard exact-identity exceptions.
+- `./traverse-then-slice.md` — compute-once paginated traversals.
+- `./vector-search-int8-udf.md` — in-SQL cosine over int8 blobs + min-across-keywords rerank.
+- `./camel-split-fts.md` — dual-form FTS cells for identifier search.
+- `./fts-rebuild-fallback.md` — graceful UDF-dependent index rebuilds.
+- `./vocabulary-drift-guards.md` — bidirectional C-predicate ↔ SQL-literal consistency tests.
+- `./schema-as-data.md` — self-describing label/edge catalogs.
+- `./architecture-aspects-rollup.md` — aspect-parameterized boundaries/hotspots/clusters.
+- `./louvain-clustering.md` — pure-C Louvain/Leiden community detection.
+- `./scc-cycle-aspect.md` — size>1 SCC cycle reporting.
+- `./search-code-literal-floor.md` — guaranteed literal line scanner under fancy retrieval.
+- `./project-listing-shadows.md` — shadow-row conventions across all consumers.
+- `./index-status-dual-state.md` — stored vs live git state reporting.
+- `./dump-project-filter.md` — id-coherent filtered SQL dumps.
+- `./dump-verify-floors.md` — tiered count verification on import.
+- `./artifact-roundtrip.md` — zstd+manifest export with size/version gates.
+- `./coverage-honesty-contract.md` — skipped/parse_partial taxonomy + generation gates.
+- `./coverage-replace-transaction.md` — atomic coverage rewrites with timing ledgers.
+- `./parse-partial-capture.md` — range-precise parse telemetry with recovery awareness.
+- `./adr-section-merge.md` — closed-vocabulary section merge with pre-store size gate.
+- `./adr-capture-before-rebuild.md` — capture-with-abort preserving user content.
+- `./dbt-lineage-extraction.md` — last-string-arg relation extraction from templated SQL.
+- `./k8s-manifest-extraction.md` — key-allowlisted infra manifest mapping.
+- `./env-url-scanner.md` — exclusion-parity config walkers with secret filtering.
+- `./config-link-strategies.md` — graded config↔code linking with negative guards.
+- `./tests-edge-derivation.md` — convention-driven TESTS/TESTS_FILE edges.
+- `./decorator-route-plane.md` — four-phase idempotent Route/HANDLES materialization.
+- `./route-canon-cross-framework.md` — client↔handler route identity across frameworks.
+- `./service-pattern-classification.md` — callee QN → HTTP_CALLS/ASYNC/ROUTE_REG/CONFIGURES.
+- `./registry-resolution-ladder.md` — bare-name resolution with defensible confidence.
+- `./path-alias-scoped-resolution.md` — pluggable longest-prefix alias scopes.
+- `./minhash-lsh-clones.md` — banded LSH MinHash with content-derived pair ownership.
+- `./change-coupling-mining.md` — filter-then-count git history coupling edges.
+- `./transitive-loop-depth.md` — memoized cycle-safe metric propagation.
+- `./semantic-eleven-signal-blend.md` — zero-model SEMANTICALLY_RELATED scoring.
+- `./language-disambiguation.md` — ordered resolution ending in deterministic defaults.
+- `./glr-depth-cap.md` — merge-depth caps for ambiguous GLR parses.
+- `./lsp-surface-codec.md` — body-vs-signature edit encoding for dependents.
+- `./closure-repair-routing.md` — NOOP/CLOSURE_REPAIR/FORCED_FULL decision ladder.
+- `./incremental-route-observability.md` — compile-time seam atoms for route assertions.
+- `./incremental-accuracy-parity.md` — bounded per-type partial≈full parity proofs.
+- `./worker-pool-deep-stacks.md` — explicit-stack pthreads for recursive parsers.
+- `./parallel-parity-harness.md` — per-edge-type dual-engine equality.
+- `./env-access-convergence-probe.md` — named known-gap test design.
+- `./mkstemp-staging-security.md` — unpredictable exclusive staging creation.
+- `./publish-destination-races.md` — destination-existence deltas + sidecar vetoes.
+- `./quarantine-naming-protocol.md` — noreplace candidate scans with rollback.
+- `./quarantine-snapshot-discipline.md` — snapshot-verify-delete for DB+WAL pairs.
+- `./invalid-name-litter-guard.md` — validate-before-open against CWD pollution.
+- `./language-contract-suite.md` — full-pipeline invariant testing across languages.
+- `./scale-tier-contracts.md` — opt-in binary-level scale legs.
+- `./scale-fit-regression-gate.md` — pure log-ratio exponent fits vs synthetic pins.
+- `./subprocess-outcome-classification.md` — six-way child-death taxonomy + quiet-timeout hangs.
+- `./crash-containment-fixture.md` — poison-file fork-isolated containment proofs.
+- `./crash-durable-worker-log.md` — unbuffered+flush-per-line post-mortem guarantees.
+- `./index-supervisor-worker.md` — respawn supervision containing pathological files.
+- `./watcher-adaptive-polling.md` — size-scaled intervals + dual-signal prune gates.
+- `./watcher-git-probe-budgets.md` — deadline+output caps against hostile fsmonitor hooks.
+- `./watcher-baseline-discipline.md` — success-committed change baselines.
+- `./git-canonical-root.md` — resolve-then-realpath repo identity from subdirs/worktrees.
+- `./userconfig-extension-mapping.md` — two-tier merge with digests for new extensions.
+- `./auto-index-gating.md` — four-gate implicit background work ladder.
+- `./session-root-detection.md` — latched single-shot context detection.
+- `./allocator-binding-order.md` — bind-first allocator routing with asserts.
+- `./memory-budget-resolver.md` — pure RAM-fraction budget resolution with strict overrides.
+- `./memory-phase-accounting.md` — gapless phase marks + post-release censuses.
+- `./arena-intern-discipline.md` — same-lifetime arenas + pointer-identity interning.
+- `./arena-eager-commit-gating.md` — OS-cost-conditioned allocator options.
+- `./arena-census-diagnostics.md` — legend-driven retention vs shape diagnosis.
+- `./private-lock-fd-discipline.md` — consume-on-invoke close semantics.
+- `./lock-registry-turn-rw.md` — writer-preference rw locks from plain files.
+- `./lock-cancel-no-barge.md` — sticky cancel tokens without barging.
+- `./lock-registry-retirement.md` — generation-token ABA defense on free.
+- `./yaml-subset-parser.md` — documented-subset parsing with refusal lists.
+- `./sanitizer-aware-budgets.md` — one-predicate instrumented detection.
+- `./shell-arg-validation.md` — deny-list + double-quote template pairing.
+- `./sqlite-authorizer-defense.md` — authorizer-level ATTACH denies.
+- `./vendored-integrity-manifest.md` — fail-closed checksum manifests.
+- `./diagnostics-output-safety.md` — fail-closed temp diagnostics files.
+
+MCP server surface
+- `./toon-token-frugal-emission.md` — header-once tabular output with field blocklists.
+- `./toon-quoting-grammar.md` — exact cell-quoting predicate.
+- `./format-duality-contract.md` — one model, two serializations.
+- `./cell-utf8-sanitization.md` — per-cell UTF-8 guarantees for line tools.
+- `./snippet-context-bomb-guard.md` — 500-line clip + source_clipped flags.
+- `./snippet-resolution-ladder.md` — disclosed-tier name resolution.
+- `./source-lossy-utf8.md` — lossy-with-structure source sanitization.
+- `./tools-list-pagination.md` — lazy cursor-in/pages-out catalogs.
+- `./tool-profile-allowlist.md` — static analysis/scout tiers, fail-closed parsing.
+- `./tool-annotations-contract.md` — four-axis safety metadata (honest destructive-query entries).
+- `./cancellation-scoping.md` — dual-form id matching + depth-scoped flag resets.
+- `./string-id-passthrough.md` — opaque JSON-RPC id echo (#253).
+- `./envelope-duplication-gate.md` — whole-catalog no-duplication property tests.
+- `./lean-defaults-contract.md` — advertise-only-emittable coherence.
+- `./numeric-arg-honesty.md` — schema-runtime bound agreement (#1511).
+- `./tail-resolution-convenience.md` — unique-tail project resolution with ambiguity refusal.
+- `./postfilter-total-consistency.md` — totals computed after filtering.
+- `./minhop-trace-union.md` — multi-seed BFS with min-hop aggregation.
+- `./strategy-class-closure.md` — closed edge-strategy trust vocabularies.
+- `./depth-clamp-policy.md` — clamp-don't-reject depth arguments.
+- `./hunk-scoped-impact-seeds.md` — diff-overlap blast-radius seeding.
+- `./impact-summary-hops.md` — hop-bucketed impact with pure risk mapping.
+- `./trace-ingest-helpers.md` — pure OTLP extraction helpers.
+- `./workflow-prompts-surface.md` — drift-guarded multi-tool recipes.
+- `./hook-augment-never-deny.md` — fail-open exit-0 hook contracts.
+- `./hook-conflict-ownership.md` — script-identity hook ownership rules.
+- `./ui-rpc-readonly-gate.md` — reject-duplicate headers + positive read allowlists.
+- `./agent-client-profiles.md` — declarative capability-bitmask agent registry.
+- `./agent-profile-renderers.md` — expectation-table dialect emitters.
+- `./progress-sink-rendering.md` — gated structured-log progress rendering.
+- `./config-safe-editing.md` — identity-CAS config upserts, fail-closed links.
+- `./activation-transaction-staging.md` — stage/validate/finalize binary replacement.
+- `./activation-guard-diagnostics.md` — BUSY-vs-refused remediation-specific messages.
+- `./bootstrap-role-routing.md` — single-classifier argv role routing.
+- `./bootstrap-launch-spec.md` — detached non-inheriting daemon spawn specs.
+- `./cross-repo-bidirectional-edges.md` — caller↔handler edges across two DBs without half-links.
+- `./multi-project-guard-ordering.md` — sorted multi-project lease acquisition with cancel checks.
+- `./index-root-safety.md` — overbroad-root refusal + allowed-root gates.
+- `./eviction-case-matrix.md` — four-case store cache eviction pins.
+
+Daemon & coordination
+- `./project-lock-two-key.md` — SH-set + EX-member per-project serialization.
+- `./version-cohort-exact-build.md` — byte-fingerprint admission cohorts.
+- `./build-fingerprint-capture.md` — capture-once executable hashing.
+- `./rendezvous-key-stability.md` — product-domain endpoint naming inversion.
+- `./cohort-cache-fingerprint-split.md` — wire vs data-domain identity layering.
+- `./cohort-startup-lifetime-split.md` — purpose-per-lock-file discipline.
+- `./cohort-mutation-barrier.md` — intent→admission→probe quiesce barriers.
+- `./conflict-record-population.md` — populate-first per-cause conflict records.
+- `./conflict-log-rotation.md` — durable private rotating conflict journals.
+- `./daemon-job-serialization.md` — scoped job FSMs with admission staleness checks.
+- `./daemon-application-job-fsm.md` — subscribe/own/terminal job lifecycle.
+- `./daemon-ipc-endpoint-security.md` — OS-scoped endpoints + anchor/temp-link publication.
+- `./windows-nonce-record.md` — canonical nonce artifacts where sockets can't hold identity.
+- `./ipc-probe-fail-closed.md` — refused-means-active liveness probes.
+- `./ipc-framing-discipline.md` — validate-then-allocate length-prefix framing.
+- `./frame-op-codes.md` — exact-layout op framing with unidentified-connection caps.
+- `./frozen-rendezvous-wire.md` — generation-zero stable envelopes + out-of-band ABIs.
+- `./hello-exchange-encode.md` — fixed-frame strict handshake encoders.
+- `./activation-shutdown-protocol.md` — cross-version escape protocols sharing the frozen header.
+- `./runtime-client-wait-semantics.md` — WAIT_FOREVER sentinels with interrupt handles.
+- `./runtime-client-leases.md` — lease-bundled spawn-free runtime layering.
+- `./connect-result-layering.md` — transport×policy×payload result structs.
+- `./daemon-stop-drain.md` — peer-verified control frames, self-excluding snapshots.
+- `./daemon-http-host-reconciliation.md` — reconciled adoption + refusal-as-result hosts.
+- `./host-reconcile-test-seams.md` — decision-injection lifecycle testing.
+- `./host-lifecycle-states.md` — prepare/reconcile/refuse/terminate state machines.
+- `./daemon-frontend-stdio-bridge.md` — strict-shape notifications + lossless backpressure.
+- `./stdio-buffering-hang.md` — FILE*-vs-poll drain-or-block bug class.
+- `./overflow-fixture-design.md` — precondition-satisfying bounds-test fixtures.
+
+## Capsule map
+- **Store open & integrity** — `query-open-immutable-fallback`: query-only opens never mutate; `wal-pragma-ladder`: busy_timeout/WAL/synchronous ladder with SIGBUS guard; `integrity-verdict-quarantine` + `integrity-verdict-three-way`: HEALTHY/CORRUPT/TRANSIENT verdict taxonomy pinned per class; `store-resolve-ladder`: cache → guarded-verdict → internal-name scan; `rowscan-error-discipline`: terminal DONE checks; `cached-statement-release`: reset-before-park; `passive-checkpoint-policy`: mode-appropriate WAL checkpoints; `bulk-write-wal-invariants`: relax synchronous, never journal_mode; `store-transaction-trio`: BEGIN IMMEDIATE contract; `store-idle-release`: TTL release + pristine valve; `store-swap-visibility`: handle-staleness detection; `eviction-case-matrix`: four eviction pins.
+- **Nodes & queries** — `node-qn-identity`: (project, qn) upsert identity + cascade; `batch-edge-upsert`: prepared UNIQUE-coalescing batches; `qn-suffix-lookup` + `batch-qn-resolution` + `node-overlap-lookup`: lookup primitives; `multitype-bfs` + `bfs-shortest-path-cte`: traversals with provenance and loop guards; `pagination-total-order` + `degree-filter-sql` + `entry-point-exclusion` + `like-hint-prefilter` + `search-label-filters` + `file-pattern-substring` + `empty-filter-omission` + `case-folding-boundary` + `traverse-then-slice` + `vector-search-int8-udf` + `camel-split-fts` + `fts-rebuild-fallback`: search machinery; `vocabulary-drift-guards`: C↔SQL vocabulary consistency tests; `schema-as-data` + `architecture-aspects-rollup` + `architecture-orientation-endpoint` + `louvain-clustering` + `scc-cycle-aspect` + `search-code-literal-floor` + `project-listing-shadows` + `index-status-dual-state` + `dump-project-filter` + `store-restore-copy` + `url-path-edge-lookup` + `node-degree-semantics` + `generation-cursor-staleness`: introspection surfaces.
+- **Publish pipeline** — `mkstemp-staging-security`: unpredictable exclusive staging; `seal-for-atomic-publish`: WAL removal + DELETE mode + TRUNCATE checkpoint; `publish-destination-races`: existence-delta abort + sidecar veto; `quarantine-naming-protocol`: `.corrupt.N` candidate scan with rollback; `quarantine-snapshot-discipline`: snapshot-verify-delete db+wal; `adr-capture-before-rebuild`: NOT_FOUND-vs-error separation; `adr-section-merge`: closed-vocabulary section merge; `artifact-roundtrip`: manifest-gated zstd exchange; `dump-verify-floors`: floor/ratio verification.
+- **Incremental & passes** — `closure-repair-routing`: NOOP/repair/full ladder with budget fallbacks; `incremental-route-observability`: compile-time seam atoms; `incremental-accuracy-parity`: ±2 per-type parity; `file-hash-detection`: hash-authoritative change; `dependent-files-closure`: filtered reverse deps; `lsp-surface-codec`: body/signature edit encoding; `watcher-baseline-discipline`: success-committed baselines; `cross-repo-bidirectional-edges` + `edge-props-commutative-merge` + `ac-lz4-batch-scan` + `cypher-parse-boundary` + `cypher-execution-deadline` + `cypher-crossjoin-guards` + `ignore-precedence-negation` + `project-name-derivation` + `invalid-name-litter-guard` + `multi-project-guard-ordering` + `index-root-safety` + `source-lossy-utf8`: pass-level contracts.
+- **MCP surface** — `toon-token-frugal-emission` + `toon-quoting-grammar` + `format-duality-contract`: token-frugal dual-format emission; `cell-utf8-sanitization`: per-cell UTF-8; `snippet-context-bomb-guard` + `snippet-resolution-ladder`: capped disclosed-tier snippets; `tools-list-pagination` + `tool-profile-allowlist` + `tool-annotations-contract`: catalog shape; `cancellation-scoping` + `string-id-passthrough`: request correlation; `envelope-duplication-gate` + `lean-defaults-contract` + `numeric-arg-honesty` + `postfilter-total-consistency`: response honesty properties; `tail-resolution-convenience` + `minhop-trace-union` + `strategy-class-closure` + `depth-clamp-policy` + `hunk-scoped-impact-seeds` + `impact-summary-hops` + `trace-ingest-helpers` + `workflow-prompts-surface`: tool behaviors.
+- **Agent integration** — `hook-augment-never-deny` + `hook-conflict-ownership`: hooks that can never block; `ui-rpc-readonly-gate`: browser-safe RPC; `agent-client-profiles` + `agent-profile-renderers`: table-driven onboarding; `progress-sink-rendering`: gated progress; `config-safe-editing` + `activation-transaction-staging` + `activation-guard-diagnostics`: safe self-installation; `bootstrap-role-routing` + `bootstrap-launch-spec`: role dispatch.
+- **Daemon coordination** — `project-lock-two-key` + `version-cohort-exact-build` + `build-fingerprint-capture`: identity and locking primitives; `rendezvous-key-stability` + `cohort-cache-fingerprint-split` + `cohort-startup-lifetime-split` + `cohort-mutation-barrier`: cohort protocol layers; `conflict-record-population` + `conflict-log-rotation`: diagnosable conflicts; `daemon-job-serialization` + `daemon-application-job-fsm`: job FSMs; `daemon-ipc-endpoint-security` + `windows-nonce-record` + `ipc-probe-fail-closed` + `ipc-framing-discipline` + `frame-op-codes`: transport security; `frozen-rendezvous-wire` + `hello-exchange-encode` + `activation-shutdown-protocol` + `runtime-client-wait-semantics` + `runtime-client-leases` + `connect-result-layering`: wire protocol; `daemon-stop-drain` + `daemon-http-host-reconciliation` + `host-reconcile-test-seams` + `host-lifecycle-states` + `daemon-frontend-stdio-bridge` + `stdio-buffering-hang` + `overflow-fixture-design`: host lifecycle and its testing.
+- **Extraction passes** — `route-canon-cross-framework` + `decorator-route-plane` + `service-pattern-classification` + `tests-edge-derivation` + `config-link-strategies` + `dbt-lineage-extraction` + `k8s-manifest-extraction` + `env-url-scanner`: edge planes; `registry-resolution-ladder` + `path-alias-scoped-resolution`: name binding; `minhash-lsh-clones` + `change-coupling-mining` + `transitive-loop-depth` + `semantic-eleven-signal-blend`: derived intelligence; `language-disambiguation` + `glr-depth-cap`: language handling; `parse-partial-capture` + `coverage-honesty-contract` + `coverage-replace-transaction`: coverage honesty; `worker-pool-deep-stacks` + `parallel-parity-harness` + `env-access-convergence-probe` + `language-contract-suite` + `scale-tier-contracts` + `scale-fit-regression-gate` + `crash-containment-fixture`: execution and verification strategy.
+- **Foundation primitives** — `allocator-binding-order` + `memory-budget-resolver` + `memory-phase-accounting` + `arena-intern-discipline` + `arena-eager-commit-gating` + `arena-census-diagnostics` + `page-cache-slab`: memory; `private-lock-fd-discipline` + `lock-registry-turn-rw` + `lock-cancel-no-barge` + `lock-registry-retirement` + `project-lock-two-key`: locking; `subprocess-outcome-classification` + `crash-durable-worker-log` + `diagnostics-output-safety` + `index-supervisor-worker` + `watcher-adaptive-polling` + `watcher-git-probe-budgets`: process supervision; `yaml-subset-parser` + `sanitizer-aware-budgets` + `shell-arg-validation` + `sqlite-authorizer-defense` + `vendored-integrity-manifest` + `git-canonical-root` + `userconfig-extension-mapping` + `auto-index-gating` + `session-root-detection` + `project-name-derivation` + `project-upsert-generation`: platform glue.
+
+## Extending the foundation
+Add one `./<seam>.md` capsule for one graph-selected, source-confirmed porting question. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf. Rich remaining seams for future passes: `src/cli/cli.c` install/uninstall flows beyond activation (12.8k lines), `src/ui/httpd.c` parser internals, `internal/cbm/sqlite_writer.c` dump formats, `src/pipeline/pass_lsp_cross.c` language-server plumbing, `src/cypher/cypher.c` full grammar surface, Windows-specific paths in `src/foundation/platform.c`.
+
+## Provenance
+codebase-memory-mcp (MIT), `main@010569fa6ce1bc5d6430f858129243ea1a2e3fd5` (live HEAD verified 2026-08-24); Codebase Memory project `ext-codebase-memory-mcp` (root `/mnt/hdd/utopia/inspo/external/codebase-memory-mcp`, branch main, ready FULL, 23,739n/134,638e, head==base 010569fa). Coverage caveat: parse_partial spans exist in ~68 files (mostly string-heavy C regions tree-sitter recovers around); none of the ranges cited by these capsules fall inside flagged spans — verify with `check_index_coverage` if porting from flagged files (`src/cli/cli.c`, `src/daemon/ipc.c`, `src/foundation/private_file_lock.c` carry wide spans).
+
+## Full view (memory graph)
+Revalidate `ext-codebase-memory-mcp` before porting: run `index_status`, `check_index_coverage`, `search_graph`, `trace_path`, and `get_code_snippet`. Record the graph root, branch, commit, mode, node/edge counts, freshness, and any coverage caveats; source and direct tests decide shipped claims. Direct suite executed at this pin via `make -f Makefile.cbm build/c/test-runner SANITIZE= GCC_ONLY_FLAGS="-Wno-error=free-nonheap-object ..."` then `./build/c/test-runner <suites>`: ~3,040 passing across 36 suites (18 skips; env-sensitive failures recorded honestly in the work record: cli ×10 hook-integration, limits ×1, mem_profile ×1).
+
+## Boundaries
+Adopt the pure contracts: WAL/journal discipline, seal-then-rename publication, generation cursors, SCANCHK/reset-before-park statement rules, TOON quoting/blocklists, closed strategy vocabularies, frozen wire envelopes, cohort admission, quiet-timeout hang classification, fail-open hooks, hash-authoritative change detection. Adapt SQLite spellings, pragma values, thresholds (LSH bands, coupling floors, poll intervals), file layouts, and vendor payloads to your host. Omit codebase-memory-mcp-specific surfaces: the embedded 3D graph UI bundle, the specific MCP tool catalog names, per-agent installer tables you don't target, and the vendored tree-sitter grammars.
+
+## Reference-file inventory
+
+Every preserved capsule/reference file in this foundation:
+
+- [`ac-lz4-batch-scan.md`](./ac-lz4-batch-scan.md)
+- [`activation-guard-diagnostics.md`](./activation-guard-diagnostics.md)
+- [`activation-shutdown-protocol.md`](./activation-shutdown-protocol.md)
+- [`activation-transaction-staging.md`](./activation-transaction-staging.md)
+- [`adr-capture-before-rebuild.md`](./adr-capture-before-rebuild.md)
+- [`adr-section-merge.md`](./adr-section-merge.md)
+- [`agent-client-profiles.md`](./agent-client-profiles.md)
+- [`agent-profile-renderers.md`](./agent-profile-renderers.md)
+- [`allocator-binding-order.md`](./allocator-binding-order.md)
+- [`architecture-aspects-rollup.md`](./architecture-aspects-rollup.md)
+- [`architecture-orientation-endpoint.md`](./architecture-orientation-endpoint.md)
+- [`arena-census-diagnostics.md`](./arena-census-diagnostics.md)
+- [`arena-eager-commit-gating.md`](./arena-eager-commit-gating.md)
+- [`arena-intern-discipline.md`](./arena-intern-discipline.md)
+- [`artifact-roundtrip.md`](./artifact-roundtrip.md)
+- [`auto-index-gating.md`](./auto-index-gating.md)
+- [`batch-edge-upsert.md`](./batch-edge-upsert.md)
+- [`batch-qn-resolution.md`](./batch-qn-resolution.md)
+- [`bfs-shortest-path-cte.md`](./bfs-shortest-path-cte.md)
+- [`bootstrap-launch-spec.md`](./bootstrap-launch-spec.md)
+- [`bootstrap-role-routing.md`](./bootstrap-role-routing.md)
+- [`build-fingerprint-capture.md`](./build-fingerprint-capture.md)
+- [`bulk-write-wal-invariants.md`](./bulk-write-wal-invariants.md)
+- [`cached-statement-release.md`](./cached-statement-release.md)
+- [`camel-split-fts.md`](./camel-split-fts.md)
+- [`cancellation-scoping.md`](./cancellation-scoping.md)
+- [`case-folding-boundary.md`](./case-folding-boundary.md)
+- [`cell-utf8-sanitization.md`](./cell-utf8-sanitization.md)
+- [`change-coupling-mining.md`](./change-coupling-mining.md)
+- [`closure-repair-routing.md`](./closure-repair-routing.md)
+- [`cohort-cache-fingerprint-split.md`](./cohort-cache-fingerprint-split.md)
+- [`cohort-mutation-barrier.md`](./cohort-mutation-barrier.md)
+- [`cohort-startup-lifetime-split.md`](./cohort-startup-lifetime-split.md)
+- [`config-link-strategies.md`](./config-link-strategies.md)
+- [`config-safe-editing.md`](./config-safe-editing.md)
+- [`conflict-log-rotation.md`](./conflict-log-rotation.md)
+- [`conflict-record-population.md`](./conflict-record-population.md)
+- [`connect-result-layering.md`](./connect-result-layering.md)
+- [`coverage-honesty-contract.md`](./coverage-honesty-contract.md)
+- [`coverage-replace-transaction.md`](./coverage-replace-transaction.md)
+- [`crash-containment-fixture.md`](./crash-containment-fixture.md)
+- [`crash-durable-worker-log.md`](./crash-durable-worker-log.md)
+- [`cross-repo-bidirectional-edges.md`](./cross-repo-bidirectional-edges.md)
+- [`cypher-crossjoin-guards.md`](./cypher-crossjoin-guards.md)
+- [`cypher-execution-deadline.md`](./cypher-execution-deadline.md)
+- [`cypher-parse-boundary.md`](./cypher-parse-boundary.md)
+- [`daemon-application-job-fsm.md`](./daemon-application-job-fsm.md)
+- [`daemon-frontend-stdio-bridge.md`](./daemon-frontend-stdio-bridge.md)
+- [`daemon-http-host-reconciliation.md`](./daemon-http-host-reconciliation.md)
+- [`daemon-ipc-endpoint-security.md`](./daemon-ipc-endpoint-security.md)
+- [`daemon-job-serialization.md`](./daemon-job-serialization.md)
+- [`daemon-stop-drain.md`](./daemon-stop-drain.md)
+- [`dbt-lineage-extraction.md`](./dbt-lineage-extraction.md)
+- [`decorator-route-plane.md`](./decorator-route-plane.md)
+- [`degree-filter-sql.md`](./degree-filter-sql.md)
+- [`dependent-files-closure.md`](./dependent-files-closure.md)
+- [`depth-clamp-policy.md`](./depth-clamp-policy.md)
+- [`diagnostics-output-safety.md`](./diagnostics-output-safety.md)
+- [`dump-project-filter.md`](./dump-project-filter.md)
+- [`dump-verify-floors.md`](./dump-verify-floors.md)
+- [`edge-props-commutative-merge.md`](./edge-props-commutative-merge.md)
+- [`empty-filter-omission.md`](./empty-filter-omission.md)
+- [`entry-point-exclusion.md`](./entry-point-exclusion.md)
+- [`env-access-convergence-probe.md`](./env-access-convergence-probe.md)
+- [`env-url-scanner.md`](./env-url-scanner.md)
+- [`envelope-duplication-gate.md`](./envelope-duplication-gate.md)
+- [`eviction-case-matrix.md`](./eviction-case-matrix.md)
+- [`file-hash-detection.md`](./file-hash-detection.md)
+- [`file-pattern-substring.md`](./file-pattern-substring.md)
+- [`format-duality-contract.md`](./format-duality-contract.md)
+- [`frame-op-codes.md`](./frame-op-codes.md)
+- [`frozen-rendezvous-wire.md`](./frozen-rendezvous-wire.md)
+- [`fts-rebuild-fallback.md`](./fts-rebuild-fallback.md)
+- [`generation-cursor-staleness.md`](./generation-cursor-staleness.md)
+- [`git-canonical-root.md`](./git-canonical-root.md)
+- [`glr-depth-cap.md`](./glr-depth-cap.md)
+- [`hello-exchange-encode.md`](./hello-exchange-encode.md)
+- [`hook-augment-never-deny.md`](./hook-augment-never-deny.md)
+- [`hook-conflict-ownership.md`](./hook-conflict-ownership.md)
+- [`host-lifecycle-states.md`](./host-lifecycle-states.md)
+- [`host-reconcile-test-seams.md`](./host-reconcile-test-seams.md)
+- [`hunk-scoped-impact-seeds.md`](./hunk-scoped-impact-seeds.md)
+- [`ignore-precedence-negation.md`](./ignore-precedence-negation.md)
+- [`impact-summary-hops.md`](./impact-summary-hops.md)
+- [`incremental-accuracy-parity.md`](./incremental-accuracy-parity.md)
+- [`incremental-route-observability.md`](./incremental-route-observability.md)
+- [`index-root-safety.md`](./index-root-safety.md)
+- [`index-status-dual-state.md`](./index-status-dual-state.md)
+- [`index-supervisor-worker.md`](./index-supervisor-worker.md)
+- [`integrity-verdict-quarantine.md`](./integrity-verdict-quarantine.md)
+- [`integrity-verdict-three-way.md`](./integrity-verdict-three-way.md)
+- [`invalid-name-litter-guard.md`](./invalid-name-litter-guard.md)
+- [`ipc-framing-discipline.md`](./ipc-framing-discipline.md)
+- [`ipc-probe-fail-closed.md`](./ipc-probe-fail-closed.md)
+- [`k8s-manifest-extraction.md`](./k8s-manifest-extraction.md)
+- [`language-contract-suite.md`](./language-contract-suite.md)
+- [`language-disambiguation.md`](./language-disambiguation.md)
+- [`lean-defaults-contract.md`](./lean-defaults-contract.md)
+- [`like-hint-prefilter.md`](./like-hint-prefilter.md)
+- [`lock-cancel-no-barge.md`](./lock-cancel-no-barge.md)
+- [`lock-registry-retirement.md`](./lock-registry-retirement.md)
+- [`lock-registry-turn-rw.md`](./lock-registry-turn-rw.md)
+- [`louvain-clustering.md`](./louvain-clustering.md)
+- [`lsp-surface-codec.md`](./lsp-surface-codec.md)
+- [`memory-budget-resolver.md`](./memory-budget-resolver.md)
+- [`memory-phase-accounting.md`](./memory-phase-accounting.md)
+- [`minhash-lsh-clones.md`](./minhash-lsh-clones.md)
+- [`minhop-trace-union.md`](./minhop-trace-union.md)
+- [`mkstemp-staging-security.md`](./mkstemp-staging-security.md)
+- [`multi-project-guard-ordering.md`](./multi-project-guard-ordering.md)
+- [`multitype-bfs.md`](./multitype-bfs.md)
+- [`node-degree-semantics.md`](./node-degree-semantics.md)
+- [`node-overlap-lookup.md`](./node-overlap-lookup.md)
+- [`node-qn-identity.md`](./node-qn-identity.md)
+- [`numeric-arg-honesty.md`](./numeric-arg-honesty.md)
+- [`overflow-fixture-design.md`](./overflow-fixture-design.md)
+- [`page-cache-slab.md`](./page-cache-slab.md)
+- [`pagination-total-order.md`](./pagination-total-order.md)
+- [`parallel-parity-harness.md`](./parallel-parity-harness.md)
+- [`parse-partial-capture.md`](./parse-partial-capture.md)
+- [`passive-checkpoint-policy.md`](./passive-checkpoint-policy.md)
+- [`path-alias-scoped-resolution.md`](./path-alias-scoped-resolution.md)
+- [`postfilter-total-consistency.md`](./postfilter-total-consistency.md)
+- [`private-lock-fd-discipline.md`](./private-lock-fd-discipline.md)
+- [`progress-sink-rendering.md`](./progress-sink-rendering.md)
+- [`project-listing-shadows.md`](./project-listing-shadows.md)
+- [`project-lock-two-key.md`](./project-lock-two-key.md)
+- [`project-name-derivation.md`](./project-name-derivation.md)
+- [`project-upsert-generation.md`](./project-upsert-generation.md)
+- [`publish-destination-races.md`](./publish-destination-races.md)
+- [`qn-suffix-lookup.md`](./qn-suffix-lookup.md)
+- [`quarantine-naming-protocol.md`](./quarantine-naming-protocol.md)
+- [`quarantine-snapshot-discipline.md`](./quarantine-snapshot-discipline.md)
+- [`query-open-immutable-fallback.md`](./query-open-immutable-fallback.md)
+- [`registry-resolution-ladder.md`](./registry-resolution-ladder.md)
+- [`rendezvous-key-stability.md`](./rendezvous-key-stability.md)
+- [`route-canon-cross-framework.md`](./route-canon-cross-framework.md)
+- [`rowscan-error-discipline.md`](./rowscan-error-discipline.md)
+- [`runtime-client-leases.md`](./runtime-client-leases.md)
+- [`runtime-client-wait-semantics.md`](./runtime-client-wait-semantics.md)
+- [`sanitizer-aware-budgets.md`](./sanitizer-aware-budgets.md)
+- [`scale-fit-regression-gate.md`](./scale-fit-regression-gate.md)
+- [`scale-tier-contracts.md`](./scale-tier-contracts.md)
+- [`scc-cycle-aspect.md`](./scc-cycle-aspect.md)
+- [`schema-as-data.md`](./schema-as-data.md)
+- [`seal-for-atomic-publish.md`](./seal-for-atomic-publish.md)
+- [`search-code-literal-floor.md`](./search-code-literal-floor.md)
+- [`search-label-filters.md`](./search-label-filters.md)
+- [`semantic-eleven-signal-blend.md`](./semantic-eleven-signal-blend.md)
+- [`service-pattern-classification.md`](./service-pattern-classification.md)
+- [`session-root-detection.md`](./session-root-detection.md)
+- [`shell-arg-validation.md`](./shell-arg-validation.md)
+- [`snippet-context-bomb-guard.md`](./snippet-context-bomb-guard.md)
+- [`snippet-resolution-ladder.md`](./snippet-resolution-ladder.md)
+- [`source-lossy-utf8.md`](./source-lossy-utf8.md)
+- [`sqlite-authorizer-defense.md`](./sqlite-authorizer-defense.md)
+- [`stdio-buffering-hang.md`](./stdio-buffering-hang.md)
+- [`store-idle-release.md`](./store-idle-release.md)
+- [`store-resolve-ladder.md`](./store-resolve-ladder.md)
+- [`store-restore-copy.md`](./store-restore-copy.md)
+- [`store-swap-visibility.md`](./store-swap-visibility.md)
+- [`store-transaction-trio.md`](./store-transaction-trio.md)
+- [`strategy-class-closure.md`](./strategy-class-closure.md)
+- [`string-id-passthrough.md`](./string-id-passthrough.md)
+- [`subprocess-outcome-classification.md`](./subprocess-outcome-classification.md)
+- [`tail-resolution-convenience.md`](./tail-resolution-convenience.md)
+- [`tests-edge-derivation.md`](./tests-edge-derivation.md)
+- [`tool-annotations-contract.md`](./tool-annotations-contract.md)
+- [`tool-profile-allowlist.md`](./tool-profile-allowlist.md)
+- [`tools-list-pagination.md`](./tools-list-pagination.md)
+- [`toon-quoting-grammar.md`](./toon-quoting-grammar.md)
+- [`toon-token-frugal-emission.md`](./toon-token-frugal-emission.md)
+- [`trace-ingest-helpers.md`](./trace-ingest-helpers.md)
+- [`transitive-loop-depth.md`](./transitive-loop-depth.md)
+- [`traverse-then-slice.md`](./traverse-then-slice.md)
+- [`ui-rpc-readonly-gate.md`](./ui-rpc-readonly-gate.md)
+- [`url-path-edge-lookup.md`](./url-path-edge-lookup.md)
+- [`userconfig-extension-mapping.md`](./userconfig-extension-mapping.md)
+- [`vector-search-int8-udf.md`](./vector-search-int8-udf.md)
+- [`vendored-integrity-manifest.md`](./vendored-integrity-manifest.md)
+- [`version-cohort-exact-build.md`](./version-cohort-exact-build.md)
+- [`vocabulary-drift-guards.md`](./vocabulary-drift-guards.md)
+- [`wal-pragma-ladder.md`](./wal-pragma-ladder.md)
+- [`watcher-adaptive-polling.md`](./watcher-adaptive-polling.md)
+- [`watcher-baseline-discipline.md`](./watcher-baseline-discipline.md)
+- [`watcher-git-probe-budgets.md`](./watcher-git-probe-budgets.md)
+- [`windows-nonce-record.md`](./windows-nonce-record.md)
+- [`worker-pool-deep-stacks.md`](./worker-pool-deep-stacks.md)
+- [`workflow-prompts-surface.md`](./workflow-prompts-surface.md)
+- [`yaml-subset-parser.md`](./yaml-subset-parser.md)

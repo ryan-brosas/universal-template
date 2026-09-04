@@ -9,7 +9,7 @@
 | [Effective Dart](https://dart.dev/effective-dart) — Style, Documentation, Usage, Design (primary) | UpperCamelCase types; lowerCamelCase identifiers; snake_case files/packages; dart format; 80 cols; /// docs; null-safety idioms; collection literals; async/await; typed public API; class modifiers; ==/hashCode |
 | [Dart linter rules](https://dart.dev/tools/linter-rules) (secondary) | mechanical enforcement via `analysis_options.yaml` / `dart analyze` |
 
-**Not duplicated here:** Every individual linter rule — enable project-relevant rules from Effective Dart links. Flutter widget layout — use stack capsules in `foundation-pack/`.
+**Not duplicated here:** Every individual linter rule — enable project-relevant rules from Effective Dart links. Flutter widget layout — use stack capsules in `skills/*-foundation`.
 
 ## Mental model
 

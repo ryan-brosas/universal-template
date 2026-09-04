@@ -1,0 +1,445 @@
+<!-- Preserved from the pre-foundation-skill-v1 loader. Detail remains historical and revision-pinned. -->
+
+# Oh My Pi: Agent Harness Foundation
+
+## Use this for
+Agent-harness work: provider loops, queue-owning facades, compaction, replay, plan handoff, durable workers, task fanout, experiments, advisor delivery. Code and tests are ground truth; references carry decisive excerpts plus live Codebase Memory retrieval calls.
+
+## Load the matching source dump
+- `./agent-loop.md` — non-consuming steering, tool-result coercion, completed-pair retention.
+- `./agent-loop-tool-batch.md` — synthetic pairing for never-executed calls, transient-turn recovery, batch skip/concurrency gates.
+- `./agent-wrapper.md` — queue ownership and empty-transcript continuation.
+- `./compaction-suite.md` — legal cuts, cache-aware prune/shake, protected output.
+- `./replay-and-occupancy.md` — honest occupancy and portable fallback for native replay.
+- `./prewalk-and-plan-handoff.md` — plan-to-implementation handoff gated on a durable write boundary.
+- `./durable-workers.md` — parent-scoped worker session persistence and teardown-safe records.
+- `./fanout-and-budgets.md` — ordered fanout, cancellation-safe concurrency, soft-to-hard execution budgets.
+- `./isolation-and-provider-permits.md` — worktree isolation and narrow provider concurrency permits.
+- `./experiment-control.md` — baseline branch isolation, branch-bound resume, durable run ledgers.
+- `./hashline.md` — line-anchored patch language and applier; pure materialize-then-syntax-veto apply pipeline.
+- `./mnemopi.md` — bank/session-scoped persistent memory facade and linear-vs-polyphonic recall orchestration.
+- `./stats.md` — honest usage windows and pure user-metric extraction that degrade instead of failing.
+- `./hashline-fs-stream.md` — pluggable Filesystem seam, numbered-line streaming, fs-mediated snapshot/recovery keys.
+- `./mnemonic-beam.md` — recall signal fusion, tier fallbacks, and consolidate/sleep compaction.
+- `./stats-sync-worker.md` — single-writer ingestion lock, worker grabs, embedded dashboard archive magic.
+- `./hashline-parser-seams.md` — lexical section splitter, lenient ranges, strict anchors, snapshot cache.
+- `./mnemonic-embeddings.md` — four-stage provider chain, guarded model heal, runtime install, host LLM bridge.
+- `./stats-db.md` — WAL init + idempotent migrations, per-file offsets, bucketed series, usage windows.
+- `./hashline-normalize-prefixes.md` — text-shape round-trip (CRLF/BOM) and echoed-prefix stripping before tokenizing.
+- `./mnemonic-binary-vectors.md` — int8/bit binary store, Hamming+cosine, triples-split migration guard.
+- `./stats-gain-dashboard.md` — savings ledger aggregation with worktree-root folding and zero-record tolerance.
+- `./hashline-clipboard-syntax.md` — clipboard register resolution and parser-backed structural proof boundaries.
+- `./mnemonic-query-cache.md` — tiered recall cache thresholds, SQLite persistence, and zero-safe cost logging.
+- `./stats-server-port.md` — dashboard route behavior, embedded client selection, and safe port reuse/reclamation.
+- `./hashline-format-recovery.md` — format grammar, content-derived identity, and anchor-proved recovery.
+- `./mnemonic-temporal-gates.md` — deterministic temporal parser and host/env recall feature gates.
+- `./stats-provider-client.md` — bounded abortable dashboard data client over typed API endpoints.
+- `./advice-delivery.md` — severity-based steer/aside/preserve routing to a live agent.
+- `./hashline-executor.md` — token-to-edit state machine: deferred flush, lenient repair warnings, ordered indices.
+- `./hashline-mismatch.md` — stale-read rejection taxonomy: drifted vs fabricated snapshot tags as actionable recovery.
+- `./hashline-stream.md` — bounded-chunk numbered-line streaming over byte inputs without materializing files.
+- `./hashline-patcher.md` — prepare/commit orchestrator: preflight-everything batches, disk-truth snapshot tags, seen-line guard, landed-prefix failure reports.
+- `./hashline-diff-preview.md` — signed numbered-diff renumbered into a post-edit preview a follow-up edit can anchor on.
+- `./hashline-noop-loop-guard.md` — byte-identical no-op edit loop breaker: soft hint first, then a thrown tool error.
+- `./edit-snapshot-budget.md` — shared-budget pruning of edit-tool oldText/newText snapshots with strip-and-mark semantics.
+- `./snapcompact-archive.md` — vision-compaction orchestration: re-render-from-kept-source, foveated HQ/LQ/HQ imaged middle, oldest-slice drop.
+- `./snapcompact-shape-billing.md` — provider-aware frame shape + per-frame token billing (billing by API, geometry by model id).
+- `./snapcompact-serialization.md` — `¶user/think/ai/call:` transcript with tool-result-into-call-scope merging and intent-as-comment.
+- `./snapcompact-normalization.md` — font-aware folding, whitespace collapse, word-wrap, and cell-grid pagination for bitmap rendering.
+- `./collab-wire-protocol.md` — dependency-free live-session collab wire contract: message/entry/event/frame shapes, envelope+link split, version-reject-at-hello.
+- `./bench-run-store.md` — SQLite mirror of filesystem-truth runs: WAL recovery-lock retry, phantom-trial pruning, freshness-based orphan inference.
+- `./bench-experiment-projection.md` — decided-population arm stats and sibling-calibrated (Rasch) final-pass projection; re-run trial merge precedence.
+- `./bench-live-cost-probe.md` — incremental JSONL cost probe over appending transcripts: byte cursor, partial-line carry, oversized-line discard.
+- `./bench-resume-recovery.md` — rebuild an exact job invocation from disk: config snapshot → launch-record ladder, recorded-backend override, default-filter union.
+- `./bench-managed-children.md` — manager child lifecycle: detached spawn, TERM→KILL cancel ladder, pid-probe liveness, dual-layer delete, hot-reload retirement.
+- `./bench-adapter-normalization.md` — one uniform snapshot schema over heterogeneous benchmark artifacts via declared metric definitions + per-kind readers.
+- `./bench-arm-inheritance.md` — comparable-arm launches that inherit dataset/sample/scale from the best-recorded sibling and diff only treatment knobs.
+- `./bench-best-of-n.md` — best-run selection ordering (success > non-ghost > cheaper > earlier) with ghost/transport-failure denominator exclusion.
+- `./bench-retry-ladder.md` — timeout/no-op/provider-failure retries that don't consume attempt slots, with telemetry-stuffed follow-up context.
+- `./bench-token-accounting.md` — cross-provider comparable token metrics: sum cache buckets into prompt cost, subtract per-call system overhead, clamp deltas.
+- `./bench-early-stop.md` — abort-on-verified-match machinery: serialized verification chain, single-settle guards, abort-inside-prompt tolerance.
+- `./bench-source-deps-cache.md` — manifest-hash-stamped linux deps tree for containerized TS workspaces: zero rebuild on TS edits, arch-matched installs, shadow mounts.
+- `./bench-gateway-isolation.md` — provider credentials never enter containers: gateway baseUrl rewrite, prefix-allowlisted env forwarding, vmnet bridge forward.
+- `./bench-sse-broadcast.md` — SSE push-on-change dashboards: serialize-compare ticks, immediate initial frame, enqueue-failure eviction, retire-before-replace.
+- `./bench-trace-tail.md` — bounded trace tail reads: fixed-byte window with torn-line drop, locator containment under the job root, per-format normalization.
+- `./bench-guided-synthesis.md` — guided-mode patch synthesis: compile expected-vs-actual into the agent's edit grammar with BOF/EOF anchors and complexity guards.
+- `./bench-edit-taxonomy.md` — edit-failure classification ladder with payload-shape fallback, autocorrect accounting, and attempted-op telemetry.
+- `./bench-docker-cleanup.md` — targeted Docker reclamation after crashes: two-signal project targeting, state filtering, active-project network protection.
+- `./bench-trial-parsing.md` — native result-file parsing contract: usage/reward fallback chains, epsilon reward compare, exception-beats-reward precedence.
+- `./bench-live-dashboard.md` — TTY monitor around a long child: signal-forward-not-die, adaptive render cadence, total finally restoration.
+- `./bench-edit-agent-loop.md` — fixture-isolated benchmarked turn-loop: one client facade over in-process/RPC, env save/restore, JSONL evidence logs.
+- `./bench-edit-verification.md` — format-normalized output equivalence: whitespace-restore-before-format, blank-line-sensitive compare, indent score.
+- `./bench-unique-hunk-rendering.md` — prompt blocks that admit exactly one byte-exact answer: placements-from-diff, merge-nearby, re-solve-as-proof.
+- `./bench-ast-mutation-framework.md` — AST-collect → mutate-node → byte-range source splice with dual-parser fallback and re-parse validity gate.
+- `./bench-in-process-client.md` — warm-pool shared infra (auth/model) with per-client registry isolation for concurrent in-process sessions.
+- `./catalog-family-predicates.md` — namespace-agnostic family predicates: version floors over allowlists, name-substring matching, coarse family tokens.
+- `./catalog-id-classifier.md` — id → family/kind/version parsing with null-memoizing parsers and precompute-plus-dynamic SemVer.
+- `./catalog-variant-collapse.md` — per-effort sibling wire ids collapsed into one logical model: purity/idempotence, price-homogeneity gate, retired-id reconciliation.
+- `./catalog-thinking-derivation.md` — derive-once thinking ladders (per-host dialects, mandatory-reasoning floors) + field-read runtime clamps.
+- `./catalog-host-classification.md` — provider-or-URL host classes with substring-default/strict-opt-in split and bounded verdict cache.
+- `./catalog-provider-priority.md` — config-first provider rank map for same-model tie-breaks.
+- `./catalog-display-name-cleaning.md` — gateway author prefixes and extrinsic tags stripped while variant tags survive.
+- `./catalog-tokenizer-resolution.md` — id-only tokenizer ladder baked at build time with oldest-generation fallback.
+- `./catalog-proxy-reference.md` — reseller id → bundled upstream metadata inheritance via bracket/marker candidate ladders.
+- `./catalog-canonical-coalescing.md` — canonical-id coalescing provenance ladder with poisoning-proof resolution caches.
+- `./catalog-anthropic-compat.md` — signing-endpoint detection, exact-origin OAuth gate, unsigned-thinking replay policy.
+- `./catalog-openai-compat.md` — detect-once wire-quirk flag records with conditional whenThinking variant views.
+- `./catalog-bedrock-compat.md` — model-card-sourced checkpoint presets and reasoning-tiered idle watchdog floors.
+- `./catalog-resolution-merge.md` — static→fallback→cache→dynamic merge ladders, authority-vs-retry split, 4096 sentinel.
+- `./catalog-model-cache.md` — SQLite catalog cache: versioned invalidation-by-delete, header-omission ledgers, quarantine healing, secure_delete.
+- `./catalog-cache-namespacing.md` — credential/endpoint-scoped cache namespaces as the migration mechanism.
+- `./catalog-openai-discovery.md` — bounded /models probes: default deadline, envelope recursion, null-vs-empty contract.
+- `./catalog-codex-wire.md` — ChatGPT-OAuth JWT claim extraction and token-derived residency headers.
+- `./catalog-copilot-wire.md` — Copilot key envelopes, plan-endpoint discovery, version-header host split.
+- `./catalog-client-version-discovery.md` — client-impersonation version tracking: env → silent manifest probe → pinned fallback.
+- `./catalog-image-fetcher-attribution.md` — provider-side image fetcher registry with corroboration flags; attribution-not-auth.
+- `./catalog-fireworks-wire-ids.md` — digit-guarded dot↔p wire codec across models/routers namespaces + Fast serving-path suffix.
+- `./catalog-cursor-proto-discovery.md` — capability truth recovered via signal ladders when a protobuf RPC under-reports.
+- `./catalog-token-costing.md` — threshold-tier pricing and TTL-component cache-write billing with residual fallback.
+- `./auth-resolution-cascade.md` — seven-leg credential precedence and the sticky side effects at each leg boundary.
+- `./auth-oauth-refresh-lease.md` — cross-process refresh: lease acquire/renew, CAS persist, peer-rotation adoption.
+- `./auth-oauth-identity-dedupe.md` — JWT-claim identity keys, org-scoped Anthropic/Codex rows, duplicate pruning on reload.
+- `./auth-usage-ranked-selection.md` — drain-urgency comparator ladder over blocked/plan/boost/hot/measured candidates.
+- `./auth-session-stickiness.md` — durable sticky pins, index re-derivation on restore, warm-window ranking skip.
+- `./auth-scoped-blocks.md` — memory+SQLite backoff blocks with MAX merge, scope keys, corruption latch.
+- `./auth-usage-cache.md` — report cache identity, ±25% TTL jitter, single-flight epoch, last-good vs purge failure contract.
+- `./auth-codex-plan-gating.md` — tri-state plan eligibility, confirm-before-enforce, three-pass degradation.
+- `./auth-definitive-failure-taxonomy.md` — definitive vs transient refresh failures: CAS-disable+tomestone vs 5-min block.
+- `./auth-broker-sentinel.md` — redacted snapshots, `__remote__` sentinel semantics, authoritative-null store hooks.
+- `./auth-bearer-attribution.md` — SHA-256 bearer fingerprint ledgers attributing delayed usage-limit errors to durable rows.
+- `./session-streaming-edit-guard.md` — dual-epoch + promise-identity staleness defense for queued streamed-edit validations, time-sliced scans, reset-before-fan-out ordering.
+- `./session-loop-guards-gemini.md` — Gemini header-runaway abort + two-phase generation-guarded post-idle recovery (discard by timestamp, remind, continue).
+- `./session-title-index.md` — history.db `session_titles` read-through-with-backfill ladder replacing content scans; never-version-someone-else's-db ownership rule.
+- `./session-pins-stable-partition.md` — id-keyed pins file, degrade-to-empty corruption handling, stable pinned-first partition preserving recency.
+- `./bash-user-shell-pty.md` — six-clause PTY eligibility ladder, dual output planes (raw renderer vs sanitized capture), color-restoring env surgery.
+- `./session-payload-413-arbitration.md` — payload-vs-token-overflow flag taxonomy, trusted-gate occupancy arithmetic, dual-flag fallback-chain routing, honest usage-backed dead ends.
+- `./session-unexpected-stop-modes.md` — boolean→enum settings migration with off-preserving semantics; mechanical vs smart detection modes.
+- `./builtins-host-contract.md` — owned Host snapshot, spawn_blocking adapter, help/usage exit split, panic containment at the builtin boundary.
+- `./builtins-stdout-buffering.md` — destination-classified StreamWriter (block for files, line otherwise) and shared-writer `2>&1` ordering.
+- `./builtins-child-env.md` — children inherit shell cwd/env/duplicated stderr and never the TUI's stdio; run_captured ordering.
+- `./builtins-registration-sets.md` — default vs utility vs process builtin sets; shadowing utilities opt-in, destructive rm/mv/ln withholdable.
+- `./builtins-rewrite-argv.md` — pre-clap argv rewrites for GNU/BSD syntax clap cannot model (`head -5`, `cut -d=`, `yes --help me`).
+- `./builtins-duration-quote.md` — GNU interval parsing (inf, zero, saturation) and safe single-quote rebuilding of child command lines.
+- `./builtins-proc-snapshot.md` — one ProcInfo contract over /proc / proc_pidinfo / Toolhelp with start-time identity and pidfd delivery.
+- `./builtins-host-processes.md` — ancestor-immunity chain: presence+age walk, late refusal, inline storage, single-snapshot resolution.
+- `./builtins-proc-match-engine.md` — pgrep/pkill/pidwait shared engine: mode-gated flags, pidfile flock, exit taxonomy, newest/oldest arbitration.
+- `./builtins-kill-semantics.md` — signal grammar incl. SIG-prefix rules, `kill -l 137` round-trip, kill(2) target classification with refusal.
+- `./builtins-timeout-spawn-recorder.md` — configured-signal delivery via SpawnObserver pid/pgid capture, `-k` escalation, 124/125/126/127/137 ladder.
+- `./builtins-nohup-detach.md` — transparent background wrapper: persistence is a background concern handled by session reparenting, not the builtin.
+- `./builtins-sort-external.md` — two-thread chunk/recycle pipeline, compressor probe on shell PATH, join-before-return panic surfacing.
+- `./builtins-xargs-limiters.md` — composable command-size limiters over ARG_MAX−2048−env, six-way exit taxonomy.
+- `./builtins-sponge-soak.md` — soak-before-open delayed destination, sibling-temp permission-preserving atomic rename.
+- `./builtins-wc-fastpaths.md` — stat/splice/read byte-count ladder with partial-count handoff and all-or-nothing SIMD gating.
+- `./builtins-tail-follow.md` — notify backend ladder with ENFILE polling degradation and tailable/orphan/parent watch trichotomy.
+- `./builtins-fd-fastpath.md` — conservative const gate for the buffered fast path; WalkDecision pruning ladder with root suppression.
+- `./builtins-rg-defaults.md` — Host-view stdin-vs-cwd default and root-stripping display paths; dual binary-mode searchers.
+- `./builtins-grep-resolution.md` — resolver-function decomposition over grep-searcher with latest-wins index tracking and JIT probe.
+- `./builtins-ps-parser.md` — one argv walker classifying BSD clusters, long options, bare-word groups, and pid lists.
+- `./builtins-top-sampling.md` — start-time-keyed CPU delta map (PID-recycling guard), zero first sample, BrokenPipe-as-success.
+- `./builtins-stat-bsd-rewrite.md` — detect-then-rewrite BSD invocations to GNU argv before clap parsing.
+- `./builtins-date-gnu-plane.md` — modifier pre-scan, depth-counted comment stripping, military-timezone DayDelta rollovers.
+- `./builtins-rm-guards.md` — guard order before resolve: empty operand cwd hazard, canonicalize-based preserve-root, `.`/`..` refusal.
+- `./builtins-mv-crossfs.md` — host-env backup defaults, hardlink/xattr-aware cross-device copy tree.
+- `./builtins-ls-sort-resolution.md` — argv-index last-wins arbitration among mutually exclusive sort flags, command-line-source gated.
+- `./builtins-tr-set-grammar.md` — context-sensitive octal parsing with GNU ambiguous-escape warning; ranges/star/equivalence classes.
+- `./builtins-cut-matchers.md` — memchr ExactMatcher + run-collapsing WhitespaceMatcher behind a one-method trait.
+- `./builtins-small-faithfulness.md` — uniq positional-flag merge, jq thread-local RuntimeGuard shim, tee never-touch-signals policy.
+- `./svg-safe-rasterizer.md` — untrusted SVG → bounded PNG off-thread with no file-backed resource loads.
+- `./streaming-sniff-then-push.md` — buffer-until-sniff gate flips a diff side to live `pushBytes` with ordered replay of buffered chunks.
+- `./stream-failure-ladder.md` — per-side failures map to tooLarge placeholder / empty side; only aborts propagate.
+- `./diff-stream-native-diff.md` — native two-sided streamer exposes only equal complete leading lines as stable before EOF.
+- `./stream-progress-emit.md` — delta-slice line updates gated on new lines or state-flag movement.
+- `./provisional-streaming-viewport.md` — provisional line-numbered view during ingestion, replaced in one frame by the exact diff document.
+- `./streamed-runs-reuse.md` — final document walks the native differ's exact runs; whitespace-ignore recomputes and drops patchability.
+- `./ifbench-array-machine.md` — fixed-LCG scramble + absolute-index opcodes make every run reproducible and locally scoreable.
+- `./ifbench-dual-contract.md` — one reply scores array AND sound independently; lookahead rejects over-long tails and echoed directives.
+- `./ifbench-turn-thread.md` — one cacheable conversation whose state is the model's own last reply; first broken turn ends the run.
+- `./ifbench-prompt-rotation.md` — directive sweeps beginning/middle/end; middle placement splits the opcode list to stay observable.
+- `./transcript-block-lifecycle.md` — active→settled→committed machine with offer/ack two-phase retirement and removal guards.
+- `./composer-history-offer.md` — composer translates container batch ids into one monotonic history under capacity pressure.
+- `./history-flush-replay.md` — stop() flushes eligible batches accept-or-throw; replay re-offers committed rows without lifecycle rewind.
+- `./retired-header-reflow.md` — accepted hard rows are sliced/reflowed on resize (clipped inside multiplexers), never recomposed.
+- `./held-tool-completions.md` — completions that outrun their card are held; side effects fire once, the card settles later.
+- `./transcript-retirement-lifecycle.md` — pressure vs flush retirement policies over the settled prefix; offer stands until acknowledged by batch id.
+- `./transcript-replay-no-rewind.md` — replay cursor over `[0,frontier)` re-emits committed rows as fresh batches one-per-frame while states stay frozen.
+- `./composer-history-ladder.md` — composer-side priority ladder (header → headerReplay → transcript) with id translation and re-return-outstanding-offer.
+- `./tui-history-watermark.md` — accepted-id watermark + anchored write; erase-before-scroll keeps unfinished frames out of scrollback; flush loop throws on non-acceptance.
+- `./natives-diff-stream.md` — incremental two-sided ingestion: complete lines live, stable-prefix only, exact Myers at EOF on the blocking pool.
+- `./git-show-byte-stream.md` — streamed `git show` chunks where the cap-crossing chunk is never yielded; truncation throws at iteration time; abandoned generators kill the child.
+- `./git-tui-stream-ladder.md` — sniff-buffer-then-stream per side with binary/LFS/SVG/image classification and per-side error isolation (tooLarge/empty/abort).
+- `./diff-pane-streaming-highlight.md` — offset-splice stream merges + 32-line batch-and-yield highlighting under a dual cancel latch (abort OR doc swap).
+- `./formatting-aware-whitespace.md` — off/whitespace/formatting ladder; reflow + import-only blocks demote to context while canPatch stays true and patches mirror the old side.
+- `./svg-rasterize-guards.md` — pixel pre-cap, zero-limit rejection, href blindness (`resolve_string = None`), off-thread render for untrusted SVG.
+- `./ifbench-action-machine.md` — fixed-LCG scramble + absolute-index opcode stream make runs reproducible and locally scoreable; even-length weave guard.
+- `./ifbench-dual-contract-scoring.md` — four-way verdict naming which contract broke; lookahead rejects over-long tails AND echoed directive text.
+- `./ifbench-runner-thread.md` — one growing cacheable thread per model: temperature 0, stable promptCacheKey, state carried in the model's own reply, first broken turn ends the run.
+- `./bench-target-resolution.md` — full-catalog resolution then same-id authenticated fallback with explicit-pin override and priority-ranked transport choice.
+- `./ifbench-live-board.md` — observer-driven live rows removed on finish into permanent verdicts; non-TTY pass/fail lines split stdout/stderr.
+- `./git-tui-vim-nav.md` — boundary-false jump primitives with host-level pending-edge rollover across files; anchors cleared on teleports.
+- `./builtins-panic-containment.md` — PANIC_SCOPE_DEPTH Cell protocol cooperating with the native crash hook.
+- `./builtins-stdin-cancellation.md` — 200 ms poll-sliced stdin reads returning EOF on abort; await-completion-before-return.
+- `./builtins-procsub-materialize.md` — `/dev/fd/<shell-fd>` args dup'd to real process fds with task-lifetime ownership, pre-parse.
+- `./builtins-head-headers.md` — output-latch header rule: failures print no separator and must not flip `first`.
+- `./builtins-find-cancellation.md` — walker-level Interrupted sentinel as the abort channel; per-entry flag polling, silent-abort mapping.
+- `./extension-managed-timers.md` — contained third-party timers (#5664): sync throw + rejection routed to onError, unref'd handles, one-shot early deregister, teardown finally-clear.
+- `./extension-handler-timeout-budget.md` — pausable per-handler budget: clearTimeout-on-win race (#3948), dialog pause/resume time folding, sentinels not throws, dedicated 2s session_shutdown cap (#2600), fail-closed tool_call block.
+- `./extension-event-emit-algebra.md` — reduction rules for N-handler events: lazy ctx alloc, cancel short-circuit, chained tool_result modification, first-wins injection, context pipelines; errors continue in emit but hook-plane tool_call throws with no timeout.
+- `./tool-call-gate-ordering.md` — deny-short-circuit BEFORE tool_call emission, hook input revision, full approval re-resolution on effectiveParams; identity-voided xdev bypass; computer-tool synthetic-input exemption; bounded dedupe markers.
+- `./tool-proxy-schema-preserving-wrap.md` — applyToolProxy forwarding that never binds callable schemas (two pinned wire-schema regressions); wrapper-own keys win; prototype walk with visited set.
+- `./custom-tool-loader-contracts.md` — injected shared API for user-dir tools, built-in-seeded first-wins name registry, declarative-file rejection, array factories, discover/load split so subagents re-bind to their own session scope.
+- `./extension-model-facade.md` — read-only ctx.models facade: accessor-injected live current(), core-parity role resolution, family token fallback; capability-checked setModel returns false without API key.
+- `./extension-load-diagnostics.md` — sanitized single-line load-failure notifications (home-dir collapse, whitespace fold, width truncate) plus the ExtensionRuntime throwing-stub boundary during loading.
+- `./plugin-install-transaction.md` — three-artifact snapshot (package.json + bun.lock + node_modules tree) around a validated plugin install; restore-or-remove lockfile rollback; concurrent pipe drain.
+- `./plugin-config-runtime-store.md` — omp-plugins.lock.json lazy-load/write-whole store, read-time project overrides (disabled/features/settings), doctor self-heal trio.
+- `./plugin-git-source-ladder.md` — git spec classification (namespaced shorthand → git+ strip → protocol/scp gate → generic fallback) with per-family validators and repo-identity dep matching.
+- `./plugin-git-cache-refresh.md` — force-fetch matching bare clones inside bun's pm cache before `bun update` so git ref pins actually move (#3063/#5401).
+- `./plugin-resolution-cache-two-roots.md` — promise-valued discovery cache keyed cwd\0home with error eviction + external invalidator (issue #4197); project-shadows-user two-root merge.
+- `./plugin-manifest-entry-resolution.md` — declared-manifest-authoritative entry precedence, resolvedPath:null missing-entry reporting feeding install validation, extensions-only directory expansion.
+- `./marketplace-catalog-fetch.md` — ordered source classification (protocol-before-isAbsolute), .omp-plugin→.claude-plugin catalog fallback, clone-to-temp/promote-after-checks, skip-not-fail entry parsing.
+- `./marketplace-install-scopes-gc.md` — dual-scope installed registry with post-write referenced-path GC, enabled-state carry-over, runtime symlink registration, staged cache copies + component validation.
+
+## Capsule map
+Each capsule pairs a decisive excerpt, invariants, a live `mcp.codebase_memory.search_graph` call, and a probe at a real test. The map records seams, not history.
+
+- **Patch language** — grammar, parsing, addressing, replay, fs seams: `hashline`, `hashline-fs-stream`, `hashline-parser-seams`, `hashline-normalize-prefixes`, `hashline-clipboard-syntax`, `hashline-format-recovery`.
+- **Patch parsing & rejection** — token-to-edit execution and stale-tag refusal: `hashline-executor`, `hashline-mismatch`.
+- **Patch orchestration & feedback** — all-or-nothing apply, preview renumbering, noop-loop escalation, snapshot budgets: `hashline-patcher`, `hashline-diff-preview`, `hashline-noop-loop-guard`, `edit-snapshot-budget`.
+- **Memory** — facade, recall, embeddings, binary vectors, cache, temporal gates: `mnemopi`, `mnemonic-beam`, `mnemonic-embeddings`, `mnemonic-binary-vectors`, `mnemonic-query-cache`, `mnemonic-temporal-gates`.
+- **Telemetry** — usage windows, sync worker, WAL series, gain dashboard, server/port, provider/client: `stats`, `stats-sync-worker`, `stats-db`, `stats-gain-dashboard`, `stats-server-port`, `stats-provider-client`.
+- **Harness seams** — steering, wrapper, compaction, replay, navigator, workers, fan-out, experiments, isolation: `agent-loop`, `agent-loop-tool-batch`, `agent-wrapper`, `compaction-suite`, `replay-and-occupancy`, `prewalk-and-plan-handoff`, `durable-workers`, `fanout-and-budgets`, `isolation-and-provider-permits`, `experiment-control`, `advice-delivery`.
+- **Streaming** — numbered-line output over byte inputs: `hashline-stream`.
+- **Vision compaction** — bitmap-frame context compression for vision LLMs: archive orchestration, shape/billing, serialization, normalization: `snapcompact-archive`, `snapcompact-shape-billing`, `snapcompact-serialization`, `snapcompact-normalization`.
+- **Collab wire protocol** — live-session host/guest/relay contract: `collab-wire-protocol`.
+- **Benchmark harness (metaharness)** — run store, experiment math, adapters, and manager lifecycle: `bench-run-store`, `bench-experiment-projection`, `bench-arm-inheritance`, `bench-best-of-n`, `bench-trial-parsing`, `bench-adapter-normalization`, `bench-token-accounting`.
+- **Benchmark manager ops** — live monitoring, launching, resuming, and cleanup: `bench-live-cost-probe`, `bench-managed-children`, `bench-resume-recovery`, `bench-sse-broadcast`, `bench-trace-tail`, `bench-live-dashboard`, `bench-docker-cleanup`.
+- **Benchmarked agent runs** — driving and scoring agent attempts: `bench-edit-agent-loop`, `bench-edit-verification`, `bench-in-process-client`, `bench-retry-ladder`, `bench-early-stop`, `bench-guided-synthesis`, `bench-edit-taxonomy`, plus container/auth infra: `bench-source-deps-cache`, `bench-gateway-isolation`.
+- **Benchmark fixture generation (typescript-edit-benchmark)** — the engine behind the edit adapter: uniqueness-provable prompt hunks, AST source-edit mutations, and the re-solve proof: `bench-unique-hunk-rendering`, `bench-ast-mutation-framework`.
+- **Model catalog: identity & policy** — namespace-agnostic family predicates, id classification, effort-ladder derivation, host classes: `catalog-family-predicates`, `catalog-id-classifier`, `catalog-thinking-derivation`, `catalog-host-classification`, `catalog-provider-priority`, `catalog-display-name-cleaning`, `catalog-tokenizer-resolution`.
+- **Model catalog: variant collapsing** — per-effort sibling ids → one logical model with routing + alias migration: `catalog-variant-collapse`.
+- **Model catalog: compat detection** — build-once per-API wire-quirk records: `catalog-anthropic-compat`, `catalog-openai-compat`, `catalog-bedrock-compat`.
+- **Model catalog: resolution & caching** — source merge ladders, SQLite cache healing, credential-scoped namespaces: `catalog-resolution-merge`, `catalog-model-cache`, `catalog-cache-namespacing`.
+- **Model catalog: discovery & wire** — bounded /models probes, JWT claims, impersonation versioning, image-fetcher attribution, wire-id codecs, protobuf RPC recovery: `catalog-openai-discovery`, `catalog-codex-wire`, `catalog-copilot-wire`, `catalog-client-version-discovery`, `catalog-image-fetcher-attribution`, `catalog-fireworks-wire-ids`, `catalog-cursor-proto-discovery`.
+- **Model catalog: proxy & canonical identity** — reseller reference inheritance and canonical-id coalescing: `catalog-proxy-reference`, `catalog-canonical-coalescing`; token pricing: `catalog-token-costing`.
+- **Credential storage kernel (packages/ai/src/auth-storage.ts)** — resolution cascade, refresh leases, identity dedupe, usage ranking, stickiness, scoped blocks, report cache, plan gating, failure taxonomy, broker sentinels, bearer attribution: `auth-resolution-cascade`, `auth-oauth-refresh-lease`, `auth-oauth-identity-dedupe`, `auth-usage-ranked-selection`, `auth-session-stickiness`, `auth-scoped-blocks`, `auth-usage-cache`, `auth-codex-plan-gating`, `auth-definitive-failure-taxonomy`, `auth-broker-sentinel`, `auth-bearer-attribution`.
+- **Session runtime plane (drift wave @4854db85)** — streamed-edit staleness defense, Gemini runaway recovery, title index, session pins, user-shell PTY, payload-413 arbitration, unexpected-stop modes: `session-streaming-edit-guard`, `session-loop-guards-gemini`, `session-title-index`, `session-pins-stable-partition`, `bash-user-shell-pty`, `session-payload-413-arbitration`, `session-unexpected-stop-modes`.
+- **In-process CLI utilities (crates/pi-builtins)** — the host kernel and its ~60 ported tools as portable contracts. Kernel: `builtins-host-contract`, `builtins-stdout-buffering`, `builtins-child-env`, `builtins-registration-sets`, `builtins-rewrite-argv`, `builtins-duration-quote`, `builtins-panic-containment`, `builtins-stdin-cancellation`, `builtins-procsub-materialize`. Process plane: `builtins-proc-snapshot`, `builtins-host-processes`, `builtins-proc-match-engine`, `builtins-kill-semantics`, `builtins-timeout-spawn-recorder`, `builtins-nohup-detach`, `builtins-ps-parser`, `builtins-top-sampling`. Text/file plane: `builtins-sort-external`, `builtins-xargs-limiters`, `builtins-sponge-soak`, `builtins-wc-fastpaths`, `builtins-tail-follow`, `builtins-fd-fastpath`, `builtins-find-cancellation`, `builtins-rg-defaults`, `builtins-grep-resolution`, `builtins-stat-bsd-rewrite`, `builtins-date-gnu-plane`, `builtins-rm-guards`, `builtins-mv-crossfs`, `builtins-ls-sort-resolution`, `builtins-tr-set-grammar`, `builtins-cut-matchers`, `builtins-head-headers`, `builtins-small-faithfulness`.
+- **History retirement & replay (TUI/composer)** — block lifecycle state machine, pressure-gated offers, flush/replay plumbing, hard-row resize reflow, held tool completions: `transcript-block-lifecycle`, `composer-history-offer`, `history-flush-replay`, `retired-header-reflow`, `held-tool-completions`; policy/cursor depth: `transcript-retirement-lifecycle` (pressure-vs-flush offer rules), `transcript-replay-no-rewind` (replay cursor, frozen states), `composer-history-ladder` (offer priority + id translation), `tui-history-watermark` (accepted-id watermark, anchored write, flush loop).
+- **Streaming diff pipeline (drift wave @2b66ee69)** — byte-streamed git objects, sniff-gated native differ, provisional viewport, exact-run reuse, safe SVG rasterization: `git-show-byte-stream`, `streaming-sniff-then-push`, `stream-failure-ladder`, `diff-stream-native-diff`, `stream-progress-emit`, `provisional-streaming-viewport`, `streamed-runs-reuse`, `svg-safe-rasterizer`; complementary seams: `natives-diff-stream` (Rust-side ingestion contract), `git-tui-stream-ladder` (side routing + classification ladder), `diff-pane-streaming-highlight` (pane merge + async highlight), `formatting-aware-whitespace` (three-mode demotion ladder), `svg-rasterize-guards` (safety gates), `git-tui-vim-nav` (boundary-false nav rollover).
+- **Instruction-following benchmark (omp if-bench)** — reproducible working-memory machine, dual-contract scoring with anti-echo matcher, cacheable turn thread, directive rotation: `ifbench-array-machine`, `ifbench-dual-contract`, `ifbench-turn-thread`, `ifbench-prompt-rotation`; engine depth: `ifbench-action-machine` (LCG scramble + absolute-index opcodes), `ifbench-dual-contract-scoring` (verdict taxonomy + anti-echo regex), `ifbench-runner-thread` (worker pool, provider plumbing, first-failure stop), `bench-target-resolution` (same-id authenticated fallback), `ifbench-live-board` (observer-driven board + non-TTY trace).
+- **Extension runtime (packages/coding-agent/src/extensibility)** — loading and hosting third-party code safely: containment, budgets, event algebra, gate ordering: `extension-managed-timers`, `extension-handler-timeout-budget`, `extension-event-emit-algebra` (extensions + hooks twin planes), `tool-call-gate-ordering`, `tool-proxy-schema-preserving-wrap`, `custom-tool-loader-contracts`, `extension-model-facade`, `extension-load-diagnostics`.
+- **Plugin plane (packages/coding-agent/src/extensibility/plugins)** — installing and resolving plugins as npm/git/marketplace artifacts: install transaction + runtime store: `plugin-install-transaction`, `plugin-config-runtime-store`; git specs: `plugin-git-source-ladder`, `plugin-git-cache-refresh`; resolution: `plugin-resolution-cache-two-roots`, `plugin-manifest-entry-resolution`; marketplace: `marketplace-catalog-fetch`, `marketplace-install-scopes-gc`.
+
+## Extending the foundation
+Add one `./*.md` capsule per new seam: a catalog line, a decisive excerpt, an invariant, a `Probe`, a `search_graph` call. Reuse the pattern. Pass 11 added the 24 `catalog-*` capsules from `packages/catalog`; pass 12 added the 11 `auth-*` capsules from `packages/ai/src/auth-storage.ts` + its sqlite store twin; new seams still start from a mechanical citation-vs-inventory grep.
+
+## Provenance
+oh-my-pi (MIT), `main@2b66ee69`; Codebase Memory project `oh-my-pi` (114,458 nodes / 600,846 edges, `full` index re-pinned IN PLACE 2026-08-24 via live-symlink root per [DONE:366] precedent after a +9-commit drift wave ff-pulled from `4854db85` — tests graph-covered; freshness proven by resolving drift-introduced symbols `createIfBenchBoard`/`initialArray` line-exact before any citation was trusted). Pass 13 mined the @4854db85 session-runtime plane (+7); pass 14 entered `crates/pi-builtins` (+34 → 142). Pass 15 (2026-08-24) mined the @2b66ee69 drift wave's three planes CONCURRENTLY from two lanes whose outputs are interleaved by filename (CONCURRENT-LANE SAME-SEAM AUTHORING, grist precedent): one lane landed 15 refs 19:45–20:07 + wiring; this deep-rover lane authored 17 refs (20:12–20:20) and extended the same map groups additively — combined leaf = 175 refs = 175 loader lines, bidirectional set-equal. Pass 16 (2026-08-25, this lane miner-oh-my-pi/FAC-81) entered `packages/coding-agent/src/extensibility` — extensions/hooks/custom-tools runtime (+8 → 183 refs = 183 loader lines, bidirectional set-equal); counts re-read live from index_status at the unchanged pin (generation 2026-08-24T14:00:13Z). Pass 17 (2026-08-25, same lane) entered the plugins plane `packages/coding-agent/src/extensibility/plugins` per pass-16 NEXT-PASS TARGETS (+8 → 191 refs = 191 loader lines, bidirectional set-equal); all 17 cited source/test paths coverage-checked no_recorded_issue at the unchanged pin.
+
+## Full view (memory graph)
+Revalidate `oh-my-pi` before porting: run `index_status`, `check_index_coverage`, `search_graph`, `trace_path`, and `get_code_snippet`. Live at this squeeze: root `/mnt/hdd/utopia/inspo/coding-agents/oh-my-pi` (live symlink `/mnt/hdd/utopia/inspo/oh-my-pi` resolves into it), branch `main@2b66ee69f2`, mode `full`, 114,458 nodes / 600,846 edges; parse_partial limited (vendor `.proto` trees plus single-line TS gaps); assets/vendor excluded by design. Source and direct tests decide shipped claims. Retrieval-plane notes: BM25 resolves Function/Method/Struct nodes line-exact for kernel symbols and for the pass-15 drift seams (`createIfBenchBoard` board.ts 63-117, `initialArray` actions.ts, `DiffStream` push_bytes/finish in pi-natives); small-faithfulness seams (uniq/jq/tee internals, tail watcher config) rank below generic noise — their capsules cite anchor greps instead of ranked hits, which is a plane property, not dead metadata.
+
+## Boundaries
+Pass 15 (2026-08-24, drift wave 4854db8..2b66ee69, +9 commits) was mined CONCURRENTLY by two lanes on the same seams (grist-class collision; outputs interleaved, no deletions): the sibling lane landed 15 refs + wiring 19:45–20:07; THIS deep-rover lane independently authored 17 capsule-v2 (20:12–20:20) from whole-file reads of — transcript-container.ts ALL 390L (retirement lifecycle + replay cursor), composer.ts ALL 567L (offer ladder + id translation + flush), tui.ts history plane (:1345–1365 flush loop, :1985–2023 resize replay, :2031–2176 watermark/anchor write), event-controller.ts held-completion fix abcd081d25 whole-diff + test file, pi-natives diff.rs streaming core (:88–103/:433–583/:593–790) + svg.rs ALL 90L, utils/git.ts runByteStream :599–687 + show.stream :1848–1852, git-tui state.ts streamContents ladder :457–714, diff-pane.ts updateStream/highlightAsync :600–709 + whitespace-mode diff a4cffcd778, if-bench protocol/actions/runner/board/index ALL + bench-runtime.ts ALL + both prompt-bearing test files (`if-bench.test.ts` ALL 210L, `git-show-stream.test.ts` ALL 50L, `diff.test.ts` stream tests :140–176, `event-controller-cursor-todo.test.ts` :173–258). Omitted-with-reason pass 15 (this lane): git-TUI sidebar/commit-form internals beyond vim-nav rollover seam (product surface); tui.ts alt-screen/mouse/kitty-image planes (owned by earlier passes / out of drift scope); if-bench prompt .md template wording (product copy; grammar captured in capsules); board.ts scoreboard column layout beyond ranking rule; bench-cli.ts command-flag parsing. Runner: bun test NOT executable this window — repo pins `bun@1.4.0`; npx bun runs fail on missing prebuilt `pi_natives` addon whose build requires rust-toolchain.toml nightly-2026-08-08 with NO rustup on host (extends [DONE:454] block honestly); deterministic gate-5 instead: every Probe anchor derived from live grep at the pin BEFORE writing and executed byte-exact POST-WIRE (17/17 GREEN incl. per-term counts for multi-file greps and executed node -e verifications of initialArray LCG outputs BEDFAHCG/BFMNIAXVJCLQHOERPTDGSKUW and length-8 action chain BEDFAHCG→BEHFADCG→EHFADCGB→EAFHDCGB), direct-test name pins verified at cited lines, Retrieves live-resolved with positive controls. Prior pass 14 (crates/pi-builtins @ 4854db8): whole-file host.rs + proc_snapshot.rs + factory/proc_match/sponge/builder/unimp → 34 builtins-* capsules; cargo test BLOCKED honestly (stable rustc E0554 on xutf portable_simd). Prior pass 13 (@4854db85 drift): session-runtime plane 7 capsules. Prior pass 12: credential-storage kernel 11 auth-* capsules. | All Oh My Pi material lives under this single foundation; prewalk, vibe workers, task orchestration, experiment control, and advisor delivery are all `./` capsules here, not sibling leaves. Adopt pure contracts; adapt provider dialects, storage, and token estimators; omit OMP-specific telemetry and transports. Edit family (2026-08-23 sweep): every `packages/hashline` module plus `execute`/`patcher`/`snapshot-details` is mapped to a capsule above or an omit-with-reason in the work record; `messages.ts` stays un-capsuled deliberately. Vision-compaction family (pass 7): whole `packages/snapcompact` mapped to four capsules; native PNG rasterizer omitted by design. Collab wire family (pass 8): `packages/wire/src/index.ts` → `collab-wire-protocol`; live-session collab runtime omitted. Benchmark-harness family (pass 9): whole `packages/metaharness` → 21 `bench-*` capsules. Pass 10: fixture-generation engine `packages/typescript-edit-benchmark` → 4 capsules; trace-report/live-progress/prompts omitted with reason. Pass 11: mined `packages/catalog` (~52k lines whole-file) into 24 capsules — identity/variant-collapse/thinking/hosts/cache/manager/compat/wire/discovery/equivalence; omitted with reason: provider-models/openai-compat.ts option builders, generated proto IR, types.ts/models.json.
+Pass 16 (2026-08-25, lane miner-oh-my-pi): whole/partial whole-file reads of the extensibility runtime — extensions/{loader 761L, wrapper :100-300, runner :1-570/:1070-1500, managed-timers 83L, model-api 39L, compact-handler 40L, load-errors 13L}, hooks/{loader 243L, runner 425L, tool-wrapper 124L}, custom-tools/{loader 301L, wrapper 50L}, tool-proxy 35L; direct tests read whole: tool-proxy.test.ts, ext-model-query.test.ts, extension-load-notifications.test.ts, custom-tool-loader.test.ts (head+fixtures). Omitted-with-reason pass 16: plugins/{manager.ts 1193L, installer, marketplace/*} (distinct marketplace plane — NEXT PASS), extensibility/utils withHostGuard internals (own seam next pass), legacy-pi-* shims (compat surface, no portable porting question), examples/hooks/* (product copy), discovery/ providers (partially owned by catalog capsules). Runner: bun test NOT executed this window (repo pins bun@1.4.0; prebuilt pi_natives addon absent and its build needs rust nightly via rust-toolchain.toml with no rustup on host — extends the pass-14/15 block honestly); deterministic gate-5 instead: Probe anchors derived from live grep at the pin BEFORE writing, re-executed byte-exact POST-WIRE (see verification.md); Retrieves live-resolved incl. adversarial wrong-project rejection.
+
+Pass 17 (2026-08-25, same lane): whole-file reads of the plugins plane per pass-16 targets — manager.ts 1193L ALL (install transaction/rollback :439-649, config plane, dual-scope getPlugin/list, doctor self-heal), loader.ts 535L ALL (promise cache + two-root merge + manifest entry resolution), git-url.ts 367L ALL, parser.ts 107L ALL, bun-git-cache.ts 91L ALL, runtime-config.ts 9L ALL, installer.ts 201L ALL (legacy contrast path), types.ts 194L ALL, marketplace/{registry 192L, cache 136L, fetcher 316L, source-resolver 147L, types 192L} ALL, marketplace/manager.ts 928L ALL, marketplace-auto-update.ts 49L ALL; doctor.ts 65L read and omitted (system-health product surface). Direct tests read whole: issue-4197-plugin-resolution-cache.test.ts 93L, plugin-install-validation.test.ts 588L, marketplace/cache.test.ts 219L. Omitted-with-reason pass 17: legacy-pi-compat.ts (~2.5kL compat surface, carried from passes 15/16), plugins/index.ts barrel (parse_partial @9), plugin-command/plugin-config CLI verb plumbing + marketplace slash-install/dev-ergonomics tests (CLI/TUI product surface), discovery/* ingestion planes and omptype package (explicit NEXT-PASS TARGETS).
+
+Prior passes follow.
+
+Pass 15 (2026-08-24, THIS pass, drift wave 4854db8..2b66ee69, +9 commits): whole-file reads of the three new planes — if-bench (`protocol.ts`/`actions.ts`/`runner.ts`/`board.ts`/`index.ts` + all four prompt templates + `test/if-bench.test.ts`), git-TUI streaming (git.ts stream plane :599-687/:1839-1852, state.ts streaming half, diff-pane build/render planes, pi-natives `diff.rs` DiffStream + `svg.rs`, `test/utils/git-show-stream.test.ts`, `test/git-tui-stream.test.ts` additions), history retirement (composer.ts frame/offer/reflow/flush, transcript-container.ts whole, tui.ts flush/replay hunks, event-controller held-completion fix + `event-controller-cursor-todo.test.ts` fast-eval case, `welcome-history-resize.test.ts`) → 17 capsule-v2 in THREE new map groups (streaming diff 8 / if-bench 4 / history retirement 5). Omitted-with-reason pass 15: `bench-runtime.ts`/`bench-cli.ts` refactor mechanics (shared bench plumbing already owned by metaharness-era capsules; the runtime split is wiring, not a new contract); git-TUI sidebar/vim-navigation keybindings (interactive product surface, no porting question); `tui-adapters.ts` theme color plumbing (cosmetic); whitespace-mode `demoteBlock` import-language tables beyond the seam captured in `streamed-runs-reuse` (per-language regexes are data, mine on a named formatting-ignore question). Runner: bun test NOT executed this window under fleet load policy — deterministic gate-5 instead: every Probe anchor derived from live grep at the pin BEFORE writing and executed byte-exact POST-WIRE (17/17 GREEN incl. per-term counts for multi-file greps), direct-test name pins verified at cited lines, Retrieves live-resolved with adversarial wrong-project check. Prior pass 14 (crates/pi-builtins @ 4854db8): whole-file host.rs + proc_snapshot.rs + factory/proc_match/sponge/builder/unimp → 34 builtins-* capsules; cargo test BLOCKED honestly (stable rustc E0554 on xutf portable_simd); omitted-with-reason: sed.rs grammar, per-tool bodies beyond distinctive seams, complete/bind readline surface. Prior pass 13 (@4854db85 drift): session-runtime plane 7 capsules. Prior pass 12: credential-storage kernel 11 auth-* capsules. | All Oh My Pi material lives under this single foundation; prewalk, vibe workers, task orchestration, experiment control, and advisor delivery are all `./` capsules here, not sibling leaves. Adopt pure contracts; adapt provider dialects, storage, and token estimators; omit OMP-specific telemetry and transports. Edit family (2026-08-23 sweep): every `packages/hashline` module plus `execute`/`patcher`/`snapshot-details` is mapped to a capsule above or an omit-with-reason in the work record; `messages.ts` stays un-capsuled deliberately. Vision-compaction family (pass 7): whole `packages/snapcompact` mapped to four capsules; native PNG rasterizer omitted by design. Collab wire family (pass 8): `packages/wire/src/index.ts` → `collab-wire-protocol`; live-session collab runtime omitted. Benchmark-harness family (pass 9): whole `packages/metaharness` → 21 `bench-*` capsules. Pass 10: fixture-generation engine `packages/typescript-edit-benchmark` → 4 capsules; trace-report/live-progress/prompts omitted with reason. Pass 11: mined `packages/catalog` (~52k lines whole-file) into 24 capsules — identity/variant-collapse/thinking/hosts/cache/manager/compat/wire/discovery/equivalence; omitted with reason: provider-models/openai-compat.ts option builders, generated proto IR, types.ts/models.json.
+
+## Reference-file inventory
+
+Every preserved capsule/reference file in this foundation:
+
+- [`advice-delivery.md`](./advice-delivery.md)
+- [`agent-loop-tool-batch.md`](./agent-loop-tool-batch.md)
+- [`agent-loop.md`](./agent-loop.md)
+- [`agent-wrapper.md`](./agent-wrapper.md)
+- [`auth-bearer-attribution.md`](./auth-bearer-attribution.md)
+- [`auth-broker-sentinel.md`](./auth-broker-sentinel.md)
+- [`auth-codex-plan-gating.md`](./auth-codex-plan-gating.md)
+- [`auth-definitive-failure-taxonomy.md`](./auth-definitive-failure-taxonomy.md)
+- [`auth-oauth-identity-dedupe.md`](./auth-oauth-identity-dedupe.md)
+- [`auth-oauth-refresh-lease.md`](./auth-oauth-refresh-lease.md)
+- [`auth-resolution-cascade.md`](./auth-resolution-cascade.md)
+- [`auth-scoped-blocks.md`](./auth-scoped-blocks.md)
+- [`auth-session-stickiness.md`](./auth-session-stickiness.md)
+- [`auth-usage-cache.md`](./auth-usage-cache.md)
+- [`auth-usage-ranked-selection.md`](./auth-usage-ranked-selection.md)
+- [`bash-user-shell-pty.md`](./bash-user-shell-pty.md)
+- [`bench-adapter-normalization.md`](./bench-adapter-normalization.md)
+- [`bench-arm-inheritance.md`](./bench-arm-inheritance.md)
+- [`bench-ast-mutation-framework.md`](./bench-ast-mutation-framework.md)
+- [`bench-best-of-n.md`](./bench-best-of-n.md)
+- [`bench-docker-cleanup.md`](./bench-docker-cleanup.md)
+- [`bench-early-stop.md`](./bench-early-stop.md)
+- [`bench-edit-agent-loop.md`](./bench-edit-agent-loop.md)
+- [`bench-edit-taxonomy.md`](./bench-edit-taxonomy.md)
+- [`bench-edit-verification.md`](./bench-edit-verification.md)
+- [`bench-experiment-projection.md`](./bench-experiment-projection.md)
+- [`bench-gateway-isolation.md`](./bench-gateway-isolation.md)
+- [`bench-guided-synthesis.md`](./bench-guided-synthesis.md)
+- [`bench-in-process-client.md`](./bench-in-process-client.md)
+- [`bench-live-cost-probe.md`](./bench-live-cost-probe.md)
+- [`bench-live-dashboard.md`](./bench-live-dashboard.md)
+- [`bench-managed-children.md`](./bench-managed-children.md)
+- [`bench-resume-recovery.md`](./bench-resume-recovery.md)
+- [`bench-retry-ladder.md`](./bench-retry-ladder.md)
+- [`bench-run-store.md`](./bench-run-store.md)
+- [`bench-source-deps-cache.md`](./bench-source-deps-cache.md)
+- [`bench-sse-broadcast.md`](./bench-sse-broadcast.md)
+- [`bench-target-resolution.md`](./bench-target-resolution.md)
+- [`bench-token-accounting.md`](./bench-token-accounting.md)
+- [`bench-trace-tail.md`](./bench-trace-tail.md)
+- [`bench-trial-parsing.md`](./bench-trial-parsing.md)
+- [`bench-unique-hunk-rendering.md`](./bench-unique-hunk-rendering.md)
+- [`builtins-child-env.md`](./builtins-child-env.md)
+- [`builtins-cut-matchers.md`](./builtins-cut-matchers.md)
+- [`builtins-date-gnu-plane.md`](./builtins-date-gnu-plane.md)
+- [`builtins-duration-quote.md`](./builtins-duration-quote.md)
+- [`builtins-fd-fastpath.md`](./builtins-fd-fastpath.md)
+- [`builtins-find-cancellation.md`](./builtins-find-cancellation.md)
+- [`builtins-grep-resolution.md`](./builtins-grep-resolution.md)
+- [`builtins-head-headers.md`](./builtins-head-headers.md)
+- [`builtins-host-contract.md`](./builtins-host-contract.md)
+- [`builtins-host-processes.md`](./builtins-host-processes.md)
+- [`builtins-kill-semantics.md`](./builtins-kill-semantics.md)
+- [`builtins-ls-sort-resolution.md`](./builtins-ls-sort-resolution.md)
+- [`builtins-mv-crossfs.md`](./builtins-mv-crossfs.md)
+- [`builtins-nohup-detach.md`](./builtins-nohup-detach.md)
+- [`builtins-panic-containment.md`](./builtins-panic-containment.md)
+- [`builtins-proc-match-engine.md`](./builtins-proc-match-engine.md)
+- [`builtins-proc-snapshot.md`](./builtins-proc-snapshot.md)
+- [`builtins-procsub-materialize.md`](./builtins-procsub-materialize.md)
+- [`builtins-ps-parser.md`](./builtins-ps-parser.md)
+- [`builtins-registration-sets.md`](./builtins-registration-sets.md)
+- [`builtins-rewrite-argv.md`](./builtins-rewrite-argv.md)
+- [`builtins-rg-defaults.md`](./builtins-rg-defaults.md)
+- [`builtins-rm-guards.md`](./builtins-rm-guards.md)
+- [`builtins-small-faithfulness.md`](./builtins-small-faithfulness.md)
+- [`builtins-sort-external.md`](./builtins-sort-external.md)
+- [`builtins-sponge-soak.md`](./builtins-sponge-soak.md)
+- [`builtins-stat-bsd-rewrite.md`](./builtins-stat-bsd-rewrite.md)
+- [`builtins-stdin-cancellation.md`](./builtins-stdin-cancellation.md)
+- [`builtins-stdout-buffering.md`](./builtins-stdout-buffering.md)
+- [`builtins-tail-follow.md`](./builtins-tail-follow.md)
+- [`builtins-timeout-spawn-recorder.md`](./builtins-timeout-spawn-recorder.md)
+- [`builtins-top-sampling.md`](./builtins-top-sampling.md)
+- [`builtins-tr-set-grammar.md`](./builtins-tr-set-grammar.md)
+- [`builtins-wc-fastpaths.md`](./builtins-wc-fastpaths.md)
+- [`builtins-xargs-limiters.md`](./builtins-xargs-limiters.md)
+- [`catalog-anthropic-compat.md`](./catalog-anthropic-compat.md)
+- [`catalog-bedrock-compat.md`](./catalog-bedrock-compat.md)
+- [`catalog-cache-namespacing.md`](./catalog-cache-namespacing.md)
+- [`catalog-canonical-coalescing.md`](./catalog-canonical-coalescing.md)
+- [`catalog-client-version-discovery.md`](./catalog-client-version-discovery.md)
+- [`catalog-codex-wire.md`](./catalog-codex-wire.md)
+- [`catalog-copilot-wire.md`](./catalog-copilot-wire.md)
+- [`catalog-cursor-proto-discovery.md`](./catalog-cursor-proto-discovery.md)
+- [`catalog-display-name-cleaning.md`](./catalog-display-name-cleaning.md)
+- [`catalog-family-predicates.md`](./catalog-family-predicates.md)
+- [`catalog-fireworks-wire-ids.md`](./catalog-fireworks-wire-ids.md)
+- [`catalog-host-classification.md`](./catalog-host-classification.md)
+- [`catalog-id-classifier.md`](./catalog-id-classifier.md)
+- [`catalog-image-fetcher-attribution.md`](./catalog-image-fetcher-attribution.md)
+- [`catalog-model-cache.md`](./catalog-model-cache.md)
+- [`catalog-openai-compat.md`](./catalog-openai-compat.md)
+- [`catalog-openai-discovery.md`](./catalog-openai-discovery.md)
+- [`catalog-provider-priority.md`](./catalog-provider-priority.md)
+- [`catalog-proxy-reference.md`](./catalog-proxy-reference.md)
+- [`catalog-resolution-merge.md`](./catalog-resolution-merge.md)
+- [`catalog-thinking-derivation.md`](./catalog-thinking-derivation.md)
+- [`catalog-token-costing.md`](./catalog-token-costing.md)
+- [`catalog-tokenizer-resolution.md`](./catalog-tokenizer-resolution.md)
+- [`catalog-variant-collapse.md`](./catalog-variant-collapse.md)
+- [`collab-wire-protocol.md`](./collab-wire-protocol.md)
+- [`compaction-suite.md`](./compaction-suite.md)
+- [`composer-history-ladder.md`](./composer-history-ladder.md)
+- [`composer-history-offer.md`](./composer-history-offer.md)
+- [`custom-tool-loader-contracts.md`](./custom-tool-loader-contracts.md)
+- [`diff-pane-streaming-highlight.md`](./diff-pane-streaming-highlight.md)
+- [`diff-stream-native-diff.md`](./diff-stream-native-diff.md)
+- [`durable-workers.md`](./durable-workers.md)
+- [`edit-snapshot-budget.md`](./edit-snapshot-budget.md)
+- [`experiment-control.md`](./experiment-control.md)
+- [`extension-event-emit-algebra.md`](./extension-event-emit-algebra.md)
+- [`extension-handler-timeout-budget.md`](./extension-handler-timeout-budget.md)
+- [`extension-load-diagnostics.md`](./extension-load-diagnostics.md)
+- [`extension-managed-timers.md`](./extension-managed-timers.md)
+- [`extension-model-facade.md`](./extension-model-facade.md)
+- [`fanout-and-budgets.md`](./fanout-and-budgets.md)
+- [`formatting-aware-whitespace.md`](./formatting-aware-whitespace.md)
+- [`git-show-byte-stream.md`](./git-show-byte-stream.md)
+- [`git-tui-stream-ladder.md`](./git-tui-stream-ladder.md)
+- [`git-tui-vim-nav.md`](./git-tui-vim-nav.md)
+- [`hashline-clipboard-syntax.md`](./hashline-clipboard-syntax.md)
+- [`hashline-diff-preview.md`](./hashline-diff-preview.md)
+- [`hashline-executor.md`](./hashline-executor.md)
+- [`hashline-format-recovery.md`](./hashline-format-recovery.md)
+- [`hashline-fs-stream.md`](./hashline-fs-stream.md)
+- [`hashline-mismatch.md`](./hashline-mismatch.md)
+- [`hashline-noop-loop-guard.md`](./hashline-noop-loop-guard.md)
+- [`hashline-normalize-prefixes.md`](./hashline-normalize-prefixes.md)
+- [`hashline-parser-seams.md`](./hashline-parser-seams.md)
+- [`hashline-patcher.md`](./hashline-patcher.md)
+- [`hashline-stream.md`](./hashline-stream.md)
+- [`hashline.md`](./hashline.md)
+- [`held-tool-completions.md`](./held-tool-completions.md)
+- [`history-flush-replay.md`](./history-flush-replay.md)
+- [`ifbench-action-machine.md`](./ifbench-action-machine.md)
+- [`ifbench-array-machine.md`](./ifbench-array-machine.md)
+- [`ifbench-dual-contract-scoring.md`](./ifbench-dual-contract-scoring.md)
+- [`ifbench-dual-contract.md`](./ifbench-dual-contract.md)
+- [`ifbench-live-board.md`](./ifbench-live-board.md)
+- [`ifbench-prompt-rotation.md`](./ifbench-prompt-rotation.md)
+- [`ifbench-runner-thread.md`](./ifbench-runner-thread.md)
+- [`ifbench-turn-thread.md`](./ifbench-turn-thread.md)
+- [`isolation-and-provider-permits.md`](./isolation-and-provider-permits.md)
+- [`marketplace-catalog-fetch.md`](./marketplace-catalog-fetch.md)
+- [`marketplace-install-scopes-gc.md`](./marketplace-install-scopes-gc.md)
+- [`mnemonic-beam.md`](./mnemonic-beam.md)
+- [`mnemonic-binary-vectors.md`](./mnemonic-binary-vectors.md)
+- [`mnemonic-embeddings.md`](./mnemonic-embeddings.md)
+- [`mnemonic-query-cache.md`](./mnemonic-query-cache.md)
+- [`mnemonic-temporal-gates.md`](./mnemonic-temporal-gates.md)
+- [`mnemopi.md`](./mnemopi.md)
+- [`natives-diff-stream.md`](./natives-diff-stream.md)
+- [`plugin-config-runtime-store.md`](./plugin-config-runtime-store.md)
+- [`plugin-git-cache-refresh.md`](./plugin-git-cache-refresh.md)
+- [`plugin-git-source-ladder.md`](./plugin-git-source-ladder.md)
+- [`plugin-install-transaction.md`](./plugin-install-transaction.md)
+- [`plugin-manifest-entry-resolution.md`](./plugin-manifest-entry-resolution.md)
+- [`plugin-resolution-cache-two-roots.md`](./plugin-resolution-cache-two-roots.md)
+- [`prewalk-and-plan-handoff.md`](./prewalk-and-plan-handoff.md)
+- [`provisional-streaming-viewport.md`](./provisional-streaming-viewport.md)
+- [`replay-and-occupancy.md`](./replay-and-occupancy.md)
+- [`retired-header-reflow.md`](./retired-header-reflow.md)
+- [`session-loop-guards-gemini.md`](./session-loop-guards-gemini.md)
+- [`session-payload-413-arbitration.md`](./session-payload-413-arbitration.md)
+- [`session-pins-stable-partition.md`](./session-pins-stable-partition.md)
+- [`session-streaming-edit-guard.md`](./session-streaming-edit-guard.md)
+- [`session-title-index.md`](./session-title-index.md)
+- [`session-unexpected-stop-modes.md`](./session-unexpected-stop-modes.md)
+- [`snapcompact-archive.md`](./snapcompact-archive.md)
+- [`snapcompact-normalization.md`](./snapcompact-normalization.md)
+- [`snapcompact-serialization.md`](./snapcompact-serialization.md)
+- [`snapcompact-shape-billing.md`](./snapcompact-shape-billing.md)
+- [`stats-db.md`](./stats-db.md)
+- [`stats-gain-dashboard.md`](./stats-gain-dashboard.md)
+- [`stats-provider-client.md`](./stats-provider-client.md)
+- [`stats-server-port.md`](./stats-server-port.md)
+- [`stats-sync-worker.md`](./stats-sync-worker.md)
+- [`stats.md`](./stats.md)
+- [`stream-failure-ladder.md`](./stream-failure-ladder.md)
+- [`stream-progress-emit.md`](./stream-progress-emit.md)
+- [`streamed-runs-reuse.md`](./streamed-runs-reuse.md)
+- [`streaming-sniff-then-push.md`](./streaming-sniff-then-push.md)
+- [`svg-rasterize-guards.md`](./svg-rasterize-guards.md)
+- [`svg-safe-rasterizer.md`](./svg-safe-rasterizer.md)
+- [`tool-call-gate-ordering.md`](./tool-call-gate-ordering.md)
+- [`tool-proxy-schema-preserving-wrap.md`](./tool-proxy-schema-preserving-wrap.md)
+- [`transcript-block-lifecycle.md`](./transcript-block-lifecycle.md)
+- [`transcript-replay-no-rewind.md`](./transcript-replay-no-rewind.md)
+- [`transcript-retirement-lifecycle.md`](./transcript-retirement-lifecycle.md)
+- [`tui-history-watermark.md`](./tui-history-watermark.md)

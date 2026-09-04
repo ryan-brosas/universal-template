@@ -7,7 +7,7 @@ disable-model-invocation: true
 
 # Elm Coding Practices
 
-Application skill for Elm style learning (from the archived `awesome-guidelines` style capsules). For TEA architecture and `Html` patterns, combine with stack capsules in `foundation-pack/`.
+Application skill for Elm style learning (from the archived `awesome-guidelines` style capsules). For TEA architecture and `Html` patterns, combine with stack capsules in `skills/*-foundation`.
 
 ## Core Principle
 

@@ -4,7 +4,8 @@
 Markdown-capable hosts receive relative symlinks to the canonical files. Gemini
 CLI receives generated TOML because its custom-command format is different.
 Existing unmanaged files are never overwritten or removed; a conflict is reported instead.
-Obsolete installer-managed entries are removed only when they are provable.
+Obsolete installer-managed entries are removed only when they are provable. This helper does
+not install skills; eager-host skill exposure uses README.md's filtered symlink route.
 """
 from __future__ import annotations
 

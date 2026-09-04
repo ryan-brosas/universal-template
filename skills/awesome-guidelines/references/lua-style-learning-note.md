@@ -9,7 +9,7 @@
 | [lua-users wiki LuaStyleGuide](http://lua-users.org/wiki/LuaStyleGuide) (primary) | 2-space indent; snake_case/lowercase; `is_` booleans; `local` over global; `return M` modules not `module()`; end terminators; truthiness idioms; avoid debug/deprecated APIs |
 | [LuaRocks lua-style-guide](https://github.com/luarocks/lua-style-guide) (secondary) | always `local`; snake_case; CamelCase classes; LDoc; early return; named `local function`; parens on calls; dot vs `[]`; table trailing commas; no semicolons; luacheck |
 
-**Not duplicated here:** Roblox Luau-specific typing — use stack capsules in `foundation-pack/`. Full Olivine-Labs guide — overlaps wiki/LuaRocks.
+**Not duplicated here:** Roblox Luau-specific typing — use stack capsules in `skills/*-foundation`. Full Olivine-Labs guide — overlaps wiki/LuaRocks.
 
 ## Mental model
 
