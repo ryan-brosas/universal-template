@@ -27,10 +27,12 @@ General coding guidance is a **map**, not a monolith. Route each topic to one le
 1. **Classify the topic** using `references/topic-index.md` (naming, docs, errors, Git, AI, performance, principles).
 2. **Load the leaf** cited on that row, never paste the whole guide inline.
 3. **Implement** under `code-discipline` (scope, verification, one source of truth).
-4. **Test** under `quality-gate-methodology` / `test-driven-development` / `testing-anti-patterns` as appropriate.
+4. **Test** under `test-generation`, `test-driven-development`, or
+   `testing-anti-patterns` as appropriate.
 5. **Review** under `code-review-and-quality` before merge when human or agent review is in scope.
-6. **Enforce** anything mechanical via `practices-to-ci` and the project CI gate, if it can be a check, do not leave it as a prompt.
-7. **Ship** via `push-pr` when the branch is ready.
+6. **Enforce** recurring exact contracts via `practices-to-ci` when the value
+   exceeds maintenance and false-positive cost.
+7. **Ship** via `push-pr` only when delivery is requested and the branch is ready.
 8. Stop when the topic is answered by the loaded leaf and any applicable gate has exit 0 evidence.
 
 ## Topic → leaf (quick map)
@@ -49,10 +51,10 @@ General coding guidance is a **map**, not a monolith. Route each topic to one le
 
 ## Red Flags
 
-- **HARD-GATE:** Prompting for something mechanically enforceable instead of adding a CI check (`practices-to-ci`).
+- Repeatedly prompting for an exact, valuable invariant that should be owned by
+  a maintained CI check (`practices-to-ci`).
 - Loading this router and then ignoring the cited leaf, the router has no rules of its own beyond routing.
 - Treating DRY/KISS/YAGNI/SOLID as behavioral walls; use them as decision hints, then verify with project gates.
-- A "best practices" answer with no named skill, no gate command, and no evidence.
 
 ## Verification
 

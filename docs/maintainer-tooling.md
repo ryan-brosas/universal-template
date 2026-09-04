@@ -17,7 +17,7 @@ behavior earns the dependency.
 | `render-prompt.py` | OPTIONAL COMPATIBILITY TOOL | Single-pass prompt placeholder rendering for hosts without native prompts. |
 | `runtime-capabilities.py` | OPTIONAL DIAGNOSTIC | Read-only aggregate environment report; native host inventories remain authoritative. |
 | `github-audit.py` | OPTIONAL DIAGNOSTIC | Read-only GitHub configuration snapshot; direct `gh` output remains authoritative. |
-| `skill-catalog.py` | GENERATED-ARTIFACT TOOL | Explicit disjoint hot/cold sets, measurable startup budget, optional search/stats, and separate generated catalogs derived from tracked filesystem/frontmatter. |
+| `skill-catalog.py` | GENERATED-ARTIFACT TOOL | Entry-only hot/cold sets, the complete AGENTS.md-plus-metadata static budget, optional search/stats, and separate generated catalogs derived from tracked filesystem/frontmatter. |
 
 ## Retired
 

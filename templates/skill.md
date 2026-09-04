@@ -42,7 +42,7 @@ Keep leaf bodies under about 600 words; depth lives in capsules.
 - Frontmatter must parse as strict YAML; known scalar fields stay strings and
   visibility flags stay booleans.
 - The model chooses `invocation` from real callers and visibility needs.
-- Visible operational metadata is hot; hidden operational and foundation leaves
-  are cold and explicitly loaded.
+- Only visible, locally owned `invocation: entry` metadata is generically hot.
+  Internal, manual, vendor, and foundation leaves are cold and explicitly loaded.
 - `kind: foundation` is not a procedure category; follow `writing-skills/references/foundation-kind.md`.
 - Every cited `references/` file must exist.

@@ -9,14 +9,16 @@ disable-model-invocation: true
 
 ## Core Principle
 
-Gather context first, stay scoped to the problem, and earn conclusions from real failures, steer outcomes, not behavior.
+Gather enough context, stay scoped to the problem, and earn conclusions from
+real evidence. Steer outcomes, not behavior.
 
 ## Workflow
 
-1. Gather context: read the issue/PR, align on scope and shape, research relevant docs/APIs/patterns.
-2. Make the narrowest change that resolves the reproduced behavior; stop.
-3. Verify: attempt operations and quote real errors; work is done when CI is green and comments are resolved.
-4. Commit: don't leave work uncommitted unless the user says otherwise.
+1. Gather enough context to own the change; research material uncertainty.
+2. Make the narrowest change that resolves the reproduced behavior.
+3. Verify with decisive checks; attempt safe, permitted operations instead of
+   inferring failure.
+4. Commit or ship only when the request includes that delivery step.
 
 General, language-agnostic code-discipline principles farmed from high-quality
 open-source repos. These guide HOW to write code well, without over-restricting
@@ -24,72 +26,69 @@ behavior (steer outcomes, not behavior).
 
 ## Gather context first (trust but verify)
 
-- Always start by gathering context about the task: read the issue/PR, ask the
- user about scope and shape, research relevant docs/APIs/patterns.
-- Don't implement non-trivial code without alignment on the approach.
+- Start from the request and relevant source. Ask about scope or research
+  docs/APIs/patterns when uncertainty materially affects the implementation.
 
 ## Scope discipline
 
 - **Be scoped to the problem.** For a bug fix, make the narrowest change that
- resolves the reproduced behavior, often one line plus one regression test,
- and stop.
+  resolves the reproduced behavior, then stop.
 - Don't widen a fix to sibling fields/providers/models on a hunch ("others might
  also be affected" is unacceptable). Only extend after confirming the shared
  defect by reproducing it.
-- Don't refactor a shared abstraction to fix one caller unless the narrow fix is
- unavailable.
+- Change a shared abstraction only when the shared defect is confirmed and that
+  abstraction owns the behavior.
 
 ## Leave behavior unchanged for others
 
-- A fix motivated by a narrow surface must not move observable behavior on a
- wider surface. Documenting it doesn't make it acceptable, only expected.
+- A narrow fix should not move unrelated observable behavior. When the owning
+  shared boundary must change, verify and communicate the wider impact.
 
 ## Verification discipline
 
-- **A restriction is a conclusion you earn from a real failure, not a field you
- read.** Never report an operation as blocked/unavailable based on a metadata
- flag or config field, attempt it and quote the actual error. If you
- can't attempt it, say "not attempted", never "we can't".
-- **Pushing is not the end of the task.** Work is done when CI is green and there
- are no unresolved comments.
-- **Do not leave work uncommitted.** Don't end a turn with unstaged or uncommitted
- changes unless the user says otherwise.
+- **A restriction is a conclusion earned from evidence, not a field read in
+  isolation.** When safe and permitted, attempt the operation and quote the
+  error. Otherwise say "not attempted" and name the constraint.
+- When delivery includes a pull request, inspect required CI and unresolved
+  review comments before calling that delivery complete.
 
 ## Type-safety and quality
 
-- Be fully type-safe (internally and in public API) without unnecessary `cast`s
- or `Any`s, so users don't need `isinstance` checks.
-- Have comprehensive tests covering all code paths, favoring integration tests
- and real requests (recordings/snapshots) over unit tests and mocking.
+- Preserve the project's type-safety contract. Avoid unnecessary casts, broad
+  escape types, and caller-side narrowing when a precise boundary is practical.
+- Cover material behavior with the smallest useful mix of tests. Favor
+  integration or real-request evidence when that boundary is the risk.
 
 ## One source of truth
 
 - Never store the same fact in two places; pick one source of truth.
-- Extract inline business logic into reusable units (actions/services), never
- inline it in controllers, tools, or components.
+- Extract shared business logic when duplication or an ownership boundary earns
+  a reusable unit; do not abstract a one-off solely for uniformity.
 
 ## Design taste
 
-- Prefer strong primitives, powerful abstractions, and general solutions over
- narrow, opinionated, or "battery-included" solutions.
-- Be thoughtful and deliberate about new abstractions and public APIs, a wrong
- choice made in a rush is much harder to change later than to do right first.
+- Match abstraction breadth to established requirements and reuse; prefer the
+  simplest primitive that keeps the design coherent.
+- Review new abstractions and public APIs carefully because compatibility can
+  make rushed choices expensive to change.
 
 ## When to use
 
 Apply these when implementing, reviewing, or committing code. For a **topic
 index** (naming, docs, Git, AI, performance) load `coding-best-practices` first,
 then return here for scope and verification. They complement
-`agent-code-quality-gate` (the 5-check gate) and `quality-gate-methodology`
-(how to write tests that catch).
+`agent-code-quality-gate` (completion review) and `test-generation` (how to
+write tests and exact gates that catch).
 
 ## Red Flags
 
-- Widening a fix to sibling fields/providers/models on a hunch ("others might also be affected") without reproducing the shared defect.
-- Reporting an operation as blocked based on a metadata flag instead of attempting it and quoting the real error.
-- Ending a turn with unstaged or uncommitted changes.
-- The same fact stored in two places.
-- Business logic inlined in controllers, tools, or components.
+- Widening a fix to sibling fields, providers, or models without evidence of a
+  shared defect.
+- Reporting an operation as blocked from metadata alone when a safe direct
+  probe is available.
+- Committing or shipping without a delivery request.
+- Competing sources of truth for the same fact.
+- Repeated business logic with no clear canonical owner.
 
 
 ## References

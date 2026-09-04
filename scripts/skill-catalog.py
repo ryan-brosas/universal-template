@@ -14,12 +14,13 @@ import json
 import os
 import re
 import sys
+import tempfile
 from pathlib import Path
 
 BASE = Path(__file__).resolve().parents[1]
 SKILLS = Path(os.environ.get("SKILLS_ROOT", str(BASE / "skills")))
 DOCS = BASE / "docs"
-TOKEN_CHARS = 4
+CONTEXT_BUDGET = BASE / "config/context-budget.json"
 DESC_TRUNC = 160
 
 
@@ -45,6 +46,12 @@ STOPWORDS = {
 }
 
 
+def context_surface(kind: str, invocation: str | None, hidden: bool) -> str:
+    if kind != FOUNDATION_KIND and invocation == "entry" and not hidden:
+        return "hot"
+    return "cold"
+
+
 def scan() -> list[dict]:
     local_dirs = (
         _METADATA.git_ignored_dirs(SKILLS)
@@ -64,7 +71,7 @@ def scan() -> list[dict]:
         hidden = fm.get("disable-model-invocation", False) is True
         invocation = fm.get("invocation")
         kind = fm.get("kind") or "skill"
-        surface = "hot" if kind != FOUNDATION_KIND and not hidden else "cold"
+        surface = context_surface(kind, invocation, hidden)
         out.append({
             "name": fm.get("name", d.name),
             "folder": d.name,
@@ -156,47 +163,77 @@ def related(skills: list[dict], name: str, limit: int = 8) -> list[str]:
     return hits
 
 
-def context_surfaces(skills: list[dict]) -> dict:
+def load_context_budget(path: Path = CONTEXT_BUDGET) -> dict:
+    """Load and validate the canonical static-context budget."""
+    value = json.loads(path.read_text(encoding="utf-8"))
+    required = (
+        ("global_instructions", "max_chars"),
+        ("hot", "max_skills"),
+        ("hot", "max_metadata_chars"),
+        ("combined", "max_chars"),
+    )
+    for section, key in required:
+        number = value.get(section, {}).get(key)
+        if not isinstance(number, int) or isinstance(number, bool) or number < 0:
+            raise ValueError(f"{path}: {section}.{key} must be a non-negative integer")
+    divisor = value.get("token_estimate_divisor")
+    if not isinstance(divisor, int) or isinstance(divisor, bool) or divisor <= 0:
+        raise ValueError(f"{path}: token_estimate_divisor must be a positive integer")
+    instruction_path = value.get("global_instructions", {}).get("path")
+    if not isinstance(instruction_path, str) or not instruction_path:
+        raise ValueError(f"{path}: global_instructions.path must be a non-empty string")
+    return value
+
+
+def context_surfaces(skills: list[dict], token_divisor: int) -> dict:
     """Return disjoint startup (hot) and on-demand (cold) identities."""
-    hot = sorted(s["name"] for s in skills if s["surface"] == "hot")
-    cold = sorted(s["name"] for s in skills if s["surface"] == "cold")
-    overlap = sorted(set(hot) & set(cold))
     hot_rows = [s for s in skills if s["surface"] == "hot"]
+    cold_rows = [s for s in skills if s["surface"] == "cold"]
+    hot = sorted(s["name"] for s in hot_rows)
+    cold = sorted(s["name"] for s in cold_rows)
     chars = sum(len(s["name"]) + len(s["desc"]) for s in hot_rows)
     return {
-        "hot": hot, "cold": cold, "overlap": overlap,
-        "hot_count": len(hot), "cold_count": len(cold),
-        "hot_chars": chars, "hot_tokens_approx": chars // TOKEN_CHARS,
+        "hot": hot,
+        "cold": cold,
+        "overlap": sorted(set(hot) & set(cold)),
+        "hot_count": len(hot),
+        "cold_count": len(cold),
+        "hot_chars": chars,
+        "hot_tokens_approx": chars // token_divisor,
+        "cold_operational": sum(s["kind"] != FOUNDATION_KIND for s in cold_rows),
+        "cold_foundations": sum(s["kind"] == FOUNDATION_KIND for s in cold_rows),
     }
-
-
-def visible_chars(skills: list[dict]) -> int:
-    return context_surfaces(skills)["hot_chars"]
 
 
 def stats(skills: list[dict]) -> dict:
     operational = [s for s in skills if s["kind"] != FOUNDATION_KIND]
     foundations = [s for s in skills if s["kind"] == FOUNDATION_KIND]
-    vis = [s for s in operational if not s["hidden"]]
+    budget = load_context_budget()
+    surfaces = context_surfaces(skills, budget["token_estimate_divisor"])
+    hot_rows = [s for s in operational if s["surface"] == "hot"]
     by_class: dict[str, int] = {}
-    for s in operational:
-        c = s["cls"] or "unclassified"
-        by_class[c] = by_class.get(c, 0) + 1
-    largest = sorted(vis, key=lambda s: -len(s["desc"]))[:10]
-    loader_words = sorted(len(s["body"].split()) for s in foundations)
-    chars = visible_chars(operational)
+    for skill in operational:
+        invocation = skill["cls"] or "unclassified"
+        by_class[invocation] = by_class.get(invocation, 0) + 1
+    largest = sorted(hot_rows, key=lambda skill: -len(skill["desc"]))[:10]
+    loader_words = sorted(len(skill["body"].split()) for skill in foundations)
     return {
         "total": len(operational),
-        "visible": len(vis),
-        "hidden": len(operational) - len(vis),
-        "visible_chars": chars,
-        "visible_tokens_approx": chars // TOKEN_CHARS,
-        "context": context_surfaces(skills),
+        "hot": len(hot_rows),
+        "cold": surfaces["cold_operational"],
+        "visible": sum(not skill["hidden"] for skill in operational),
+        "hidden": sum(skill["hidden"] for skill in operational),
+        "hot_chars": surfaces["hot_chars"],
+        "hot_tokens_approx": surfaces["hot_tokens_approx"],
+        "context": surfaces,
         "classes": by_class,
-        "largest": [{"name": s["name"], "desc_chars": len(s["desc"])} for s in largest],
+        "largest": [
+            {"name": skill["name"], "desc_chars": len(skill["desc"])}
+            for skill in largest
+        ],
         "foundations": {
             "total": len(foundations),
-            "visible": sum(not s["hidden"] for s in foundations),
+            "visible": sum(not skill["hidden"] for skill in foundations),
             "loader_words_min": loader_words[0] if loader_words else 0,
             "loader_words_median": loader_words[len(loader_words) // 2] if loader_words else 0,
             "loader_words_max": loader_words[-1] if loader_words else 0,
@@ -261,20 +298,22 @@ def build_skill_catalog_md(skills: list[dict]) -> str:
         "",
         "Derived from operational `skills/*/SKILL.md` metadata for human browsing.",
         "Models discover skills from the filesystem or the host's native skill surface.",
-        "Visible operational metadata is hot; hidden operational skills are cold.",
-        "Cold foundations are excluded; see `foundation-catalog.md`.",
+        "Only visible locally owned entry metadata is hot.",
+        "Internal, manual, vendor, and foundation capabilities are cold.",
         "",
     ]
     st = stats(skills)
-    lines.append(f"{st['total']} skills: {st['visible']} hot, {st['hidden']} cold. "
-                 f"Visible startup metadata: ~{st['visible_chars']} chars "
-                 f"(~{st['visible_tokens_approx']} tokens).")
+    lines.append(
+        f"{st['total']} skills: {st['hot']} hot, {st['cold']} cold. "
+        f"Hot startup metadata: ~{st['hot_chars']} chars "
+        f"(~{st['hot_tokens_approx']} tokens)."
+    )
     lines.append("")
     sections = [
         ("Entry skills", "entry", "Hot direct user-facing capabilities; trigger on request."),
         ("Internal", "internal", "Cold: invoked by another capability and hidden from startup metadata."),
         ("Manual specialists", "manual", "Cold: loaded explicitly through native search or inspection; hidden from startup metadata."),
-        ("Vendor-managed", "vendor", "Installed and updated by their vendor; visibility follows integration."),
+        ("Vendor-managed", "vendor", "Cold in the generic surface; visibility follows the owning host integration."),
     ]
     for title, key, blurb in sections:
         rows = [s for s in skills if s["cls"] == key]
@@ -317,18 +356,31 @@ def build_foundation_catalog_md(skills: list[dict]) -> str:
     return "\n".join(lines)
 
 
-def cmd_list(skills: list[dict], args) -> int:
-    rows = skills
-    if args.visible:
+def filter_list_rows(
+    skills: list[dict], *, visible: bool = False, hidden: bool = False,
+    klass: str | None = None, kind: str | None = None,
+    surface: str | None = None, tracked_only: bool = False,
+) -> list[dict]:
+    """Apply list filters, including publication-safe local exclusion."""
+    rows = [s for s in skills if not tracked_only or not s.get("local")]
+    if visible:
         rows = [s for s in rows if not s["hidden"]]
-    if args.hidden:
+    if hidden:
         rows = [s for s in rows if s["hidden"]]
-    if args.klass:
-        rows = [s for s in rows if s["cls"] == args.klass]
-    if args.kind:
-        rows = [s for s in rows if s["kind"] == args.kind]
-    if args.surface:
-        rows = [s for s in rows if s["surface"] == args.surface]
+    if klass:
+        rows = [s for s in rows if s["cls"] == klass]
+    if kind:
+        rows = [s for s in rows if s["kind"] == kind]
+    if surface:
+        rows = [s for s in rows if s["surface"] == surface]
+    return rows
+
+
+def cmd_list(skills: list[dict], args) -> int:
+    rows = filter_list_rows(
+        skills, visible=args.visible, hidden=args.hidden, klass=args.klass,
+        kind=args.kind, surface=args.surface, tracked_only=args.tracked_only,
+    )
     if args.json:
         print(json.dumps([{k: s[k] for k in ("name", "kind", "cls", "hidden", "surface", "local", "desc", "path")}
                           for s in rows], indent=2))
@@ -399,7 +451,10 @@ def cmd_stats(skills: list[dict], args) -> int:
         print(json.dumps(st, indent=2))
         return 0
     print("Skill catalog stats")
-    print(f"  operational: {st['total']}  visible: {st['visible']}  hidden: {st['hidden']}")
+    print(
+        f"  operational: {st['total']}  hot: {st['hot']}  cold: {st['cold']} "
+        f" visible: {st['visible']}  hidden: {st['hidden']}"
+    )
     foundation_stats = st["foundations"]
     print(f"  foundations: {foundation_stats['total']}  visible: {foundation_stats['visible']}"
           f"  loader words min/median/max: {foundation_stats['loader_words_min']}/"
@@ -407,35 +462,121 @@ def cmd_stats(skills: list[dict], args) -> int:
     n_local = sum(1 for s in skills if s.get("local"))
     if n_local:
         print(f"  machine-local (git-ignored; excluded from generated catalogs): {n_local}")
-    print(f"  visible metadata: {st['visible_chars']} chars (~{st['visible_tokens_approx']} tokens)")
+    print(f"  hot metadata: {st['hot_chars']} chars (~{st['hot_tokens_approx']} tokens)")
     for c in sorted(st["classes"]):
         print(f"  class {c:13} {st['classes'][c]}")
-    print("  largest visible descriptions:")
+    print("  largest hot descriptions:")
     for l in st["largest"]:
         print(f"    {l['desc_chars']:5}  {l['name']}")
     return 0
 
 
-def cmd_context(skills: list[dict], args) -> int:
-    rows = [s for s in skills if not s.get("local")]
-    result = context_surfaces(rows)
-    failures = []
+def context_report(
+    skills: list[dict], budget: dict, instruction_path: Path | None = None
+) -> dict:
+    """Measure the complete static global context against one explicit budget."""
+    if instruction_path is None:
+        instruction_path = (BASE / budget["global_instructions"]["path"]).resolve()
+        try:
+            instruction_path.relative_to(BASE.resolve())
+        except ValueError as exc:
+            raise ValueError("global_instructions.path escapes the repository") from exc
+    divisor = budget["token_estimate_divisor"]
+    surfaces = context_surfaces(skills, divisor)
+    instruction_chars = len(instruction_path.read_text(encoding="utf-8"))
+    combined_chars = instruction_chars + surfaces["hot_chars"]
+    result = {
+        "global_instructions": {
+            "path": budget["global_instructions"]["path"],
+            "chars": instruction_chars,
+            "tokens_approx": instruction_chars // divisor,
+            "max_chars": budget["global_instructions"]["max_chars"],
+        },
+        "hot": {
+            "skills": surfaces["hot_count"],
+            "names": surfaces["hot"],
+            "metadata_chars": surfaces["hot_chars"],
+            "tokens_approx": surfaces["hot_tokens_approx"],
+            "max_skills": budget["hot"]["max_skills"],
+            "max_metadata_chars": budget["hot"]["max_metadata_chars"],
+        },
+        "combined": {
+            "chars": combined_chars,
+            "tokens_approx": combined_chars // divisor,
+            "max_chars": budget["combined"]["max_chars"],
+        },
+        "cold": {
+            "operational": surfaces["cold_operational"],
+            "foundations": surfaces["cold_foundations"],
+            "names": surfaces["cold"],
+        },
+        "overlap": surfaces["overlap"],
+        "token_estimate_divisor": divisor,
+        "failures": [],
+    }
+    failures = result["failures"]
     if result["overlap"]:
         failures.append("hot/cold overlap: " + ", ".join(result["overlap"]))
-    if args.max_hot_chars is not None and result["hot_chars"] > args.max_hot_chars:
-        failures.append(f"hot chars {result['hot_chars']} exceed {args.max_hot_chars}")
-    if args.max_hot_skills is not None and result["hot_count"] > args.max_hot_skills:
-        failures.append(f"hot skills {result['hot_count']} exceed {args.max_hot_skills}")
-    result["failures"] = failures
+    if instruction_chars > result["global_instructions"]["max_chars"]:
+        failures.append(
+            "global_instructions chars "
+            f"{instruction_chars} exceed {result['global_instructions']['max_chars']}"
+        )
+    if result["hot"]["skills"] > result["hot"]["max_skills"]:
+        failures.append(
+            f"hot skills {result['hot']['skills']} exceed {result['hot']['max_skills']}"
+        )
+    if result["hot"]["metadata_chars"] > result["hot"]["max_metadata_chars"]:
+        failures.append(
+            "hot metadata chars "
+            f"{result['hot']['metadata_chars']} exceed {result['hot']['max_metadata_chars']}"
+        )
+    if combined_chars > result["combined"]["max_chars"]:
+        failures.append(
+            f"combined chars {combined_chars} exceed {result['combined']['max_chars']}"
+        )
+    return result
+
+
+def cmd_context(skills: list[dict], args) -> int:
+    rows = [skill for skill in skills if not skill.get("local")]
+    budget = load_context_budget()
+    if args.max_global_chars is not None:
+        budget["global_instructions"]["max_chars"] = args.max_global_chars
+    if args.max_hot_chars is not None:
+        budget["hot"]["max_metadata_chars"] = args.max_hot_chars
+    if args.max_hot_skills is not None:
+        budget["hot"]["max_skills"] = args.max_hot_skills
+    if args.max_combined_chars is not None:
+        budget["combined"]["max_chars"] = args.max_combined_chars
+    result = context_report(rows, budget)
     if args.json:
         print(json.dumps(result, indent=2))
     else:
-        print(f"hot: {result['hot_count']} skills, {result['hot_chars']} chars (~{result['hot_tokens_approx']} tokens)")
-        print(f"cold: {result['cold_count']} discoverable entries")
+        global_context = result["global_instructions"]
+        hot = result["hot"]
+        combined = result["combined"]
+        cold = result["cold"]
+        print(
+            f"global instructions: {global_context['chars']} chars "
+            f"(~{global_context['tokens_approx']} tokens)"
+        )
+        print(
+            f"hot: {hot['skills']} skills, {hot['metadata_chars']} metadata chars "
+            f"(~{hot['tokens_approx']} tokens)"
+        )
+        print(
+            f"combined static: {combined['chars']} chars "
+            f"(~{combined['tokens_approx']} tokens)"
+        )
+        print(
+            f"cold: {cold['operational']} operational, "
+            f"{cold['foundations']} foundations"
+        )
         print(f"overlap: {len(result['overlap'])}")
-        for failure in failures:
+        for failure in result["failures"]:
             print(f"FAIL  {failure}")
-    return 1 if failures else 0
+    return 1 if result["failures"] else 0
 
 
 def cmd_selftest(skills: list[dict], _args) -> int:
@@ -462,10 +603,100 @@ def cmd_selftest(skills: list[dict], _args) -> int:
     if any(f"../skills/{s['name']}/SKILL.md" in foundation_doc for s in operational):
         print("selftest: operational skill leaked into foundation catalog", file=sys.stderr)
         return 1
-    surfaces = context_surfaces([*operational, *foundations])
+    divisor = load_context_budget()["token_estimate_divisor"]
+    surfaces = context_surfaces([*operational, *foundations], divisor)
     if surfaces["overlap"] or surfaces["hot_count"] + surfaces["cold_count"] != len(operational) + len(foundations):
         print("selftest: context surfaces are not exhaustive and disjoint", file=sys.stderr)
         return 1
+    expected_surfaces = {
+        ("skill", "entry", False): "hot",
+        ("skill", "entry", True): "cold",
+        ("skill", "internal", True): "cold",
+        ("skill", "manual", True): "cold",
+        ("skill", "vendor", False): "cold",
+        (FOUNDATION_KIND, "manual", True): "cold",
+    }
+    for inputs, expected in expected_surfaces.items():
+        if context_surface(*inputs) != expected:
+            print(f"selftest: context classification failed for {inputs}", file=sys.stderr)
+            return 1
+    fixture = [
+        {
+            "name": "entry",
+            "desc": "x",
+            "kind": "skill",
+            "surface": "hot",
+            "hidden": False,
+            "cls": "entry",
+            "local": False,
+        },
+        {
+            "name": "vendor",
+            "desc": "x",
+            "kind": "skill",
+            "surface": "cold",
+            "hidden": False,
+            "cls": "vendor",
+            "local": False,
+        },
+        {
+            "name": "local-entry",
+            "desc": "x",
+            "kind": "skill",
+            "surface": "hot",
+            "hidden": False,
+            "cls": "entry",
+            "local": True,
+        },
+        {
+            "name": "foundation",
+            "desc": "x",
+            "kind": FOUNDATION_KIND,
+            "surface": "cold",
+            "hidden": True,
+            "cls": "manual",
+            "local": False,
+        },
+    ]
+    tracked_hot = filter_list_rows(
+        fixture, surface="hot", tracked_only=True
+    )
+    if [skill["name"] for skill in tracked_hot] != ["entry"]:
+        print("selftest: tracked hot export included a local skill", file=sys.stderr)
+        return 1
+    all_hot = filter_list_rows(fixture, surface="hot")
+    if {skill["name"] for skill in all_hot} != {"entry", "local-entry"}:
+        print("selftest: local skill inspection path missing", file=sys.stderr)
+        return 1
+    test_budget = {
+        "global_instructions": {"path": "AGENTS.md", "max_chars": 5},
+        "hot": {"max_skills": 1, "max_metadata_chars": 6},
+        "combined": {"max_chars": 11},
+        "token_estimate_divisor": 4,
+    }
+    with tempfile.TemporaryDirectory(prefix="context-budget-") as raw:
+        temporary = Path(raw)
+        instruction_path = temporary / "AGENTS.md"
+        instruction_path.write_text("abcd\n", encoding="utf-8")
+        budget_path = temporary / "budget.json"
+        budget_path.write_text(json.dumps(test_budget), encoding="utf-8")
+        loaded_budget = load_context_budget(budget_path)
+        tracked_fixture = [skill for skill in fixture if not skill["local"]]
+        report = context_report(tracked_fixture, loaded_budget, instruction_path)
+        if report["failures"] or report["combined"]["chars"] != 11:
+            print(f"selftest: configured context budget did not pass: {report}", file=sys.stderr)
+            return 1
+        loaded_budget["global_instructions"]["max_chars"] = 4
+        loaded_budget["combined"]["max_chars"] = 10
+        failures = context_report(
+            tracked_fixture, loaded_budget, instruction_path
+        )["failures"]
+        if not any(item.startswith("global_instructions") for item in failures):
+            print("selftest: global instruction budget failure missing", file=sys.stderr)
+            return 1
+        if not any(item.startswith("combined") for item in failures):
+            print("selftest: combined context budget failure missing", file=sys.stderr)
+            return 1
     escaped = _align_md_table(["| A | B |", "|---|---|", r"| x | one \| two |"])
     if "one \| two" not in escaped[-1] or len(_split_md_row(escaped[-1])) != 2:
         print("selftest: escaped Markdown pipe changed table shape", file=sys.stderr)
@@ -513,6 +744,7 @@ def main() -> int:
     p.add_argument("--class", dest="klass", choices=CLASSES)
     p.add_argument("--kind", choices=KINDS)
     p.add_argument("--surface", choices=("hot", "cold"))
+    p.add_argument("--tracked-only", action="store_true")
     p.add_argument("--json", action="store_true")
     p = sub.add_parser("search", help="scored catalog search (maintainer/explicit queries)")
     p.add_argument("query")
@@ -525,8 +757,10 @@ def main() -> int:
     p.add_argument("--json", action="store_true")
     p = sub.add_parser("context", help="measure and optionally gate disjoint hot/cold surfaces")
     p.add_argument("--json", action="store_true")
+    p.add_argument("--max-global-chars", type=int)
     p.add_argument("--max-hot-chars", type=int)
     p.add_argument("--max-hot-skills", type=int)
+    p.add_argument("--max-combined-chars", type=int)
     p = sub.add_parser("generate", help="write generated skill and foundation catalogs")
     p.add_argument("--check", action="store_true", help="verify generated docs are current")
     sub.add_parser("selftest", help="verify kind-aware search, stats, and catalog separation")

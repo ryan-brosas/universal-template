@@ -37,7 +37,7 @@ jobs:
           python3 scripts/install-prompts.py --selftest
           python3 scripts/render-prompt.py --selftest
           python3 scripts/skill-catalog.py selftest
-          python3 scripts/skill-catalog.py context --max-hot-skills 40 --max-hot-chars 11000
+          python3 scripts/skill-catalog.py context
           python3 scripts/skill-catalog.py generate --check
           python3 scripts/repo-hygiene.py --selftest
           python3 scripts/repo-hygiene.py

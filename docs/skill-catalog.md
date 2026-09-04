@@ -4,10 +4,10 @@
 
 Derived from operational `skills/*/SKILL.md` metadata for human browsing.
 Models discover skills from the filesystem or the host's native skill surface.
-Visible operational metadata is hot; hidden operational skills are cold.
-Cold foundations are excluded; see `foundation-catalog.md`.
+Only visible locally owned entry metadata is hot.
+Internal, manual, vendor, and foundation capabilities are cold.
 
-153 skills: 38 hot, 115 cold. Visible startup metadata: ~10315 chars (~2578 tokens).
+153 skills: 33 hot, 120 cold. Hot startup metadata: ~8449 chars (~2112 tokens).
 
 ## Entry skills
 
@@ -46,7 +46,7 @@ Hot direct user-facing capabilities; trigger on request.
 | [`ship-pr`](../skills/ship-pr/SKILL.md)                                                     | entry | visible | Use when the user wants a change shipped autonomously end to end: commit, push, open the PR, watch CI, triage and address bot/human review comments in-thread,...  |
 | [`skill-catalog`](../skills/skill-catalog/SKILL.md)                                         | entry | visible | Use when the user asks what skills exist or needs to find the right skill for a topic; inspect local frontmatter and return only relevant candidates.              |
 | [`system-design-specification`](../skills/system-design-specification/SKILL.md)             | entry | visible | Use when authoring formal, crash-proof system design documents and architectural specifications: scope fences and non-goals, 4-part state ontologies, mathemati... |
-| [`test-generation`](../skills/test-generation/SKILL.md)                                     | entry | visible | Use when writing, expanding, or auditing tests, converting workflow rules into gates, or deciding what to test. Catch-first method: a test is only good if it c... |
+| [`test-generation`](../skills/test-generation/SKILL.md)                                     | entry | visible | Use when writing, expanding, or auditing tests, converting exact recurring failures into gates, or deciding what to test. Catch-first method: prove a test can...  |
 | [`writing-skills`](../skills/writing-skills/SKILL.md)                                       | entry | visible | Use when authoring, editing, or verifying any SKILL.md in this catalog: canonical template, frontmatter grammar, uniform anatomy, progressive disclosure, and t... |
 
 ## Internal
@@ -71,7 +71,7 @@ Cold: invoked by another capability and hidden from startup metadata.
 | [`opensrc`](../skills/opensrc/SKILL.md)                                     | internal | hidden  | Use when you need to understand how a library works internally, debug dependency issues, or inspect package source beyond types and docs - fetches source for n... |
 | [`performance-optimization`](../skills/performance-optimization/SKILL.md)   | internal | hidden  | Use when profiling, optimizing, or adding performance budgets to applications, covers measure-first workflow, Core Web Vitals, common anti-patterns, and perfor... |
 | [`practices-to-ci`](../skills/practices-to-ci/SKILL.md)                     | internal | hidden  | Use when a repo has code practices/discipline that should be enforced automatically, turn them into mechanical CI checks instead of relying on prompting or pro... |
-| [`quality-gate-methodology`](../skills/quality-gate-methodology/SKILL.md)   | internal | hidden  | Use when writing or reviewing tests and quality gates for code, a test is only good if it catches: pre-fix FAIL and post-fix PASS, broad tests over single case... |
+| [`quality-gate-methodology`](../skills/quality-gate-methodology/SKILL.md)   | internal | hidden  | Use when an internal caller asks for the legacy quality-gate methodology name; compatibility route to the canonical test-generation procedure.                     |
 | [`root-cause-tracing`](../skills/root-cause-tracing/SKILL.md)               | internal | hidden  | Use when errors occur deep in execution and you need to trace back to the original trigger - trace bugs backward through the call stack, adding instrumentation... |
 | [`source-driven-development`](../skills/source-driven-development/SKILL.md) | internal | hidden  | Use when shipping code that depends on unfamiliar libraries, external APIs, or framework behavior: cite the authoritative source or mark the decision unverifie... |
 | [`test-driven-development`](../skills/test-driven-development/SKILL.md)     | internal | hidden  | Use when implementing a behavior change or fixing a reproducible defect - demonstrate the failure first (RED), fix, verify GREEN; for non-reproducible issues,...  |
@@ -180,7 +180,7 @@ Cold: loaded explicitly through native search or inspection; hidden from startup
 
 ## Vendor-managed
 
-Installed and updated by their vendor; visibility follows integration.
+Cold in the generic surface; visibility follows the owning host integration.
 
 | Skill                                                                         | Class  | Visible | Description                                                                                                                                                        |
 | ----------------------------------------------------------------------------- | ------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |

@@ -30,6 +30,48 @@ class FrontmatterError(ValueError):
     pass
 
 
+if yaml is not None:
+    class UniqueKeyLoader(yaml.SafeLoader):
+        """Safe YAML loader that rejects duplicate mapping keys."""
+
+
+    def _construct_unique_mapping(loader, node, deep=False):
+        direct_keys = set()
+        for key_node, _value_node in node.value:
+            if key_node.tag == "tag:yaml.org,2002:merge":
+                continue
+            key = loader.construct_object(key_node, deep=deep)
+            try:
+                duplicate = key in direct_keys
+            except TypeError as exc:
+                raise yaml.constructor.ConstructorError(
+                    "while constructing a mapping",
+                    node.start_mark,
+                    "found an unhashable key",
+                    key_node.start_mark,
+                ) from exc
+            if duplicate:
+                raise yaml.constructor.ConstructorError(
+                    "while constructing a mapping",
+                    node.start_mark,
+                    f"duplicate key: {key!r}",
+                    key_node.start_mark,
+                )
+            direct_keys.add(key)
+        loader.flatten_mapping(node)
+        return yaml.constructor.SafeConstructor.construct_mapping(
+            loader, node, deep=deep
+        )
+
+
+    UniqueKeyLoader.add_constructor(
+        yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG,
+        _construct_unique_mapping,
+    )
+else:
+    UniqueKeyLoader = None
+
+
 def parse_frontmatter(text: str) -> dict[str, Any]:
     """Parse the opening YAML document strictly; never guess from lines."""
     if not text.startswith("---\n"):
@@ -41,7 +83,7 @@ def parse_frontmatter(text: str) -> dict[str, Any]:
     if yaml is None:
         raise FrontmatterError("PyYAML is required for strict frontmatter parsing")
     try:
-        value = yaml.safe_load(source)
+        value = yaml.load(source, Loader=UniqueKeyLoader)
     except yaml.YAMLError as exc:
         raise FrontmatterError(f"invalid YAML: {exc}") from exc
     if not isinstance(value, dict):
@@ -217,12 +259,58 @@ def selftest() -> int:
         if validate_tree(root):
             print("selftest: valid foundation rejected", file=sys.stderr)
             return 1
+        typed = parse_frontmatter(
+            "---\nname: 'quoted-name'\ndescription: |\n"
+            "  first line\n  second line\n"
+            "disable-model-invocation: true\n---\n"
+        )
+        if typed["description"] != "first line\nsecond line\n" or typed["disable-model-invocation"] is not True:
+            print("selftest: valid YAML scalar typing changed", file=sys.stderr)
+            return 1
+        merged = parse_frontmatter(
+            "---\ndefaults: &defaults\n  invocation: manual\n"
+            "  disable-model-invocation: true\n<<: *defaults\n"
+            "name: merged\ndescription: merged values\n---\n"
+        )
+        if (
+            merged["invocation"] != "manual"
+            or merged["disable-model-invocation"] is not True
+        ):
+            print("selftest: valid YAML merge rejected", file=sys.stderr)
+            return 1
+        overridden = parse_frontmatter(
+            "---\ndefaults: &defaults\n  invocation: manual\n<<: *defaults\n"
+            "name: override\ndescription: explicit override\ninvocation: entry\n---\n"
+        )
+        if overridden["invocation"] != "entry":
+            print("selftest: explicit merge override changed", file=sys.stderr)
+            return 1
+        try:
+            parse_frontmatter(
+                "---\nname: nested\ndescription: nested duplicate\n"
+                "extra:\n  key: first\n  key: second\n---\n"
+            )
+        except FrontmatterError as exc:
+            if "duplicate key: 'key'" not in str(exc):
+                print(f"selftest: nested duplicate error changed: {exc}", file=sys.stderr)
+                return 1
+        else:
+            print("selftest: nested duplicate key accepted", file=sys.stderr)
+            return 1
         cases = [
             (valid_text.replace("invocation: manual", "invocation: entry"), "foundation invocation must be manual"),
             (valid_text.replace("kind: foundation\n", ""), "*-foundation requires kind: foundation"),
             (valid_text.replace("disable-model-invocation: true", 'disable-model-invocation: "true"'), "must be a boolean"),
             (valid_text.replace("description: cold evidence", "description:\n  nested: value"), "description must be a string"),
             (valid_text.replace("kind: foundation", "kind: [foundation"), "frontmatter unparseable"),
+            (
+                valid_text.replace("name: demo-foundation", "name: first\nname: second"),
+                "duplicate key: 'name'",
+            ),
+            (
+                valid_text.replace("invocation: manual", "invocation: entry\ninvocation: manual"),
+                "duplicate key: 'invocation'",
+            ),
         ]
         for bad, expected in cases:
             (valid / "SKILL.md").write_text(bad, encoding="utf-8")

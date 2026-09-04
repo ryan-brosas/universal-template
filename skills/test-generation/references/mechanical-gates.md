@@ -1,23 +1,37 @@
-# Mechanical Gate Ladder — quality packs and unbypassable gates
+# Mechanical gate ladder
 
-Source: scarywood75, 2026-07-19; distilled from the original discussion transcript.
+Source: scarywood75, 2026-07-19; distilled from the original discussion
+transcript and qualified against this repository's engineering policy.
 
-## Anything mechanical → a test or gate
+## Gate exact, valuable invariants
 
-Anything deterministic: exposed functions not used elsewhere, non-existent consts, unused imports, duplicate detection via semantic comparison (how far is function X from function Y; near-identical ⇒ duplicate). Removing responsibility from the LLM, which "tends to forget and makes mistakes."
+A deterministic, reproducible failure class can earn a test or gate: invalid
+references, nonexistent constants, unused exports where the project forbids
+them, generated-file drift, or exact structural duplication. The gate should
+check an artifact or runtime property, not whether an agent followed a preferred
+thinking process.
+
+Do not mechanize every possible check. Add a gate when recurrence, impact, and
+signal justify its maintenance and false-positive cost.
 
 ## Quality packs
 
-- A **quality pack** = a set of gates. One pack is universal across all languages (structure, hygiene); others are language-specific (e.g. TS, Python).
-- After adding a gate, the harness runs it in CI; the agent's session never "passes" without the pack green.
+A quality pack can group a small set of related gates. A project-wide pack may
+own exact repository invariants while language-specific packs own compiler,
+linter, or test-runner contracts. Keep each check independently diagnosable and
+allow documented exceptions where the underlying policy allows them.
 
-## Gates vs prompts (the core contrast)
+## Gates versus prompts
 
-> Prompting for something that can be mechanically enforced is useless.
-
-Example from the source: "I want my agents to use the web as much as possible, so I created a gate that does not allow them to go further until they have called and used the researcher agent — because telling my agent to research by prompting does not consistently work, while the gate cannot be bypassed."
+The source recommended blocking progress until an agent called a researcher.
+That enforces ceremony rather than evidence and is not adopted here. If research
+quality matters, verify the resulting claim, citation, artifact, or behavior.
+Tool choice remains contextual.
 
 ## Applying
 
-- When a project has a rule that is *behaved* ("use AI to research", "lint style") turn that rule into a gate/check the first time it is violated, not a reminder.
-- The gate runs at the end of iterate loop: fast iteration while green; a red gate halts (never bypass, never waive silently).
+- Promote a repeated deterministic catch into the narrowest maintained test or
+  gate that owns it.
+- Keep semantic review, research strategy, and tool selection as judgment.
+- A red required gate blocks completion until fixed or dispositioned through the
+  project's explicit exception path; do not waive it silently.

@@ -36,8 +36,9 @@ When a skill qualifies:
   trigger/collision testing.
 - Preserve compact evidence provenance outside the operational instructions
   only when it materially supports future review.
-- Run the skill validator, catalog checks, style checks, and affected behavior
-  tests.
+- Run the exact skill validator and generated-catalog parity check. Review prose
+  and semantic quality using current writing guidance. Run affected behavior
+  tests when the skill changes behavior.
 
 Outside the universal-template repository, draft in the conversation unless the
 user supplies an explicit destination.

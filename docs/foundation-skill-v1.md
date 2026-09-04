@@ -64,13 +64,13 @@ explicitly unverified.
 ## Filtered discovery route
 
 Keep `skills/` canonical. For eager or unverified hosts, create a host-owned
-**symlink view** containing only tracked hot skill directories (operational
-entries not hidden by `disable-model-invocation`) and configure that host to
+**symlink view** containing only tracked hot skill directories (visible, locally
+owned `invocation: entry` leaves) and configure that host to
 scan the view. Do not copy files and do not create a second canonical tree.
 Maintainers can obtain the exact source set with:
 
 ```sh
-python3 scripts/skill-catalog.py list --surface hot --json
+python3 scripts/skill-catalog.py list --surface hot --tracked-only --json
 ```
 
 A foundation remains available through explicit

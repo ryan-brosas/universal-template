@@ -4,101 +4,74 @@ description: Use when the user wants to improve architecture, find refactoring o
 invocation: entry
 ---
 
+# Improve codebase architecture
 
-# Improve Codebase Architecture
+## Core principle
 
-## Core Principle
+Start from a concrete maintenance, coupling, reliability, performance, or
+navigation problem. Change the smallest coherent ownership boundary that
+addresses its cause, preserve intended behavior, and verify the improvement with
+the evidence the problem supports.
 
-Architecture change = behavior-preserving: tests stay green, one axis at a time, each step independently shippable, measured before and after.
+## When to use / NOT
 
-## Iron Laws
-
-<EXTREMELY-IMPORTANT>
-- **Architecture change = behavior-preserving.** Tests stay green.
-- **One axis at a time.** Not naming + layering + packaging in one PR.
-- **Each step independently shippable.** Strangler fig, not big-bang.
-- **Measure before and after.** Cyclomatic complexity, coupling, build time.
-- **Make easy changes easy, hard changes possible.** Not "perfect". Just better.
-</EXTREMELY-IMPORTANT>
-
-## When to Use
-
-"Improve the architecture"; module too coupled; tests hard to write; "this class is too big"; AI tools struggle; build/test time high; on-boarding painful.
-
-## When NOT to Use
-
-Architecture is fine; "redesign" without a problem; rewrites (different risk); user wants features.
-
-## The Refactoring Ladder
-
-```
-1. Rename    (~hours, high signal)
-2. Extract   (~hours)
-3. Move      (~hours)
-4. Restructure (interface, layering — ~days)
-5. Repackage (~weeks)
-6. Rewrite   (~months)
-```
-
-Start at the bottom. Don't jump to 5.
+- **Use when:** responsibilities are fragmented, changes require shotgun edits,
+  interfaces are hard to test, dependencies point the wrong way, or build and
+  navigation costs are materially slowing work.
+- **NOT when:** there is no concrete problem, a local implementation fix owns the
+  issue, or the request is a feature rather than an architecture change.
 
 ## Workflow
 
-1. **Identify the smell.** Don't refactor what isn't broken.
-2. **Measure baseline.** Coupling, complexity, build time. Record.
-3. **Pick the smallest change.** One rename, extract, or move.
-4. **Verify behavior preserved.** Tests pass.
-5. **Measure again.** Did the metric improve?
-6. **Commit.** One commit per change.
-7. **Repeat.** Or stop.
+1. **Name the pain and affected behavior.** Identify callers, dependencies, and
+   the boundary that currently owns the responsibility.
+2. **Establish useful evidence.** Use tests, change patterns, dependency traces,
+   runtime behavior, or a relevant metric. Do not require a metric when direct
+   behavioral evidence is stronger.
+3. **Choose the smallest coherent move.** Rename, extract, consolidate, move, or
+   reshape an interface according to the actual cause. Avoid splitting a
+   naturally cohesive module merely to reduce size.
+4. **Protect behavior and integration.** Use existing tests and focused probes;
+   add a regression test when the recurring failure class earns one.
+5. **Implement in reviewable increments when that lowers risk.** One increment
+   may address several tightly coupled edits. Do not force unrelated naming,
+   packaging, or style work into it.
+6. **Compare the result with the original pain.** Verify affected callers and
+   remove obsolete paths when safe. Stop when the requested improvement is
+   demonstrated; commit or ship only when requested.
 
-## Common Smells
+## Diagnostic patterns
 
-| Smell | Indicator | First move |
-|---------------------|---------------------------------------|----------------------------|
-| Long method | > 30 lines, multiple responsibilities | Extract method |
-| God class | 1000+ lines, 20+ methods | Extract class |
-| Tight coupling | Changing A forces changes in B | Dependency injection |
-| Feature envy | Method uses B's data more | Move method to B |
-| Primitive obsession | Strings/numbers for domain | Value objects / branded |
-| Long parameter list | > 3 params, especially bools | Parameter object / options |
-| Shotgun surgery | One change touches 5+ files | Consolidate |
-| Divergent change | One class changes for many reasons | Split by axis |
+| Observation | Question | Possible move |
+| --- | --- | --- |
+| One fact or policy is maintained in several places | Which layer should own it? | Consolidate and derive secondary views |
+| A small change touches unrelated modules | Is responsibility fragmented? | Move behavior to the owning boundary |
+| Tests require broad mocking | Is the interface wider than the capability? | Narrow or invert the dependency |
+| A module changes for unrelated reasons | Are multiple responsibilities merely colocated? | Extract along an established change axis |
+| Callers repeatedly translate the same primitive data | Is a domain contract missing? | Introduce a value or interface when reuse is real |
+| Build or runtime cost dominates iteration | Where does measurement place the cost? | Optimize or isolate the measured boundary |
 
-## Module Boundaries
+These are prompts for investigation, not numeric thresholds or automatic
+refactors.
 
-**Good**: single purpose, small interface, changes localized, testable.
-**Bad**: two things, wide interface, one change touches many files, tests mock the world.
+## Larger migrations
 
-## When to Stop
+Use parallel old and new paths only when incremental routing materially reduces
+risk. Define compatibility and rollback boundaries, migrate callers in bounded
+steps, then remove the old path after evidence shows it is unused. A direct
+refactor is simpler when coexistence adds no safety.
 
-Stop if tests are easy to write, build time decreased, new features easy, onboarding faster, AI tools navigate. Continue otherwise.
+## Red flags
 
-## Strangler Fig Pattern
-
-For larger refactors:
-1. **Build new alongside old.** Both work.
-2. **Route traffic incrementally.** 10% → 50% → 100%.
-3. **Remove old path.** Once 100% on new.
-4. **One piece at a time.** Module by module.
-
-## Common Mistakes
-
-Refactor without tests; big-bang rewrite; "perfect is the enemy" → over-polish; rename without target; refactor + feature in one PR; no measurement.
-
-## Red Flags
-
-Refactor without tests; no baseline; "I think this is better" (no metric); "rewrite it"; multiple axes; refactor + feature; tests skipped; "moved it, better" (no proof).
-
-## Anti-Patterns
-
-**Refactor without tests**; **no baseline**; **"rewrite"**; **multiple axes**; **refactor + feature**; **"I think"**; **"moved it"**; **one PR, many changes**.
+- Redesign without a named problem or affected caller.
+- A new abstraction with no owned responsibility or credible reuse.
+- Metrics chosen because they are easy to count rather than relevant.
+- Behavior, compatibility, or user changes lost during structural cleanup.
+- A permanent duplicate path created as a temporary migration mechanism.
 
 ## Verification
 
-Tests pass after each step (behavior preserved); the measured metric, cyclomatic complexity, coupling, build time, improved versus the recorded baseline. Stop when tests are easy to write, build time decreased, new features easy, onboarding faster, and AI tools navigate.
-
-
-## References
-
-N/A, no reference files; the ladder, smells table, and patterns are inline in this skill.
+Show that relevant tests or probes pass, affected callers use the intended
+owner, obsolete duplication is gone or explicitly staged for removal, and the
+original architecture pain improved. State any unverified integration or
+migration risk.

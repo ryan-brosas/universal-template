@@ -41,11 +41,6 @@ def validate(title: str) -> list[str]:
     errors: list[str] = []
     if parsed["type"] not in ALLOWED_TYPES:
         errors.append(f"unknown type {parsed['type']!r}")
-    description = parsed["description"]
-    if description[0].isupper():
-        errors.append("description should not start with a capital letter")
-    if description.endswith("."):
-        errors.append("description should not end with a period")
     return errors
 
 
@@ -67,7 +62,9 @@ def selftest() -> int:
         ("security(auth): reject leaked tokens", ["type:security"], True),
         ("deps: pin context server", ["type:dependencies"], True),
         ("update stuff", [], False),
-        ("feat: Add a capital", ["type:feature"], False),
+        ("feat: Add a capital", ["type:feature"], True),
+        ("fix(parser): End with a period.", ["type:bug"], True),
+        ("fix(parser):   ", [], False),
     )
     ok = True
     for title, expected_labels, valid in cases:
