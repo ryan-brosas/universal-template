@@ -30,7 +30,7 @@ response.state = { messages };
 
 **Flow:** server keeps NO conversation store: each request carries prior history, server appends its new turns and returns the WHOLE array for the client to persist (doc comment: client shouldn't parse it — format stability deliberately uncommitted). Telemetry records only the DELTA but with ABSOLUTE indices (`newMessagesStartIndex`) so server-side logs can be replayed into one transcript; assistantReceive logs final index `messages.length - 1` plus suggestedFormula.
 **Invariant:** The evaluateCurrentFormula system message (:98–115) is injected AFTER the schema prompt and BEFORE the user text every time evaluation is requested — position carries meaning for the model. History mutation happens on a LOCAL array then gets returned; mutating request.state in place would alias caller memory across retries. A porter storing history server-side breaks multi-worker routing (turn N may hit any worker).
-**Probe:** `bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "newMessagesStartIndex" app/server/lib/OpenAIAssistantV1.ts && grep -n "role: \"system\" | \"user\" | \"assistant\" | \"tool\"" app/common/Assistance.ts'` → :122/:129; role union :19.
+**Probe:** `bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "newMessagesStartIndex" app/server/lib/OpenAIAssistantV1.ts && grep -n "role: \"system\" | \"user\" | \"assistant\" | \"tool\"" app/common/Assistance.ts'` → :122/:129; role union :19.
 Direct tests: `test/server/lib/OpenAIAssistantV1.ts` :96 case asserts `state.messages` deep-equals `[...requestMessages, replyMessage]`; :312 past-history case feeds 3-message state.
 
 ### Retrieve

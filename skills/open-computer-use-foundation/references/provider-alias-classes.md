@@ -25,7 +25,7 @@ def __init__(self, model):
 
 **Flow:** config.py instantiates three singletons (`grounding_model`, `vision_model`, `action_model`) with friendly names → constructor maps friendly→vendor id → all calls flow through the shared `completion()` of the chosen base family.
 **Invariant:** Any OpenAI-compatible vendor needs ONLY base_url + api_key + aliases — no method overrides (Gemini rides the OpenAI spec via its `/v1beta/openai` endpoint). Alias miss falls back to the raw name, so new models work before aliases exist. Import-time env capture means dotenv must load BEFORE importing providers (both files call `load_dotenv()` defensively).
-**Probe:** `cd /mnt/hdd/utopia/inspo/external/open-computer-use && grep -c '^class .*Provider(' os_computer_use/providers.py` → expect 10 (Llama/OpenRouter/Fireworks/DeepSeek/OpenAI/Gemini ride OpenAI-compatible; Anthropic; Groq; Mistral; Moonshot); `sed -n '17,29p' os_computer_use/providers.py` (Llama/OpenRouter alias tables verbatim).
+**Probe:** `cd $REFERENCE_ROOT/external/open-computer-use && grep -c '^class .*Provider(' os_computer_use/providers.py` → expect 10 (Llama/OpenRouter/Fireworks/DeepSeek/OpenAI/Gemini ride OpenAI-compatible; Anthropic; Groq; Mistral; Moonshot); `sed -n '17,29p' os_computer_use/providers.py` (Llama/OpenRouter alias tables verbatim).
 **Retrieve:**
 ```ts
 await mcp.codebase_memory.search_graph({ project: "ext-open-computer-use", query: "provider base_url aliases api_key getenv", limit: 10, fields: ["signature", "name", "file"] });

@@ -26,7 +26,7 @@ Message(logger.log(f"THOUGHT: {self.append_screenshot()}", "green"))
 
 **Flow:** call log() with formatted text → ANSI print (gray=37;2 dim) → append structured entry → rewrite whole HTML file (template swap on `{{content}}`) → return original string → caller wraps the RETURN VALUE in a Message.
 **Invariant:** Logging is not a side channel but the value pipeline: console coloration, durable HTML transcript, and message construction happen in ONE expression, so history can never drift from what was displayed. Full-file rewrite each line is O(n²) by design — transcripts here are small; CSS colors come from a two-tuple map (fg,bg) with fallback `(entry_color, "#f5f5f5")`.
-**Probe:** `cd /mnt/hdd/utopia/inspo/external/open-computer-use && grep -n 'return text' os_computer_use/logging.py && grep -c 'logger.log' os_computer_use/sandbox_agent.py` → expect return at :82 and 4 call sites wrapping Messages/logs.
+**Probe:** `cd $REFERENCE_ROOT/external/open-computer-use && grep -n 'return text' os_computer_use/logging.py && grep -c 'logger.log' os_computer_use/sandbox_agent.py` → expect return at :82 and 4 call sites wrapping Messages/logs.
 **Retrieve:**
 ```ts
 await mcp.codebase_memory.search_graph({ project: "ext-open-computer-use", query: "Logger log write_log_file print_colored css_color_map", limit: 6, fields: ["signature", "name", "file"] });

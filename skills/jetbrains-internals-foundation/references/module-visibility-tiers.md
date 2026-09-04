@@ -25,7 +25,7 @@ REPORT_ERROR
 
 **Flow:** build stamps one tier per module → serialized to `module-descriptors.dat` + mirrored as XML jar → boot parses through `ModuleVisibilityValue` → `PluginSetBuilder.kt` runs the visibility check with per-install severity (`DISABLED` / `REPORT_WARNING` / `REPORT_ERROR`) — i.e. violations are configurable diagnostics, not hard loader failures.
 **Invariant:** (1) Tiers are NOT a security lattice: resolved dependency edges exist from EVERY tier to EVERY tier — pycharm public→private 184, private→private 206, internal→private 61 (rider 173/190/54; same shape in webstorm/clion). Never port this as an access-control DAG; it is packaging metadata. (2) Tier identity travels with the module NAME: 1,072 bare-name modules ship in ALL of the 10 v2-format products and 1,070 (99.8%) carry the IDENTICAL tier in every one; pycharm∩webstorm common set 1,357 with ZERO disagreement. Exactly TWO conflicts exist cluster-wide, both rider-only downgrades: `intellij.platform.ide.impl.wsl` public→internal and `intellij.xml.syntax` internal→private (confounder: rider sits on micro-line 262.8665 vs 9437 elsewhere). (3) Corollaries: every `<X>_<consumer>_$implicit` synthetic descriptor is private (pycharm 23/23); every `$legacy_jps_library` shim is public (117/117); DataSpell DS-261 (old flat format generation) carries ZERO visibility attrs — presence of the attr is itself a format-generation marker. (4) Cluster census (occurrences): pycharm 654/420/528 · rider 683/409/526 · clion 681/442/551 · phpstorm 642/354/519 · webstorm 619/352/486 · rubymine 620/355/487 · rustrover 617/362/493 · goland 586/359/503 · phpstorm-light 580/349/467 · datagrip 493/312/341 (public/internal/private). **ERRATUM vs [DONE:340]:** that entry recorded pycharm public=301; machine recount (two independent methods: grep over the extracted tree AND a zipfile probe) returns **654**, while its rider 683/409/526 and pycharm internal/private 420/528 reproduce EXACTLY here — trust this table.
-**Probe:** anchored at the PyCharm install root `/mnt/hdd/utopia/inspo/reference/jetbrains/pycharm`:
+**Probe:** anchored at the PyCharm install root `$REFERENCE_ROOT/reference/jetbrains/pycharm`:
 ```bash
 python3 -c "import zipfile,re,collections; z=zipfile.ZipFile('modules/module-descriptors.jar'); c=collections.Counter(); [c.update(re.findall(r'visibility=\"(\w+)\"', z.read(n).decode('utf-8','replace'))) for n in z.namelist() if n.endswith('.xml')]; print(dict(c))"
 ```
@@ -34,7 +34,7 @@ python3 -c "import zipfile,re,collections; z=zipfile.ZipFile('modules/module-des
 ## Get live surrounding code
 **Retrieve:** (jar-resident manifest plane — not symbol-indexed; the graph's code plane holds helpers/scripts only)
 ```bash
-cd /mnt/hdd/utopia/inspo/reference/jetbrains && for p in rider clion pycharm webstorm; do echo "$p: $(unzip -p $p/modules/module-descriptors.jar intellij.xml.syntax.xml | sed -n '2p' | grep -o 'visibility="[a-z]*"')"; done
+cd $REFERENCE_ROOT/reference/jetbrains && for p in rider clion pycharm webstorm; do echo "$p: $(unzip -p $p/modules/module-descriptors.jar intellij.xml.syntax.xml | sed -n '2p' | grep -o 'visibility="[a-z]*"')"; done
 ```
 Adversarial wrong-project check executed pre-write: `search_graph {"project":"jetbrains-datagrip","query":"ModuleVisibility visibility tiers","limit":3}` → `total: 0`.
 

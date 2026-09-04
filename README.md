@@ -40,9 +40,10 @@ Then have the active coding agent perform this bounded setup:
    Prefer current host documentation or runtime help over remembered paths.
 3. Inspect the host's skill discovery behavior before linking `skills/`. A host
    that eagerly scans the tree or whose hidden-field behavior is unverified must
-   receive a host-owned filtered symlink view containing only operational leaves
-   (frontmatter without `kind: foundation`), never the unified root. Only a host
-   proven to discover lazily without scanning the full tree may use the root.
+   receive a host-owned filtered symlink view containing only the tracked **hot**
+   set (operational leaves not hidden by `disable-model-invocation`), never the
+   unified root. Only a host proven to discover lazily without scanning the full
+   tree may use the root.
 4. Generate a host adapter only when the host requires a different format. The
    adapter must name its canonical source under `prompts/` and remain derived.
 5. Preserve every unmanaged file. Replace or remove only links and adapters
@@ -57,18 +58,19 @@ capabilities, not Python.
 
 `skills/` is the one canonical source tree; do not copy it or maintain a second
 foundation tree. For eager or unverified hosts, create a host-owned directory of
-symlinks to operational skill directories only, configure the host to scan that
+symlinks to tracked hot skill directories only, configure the host to scan that
 directory, and disable its automatic `~/.agents/skills` scan where supported.
 Reconcile links from current frontmatter and preserve unmanaged host files.
 Maintainers can inspect the exact filtered set with:
 
 ```sh
-python3 scripts/skill-catalog.py list --kind skill --json
+python3 scripts/skill-catalog.py list --surface hot --json
+python3 scripts/skill-catalog.py context --json
 ```
 
-Foundations remain cold and explicit: use catalog search/show, open the selected
-`skills/<name>-foundation/SKILL.md`, inspect its `references/index.md`, then load
-one matching capsule. See `docs/foundation-skill-v1.md` for measured host
+Hidden operational skills and foundations remain cold and explicit. Use catalog
+search/show and load one selected hidden procedure. For a foundation, open its
+`SKILL.md`, inspect `references/index.md`, then load one matching capsule. See `docs/foundation-skill-v1.md` for measured host
 behavior and limitations.
 
 ### Optional compatibility installer
@@ -115,8 +117,10 @@ Reusable prompts include `/repo-audit`, `/plan-work`, `/implement-work`,
 `scripts/render-prompt.py` remains an optional compatibility helper for hosts
 without a native prompt surface.
 
-MCP servers are added one at a time from `mcp/servers.json`; see
-`mcp/catalog.md` for verified host shapes and secret handling.
+`mcp/servers.json` is a registry, not a default connection set. The `minimal`
+profile activates nothing; select one server or scoped profile through
+`mcp/configure.py`. See `mcp/catalog.md` for verified host shapes, package pins,
+and secret handling.
 
 ## Maintenance
 
@@ -132,7 +136,9 @@ Python helpers.
 - Maintainer tool ownership: `docs/maintainer-tooling.md`
 - Human operational skill catalog: `docs/skill-catalog.md`
 - Human foundation catalog: `docs/foundation-catalog.md`
-- Foundation migration and host probes: `docs/foundation-skill-v1.md`
+- Foundation migration evidence: `docs/foundation-skill-v1.md`
+- Context definitions, budgets, host probes, and MCP costs: `docs/context-surfaces.md`
+- Licensing status and blockers: `docs/licensing.md`
 - Current objectives: `docs/roadmap.md`
 - MCP registry and host wiring: `mcp/catalog.md`
 - Security policy: `SECURITY.md`

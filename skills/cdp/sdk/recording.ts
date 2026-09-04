@@ -80,6 +80,20 @@ function markerPath(): string {
   return join(recordingsRoot(), `.active-${port}`);
 }
 
+function textCaptureEnabled(): boolean {
+  return process.env.CDP_RECORD_TEXT?.trim() === '1';
+}
+
+export function recordedText(value: string, input: string | undefined, allowText: boolean): JsonObject {
+  if (allowText && input && input !== 'password') return { text: value };
+  return {
+    text: '••••••',
+    textLength: value.length,
+    textRedacted: true,
+    ...(input === 'password' ? { password: true } : {}),
+  };
+}
+
 function envOverride(): boolean | undefined {
   const raw = process.env.CDP_RECORD;
   if (raw == null) return undefined;
@@ -437,15 +451,9 @@ export class RecordingManager {
     if (typeof event.url === 'string') event.url = scrubUrl(event.url);
     if (typeof event.to === 'string') event.to = scrubUrl(event.to);
     if (privateText !== undefined) {
-      if (context.input && context.input !== 'password') {
-        event.text = privateText;
-      } else {
-        // Fail closed when focused-element inspection is unavailable: never let
-        // plaintext reach disk unless the field was positively non-password.
-        event.text = '••••••';
-        event.textRedacted = true;
-        if (context.input === 'password') event.password = true;
-      }
+      // Persist no typed content by default. Explicit CDP_RECORD_TEXT=1 is still
+      // refused for passwords and requires video review/showTyping to display.
+      Object.assign(event, recordedText(privateText, context.input, textCaptureEnabled()));
     }
 
     try {

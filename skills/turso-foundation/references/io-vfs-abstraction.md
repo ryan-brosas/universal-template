@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Pluggable IO/VFS abstraction — what contract must every storage backend satisfy?
 
-**Source:** turso (MIT) `main@def9a0601b8e` (/mnt/hdd/utopia/inspo/memory/turso); Codebase Memory project `turso`. **Question:** Which traits define the engine's IO boundary, and what default-method plumbing can a porter reuse instead of rewriting?
+**Source:** turso (MIT) `main@def9a0601b8e` ($REFERENCE_ROOT/memory/turso); Codebase Memory project `turso`. **Question:** Which traits define the engine's IO boundary, and what default-method plumbing can a porter reuse instead of rewriting?
 
 ## One IO trait, one File trait, many backends
 **Path/Symbol:** `core/io/mod.rs`: trait `IO: Clock + Send + Sync` (:424-470+), trait `File` (:153-260+), `FileId` (:57-64), cfg_block platform selection (:21-51); `core/io/vfs.rs` (extension-VFS bridge); backends `unix.rs`, `io_uring.rs`, `windows.rs`, `win_iocp.rs`, `memory.rs`, `generic.rs`, `vfs.rs`.

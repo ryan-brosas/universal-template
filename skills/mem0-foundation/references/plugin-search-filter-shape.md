@@ -27,7 +27,7 @@ except Exception as e:                              # incl. HTTPError(429)
 
 **Flow:** build filter dialect → POST /v3/memories/search/ (5s timeout) → unwrap → slice to top_k → optional min_score post-filter → on ANY exception: one stderr line + []. `rerank=True` is added ONLY when requested (#5684), but injection paths call `should_rerank()` which defaults ON (REST skips reranking when key omitted; opt out via MEM0_RERANK ∈ {0,false,no,off,""} case-insensitive).
 **Invariant:** threshold is a SERVER param; min_score is CLIENT post-filter — they are not interchangeable; empty-by-rate-limit must log status+phrase so it never masquerades as a true empty (#22); happy path emits zero stderr.
-**Probe:** `cd /mnt/hdd/utopia/inspo/mem0 && .venv/bin/python -m pytest integrations/mem0-plugin/tests/test_search.py -q` (11 tests incl. both regressions).
+**Probe:** `cd $REFERENCE_ROOT/mem0 && .venv/bin/python -m pytest integrations/mem0-plugin/tests/test_search.py -q` (11 tests incl. both regressions).
 
 ## Get live surrounding code
 **Retrieve:**

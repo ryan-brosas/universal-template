@@ -30,7 +30,7 @@ public lookup(value: any, raw: string): any {
 
 **Flow:** Blank/empty ⇒ numeric 0 (Grist's "no reference" sentinel, NOT null). When the referenced table's data is present locally, resolve immediately to a positive rowId or hand back the raw STRING (which becomes AltText — visible to the user as unparseable text rather than silently dropped). When absent, emit the lowercase-`"l"` tuple so the DATA ENGINE performs the same resolution with full access.
 **Invariant:** The `raw` fallback is deliberate losslessness: an unmatched reference must remain visible/complainable, never vanish into a dangling 0. The `raw` option rides along ONLY when parse changed the value (`value !== raw`) so the engine can retry the original text. Integer coercion happens even before load checks because ids are numbers by construction — but existence is still verified later (engine-side when unloaded).
-**Probe:** `bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "return 0;  // default value for a reference column" app/common/ValueParser.ts && grep -n "\[\"l\", value, options\]" app/common/ValueParser.ts'` → :137 and :155.
+**Probe:** `bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "return 0;  // default value for a reference column" app/common/ValueParser.ts && grep -n "\[\"l\", value, options\]" app/common/ValueParser.ts'` → :137 and :155.
 Direct tests: reference-paste behavior exercised via `test/server/lib/OpenAIAssistantV1.ts`? No — anchor suite: `grep -rln "ReferenceParser" test/` → paste/import suites.
 
 ### Retrieve

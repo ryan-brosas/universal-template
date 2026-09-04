@@ -20,7 +20,7 @@
 
 **Flow:** keymap resolution collects ALL matching action entries up the parent chain → a child entry with no shortcut children CONTRIBUTES NOTHING and thereby masks every ancestor binding for that id → net effect is deletion without any negative syntax → porters grepping for `first-keystroke=""` (or reading only bound entries) mis-measure the map.
 **Invariant:** unbinding is expressed by PRESENCE of an action element with ABSENCE of children; the shadow must keep the exact action id. A map that wanted "inherit everything except X" is indistinguishable in file size from a full rebinding unless you count shadows.
-**Probe:** `unzip -p /mnt/hdd/utopia/inspo/reference/jetbrains/rider/plugins/keymap-vscode/lib/keymap-vscode.jar keymaps/VSCode.xml | grep -c '<action id="[^"]*" />'` → 129 (the two no-space variants `…/>` are the remainder of 131; child-count classifier is authoritative); same pipe `| grep -c 'first-keystroke=""'` → 0.
+**Probe:** `unzip -p $REFERENCE_ROOT/reference/jetbrains/rider/plugins/keymap-vscode/lib/keymap-vscode.jar keymaps/VSCode.xml | grep -c '<action id="[^"]*" />'` → 129 (the two no-space variants `…/>` are the remainder of 131; child-count classifier is authoritative); same pipe `| grep -c 'first-keystroke=""'` → 0.
 **Coverage caveat:** resource plane, direct extraction.
 
 ## Get live surrounding code

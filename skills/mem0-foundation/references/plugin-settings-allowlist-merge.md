@@ -25,7 +25,7 @@ return sorted(k for k in user if k not in DEFAULTS)   # unknown_keys(): keys NO 
 
 **Flow:** defaults copy → parse user file → non-dict or unreadable ⇒ defaults → merge ONLY known keys → CLI `init` creates once (`Created` printed exactly once across runs) and warns about ignored keys.
 **Invariant:** unknown keys NEVER enter effective config but ARE reported back to the user (typo surfacing); creation never overwrites an existing file; every failure mode returns usable defaults.
-**Probe:** `cd /mnt/hdd/utopia/inspo/mem0 && .venv/bin/python -m pytest integrations/mem0-plugin/tests/test_load_settings.py -q` (executed this pass: 8 passed).
+**Probe:** `cd $REFERENCE_ROOT/mem0 && .venv/bin/python -m pytest integrations/mem0-plugin/tests/test_load_settings.py -q` (executed this pass: 8 passed).
 
 ## Get live surrounding code
 **Retrieve:**

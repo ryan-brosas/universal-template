@@ -36,7 +36,7 @@ if (!existing) {
 **Invariant:** `connectId || undefined` matters — TypeORM would otherwise query `connect_id = NULL` matching every unlinked row. Changing login.email here is a LIVE UNIQUE-KEY RENAME inside a transaction; a collision throws QueryFailedError uncaught (deliberate loud failure). A porter who upserts by email instead of connectId splits one human into two accounts across providers.
 
 ### Probe (direct tests)
-`bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "should normalize email address" test/gen-server/lib/homedb/UsersManager.ts'` → :564.
+`bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "should normalize email address" test/gen-server/lib/homedb/UsersManager.ts'` → :564.
 `bash -c 'grep -c "connectId" app/gen-server/lib/homedb/UsersManager.ts'` → ≥ 4.
 Direct tests: `test/gen-server/lib/homedb/UsersManager.ts` ensureExternalUser family (:526 no-op, :535 save unknown, :543 update existing, :564 normalization).
 

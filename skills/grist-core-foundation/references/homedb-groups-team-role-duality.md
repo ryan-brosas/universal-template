@@ -36,7 +36,7 @@ await manager.remove(group);
 **Invariant:** `getMemberUserRoles` static (:64–77) folds a user's multiple group memberships into the STRONGEST role (`roles.getStrongestRole`) — order of aclRules is irrelevant. The delete's explicit `group_groups` cleanup exists because remove() doesn't cascade inbound edges; porters relying on ORM cascades leave dangling subgroup rows.
 
 ### Probe (direct tests)
-`bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "should refuse to create a" app/gen-server/lib/homedb/GroupsManager.ts test/gen-server/lib/homedb/GroupsManager.ts | head -2'` → source :496 area + test :154.
+`bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "should refuse to create a" app/gen-server/lib/homedb/GroupsManager.ts test/gen-server/lib/homedb/GroupsManager.ts | head -2'` → source :496 area + test :154.
 `bash -c 'grep -c "memberUsers" app/gen-server/lib/homedb/GroupsManager.ts'` → ≥ 8.
 Direct tests: `test/gen-server/lib/homedb/GroupsManager.ts` (423L: team create :115, members :124, same-name role allowed :135/:144, collision refused :154, overwrite families :171+).
 

@@ -33,7 +33,7 @@ for (const tableRef of tableRefs) {
 
 **Probe:** deterministic greps (no unit suite drives these paths — coverage caveat):
 ```bash
-cd /mnt/hdd/utopia/inspo/grist-core
+cd $REFERENCE_ROOT/grist-core
 grep -n "Cannot find or access table" app/server/lib/Export.ts        # 164 (message), 303 (section guard)
 grep -n "summarySourceTable: 0" app/server/lib/Export.ts              # 178
 grep -rn "export function isTableCensored" app/common/isHiddenTable.ts

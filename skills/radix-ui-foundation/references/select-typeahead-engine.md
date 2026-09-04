@@ -24,7 +24,7 @@ return nextItem !== currentItem ? nextItem : undefined;
 
 **Flow:** keydown (length===1, no modifiers — checked at both call sites) appends to buffer → callback receives full buffer → trigger consumer matches against enabled items anchored on `context.value`; content consumer anchors on `document.activeElement` and focuses inside `setTimeout(...)` because imperative focus during keydown races React batching (facebook/react#20332) → match wraps forward from current; buffer decays via nested `updateSearch('')` after 1000ms.
 **Invariant:** repeated-character normalization (`'aaa'` ≡ `'a'`) must run BEFORE length checks that treat 1-char searches differently; the exclude-current rule applies only when the NORMALIZED search is one character — otherwise pressing `'ab'` while on item 'Ab' correctly keeps it; matching never moves focus when the current item already matches (multi-char case).
-**Probe:** `bash -c "cd /mnt/hdd/utopia/inspo/external/ui-radix-ui && grep -nF \"updateSearch(''), 1000\" packages/react/select/src/select.tsx"` (:1871 decay constant) and `grep -nF 'search.length > 1 && Array.from(search).every((char) => char === search[0])' packages/react/select/src/select.tsx` (:1911 normalization predicate).
+**Probe:** `bash -c "cd $REFERENCE_ROOT/external/ui-radix-ui && grep -nF \"updateSearch(''), 1000\" packages/react/select/src/select.tsx"` (:1871 decay constant) and `grep -nF 'search.length > 1 && Array.from(search).every((char) => char === search[0])' packages/react/select/src/select.tsx` (:1911 normalization predicate).
 **Retrieve:**
 ```ts
 await mcp.codebase_memory.search_graph({ project: "ext-ui-radix-ui", query: "useTypeaheadSearch findNextItem wrapArray", limit: 10 });

@@ -24,7 +24,7 @@ def call_function(self, name, arguments):
 
 **Flow:** LLM emits `{name, parameters}` → membership check `name.lower() in tools` gates `getattr` (an unregistered name NEVER resolves to a method, even one that exists on the class) → invocation kwargs-spreads arguments → ANY exception becomes a string result → unknown names return the literal `"Function not implemented."`.
 **Invariant:** Every failure mode returns a STRING the model can read as an observation; nothing raises out of the dispatcher, and no non-tool attribute of the agent is reachable because the registry check happens BEFORE `getattr`.
-**Probe:** `cd /mnt/hdd/utopia/inspo/external/open-computer-use && sed -n '42,59p' os_computer_use/sandbox_agent.py` (shows gate-before-getattr order and the bare `tools` reference); direct test harness `tests/sandbox_agent.py:28` instantiates `SandboxAgent(MockSandbox(), save_logs=False)` proving the dispatcher runs against a stub sandbox.
+**Probe:** `cd $REFERENCE_ROOT/external/open-computer-use && sed -n '42,59p' os_computer_use/sandbox_agent.py` (shows gate-before-getattr order and the bare `tools` reference); direct test harness `tests/sandbox_agent.py:28` instantiates `SandboxAgent(MockSandbox(), save_logs=False)` proving the dispatcher runs against a stub sandbox.
 **Retrieve:**
 ```ts
 await mcp.codebase_memory.search_graph({ project: "ext-open-computer-use", query: "call_function tool registry decorator", limit: 8, fields: ["signature", "name", "file"] });

@@ -35,7 +35,7 @@ public formatAny(value: any): any {
 
 **Probe:** deterministic greps (coverage caveat: no dedicated unit file):
 ```bash
-cd /mnt/hdd/utopia/inspo/grist-core
+cd $REFERENCE_ROOT/grist-core
 grep -n "Attachments: UnsupportedFormatter" app/server/lib/ExcelFormatter.ts   # 170
 grep -n "return this.isRightType(value) ? this.format(value) : formatUnknown(value)" app/server/lib/ExcelFormatter.ts  # 92
 grep -n "time.utc(true).local()" app/server/lib/ExcelFormatter.ts              # 145

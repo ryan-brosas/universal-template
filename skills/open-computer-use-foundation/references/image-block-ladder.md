@@ -37,7 +37,7 @@ return {"type": "image",
 
 **Flow:** every outgoing message passes through `transform_message` in `completion()` → per-element dispatch on `isinstance(bytes)` → provider-specific block construction → kwargs filtered (`None` tools omitted) before `client.create`.
 **Invariant:** The bytes-in-content convention is the portability boundary — providers never see raw bytes because EVERY call re-wraps; OpenAI sniffs the real format and falls back to png WITHOUT failing the call, while Anthropic hardcodes `image/png` (a JPEG would be mislabeled — fine for E2B screenshots, wrong for arbitrary images). Detection failure is warn-and-continue, never raise.
-**Probe:** `cd /mnt/hdd/utopia/inspo/external/open-computer-use && grep -n 'data:image' os_computer_use/llm_provider.py && grep -n 'media_type' os_computer_use/llm_provider.py` (pins f-string data-URL at :135 and hardcoded png at :196); direct test: `tests/llm_provider.py:27-35` builds exactly this mixed `[str, bytes]` content for five providers.
+**Probe:** `cd $REFERENCE_ROOT/external/open-computer-use && grep -n 'data:image' os_computer_use/llm_provider.py && grep -n 'media_type' os_computer_use/llm_provider.py` (pins f-string data-URL at :135 and hardcoded png at :196); direct test: `tests/llm_provider.py:27-35` builds exactly this mixed `[str, bytes]` content for five providers.
 **Retrieve:**
 ```ts
 await mcp.codebase_memory.search_graph({ project: "ext-open-computer-use", query: "wrap_block transform_message create_image_block base64", limit: 8, fields: ["signature", "name", "file"] });

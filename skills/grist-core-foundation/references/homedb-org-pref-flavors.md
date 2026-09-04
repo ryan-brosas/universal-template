@@ -33,7 +33,7 @@ await manager.createQueryBuilder().insert()
 **Invariant:** Permission asymmetry is deliberate — a VIEWER may set their OWN prefs on a site they can't edit; org-wide changes need SCHEMA_EDIT. The JSON.stringify parameter workaround exists because TypeORM mangles json params in onConflict clauses. NULL-ordering divergence between sqlite/postgres is why COALESCE appears in BOTH the join order and the conflict target.
 
 ### Probe (direct tests)
-`bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "userOrgPrefs" app/gen-server/lib/homedb/HomeDBManager.ts | head -3'` → :1435/:1481/:4827.
+`bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "userOrgPrefs" app/gen-server/lib/homedb/HomeDBManager.ts | head -3'` → :1435/:1481/:4827.
 `bash -c 'grep -n "it(" test/gen-server/lib/prefs.ts | head -6'` → suite coverage.
 Direct tests: `test/gen-server/lib/prefs.ts` (133L) + ApiServerAccess pref asserts.
 

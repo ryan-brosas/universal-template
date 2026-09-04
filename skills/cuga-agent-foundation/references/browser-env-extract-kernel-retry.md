@@ -38,7 +38,7 @@ except (ChromeExtensionError, MarkingError) as e:
 **Probe:** no upstream direct test covers this file (grep over `tests/` finds zero) — coverage caveat recorded. Deterministic probe executed against the repo venv pins the demotion shape: a stub communicator whose `extract_screenshot` raises and whose other extract methods return canned values feeds `full_extract_chrome_extension(max_retries=1)` → result has `screenshot == ""`, all other keys populated, no retry.
 **Executed:**
 ```bash
-cd /mnt/hdd/utopia/inspo/cuga-agent && PYTHONPATH=src .venv/bin/python -c "
+cd $REFERENCE_ROOT/cuga-agent && PYTHONPATH=src .venv/bin/python -c "
 import asyncio
 from cuga.backend.browser_env.browser.gym_obs.extract_chrome_extension import full_extract_chrome_extension
 class Stub:

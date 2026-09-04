@@ -31,7 +31,7 @@ return { previous, current };
 **Invariant:** Porting rule — business logic lives in sub-managers; cross-cutting concerns (notifications, caching, notifier wiring) attach ONLY in the facade wrappers. UsersManager's class docstring is contractual: instance/static methods must be reached "through HomeDBManager", never imported standalone.
 
 ### Probe (direct tests)
-`bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -c "this._usersManager\." app/gen-server/lib/homedb/HomeDBManager.ts'` → ≥ 20 (delegation density).
+`bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -c "this._usersManager\." app/gen-server/lib/homedb/HomeDBManager.ts'` → ≥ 20 (delegation density).
 `bash -c 'grep -n "It.s only meant to be used by HomeDBManager" app/gen-server/lib/homedb/UsersManager.ts app/gen-server/lib/homedb/GroupsManager.ts'` → both files.
 Direct tests: `test/gen-server/lib/homedb/HomeDBManager.ts` (499L suite drives everything through the facade).
 

@@ -26,8 +26,10 @@ that gap. No fixed tool chain.
 | External facts / advisories | Exa or read-only fetch |
 | GitHub repo overview | DeepWiki → repository |
 
-Model output is not evidence until verified against source/tests/runtime.
-For execution or model escalation, see `execution-router` and `model-resolution`.
+Model output is not evidence until verified against source/tests/runtime. MCP
+capabilities are selected per task from `../../mcp/profiles.json`; the minimal
+profile connects none, and no route requires all six declarations. For execution
+or model escalation, see `execution-router` and `model-resolution`.
 
 ## References
 

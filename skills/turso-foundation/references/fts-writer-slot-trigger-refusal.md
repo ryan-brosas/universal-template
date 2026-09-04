@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # FTS per-index writer slot — why can't one statement open two flushing cursors, and what error must the second get?
 
-**Source:** turso (MIT) `main@d9266124f` (/mnt/hdd/utopia/inspo/memory/turso); Codebase Memory `turso`. **Question:** How do you stop a trigger writing the FTS-indexed table it fires on from storing the union of two divergent Tantivy file sets under one manifest — without blocking legitimate sequential statements?
+**Source:** turso (MIT) `main@d9266124f` ($REFERENCE_ROOT/memory/turso); Codebase Memory `turso`. **Question:** How do you stop a trigger writing the FTS-indexed table it fires on from storing the union of two divergent Tantivy file sets under one manifest — without blocking legitimate sequential statements?
 
 ## One slot per connection, claimed on first mutation, refused with Raise(Abort)
 **Path/Symbol:** `core/index_method/fts.rs`: `FtsWriterSlot` (:1377-1380), `claim_writer_slot` (:2015-2061), `release_writer_slot` (:2185-2194), `acquire_mvcc_write_lease` (:2065-2110), lazy `ensure_writer` (:2154-2181).

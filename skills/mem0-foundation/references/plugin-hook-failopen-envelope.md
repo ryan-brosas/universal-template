@@ -26,7 +26,7 @@ if __name__ == "__main__":
 
 **Flow:** host fires hook → script resolves inputs defensively (missing key/file/JSON → early return) → optional work → any exception lands in the wrapper → exit code is ALWAYS 0.
 **Invariant:** no raise may cross the script boundary; stdout carries only deliberate context payloads; happy path writes nothing to stderr; logging goes through the `:80-`-style `[mem0-*]` stderr handler (MEM0_DEBUG additionally mirrors to ~/.mem0/hooks.log).
-**Probe:** `cd /mnt/hdd/utopia/inspo/mem0 && .venv/bin/python -m pytest integrations/mem0-plugin/tests/test_search.py -q` (pins 429→[]+stderr AND happy-path-silent).
+**Probe:** `cd $REFERENCE_ROOT/mem0 && .venv/bin/python -m pytest integrations/mem0-plugin/tests/test_search.py -q` (pins 429→[]+stderr AND happy-path-silent).
 
 ## Get live surrounding code
 **Retrieve:**

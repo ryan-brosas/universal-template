@@ -35,7 +35,7 @@ public async removeWebhook(id: string, docId: string, unsubscribeKey: string, ch
 **Invariant:** Unsubscribe-key checking is OPTIONAL by design (`checkKey`) — authenticated doc-owner deletes skip it, unauthenticated unsubscribe links require it; the same endpoint serves both. A porter who always requires the key breaks owner UX; one who never checks it hands anyone-with-the-id deletion power.
 
 ### Probe (direct tests)
-`bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -c "unsubscribeKey" app/gen-server/lib/homedb/HomeDBManager.ts'` → ≥ 3.
+`bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -c "unsubscribeKey" app/gen-server/lib/homedb/HomeDBManager.ts'` → ≥ 3.
 `bash -c 'grep -rn "Wrong unsubscribeKey" test/ | head -2'` → coverage exists.
 Direct tests: `test/server/lib/docapi/Webhooks.ts` (unsubscribe + secret round-trip its).
 

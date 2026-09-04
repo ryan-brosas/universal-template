@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # FTS foreground merge budget — how do you run segment maintenance synchronously inside a transaction without unbounded latency?
 
-**Source:** turso (MIT) `main@d9266124f` (/mnt/hdd/utopia/inspo/memory/turso); Codebase Memory `turso`. **Question:** Why disable tantivy's background merges, and what makes exactly-one-bounded-merge-per-commit the safe replacement?
+**Source:** turso (MIT) `main@d9266124f` ($REFERENCE_ROOT/memory/turso); Codebase Memory `turso`. **Question:** Why disable tantivy's background merges, and what makes exactly-one-bounded-merge-per-commit the safe replacement?
 
 ## Third-party policy output is untrusted; smallest-first; defer beyond budget
 **Path/Symbol:** `core/index_method/fts.rs`: `automatic_merge_policy` (:3104-3114), `bounded_merge_candidate` (:3116-3177), `commit_writer_with_maintenance` (:3184-3237), constants `FTS_MERGE_FACTOR=8` (:74), `FTS_DELETED_DOCS_MERGE_THRESHOLD=0.3` (:79), `FTS_MAX_SYNC_MERGE_DOCS=64_000` (:82), `FTS_MAX_SYNC_MERGE_BYTES=32MiB` (:86).

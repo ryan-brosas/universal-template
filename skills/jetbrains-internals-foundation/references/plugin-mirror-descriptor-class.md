@@ -24,7 +24,7 @@
 **Flow:** build groups generated per-module descriptors under their owning plugin id → writes one `<plugin>`-rooted mirror per bundled plugin into `plugins/` → serializes everything into `.dat` for runtime → humans/diff tools read the XML mirrors.
 **Invariant:** any jar-wide text sweep that does not first split entries by ROOT ELEMENT TAG conflates two schemas and fabricates phantom buckets — the recorded "none=117 visibility" defect class ([DONE:369] erratum) was exactly this: 117 plugin mirrors misread as visibility-less module descriptors. Parse rule: read the first element after the prolog/comments; route `<plugin>` roots to the loading-matrix grammar, `<module>` roots to the tier grammar. Second trap: `<module>` CHILDREN inside plugin mirrors have `name=` but their PARENT has none, so name-keyed joins must be depth-aware.
 **Census (plugin-mirror count per product):** phpstorm 143 · rider 141 · clion 140 · webstorm 120 · pycharm 117 · rubymine 117 · rustrover 115 · goland 90 · datagrip 61 · dataspell 0 (DS-261 ships the older flat generation — no `plugins/` dir at all). The class exists only on the 262 platform line, same switch point as the loading-matrix format.
-**Probe:** anchored at the PyCharm install root `/mnt/hdd/utopia/inspo/reference/jetbrains/pycharm` (strip prolog AND leading comment before reading the root tag — every mirror leads with `<?xml?>` + a comment; naive `find('<')` yields `?xml` for all 1,719 entries):
+**Probe:** anchored at the PyCharm install root `$REFERENCE_ROOT/reference/jetbrains/pycharm` (strip prolog AND leading comment before reading the root tag — every mirror leads with `<?xml?>` + a comment; naive `find('<')` yields `?xml` for all 1,719 entries):
 ```bash
 python3 -c "
 import zipfile,re

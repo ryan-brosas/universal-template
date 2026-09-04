@@ -36,7 +36,7 @@ if (options.markedPermissions) {
 **Invariant:** The special previewer user bypasses via `acl_rules.permissions = :VIEW` OR-clause; anonymous listing rides a separate anon@ OR-clause ONLY in `list` style. `permissions !== null` asks a yes/no question (`& :permissions = :permissions ... limit 1`); `null` computes the full aggregate for display. A porter who collapses `list` vs `open` makes every everyone@-shared doc listed — a discoverability/security regression the tests pin.
 
 ### Probe (direct tests)
-`bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -c "gu3" app/gen-server/lib/homedb/HomeDBManager.ts'` → ≥ 5.
+`bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -c "gu3" app/gen-server/lib/homedb/HomeDBManager.ts'` → ≥ 5.
 `bash -c 'grep -n "editors and owners can list docs they cannot view" test/gen-server/lib/listing.ts'` → :98.
 Direct tests: `test/gen-server/lib/listing.ts` ("editors and owners CANNOT list workspaces they cannot view" :134 — pins open-vs-list asymmetry), `test/server/lib/Authorizer.ts`.
 

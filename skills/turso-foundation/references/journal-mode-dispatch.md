@@ -23,7 +23,7 @@ The guard exists because page encryption and a custom DurableStorage compose ind
 
 **Flow:** open path probes existing artifacts (`logical_log_exists` ⇒ MVCC history) or takes explicit mode → header `Version` ↔ JournalMode round-trip keeps file-format truth → unsupported modes (Delete/Persist/etc.) parse but refuse to run.
 **Invariant:** mode, header version, and sidecar-file presence must agree before any write; encryption context must cover EVERY durable artifact or fail closed at open.
-**Probe:** module-level unit coverage is thin here — behavior pins live in integration tests under `/mnt/hdd/utopia/inspo/memory/turso/tests/`; treat `supported()` + the encryption guard as the contract.
+**Probe:** module-level unit coverage is thin here — behavior pins live in integration tests under `$REFERENCE_ROOT/memory/turso/tests/`; treat `supported()` + the encryption guard as the contract.
 
 ## Get live surrounding code
 **Retrieve:**

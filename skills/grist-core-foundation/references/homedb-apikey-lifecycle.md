@@ -33,7 +33,7 @@ public async getUserByKey(apiKey: string): Promise<User | undefined> {
 **Invariant:** Rotation requires EXPLICIT force — a client that re-POSTs without force cannot accidentally invalidate a live credential; service-account key rotation passes force:true deliberately (:191). No hashing of keys at rest (keys ARE secrets shown once to the user) — porters adding hashing must change lookup to keyed-hash comparison, not reuse findOne.
 
 ### Probe (direct tests)
-`bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "randomBytes(20)" app/gen-server/lib/homedb/UsersManager.ts'` → :38.
+`bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "randomBytes(20)" app/gen-server/lib/homedb/UsersManager.ts'` → :38.
 `bash -c 'grep -rn "apiKey" test/gen-server/ApiServer.ts | head -3'` → endpoint coverage.
 Direct tests: `test/gen-server/ApiServer.ts` api-key its (create/dup/force/delete round trip).
 

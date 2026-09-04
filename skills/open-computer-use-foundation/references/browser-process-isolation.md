@@ -26,7 +26,7 @@ webview.start()
 
 **Flow:** open() spawns the webview event loop as its own PROCESS (GUI toolkits own their main loop and would otherwise block or fight asyncio) → parent stays interactive for the USER prompt → close() enqueues "close" → child's daemon thread polls at 1 Hz and calls `window.destroy()` → `join()` reaps.
 **Invariant:** The viewer is deliberately fire-and-forget: no IPC back, no error propagation (a crashed child leaves `is_running` True — acceptable because main.py closes it in `finally`); the 29px frame compensation is the coupling that keeps agent click coordinates aligned with what the human watches. Polling (not blocking queue.get) is required because pywebview owns the child's main thread.
-**Probe:** `cd /mnt/hdd/utopia/inspo/external/open-computer-use && grep -n 'Process(\|Queue()\|window_frame_height' os_computer_use/browser.py` (pins spawn :35, queue :12, and BOTH frame-height copies :11/:67 which MUST stay in sync).
+**Probe:** `cd $REFERENCE_ROOT/external/open-computer-use && grep -n 'Process(\|Queue()\|window_frame_height' os_computer_use/browser.py` (pins spawn :35, queue :12, and BOTH frame-height copies :11/:67 which MUST stay in sync).
 **Retrieve:**
 ```ts
 await mcp.codebase_memory.search_graph({ project: "ext-open-computer-use", query: "Browser webview create_window command_queue destroy", limit: 6, fields: ["signature", "name", "file"] });

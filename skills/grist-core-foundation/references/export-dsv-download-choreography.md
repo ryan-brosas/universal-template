@@ -33,7 +33,7 @@ case "💩": {
 
 **Probe:** deterministic greps (coverage caveat: no dedicated unit file):
 ```bash
-cd /mnt/hdd/utopia/inspo/grist-core
+cd $REFERENCE_ROOT/grist-core
 grep -cF '"💩"' app/server/lib/ExportDSV.ts        # 3 (type union + 2 switch arms)
 grep -n "text/x-doo-separated-values" app/server/lib/ExportDSV.ts   # 169, 180
 grep -n "delimiter: \",\"" app/server/lib/DocApi.ts # 1268 (route pins delimiter per endpoint)

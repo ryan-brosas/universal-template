@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # EQP detail vocabulary — how do you emit EXPLAIN QUERY PLAN rows that mean what SQLite users expect?
 
-**Source:** turso (MIT) `main@d9266124f` (/mnt/hdd/utopia/inspo/memory/turso); Codebase Memory `turso`. **Question:** What closed set of plan details covers every row source, and where does the end-key operator get REVERSED for display?
+**Source:** turso (MIT) `main@d9266124f` ($REFERENCE_ROOT/memory/turso); Codebase Memory `turso`. **Question:** What closed set of plan details covers every row source, and where does the end-key operator get REVERSED for display?
 
 ## One enum, one Display, and the SeekOp negation rule
 **Path/Symbol:** `core/translate/eqp.rs`: `EqpDetail` (:214-295), `Display for EqpDetail` (:298-385), `seek_constraint_parts` (:389-425), `EqpSearchKind/EqpSortMethod/EqpCompoundOp/EqpJoin/EqpSubqueryExec` (:163-211), `program_plan_json` (:804+).

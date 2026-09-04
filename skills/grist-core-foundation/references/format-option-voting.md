@@ -33,7 +33,7 @@ if (maxDecimals > (tmpNF.maximumFractionDigits ?? 0)) result.maxDecimals = maxDe
 
 **Flow:** iterate DISTINCT values (`getDistinctValues`) → per value parse with the normalization pipeline → latch parens decision (a single plain negative permanently vetoes paren style) → count modes (decimal/currency/percent/scientific) → majority mode wins but plain decimal is only asserted if SOME value showed a digit group separator → trailing-zero scan sets minimum `decimals`; currency columns with fewer decimals than the locale default get explicit `decimals` so `$1.00` isn't forced on `1`.
 **Invariant:** Voting runs over distinct values only (duplicates don't stuff the ballot). `decimals` counts toward a MAX only when a trailing zero proves intent (`1.50` ⇒ ≥2); `1.5` alone never raises it. The final `buildNumberFormat().resolvedOptions()` round-trip checks whether the guessed options would clamp precision — that's when `maxDecimals` gets set explicitly.
-**Probe:** `bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "getDistinctValues(values)" app/common/NumberParse.ts && grep -n "anyHasDigitGroupSeparator" app/common/NumberParse.ts | head -3'` → :247 and :232/:271/:307.
+**Probe:** `bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "getDistinctValues(values)" app/common/NumberParse.ts && grep -n "anyHasDigitGroupSeparator" app/common/NumberParse.ts | head -3'` → :247 and :232/:271/:307.
 Direct tests: `test/common/NumberParse.ts` — guess-options assertions inside the locale matrix; `test/common/ValueGuesser.ts` "should handle formatted numbers" (:68).
 
 ### Retrieve

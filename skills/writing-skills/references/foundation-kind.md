@@ -29,7 +29,8 @@ seams, or edge cases prove more expensive to re-derive than to preserve.
 
 ## Operational skill
 
-An operational skill changes how work is performed. It omits `kind` (the field
+An operational skill changes how work is performed. Visible operational
+metadata is hot; hidden operational skills remain cold and explicitly loaded. It omits `kind` (the field
 is reserved as the foundation discriminator) and contains a reusable procedure,
 decision process, tool contract, or routing behavior. Repository facts and
 source summaries alone do not qualify.

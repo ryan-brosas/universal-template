@@ -27,7 +27,7 @@ if total == 1:
 
 **Flow:** ≤limit → pass through untouched → else split by type → drop blank pieces → single piece? yield shrunk piece : fan out pieces each carrying `part i/total` metadata (marker omitted-with-warning on caller collision or when metadata already has MAX_METADATA_KEYS=10 keys — caller's domain data always wins over diagnostics).
 **Invariant:** Pipeline appends LimitGuard AFTER all user transforms, so users never think about the limit and no transform output can overshoot it. The single-piece case must still yield the PIECE — yielding the original would emit data the API rejects. JSON that cannot split validly is downgraded to text WITH a warning, never silently.
-**Probe:** `cd /mnt/hdd/utopia/inspo/external/zep/ingestion && python3 -c "import sys; sys.path.insert(0,'src'); from zep_ingest.transforms.limits import LimitGuard"` (import probe; behavior pinned by `tests/test_limits.py` 18 tests incl. `test_whitespace_padded_text_yields_shrunk_piece_not_original`).
+**Probe:** `cd $REFERENCE_ROOT/external/zep/ingestion && python3 -c "import sys; sys.path.insert(0,'src'); from zep_ingest.transforms.limits import LimitGuard"` (import probe; behavior pinned by `tests/test_limits.py` 18 tests incl. `test_whitespace_padded_text_yields_shrunk_piece_not_original`).
 
 ## Get live surrounding code
 **Retrieve:**

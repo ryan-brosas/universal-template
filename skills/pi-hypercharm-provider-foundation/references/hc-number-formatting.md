@@ -27,7 +27,7 @@ return Math.round(n).toLocaleString("en-US");
 
 **Flow:** session line renders `⚡ <formatSpendHc> hc · <n> req`; account tier atoms join with `" · "`; rate counts render exact under 1000 (`String(Math.max(0, Math.round(n)))`).
 **Invariant:** the thresholds are DELIBERATELY asymmetric per semantic: balance compacts at ≥10k because it's a stock figure read at a glance; rate counts stay exact until ≥1000 then use one decimal k; spend NEVER compacts — it widens precision DOWN instead (<0.01 gets four decimals, sub-0.001 becomes the honest approximation marker `"~0"`). `trimZeros` only strips when a "." is present, strips zeros BEFORE the dot, and never mangles an integer string. Smoke-pinned values: `formatBalHc(12345)="12.3k"`, `(1_250_000)="1.25M"`, `(250.5)="250.5"`; `formatSpendHc(0.0004)="~0"`, `(0.0021)="0.0021"`; `formatRateCompact(9996)="10k"`. `accountHasData` treats `authDaysLeft` as NOT data-sufficient on its own (balance/team/rate gate visibility).
-**Probe:** `bash -c 'cd /mnt/hdd/utopia/inspo/pi-hypercharm-provider && grep -cF "replace(/0+$/" status.ts'` → 1; `grep -cE "1_000_000|10_000" status.ts` → 2; `grep -c "~0" status.ts` → 1; `grep -c "toFixed(4)" status.ts` → 1. Direct runner: `node tests/status.smoke.ts` → "status.smoke: all assertions passed" (Node v26.7.0 at HEAD 4520704).
+**Probe:** `bash -c 'cd $REFERENCE_ROOT/pi-hypercharm-provider && grep -cF "replace(/0+$/" status.ts'` → 1; `grep -cE "1_000_000|10_000" status.ts` → 2; `grep -c "~0" status.ts` → 1; `grep -c "toFixed(4)" status.ts` → 1. Direct runner: `node tests/status.smoke.ts` → "status.smoke: all assertions passed" (Node v26.7.0 at HEAD 4520704).
 
 ## Get live surrounding code
 **Retrieve:**

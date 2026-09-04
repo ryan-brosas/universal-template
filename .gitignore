@@ -14,6 +14,10 @@
 /state/
 # Skill-local helper scripts stay out of the catalog repo.
 skills/*/scripts/
+# Host/vendor-managed runtime skills stay installed locally, never published.
+/skills/.system/
+# Optional machine-local model preferences.
+/config/model-profiles.local.yaml
 *.pyc
 __pycache__/
 skills/omarchy

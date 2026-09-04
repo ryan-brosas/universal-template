@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Completion protocol — how does async IO report results without a runtime?
 
-**Source:** turso (MIT) `main@def9a0601b8e` (/mnt/hdd/utopia/inspo/memory/turso); Codebase Memory project `turso`. **Question:** What is the completion value type, who keeps buffers alive, and how do N child ops collapse into one parent result?
+**Source:** turso (MIT) `main@def9a0601b8e` ($REFERENCE_ROOT/memory/turso); Codebase Memory project `turso`. **Question:** What is the completion value type, who keeps buffers alive, and how do N child ops collapse into one parent result?
 
 ## A cloneable, Future-implementing Completion with OnceLock results
 **Path/Symbol:** `core/io/completions.rs`: `Completion` (:27-70), `CompletionInner` (:100-118), typed callbacks (`ReadComplete`/`WriteComplete`/`SyncComplete`/`TruncateComplete`, :10-14), `GroupCompletion` (:207+), `Context` waker plumbing (:44-95).

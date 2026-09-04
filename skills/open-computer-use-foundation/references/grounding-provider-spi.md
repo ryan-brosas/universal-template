@@ -29,7 +29,7 @@ else:
 
 **Flow:** config.py binds ONE module-global (`grounding_model = providers.OSAtlasProvider()`; ShowUI commented as drop-in) → click_element calls `.call(query, screenshot_path)` blindly → each provider owns: Space endpoint constants, request param names, response grammar parse, and coordinate normalization (absolute-midpoint vs relative-scale).
 **Invariant:** The agent loop never knows which grounder runs — swapping vendors is one line in config.py. ShowUI's `extract_norm_point` carries a LATENT BUG worth porting knowledge: it references bare `np` (never imported) on the array branch, and downloads the ANNOTATED image just to read dimensions — adopters should open the local file instead. HF_TOKEN is captured at import time like all other keys.
-**Probe:** `cd /mnt/hdd/utopia/inspo/external/open-computer-use && grep -n 'def call' os_computer_use/osatlas_provider.py os_computer_use/showui_provider.py && grep -n 'grounding_model' os_computer_use/config.py` (pins identical signatures and the single swap point).
+**Probe:** `cd $REFERENCE_ROOT/external/open-computer-use && grep -n 'def call' os_computer_use/osatlas_provider.py os_computer_use/showui_provider.py && grep -n 'grounding_model' os_computer_use/config.py` (pins identical signatures and the single swap point).
 **Retrieve:**
 ```ts
 await mcp.codebase_memory.search_graph({ project: "ext-open-computer-use", query: "OSAtlasProvider ShowUIProvider gradio predict handle_file", limit: 8, fields: ["signature", "name", "file"] });

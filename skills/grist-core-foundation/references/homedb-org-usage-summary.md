@@ -29,7 +29,7 @@ if (maxAttachmentsBytesPerOrg && totalAttachmentsSizeBytes > maxAttachmentsBytes
 **Invariant:** Usage is DERIVED at read time from per-doc usage snapshots (written by HostedMetadataManager via setDocsMetadata), never incremented transactionally — eventual consistency by design. The classification function lives in common/ so the CLIENT repeats it for per-doc badges; server and UI must share one copy or badges disagree with the summary.
 
 ### Probe (direct tests)
-`bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "getOrgUsageSummary" app/gen-server/lib/homedb/HomeDBManager.ts | head -1'` → :862.
+`bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "getOrgUsageSummary" app/gen-server/lib/homedb/HomeDBManager.ts | head -1'` → :862.
 `bash -c 'grep -rn "getOrgUsageSummary\|countsByDataLimitStatus" test/ --include="*.ts" -l | head -3'` → coverage files.
 Direct tests: ApiServer usage-summary its (grep countsByDataLimitStatus in test/gen-server/).
 

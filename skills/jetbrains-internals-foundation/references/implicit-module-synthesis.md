@@ -27,7 +27,7 @@
 
 **Flow:** build detects that plugin P's code needs module M but M must stay invisible platform-wide → emits M.jar physically under P's (or another plugin's) `lib/modules/` → synthesizes descriptor(s) with namespace `P_$implicit`, visibility `private` → loader resolves M only for classloaders inside P's scope → no global export ever happens.
 **Invariant:** scope-by-namespace, not scope-by-path — the resource path locates bytes, but what gates resolution is the namespace matching the consuming plugin's id. Wrong port: "solving" the sharing need by flipping these modules to `public` (breaks encapsulation the tier system exists to keep) or by merging them into the host module (breaks their independent dependency sets). Also: `$implicit` descriptors are TOP-LEVEL files (not under `plugins/`), so a census that walks only `plugins/*.xml` misses them.
-**Probe:** anchored at the Rider install root `/mnt/hdd/utopia/inspo/reference/jetbrains/rider`:
+**Probe:** anchored at the Rider install root `$REFERENCE_ROOT/reference/jetbrains/rider`:
 ```bash
 python3 -c "import zipfile;z=zipfile.ZipFile('modules/module-descriptors.jar');hits=[n for n in z.namelist() if n.endswith('_\$implicit.xml')];print(len(hits));print('\n'.join(hits[:5]))"
 ```

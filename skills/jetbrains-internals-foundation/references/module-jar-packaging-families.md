@@ -25,7 +25,7 @@
 
 **Flow:** descriptor name → its single `<resource-root>` → physical jar (relative to `modules/`, i.e. install-root-relative after stripping `../`) → classloader wires the jar into that module's loader.
 **Invariant:** (1) ONE JAR HOSTS MANY MODULES regularly — the mapping is N:1: pycharm's top hosts are `plugins/fullLine/lib/fullLine.jar` (62 module descriptors!), `lib/intellij.platform.ide.impl.jar` (22), `lib/util-8.jar` (17); every product has 3–5 such ≥10-module jars. A porter who assumes jar==module breaks here. (2) THE MIRROR IS PARTIAL: bare-name dependencies with NO descriptor in this jar resolve inside the binary truth instead — e.g. `intellij.cidr.core`, cited by ~280 pycharm dep refs, is ABSENT from the XML mirror but byte-findable in `module-descriptors.dat`. Cross-product references (CLion-only modules cited by descriptors shipped in every IDE) are the bulk of these. Diffing or porting from the XML mirror alone undercounts the runtime graph; treat `.dat` as superset, mirror as the readable projection.
-**Probe:** anchored at the PyCharm install root `/mnt/hdd/utopia/inspo/reference/jetbrains/pycharm`:
+**Probe:** anchored at the PyCharm install root `$REFERENCE_ROOT/reference/jetbrains/pycharm`:
 ```bash
 python3 -c "import zipfile,re,collections; z=zipfile.ZipFile('modules/module-descriptors.jar'); c=collections.Counter(); [c.update(re.findall(r'<resource-root path=\"([^\"]+)\"', z.read(n).decode('utf-8','replace'))) for n in z.namelist() if n.endswith('.xml')]; print(len(c), sum(v for k,v in c.items() if '/lib/modules/' in k))"
 ```
@@ -39,7 +39,7 @@ python3 -c "data=open('modules/module-descriptors.dat','rb').read(); print('FOUN
 ## Get live surrounding code
 **Retrieve:** (jar-resident manifest plane — not symbol-indexed)
 ```bash
-cd /mnt/hdd/utopia/inspo/reference/jetbrains/pycharm && unzip -p modules/module-descriptors.jar intellij.grazie.markdown.xml && unzip -l plugins/fullLine/lib/fullLine.jar | head -5
+cd $REFERENCE_ROOT/reference/jetbrains/pycharm && unzip -p modules/module-descriptors.jar intellij.grazie.markdown.xml && unzip -l plugins/fullLine/lib/fullLine.jar | head -5
 ```
 
 ## Verdict

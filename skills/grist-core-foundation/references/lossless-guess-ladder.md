@@ -28,7 +28,7 @@ return (
 
 **Flow:** BoolGuesser (exact `"true"`/`"false"` strings only) → NumericGuesser seeded with format options voted from the data itself (`NumberParse.guessOptions`) → DateGuesser seeded with a format guessed by `guessDateFormat` → Text fallback. Each `.guess()` returns null on any doubt, which `||`-short-circuits into the next candidate.
 **Invariant:** The whole ladder is LOSSLESS: a guessed type is adopted only if every parsed value formats back to exactly the input string (see ninety-percent-parse-budget). A porter who guesses "Numeric" for `["1","01"]` breaks the invariant — leading zeros would not survive formatting, so it stays Text. The Text fallback deliberately omits `values` because re-serializing unchanged strings across the JS→Python pipe costs bandwidth for nothing.
-**Probe:** `bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "type: \"Text\"" app/common/ValueGuesser.ts && grep -n "new BoolGuesser()" app/common/ValueGuesser.ts'` → :193 (single Text fallback) and :182 (Bool first).
+**Probe:** `bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "type: \"Text\"" app/common/ValueGuesser.ts && grep -n "new BoolGuesser()" app/common/ValueGuesser.ts'` → :193 (single Text fallback) and :182 (Bool first).
 Direct tests: `test/common/ValueGuesser.ts` (:15 `describe("ValueGuesser")`; "should guess booleans and numbers correctly" :16; date guessing :126).
 
 ### Retrieve

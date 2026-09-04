@@ -31,7 +31,7 @@ for (const notification of notifications) { await notification(); }
 **Invariant:** The LRU caches PROMISES not values — one failed lookup poisons the slot until TTL unless callers use `mapSetOrClear` semantics in `getDoc` (:1142). Errors are cached as DocAuthResult objects (fail-closed on read of `access`). A porter who invalidates inside the transaction publishes uncommitted state to other servers via redis; the callback-list pattern exists precisely to run invalidations AFTER commit.
 
 ### Probe (direct tests)
-`bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "should invalidate docAccess values when doc is moved" test/gen-server/lib/HomeDBCaches.ts'` → :186.
+`bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "should invalidate docAccess values when doc is moved" test/gen-server/lib/HomeDBCaches.ts'` → :186.
 `bash -c 'grep -c "addInvalidationDocAccess" app/gen-server/lib/homedb/HomeDBManager.ts'` → ≥ 5.
 Direct tests: `test/gen-server/lib/HomeDBCaches.ts` (redis-gated suite: expire :84, invalidate-on-access-change :132, move :186, "happens not to invalidate on user name changes" :247, cross-server :318).
 

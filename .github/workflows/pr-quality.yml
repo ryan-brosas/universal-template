@@ -28,7 +28,7 @@ jobs:
           persist-credentials: false
 
       - name: Install structured-data checker
-        run: pip install --user pyyaml==6.0.3
+        run: pip install --user -r requirements-dev.txt
 
       - name: Check repository contracts
         shell: bash
@@ -41,8 +41,12 @@ jobs:
             python3 scripts/install-prompts.py --selftest
             python3 scripts/render-prompt.py --selftest
             python3 scripts/skill-catalog.py selftest
+            python3 scripts/skill-catalog.py context --max-hot-skills 40 --max-hot-chars 11000
             python3 scripts/skill-catalog.py generate --check
+            python3 scripts/repo-hygiene.py --selftest
             python3 scripts/repo-hygiene.py
+            python3 mcp/configure.py --selftest
+            node --test skills/cdp/sdk/recording-privacy.test.ts
             python3 scripts/web-reference-manifest.py --selftest
             python3 scripts/pr-metadata.py --selftest
           } 2>&1 | tee /tmp/repository-contracts.log
@@ -63,7 +67,7 @@ jobs:
           fi
 
       - name: Check the PR body contract
-        if: github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'reopened')
+        if: github.event_name == 'pull_request'
         shell: bash
         env:
           PR_BODY: ${{ github.event.pull_request.body }}

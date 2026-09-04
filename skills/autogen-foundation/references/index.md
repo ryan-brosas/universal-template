@@ -100,7 +100,7 @@ Use when building or porting a multi-agent orchestration layer in Python: a mini
 Add one `./<seam>.md` capsule for one graph-selected, source-confirmed porting question. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf.
 
 ## Provenance
-autogen (MIT — LICENSE-CODE), `main@027ecf0a379bcc1d09956d46d12d44a3ad9cee14`; Codebase Memory project `autogen` (full mode, canonical root /mnt/hdd/utopia/inspo/autogen, 16,432 nodes / 86,358 edges, generation 2026-08-24T16:12:29Z, generation_matches true; parse_partial ×9 confined to dotnet tooling/docs templates and cookiecutter pyproject — none cited). The earlier twin project `ext-autogen` is retired; revalidate against `autogen`.
+autogen (MIT — LICENSE-CODE), `main@027ecf0a379bcc1d09956d46d12d44a3ad9cee14`; Codebase Memory project `autogen` (full mode, canonical root $REFERENCE_ROOT/autogen, 16,432 nodes / 86,358 edges, generation 2026-08-24T16:12:29Z, generation_matches true; parse_partial ×9 confined to dotnet tooling/docs templates and cookiecutter pyproject — none cited). The earlier twin project `ext-autogen` is retired; revalidate against `autogen`.
 
 ## Full view (memory graph)
 Revalidate `autogen` before porting: run `index_status`, `check_index_coverage`, `search_graph`, `trace_path`, and `get_code_snippet`. Record the graph root, branch, commit, mode, node/edge counts, freshness, and any coverage caveats; source and direct tests decide shipped claims.

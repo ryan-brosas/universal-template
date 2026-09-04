@@ -29,7 +29,7 @@ return moment.tz(dateTime, fullFormat, true, timezone).valueOf() / 1000;
 
 **Flow:** try whole-string-as-date → strip timezone suffix → strip/standardize time → parse remaining date strictly at UTC → RE-SERIALIZE that date as plain `YYYY-MM-DD` → concatenate standardized `HH:mm:ss` plus any explicit offset → single strict parse in the column's timezone.
 **Invariant:** The intermediate UTC round-trip prevents the classic double-shift bug: had the date been parsed directly in the target timezone and then combined, midnight would shift by the zone offset when the offset is later applied again via the `Z` suffix. The comment is load-bearing — a porter "simplifying" to one parse produces dates off by hours depending on direction of the offset. Whole-string-first ordering also preserves pure-date fast paths (and raw-timestamp passthrough inside parseDateStrict).
-**Probe:** `bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "moment.unix(date).utc().format" app/common/parseDate.ts && sed -n "211,219p" app/common/parseDate.ts | grep -c "tzOffset"'` → :215 round-trip line; 2 uses of tzOffset in the tail.
+**Probe:** `bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "moment.unix(date).utc().format" app/common/parseDate.ts && sed -n "211,219p" app/common/parseDate.ts | grep -c "tzOffset"'` → :215 round-trip line; 2 uses of tzOffset in the tail.
 Direct tests: `test/common/parseDate.ts` datetime cases in :98+ suite (date+time+zone combos).
 
 ### Retrieve

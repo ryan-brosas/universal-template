@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Git CLI-wrapper tool hardening — how do you expose CLI-wrapping git tools to an LLM so flag injection, path traversal, and out-of-scope repositories are structurally impossible?
 
-**Source:** modelcontextprotocol/servers MIT `main@599dafc1054550a6eeb87a6545c1e1b03b3ca827`; Codebase Memory `servers` (root `/mnt/hdd/utopia/inspo/servers`; the pass-9-era path-slugged project name no longer resolves after the disk re-org — same index re-registered under the short name). **Question:** what is the complete defense ladder a git MCP server needs between an untrusted LLM argument and a shell-adjacent CLI?
+**Source:** modelcontextprotocol/servers MIT `main@599dafc1054550a6eeb87a6545c1e1b03b3ca827`; Codebase Memory `servers` (root `$REFERENCE_ROOT/servers`; the pass-9-era path-slugged project name no longer resolves after the disk re-org — same index re-registered under the short name). **Question:** what is the complete defense ladder a git MCP server needs between an untrusted LLM argument and a shell-adjacent CLI?
 
 ## Four-layer defense ladder over GitPython (prefix-reject -> ref-validate -> `--` separator -> resolve+relative_to scoping)
 **Path/Symbol:** `src/git/src/mcp_server_git/server.py` — `git_diff` :120–126; `git_add` :132–153; `git_log` timestamp guard :159–171; `git_create_branch` :200–212; `git_checkout` :214–221; `git_show` :225–250; `validate_repo_path` :252–270; `git_branch` contains/not_contains guard :273–305; `call_tool` scoping call site :487–495; startup fail-closed in `serve` :311–317.

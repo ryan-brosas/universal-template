@@ -42,7 +42,7 @@ const run = (method: string, ...args: any[]) => exportPool.run({ port: port2, te
 
 **Probe:** deterministic greps (coverage caveat: no dedicated unit file):
 ```bash
-cd /mnt/hdd/utopia/inspo/grist-core
+cd $REFERENCE_ROOT/grist-core
 grep -n "Piscina.isWorkerThread" app/server/lib/ExportXLSX.ts     # 29
 grep -n "transferList: \[port2\]" app/server/lib/ExportXLSX.ts    # 76
 grep -n "req.off(\"close\", cancelWorker)" app/server/lib/ExportXLSX.ts  # 68

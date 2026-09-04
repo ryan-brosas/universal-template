@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Commit-time conflict detection — where do write-write conflicts get validated, and by what rule?
 
-**Source:** turso (MIT) `main@def9a0601b8e` (/mnt/hdd/utopia/inspo/memory/turso); Codebase Memory project `turso`. **Question:** How does turso get first-committer-wins serializability without any write locks or waits?
+**Source:** turso (MIT) `main@def9a0601b8e` ($REFERENCE_ROOT/memory/turso); Codebase Memory project `turso`. **Question:** How does turso get first-committer-wins serializability without any write locks or waits?
 
 ## Conflicts live at commit — and only there
 **Path/Symbol:** `core/mvcc/database/mod.rs`: insert-time note (:5011-5013 at HEAD), `check_rowid_for_conflicts` / `check_index_for_conflicts` (fns at :1781/:1805; body span :1857-2040), driven from the Commit machine step (:2987-3000); tombstone-as-lock rule (:9905-9908). (Commit-sweep half of the duality — the eager write-time lane is `is_write_write_conflict` :9785-9821, covered by `mvcc-conflict-detection-duality.md`.)

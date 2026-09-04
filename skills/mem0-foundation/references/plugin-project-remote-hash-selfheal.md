@@ -26,7 +26,7 @@ if remote_key:
 
 **Flow:** MEM0_PROJECT_ID env → map[cwd] → map[remote-hash] (+rewrite map[cwd]) → git origin slug (`git@host:owner/repo.git`→`owner-repo`; strips .git, https/http/ssh/git://, git@ incl. host aliases; first `:` becomes `/`) → basename(cwd) → "unknown". Branch: `git branch --show-current` else "unknown".
 **Invariant:** the stable identity is the remote URL hash, not the path; self-heal rewrite is best-effort (OSError swallowed); slug collision risk accepted (owner-repo pair); save writes both keys so the NEXT move already has its fallback.
-**Probe:** `cd /mnt/hdd/utopia/inspo/mem0 && .venv/bin/python -m pytest integrations/mem0-plugin/tests/test_project.py -q`.
+**Probe:** `cd $REFERENCE_ROOT/mem0 && .venv/bin/python -m pytest integrations/mem0-plugin/tests/test_project.py -q`.
 
 ## Get live surrounding code
 **Retrieve:**

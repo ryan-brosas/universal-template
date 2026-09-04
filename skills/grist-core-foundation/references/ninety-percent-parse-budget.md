@@ -29,7 +29,7 @@ for (const value of values) {
 
 **Flow:** Budget computed over non-empty count × 0.1 → per value: blank handled by type's null-storage policy; parse failure increments counter and aborts past budget; parse success must format back (via a formatter built from the guessed colInfo) to the ORIGINAL string.
 **Invariant:** Two independent gates, either kills the guess: (1) unparseable fraction > 10% of non-empty values; (2) ANY single value whose formatted form differs from its input — even one lossy row vetoes. Blank handling is per-type: Bool cannot store nulls (they'd silently become false), so a blank column never guesses Bool; everything else maps blanks to null. Numeric relaxes gate 2 by stripping whitespace/LRM chars (`NumberParse.removeCharsRegex`) on BOTH sides before comparing — `"1 234"` may equal `"1234"`.
-**Probe:** `bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && sed -n "175,214p" test/common/ValueGuesser.ts | grep -c "check("'` → 5 (nine-ok/eight-reject, each repeated with 90 blanks proving blanks don't inflate the denominator).
+**Probe:** `bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && sed -n "175,214p" test/common/ValueGuesser.ts | grep -c "check("'` → 5 (nine-ok/eight-reject, each repeated with 90 blanks proving blanks don't inflate the denominator).
 Direct tests: `test/common/ValueGuesser.ts` :175–213 ("should require 90% of values to be parsed").
 
 ### Retrieve

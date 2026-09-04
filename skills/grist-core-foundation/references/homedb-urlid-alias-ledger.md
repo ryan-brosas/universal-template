@@ -41,7 +41,7 @@ await manager.createQueryBuilder()
 **Invariant:** Conflict scope is org-TYPE dependent — support-org docs check GLOBALLY (examples appear on team sites), personal orgs check across ALL personal orgs (`orgs.owner_id is not null`), team sites check own org PLUS the example org (:3931–3937). Second check forbids a urlId equal to ANY existing docId ("a recipe for confusion and mischief", :3944–3947). A porter who treats aliases as replace-not-accumulate breaks every bookmark issued before a rename.
 
 ### Probe (direct tests)
-`bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "cannot use an existing docId as a urlId" test/gen-server/lib/urlIds.ts'` → :83.
+`bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "cannot use an existing docId as a urlId" test/gen-server/lib/urlIds.ts'` → :83.
 `bash -c 'grep -c "onConflict" app/gen-server/lib/homedb/HomeDBManager.ts'` → ≥ 3.
 Direct tests: `test/gen-server/lib/urlIds.ts` parametrized over personal/team orgs (same-urlId 400s :50, distinct ok :63, example reuse :76, docId-as-urlId :83, reverse reuse :102, disambiguation :113).
 

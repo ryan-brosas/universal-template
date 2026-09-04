@@ -31,7 +31,7 @@ if hasattr(obj, "data") and isinstance(obj.data, dict):
 
 **Flow:** build (`F.field op value` or LLM JSON `{model_validate}`) → combine with `&`/`|`/`~` overloads (each returns a NEW node; `_make_and/_make_or` FLATTEN same-kind children so `(a&b)&c` is one AndExpr of 3) → either `.evaluate(obj)` client-side against dicts/dataclasses/`.data` dicts, or backend `_compile_filter(expr)`.
 **Invariant:** missing-field semantics are fail-closed-False EXCEPT `exists`, which is truthy-parameterized (`F.f.exists(False)` means "field must be absent"); `in_`/`not_in` return False when value is not a list instead of raising; type-mismatched contains/startswith/endswith on non-strings are False, not errors.
-**Probe:** `tests/unit/vector_stores/test_filtering.py` — `test_missing_field_returns_false` (:60), `test_and_flattening` asserts `len(expr.and_) == 3` (:214-218), `test_double_negation` asserts `~(~inner)` IS the Condition (:233-240), `test_complex_nested_roundtrip` re-evaluates after JSON round-trip (:305-323). Suite runs offline: `/home/utopia/.venvs/grag-lane-venv/bin/python -m pytest tests/unit/vector_stores/test_filtering.py -q` → 34 passed @pin.
+**Probe:** `tests/unit/vector_stores/test_filtering.py` — `test_missing_field_returns_false` (:60), `test_and_flattening` asserts `len(expr.and_) == 3` (:214-218), `test_double_negation` asserts `~(~inner)` IS the Condition (:233-240), `test_complex_nested_roundtrip` re-evaluates after JSON round-trip (:305-323). Suite runs offline: `$VENV_ROOT/grag-lane-venv/bin/python -m pytest tests/unit/vector_stores/test_filtering.py -q` → 34 passed @pin.
 
 ## Get live surrounding code
 **Retrieve:**

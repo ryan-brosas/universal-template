@@ -27,7 +27,7 @@ else if (hours === 12 && ampm.startsWith("a")) hours = 0;
 
 **Flow:** UTC/GMT/Z ⇒ fixed `+00:00` offset. `+5`, `-0330` style ⇒ normalized via `calculateOffset` (`sign + hh.padStart(2) + ":" + mm.padStart(2)`). Zone ABBREVIATIONS (EST, CET…) valid only for the document's own timezone — matched from `moment.tz.zone(tz).abbrs`, then STRIPPED with empty offset so the value is interpreted AS the column's timezone rather than re-zoned. Time part handles compact `1832` (match[4][5]) plus am/pm edge rules: `12pm`=12h, `12am`=0h, `0am` stays 0.
 **Invariant:** Abbreviation ≠ conversion — the `[ap]m` regex guard `[^a-zA-Z]` prevents "CEST" matching its tail "EST". Offsets are appended as text and carried into the moment format as `Z` (`timeformat = " HH:mm:ss" + (tzOffset ? "Z" : "")`). Anything left unparsed after standardizeTime (residual text) makes parseDate bail null — no silent truncation.
-**Probe:** `bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "abbreviations are simply stripped" app/common/parseDate.ts -i && grep -n "hours === 12 && ampm.startsWith" app/common/parseDate.ts'` → :303 comment and :332 midnight rule.
+**Probe:** `bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "abbreviations are simply stripped" app/common/parseDate.ts -i && grep -n "hours === 12 && ampm.startsWith" app/common/parseDate.ts'` → :303 comment and :332 midnight rule.
 Direct tests: `test/common/parseDate.ts` timezone/time cases within :98+ suite (incl. abbreviation stripping).
 
 ### Retrieve

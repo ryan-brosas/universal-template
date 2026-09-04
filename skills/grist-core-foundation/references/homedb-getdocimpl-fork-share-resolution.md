@@ -37,7 +37,7 @@ if (ids.forkUserId !== undefined) {
 **Invariant:** Disabled-user check piggybacks on the SAME query via unconditional join `leftJoin(User, "users", "users.id = :userId")` selecting `users.disabled_at` — deliberately localized here because only websocket traffic hits it (:1082–1092). A porter who moves that check into every home-DB method pays an extra round trip per call; one who drops it lets disabled users keep live websockets.
 
 ### Probe (direct tests)
-`bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -c "NEW_DOCUMENT_CODE" app/gen-server/lib/homedb/HomeDBManager.ts'` → ≥ 3.
+`bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -c "NEW_DOCUMENT_CODE" app/gen-server/lib/homedb/HomeDBManager.ts'` → ≥ 3.
 `bash -c 'grep -n "can fork docs" test/gen-server/lib/HomeDBManager.ts'` → :423.
 Direct tests: `test/server/lib/Authorizer.ts` :286 ("viewer can fork doc" asserting parsed `forkUserId`) and :300 ("anon can fork doc"); `test/gen-server/lib/HomeDBManager.ts` :423 fork family incl. `_addForks` shape assertions.
 

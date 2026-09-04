@@ -23,7 +23,7 @@
 
 **Flow:** plugin declares action + its OWN preferred defaults inside its descriptor → each named keymap absorbs the binding as if shipped with the map → users overriding later always win → mac coverage requires naming EACH mac map separately (Mac OS X AND Mac OS X 10.5+), because `$default` is not their ancestor-of-record for absorption semantics.
 **Invariant:** an inline shortcut NEVER applies to all keymaps — it lands only in the explicitly named one(s); omitting the attribute would be a grammar violation observed zero times across the FULL cluster census of 2,107 inline `<keyboard-shortcut>` entries (all descriptors, all 15 installs, verified by attribute scan). This is how plugins ship sensible defaults without mutating shared resources.
-**Probe:** `unzip -p /mnt/hdd/utopia/inspo/reference/jetbrains/pycharm/plugins/terminal/lib/terminal.jar META-INF/plugin.xml | grep -c 'keymap="\$default"'` → 22; `unzip -p … same jar … | grep -c '<keyboard-shortcut'` → 53.
+**Probe:** `unzip -p $REFERENCE_ROOT/reference/jetbrains/pycharm/plugins/terminal/lib/terminal.jar META-INF/plugin.xml | grep -c 'keymap="\$default"'` → 22; `unzip -p … same jar … | grep -c '<keyboard-shortcut'` → 53.
 **Coverage caveat:** resource plane, direct extraction.
 
 ## Get live surrounding code

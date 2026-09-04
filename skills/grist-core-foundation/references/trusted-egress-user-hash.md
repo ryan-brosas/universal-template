@@ -24,7 +24,7 @@ log.rawInfo("getUserHash", { ...getLogMeta(session), userRef: user?.ref, hash })
 
 **Flow:** every completion POST rides `DEPS.agents.trusted` (GristProxyAgent from ProxyAgent.ts) when configured — untrusted hosts otherwise default-agent. temperature pinned to 0 for reproducible formula help; `user` field carries the salted hash so OpenAI-side abuse signals can't be joined to real identities from outside, while OUR logs record hash+ref together making support reverse-lookup possible internally.
 **Invariant:** The salt is hardcoded NOT secret (it's in the repo): its job is defeating trivial rainbow/id-guessing, not hashing security — a porter "improving" it to a server secret breaks log correlation. DEPS indirection exists so tests swap fetch/delay without module hacks (`test/server/lib/OpenAIAssistantV1.ts` stubs exactly these). Omitting the agent option when unset (spread of undefined key) matters: node-fetch must not receive agent:undefined semantics differences.
-**Probe:** `bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "DEPS.agents.trusted" app/server/lib/OpenAIAssistantV1.ts && grep -n "temperature: 0" app/server/lib/OpenAIAssistantV1.ts && sed -n "147,158p" test/server/lib/OpenAIAssistantV1.ts | grep -c "proxy"'` → :213, :204, proxy tests present.
+**Probe:** `bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "DEPS.agents.trusted" app/server/lib/OpenAIAssistantV1.ts && grep -n "temperature: 0" app/server/lib/OpenAIAssistantV1.ts && sed -n "147,158p" test/server/lib/OpenAIAssistantV1.ts | grep -c "proxy"'` → :213, :204, proxy tests present.
 Direct tests: `test/server/lib/OpenAIAssistantV1.ts` :147 "does not use the trusted proxy when not configured", :159 "uses trusted proxy when configured".
 
 ### Retrieve

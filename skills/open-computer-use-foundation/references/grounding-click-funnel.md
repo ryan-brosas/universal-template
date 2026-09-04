@@ -35,7 +35,7 @@ def extract_bbox_midpoint(bbox_response):
 
 **Flow:** fresh screenshot → grounding model returns OS-Atlas bbox token stream → regex strips `<|box_start|>…<|box_end|>` wrapper (falls back to raw text) → float extraction accepts either a bare point (2 nums) or a box (≥4 → integer midpoint via `//2`) → red debug dot stamped on the screenshot → `move_mouse(x,y)` then the caller-supplied click closure.
 **Invariant:** Click coordinates are ALWAYS derived from a screenshot taken in the same call — never from `latest_screenshot` staleness across turns — and the annotated image is persisted as evidence BEFORE the click fires. Midpoint uses floor division on floats (returns ints because operands are whole-pixel floats); `< 2` or `3` numbers yield `None`, which will crash the unpacking — under-specified targets fail loudly rather than clicking blind.
-**Probe:** `cd /mnt/hdd/utopia/inspo/external/open-computer-use && python3 -c "
+**Probe:** `cd $REFERENCE_ROOT/external/open-computer-use && python3 -c "
 from os_computer_use.grounding import extract_bbox_midpoint
 assert extract_bbox_midpoint('<|box_start|>100.0 200.0 300.0 400.0<|box_end|>') == (200, 300)
 assert extract_bbox_midpoint('512 384') == (512.0, 384.0)

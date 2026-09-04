@@ -35,7 +35,7 @@ sortSpec = sortSpec!.map((colSpec) => {
 
 **Probe:** deterministic greps (coverage caveat: no dedicated unit file):
 ```bash
-cd /mnt/hdd/utopia/inspo/grist-core
+cd $REFERENCE_ROOT/grist-core
 grep -n "unsavedFiltersByColRef\[col.id\]?.filter || savedFiltersByColRef" app/server/lib/Export.ts  # 332
 grep -n "Sort.swapColRef(colSpec, effectiveColRef)" app/server/lib/Export.ts  # 360
 grep -n "prevFilter(id) && curFilter(id)" app/server/lib/Export.ts  # 377

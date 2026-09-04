@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # .NET profiler tool layouts note — dotmemory/dottrace are NOT IDE manifests
 
-**Source:** JetBrains installed builds `dotmemory` (388M) / `dottrace` (641M) at `/mnt/hdd/utopia/inspo/reference/jetbrains/`; Codebase Memory `jetbrains-dotmemory` (5,124 nodes), `jetbrains-dottrace` (12,542). **Question:** Do the two standalone .NET profiler distributions carry IntelliJ-platform manifest patterns worth mining?
+**Source:** JetBrains installed builds `dotmemory` (388M) / `dottrace` (641M) at `$REFERENCE_ROOT/reference/jetbrains/`; Codebase Memory `jetbrains-dotmemory` (5,124 nodes), `jetbrains-dottrace` (12,542). **Question:** Do the two standalone .NET profiler distributions carry IntelliJ-platform manifest patterns worth mining?
 
 ## Layout classification
 **Path/Symbol:** `dotmemory/*.dll` + `*.xml` (in-place .NET XML doc-comment files: Armature.xml, Avalonia.Base.xml, AutoMapper.xml...) and `JetBrains.dotMemory.*.deps.json` / `runtimeconfig.json`; same shape in dottrace. NO `lib/*.jar`, no `META-INF/plugin.xml`, no `product-info.json` with IDE fields.

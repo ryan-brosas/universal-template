@@ -24,7 +24,7 @@ $ head -1 com/jetbrains/python/packaging/PyPackageManager.java
 **Probe:** from `<install>` root (anchored at `pycharm/`):
 `ls lib/src/pycharm-openapi-src/com/jetbrains/python/packaging/ | wc -l` → `9`;
 `find lib/src/pycharm-openapi-src -name '*.java' | wc -l` → `222`;
-`ls /mnt/hdd/utopia/inspo/reference/jetbrains/clion/lib/src 2>/dev/null | wc -l` → `0` (plane absent outside py/dataspell).
+`ls $REFERENCE_ROOT/reference/jetbrains/clion/lib/src 2>/dev/null | wc -l` → `0` (plane absent outside py/dataspell).
 **Coverage caveat:** zip↔disk identity verified for pycharm only; assume drift if either snapshot changes.
 
 ## Get live surrounding code

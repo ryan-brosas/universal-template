@@ -29,7 +29,7 @@ doc.aliases = undefined as any;
 **Invariant:** The `doc.aliases = undefined` assignment appears in moveDoc, updateDocument, pinDoc alike — TypeORM would otherwise try to persist an aliase relation loaded under a WHERE filter and resurrect rows. urlIds are org-SCOPED (`Alias.orgId`) so cross-org moves can't preserve them; conflict grammar differs by org type (support org checks globally, personal checks across ALL personal orgs, team checks own+example org — :3921–3937). Porters who keep aliases across moves create ambiguous routing in the merged personal-org domain.
 
 ### Probe (direct tests)
-`bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "should invalidate docAccess values when doc is moved" test/gen-server/lib/HomeDBCaches.ts'` → :186 (move is a first-class invalidation trigger).
+`bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "should invalidate docAccess values when doc is moved" test/gen-server/lib/HomeDBCaches.ts'` → :186 (move is a first-class invalidation trigger).
 `bash -c 'grep -n "setInheritance" app/gen-server/lib/homedb/HomeDBManager.ts | head -2'` → includes :2691 call site + :4052-ish def in GroupsManager.
 Direct tests: `test/gen-server/lib/HomeDBCaches.ts` :186 suite; DocApi move tests (`test/server/lib/docapi/`).
 

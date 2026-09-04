@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Vector-IVF shadow schema — how does a vector index persist without its own file format, and why does CREATE INDEX inside a statement need the subjournal opt-out?
 
-**Source:** turso (MIT) `main@1654d1587fab` (/mnt/hdd/utopia/inspo/turso); Codebase Memory `turso`. **Question:** Where do posting lists and per-component statistics physically live so that DDL, savepoints, WAL, and checkpointing keep working unchanged?
+**Source:** turso (MIT) `main@1654d1587fab` ($REFERENCE_ROOT/turso); Codebase Memory `turso`. **Question:** Where do posting lists and per-component statistics physically live so that DDL, savepoints, WAL, and checkpointing keep working unchanged?
 
 ## Two real `backing_btree` indexes named after the index method
 **Path/Symbol:** `core/index_method/toy_vector_sparse_ivf.rs`: `VectorSparseInvertedIndexMethodCursor::new` (:360-395), `create` (:407-451), `destroy` (:453-478), `open_read` (:480-495), `open_write` (:497-511).

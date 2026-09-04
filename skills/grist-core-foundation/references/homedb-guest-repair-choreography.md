@@ -37,7 +37,7 @@ TypeORM workaround forcing explicit diff writes (`GroupsManager.setGroupUsers`):
 **Invariant:** Repairs run INSIDE the same transaction as the mutation but tolerate concurrent unique-violations silently ("those functions... are ignoring any unique constraints errors" — addDocument comment :1795–1797). Soft-deleted docs/workspaces never contribute guests. A porter who updates only the directly-acted-on group leaves stale org-level access — the whole design bets on eventual-consistency-by-repair rather than perfect incremental bookkeeping.
 
 ### Probe (direct tests)
-`bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -c "_repairOrgGuests(" app/gen-server/lib/homedb/HomeDBManager.ts'` → ≥ 10.
+`bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -c "_repairOrgGuests(" app/gen-server/lib/homedb/HomeDBManager.ts'` → ≥ 10.
 `bash -c 'grep -n "can remove users from orgs while preserving workspace access" test/gen-server/lib/scrubUserFromOrg.ts'` → :205.
 Direct tests: `test/gen-server/lib/scrubUserFromOrg.ts` full suite (guest preservation after org removal); `test/gen-server/ApiServerAccess.ts` guest assertions.
 

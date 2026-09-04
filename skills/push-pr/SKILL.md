@@ -13,7 +13,7 @@ Use one evidence path for every pull request. The local gate checks the branch. 
 ## When to Use / NOT
 
 - **Use when:** a verified branch needs a pull request.
-- **Use when:** the project defines a quality workflow that guards its branches (`github-actions-engineering` authors or reviews it; the standard shape is `~/.agents/templates/github-pr-ci.yml`).
+- **Use when:** the project defines a quality workflow that guards its branches (`github-actions-engineering` authors or reviews it; the standard shape is `../../templates/github-pr-ci.yml`).
 - **Use when:** a review must show screenshots, CI state, or graph evidence.
 - **NOT when:** the project defines no quality gate. Run the strongest applicable checks (build, tests, lint, `git diff --check`), report the verification gap in the PR body, and do not invent CI that does not exist.
 - **NOT when:** an open PR already covers the branch. Update that PR.
@@ -22,7 +22,7 @@ Use one evidence path for every pull request. The local gate checks the branch. 
 
 1. Inspect the branch and diff: `git status`, `git log <base>..HEAD`, `git diff <base>...HEAD`. Record the base branch and what changed.
 2. Run the relevant project verification (the project's gates for the touched surface, not every gate in existence). Save each command and its exit status. Run `git diff --check` on the branch range.
-3. Discover the repository's own PR template first, `.github/PULL_REQUEST_TEMPLATE.md`, `PULL_REQUEST_TEMPLATE/` directory, `docs/`, or the repository root (GitHub-supported locations; re-verify when GitHub changes them). Use the repository's template when one exists; fall back to `~/.agents/templates/pull-request.md` otherwise.
+3. Discover the repository's own PR template first, `.github/PULL_REQUEST_TEMPLATE.md`, `PULL_REQUEST_TEMPLATE/` directory, `docs/`, or the repository root (GitHub-supported locations; re-verify when GitHub changes them). Use the repository's template when one exists; fall back to `../../templates/pull-request.md` otherwise.
 4. Construct the PR body from actual evidence, scope, what changed and why, verification output, run links. Never fabricate completed checks; mark absent values `None`. Conditional sections only when they apply: **visual change** → actual before/after screenshot or rendered evidence; **complex structural change** → Fovea/Steroid observation when useful; **external/reference implementation** → provenance + license note; **reusable lesson** → mark as a `leverage-capture` candidate (do not capture automatically).
 5. Write the body to a securely created temporary file (`mktemp`), never interpolate generated Markdown into the shell command.
 6. Push and create the PR: `gh pr create --title "..." --body-file <file> --base <base>`. **Draft policy:** implementation incomplete → `--draft`; implementation ready → open ready for review and let CI run in parallel (review and CI are parallel activities). A failing required check blocks the merge, not the review.
@@ -68,4 +68,4 @@ The PR exists with a body whose claims trace to real evidence (diff, commands + 
 
 - `references/pull-request-format.md` - fixed PR body order and evidence fields.
 - `references/ci-and-observation.md` - workflow events, anti-slop checks, graph observation, and learning.
-- `~/.agents/skills/github-actions-engineering/SKILL.md` - the skill that authors and reviews the workflow file.
+- `../github-actions-engineering/SKILL.md` - the skill that authors and reviews the workflow file.

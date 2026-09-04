@@ -10,7 +10,7 @@
       "command": "npx",
       "args": [
         "-y",
-        "@upstash/context7-mcp"
+        "@upstash/context7-mcp@4.0.4"
       ],
       "env": {
         "CONTEXT7_API_KEY": "${CONTEXT7_API_KEY}"
@@ -22,7 +22,7 @@
       "command": "npx",
       "args": [
         "-y",
-        "deepwiki-mcp"
+        "deepwiki-mcp@0.0.6"
       ],
       "lifecycle": "keep-alive"
     },
@@ -31,7 +31,7 @@
       "command": "npx",
       "args": [
         "-y",
-        "exa-mcp-server"
+        "exa-mcp-server@3.4.1"
       ],
       "env": {
         "EXA_API_KEY": "${EXA_API_KEY}"

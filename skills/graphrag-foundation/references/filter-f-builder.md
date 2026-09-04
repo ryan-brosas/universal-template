@@ -26,7 +26,7 @@ class _FieldBuilder:
 
 **Flow:** `F.status` → `__getattr__` wraps the NAME in a FieldRef → `F.status == "active"` → dunder returns `Condition(field="status", operator=eq, value="active")` → combinable with `&`/`|`/`~` (Condition defines them too). Non-dunder operators (contains/in_/exists) are explicit METHODS because Python has no operator syntax for them.
 **Invariant:** dunder overloads must be defined on FieldRef for comparisons AND mirrored as `__and__/__or__/__invert__` on all four expression nodes — if a porter adds a fifth node type without the three combinators, `(a & b) | c` silently falls back to identity-based equality and produces wrong trees. `__hash__` is implicitly None once `__eq__` is overridden; these objects are not dict-key safe.
-**Probe:** `tests/unit/vector_stores/test_filtering.py` TestFBuilder (:133-173) asserts `F.color == "red"` yields `isinstance(expr, Condition)` with exact field/operator/value; TestOperatorOverloads (:179-205) pins nesting shapes. 34 passed @pin via `/home/utopia/.venvs/grag-lane-venv/bin/python -m pytest tests/unit/vector_stores/test_filtering.py -q`.
+**Probe:** `tests/unit/vector_stores/test_filtering.py` TestFBuilder (:133-173) asserts `F.color == "red"` yields `isinstance(expr, Condition)` with exact field/operator/value; TestOperatorOverloads (:179-205) pins nesting shapes. 34 passed @pin via `$VENV_ROOT/grag-lane-venv/bin/python -m pytest tests/unit/vector_stores/test_filtering.py -q`.
 
 ## Get live surrounding code
 **Retrieve:**

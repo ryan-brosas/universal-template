@@ -44,7 +44,7 @@ Escape table (:26–37): short escapes → 2; control chars `<0x20` → 6 (`\u00
 
 **Invariant:** Wire-safety is measured in SERIALIZED bytes, never source characters or Python string length. Chunk boundaries may split anywhere (including mid-codepoint-neighborhoods) because the receiver concatenates text deltas. Anything that cannot be split must be truncated to a self-describing marker that still fits one notification.
 
-**Probe:** `bash -c 'cd /mnt/hdd/utopia/inspo/pydantic-ai-harness && /tmp/harness-p6-venv/bin/python -m pytest "tests/experimental/acp/test_acp.py::TestChunkText" "tests/experimental/acp/test_acp.py::TestPermission::test_oversized_tool_output_is_truncated_in_the_update" "tests/experimental/acp/test_conformance.py::TestStreamedFrameBytes" -q'` — ascii byte-budget split, exact-fit single chunk, empty→nothing, non-ASCII stays in budget where a char cap would not; oversized output replaced by `"truncated": true` marker under cap+1024; wire-level frame-bytes conformance. (Executed this pass; see verification.md.)
+**Probe:** `bash -c 'cd $REFERENCE_ROOT/pydantic-ai-harness && /tmp/harness-p6-venv/bin/python -m pytest "tests/experimental/acp/test_acp.py::TestChunkText" "tests/experimental/acp/test_acp.py::TestPermission::test_oversized_tool_output_is_truncated_in_the_update" "tests/experimental/acp/test_conformance.py::TestStreamedFrameBytes" -q'` — ascii byte-budget split, exact-fit single chunk, empty→nothing, non-ASCII stays in budget where a char cap would not; oversized output replaced by `"truncated": true` marker under cap+1024; wire-level frame-bytes conformance. (Executed this pass; see verification.md.)
 
 ## Get live surrounding code
 **Retrieve:**

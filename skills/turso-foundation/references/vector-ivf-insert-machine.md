@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Vector-IVF insert machine — how does one sparse vector become posting rows + stats, and why is the inverted seek's result thrown away?
 
-**Source:** turso (MIT) `main@1654d1587fab` (/mnt/hdd/utopia/inspo/turso); Codebase Memory `turso`. **Question:** What exact per-component write ladder turns `INSERT INTO t(vector32_sparse(...))` into index content, and which error checks are deliberately skipped?
+**Source:** turso (MIT) `main@1654d1587fab` ($REFERENCE_ROOT/turso); Codebase Memory `turso`. **Question:** What exact per-component write ladder turns `INSERT INTO t(vector32_sparse(...))` into index content, and which error checks are deliberately skipped?
 
 ## Six-state resume machine; one posting row per (position, sum, rowid); blind insert
 **Path/Symbol:** `core/index_method/toy_vector_sparse_ivf.rs`: `VectorSparseInvertedIndexInsertState` enum (:45-87), `insert` (:531-783), `parse_stat_row` (:162-194).

@@ -1,17 +1,17 @@
 # Shared MCP catalog (CLI-neutral)
 
-CANONICAL SOURCE OF TRUTH: `~/.agents/mcp/servers.json`
+CANONICAL REGISTRY: `servers.json` (relative to this directory)
 
-`~/.agents` is the global settings area every CLI reads — skills
-(`~/.agents/skills`), templates (`~/.agents/templates`), essentials
-(`~/.agents/essentials`) and the MCP registry (`~/.agents/mcp/servers.json`).
+The registry declares capabilities. It is not a default activation list and no
+host is required to connect every entry.
 
 ## Rules
 
 - Servers are declared ONCE, in the canonical registry; per-CLI host configs are
   derived copies written only when the user requests a specific server.
-- To wire a server: copy that server's block from `servers.json` into the target
-  CLI's own config (see per-CLI wiring below), one server at a time.
+- To wire a server, preview `configure.py --server NAME --target PATH`; pass
+  `--apply` only after reviewing the scoped merge. `profiles.json` provides
+  bounded sets, and `minimal` activates none.
 - Prefer a dry-run-style preview before writing, and back up a host config
   before its first write.
 - Never touch servers you didn't request. Never store token **values** anywhere —
@@ -27,14 +27,14 @@ CANONICAL SOURCE OF TRUTH: `~/.agents/mcp/servers.json`
 - **`mcp-steroid`** connects through `~/.mcp-steroid/bin/devrig mcp` (devrig
   launcher → JetBrains IDE; the launcher pins its own JDK).
 
-## Current registry (`~/.agents/mcp/servers.json`)
+## Current registry (`servers.json`)
 
 | Server            | Kind  | Connection / command                                    | Key / env                        | Notes |
 |-------------------|-------|---------------------------------------------------------|----------------------------------|-------|
 | codebase-memory   | stdio | `codebase-memory-mcp` (PATH-resolved; mise shim)         | `CBM_CACHE_DIR` (machine-local)  | local graph, keep-alive |
-| context7          | stdio | `npx -y @upstash/context7-mcp`               | `CONTEXT7_API_KEY`               | library docs + code examples |
-| deepwiki          | stdio | `npx -y deepwiki-mcp`                        | none                             | OSS architecture pages |
-| exa               | stdio | `npx -y exa-mcp-server`                      | `EXA_API_KEY`                    | live web search |
+| context7          | stdio | `npx -y @upstash/context7-mcp@4.0.4`               | `CONTEXT7_API_KEY`               | library docs + code examples |
+| deepwiki          | stdio | `npx -y deepwiki-mcp@0.0.6`                        | none                             | OSS architecture pages |
+| exa               | stdio | `npx -y exa-mcp-server@3.4.1`                      | `EXA_API_KEY`                    | live web search |
 | openviking        | remote| `http://127.0.0.1:1933/mcp`                  | none (local daemon)              | optional rebuildable projection/cache over mined corpus; register only when the daemon runs; never canonical, never auto-synced, never a blocker |
 | mcp-steroid       | stdio | `devrig mcp` (PATH-resolved)                  | none (local IDE bridge)          | JetBrains PSI/refactoring/test/debugger access via devrig |
 
@@ -54,6 +54,19 @@ These hosts already export or can export the needed vars; the `${VAR}` text in
 |-----|------------|
 | `EXA_API_KEY` | `~/.profile`, `~/.dsh/.env` |
 | `CONTEXT7_API_KEY` | `~/.profile`, `~/.dsh/.env` |
+
+## Scoped profiles
+
+`profiles.json` defines `minimal` (none), `code`, `docs`, `research`, and
+`memory`. Profiles are explicit convenience selections, not always-on policy.
+Use `--deactivate` to remove only the selected profile entries while preserving
+unrelated host configuration. Writes are atomic. Prime translation remains
+available through `sync-to-prime.py`, but it also requires `--server` or
+`--profile`.
+
+Measured tool-contract costs and the 81,429-byte all-versus-minimal reduction
+are recorded in `../docs/context-surfaces.md` and
+`../docs/context-measurements.json`.
 
 ## Per-CLI wiring
 
@@ -77,11 +90,12 @@ The canonical registry fans out through per-CLI mirrors **and** machine-local
 overlay files that this repo does not own — document them, never hand-edit
 both sides blindly:
 
-- `~/.pi/agent/mcp.json` — pi's mirror (all six servers; regenerate from the
-  canonical registry after changes).
+- `~/.pi/agent/mcp.json` — pi's host-owned selected subset; never regenerate
+  all six by default.
 - `~/.mcporter/mcporter.json` — the pi-mcp-adapter layer (subset; env values
   support `${VAR}` expansion — never store literal keys there; use env vars).
-- `~/.prime/agent/settings.json` — written by `mcp/sync-to-prime.py --apply`.
+- `~/.prime/agent/settings.json` — scoped writes only through
+  `mcp/sync-to-prime.py --server NAME --apply` or an explicit profile.
 - The IntelliJ **built-in** MCP server (`http://localhost:64442`) is a
   separate transport from mcp-steroid; it needs `JETBRAINS_MCP_TOKEN` exported
   or it fails auth (401) — wire the token or treat the entry as dormant.

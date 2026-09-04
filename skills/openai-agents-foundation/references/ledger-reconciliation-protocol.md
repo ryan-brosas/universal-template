@@ -4,7 +4,7 @@
 **Source:** OpenAI Agents Python MIT `main@fe45b415` (process seam; evidence is this leaf's own work records + on-disk state). **Question:** When pass N delivered its artifacts but the shared ledger row still reads pass N−1, how do you reconcile counts and history in one scoped edit without a stale whole-file replacement?
 
 ## Detect, verify on disk, then one scoped row edit
-**Path/Symbol:** work records `/mnt/hdd/utopia/inspo/.skill-mining-work/openai-agents-python/{state,research,verification}.md`; ledger `/mnt/hdd/utopia/inspo/.skill-mining-work/llm-repo-learning.md` row `openai-agents-python`.
+**Path/Symbol:** work records `$REFERENCE_ROOT/.skill-mining-work/openai-agents-python/{state,research,verification}.md`; ledger `$REFERENCE_ROOT/.skill-mining-work/llm-repo-learning.md` row `openai-agents-python`.
 **Signature:** reconciliation precondition: `pass-8 verification.md` records completion + parity (75 refs / 75 v2 / 75 loader) AND the ledger row still reads `pass 7 | 71 | 71`.
 **Data Shape:** row columns `Source | Foundation | Graph project | Pin | Pass | Refs | V2 | Last pass | Next-pass targets | Blockers`; the Status board line mirrors pass/refs/v2.
 

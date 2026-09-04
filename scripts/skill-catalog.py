@@ -3,7 +3,8 @@
 
 Optional human-facing catalog tooling (list, search, show, stats, generate).
 The filesystem and each skill's frontmatter are canonical. Models should use
-native filesystem or host discovery during ordinary work. Zero dependencies.
+native filesystem or host discovery during ordinary work. PyYAML is shared with
+the strict skill validator.
 """
 from __future__ import annotations
 
@@ -45,7 +46,10 @@ STOPWORDS = {
 
 
 def scan() -> list[dict]:
-    local_dirs = _METADATA.git_ignored_dirs(SKILLS)
+    local_dirs = (
+        _METADATA.git_ignored_dirs(SKILLS)
+        | _METADATA.git_untracked_dirs(SKILLS)
+    )
     out: list[dict] = []
     if not SKILLS.is_dir():
         return out
@@ -57,15 +61,17 @@ def scan() -> list[dict]:
             continue
         text = sm.read_text(encoding="utf-8")
         fm = parse_frontmatter(text)
-        hidden = str(fm.get("disable-model-invocation", "")).strip().lower() == "true"
+        hidden = fm.get("disable-model-invocation", False) is True
         invocation = fm.get("invocation")
         kind = fm.get("kind") or "skill"
+        surface = "hot" if kind != FOUNDATION_KIND and not hidden else "cold"
         out.append({
             "name": fm.get("name", d.name),
             "folder": d.name,
             "desc": fm.get("description", ""),
             "kind": kind,
             "hidden": hidden,
+            "surface": surface,
             "local": d.name in local_dirs,
             "cls": invocation,
             "path": str(sm),
@@ -133,7 +139,7 @@ def search(skills: list[dict], query: str, limit: int) -> list[dict]:
         s, why = score_skill(sk, toks, q_low)
         if s > 0:
             scored.append({"score": s, "why": why, **{k: sk[k] for k in
-                          ("name", "kind", "cls", "hidden", "desc", "path")}})
+                          ("name", "kind", "cls", "hidden", "surface", "local", "desc", "path")}})
     scored.sort(key=lambda x: -x["score"])
     return scored[:limit]
 
@@ -150,12 +156,22 @@ def related(skills: list[dict], name: str, limit: int = 8) -> list[str]:
     return hits
 
 
+def context_surfaces(skills: list[dict]) -> dict:
+    """Return disjoint startup (hot) and on-demand (cold) identities."""
+    hot = sorted(s["name"] for s in skills if s["surface"] == "hot")
+    cold = sorted(s["name"] for s in skills if s["surface"] == "cold")
+    overlap = sorted(set(hot) & set(cold))
+    hot_rows = [s for s in skills if s["surface"] == "hot"]
+    chars = sum(len(s["name"]) + len(s["desc"]) for s in hot_rows)
+    return {
+        "hot": hot, "cold": cold, "overlap": overlap,
+        "hot_count": len(hot), "cold_count": len(cold),
+        "hot_chars": chars, "hot_tokens_approx": chars // TOKEN_CHARS,
+    }
+
+
 def visible_chars(skills: list[dict]) -> int:
-    return sum(
-        len(s["name"]) + len(s["desc"])
-        for s in skills
-        if s["kind"] != FOUNDATION_KIND and not s["hidden"]
-    )
+    return context_surfaces(skills)["hot_chars"]
 
 
 def stats(skills: list[dict]) -> dict:
@@ -175,6 +191,7 @@ def stats(skills: list[dict]) -> dict:
         "hidden": len(operational) - len(vis),
         "visible_chars": chars,
         "visible_tokens_approx": chars // TOKEN_CHARS,
+        "context": context_surfaces(skills),
         "classes": by_class,
         "largest": [{"name": s["name"], "desc_chars": len(s["desc"])} for s in largest],
         "foundations": {
@@ -200,8 +217,26 @@ def _md_row(s: dict) -> str:
     return f"| [`{s['name']}`](../skills/{s['folder']}/SKILL.md) | {s['cls'] or 'unclassified'} | {vis} | {desc} |"
 
 
+def _split_md_row(row: str) -> list[str]:
+    """Split a Markdown row without treating escaped pipes as delimiters."""
+    cells: list[str] = []
+    current: list[str] = []
+    escaped = False
+    for char in row.strip()[1:-1]:
+        if char == "|" and not escaped:
+            cells.append("".join(current).strip())
+            current = []
+        else:
+            current.append(char)
+        escaped = char == "\\" and not escaped
+        if char != "\\":
+            escaped = False
+    cells.append("".join(current).strip())
+    return cells
+
+
 def _align_md_table(rows: list[str]) -> list[str]:
-    parts = [[c.strip() for c in r.split("|")[1:-1]] for r in rows]
+    parts = [_split_md_row(r) for r in rows]
     ncols = max(len(c) for c in parts)
     parts = [c + [""] * (ncols - len(c)) for c in parts]
     widths = [max(len(row[i]) for row in parts) for i in range(ncols)]
@@ -226,18 +261,19 @@ def build_skill_catalog_md(skills: list[dict]) -> str:
         "",
         "Derived from operational `skills/*/SKILL.md` metadata for human browsing.",
         "Models discover skills from the filesystem or the host's native skill surface.",
+        "Visible operational metadata is hot; hidden operational skills are cold.",
         "Cold foundations are excluded; see `foundation-catalog.md`.",
         "",
     ]
     st = stats(skills)
-    lines.append(f"{st['total']} skills: {st['visible']} visible, {st['hidden']} hidden. "
+    lines.append(f"{st['total']} skills: {st['visible']} hot, {st['hidden']} cold. "
                  f"Visible startup metadata: ~{st['visible_chars']} chars "
                  f"(~{st['visible_tokens_approx']} tokens).")
     lines.append("")
     sections = [
-        ("Entry skills", "entry", "Direct user-facing capabilities; trigger on request."),
-        ("Internal", "internal", "Invoked by another capability; hidden from startup metadata."),
-        ("Manual specialists", "manual", "Loaded explicitly through native search or inspection; hidden from startup metadata."),
+        ("Entry skills", "entry", "Hot direct user-facing capabilities; trigger on request."),
+        ("Internal", "internal", "Cold: invoked by another capability and hidden from startup metadata."),
+        ("Manual specialists", "manual", "Cold: loaded explicitly through native search or inspection; hidden from startup metadata."),
         ("Vendor-managed", "vendor", "Installed and updated by their vendor; visibility follows integration."),
     ]
     for title, key, blurb in sections:
@@ -262,6 +298,7 @@ def build_foundation_catalog_md(skills: list[dict]) -> str:
         "# Foundation Catalog",
         "",
         "Cold, source-specific, revision-pinned evidence under `skills/*-foundation/`.",
+        "This is part of the cold discoverable set and never startup context.",
         "Foundations are manual and hidden: search explicitly, open the topic index,",
         "then load one matching capsule. Current source and tests outrank them.",
         "",
@@ -290,14 +327,16 @@ def cmd_list(skills: list[dict], args) -> int:
         rows = [s for s in rows if s["cls"] == args.klass]
     if args.kind:
         rows = [s for s in rows if s["kind"] == args.kind]
+    if args.surface:
+        rows = [s for s in rows if s["surface"] == args.surface]
     if args.json:
-        print(json.dumps([{k: s[k] for k in ("name", "kind", "cls", "hidden", "desc", "path")}
+        print(json.dumps([{k: s[k] for k in ("name", "kind", "cls", "hidden", "surface", "local", "desc", "path")}
                           for s in rows], indent=2))
         return 0
     for s in rows:
         vis = "hidden" if s["hidden"] else "VISIBLE"
         local = " machine-local" if s.get("local") else ""
-        print(f"{s['kind']:10} {s['cls'] or 'unclassified':12} {vis:7} {s['name']}{local}")
+        print(f"{s['surface']:4} {s['kind']:10} {s['cls'] or 'unclassified':12} {vis:7} {s['name']}{local}")
     print(f"-- {len(rows)} entries", file=sys.stderr)
     return 0
 
@@ -377,6 +416,28 @@ def cmd_stats(skills: list[dict], args) -> int:
     return 0
 
 
+def cmd_context(skills: list[dict], args) -> int:
+    rows = [s for s in skills if not s.get("local")]
+    result = context_surfaces(rows)
+    failures = []
+    if result["overlap"]:
+        failures.append("hot/cold overlap: " + ", ".join(result["overlap"]))
+    if args.max_hot_chars is not None and result["hot_chars"] > args.max_hot_chars:
+        failures.append(f"hot chars {result['hot_chars']} exceed {args.max_hot_chars}")
+    if args.max_hot_skills is not None and result["hot_count"] > args.max_hot_skills:
+        failures.append(f"hot skills {result['hot_count']} exceed {args.max_hot_skills}")
+    result["failures"] = failures
+    if args.json:
+        print(json.dumps(result, indent=2))
+    else:
+        print(f"hot: {result['hot_count']} skills, {result['hot_chars']} chars (~{result['hot_tokens_approx']} tokens)")
+        print(f"cold: {result['cold_count']} discoverable entries")
+        print(f"overlap: {len(result['overlap'])}")
+        for failure in failures:
+            print(f"FAIL  {failure}")
+    return 1 if failures else 0
+
+
 def cmd_selftest(skills: list[dict], _args) -> int:
     foundations = [s for s in skills if s["kind"] == FOUNDATION_KIND and not s.get("local")]
     operational = [s for s in skills if s["kind"] != FOUNDATION_KIND and not s.get("local")]
@@ -400,6 +461,14 @@ def cmd_selftest(skills: list[dict], _args) -> int:
         return 1
     if any(f"../skills/{s['name']}/SKILL.md" in foundation_doc for s in operational):
         print("selftest: operational skill leaked into foundation catalog", file=sys.stderr)
+        return 1
+    surfaces = context_surfaces([*operational, *foundations])
+    if surfaces["overlap"] or surfaces["hot_count"] + surfaces["cold_count"] != len(operational) + len(foundations):
+        print("selftest: context surfaces are not exhaustive and disjoint", file=sys.stderr)
+        return 1
+    escaped = _align_md_table(["| A | B |", "|---|---|", r"| x | one \| two |"])
+    if "one \| two" not in escaped[-1] or len(_split_md_row(escaped[-1])) != 2:
+        print("selftest: escaped Markdown pipe changed table shape", file=sys.stderr)
         return 1
     print("SKILL CATALOG SELFTEST PASS")
     return 0
@@ -443,6 +512,7 @@ def main() -> int:
     p.add_argument("--hidden", action="store_true")
     p.add_argument("--class", dest="klass", choices=CLASSES)
     p.add_argument("--kind", choices=KINDS)
+    p.add_argument("--surface", choices=("hot", "cold"))
     p.add_argument("--json", action="store_true")
     p = sub.add_parser("search", help="scored catalog search (maintainer/explicit queries)")
     p.add_argument("query")
@@ -453,13 +523,17 @@ def main() -> int:
     p.add_argument("--json", action="store_true")
     p = sub.add_parser("stats", help="catalog and context-budget stats")
     p.add_argument("--json", action="store_true")
+    p = sub.add_parser("context", help="measure and optionally gate disjoint hot/cold surfaces")
+    p.add_argument("--json", action="store_true")
+    p.add_argument("--max-hot-chars", type=int)
+    p.add_argument("--max-hot-skills", type=int)
     p = sub.add_parser("generate", help="write generated skill and foundation catalogs")
     p.add_argument("--check", action="store_true", help="verify generated docs are current")
     sub.add_parser("selftest", help="verify kind-aware search, stats, and catalog separation")
     args = ap.parse_args()
     skills = scan()
     return {"list": cmd_list, "search": cmd_search, "show": cmd_show,
-            "stats": cmd_stats, "generate": cmd_generate,
+            "stats": cmd_stats, "context": cmd_context, "generate": cmd_generate,
             "selftest": cmd_selftest}[args.cmd](skills, args)
 
 

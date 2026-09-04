@@ -34,7 +34,7 @@ function isISearchDataInNin(data) {
 **Invariant:** validation depth scales with persistence depth — search requests are transient (nothing persists), so the guard pins almost nothing (contrast entity aggregates, which whitelist dozens of props). The explicit `!Array.isArray(arg)` exists because the kernel's `isObject` accepts arrays; every payload guard must re-exclude them where shape matters.
 **Probe:** deterministic node-require:
 ```bash
-node -e "const g=require('/mnt/hdd/utopia/inspo/lh-basis/core/public-methods/shared-types/profilesSearch/guards.js');const c=require('/mnt/hdd/utopia/inspo/lh-basis/core/public-methods/shared-types/common/guards.js');console.log(g.isISearchListData({request:{}}),g.isISearchListData([1,2]),g.isIPeopleSearchListData({request:{},type:'people'}),g.isIOrganizationsSearchListData({request:{},type:'people'}),g.isProfileSearchOption({empty:false}),g.isProfileSearchOption({exists:1}),g.isProfileSearchOptionOrText('query'),c.isISearchDataInNin({in:[1]}),c.isISearchDataInNin({nin:'x'}))"
+node -e "const g=require('$REFERENCE_ROOT/lh-basis/core/public-methods/shared-types/profilesSearch/guards.js');const c=require('$REFERENCE_ROOT/lh-basis/core/public-methods/shared-types/common/guards.js');console.log(g.isISearchListData({request:{}}),g.isISearchListData([1,2]),g.isIPeopleSearchListData({request:{},type:'people'}),g.isIOrganizationsSearchListData({request:{},type:'people'}),g.isProfileSearchOption({empty:false}),g.isProfileSearchOption({exists:1}),g.isProfileSearchOptionOrText('query'),c.isISearchDataInNin({in:[1]}),c.isISearchDataInNin({nin:'x'}))"
 ```
 → expect `true false true false true false true true false` (strict boolean flags — `exists:1` fails; `nin` must be an array).
 

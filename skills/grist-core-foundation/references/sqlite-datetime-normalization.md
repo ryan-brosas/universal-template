@@ -25,7 +25,7 @@ throw new Error(`normalizedDateTimeString cannot handle ${dateTime}`);
 
 **Flow:** falsy passes through unchanged (`!dateTime` early return preserves "" / null semantics for callers distinguishing "no time yet") → Date instances already carry zone info → string/number path re-anchors to UTC BEFORE formatting so the emitted string always ends in Z.
 **Invariant:** `moment.utc(x)` vs `moment(x)` differs precisely when x lacks zone markers: local-time interpretation would shift every SQLite-read timestamp by the host offset. Postgres drivers return real Date objects where the comment says normalization "is not really needed" — the branch split encodes driver behavior knowledge. Unknown types throw rather than guess (audit-visible).
-**Probe:** `bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "moment.utc(dateTime).toISOString()" app/common/normalizedDateTimeString.ts && grep -n "lastChangeAt: normalizedDateTimeString" app/server/lib/ActiveDoc.ts'` → :24 and :3137 consumer proof.
+**Probe:** `bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "moment.utc(dateTime).toISOString()" app/common/normalizedDateTimeString.ts && grep -n "lastChangeAt: normalizedDateTimeString" app/server/lib/ActiveDoc.ts'` → :24 and :3137 consumer proof.
 Direct tests: no dedicated spec file (27L util); covered indirectly via doc-snapshot suites — stated coverage caveat.
 
 ### Retrieve

@@ -1,40 +1,39 @@
-# Optional local model preferences.
-#
-# These chains are tie-breakers after the active agent inspects task needs and
-# current host/provider availability. They are not capability declarations,
-# context requirements, authentication state, or a universal ranking. Probe
-# uncertain capabilities with native host commands before load-bearing use.
-# Address form: <backend>:<model>.
-
+# Portable task-needs profiles. These are requirements, not model rankings.
+# Machine-local model preferences belong in config/model-profiles.local.yaml,
+# which is git-ignored. Resolve concrete models from live host inventory.
 profiles:
   economy-worker:
-    prefer:
-      - pi:zro/deepseek-v4-flash-0731
-      - pi:hyper/deepseek-v4-flash
-      - agy:gemini-3.7-flash-low
+    needs:
+      reasoning: routine
+      latency: low
+      cost: low
+      tools: [filesystem]
   fast-investigator:
-    prefer:
-      - pi:hyper/deepseek-v4-flash
-      - agy:gemini-3.7-flash-medium
+    needs:
+      reasoning: moderate
+      latency: low
+      tools: [filesystem, search]
   strong-reviewer:
-    prefer:
-      - agy:claude-opus-4-6-thinking
-      - agy:claude-sonnet-4-6
-      - pi:cursor/claude-opus-5@1m
-      - claude-code:opus
+    needs:
+      reasoning: high
+      context: large
+      tools: [filesystem]
   architect:
-    prefer:
-      - agy:claude-opus-4-6-thinking
-      - pi:cursor/claude-opus-5@1m
+    needs:
+      reasoning: high
+      context: large
+      output: structured-design
   frontend-critic:
-    prefer:
-      - agy:gemini-3.1-pro-high
-      - agy:gemini-3.7-flash-high
-      - agy:claude-sonnet-4-6
+    needs:
+      reasoning: moderate
+      modalities: [image-input]
+      tools: [browser]
   debugger:
-    prefer:
-      - pi:hyper/deepseek-v4-pro
-      - agy:claude-sonnet-4-6
+    needs:
+      reasoning: high
+      tools: [filesystem, execution]
   spam-worker:
-    prefer:
-      - pi:yolo-auto/qwen3.8-27b
+    needs:
+      reasoning: routine
+      latency: low
+      cost: lowest

@@ -1,0 +1,32 @@
+{
+  "measured_at": "2026-09-04",
+  "commit_base": "76afa8ecaa2fa6fceb4953b4a086415f7bbf7a55",
+  "static_context": {
+    "hot_skills": 38,
+    "cold_entries": 309,
+    "overlap": 0,
+    "hot_metadata_chars": 10315,
+    "hot_tokens_approx": 2578
+  },
+  "pi_outbound_probe": {
+    "version": "0.84.4",
+    "route": "--no-skills plus one --skill per tracked hot entry",
+    "selected_skills": 38,
+    "skill_entries": 38,
+    "system_chars": 18313,
+    "request_bytes": 19491,
+    "hot_marker_present": true,
+    "cold_marker_absent": true
+  },
+  "mcp_contracts": {
+    "method": "UTF-8 byte lengths of compact JSON inputSchema plus tool description from the live adapter catalog",
+    "codebase-memory": {"tools": 15, "input_schema_bytes": 11008, "description_bytes": 9371, "total_contract_bytes": 20379},
+    "context7": {"tools": 2, "input_schema_bytes": 2002, "description_bytes": 2435, "total_contract_bytes": 4437},
+    "deepwiki": {"tools": 2, "input_schema_bytes": 521, "description_bytes": 176, "total_contract_bytes": 697},
+    "exa": {"tools": 2, "input_schema_bytes": 886, "description_bytes": 836, "total_contract_bytes": 1722},
+    "openviking": {"tools": 13, "input_schema_bytes": 4246, "description_bytes": 4020, "total_contract_bytes": 8266},
+    "mcp-steroid": {"tools": 8, "input_schema_bytes": 8889, "description_bytes": 37039, "total_contract_bytes": 45928},
+    "all_declared_total_contract_bytes": 81429,
+    "minimal_profile_total_contract_bytes": 0
+  }
+}

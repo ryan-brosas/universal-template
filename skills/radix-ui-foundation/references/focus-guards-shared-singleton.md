@@ -33,7 +33,7 @@ return () => {
 
 **Flow:** first consumer creates pair + inserts at body extremes → subsequent overlay mounts reuse cached nodes (only re-inserting when a portal landed AFTER the trailing guard, breaking the last-child invariant) → unmount decrements; ONLY the final consumer removes nodes and nulls the cache. Select content calls useFocusGuards because its portalled content may be the last element in the DOM.
 **Invariant:** conditional writes are the performance contract — unconditional insertAdjacentElement forces synchronous reflow under sibling layout readers; the trailing guard must be re-asserted whenever it's no longer lastElementChild (portals append after it).
-**Probe:** direct tests `packages/react/focus-guards/src/focus-guards.test.tsx` (128L). Byte-exact anchors: `bash -c "cd /mnt/hdd/utopia/inspo/external/ui-radix-ui && grep -nF 'document.body.firstElementChild !== start' packages/react/focus-guards/src/focus-guards.tsx"` (:33) and `grep -cF 'if (count === 1) {' packages/react/focus-guards/src/focus-guards.tsx"` (=1, :44).
+**Probe:** direct tests `packages/react/focus-guards/src/focus-guards.test.tsx` (128L). Byte-exact anchors: `bash -c "cd $REFERENCE_ROOT/external/ui-radix-ui && grep -nF 'document.body.firstElementChild !== start' packages/react/focus-guards/src/focus-guards.tsx"` (:33) and `grep -cF 'if (count === 1) {' packages/react/focus-guards/src/focus-guards.tsx"` (=1, :44).
 **Retrieve:**
 ```ts
 await mcp.codebase_memory.search_graph({ project: "ext-ui-radix-ui", query: "useFocusGuards guards insertAdjacentElement", limit: 10 });

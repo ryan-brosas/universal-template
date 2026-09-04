@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
-"""Validate exact skill metadata, names, visibility, and local references.
-
-This gate deliberately does not judge prose, usefulness, overlap, routing, or
-section structure. Those decisions belong to model review.
-"""
+"""Validate strict skill metadata, names, visibility, and local references."""
 from __future__ import annotations
 
 import argparse
@@ -13,6 +9,12 @@ import subprocess
 import sys
 import tempfile
 from pathlib import Path
+from typing import Any
+
+try:
+    import yaml
+except ImportError:  # CI and contributor setup install the pinned dependency.
+    yaml = None
 
 BASE = Path(__file__).resolve().parents[1]
 SKILLS = Path(os.environ.get("SKILLS_ROOT", str(BASE / "skills")))
@@ -20,25 +22,44 @@ NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 INVOCATIONS = {"entry", "internal", "manual", "vendor"}
 FOUNDATION_KIND = "foundation"
 LEGACY_FOUNDATIONS = BASE / ("foundation" + "-pack")
+STRING_FIELDS = {"name", "description", "invocation", "kind", "setup", "compatibility"}
+BOOL_FIELDS = {"disable-model-invocation", "x-manual-only"}
 
 
-def parse_frontmatter(text: str) -> dict[str, str]:
+class FrontmatterError(ValueError):
+    pass
+
+
+def parse_frontmatter(text: str) -> dict[str, Any]:
+    """Parse the opening YAML document strictly; never guess from lines."""
     if not text.startswith("---\n"):
-        return {}
-    end = text.find("\n---", 4)
-    if end < 0:
-        return {}
-    result: dict[str, str] = {}
-    for line in text[4:end].splitlines():
-        match = re.match(r"^([A-Za-z0-9_-]+):\s*(.*)$", line)
-        if not match:
-            continue
-        key, value = match.groups()
-        value = value.strip()
-        if len(value) >= 2 and value[0] in "\"'" and value[-1] == value[0]:
-            value = value[1:-1]
-        result[key] = value
-    return result
+        raise FrontmatterError("opening --- delimiter missing")
+    match = re.search(r"^---[ \t]*$", text[4:], re.MULTILINE)
+    if match is None:
+        raise FrontmatterError("closing --- delimiter missing")
+    source = text[4:4 + match.start()]
+    if yaml is None:
+        raise FrontmatterError("PyYAML is required for strict frontmatter parsing")
+    try:
+        value = yaml.safe_load(source)
+    except yaml.YAMLError as exc:
+        raise FrontmatterError(f"invalid YAML: {exc}") from exc
+    if not isinstance(value, dict):
+        raise FrontmatterError("frontmatter must be a YAML mapping")
+    if not all(isinstance(key, str) for key in value):
+        raise FrontmatterError("frontmatter keys must be strings")
+    return value
+
+
+def metadata_type_errors(skill: Path, metadata: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    for key in STRING_FIELDS & metadata.keys():
+        if not isinstance(metadata[key], str):
+            errors.append(f"{skill}: {key} must be a string")
+    for key in BOOL_FIELDS & metadata.keys():
+        if not isinstance(metadata[key], bool):
+            errors.append(f"{skill}: {key} must be a boolean")
+    return errors
 
 
 def git_ignored_dirs(root: Path) -> set[str]:
@@ -51,15 +72,26 @@ def git_ignored_dirs(root: Path) -> set[str]:
         result = subprocess.run(
             ["git", "-C", str(root.parent), "check-ignore", "--stdin", "--no-index"],
             input="".join(f"{root.name}/{name}\n" for name in names),
-            capture_output=True,
-            text=True,
-            check=False,
+            capture_output=True, text=True, check=False,
         )
     except OSError:
         return set()
     if result.returncode not in (0, 1):
         return set()
     return {line.rsplit("/", 1)[-1] for line in result.stdout.splitlines()}
+
+
+def git_untracked_dirs(root: Path) -> set[str]:
+    """Return top-level skill dirs whose SKILL.md is not in the Git index."""
+    try:
+        result = subprocess.run(
+            ["git", "-C", str(root.parent), "ls-files", "--", f"{root.name}/*/SKILL.md"],
+            capture_output=True, text=True, check=True,
+        )
+    except (OSError, subprocess.CalledProcessError):
+        return set()
+    tracked = {Path(line).parent.name for line in result.stdout.splitlines()}
+    return {entry.name for entry in root.iterdir() if entry.is_dir() and entry.name not in tracked}
 
 
 def referenced_files(skill: Path, text: str) -> list[str]:
@@ -77,7 +109,6 @@ def referenced_files(skill: Path, text: str) -> list[str]:
 
 
 def validate_foundation_index(skill: Path) -> list[str]:
-    errors: list[str] = []
     references = skill.parent / "references"
     index = references / "index.md"
     if not index.is_file():
@@ -85,46 +116,42 @@ def validate_foundation_index(skill: Path) -> list[str]:
     text = index.read_text(encoding="utf-8")
     linked = set(re.findall(r"\]\((?:\./)?([A-Za-z0-9][A-Za-z0-9._-]*\.md)\)", text))
     on_disk = {path.name for path in references.glob("*.md") if path.name != "index.md"}
-    for name in sorted(on_disk - linked):
-        errors.append(f"{index}: reference file absent from inventory: {name}")
-    for name in sorted(linked - on_disk):
-        errors.append(f"{index}: inventory target missing: {name}")
+    errors = [f"{index}: reference file absent from inventory: {name}" for name in sorted(on_disk - linked)]
+    errors += [f"{index}: inventory target missing: {name}" for name in sorted(linked - on_disk)]
     return errors
 
 
 def validate_skill(skill: Path, require_invocation: bool = True) -> tuple[str | None, list[str]]:
-    errors: list[str] = []
     try:
         text = skill.read_text(encoding="utf-8")
     except OSError as exc:
         return None, [f"{skill}: unreadable: {exc}"]
-    metadata = parse_frontmatter(text)
-    if not metadata:
-        return None, [f"{skill}: frontmatter missing or unparseable"]
-    name = metadata.get("name")
-    if not name:
+    try:
+        metadata = parse_frontmatter(text)
+    except FrontmatterError as exc:
+        return None, [f"{skill}: frontmatter unparseable: {exc}"]
+    errors = metadata_type_errors(skill, metadata)
+    name_value = metadata.get("name")
+    name = name_value if isinstance(name_value, str) else None
+    if name is None:
         errors.append(f"{skill}: name missing")
     elif not NAME_RE.fullmatch(name):
         errors.append(f"{skill}: invalid skill name: {name!r}")
     elif name != skill.parent.name:
         errors.append(f"{skill}: name {name!r} != directory {skill.parent.name!r}")
-    if not metadata.get("description", "").strip():
+    description = metadata.get("description")
+    if not isinstance(description, str) or not description.strip():
         errors.append(f"{skill}: description missing")
     if require_invocation:
         invocation = metadata.get("invocation")
         if invocation not in INVOCATIONS:
-            errors.append(
-                f"{skill}: invocation must be one of {sorted(INVOCATIONS)}, got {invocation!r}"
-            )
-        raw_hidden = metadata.get("disable-model-invocation", "false").lower()
-        if raw_hidden not in {"true", "false"}:
-            errors.append(f"{skill}: disable-model-invocation must be true or false")
-        hidden = raw_hidden == "true"
+            errors.append(f"{skill}: invocation must be one of {sorted(INVOCATIONS)}, got {invocation!r}")
+        hidden_value = metadata.get("disable-model-invocation", False)
+        hidden = hidden_value is True
         if invocation == "entry" and hidden:
             errors.append(f"{skill}: entry invocation contradicts hidden visibility")
         if invocation in {"internal", "manual"} and not hidden:
             errors.append(f"{skill}: {invocation} invocation requires hidden visibility")
-
         kind = metadata.get("kind")
         foundation_name = bool(name and name.endswith("-foundation"))
         if foundation_name and kind != FOUNDATION_KIND:
@@ -191,21 +218,17 @@ def selftest() -> int:
             print("selftest: valid foundation rejected", file=sys.stderr)
             return 1
         cases = [
-            (
-                valid_text.replace("invocation: manual", "invocation: entry"),
-                {"entry invocation contradicts hidden visibility", "foundation invocation must be manual"},
-            ),
-            (valid_text.replace("kind: foundation\n", ""), {"*-foundation requires kind: foundation"}),
-            (
-                valid_text.replace("disable-model-invocation: true", "disable-model-invocation: false"),
-                {"manual invocation requires hidden visibility", "foundations must disable model invocation"},
-            ),
+            (valid_text.replace("invocation: manual", "invocation: entry"), "foundation invocation must be manual"),
+            (valid_text.replace("kind: foundation\n", ""), "*-foundation requires kind: foundation"),
+            (valid_text.replace("disable-model-invocation: true", 'disable-model-invocation: "true"'), "must be a boolean"),
+            (valid_text.replace("description: cold evidence", "description:\n  nested: value"), "description must be a string"),
+            (valid_text.replace("kind: foundation", "kind: [foundation"), "frontmatter unparseable"),
         ]
         for bad, expected in cases:
             (valid / "SKILL.md").write_text(bad, encoding="utf-8")
             errors = validate_tree(root)
-            if not all(any(needle in error for error in errors) for needle in expected):
-                print(f"selftest: foundation invariants not caught: {errors}", file=sys.stderr)
+            if not any(expected in error for error in errors):
+                print(f"selftest: {expected!r} not caught: {errors}", file=sys.stderr)
                 return 1
     print("SKILL VALIDATOR SELFTEST PASS")
     return 0
@@ -219,9 +242,7 @@ def main() -> int:
         return selftest()
     ignored = git_ignored_dirs(SKILLS) if SKILLS == BASE / "skills" else set()
     errors = validate_tree(SKILLS, True, ignored)
-    if SKILLS == BASE / "skills" and (
-        LEGACY_FOUNDATIONS.exists() or LEGACY_FOUNDATIONS.is_symlink()
-    ):
+    if SKILLS == BASE / "skills" and (LEGACY_FOUNDATIONS.exists() or LEGACY_FOUNDATIONS.is_symlink()):
         errors.append("retired foundation directory must not exist (including symlinks)")
     for error in errors:
         print(f"FAIL  {error}")

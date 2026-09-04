@@ -28,7 +28,7 @@ if message.content and not tool_calls:
 
 **Flow:** native `tool_calls` present → parse+filter (bad JSON vanishes, no error surfaces) → zero native calls AND non-empty text → greedy `\{.*\}` span → json.loads via `parse_json` (None on JSONDecodeError, printed) → accept only when BOTH `name` and parameters resolve → return `(None, [call])`.
 **Invariant:** Salvage fires ONLY when there are no native tool calls; a salvaged call REPLACES content (`return None, …`) so the loop never treats prose as both thought and action; `parse_json` returning None anywhere degrades to "no tool calls this turn" rather than raising.
-**Probe:** `cd /mnt/hdd/utopia/inspo/external/open-computer-use && grep -n 'tool_call.get' os_computer_use/llm_provider.py && grep -n 're.search' os_computer_use/llm_provider.py` (pins dual-key `.get` chain at :161 and the single salvage regex at :157).
+**Probe:** `cd $REFERENCE_ROOT/external/open-computer-use && grep -n 'tool_call.get' os_computer_use/llm_provider.py && grep -n 're.search' os_computer_use/llm_provider.py` (pins dual-key `.get` chain at :161 and the single salvage regex at :157).
 **Retrieve:**
 ```ts
 await mcp.codebase_memory.search_graph({ project: "ext-open-computer-use", query: "parse_json tool_call arguments re.search salvage", limit: 6, fields: ["signature", "name", "file"] });

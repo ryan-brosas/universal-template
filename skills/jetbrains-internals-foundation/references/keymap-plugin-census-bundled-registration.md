@@ -37,7 +37,7 @@
 
 **Flow:** install ships zero or more `keymap-*` plugin dirs → each jar's plugin.xml declares category=Keymap + lang-module dependency → each `bundledKeymap` EP names ONE keymap file resolved relative to the jar root (`keymaps/` dir) → since==until==own-version exact-pinning makes every rebuild re-release the whole set → a derived keymap (VS2022) adds a `<depends>` on its base keymap plugin so the parent NAME resolves at load.
 **Invariant:** a bundledKeymap file name is jar-root-relative and must match a packaged `keymaps/<file>` exactly — there is no fallback lookup; and the OS pairing is by-convention two separate bundledKeymap declarations, never one file with conditionals.
-**Probe:** `unzip -p /mnt/hdd/utopia/inspo/reference/jetbrains/clion/plugins/keymap-eclipse/lib/keymap-eclipse.jar META-INF/plugin.xml | grep -c bundledKeymap` → 2; `for d in /mnt/hdd/utopia/inspo/reference/jetbrains/*/plugins/keymap-*; do basename $d; done | wc -l` → 32.
+**Probe:** `unzip -p $REFERENCE_ROOT/reference/jetbrains/clion/plugins/keymap-eclipse/lib/keymap-eclipse.jar META-INF/plugin.xml | grep -c bundledKeymap` → 2; `for d in $REFERENCE_ROOT/reference/jetbrains/*/plugins/keymap-*; do basename $d; done | wc -l` → 32.
 **Coverage caveat:** resource plane, direct extraction; jar-resident freshness not symbol-indexed (expected class).
 
 ## Get live surrounding code

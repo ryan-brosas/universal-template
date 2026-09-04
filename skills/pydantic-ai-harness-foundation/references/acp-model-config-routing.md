@@ -35,7 +35,7 @@ And the run seam (:896–903): "`None` (no advertised models) is passed through 
 
 **Invariant:** The shared pydantic-ai Agent is NEVER mutated by client choices — switching is per-session state consumed at run time. Only advertised ids validate; unknown ids/configs are malformed input (`invalid_params`), unsupported methods stay `method_not_found` — the JSON-RPC error CODE distinguishes malformed from unroutable (TestErrorCodes). The routing works over the stable surface alone (conformance test runs with `unstable=False`).
 
-**Probe:** `bash -c 'cd /mnt/hdd/utopia/inspo/pydantic-ai-harness && /tmp/harness-p6-venv/bin/python -m pytest "tests/experimental/acp/test_conformance.py::TestModelConfigRouting" "tests/experimental/acp/test_conformance.py::TestErrorCodes" "tests/experimental/acp/test_persistence.py::test_set_model_config_save_failure_is_logged_and_does_not_fail_the_request" -q'` — stable-surface routing asserts `SessionConfigOptionSelect.current_value == 'test'`; error codes pinned; failing store keeps the selection. (Executed this pass; see verification.md.)
+**Probe:** `bash -c 'cd $REFERENCE_ROOT/pydantic-ai-harness && /tmp/harness-p6-venv/bin/python -m pytest "tests/experimental/acp/test_conformance.py::TestModelConfigRouting" "tests/experimental/acp/test_conformance.py::TestErrorCodes" "tests/experimental/acp/test_persistence.py::test_set_model_config_save_failure_is_logged_and_does_not_fail_the_request" -q'` — stable-surface routing asserts `SessionConfigOptionSelect.current_value == 'test'`; error codes pinned; failing store keeps the selection. (Executed this pass; see verification.md.)
 
 ## Get live surrounding code
 **Retrieve:**

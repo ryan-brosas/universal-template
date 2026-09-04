@@ -31,7 +31,7 @@ And `_filterByOrgGroups` on merged orgs: `.andWhere("orgs.owner_id is not null")
 **Invariant:** everyone@ vs anon@ have OPPOSITE listing semantics: shares with everyone@ make resources accessible-but-unlisted (contribution zeroed in `list` style), shares with anon@ make them listed. A porter who merges the two accounts breaks discoverability invariants pinned by test/gen-server/lib/everyone.ts.
 
 ### Probe (direct tests)
-`bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "skips picking a user for merged personal org" test/gen-server/lib/HomeDBManager.ts'` → :295.
+`bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "skips picking a user for merged personal org" test/gen-server/lib/HomeDBManager.ts'` → :295.
 `bash -c 'grep -c "getSpecialUserId\|_specialUserIds" app/gen-server/lib/homedb/UsersManager.ts'` → ≥ 6.
 Direct tests: `test/gen-server/lib/mergedOrgs.ts` (pooling :38, doc under merged domain :97), `test/gen-server/lib/everyone.ts` (4 share-listing its), `test/gen-server/lib/previewer.ts`, `HomeDBManager.ts` :223–275 pooling family.
 

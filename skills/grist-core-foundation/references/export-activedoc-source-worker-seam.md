@@ -40,7 +40,7 @@ export class ActiveDocSourceDirect implements ActiveDocSource {
 
 **Probe:** deterministic greps (no dedicated unit suite for this plane — coverage caveat):
 ```bash
-cd /mnt/hdd/utopia/inspo/grist-core
+cd $REFERENCE_ROOT/grist-core
 grep -n "export interface ActiveDocSource" app/server/lib/Export.ts          # 31
 grep -n "class ActiveDocSourceDirect implements ActiveDocSource" app/server/lib/Export.ts  # 38
 grep -n "fetchTable(docSessionFromRequest(this._req), tableId, true)" app/server/lib/Export.ts  # 48

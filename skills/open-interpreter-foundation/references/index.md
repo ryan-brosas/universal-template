@@ -45,7 +45,7 @@ Use when building or porting a JavaScript code-action loop: an `exec` freeform t
 Add one `./<seam>.md` capsule for one graph-selected, source-confirmed porting question. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf.
 
 ## Provenance
-open-interpreter (Apache-2.0), `main@5b07159c477920c159d8892d112b480e7307f257`; Codebase Memory project `ext-open-interpreter` (root `/mnt/hdd/utopia/inspo/external/open-interpreter`, FULL mode, 113,523n/742,028e, indexed 2026-08-23T09:11:09Z, generation_matches=true; repo is now a Rust Codex fork — the legacy Python interpreter tree is gone at this HEAD).
+open-interpreter (Apache-2.0), `main@5b07159c477920c159d8892d112b480e7307f257`; Codebase Memory project `ext-open-interpreter` (root `$REFERENCE_ROOT/external/open-interpreter`, FULL mode, 113,523n/742,028e, indexed 2026-08-23T09:11:09Z, generation_matches=true; repo is now a Rust Codex fork — the legacy Python interpreter tree is gone at this HEAD).
 
 ## Full view (memory graph)
 Revalidate `ext-open-interpreter` before porting: run `index_status`, `check_index_coverage`, `search_graph`, `trace_path`, and `get_code_snippet`. Record the graph root, branch, commit, mode, node/edge counts, freshness, and any coverage caveats; source and direct tests decide shipped claims. All 18 cited paths returned no_recorded_issue + metadata_match at the pinned HEAD.

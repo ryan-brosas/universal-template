@@ -36,7 +36,9 @@ hidden**, with **10,315 visible characters (~2,578 tokens)**. Foundations are
 excluded from those operational/startup counts. Their 194 name+description
 records total 89,630 characters (~22,407 tokens); an eager host pointed at the
 unfiltered tree can expose that avoidable metadata, so eager or unverified
-hosts must use the filtered discovery route in `README.md`.
+hosts must use the filtered hot discovery route in `README.md`. The current
+versioned payload and MCP measurements are in `context-surfaces.md` and
+`context-measurements.json`; this section remains migration evidence.
 
 ## Installed-host probes
 
@@ -62,13 +64,13 @@ explicitly unverified.
 ## Filtered discovery route
 
 Keep `skills/` canonical. For eager or unverified hosts, create a host-owned
-**symlink view** containing only operational skill directories (entries whose
-frontmatter is not `kind: foundation`) and configure that host to scan the
-view. Do not copy files and do not create a second canonical tree. Maintainers
-can obtain the exact source set with:
+**symlink view** containing only tracked hot skill directories (operational
+entries not hidden by `disable-model-invocation`) and configure that host to
+scan the view. Do not copy files and do not create a second canonical tree.
+Maintainers can obtain the exact source set with:
 
 ```sh
-python3 scripts/skill-catalog.py list --kind skill --json
+python3 scripts/skill-catalog.py list --surface hot --json
 ```
 
 A foundation remains available through explicit

@@ -36,7 +36,7 @@ const permissionThreshold = removingSelf ? Permissions.VIEW : Permissions.ACL_ED
 **Invariant:** The threshold trick lets a lone user drop THEMSELVES with mere VIEW rights while any other change needs ACL_EDIT. `_updateUserPermissions` folds unaffected users into `userDelta` as a side effect ("so that we have a record of where they are") — callers relying on delta purity double-count. A porter applying deltas per-email instead of merged-by-normalized-email silently downgrades `Alice@x` when `alice@x` also appears.
 
 ### Probe (direct tests)
-`bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -c "getStrongestRole" app/gen-server/lib/homedb/UsersManager.ts'` → ≥ 1.
+`bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -c "getStrongestRole" app/gen-server/lib/homedb/UsersManager.ts'` → ≥ 1.
 `bash -c 'grep -n "Include a maxInheritedRole value and check that the operation fails with 400" test/gen-server/ApiServerAccess.ts'` → :365.
 Direct tests: `test/gen-server/ApiServerAccess.ts` (maxInheritedRole set/removed ladder :587–620), `test/gen-server/lib/scrubUserFromOrg.ts` ("cannot remove users from orgs without permission" :336).
 

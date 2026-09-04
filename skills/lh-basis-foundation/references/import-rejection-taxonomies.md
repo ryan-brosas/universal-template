@@ -37,7 +37,7 @@ var UnprocessedCSVCampaignReason;
 
 **Probe (executed pass 14, deterministic node-require against shipped dist module):**
 ```bash
-node -e "const e=require('/mnt/hdd/utopia/inspo/lh-basis/core/public-methods/shared-types/importData/enums.js');const p=e.UnprocessedCSVPersonReason,c=e.UnprocessedCSVCampaignReason;console.log(p.INVALID_CHECK_SUM,c.INVALID_CHECK_SUM,p.MISSING_QUOTES,Boolean(p.MISSING_QUOTES),p[3])"
+node -e "const e=require('$REFERENCE_ROOT/lh-basis/core/public-methods/shared-types/importData/enums.js');const p=e.UnprocessedCSVPersonReason,c=e.UnprocessedCSVCampaignReason;console.log(p.INVALID_CHECK_SUM,c.INVALID_CHECK_SUM,p.MISSING_QUOTES,Boolean(p.MISSING_QUOTES),p[3])"
 ```
 → observed `3 1 0 false INVALID_CHECK_SUM` (ordinal split live; MISSING_QUOTES falsy; reverse map resolves 3 → INVALID_CHECK_SUM).
 

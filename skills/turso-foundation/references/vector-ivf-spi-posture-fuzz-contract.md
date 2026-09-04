@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Vector-IVF SPI posture & fuzz contract — what is the minimal index-method posture that still gets full MVCC transactionality, and what exactly does its test promise?
 
-**Source:** turso (MIT) `main@1654d1587fab` (/mnt/hdd/utopia/inspo/turso); Codebase Memory `turso`. **Question:** Which `IndexMethodDefinition` fields and hook overrides does a method need when it stores everything in ordinary transactional structures — and how is approximation quality pinned by tests?
+**Source:** turso (MIT) `main@1654d1587fab` ($REFERENCE_ROOT/turso); Codebase Memory `turso`. **Question:** Which `IndexMethodDefinition` fields and hook overrides does a method need when it stores everything in ordinary transactional structures — and how is approximation quality pinned by tests?
 
 ## Minimal posture: no-op hooks + TransactionalBackingStore + materialized results, pinned by a differential fuzz
 **Path/Symbol:** `core/index_method/toy_vector_sparse_ivf.rs`: `attach` (:321-338), `VectorSparseInvertedIndexMethodAttachment::definition` (:341-351), all five statement hooks (:513-523); contract pinned by `tests/integration/index_method/mod.rs:378-499`.

@@ -35,7 +35,7 @@ const UNAMBIGUOUS_FORMATS = [
 
 **Flow:** Both entries prepend variations of the column's own format (`_buildVariations`) before their fallback list. Lenient path then tries numeric-month orders like `D M YYYY` — fine for one interactive cell where the user sees the result. Bulk paste uses the strict path: numeric day/month swaps ("03/04" as Mar 4 vs Apr 3) are exactly the silent corruption class it exists to prevent; month-NAME formats (`MMM`) carry no such ambiguity.
 **Invariant:** UNAMBIGUOUS = ISO order plus every month-name format. The `results` Set variant returns undefined-with-populated-set semantics: callers detect "multiple plausible dates" by set size instead of receiving an arbitrary first match. A porter who "simplifies" by sharing one format list reintroduces silent day/month swapping at import scale.
-**Probe:** `bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && sed -n "62,65p" app/common/parseDate.ts && grep -n "results.add(value)" app/common/parseDate.ts'` → filter-to-MMM definition and :172.
+**Probe:** `bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && sed -n "62,65p" app/common/parseDate.ts && grep -n "results.add(value)" app/common/parseDate.ts'` → filter-to-MMM definition and :172.
 Direct tests: `test/common/parseDate.ts` :98 `describe("parseDate")`, :449 `describe("guessDateFormat")` — strict/lenient split pinned throughout.
 
 ### Retrieve

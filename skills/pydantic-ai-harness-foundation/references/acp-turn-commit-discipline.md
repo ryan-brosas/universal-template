@@ -52,7 +52,7 @@ And the closer (:695–699): `for tool_call_id in turn.started - turn.resulted:`
 
 **Invariant:** Commit is all-or-nothing at turn granularity — exactly one of {nothing committed, everything committed}. Every announced-but-unfinished tool call reaches a terminal status on EVERY exit path, and those failure sends are best-effort + never part of the replayable transcript. A response must never report usage for state that was not committed.
 
-**Probe:** `bash -c 'cd /mnt/hdd/utopia/inspo/pydantic-ai-harness && /tmp/harness-p6-venv/bin/python -m pytest "tests/experimental/acp/test_acp.py::TestCancellation::test_cancel_closes_out_in_flight_tool_calls" "tests/experimental/acp/test_acp.py::TestCancellation::test_cancelled_turn_with_a_store_persists_nothing" "tests/experimental/acp/test_persistence.py::test_cancel_landing_in_the_post_commit_save_commits_but_answers_cancelled" -q'` — in-flight tool call driven to `failed`; store keeps the pre-turn empty snapshot; post-commit cancel answers `'cancelled'` WITH usage and keeps history. (Executed this pass; see verification.md.)
+**Probe:** `bash -c 'cd $REFERENCE_ROOT/pydantic-ai-harness && /tmp/harness-p6-venv/bin/python -m pytest "tests/experimental/acp/test_acp.py::TestCancellation::test_cancel_closes_out_in_flight_tool_calls" "tests/experimental/acp/test_acp.py::TestCancellation::test_cancelled_turn_with_a_store_persists_nothing" "tests/experimental/acp/test_persistence.py::test_cancel_landing_in_the_post_commit_save_commits_but_answers_cancelled" -q'` — in-flight tool call driven to `failed`; store keeps the pre-turn empty snapshot; post-commit cancel answers `'cancelled'` WITH usage and keeps history. (Executed this pass; see verification.md.)
 
 ## Get live surrounding code
 **Retrieve:**

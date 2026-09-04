@@ -31,7 +31,7 @@ export function configureOpenAIAssistantV1(): AssistantV1 | undefined {
 
 **Flow:** settings resolution (env → config file) per flag → presence check on key OR endpoint (a keyless local LLM endpoint is legal) → `"test"` magic value swaps in EchoAssistant so suites run without network. V2 options spread V1's and add tool-loop limits.
 **Invariant:** The constructor double-checks (`!this._apiKey && !_options.completionEndpoint` throws) but the FACTORY decides absence — callers treat undefined as "don't mount routes". `censor:true` keeps the key out of AppSettings dumps (ties into the api-result-pruning discipline). Default model/longer-context defaults apply ONLY when no custom endpoint was set (:76–80) — custom-endpoint deployments must name their own model.
-**Probe:** `bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "ASSISTANT_API_KEY\|preferredEnvVar" app/server/lib/Assistant.ts | head -3 && grep -n "options.apiKey === \"test\"" app/server/lib/configureOpenAIAssistantV1.ts'` → :19/:20 and :9.
+**Probe:** `bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "ASSISTANT_API_KEY\|preferredEnvVar" app/server/lib/Assistant.ts | head -3 && grep -n "options.apiKey === \"test\"" app/server/lib/configureOpenAIAssistantV1.ts'` → :19/:20 and :9.
 Direct tests: `test/server/lib/OpenAIAssistantV1.ts` before-hook drives this exact factory with env vars (:36–47).
 
 ### Retrieve

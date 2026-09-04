@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Index-method SPI — how does an external index plug into the engine without bypassing MVCC?
 
-**Source:** turso (MIT) `main@d9266124f` (/mnt/hdd/utopia/inspo/memory/turso); Codebase Memory `turso`. **Question:** What is the minimal contract an out-of-tree index method must implement so the engine treats it like a first-class index — and which defaults are safe only for stateless methods?
+**Source:** turso (MIT) `main@d9266124f` ($REFERENCE_ROOT/memory/turso); Codebase Memory `turso`. **Question:** What is the minimal contract an out-of-tree index method must implement so the engine treats it like a first-class index — and which defaults are safe only for stateless methods?
 
 ## Factory → attachment → cursor, with a declared MVCC posture
 **Path/Symbol:** `core/index_method/mod.rs`: `IndexMethod::attach` (:31-37), `IndexMethodAttachment` (:53-56), `IndexMethodDefinition.mvcc_support/results_materialized/backing_btree` (:80-100), `IndexMethodMvccSupport` (:59-77), `ensure_mvcc_support` (:415-435).

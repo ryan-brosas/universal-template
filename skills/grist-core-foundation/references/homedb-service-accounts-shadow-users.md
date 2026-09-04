@@ -33,7 +33,7 @@ private _assertExistingAndOwned(serviceAccount: ServiceAccount | null, expectedO
 **Invariant:** The Login entity VALIDATES that type-"service" users carry the `.invalid` TLD (:41–42) — two layers enforcing non-loginability. Ownership checks are opt-in per call (`expectedOwnerId`) but every public wrapper passes it; a porter who forgets one creates an IDOR on machine credentials. `testDeleteAllServiceAccounts` exists ONLY for tests ("outside of tests context will lead to partial db destruction").
 
 ### Probe (direct tests)
-`bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "serviceaccounts.invalid" app/gen-server/entity/Login.ts'` → :17.
+`bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "serviceaccounts.invalid" app/gen-server/entity/Login.ts'` → :17.
 `bash -c 'grep -n "Only regular users" app/gen-server/lib/homedb/ServiceAccountsManager.ts'` → :48.
 Direct tests: `test/gen-server/ApiServer.ts` service-account its (grep `serviceAccount`); Login entity validation exercised via migrations/user suites.
 
