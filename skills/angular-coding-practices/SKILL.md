@@ -1,6 +1,7 @@
 ---
 name: angular-coding-practices
 description: "Use when authoring or reviewing Angular apps, kebab-case files, feature folders, inject(), readonly inputs, protected template members, class/style bindings, selector prefixes, and angular-eslint verification."
+invocation: manual
 disable-model-invocation: true
 ---
 

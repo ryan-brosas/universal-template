@@ -1,6 +1,7 @@
 ---
 name: typescript-coding-standards
 description: Use when writing, refactoring, or reviewing TypeScript code that needs strong domain modeling, typed errors, schema parsing, safe adapters, test seams, or maintainable module boundaries.
+invocation: manual
 disable-model-invocation: true
 ---
 

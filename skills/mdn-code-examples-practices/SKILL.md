@@ -1,6 +1,7 @@
 ---
 name: mdn-code-examples-practices
 description: "Use when authoring MDN/Mozilla doc code examples, Prettier, 15–25 line vanilla snippets, JS const/let/textContent, HTML5 lowercase kebab markup, modern vanilla CSS, and example-good/bad fences."
+invocation: manual
 disable-model-invocation: true
 ---
 

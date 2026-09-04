@@ -1,6 +1,7 @@
 ---
 name: clojure-coding-practices
 description: "Use when authoring or reviewing Clojure, 2-space layout, gathered parens, sorted ns requires, lisp-case naming,?/! conventions, threading idioms, keyword maps, ex-info errors, and clj-kondo/cljfmt in CI."
+invocation: manual
 disable-model-invocation: true
 ---
 

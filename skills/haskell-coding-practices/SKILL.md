@@ -1,6 +1,7 @@
 ---
 name: haskell-coding-practices
 description: "Use when authoring or reviewing Haskell, 4-space/80-col layout, Haddock, explicit imports, type signatures, avoid partial functions, strict data, IO separation, and stylish-haskell/HLint/cabal test in CI."
+invocation: manual
 disable-model-invocation: true
 ---
 

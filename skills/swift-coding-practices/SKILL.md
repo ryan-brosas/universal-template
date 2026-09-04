@@ -1,6 +1,7 @@
 ---
 name: swift-coding-practices
 description: "Use when authoring or reviewing Swift, let/guard/optionals, explicit access, struct/final defaults, API naming fluency, argument labels, defaulted parameters, and documentation summaries."
+invocation: manual
 disable-model-invocation: true
 ---
 

@@ -1,6 +1,7 @@
 ---
 name: root-cause-tracing
 description: "Use when errors occur deep in execution and you need to trace back to the original trigger - trace bugs backward through the call stack, adding instrumentation when needed."
+invocation: internal
 disable-model-invocation: true
 ---
 

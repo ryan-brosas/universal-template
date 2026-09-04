@@ -1,6 +1,7 @@
 ---
 name: common-lisp-coding-practices
 description: "Use when authoring or reviewing Common Lisp, lisp-case naming, *earmuffs*/+constants+, SLIME indentation,:import-from packages, CLOS typed slots, defgeneric protocols, and ASDF test in CI."
+invocation: manual
 disable-model-invocation: true
 ---
 

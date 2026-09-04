@@ -51,7 +51,9 @@ Prefer using, improving, or creating shared functions, logic, modules, tests,
 configuration, abstractions, and utilities when reuse is established or
 reasonably expected. Build cohesive blocks with clear ownership and interfaces.
 Avoid parallel implementations when one authoritative implementation can own the
-same fact, responsibility, contract, or configuration domain.
+same fact, responsibility, contract, or configuration domain. Prefer model
+judgment for semantic decisions and deterministic mechanisms for exact contracts;
+no implementation language is required for ordinary use of this baseline.
 
 Where multiple representations are necessary, derive or synchronize them from
 the canonical owner where practical. Avoid competing manually maintained truths.

@@ -1,6 +1,7 @@
 ---
 name: agent-code-quality-gate
 description: "Use when a coding agent claims implementation work is complete - an operational gate over scope, duplication, behavior tests, verification evidence, and regressions."
+invocation: internal
 disable-model-invocation: true
 ---
 

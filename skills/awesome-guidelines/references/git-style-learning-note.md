@@ -10,7 +10,7 @@
 | [git/Documentation/SubmittingPatches](https://github.com/git/git/blob/master/Documentation/SubmittingPatches) | Imperative mood, problem/solution body structure, present-tense problem statement, commit references, patch-series rewrite ethics |
 | [tbaggery commit messages](https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html) | Why subject/body split matters for `log`, `rebase -i`, `format-patch`, GitHub UI |
 | [git/CodingGuidelines](https://github.com/git/git/blob/master/Documentation/CodingGuidelines) | Log messages as important as code; avoid style-only churn on unrelated work |
-| Catalog | `conventional-commit.py`, `git-and-collaboration.md`, `AGENTS.md` branch naming |
+| Catalog | `git-and-collaboration.md`, `AGENTS.md` branch naming, repository-native title checks |
 
 ## Mental model
 

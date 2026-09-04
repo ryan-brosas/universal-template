@@ -1,6 +1,7 @@
 ---
 name: fsharp-coding-practices
 description: "Use when authoring or reviewing F#,.NET naming, XML docs, module/type design, Async/Task boundaries, vanilla.NET interop (Func, IEnumerable, TryGetValue), and Fantomas/dotnet build in CI."
+invocation: manual
 disable-model-invocation: true
 ---
 

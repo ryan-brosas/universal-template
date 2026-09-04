@@ -1,6 +1,7 @@
 ---
 name: fortran-coding-practices
 description: "Use when authoring or reviewing Fortran, fprettify 4-space layout, lowercase snake_case, intent/assumed-shape, dp kind, private modules, FORD docs, modern F2003+ only, and build/fprettify/test in CI."
+invocation: manual
 disable-model-invocation: true
 ---
 

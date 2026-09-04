@@ -1,188 +1,148 @@
 #!/usr/bin/env python3
-"""skill-validator.py — mechanical format gate for ~/.agents/skills.
+"""Validate exact skill metadata, names, visibility, and local references.
 
-Canonical format (see templates/): practice/tool skills -> templates/skill.md
-skeleton.
-
-Severity: P0 = broken discovery/contract, P1 = retrieval or parity risk,
-          P2 = style deviation from the mandated skeleton.
-Zero dependencies. Exit 1 if any P0, else 0.
+This gate deliberately does not judge prose, usefulness, overlap, routing, or
+section structure. Those decisions belong to model review.
 """
-import importlib.util
-import os, re, sys
+from __future__ import annotations
+
+import os
+import re
+import subprocess
+import sys
 from pathlib import Path
 
-try:
-    # scripts/style-lint.py has a hyphen: import by file path, not module name.
+BASE = Path(__file__).resolve().parents[1]
+SKILLS = Path(os.environ.get("SKILLS_ROOT", str(BASE / "skills")))
+FOUNDATIONS = BASE / "foundation-pack"
+NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+INVOCATIONS = {"entry", "internal", "manual", "vendor"}
 
-    _spec = importlib.util.spec_from_file_location(
-        "style_lint", str(Path(__file__).with_name("style-lint.py")))
-    assert _spec is not None and _spec.loader is not None
-    _mod = importlib.util.module_from_spec(_spec)
-    _spec.loader.exec_module(_mod)
-    lint_text = _mod.lint_text
-except Exception:  # noqa: BLE001
-    lint_text = None
 
-try:
-    # One canonical frontmatter parser: catalog-quality.py owns it.
-    _cq_spec = importlib.util.spec_from_file_location(
-        "catalog_quality", str(Path(__file__).with_name("catalog-quality.py")))
-    assert _cq_spec is not None and _cq_spec.loader is not None
-    _cq = importlib.util.module_from_spec(_cq_spec)
-    _cq_spec.loader.exec_module(_cq)
-    _parse_fm = _cq.parse_frontmatter
-except Exception:  # noqa: BLE001
-    _parse_fm = None
-
-_REPO_SKILLS = str(Path(__file__).resolve().parents[1] / "skills")
-ROOT = os.environ.get("SKILLS_ROOT", _REPO_SKILLS)
-
-PRACTICE_SECTIONS = [
-    ("Core Principle", "core principle"),
-    ("When to Use / NOT", "when to use"),
-    ("Workflow", "workflow"),
-    ("Red Flags", "red flag"),
-    ("Verification", "verification"),
-    ("References", "references"),
-]
-
-def parse_frontmatter(text):
-    """Return (fm dict, body) using the canonical catalog parser.
-
-    catalog-quality.py owns frontmatter parsing; this wrapper recovers the
-    body after the closing delimiter. Falls back to an inline parser only if
-    catalog-quality cannot be imported.
-    """
-    if not text.startswith("---"):
-        return None, text
-    end = text.find("\n---", 3)
-    if end == -1:
-        return None, text  # no closing delimiter: unparseable
-    body = text[end + 4:]
-    if _parse_fm is not None:
-        fm = _parse_fm(text)
-        if not fm:
-            return None, text  # closing delimiter but no parseable keys
-        return fm, body
-    lines = text[4:end].splitlines() if text.startswith("---\n") else text[3:end].splitlines()
-    fm = {}
-    i = 0
-    while i < len(lines):
-        m = re.match(r"^([A-Za-z0-9_-]+):\s*(.*)$", lines[i])
-        if not m:
-            i += 1
+def parse_frontmatter(text: str) -> dict[str, str]:
+    if not text.startswith("---\n"):
+        return {}
+    end = text.find("\n---", 4)
+    if end < 0:
+        return {}
+    result: dict[str, str] = {}
+    for line in text[4:end].splitlines():
+        match = re.match(r"^([A-Za-z0-9_-]+):\s*(.*)$", line)
+        if not match:
             continue
-        key, val = m.group(1), m.group(2).strip()
-        j = i + 1
-        extra = []
-        while j < len(lines) and not re.match(r"^[A-Za-z0-9_-]+:\s*", lines[j]):
-            extra.append(lines[j])
-            j += 1
-        val = " ".join([val] + [e.strip() for e in extra]).strip()
-        if len(val) >= 2 and val[0] in "\"'" and val[-1] == val[0]:
-            val = val[1:-1]
-        fm[key] = val
-        i = j
-    return fm, body
-
-def headings(body):
-    return [h.strip().lower() for h in re.findall(r"^#{1,6}\s+(.+)$", body, re.M)]
-
-def check_sections(body, spec):
-    hs = headings(body)
-    missing = []
-    for label, needle in spec:
-        if not any(needle in h for h in hs):
-            missing.append(label)
-    return missing
-
-def ref_lines(body):
-    return re.findall(r"^\s*-\s+`references/([^`]+)`", body, re.M)
+        key, value = match.groups()
+        value = value.strip()
+        if len(value) >= 2 and value[0] in "\"'" and value[-1] == value[0]:
+            value = value[1:-1]
+        result[key] = value
+    return result
 
 
-def main():
-    report = []
-    counts = {"P0": 0, "P1": 0, "P2": 0}
-    n_practice = 0
-    for d in sorted(os.listdir(ROOT)):
-        dpath = os.path.join(ROOT, d)
-        if not os.path.isdir(dpath):
+def git_ignored_dirs(root: Path) -> set[str]:
+    if not root.is_dir():
+        return set()
+    names = [entry.name for entry in root.iterdir() if entry.is_dir()]
+    if not names:
+        return set()
+    try:
+        result = subprocess.run(
+            ["git", "-C", str(root.parent), "check-ignore", "--stdin", "--no-index"],
+            input="".join(f"{root.name}/{name}\n" for name in names),
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+    except OSError:
+        return set()
+    if result.returncode not in (0, 1):
+        return set()
+    return {line.rsplit("/", 1)[-1] for line in result.stdout.splitlines()}
+
+
+def referenced_files(skill: Path, text: str) -> list[str]:
+    errors: list[str] = []
+    for relative in sorted(set(re.findall(r"`(references/[A-Za-z0-9][A-Za-z0-9._/-]*)`", text))):
+        target = (skill.parent / relative).resolve()
+        try:
+            target.relative_to(skill.parent.resolve())
+        except ValueError:
+            errors.append(f"{skill}: reference escapes skill directory: {relative}")
             continue
-        if d.startswith("."):
-            continue  # e.g. .system — Codex host bundle, not a catalog skill leaf
-        skill_md = os.path.join(dpath, "SKILL.md")
-        issues = []
-        if not os.path.isfile(skill_md):
-            issues.append(("P0", "SKILL.md missing"))
-            report.append((d, issues))
-            counts["P0"] += 1
+        if not target.is_file():
+            errors.append(f"{skill}: referenced file missing: {relative}")
+    return errors
+
+
+def validate_skill(skill: Path, require_invocation: bool) -> tuple[str | None, list[str]]:
+    errors: list[str] = []
+    try:
+        text = skill.read_text(encoding="utf-8")
+    except OSError as exc:
+        return None, [f"{skill}: unreadable: {exc}"]
+    metadata = parse_frontmatter(text)
+    if not metadata:
+        return None, [f"{skill}: frontmatter missing or unparseable"]
+    name = metadata.get("name")
+    if not name:
+        errors.append(f"{skill}: name missing")
+    elif not NAME_RE.fullmatch(name):
+        errors.append(f"{skill}: invalid skill name: {name!r}")
+    elif name != skill.parent.name:
+        errors.append(f"{skill}: name {name!r} != directory {skill.parent.name!r}")
+    if not metadata.get("description", "").strip():
+        errors.append(f"{skill}: description missing")
+    if require_invocation:
+        invocation = metadata.get("invocation")
+        if invocation not in INVOCATIONS:
+            errors.append(
+                f"{skill}: invocation must be one of {sorted(INVOCATIONS)}, got {invocation!r}"
+            )
+        raw_hidden = metadata.get("disable-model-invocation", "false").lower()
+        if raw_hidden not in {"true", "false"}:
+            errors.append(f"{skill}: disable-model-invocation must be true or false")
+        hidden = raw_hidden == "true"
+        if invocation == "entry" and hidden:
+            errors.append(f"{skill}: entry invocation contradicts hidden visibility")
+        if invocation in {"internal", "manual"} and not hidden:
+            errors.append(f"{skill}: {invocation} invocation requires hidden visibility")
+    errors.extend(referenced_files(skill, text))
+    return name, errors
+
+
+def validate_tree(root: Path, require_invocation: bool, ignored: set[str] | None = None) -> list[str]:
+    errors: list[str] = []
+    seen: set[str] = set()
+    if not root.is_dir():
+        return [f"required directory missing: {root}"]
+    ignored = ignored or set()
+    for directory in sorted(root.iterdir()):
+        if not directory.is_dir() or directory.name.startswith(".") or directory.name in ignored:
             continue
-        text = open(skill_md, encoding="utf-8").read()
-        fm, body = parse_frontmatter(text)
-        if fm is None:
-            issues.append(("P0", "frontmatter unparseable"))
-            report.append((d, issues))
-            counts["P0"] += 1
+        if root == FOUNDATIONS and not directory.name.endswith("-foundation"):
             continue
-        if fm.get("name") != d:
-            issues.append(("P0", f"name '{fm.get('name')}' != folder '{d}'"))
-        desc = fm.get("description", "")
-        if not desc:
-            issues.append(("P0", "description missing"))
-        elif len(desc) > 1024:
-            issues.append(("P0", f"description {len(desc)} chars > 1024"))
-        if desc and not desc.lower().startswith("use when"):
-            issues.append(("P1", "description does not start with 'Use when'"))
-        # Archived cold libraries (x-archive: true) are content, not
-        # procedures: the filesystem is their index, so the skeleton and
-        # orphan-reference style checks do not apply.
-        archived = str(fm.get("x-archive", "")).strip().lower() == "true"
-        refs_dir = os.path.join(dpath, "references")
-        disk_refs = set()
-        if os.path.isdir(refs_dir):
-            disk_refs = {f for f in os.listdir(refs_dir) if f.endswith(".md")}
-        cited = ref_lines(body)
-        cited_set = set(cited)
-        for c in sorted(cited_set):
-            if c not in disk_refs:
-                issues.append(("P1", f"cited reference missing on disk: {c}"))
-        if not archived:
-            for o in sorted(disk_refs - cited_set):
-                issues.append(("P2", f"orphan reference not cited in SKILL.md: {o}"))
-        n_practice += 1
-        if not archived:
-            for label in check_sections(body, PRACTICE_SECTIONS):
-                issues.append(("P2", f"skeleton section missing: {label}"))
-        if lint_text is not None:
-            for v in lint_text(body)[:3]:
-                issues.append(("P2", f"style[{v['level']}] {v['rule']}: {v['message']}"))
-        for sev, _ in issues:
-            counts[sev] += 1
-        report.append((d, issues))
-    # markdown report
-    out = ["# Skill catalog audit", f"root: {ROOT}", f"practice/tool skills: {n_practice}",
-           f"P0={counts['P0']} P1={counts['P1']} P2={counts['P2']}", "",
-           "## P0/P1 offenders", ""]
-    for d, issues in report:
-        bad = [(s, m) for s, m in issues if s in ("P0", "P1")]
-        if bad:
-            out.append(f"### {d}")
-            for s, m in bad:
-                out.append(f"- [{s}] {m}")
-            out.append("")
-    out += ["## P2-only deviations (style)", ""]
-    for d, issues in report:
-        p2 = [m for s, m in issues if s == "P2"]
-        if p2 and not any(s in ("P0", "P1") for s, _ in issues):
-            out.append(f"- {d}: " + "; ".join(p2))
-    txt = "\n".join(out) + "\n"
-    dest = os.environ.get("AUDIT_OUT", "/tmp/skill-audit-report.md")
-    open(dest, "w", encoding="utf-8").write(txt)
-    print(f"skills scanned: {len(report)} (practice {n_practice})")
-    print(f"P0={counts['P0']} P1={counts['P1']} P2={counts['P2']}")
-    print(f"report: {dest}")
-    sys.exit(1 if counts["P0"] else 0)
+        skill = directory / "SKILL.md"
+        if not skill.is_file():
+            errors.append(f"{directory}: SKILL.md missing")
+            continue
+        name, skill_errors = validate_skill(skill, require_invocation)
+        errors.extend(skill_errors)
+        if name in seen:
+            errors.append(f"{skill}: duplicate skill name: {name}")
+        elif name:
+            seen.add(name)
+    return errors
+
+
+def main() -> int:
+    ignored = git_ignored_dirs(SKILLS) if SKILLS == BASE / "skills" else set()
+    errors = validate_tree(SKILLS, True, ignored)
+    if SKILLS == BASE / "skills":
+        errors.extend(validate_tree(FOUNDATIONS, False))
+    for error in errors:
+        print(f"FAIL  {error}")
+    print(f"SKILL CONTRACTS: {len(errors)} fail")
+    return 1 if errors else 0
+
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

@@ -1,6 +1,7 @@
 ---
 name: git-workflow-and-versioning
 description: "Use when preparing a release, choosing a version bump, creating or moving tags, writing changelog or release-note content, or when git hygiene for shared history is in question: commits, branches, recovery, non-interactive continuation."
+invocation: entry
 ---
 
 # Git Workflow and Versioning
@@ -51,7 +52,7 @@ change users must react to is at least minor.
  to split.
 4. **Message** - editor commit for non-trivial work: imperative subject
  (`type(scope): desc`), blank line, body ~72 cols with the **why**; run the
- repository's conventional-commit gate when it exists.
+ repository's title or commit protocol when one exists.
 5. **Before push** - gates pass; fixup/squash/rebase -i on private branches
  only; **never** force-push shared branches without explicit approval.
 6. **Merge** - per project policy; `--no-ff` when branch topology matters.
@@ -99,8 +100,7 @@ change users must react to is at least minor.
 ## Verification
 
 - `git status --short` and the diff/staged summary cited.
-- `CHECK_RANGE=origin/main..HEAD python3 scripts/conventional-commit.py` on
- catalog branches.
+- `git log --format=%s origin/main..HEAD` matches the repository's documented commit convention when one applies.
 - Release: the tag points at the intended commit; `gh release view` shows the
  published release with generated notes present.
 

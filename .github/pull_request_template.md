@@ -10,7 +10,7 @@
 
 <!-- only checks actually run, with results -->
 
-- Catalog gates: `skill-validator` / `catalog-quality` / `repo-hygiene` / `policy-consistency` / `dead-code` / `conventional-commit`
+- Repository contracts: `skill-validator` / `install-prompts --check-repo` / prompt self-tests / `skill-catalog generate --check` / `repo-hygiene` / manifest and PR-metadata self-tests
 - `git diff --check`
 
 ## Risks

@@ -1,6 +1,7 @@
 ---
 name: javascript-coding-practices
 description: "Use when authoring or reviewing JavaScript, named ES module exports, const/let, strict equality, semicolons and braces, trailing commas, arrow callbacks, JSDoc on public API, and banned eval/with/var."
+invocation: manual
 disable-model-invocation: true
 ---
 

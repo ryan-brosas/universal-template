@@ -1,6 +1,7 @@
 ---
 name: typescript-coding-practices
 description: "Use when authoring or reviewing TypeScript style, named ES module exports, import type, unknown over any, nullable-at-use-site, optional params over overload sprawl, readonly/parameter properties, and banned default exports/namespaces/const enum."
+invocation: manual
 disable-model-invocation: true
 ---
 

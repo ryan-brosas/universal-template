@@ -1,6 +1,7 @@
 ---
 name: csharp-coding-practices
 description: "Use when authoring or reviewing C#, Allman 4-space layout, file-scoped namespaces, Framework Design naming, modern C# idioms, specific exception handling, and XML docs on public API."
+invocation: manual
 disable-model-invocation: true
 ---
 

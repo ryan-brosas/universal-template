@@ -1,6 +1,7 @@
 ---
 name: grill-with-docs
 description: Use when user wants to stress-test a plan against their project's language and documented decisions.
+invocation: internal
 disable-model-invocation: true
 ---
 

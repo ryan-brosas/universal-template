@@ -1,6 +1,7 @@
 ---
 name: pascal-coding-practices
 description: "Use when authoring or reviewing Free Pascal/GNU Pascal, 2-space/no-tab layout, lowercase keywords, PascalCase T/P types, unit block order, brace comments, result returns, and fpc -Wall or fpsonar in CI."
+invocation: manual
 disable-model-invocation: true
 ---
 

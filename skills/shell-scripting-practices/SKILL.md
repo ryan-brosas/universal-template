@@ -1,6 +1,7 @@
 ---
 name: shell-scripting-practices
 description: "Use when authoring or reviewing bash glue scripts, scope limits, quoting and arrays, subshell-safe loops, main/local structure, STDERR errors, and ShellCheck; distilled from Google Shell Style Guide."
+invocation: manual
 disable-model-invocation: true
 ---
 

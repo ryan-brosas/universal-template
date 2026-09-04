@@ -1,6 +1,7 @@
 ---
 name: go-coding-practices
 description: "Use when authoring or reviewing Go, gofmt, MixedCaps naming, explicit error returns, early error flow, consumer-defined interfaces, context-first APIs, goroutine lifetimes, and no production panic."
+invocation: manual
 disable-model-invocation: true
 ---
 

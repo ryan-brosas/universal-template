@@ -1,6 +1,7 @@
 ---
 name: erlang-coding-practices
 description: "Use when authoring or reviewing Erlang, 2-space layout, snake_case/CamelCase naming, clause functions, -spec exports, OTP API encapsulation, {ok,error} returns, atom/deserialize safety, and Elvis/dialyzer/xref in CI."
+invocation: manual
 disable-model-invocation: true
 ---
 

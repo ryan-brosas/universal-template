@@ -1,6 +1,7 @@
 ---
 name: julia-coding-practices
 description: "Use when authoring or reviewing Julia, BlueStyle/JuliaFormatter 4-space/92-col layout, explicit using/exports, typed methods with return, kwargs semicolon, docstrings, and formatter/test in CI."
+invocation: manual
 disable-model-invocation: true
 ---
 

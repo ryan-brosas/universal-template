@@ -2,6 +2,7 @@
 name: gsearch
 disable-model-invocation: true
 description: "Use when the user asks to search the web, look something up, find a link, or research a topic. Google via CDP returns title, URL, and snippet in about a second; follow a result URL to read page text or JSON. Requires browser-harness-js on PATH and a Chromium browser with remote debugging."
+invocation: manual
 setup: bash <skill-dir>/scripts/setup
 compatibility: Requires browser-harness-js on PATH and a running Chromium browser with remote debugging (chrome://inspect or --remote-debugging-port).
 ---

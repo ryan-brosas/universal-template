@@ -1,6 +1,7 @@
 ---
 name: leverage-capture
 description: "Use when work has finished and something may be worth preserving: classify it into code, references, foundations, gates, skills, project notes, or nothing, and capture only that in the cheapest form."
+invocation: entry
 ---
 
 # Capture Reusable Value

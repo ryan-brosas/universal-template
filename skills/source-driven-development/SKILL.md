@@ -1,6 +1,7 @@
 ---
 name: source-driven-development
 description: "Use when shipping code that depends on unfamiliar libraries, external APIs, or framework behavior: cite the authoritative source or mark the decision unverified; route discovery itself to evidence-router."
+invocation: internal
 disable-model-invocation: true
 ---
 

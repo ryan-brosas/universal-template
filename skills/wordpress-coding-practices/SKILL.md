@@ -1,6 +1,7 @@
 ---
 name: wordpress-coding-practices
 description: "Use when authoring or reviewing WordPress themes/plugins, WPCS PHP naming, Yoda conditions, late esc_* output, $wpdb->prepare, i18n text domains, HTML/CSS/JS handbooks, and PHPCS verification."
+invocation: manual
 disable-model-invocation: true
 ---
 

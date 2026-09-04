@@ -1,6 +1,7 @@
 ---
 name: october-coding-practices
 description: "Use when authoring or reviewing October CMS plugins/themes, PSR-1/2/4, camelCase/snake_case split, marketplace naming, Rain exceptions, composer -plugin/-theme packages, and semver publish verification."
+invocation: manual
 disable-model-invocation: true
 ---
 

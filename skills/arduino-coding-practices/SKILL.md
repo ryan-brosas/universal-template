@@ -1,6 +1,7 @@
 ---
 name: arduino-coding-practices
 description: "Use when authoring or reviewing Arduino libraries/sketches, camelCase read/write/begin API,.h/.cpp structure, setup/loop lifecycle, Stream-aware serial, keywords/examples, and arduino-cli compile verify."
+invocation: manual
 disable-model-invocation: true
 ---
 

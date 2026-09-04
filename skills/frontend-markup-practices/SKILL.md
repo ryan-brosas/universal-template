@@ -1,6 +1,7 @@
 ---
 name: frontend-markup-practices
 description: "Use when authoring or reviewing static HTML/CSS, semantic markup, accessibility, class-based low-specificity CSS, js-* hooks, formatting, HTTPS assets, and validation; distilled from Google HTML/CSS, CSS Guidelines, and Code Guide."
+invocation: manual
 disable-model-invocation: true
 ---
 

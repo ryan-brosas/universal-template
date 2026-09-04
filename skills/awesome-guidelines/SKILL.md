@@ -1,6 +1,7 @@
 ---
 name: awesome-guidelines
 description: "Use when a practices leaf or question points at a specific awesome-guidelines style capsule or learning note - archived cold library; the ingestion pipeline is retired, so load only to read a cited capsule."
+invocation: manual
 disable-model-invocation: true
 x-archive: true
 ---

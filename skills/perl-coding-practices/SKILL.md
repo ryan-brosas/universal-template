@@ -1,6 +1,7 @@
 ---
 name: perl-coding-practices
 description: "Use when authoring or reviewing Perl, v5.36/strict/warnings, 4-space aligned layout, snake_case and Mixed::Case modules, 3-arg open, explicit subs/I/O, anti-pattern avoidance, and perlcritic/perltidy/prove in CI."
+invocation: manual
 disable-model-invocation: true
 ---
 

@@ -1,6 +1,7 @@
 ---
 name: deep-module-design
 description: "Use when reviewing module boundaries, designing a deep module, reducing interface complexity, or reviewing AI-generated code for structural quality. Hidden by default: load for explicit design-review requests."
+invocation: manual
 disable-model-invocation: true
 ---
 

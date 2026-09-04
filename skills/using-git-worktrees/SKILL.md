@@ -1,6 +1,7 @@
 ---
 name: using-git-worktrees
 description: "Use when parallel or conflicting work in the same repo needs a separate checkout without stashing — sibling worktree; verify the branch is not already checked out elsewhere."
+invocation: manual
 disable-model-invocation: true
 ---
 

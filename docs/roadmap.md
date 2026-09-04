@@ -75,12 +75,10 @@ Progress is normally recoverable from source, Git, the project tracker, and proj
 
 ## 4. Enforce mechanically
 
-- **Expand the catalog gate suite.** Grow the validator scripts
-  (`scripts/skill-validator.py`, `catalog-quality.py`,
-  `repo-hygiene.py`, `dead-code.py`, `policy-consistency.py`,
-  `style-lint.py`) with structural skill-visibility checks, dangling
-  cross-skill reference detection, and portable-path validation for new config
-  surfaces.
+- **Keep publication checks exact.** Deterministic validation covers structured
+  data, names, paths, references, generated parity, secret patterns, and safe
+  mutation. Models review policy meaning, prose, skill usefulness, evidence
+  sufficiency, and architectural tradeoffs from current source and runtime facts.
 - **Transactional mutation boundaries (opt-in).** Host-specific execution
   guards (pi: `skills/fabric-native-execution/` and project or `~/.pi/`
   config) stay opt-in for work that needs transactional or postcondition

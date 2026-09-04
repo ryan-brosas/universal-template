@@ -1,6 +1,7 @@
 ---
 name: execution-router
 description: "Use when Main alone is insufficient and child, parallel, RLM, actor, or alternate-model execution is already justified — cold escalation reference."
+invocation: internal
 disable-model-invocation: true
 ---
 

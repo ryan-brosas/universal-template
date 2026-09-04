@@ -1,6 +1,7 @@
 ---
 name: linux-kernel-coding-practices
 description: "Use when authoring or reviewing Linux kernel C, 8-tab indent, 80-col K&R braces, pointer-on-name spacing, descriptive globals, goto cleanup, kernel-doc, kmalloc_obj, and scripts/checkpatch.pl."
+invocation: manual
 disable-model-invocation: true
 ---
 

@@ -1,6 +1,7 @@
 ---
 name: push-pr
 description: "Use when finished work needs to be pushed and opened or updated as a GitHub pull request, when PR review feedback must be addressed in its thread, or when an open PR should be auto-merged on request. Runs the project's own gates and builds the PR body from real evidence."
+invocation: entry
 ---
 
 # Push PR

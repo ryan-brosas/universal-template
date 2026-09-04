@@ -1,6 +1,7 @@
 ---
 name: ruby-coding-practices
 description: "Use when authoring or reviewing Ruby, 2-space layout, snake_case/CapitalCase naming, keyword args, call parentheses, class skeleton, explicit namespaces, module_function, and StandardError rescue discipline."
+invocation: manual
 disable-model-invocation: true
 ---
 

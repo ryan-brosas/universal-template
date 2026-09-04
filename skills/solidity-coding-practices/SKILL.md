@@ -1,6 +1,7 @@
 ---
 name: solidity-coding-practices
 description: "Use when authoring or reviewing Solidity, official layout/naming, NatSpec ABI docs, contract structure, Solcurity CEI/external-call checks, forge fmt/test and Slither in CI."
+invocation: manual
 disable-model-invocation: true
 ---
 

@@ -1,6 +1,7 @@
 ---
 name: test-generation
 description: "Use when writing, expanding, or auditing tests, converting workflow rules into gates, or deciding what to test. Catch-first method: a test is only good if it can catch; pre-fix must fail and post-fix pass; expand existing tests instead of adding duplicates; keep files small and grouped into cohorts."
+invocation: entry
 ---
 
 # Test Generation, catch-first, ledger-based

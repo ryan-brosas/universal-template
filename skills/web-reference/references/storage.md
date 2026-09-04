@@ -51,17 +51,13 @@ A quick capture is one region screenshot, `REFERENCE.md`, and `manifest.json` â€
 }
 ```
 
-Evidence values are booleans or bundle-relative paths. Every declared path must exist. A known key marked `false` needs a `coverage_gaps` entry that names it. Expected evidence by scope: quick needs `screenshots`; page and site need `rendered_html` and `screenshots`; deep additionally needs `computed_styles` and `css_variables`. An expected key that is absent needs a matching `coverage_gaps` entry too.
+Evidence values are booleans or bundle-relative paths, and every declared path must exist. `coverage_gaps` records known omissions for model review. The model decides whether the collected evidence is sufficient for the question; scope labels do not mechanically imply a universal evidence quota.
 
 Capture ids are `YYYY-MM-DD`, or `YYYY-MM-DDTHHMM` when a second capture happens on the same calendar day. Ids must be unique.
 
 ## Validation
 
-```bash
-python3 ~/.agents/scripts/web-reference-manifest.py reference/web/<host>
-```
-
-P0 findings fail the check: missing manifest or REFERENCE.md, a manifest that is not a JSON object, bad fields, referenced files that do not exist, evidence values that are neither boolean nor path, expected evidence missing without a declared gap, invalid or duplicate capture ids, credential-like material in authored metadata (manifest, REFERENCE.md, design, patterns), a vendor-format key (sk-, ghp_, AKIA) anywhere including raw captures, a quick capture without a real screenshot file (a boolean or a declared gap does not satisfy it), undeclared partial capture. Warnings: missing ADOPT / ADAPT / OMIT sections (a capture may exist before implementation decisions â€” record them via `reference-driven-development` later), bearer/labeled credential samples in raw captured evidence (likely public documentation examples; review and quarantine before reuse), oversized files, duplicate routes, missing viewports on site captures, credential scans truncated by file size.
+Inspect `manifest.json` and referenced files with native filesystem and JSON tools. Confirm field types, exact enums, capture identifiers, path containment, file existence, and credential hygiene. `scripts/web-reference-manifest.py` is an optional Python implementation of those hard checks for maintainers and CI. It does not judge coverage, trust, visual quality, or ADOPT / ADAPT / OMIT.
 
 ## REFERENCE.md
 
@@ -78,6 +74,6 @@ ADOPT / ADAPT / OMIT sections belong here when the project has decided how the r
 ## Storage policy
 
 - Small structured bundles (REFERENCE.md, manifest, design JSON, selected screenshots) may be committed under project policy.
-- Raw archives stay out of Git by default: local, ignored, LFS, or an artifact store, per project decision. The validator warns above 25 MB.
+- Raw archives stay out of Git by default: local, ignored, LFS, or an artifact store, per project decision. Inspect size before committing.
 - Crawler cache and temp files are discarded after normalization.
 - The reference contract lifecycle applies: project-local, read-only, disposable; captures do not promote to skills or foundations.

@@ -1,6 +1,7 @@
 ---
 name: code-discipline
 description: "Use when implementing, reviewing, or committing code, general code-discipline principles (scope, verification, type-safety, tests, context-gathering) farmed from high-quality repos."
+invocation: internal
 disable-model-invocation: true
 ---
 

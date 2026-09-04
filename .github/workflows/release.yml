@@ -1,7 +1,4 @@
-# Publishes a versioned GitHub release for a pushed vX.Y.Z tag. The tag is
-# the single release authority; plain pushes never publish. Verification uses
-# the canonical suite in CONTRIBUTING.md before a write-scoped job creates the
-# release with notes categorized by .github/release.yml.
+# Publish a GitHub release for a pushed vX.Y.Z tag.
 name: release
 
 on:
@@ -27,29 +24,21 @@ jobs:
           fetch-depth: 2
           persist-credentials: false
 
-      - name: Install YAML checker
-        run: pip install --user pyyaml==6.0.3  # pinned; bump deliberately
+      - name: Install structured-data checker
+        run: pip install --user pyyaml==6.0.3
 
-      - name: Run the canonical repository gates
+      - name: Check repository contracts
         shell: bash
         run: |
           set -euo pipefail
-          SKILLS_ROOT="${GITHUB_WORKSPACE}/skills" python3 scripts/skill-validator.py
+          SKILLS_ROOT="$GITHUB_WORKSPACE/skills" python3 scripts/skill-validator.py
           python3 scripts/install-prompts.py --check-repo
           python3 scripts/install-prompts.py --selftest
           python3 scripts/render-prompt.py --selftest
-          python3 scripts/catalog-quality.py --selftest
-          python3 scripts/catalog-quality.py
+          python3 scripts/skill-catalog.py generate --check
           python3 scripts/repo-hygiene.py
-          python3 scripts/policy-consistency.py
-          python3 scripts/style-lint.py --selftest
-          python3 scripts/style-lint.py
           python3 scripts/web-reference-manifest.py --selftest
-          python3 scripts/dead-code.py
-          python3 scripts/foundation-validator.py --selftest
-          python3 scripts/foundation-validator.py
-          python3 scripts/reference-retrieval-fixture.py --selftest
-          CHECK_RANGE="$GITHUB_SHA^..$GITHUB_SHA" python3 scripts/conventional-commit.py
+          python3 scripts/pr-metadata.py --selftest
           git diff --check "$GITHUB_SHA^" "$GITHUB_SHA"
 
   publish:

@@ -1,6 +1,7 @@
 ---
 name: c-coding-practices
 description: "Use when authoring or reviewing C, snake_case naming, header guards, no data in headers, Yoda comparisons, safe macros, initialize-all, and checked error returns."
+invocation: manual
 disable-model-invocation: true
 ---
 

@@ -1,6 +1,7 @@
 ---
 name: api-design-practices
 description: "Use when designing or reviewing HTTP/JSON APIs, resource naming, idempotent writes, machine-readable errors, pagination from v1, and explicit versioning; distilled from Azure REST Guidelines and Google AIPs."
+invocation: manual
 disable-model-invocation: true
 ---
 

@@ -1,6 +1,7 @@
 ---
 name: fallow
 description: "Use when analyzing code quality, finding dead code, detecting duplication, assessing complexity, checking blast radius, or cleaning up a TS or JS codebase with deterministic static analysis."
+invocation: internal
 disable-model-invocation: true
 ---
 

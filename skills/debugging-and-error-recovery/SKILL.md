@@ -1,6 +1,7 @@
 ---
 name: debugging-and-error-recovery
 description: "Use when tests fail, builds break, behavior is unexpected, or multiple fix attempts have not worked."
+invocation: entry
 ---
 
 # Debugging & Error Recovery

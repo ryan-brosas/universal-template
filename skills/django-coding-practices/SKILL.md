@@ -1,6 +1,7 @@
 ---
 name: django-coding-practices
 description: "Use when authoring or reviewing Django code, black/isort imports, DTL spacing, request-first views, model field order, TextChoices, lazy settings, i18n strings, and pre-commit verification."
+invocation: manual
 disable-model-invocation: true
 ---
 

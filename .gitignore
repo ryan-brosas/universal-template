@@ -1,27 +1,15 @@
 .pi/
-# Root catalog gates must be tracked for CI; other root scripts stay local.
+# Retained publication helpers are tracked; other root scripts stay local.
 /scripts/*
-!/scripts/skill-validator.py
-!/scripts/repo-hygiene.py
-!/scripts/catalog-quality.py
-!/scripts/catalog-integrity.py
-!/scripts/dead-code.py
-!/scripts/conventional-commit.py
-!/scripts/policy-consistency.py
-!/scripts/runtime-capabilities.py
-!/scripts/resolve-model.py
-!/scripts/style-lint.py
-!/scripts/skill-catalog.py
-!/scripts/legacy-skill-report.py
-!/scripts/pr-metadata.py
 !/scripts/github-audit.py
-!/scripts/web-reference-manifest.py
-!/scripts/foundation-validator.py
-!/scripts/reference-retrieval-fixture.py
 !/scripts/install-prompts.py
+!/scripts/pr-metadata.py
 !/scripts/render-prompt.py
-!/scripts/context-budget-baseline.json
-!/scripts/fixtures/
+!/scripts/repo-hygiene.py
+!/scripts/runtime-capabilities.py
+!/scripts/skill-catalog.py
+!/scripts/skill-validator.py
+!/scripts/web-reference-manifest.py
 # Generated runtime capability state (machine-local, never committed).
 /state/
 # Skill-local helper scripts stay out of the catalog repo.

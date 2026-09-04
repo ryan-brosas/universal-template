@@ -1,122 +1,61 @@
 ---
 name: model-resolution
-description: "Use when execution-router has already chosen a role and mechanism and the lane needs a concrete backend/model: discover available providers and models at runtime, hard-filter by the role's capabilities, rank by local preference, and fall back gracefully."
+description: "Use when a task or delegated lane needs a concrete model or backend; inspect live availability, choose the smallest sufficient option, probe uncertainty, and escalate only from observed gaps."
+invocation: internal
 disable-model-invocation: true
 ---
 
-# Model Resolution (internal)
+# Model Resolution
 
 ## Core Principle
 
-**ROLE → REQUIRED CAPABILITY → BEST CURRENTLY AVAILABLE MODEL.** Never
-MODEL → WORKFLOW. Providers and models are runtime state: discover what exists
-now, filter by the role's hard requirements, rank with local preferences,
-degrade gracefully. Prefer the mechanical resolver; read this skill only when
-the resolver is absent or its result needs adjudication.
+Start with the task, then inspect current runtime capabilities. Model names,
+provider availability, authentication, context limits, and tool support are live
+state. No fixed role threshold or tracked preference is universal truth.
 
 ## When to Use / NOT
 
-- **Use when:** execution-router chose a role and mechanism and the lane
-  needs a concrete backend/model.
-- **NOT when:** the task itself is a normal edit with the primary resolver;
-  or when no role/capability decision is needed.
+- **Use when:** a task, review, investigation, or delegated lane needs a model
+  choice that the current host has not already made.
+- **NOT when:** the active model is sufficient and changing lanes adds no value.
 
-## Workflow (default: mechanical resolver)
+## Workflow
 
-```bash
-python3 ~/.agents/scripts/resolve-model.py --role reviewer --json
-python3 ~/.agents/scripts/resolve-model.py --role worker --require-context 128000 --json
-```
+1. Identify the task's actual needs: reasoning depth, tools, modalities, context,
+   latency, cost, and failure risk. Separate requirements from preferences.
+2. Probe current availability through the host's native surfaces, such as
+   `pi --list-models`, `veda models`, `agy models`, provider APIs, or exposed
+   model inventory tools. Check authentication in the execution environment.
+3. Choose the smallest available model that is plausibly sufficient. Use
+   `config/model-profiles.yaml` only as optional local preference hints after
+   live discovery, never as capability evidence.
+4. Verify an uncertain capability with one bounded representative probe before
+   assigning load-bearing work.
+5. Escalate only when observed output or a capability gap justifies a stronger,
+   larger, or different model. Do not retry the same unsuitable lane blindly.
 
-The resolver discovers (`pi --list-models`, `veda models`, `which`), applies
-the role's hard filters (backend present, model in catalog, context ≥ required,
-capability flags, auth where checkable), ranks survivors by
-`config/model-profiles.yaml` preference order, and prints candidates plus
-excluded reasons as JSON. Read its output; do not re-derive it by hand.
-Candidates carry `context_unverified` / `capability_unverified` flags for any
-field discovery could not confirm, treat those as unknown, never as
-guaranteed compatibility; roles are accepted case-insensitively and the
-preference file resolves from the checkout the script lives in
-(`AGENTS_PROFILES` overrides explicitly).
+## Fallbacks
 
-## Role → capability requirements
-
-| Role | Requires |
-|---|---|
-| MAIN | economical, fast, tool-capable, holds the session |
-| WORKER | code competence, write access in its slice, cheap |
-| REFERENCE-INVESTIGATOR | code comprehension, adequate context, read-only, cheap |
-| REVIEWER | strong reasoning, read-only, independent context, high confidence |
-| NAVIGATOR | strong planning reasoning, read-only, structured output |
-| FRONTEND-CRITIC | UI/UX or multimodal reasoning ability, whichever available model has it |
-| DEBUGGER | runtime/tool access, hypothesis discipline |
-| SECURITY-REVIEWER | adversarial reasoning, read-only |
-| SOLVER / JUDGE / VERIFIER | independent strong reasoning; diversity between them when the problem is hard |
-| SUPERVISOR | orchestration reliability, budget discipline |
-
-## Runtime discovery (re-verify per installed version)
-
-| Question | Command |
-|---|---|
-| Pi providers/models (context, thinking, images) | `pi --list-models [search]` |
-| Pi provider readiness | `pi auth check --provider <name>` (environment-scoped) |
-| Veda backends/aliases | `veda models [backend]` |
-| Veda personas | `veda personas` |
-| Backend CLIs present | `which claude codex droid gemini agy` |
-| Full stack report | `python3 ~/.agents/scripts/runtime-capabilities.py [--json] [--smoke [backend]]` |
-
-## Addressing (verified mechanics; re-verify per version)
-
-- Pi models via the Veda Pi backend are addressed **`pi/<provider>/<model>`**;
- strings without the `pi/` prefix are rejected. The Veda Pi backend may not
- enumerate Pi's catalog, discover with `pi --list-models`, pass an explicit
- `pi/...` model, and one-shot probe unfamiliar lanes.
-- Direct backends: `veda -b <backend> -m <model>`. When the model is omitted
- Veda picks its own backend default, which may be invalid, always pass an
- explicit backend-appropriate model per lane.
-- `veda -b pi` bridges to whatever Pi has configured, so new Pi providers
- become usable lanes automatically.
-- Installed ≠ authenticated: a backend CLI can be present yet unauthenticated,
- and readiness checks are environment-scoped, verify in the environment the
- lane will run in.
-
-## Stable preferences vs runtime state
-
-- `config/model-profiles.yaml` (git-tracked): **stable preference chains
- only**, which models are preferred per role. No auth state, no dated quirks.
-- Runtime observations (auth state, broken flags, dated quirks): generated
- state under `state/` (gitignored) or the resolver's live discovery. Record
- quirks in the task's audit note, not in tracked config.
-
-## Fallback rules
-
-- **Infrastructure failure** (provider down, auth expired, CLI missing): mark
- unavailable for this task, take the next compatible candidate, or fall back
- to Main's model with the same role requirements. Never fail the task.
-- **Weak answer** (wrong result, hallucination, shallow reasoning): do not
- blind-retry the same lane, escalate the capability requirement and
- re-resolve (stronger or different model), or do the step yourself with
- ground truth.
-- One fallback per attempt; no retry storms.
-- Diversity is for correlated-failure reduction or different
- capability, never ceremony. Same provider, different models is valid.
+Infrastructure failure means choose another currently available candidate or
+continue with the active model. Weak output means refine the requirement and
+escalate capability. Record the observed gap, not a permanent claim about the
+provider.
 
 ## Red Flags
 
-- Hard-coding a model slug or provider in policy or a skill body; the
-  runtime catalog is the only source of truth.
-- Treating resolver failure as "use the first one" or guessing; read the
-  resolver output and adjudicate the named gap.
+- Starting from a model slug and inventing a workflow around it.
+- Treating installed as authenticated or advertised context as observed fitness.
+- Fixed role-to-context thresholds, global rankings, or tracked runtime status.
+- Requiring an optional resolver script before native discovery.
 
 ## Verification
 
-Resolution is traceable: role → requirements → discovery output → filtered/
-ranked choice → fallback used (if any). A one-shot probe verifies an
-unfamiliar lane before real work.
+The choice is traceable from task requirements to live inventory, bounded probe
+when needed, selected model, and any observed reason for escalation.
 
 ## References
 
-- `../execution-router/SKILL.md`, chooses the mechanism and role this skill resolves
-- `../veda-lane/SKILL.md`, executing through Veda once a Veda lane is selected
-- `../../config/model-profiles.yaml`, stable preference chains
-- `../../scripts/resolve-model.py`, the mechanical resolver
+- `../execution-router/SKILL.md`, when execution shape must be chosen first.
+- `../veda-lane/SKILL.md`, native Veda lane execution.
+- `../../config/model-profiles.yaml`, optional local preference hints.
+- `../../scripts/runtime-capabilities.py`, optional aggregate diagnostic.

@@ -1,6 +1,7 @@
 ---
 name: farmed-test-harness
 description: "Use when writing tests for code that talks to HTTP/LLM/external services, reuse the farmed test harness (cassette recording/replay, client error handling, pytest fixtures) instead of writing tests from scratch."
+invocation: entry
 ---
 
 # Farmed Test Harness

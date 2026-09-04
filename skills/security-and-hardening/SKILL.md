@@ -1,6 +1,7 @@
 ---
 name: security-and-hardening
 description: "Use when auditing for security vulnerabilities, implementing auth or authz, handling secrets, or hardening against OWASP Top 10 - covers input validation, authentication, dependency auditing, and secure defaults."
+invocation: entry
 ---
 
 # Security & Hardening

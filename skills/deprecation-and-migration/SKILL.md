@@ -1,6 +1,7 @@
 ---
 name: deprecation-and-migration
 description: Use when deprecating APIs, migrating between library versions, removing legacy code, or planning breaking changes, covers deprecation notices, migration guides, codemods, and staged rollout
+invocation: entry
 ---
 
 

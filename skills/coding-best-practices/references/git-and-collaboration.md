@@ -12,7 +12,7 @@
 
 ## Commits
 
-- Subject: `type(scope): summary` — types include `feat`, `fix`, `docs`, `chore`, `refactor`, `test`, `ci` (catalog: `scripts/conventional-commit.py`).
+- Subject: follow the project convention; when it uses conventional titles, prefer `type(scope): summary`.
 - Imperative mood, no trailing period, no leading capital in description segment.
 - Body explains **why** when the subject is not enough.
 
@@ -30,7 +30,7 @@
 ## Mechanical gates
 
 - `git diff --check` (whitespace)
-- `conventional-commit.py` on branch range
+- Direct `git log --format=%s` review against the project convention
 - The project's PR quality workflow
 - PR title check (`pr-title.yml` on catalog)
 

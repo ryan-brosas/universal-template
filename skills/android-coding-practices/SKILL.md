@@ -1,6 +1,7 @@
 ---
 name: android-coding-practices
 description: "Use when authoring or reviewing Android apps, ribot/xmartlabs resource naming, component factories, Java/Kotlin conventions, MVP/Jetpack layering, and lint/detekt/tests in CI."
+invocation: manual
 disable-model-invocation: true
 ---
 

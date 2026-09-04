@@ -1,6 +1,7 @@
 ---
 name: gnu-c-coding-practices
 description: "Use when authoring or reviewing GNU package C, 79-col defun braces, GNU indent spacing, lowercase_with_underscores naming, English comments, braced nested if/else, Gnulib/Autoconf, and checked syscalls/malloc."
+invocation: manual
 disable-model-invocation: true
 ---
 

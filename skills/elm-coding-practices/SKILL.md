@@ -1,6 +1,7 @@
 ---
 name: elm-coding-practices
 description: "Use when authoring or reviewing Elm, elm-format, 80-column layout, type annotations, qualified imports, custom ID types, multi-step pipelines, and elm-review/test in CI."
+invocation: manual
 disable-model-invocation: true
 ---
 

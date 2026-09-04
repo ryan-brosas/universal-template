@@ -1,6 +1,7 @@
 ---
 name: racket-coding-practices
 description: "Use when authoring or reviewing Racket, DrRacket indent, kebab-case naming, define/cond/for idioms, provide/contract-out modules, rackunit tests, and raco test in CI."
+invocation: manual
 disable-model-invocation: true
 ---
 

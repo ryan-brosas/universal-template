@@ -1,6 +1,7 @@
 ---
 name: drupal-coding-practices
 description: "Use when authoring or reviewing Drupal modules/themes, 2-space PHP layout, module-prefixed functions, PSR-4 namespaces, docblocks, t() i18n, YAML/Twig/JS standards, and PHPCS/PHPStan verification."
+invocation: manual
 disable-model-invocation: true
 ---
 

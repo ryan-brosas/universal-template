@@ -1,6 +1,7 @@
 ---
 name: pixel-perfect
 description: "Use when a design copy must match its source pixel-perfectly — Paper↔Figma fidelity checks, fixing 'it looks off' or 'not accurate' feedback, verifying fills, radii, shadows, type metrics, or fonts against the design source, or before calling a design match done."
+invocation: entry
 ---
 
 # Pixel-Perfect Design Fidelity

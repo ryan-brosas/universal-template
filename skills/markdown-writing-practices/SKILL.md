@@ -1,6 +1,7 @@
 ---
 name: markdown-writing-practices
 description: "Use when authoring or reviewing Markdown docs, single H1 layout, 80-column wrap, ATX headings, fenced code with language, descriptive links, reference links, and tables only when scannable 2D data."
+invocation: manual
 disable-model-invocation: true
 ---
 

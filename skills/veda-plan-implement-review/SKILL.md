@@ -1,6 +1,7 @@
 ---
 name: veda-plan-implement-review
 description: "Use when you need to plan an approach, execute it, and review the outcome, plan AND implement with the Veda Navigator model, then review the result: align on an approach with Navigator, carry it out, then close with a reviewer pass (fix P0/P1, re-review until pass). Drives `veda -S impl-TASKNAME -m flash -p navigator-plan` to align, implements with native tools, then `-p reviewer`. Navigator has read-only tools only."
+invocation: vendor
 argument-hint: "[veda-flags]"
 ---
 

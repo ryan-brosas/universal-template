@@ -1,6 +1,7 @@
 ---
 name: fabric-native-execution
 description: "Use when working inside Pi Fabric: core fabric_exec execution first, native providers (memory, state, compact) as helpers, and deliberate escalation to agents/Veda runner or Schema audit/enforce when the task benefits."
+invocation: internal
 disable-model-invocation: true
 ---
 

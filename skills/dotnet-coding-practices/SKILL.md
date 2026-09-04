@@ -1,6 +1,7 @@
 ---
 name: dotnet-coding-practices
 description: "Use when designing or reviewing cross-language.NET public APIs, Framework Design naming, scenario-driven library design, exception/event/dispose patterns, secure coding baseline, and analyzer/CLS gates in CI."
+invocation: manual
 disable-model-invocation: true
 ---
 

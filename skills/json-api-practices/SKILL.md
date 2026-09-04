@@ -1,6 +1,7 @@
 ---
 name: json-api-practices
 description: "Use when authoring or reviewing JSON API payloads, strict JSON syntax, camelCase properties, string enums, RFC3339 dates, Google-style data/error envelope, and paging reserved names."
+invocation: manual
 disable-model-invocation: true
 ---
 

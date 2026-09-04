@@ -1,6 +1,7 @@
 ---
 name: mongodb-data-practices
 description: "Use when designing or reviewing MongoDB schemas, UPPERCASE enums, is/has booleans, BSON dates, null semantics, camelCase keys, string _id, embed vs reference, validation, and indexes."
+invocation: manual
 disable-model-invocation: true
 ---
 

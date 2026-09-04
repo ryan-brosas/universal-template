@@ -1,6 +1,7 @@
 ---
 name: kotlin-coding-practices
 description: "Use when authoring or reviewing Kotlin, 4-space layout, PascalCase/camelCase naming, package-aligned files, class member order, val immutability, default parameters, expression if/when, and explicit library API."
+invocation: manual
 disable-model-invocation: true
 ---
 

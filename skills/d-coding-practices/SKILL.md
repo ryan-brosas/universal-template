@@ -1,6 +1,7 @@
 ---
 name: d-coding-practices
 description: "Use when authoring or reviewing D, 4-space Allman layout, camelCase/PascalCase naming, alias= declarations, @property APIs, selective imports, Ddoc Params/Returns, and dub test/dfmt in CI."
+invocation: manual
 disable-model-invocation: true
 ---
 

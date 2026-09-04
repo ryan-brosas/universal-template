@@ -1,6 +1,7 @@
 ---
 name: codebase-memory
 description: "Use when navigating, indexing, tracing, or comparing local and inspiration repositories through the Codebase Memory MCP knowledge graph."
+invocation: internal
 disable-model-invocation: true
 ---
 

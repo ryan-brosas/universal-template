@@ -1,6 +1,7 @@
 ---
 name: codex-websearch
 description: "Use when you need current web facts, documentation discovery, or cited search results through the installed Codex web-search extension."
+invocation: internal
 disable-model-invocation: true
 ---
 

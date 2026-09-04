@@ -1,6 +1,7 @@
 ---
 name: magento-coding-practices
 description: "Use when authoring or reviewing Adobe Commerce/Magento extensions, strict_types, PSR-12,::class, DI/composition, prepared SQL, escape output, service contracts, and PHPCS Magento2 verification."
+invocation: manual
 disable-model-invocation: true
 ---
 

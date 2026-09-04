@@ -1,6 +1,7 @@
 ---
 name: copywriting
 description: "Use when writing, rewriting, or auditing conversion-focused landing pages, homepages, product or pricing pages, sales pages, emails, ads, headlines, CTAs, value propositions, positioning, SaaS messaging, onboarding, UX copy, or when turning customer research and reviews into persuasive copy."
+invocation: entry
 ---
 
 # Copywriting

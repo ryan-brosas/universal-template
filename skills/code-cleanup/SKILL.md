@@ -1,6 +1,7 @@
 ---
 name: code-cleanup
 description: "Use when behavior works but the diff is noisy, repetitive, over-complicated, or AI-shaped - lock behavior first, simplify the changed code, and re-verify without expanding scope."
+invocation: entry
 ---
 
 
