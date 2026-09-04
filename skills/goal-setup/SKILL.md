@@ -13,7 +13,7 @@ Separation of jobs: **brainstorming** decides what to do · implementation prove
 
 ## When to Use / NOT
 
-- **Use when:** work is expected to run for roughly four days or longer **and** needs meaningful recovery or handoff beyond source, Git, the project tracker, and scoped memory; or the user, repository/project policy, an external tracker, an ADR process, a compliance rule, or a cross-team coordinator explicitly requires a durable record.
+- **Use when:** work is expected to run for roughly four days or longer **and** needs meaningful recovery or handoff beyond source, Git, the project tracker, and project-scoped session evidence; or the user, repository/project policy, an external tracker, an ADR process, a compliance rule, or a cross-team coordinator explicitly requires a durable record.
 - **NOT when:** the user merely asks for a plan; the work is ambiguous, high-risk, or multi-session; a feature, migration, refactor, or production change is still manageable from source and normal project tracking; or no verified pass exists yet. Those conditions call for conversation, direct implementation, or the existing coordinator—not a repository plan file.
 
 ## Workflow

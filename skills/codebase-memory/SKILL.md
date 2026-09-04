@@ -20,7 +20,7 @@ A rebuildable cross-repository index, not a default step: the graph is a derived
 
 ## When to Use / NOT
 
-- **Use when:** the question spans repositories or sessions, finding which indexed project holds a pattern, comparing a reference candidate, cross-service structure, or non-Pi environments where Fovea is unavailable.
+- **Use when:** the question spans repositories, services, or explicitly indexed repository revisions: finding which indexed project holds a pattern, comparing a reference candidate, cross-service structure, or non-Pi environments where Fovea is unavailable.
 - **NOT when:** the active project just needs orientation (use Fovea or direct source). Do not index a current or active owned project merely because the MCP is connected. Index creation requires an explicit user request; a finished project is not ingested by default. Never call `codebase-memory_delete_project` without explicit user approval, and do not write ADRs or ingest traces unless requested (see Boundaries).
 
 ## Workflow
