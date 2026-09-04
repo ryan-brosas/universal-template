@@ -1,8 +1,14 @@
 {
+  "global_instructions": {
+    "path": "AGENTS.md",
+    "max_chars": 3000
+  },
   "hot": {
     "max_skills": 40,
     "max_metadata_chars": 11000
   },
-  "method": "sum of name and description characters for tracked, operational skills with disable-model-invocation != true",
+  "combined": {
+    "max_chars": 14000
+  },
   "token_estimate_divisor": 4
 }

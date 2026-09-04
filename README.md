@@ -41,8 +41,8 @@ Then have the active coding agent perform this bounded setup:
 3. Inspect the host's skill discovery behavior before linking `skills/`. A host
    that eagerly scans the tree or whose hidden-field behavior is unverified must
    receive a host-owned filtered symlink view containing only the tracked **hot**
-   set (operational leaves not hidden by `disable-model-invocation`), never the
-   unified root. Only a host proven to discover lazily without scanning the full
+   set (visible, locally owned `invocation: entry` leaves), never the unified
+   root. Only a host proven to discover lazily without scanning the full
    tree may use the root.
 4. Generate a host adapter only when the host requires a different format. The
    adapter must name its canonical source under `prompts/` and remain derived.
@@ -97,10 +97,12 @@ is not required to consume or maintain the canonical content.
 
 ## Context model
 
+Static global context is `AGENTS.md` plus hot skill names and descriptions.
+Selected skill bodies and references, project instructions, active tool schemas,
+and conversation state are task context and are not counted as always loaded.
 Project source, tests, and runtime behavior establish current software truth.
-Session events preserve historical work evidence. Recall and reflection are
-rebuildable projections. Only reviewed code, gates, skills, and rare minimal
-project notes become durable promotions.
+Session events preserve historical work evidence; recall and reflection are
+rebuildable projections.
 
 ## Usage
 
@@ -118,8 +120,9 @@ Reusable prompts include `/repo-audit`, `/plan-work`, `/implement-work`,
 without a native prompt surface.
 
 `mcp/servers.json` is a registry, not a default connection set. The `minimal`
-profile activates nothing; select one server or scoped profile through
-`mcp/configure.py`. See `mcp/catalog.md` for verified host shapes, package pins,
+profile activates nothing; select one single-purpose profile or server through
+`mcp/configure.py`. Code graph and IDE semantics use separate profiles. See
+`mcp/catalog.md` for verified host shapes, package pins,
 and secret handling.
 
 ## Maintenance

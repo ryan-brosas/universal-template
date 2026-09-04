@@ -28,7 +28,7 @@ python3 scripts/install-prompts.py --check-repo
 python3 scripts/install-prompts.py --selftest
 python3 scripts/render-prompt.py --selftest
 python3 scripts/skill-catalog.py selftest
-python3 scripts/skill-catalog.py context --max-hot-skills 40 --max-hot-chars 11000
+python3 scripts/skill-catalog.py context
 python3 scripts/skill-catalog.py generate --check
 python3 scripts/repo-hygiene.py --selftest
 python3 scripts/repo-hygiene.py
@@ -73,6 +73,8 @@ equals the directory, references resolve within the skill, and host visibility
 remains expressed by `disable-model-invocation`. Cold `*-foundation` leaves live
 in the same tree with `kind: foundation`, manual invocation, hidden visibility,
 and a complete `references/index.md` inventory. They remain outside operational
-catalog and startup counts. Hidden operational skills are cold too. The hot set
-is tracked operational metadata not hidden by `disable-model-invocation`; the
-validator and catalog gate check only the resulting exact contract.
+catalog and startup counts. Internal, manual, and vendor operational skills are
+cold too. The generic hot set contains only tracked, visible `invocation: entry`
+metadata. The context gate
+reads all limits from `config/context-budget.json` and measures that metadata
+with `AGENTS.md` as the complete static baseline.

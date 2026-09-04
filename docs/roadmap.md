@@ -15,12 +15,13 @@ Progress is normally recoverable from source, Git, the project tracker, and proj
 
 ## Context-provable baseline
 
-The baseline treats context as an explicit publication contract: tracked visible
-operational metadata is hot; hidden operational skills and foundations are cold
-and on-demand. CI gates a measured hot budget and zero set overlap. Host payload
-evidence and MCP schema costs are versioned in
-`docs/context-measurements.json`; the six-server MCP file is a registry with an
-empty minimal profile, not an always-on connection set. Strict YAML parsing,
+The baseline treats context as an explicit publication contract: the compact
+global constitution plus tracked, visible entry metadata is static context.
+Internal, manual, vendor, and foundation leaves are cold and on demand. CI reads
+one canonical config to gate the constitution, hot metadata, combined budget,
+and zero set overlap. Host payload evidence and dynamic MCP schema costs are
+versioned in `docs/context-measurements.json`; the six-server MCP file is a
+registry with an empty minimal profile, not an always-on connection set. Strict YAML parsing,
 Git-tracked hygiene, vendor/session exclusions, atomic prompt adapters, and
 fail-closed CDP text persistence protect the same boundary. Re-probe host
 versions and payloads when those integrations change.

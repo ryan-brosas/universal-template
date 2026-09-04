@@ -30,6 +30,43 @@ class FrontmatterError(ValueError):
     pass
 
 
+if yaml is not None:
+    class UniqueKeyLoader(yaml.SafeLoader):
+        """Safe YAML loader that rejects duplicate mapping keys."""
+
+
+    def _construct_unique_mapping(loader, node, deep=False):
+        mapping = {}
+        for key_node, value_node in node.value:
+            key = loader.construct_object(key_node, deep=deep)
+            try:
+                duplicate = key in mapping
+            except TypeError as exc:
+                raise yaml.constructor.ConstructorError(
+                    "while constructing a mapping",
+                    node.start_mark,
+                    "found an unhashable key",
+                    key_node.start_mark,
+                ) from exc
+            if duplicate:
+                raise yaml.constructor.ConstructorError(
+                    "while constructing a mapping",
+                    node.start_mark,
+                    f"duplicate key: {key!r}",
+                    key_node.start_mark,
+                )
+            mapping[key] = loader.construct_object(value_node, deep=deep)
+        return mapping
+
+
+    UniqueKeyLoader.add_constructor(
+        yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG,
+        _construct_unique_mapping,
+    )
+else:
+    UniqueKeyLoader = None
+
+
 def parse_frontmatter(text: str) -> dict[str, Any]:
     """Parse the opening YAML document strictly; never guess from lines."""
     if not text.startswith("---\n"):
@@ -41,7 +78,7 @@ def parse_frontmatter(text: str) -> dict[str, Any]:
     if yaml is None:
         raise FrontmatterError("PyYAML is required for strict frontmatter parsing")
     try:
-        value = yaml.safe_load(source)
+        value = yaml.load(source, Loader=UniqueKeyLoader)
     except yaml.YAMLError as exc:
         raise FrontmatterError(f"invalid YAML: {exc}") from exc
     if not isinstance(value, dict):
@@ -217,12 +254,28 @@ def selftest() -> int:
         if validate_tree(root):
             print("selftest: valid foundation rejected", file=sys.stderr)
             return 1
+        typed = parse_frontmatter(
+            "---\nname: 'quoted-name'\ndescription: |\n"
+            "  first line\n  second line\n"
+            "disable-model-invocation: true\n---\n"
+        )
+        if typed["description"] != "first line\nsecond line\n" or typed["disable-model-invocation"] is not True:
+            print("selftest: valid YAML scalar typing changed", file=sys.stderr)
+            return 1
         cases = [
             (valid_text.replace("invocation: manual", "invocation: entry"), "foundation invocation must be manual"),
             (valid_text.replace("kind: foundation\n", ""), "*-foundation requires kind: foundation"),
             (valid_text.replace("disable-model-invocation: true", 'disable-model-invocation: "true"'), "must be a boolean"),
             (valid_text.replace("description: cold evidence", "description:\n  nested: value"), "description must be a string"),
             (valid_text.replace("kind: foundation", "kind: [foundation"), "frontmatter unparseable"),
+            (
+                valid_text.replace("name: demo-foundation", "name: first\nname: second"),
+                "duplicate key: 'name'",
+            ),
+            (
+                valid_text.replace("invocation: manual", "invocation: entry\ninvocation: manual"),
+                "duplicate key: 'invocation'",
+            ),
         ]
         for bad, expected in cases:
             (valid / "SKILL.md").write_text(bad, encoding="utf-8")

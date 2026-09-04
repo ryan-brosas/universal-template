@@ -15,21 +15,23 @@ that gap. No fixed tool chain.
 | Need | Capability |
 |---|---|
 | Active or owned repo orientation / neighborhoods | Direct source + Fovea (`fovea_sketch` → `fovea_focus` → `fovea_dwell`) |
-| Exact usages / types / refactor safety | MCP Steroid / JetBrains (`steroid_*`) + source |
+| IDE-aware types / semantic refactor | `ide` profile: MCP Steroid / JetBrains (`steroid_*`) + source |
 | Runtime behavior | tests, debugger, runtime output |
 | Named inspiration repo | project `reference/<repo>/` + source/tests |
 | Live site capture | `reference/web/<site>/` or `web-reference` |
 | Stack patterns from prior implementations | `skills/*-foundation` + cited source |
-| Explicitly retained cross-repo pattern index | Codebase Memory → activate candidate under `reference/` |
+| Code graph / cross-repo pattern index | `code-graph` profile: Codebase Memory → verify candidate in source |
 | Past attempts / lessons | Project-scoped session history (`/recall-session`); OpenViking only as an optional rebuildable cache |
 | Current library docs | official docs / Context7 |
 | External facts / advisories | Exa or read-only fetch |
 | GitHub repo overview | DeepWiki → repository |
 
-Model output is not evidence until verified against source/tests/runtime. MCP
-capabilities are selected per task from `../../mcp/profiles.json`; the minimal
-profile connects none, and no route requires all six declarations. For execution
-or model escalation, see `execution-router` and `model-resolution`.
+Name one uncertainty, select its primary source, and escalate only when that
+source is insufficient. Model output is not evidence until verified against
+source/tests/runtime. MCP capabilities are selected per task from
+`../../mcp/profiles.json`; each profile selects at most one server and `minimal`
+connects none. For execution or model escalation, see `execution-router` and
+`model-resolution`.
 
 ## References
 

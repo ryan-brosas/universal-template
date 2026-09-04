@@ -1,22 +1,69 @@
 {
-  "measured_at": "2026-09-04",
-  "commit_base": "76afa8ecaa2fa6fceb4953b4a086415f7bbf7a55",
+  "base_commit": "149b21c70ac9da2bf0444597b8f4626d6550ce16",
+  "measured_commit": null,
+  "measured_tree": "PR snapshot based on base_commit; includes task changes and excludes preserved pre-existing working-tree edits",
+  "measurement_environment": {
+    "date": "2026-09-04",
+    "host": "isolated local loopback OpenAI-compatible endpoint",
+    "versions": {
+      "pi": "0.84.4"
+    }
+  },
   "static_context": {
-    "hot_skills": 38,
-    "cold_entries": 309,
-    "overlap": 0,
-    "hot_metadata_chars": 10315,
-    "hot_tokens_approx": 2578
+    "starting": {
+      "global_instruction_chars": 9484,
+      "hot_skills": 38,
+      "hot_metadata_chars": 10315,
+      "combined_chars": 19799,
+      "combined_tokens_approx": 4949
+    },
+    "measured": {
+      "global_instruction_bytes": 2824,
+      "global_instruction_chars": 2824,
+      "global_instruction_lines": 65,
+      "global_instruction_tokens_approx": 706,
+      "hot_skills": 33,
+      "hot_metadata_chars": 8449,
+      "hot_tokens_approx": 2112,
+      "combined_chars": 11273,
+      "combined_tokens_approx": 2818,
+      "cold_operational": 120,
+      "foundations": 194,
+      "token_estimate_divisor": 4
+    }
   },
   "pi_outbound_probe": {
     "version": "0.84.4",
-    "route": "--no-skills plus one --skill per tracked hot entry",
-    "selected_skills": 38,
-    "skill_entries": 38,
-    "system_chars": 18313,
-    "request_bytes": 19491,
-    "hot_marker_present": true,
-    "cold_marker_absent": true
+    "route": "temporary PI_CODING_AGENT_DIR; loopback openai-completions provider; --approve --no-session --no-extensions --no-prompt-templates --no-themes --no-skills --tools read; one --skill per tracked hot entry",
+    "minimal_mcp_profile": true,
+    "request_count": 3,
+    "host_base_system_chars": 1748,
+    "global_system_chars": 4746,
+    "global_instruction_file_chars": 2824,
+    "global_system_delta_chars_with_wrapper": 2998,
+    "hot_metadata_source_chars": 8449,
+    "hot_system_delta_chars_with_wrapper": 13950,
+    "selected_skill_body_chars": 0,
+    "tool_schema_chars": 304,
+    "full_tool_definition_chars": 699,
+    "tool_count": 1,
+    "final_system_chars": 18696,
+    "total_serialized_request_bytes": 19916,
+    "hot_entry_marker_present": true,
+    "cold_marker_present": false,
+    "foundation_marker_present": false
+  },
+  "selected_skill_probe": {
+    "route": "same isolated Pi provider and full hot surface; model-issued read tool call for a cold skill",
+    "request_count": 2,
+    "selected_skill": "veda-worker",
+    "selected_skill_body_chars": 18987,
+    "first_request_bytes": 19937,
+    "followup_request_bytes": 39637,
+    "tool_result_chars": 18987,
+    "cold_name_in_initial_system": false,
+    "selected_body_in_initial_request": false,
+    "selected_body_in_followup_request": true
   },
   "mcp_contracts": {
     "method": "UTF-8 byte lengths of compact JSON inputSchema plus tool description from the live adapter catalog",

@@ -57,10 +57,12 @@ These hosts already export or can export the needed vars; the `${VAR}` text in
 
 ## Scoped profiles
 
-`profiles.json` defines `minimal` (none), `code`, `docs`, `research`, and
-`memory`. Profiles are explicit convenience selections, not always-on policy.
-Use `--deactivate` to remove only the selected profile entries while preserving
-unrelated host configuration. Writes are atomic. Prime translation remains
+`profiles.json` defines `minimal` (none) and six one-server profiles:
+`code-graph`, `ide`, `docs`, `repository-research`, `web-research`, and
+`historical-context`. Codebase Memory and MCP Steroid are deliberately separate;
+there is no ambiguous `code` compatibility alias. Profiles are explicit
+selections, not always-on policy. Use `--deactivate` to remove only the selected
+profile entries while preserving unrelated host configuration. Writes are atomic. Prime translation remains
 available through `sync-to-prime.py`, but it also requires `--server` or
 `--profile`.
 

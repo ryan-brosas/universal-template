@@ -1,41 +1,36 @@
 # Git and collaboration
 
-## Every project uses version control
+## Checkpoints and commits
 
-- Commit at natural checkpoints with a coherent, verifiable diff (`code-discipline`).
-- Do not leave work uncommitted at end of turn unless the user asked.
-
-## Branches
-
-- Short-lived feature branches off the project base (`main` unless AGENTS.md says otherwise).
-- Branch names: lowercase, hyphen-separated, ≤3 segments (global convention in `AGENTS.md`).
-
-## Commits
-
-- Subject: follow the project convention; when it uses conventional titles, prefer `type(scope): summary`.
-- Imperative mood, no trailing period, no leading capital in description segment.
-- Body explains **why** when the subject is not enough.
+- Commit at a natural, verifiable checkpoint when the user or project workflow
+  requests a commit.
+- Follow the project's branch and commit conventions; do not impose a global
+  branch shape or prose style.
+- Explain why in the body when the subject does not make the reason clear.
 
 ## Pull requests
 
-- Fill the body from `~/.agents/templates/pull-request.md` via `push-pr`.
-- Work is not done at push — CI green and review comments resolved (`code-discipline`).
-- Set labels/metadata at `gh pr create` time; watch the workflow run to completion.
+- Use the project's PR template and the applicable delivery skill.
+- When the requested delivery includes a PR, inspect required CI and unresolved
+  review comments before calling it complete.
+- Apply labels or metadata through the repository's supported automation.
 
 ## Conflicts and history
 
-- Rebase or merge per team policy; never force-push shared branches without explicit request.
-- Resolve conflicts in the files you touched; run the project gate after resolution.
+- Rebase or merge according to team policy. Never force-push shared history
+  without explicit authorization.
+- Resolve conflicts within the requested scope, preserve unrelated user work,
+  and rerun affected gates.
 
-## Mechanical gates
+## Useful checks
 
-- `git diff --check` (whitespace)
-- Direct `git log --format=%s` review against the project convention
-- The project's PR quality workflow
-- PR title check (`pr-title.yml` on catalog)
+- `git diff --check`
+- direct review of `git diff` and `git log --format=%s`
+- the project's required PR checks
 
 ## Leaf skills
 
-- `git-workflow-and-versioning` — application skill (deep Git/semver/changelog learning)
-- `awesome-guidelines/references/git-style-learning-note.md` — why behind branch/commit/merge rules
-- `push-pr`, `github-actions-engineering`, `code-discipline`, `code-review-and-quality`
+- `git-workflow-and-versioning`, deep Git, versioning, and changelog guidance
+- `push-pr`, bounded PR creation and update workflow
+- `ship-pr`, explicitly requested end-to-end delivery
+- `github-actions-engineering`, CI workflow ownership

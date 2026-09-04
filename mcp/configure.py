@@ -108,8 +108,19 @@ def selftest() -> int:
             pass
         assert path.read_text(encoding="utf-8") == before
         assert not list(path.parent.glob(f".{path.name}.*"))
-        empty, _ = selection("minimal", None)
-        assert empty == []
+        expected_profiles = {
+            "minimal": [],
+            "code-graph": ["codebase-memory"],
+            "ide": ["mcp-steroid"],
+            "docs": ["context7"],
+            "repository-research": ["deepwiki"],
+            "web-research": ["exa"],
+            "historical-context": ["openviking"],
+        }
+        for profile, expected in expected_profiles.items():
+            selected, _ = selection(profile, None)
+            assert selected == expected
+        assert "code" not in load_json(PROFILES)["profiles"]
     print("MCP CONFIGURE SELFTEST PASS")
     return 0
 

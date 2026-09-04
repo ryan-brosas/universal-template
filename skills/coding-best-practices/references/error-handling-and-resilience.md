@@ -7,7 +7,7 @@
 ## Prefer tests over catch-all handlers
 
 - A broad `try/except` without a behavior test often hides bugs. Write a failing test first (`test-driven-development`), then handle the specific failure mode you proved.
-- `quality-gate-methodology`: test un-fixed (fail) and fixed (pass) — the test must catch.
+- `test-generation`: prove pre-fix failure and post-fix success when the defect is safely reproducible.
 
 ## Boundaries to handle explicitly
 
@@ -34,6 +34,6 @@
 
 ## Leaf skills
 
-- `quality-gate-methodology`, `test-driven-development`, `testing-anti-patterns`
+- `test-generation`, `test-driven-development`, `testing-anti-patterns`
 - Typed errors: `typescript-coding-standards`
 - Security-related failures: `security-and-hardening`

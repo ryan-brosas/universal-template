@@ -1,24 +1,31 @@
-# Test Ledger Protocol
+# Optional test ledger
 
-Source: scarywood75, 2026-08-03; distilled from the original discussion transcript.
+Source: scarywood75, 2026-08-03; distilled from the original discussion
+transcript and qualified for proportional use.
 
-## Why a ledger
+## When a ledger helps
 
-Without a ledger, an LLM will "prompt" its way to dozens of duplicate / near-identical tests as edge cases accrue. The ledger is the memory of intent: what each test **targets**, so each new gap is routed to the test that should have caught it.
+A lightweight ledger can make intent visible during a broad test audit, a
+multi-test migration, or work on a suite with recurring near-duplicates. Do not
+create or maintain one for a small suite when names and nearby source already
+make ownership obvious.
 
-## The protocol
+## Minimal shape
 
-1. Each test has a row: `name` · `targets (the TYPE of bug/gap/issue, not a specific value)` · `how to reproduce a red run`.
-2. Each time something slips through, first consult the ledger: "which existing test *should* have caught this?" — if it exists, **expand it**; only if nothing targets it do you add a new test, and you add it to the ledger.
-3. Never create a near-identical twin. Before adding, diff against the ledger semantically (shared functions; different static value = duplicate).
-4. The LLM checks the ledger every time a gap is reported, and can update the ledger rows when intent shifts.
+Record only what improves a coverage decision:
 
-## Red-run discipline
+```text
+test name | failure class or invariant | reproducible RED command, if available
+```
 
-- A test is proven by its **red run**: run the code BEFORE the fix → the test fails; apply fix → test passes.
-- Log both runs in the PR/change notes (e.g. `RED: X fails, GREEN: X passes`).
-- Gates enforce the ledger too: no empty test bodies, no static-assert-only tests (no assertions on fixed literals).
+When a defect escapes, ask which existing test owns that failure class. Expand
+it when the ownership is clear. Add a new test when the boundary, responsibility,
+or isolation need is genuinely different.
 
-## The moving target caveat
+## Evidence
 
-"It's never going to be perfect." The ledger keeps the suite *tight and legible* as it evolves, which is what keeps babysitting cheap later.
+For a safely reproducible regression, record the failing pre-fix result and the
+passing post-fix result in the change evidence. If the pre-fix state is
+unavailable or unsafe to run, retain the strongest direct failure evidence and
+state that limitation. Do not fabricate RED or require fixed-literal bans that
+would reject legitimate contract tests.

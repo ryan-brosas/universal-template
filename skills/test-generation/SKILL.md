@@ -1,48 +1,74 @@
 ---
 name: test-generation
-description: "Use when writing, expanding, or auditing tests, converting workflow rules into gates, or deciding what to test. Catch-first method: a test is only good if it can catch; pre-fix must fail and post-fix pass; expand existing tests instead of adding duplicates; keep files small and grouped into cohorts."
+description: "Use when writing, expanding, or auditing tests, converting exact recurring failures into gates, or deciding what to test. Catch-first method: prove a test can catch when reproducible, expand the right existing test, and avoid duplicate coverage."
 invocation: entry
 ---
 
-# Test Generation, catch-first, ledger-based
+# Test generation: catch-first and evidence-based
 
 ## Core Principle
 
-A test is only good if it can **properly catch**. Pass means nothing; a suite is valuable only when the un-fixed version fails and the fixed version passes.
+A test earns confidence by catching its intended failure class. When safe and
+reproducible, prove that with a pre-fix failure and post-fix pass; otherwise use
+the strongest direct evidence available.
 
 ## When to Use / NOT
 
-- **Use when:** writing a new test; a bug slipped through an *existing* test (expand, don't duplicate); auditing a suite for near-duplicates; converting project rules into gates; or told to "add tests".
-- **NOT when:** the check is a smoke run with no failure mode you can state; OR you should be enforcing via a gate instead of a test (gates that "cannot be bypassed" > prompt-only rules).
+- **Use when:** writing or expanding tests, auditing coverage or duplication,
+  converting an exact recurring failure into a gate, or deciding what to test.
+- **NOT when:** no meaningful failure mode can be stated, or the concern is
+  semantic judgment or preferred agent behavior rather than an objective outcome.
 
 ## Workflow
 
-1. **Determine what you want / gaps first**, a repo's popularity is not the proper judge; decide the *type* of bugs/gaps/issues that matter to you, then target that type.
-2. **One broad test per failure-type**, not one per specific value. Target the class of bug, exposed functions not used elsewhere, non-existent consts, unused imports, near-identical dups (semantic distance scan).
-3. **Test un-fixed AND fixed.** Pre-fix run must fail the test; post-fix run must pass. Record both.
-4. **Maintain the test ledger.** The LLM keeps and updates a list of test names + what each targets; it checks the ledger every time something isn't caught, instead of inventing fixes.
-5. **Never create duplicates or near-identical tests.** When a gap *should* have been caught and wasn't → **expand existing tests**, don't add new ones. Make tests for your test units too (shared functions, no static values/lists, no near-identical logic).
-6. **Turn every manual catch into a mechanical test as much as possible.** Prompt the agent each turn to assess and check the workflow. Every time it jerry-rigs a script and uses it multiple times, turn that script into a **workflow/gate**. Where a script itself enforces order (e.g. CLI to verify file ordering), have the LLM call it, "AI is good at making you think it gave the proper results."
-7. **Gate, don't prompt.** If the goal is that the agent must research, or must have used some tool, build a gate that cannot be bypassed (prompt-only instructions are inconsistent; a gate cannot be bypassed).
-8. **Shape the repo to raise pass-rate**: keep files small; group changes into coherent themed cohorts (a larger problem broken into smaller themed tasks), reduces turns the model has to think.
-9. **Iterate forever.** The test suite evolves; never perfect. The babysitting is front-loaded, later you do much less.
+1. **Name the gap first.** State the behavior, invariant, or failure class that
+   matters and why existing evidence does not cover it.
+2. **Test the class, not one incidental value.** Prefer a representative invariant
+   or boundary unless specific values are themselves part of the contract.
+3. **Test un-fixed AND fixed when reproducible.** The pre-fix run must fail and
+   the post-fix run pass. If a safe pre-fix run is unavailable, record the
+   strongest direct failure evidence instead of fabricating RED.
+4. **Use the project's test inventory.** For a broad audit or multi-test change,
+   keep a lightweight ledger of test names and targeted failure classes when it
+   improves coverage decisions.
+5. **Expand before duplicating.** When an existing test owns the escaped failure
+   class, expand it. Add a new test when ownership or isolation is genuinely
+   different.
+6. **Promote recurring exact catches.** Convert a repeated, reproducible failure
+   class into a maintained test or gate when its value exceeds false-positive and
+   maintenance cost. Leave one-off or semantic judgment out of mechanical gates.
+7. **Gate exact outcomes, not behavior.** Do not enforce that an agent researched
+   or used a particular tool; test the objective artifact or runtime property.
+8. **Keep test changes cohesive.** Group broad work into understandable cohorts
+   when that improves review and diagnosis; do not split naturally cohesive code
+   to satisfy a size ritual.
+9. **Evolve on evidence.** Expand the suite when escaped defects reveal a
+   valuable gap; do not create a standing test-growth ritual.
 
 ## Red Flags
 
-- A test suite full of pass = doing nothing; no red run recorded anywhere.
-- Static values/lists in tests; near-identical duplicated tests; new orphans when a later catch was a variant.
-- Prompting alone to force a tool to be used; the check is fluffy prose, not a mechanical gate.
-- "Copy good repo code" as the selection criterion without gates (mixed results like asking a different coworker each day).
+- A new regression test is claimed to catch a reproducible defect without a RED
+  run or equivalent direct failure evidence.
+- Near-identical duplicate tests or orphan tests for variants owned elsewhere.
+- A gate forces use of a tool or process instead of checking an objective result.
 
 ## Verification
 
-- Every new or expanded test has both runs recorded: pre-fix run fails, post-fix run passes (Workflow step 3), a suite with no red run recorded is doing nothing (Red Flags).
-- The test ledger contains the test name + the failure-type it targets, and shows no near-duplicate entry (expand-don't-duplicate).
-- Anything mechanical/deterministic was turned into a test or an unbypassable gate, not prompt-only prose (`references/mechanical-gates.md`).
+- Every new or expanded regression test has a recorded pre-fix failure and
+  post-fix pass when safely reproducible; otherwise the report names the direct
+  failure evidence and limitation.
+- When a ledger is warranted, it names each test and targeted failure class and
+  exposes near-duplicate coverage.
+- Repeated deterministic failure classes with positive maintenance value are
+  covered by tests or gates; semantic judgment is not encoded as a behavior gate
+  (`references/mechanical-gates.md`).
 
 
 ## References
 
-- `references/test-ledger.md`, the ledger contract: every test = name + the failure-type it targets; check it every time something isn't caught; expand-don't-duplicate (scarywood75, 8/3/26)
-- `references/mechanical-gates.md`, anything mechanical/deterministic → test or gate; quality packs (universal + per-language); unbypassable gate-over-prompt (scarywood75 + Tom, 7/19/26)
-- `references/cohort-discipline.md`, keep files small, group changes into themed cohorts, convert repeated scripts into workflows and CLI gates (Sewer56)
+- `references/test-ledger.md`, optional ledger structure and expand-before-duplicate
+  evidence (scarywood75, 2026-08-03)
+- `references/mechanical-gates.md`, qualification boundaries for deterministic
+  tests, gates, and quality packs (scarywood75 + Tom, 2026-07-19)
+- `references/cohort-discipline.md`, evidence on cohesive test cohorts and scratch
+  tool promotion (Sewer56)
