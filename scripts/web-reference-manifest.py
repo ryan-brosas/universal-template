@@ -147,6 +147,25 @@ def validate_bundle(raw_root: str) -> list[str]:
             else:
                 for shot_index, shot in enumerate(shots):
                     file_ref(root, shot, f"pages[{index}].screenshots[{shot_index}]", errors)
+    if manifest.get("scope") == "quick":
+        screenshot_refs: list[object] = []
+        if isinstance(evidence, dict):
+            screenshot_refs.append(evidence.get("screenshots"))
+        if isinstance(pages, list):
+            for page in pages:
+                if isinstance(page, dict) and isinstance(page.get("screenshots"), list):
+                    screenshot_refs.extend(page["screenshots"])
+        has_screenshot = any(
+            isinstance(relative, str)
+            and (target := contained(root, relative)) is not None
+            and target.is_file()
+            for relative in screenshot_refs
+        )
+        if not has_screenshot:
+            errors.append(
+                "quick capture must reference at least one existing screenshot file through "
+                "evidence.screenshots or pages[].screenshots"
+            )
     captures = manifest.get("captures", [])
     if not isinstance(captures, list):
         errors.append("captures must be a list")
@@ -194,6 +213,24 @@ def selftest() -> int:
         if validate_bundle(str(root)):
             print("web-reference manifest selftest: FAIL valid fixture")
             return 1
+        manifest["evidence"] = {"screenshots": True}
+        (root / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+        if not any("existing screenshot file" in error for error in validate_bundle(str(root))):
+            print("web-reference manifest selftest: FAIL boolean screenshot evidence")
+            return 1
+        manifest["evidence"] = {"screenshots": False}
+        manifest["coverage_gaps"] = ["screenshots: not captured"]
+        (root / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+        if not any("existing screenshot file" in error for error in validate_bundle(str(root))):
+            print("web-reference manifest selftest: FAIL screenshot coverage gap")
+            return 1
+        manifest["pages"] = [{"route": "/", "screenshots": ["files/shot.png"]}]
+        (root / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+        if validate_bundle(str(root)):
+            print("web-reference manifest selftest: FAIL page screenshot fixture")
+            return 1
+        manifest.pop("pages")
+        manifest["coverage_gaps"] = []
         manifest["evidence"] = {"screenshots": "../escape.png"}
         (root / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
         if not any("inside the bundle" in error for error in validate_bundle(str(root))):
