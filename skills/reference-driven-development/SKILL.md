@@ -1,6 +1,7 @@
 ---
 name: reference-driven-development
 description: "Use when outside prior art reduces uncertainty: adapting a reference repo, porting a pattern, or when a relevant project-local reference/<repo>/ or reference/web/<site>/ already exists and would materially help—even without an explicit use-this-reference request."
+invocation: entry
 ---
 
 # Reference-Driven Development

@@ -20,7 +20,7 @@ body:
     id: area
     attributes:
       label: Affected path or skill
-      description: e.g. skills/push-pr, scripts/catalog-quality.py, .github/workflows
+      description: e.g. skills/push-pr, scripts/repo-hygiene.py, .github/workflows
     validations:
       required: false
   - type: checkboxes

@@ -1,6 +1,7 @@
 ---
 name: pdf-extract
 description: Use when extracting text, images, tables, or metadata from PDF files. MUST load to choose the correct extraction library based on PDF complexity, simple text vs structured data vs complex layouts.
+invocation: manual
 disable-model-invocation: true
 ---
 

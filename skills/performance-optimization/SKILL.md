@@ -1,6 +1,7 @@
 ---
 name: performance-optimization
 description: Use when profiling, optimizing, or adding performance budgets to applications, covers measure-first workflow, Core Web Vitals, common anti-patterns, and performance regression prevention
+invocation: internal
 disable-model-invocation: true
 ---
 

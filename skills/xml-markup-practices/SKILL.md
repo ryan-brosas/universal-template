@@ -1,6 +1,7 @@
 ---
 name: xml-markup-practices
 description: "Use when designing or reviewing machine-readable XML formats, reuse-first schemas, RELAX NG namespaces, lowerCamelCase names, element/attribute rules, UTF-8 instances, and xmllint/RNG validation in CI."
+invocation: manual
 disable-model-invocation: true
 ---
 

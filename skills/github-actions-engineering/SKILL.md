@@ -1,6 +1,7 @@
 ---
 name: github-actions-engineering
 description: "Use when designing, creating, auditing, repairing, hardening, or optimizing GitHub Actions CI/CD: set up CI for a project, fix a failing workflow, secure or speed up Actions, define required checks, build release or reusable workflows, or diagnose a stuck required check. Owns.github/workflows/ and workflow-adjacent CI config."
+invocation: entry
 ---
 
 # GitHub Actions Engineering

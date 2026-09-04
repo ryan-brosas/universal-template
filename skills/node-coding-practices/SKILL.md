@@ -1,6 +1,7 @@
 ---
 name: node-coding-practices
 description: "Use when authoring or reviewing Node.js, felixge 2-space semicolons, camelCase/===, small early-return functions, top requires, npm/package.json, PORT env, and cross-platform Windows path hygiene."
+invocation: manual
 disable-model-invocation: true
 ---
 

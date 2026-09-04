@@ -1,6 +1,7 @@
 ---
 name: npm-trusted-publishing
 description: "Use when setting up npm publishing from GitHub Actions for a package, adding a publish job or workflow, or answering 'how do I publish this to npm' — the AI does the publishing end to end in GitHub Actions (OIDC trusted publishing, no NPM_TOKEN secret) and guides the human through the one-time npmjs.com settings. Trigger-first; pick over secret-based publishing advice."
+invocation: entry
 ---
 
 # npm Trusted Publishing from GitHub Actions

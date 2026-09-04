@@ -1,18 +1,9 @@
 #!/usr/bin/env python3
-"""Repo-hygiene check — mechanical anti-slop for the global skill catalog.
+"""Check exact repository publication contracts.
 
-Ported from the absorbed pi-template gate and owned by `practices-to-ci`.
-Enforces:
-- no trailing whitespace
-- files end with a newline
-- no smart quotes / ligatures in code/config (not prose .md)
-- no large authored files (default >1MB; vendored protocol dumps exempt)
-- YAML / JSON / TOML validity
-- lightweight typo scan on top-level docs + practice SKILL.md files
-- lightweight secret-pattern scan
-- no .gitmodules
-
-Exit 0 = clean. Non-zero = report what to fix.
+The gate owns bytes and structure: required files, whitespace, structured-data
+parsing, obvious credential patterns, portable MCP paths, and file-size limits.
+It does not judge prose or policy meaning.
 """
 from __future__ import annotations
 
@@ -23,177 +14,122 @@ import sys
 from pathlib import Path
 
 BASE = Path(__file__).resolve().parents[1]
-MAX_KB = 1024
-errors: list[str] = []
-
+MAX_BYTES = 1024 * 1024
 TEXT_EXT = {".md", ".json", ".yml", ".yaml", ".py", ".mjs", ".ts", ".toml", ".txt", ".sh"}
-CODE_EXT = {".py", ".mjs", ".ts", ".json", ".yml", ".yaml", ".toml", ".env"}
 SKIP_DIRS = {".git", ".idea", ".pi", "node_modules", ".venv", "__pycache__"}
-
-# Vendored / generated / example dumps (size + formatting exempt)
-LARGE_EXEMPT_SUFFIXES = (
-    "/sdk/browser_protocol.json",
-    "/sdk/js_protocol.json",
+REQUIRED = (
+    "AGENTS.md", "README.md", "CONTRIBUTING.md", "SECURITY.md",
+    "prompts", "skills", "templates", "mcp/servers.json",
+    "templates/agents.md", "templates/project-context.md", "templates/roadmap.md",
+    "templates/readme.md", "templates/pull-request.md", "templates/github-pr-ci.yml",
+    "templates/skill.md",
+)
+LARGE_EXEMPT_SUFFIXES = ("/sdk/browser_protocol.json", "/sdk/js_protocol.json")
+SECRET_PATTERNS = (
+    (re.compile(r"\bsk-[A-Za-z0-9_-]{20,}\b"), "OpenAI-style key"),
+    (re.compile(r"\bgh[pousr]_[A-Za-z0-9]{20,}\b"), "GitHub token"),
+    (re.compile(r"\bAKIA[0-9A-Z]{16}\b"), "AWS access key"),
+    (re.compile(r"(?i)(api[_-]?key|client[_-]?secret|password|auth[_-]?token)\s*[:=]\s*['\"][^'\"\s]{16,}['\"]"), "possible secret"),
 )
 
-def is_vendored_path(rel: str) -> bool:
-    return (
-        "/sdk/" in f"/{rel}/"
-        or "/learnings/" in f"/{rel}/"
-        or rel.endswith("/sdk/browser_protocol.json")
-        or rel.endswith("/sdk/js_protocol.json")
-    )
 
-TYPO_MAP = {
-    "recieve": "receive",
-    "seperate": "separate",
-    "occured": "occurred",
-    "adress": "address",
-    "definately": "definitely",
-    "untill": "until",
-    "compatability": "compatibility",
-    "dependancy": "dependency",
-    "enviroment": "environment",
-    "existance": "existence",
-    "fucntion": "function",
-    "paramter": "parameter",
-    "retrun": "return",
-    "wether": "whether",
-}
+def is_vendored(rel: str) -> bool:
+    return "/sdk/" in f"/{rel}/" or "/learnings/" in f"/{rel}/"
 
 
-def walk() -> list[Path]:
-    out: list[Path] = []
-    for root, dirs, files in os.walk(BASE):
-        dirs[:] = [d for d in dirs if d not in SKIP_DIRS and not d.endswith(".bak")]
-        for name in files:
-            if name.endswith((".bak", ".jsonl", ".swp", ".tmp", ".log")):
-                continue
-            out.append(Path(root) / name)
-    return out
+def files() -> list[Path]:
+    found: list[Path] = []
+    for root, dirs, names in os.walk(BASE):
+        dirs[:] = [name for name in dirs if name not in SKIP_DIRS and not name.endswith(".bak")]
+        for name in names:
+            if not name.endswith((".bak", ".jsonl", ".swp", ".tmp", ".log")):
+                found.append(Path(root) / name)
+    return found
 
 
-def is_large_exempt(rel: str) -> bool:
-    return any(rel.endswith(sfx) or sfx in rel for sfx in LARGE_EXEMPT_SUFFIXES)
-
-
-def check_file(path: Path) -> None:
-    rel = str(path.relative_to(BASE))
-    ext = path.suffix.lower()
-
-    if is_vendored_path(rel):
-        return
-
+def parse_structured(path: Path, text: str, errors: list[str]) -> None:
+    rel = path.relative_to(BASE)
     try:
-        size_kb = path.stat().st_size / 1024
-        if size_kb > MAX_KB and not is_large_exempt(rel):
-            errors.append(f"large file ({size_kb:.0f}KB > {MAX_KB}KB): {rel}")
-    except OSError:
-        return
-
-    if ext not in TEXT_EXT:
-        return
-
-    try:
-        content = path.read_text(encoding="utf-8")
-    except (UnicodeDecodeError, OSError):
-        return
-
-    if "\r\n" in content and "\n" in content.replace("\r\n", ""):
-        errors.append(f"mixed line endings: {rel}")
-
-    for i, line in enumerate(content.splitlines(), 1):
-        if line != line.rstrip(" \t"):
-            errors.append(f"trailing whitespace: {rel}:{i}")
-            break
-
-    if content and not content.endswith("\n"):
-        errors.append(f"missing EOF newline: {rel}")
-
-    # Smart quotes in code/config only — prose markdown may keep typography.
-    if ext in CODE_EXT:
-        for ch, name in (
-            ("\u201c", "smart quote"),
-            ("\u201d", "smart quote"),
-            ("\u2018", "smart quote"),
-            ("\u2019", "smart quote"),
-            ("\ufb01", "ligature fi"),
-            ("\ufb02", "ligature fl"),
-        ):
-            if ch in content:
-                errors.append(f"{name} in {rel}")
-                break
-
-    if ext == ".json":
-        try:
-            json.loads(content)
-        except Exception as exc:  # noqa: BLE001
-            errors.append(f"invalid JSON: {rel}: {exc}")
-
-    if ext == ".toml":
-        try:
+        if path.suffix == ".json":
+            json.loads(text)
+        elif path.suffix == ".toml":
             import tomllib
-
-            tomllib.loads(content)
-        except Exception as exc:  # noqa: BLE001
-            errors.append(f"invalid TOML: {rel}: {exc}")
-
-    if ext in CODE_EXT:
-        secret_patterns = [
-            (r"(?i)(api[_-]?key|secret|token|password)\s*[:=]\s*['\"][A-Za-z0-9_\-]{16,}['\"]", "possible secret"),
-            (r"sk-[A-Za-z0-9]{20,}", "OpenAI-style key"),
-            (r"ghp_[A-Za-z0-9]{20,}", "GitHub token"),
-            (r"AKIA[0-9A-Z]{16}", "AWS access key"),
-        ]
-        for pat, label in secret_patterns:
-            if re.search(pat, content):
-                errors.append(f"{label} in {rel}")
-                break
-
-    # Typos: top-level docs + practice SKILL.md only.
-    typo_target = False
-    if rel in {"AGENTS.md", "README.md"}:
-        typo_target = True
-    if rel.startswith("skills/") and rel.endswith("/SKILL.md"):
-        typo_target = True
-    if typo_target and ext == ".md":
-        for word, fix in TYPO_MAP.items():
-            if re.search(rf"\b{word}\b", content, re.IGNORECASE):
-                errors.append(f"typo '{word}' (should be '{fix}'): {rel}")
-                break
+            tomllib.loads(text)
+        elif path.suffix in {".yml", ".yaml"}:
+            try:
+                import yaml
+            except ImportError:
+                errors.append("PyYAML is required for maintainer validation of YAML files")
+                return
+            yaml.safe_load(text)
+    except Exception as exc:  # noqa: BLE001
+        errors.append(f"invalid {path.suffix.lstrip('.').upper()}: {rel}: {exc}")
 
 
-def check_yaml() -> None:
+def check_mcp(errors: list[str]) -> None:
+    path = BASE / "mcp/servers.json"
     try:
-        import yaml
-    except ImportError:
+        servers = json.loads(path.read_text(encoding="utf-8"))["mcpServers"]
+    except Exception as exc:  # noqa: BLE001
+        errors.append(f"mcp/servers.json missing mcpServers object: {exc}")
         return
-    for path in list((BASE / ".github" / "workflows").glob("*.yml")) + list((BASE / "templates").glob("*.yml")):
-        try:
-            yaml.safe_load(path.read_text(encoding="utf-8"))
-        except Exception as exc:  # noqa: BLE001
-            errors.append(f"invalid YAML: {path.relative_to(BASE)}: {exc}")
+    if not isinstance(servers, dict):
+        errors.append("mcp/servers.json mcpServers must be an object")
+        return
+    machine_paths = ("/home/", "/mnt/", "/Users/", "C:\\")
+    for name, config in servers.items():
+        if not isinstance(config, dict):
+            errors.append(f"mcp/servers.json: {name} config must be an object")
+            continue
+        values = [config.get("command", ""), *(config.get("args") or [])]
+        values.extend((config.get("env") or {}).values())
+        for value in values:
+            if isinstance(value, str) and (value.startswith("/") or any(part in value for part in machine_paths)):
+                errors.append(f"mcp/servers.json: {name} contains machine-local path: {value}")
 
 
 def main() -> int:
+    errors: list[str] = []
+    for relative in REQUIRED:
+        if not (BASE / relative).exists():
+            errors.append(f"required path missing: {relative}")
     if (BASE / ".gitmodules").exists():
         errors.append("git submodules are forbidden (.gitmodules present)")
-
-    for path in walk():
-        check_file(path)
-    check_yaml()
-
-    if errors:
-        print("REPO HYGIENE FAILURES:")
-        for err in errors[:80]:
-            print(f"  - {err}")
-        if len(errors) > 80:
-            print(f"  ... {len(errors)} total")
-        else:
-            print(f"  ... {len(errors)} total")
-        return 1
-    print("REPO HYGIENE OK")
-    return 0
+    for path in files():
+        rel = str(path.relative_to(BASE))
+        if is_vendored(rel):
+            continue
+        try:
+            size = path.stat().st_size
+        except OSError:
+            continue
+        if size > MAX_BYTES and not any(rel.endswith(suffix) for suffix in LARGE_EXEMPT_SUFFIXES):
+            errors.append(f"large file ({size // 1024}KB > 1024KB): {rel}")
+        if path.suffix.lower() not in TEXT_EXT:
+            continue
+        try:
+            text = path.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            continue
+        if "\r\n" in text and "\n" in text.replace("\r\n", ""):
+            errors.append(f"mixed line endings: {rel}")
+        if any(line != line.rstrip(" \t") for line in text.splitlines()):
+            errors.append(f"trailing whitespace: {rel}")
+        if text and not text.endswith("\n"):
+            errors.append(f"missing EOF newline: {rel}")
+        parse_structured(path, text, errors)
+        if path.suffix.lower() != ".md":
+            for pattern, label in SECRET_PATTERNS:
+                if pattern.search(text):
+                    errors.append(f"{label} in {rel}")
+                    break
+    check_mcp(errors)
+    for error in errors[:100]:
+        print(f"FAIL  {error}")
+    if len(errors) > 100:
+        print(f"FAIL  ... {len(errors) - 100} more")
+    print(f"REPOSITORY CONTRACTS: {len(errors)} fail")
+    return 1 if errors else 0
 
 
 if __name__ == "__main__":

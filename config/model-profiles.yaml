@@ -1,24 +1,16 @@
-# Model profiles — STABLE LOCAL PREFERENCES only (git-tracked).
+# Optional local model preferences.
 #
-# This file holds which models are PREFERRED per lane. It never records
-# runtime state: no auth status, no dated quirks, no availability — that is
-# discovered live by scripts/resolve-model.py and scripts/runtime-capabilities.py.
-# Durable lessons belong in memory; generated machine state belongs in state/.
-#
-# Resolve every entry against runtime discovery before use:
-#   python3 ~/.agents/scripts/resolve-model.py --role <role> --json
-#   python3 ~/.agents/scripts/runtime-capabilities.py
-#   pi --list-models | veda models [backend] | agy models
-#
-# Addressing: <backend>:<model>. Pi models keep their provider form
-# (<backend>:<provider>/<model>); through the Veda pi backend the expected
-# string is pi/<provider>/<model>.
+# These chains are tie-breakers after the active agent inspects task needs and
+# current host/provider availability. They are not capability declarations,
+# context requirements, authentication state, or a universal ranking. Probe
+# uncertain capabilities with native host commands before load-bearing use.
+# Address form: <backend>:<model>.
 
 profiles:
   economy-worker:
     prefer:
-      - pi:zro/deepseek-v4-flash-0731        # configured Main model
-      - pi:hyper/deepseek-v4-flash           # large context
+      - pi:zro/deepseek-v4-flash-0731
+      - pi:hyper/deepseek-v4-flash
       - agy:gemini-3.7-flash-low
   fast-investigator:
     prefer:
@@ -36,8 +28,8 @@ profiles:
       - pi:cursor/claude-opus-5@1m
   frontend-critic:
     prefer:
-      - agy:gemini-3.1-pro-high              # alias: gemini-pro
-      - agy:gemini-3.7-flash-high            # alias: gemini-ui
+      - agy:gemini-3.1-pro-high
+      - agy:gemini-3.7-flash-high
       - agy:claude-sonnet-4-6
   debugger:
     prefer:
@@ -45,4 +37,4 @@ profiles:
       - agy:claude-sonnet-4-6
   spam-worker:
     prefer:
-      - pi:yolo-auto/qwen3.8-27b             # owner-approved spam lane
+      - pi:yolo-auto/qwen3.8-27b

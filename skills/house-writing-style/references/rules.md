@@ -1,8 +1,8 @@
 # House style rules (detailed)
 
-Explanatory reference for `skills/house-writing-style/SKILL.md` and
-`scripts/style-lint.py`. Examples that contain prohibited forms live inside
-fenced code blocks so the linter skips them.
+Explanatory reference for model review with
+`skills/house-writing-style/SKILL.md`. Examples preserve the forms under
+discussion so reviewers can judge them in context.
 
 ## What this style is
 
@@ -12,7 +12,7 @@ active constructions where clear, concrete verbs, controlled sentence
 complexity, reduced noun stacking) and adds house rules. It is not formal
 ASD-STE100 compliance; never claim certification.
 
-## Hard rules (deterministic, ERROR)
+## Strong defaults (model-reviewed)
 
 | Rule                   | Detection                                                                       | Fix                                     |
 | ---------------------- | ------------------------------------------------------------------------------- | --------------------------------------- |

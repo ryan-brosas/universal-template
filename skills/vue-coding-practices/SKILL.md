@@ -1,6 +1,7 @@
 ---
 name: vue-coding-practices
 description: "Use when authoring or reviewing Vue 3 SFCs, Priority A multi-word components, typed props, keyed v-for, scoped styles, naming conventions, template simplicity, props-down/events-up, and eslint-plugin-vue."
+invocation: manual
 disable-model-invocation: true
 ---
 

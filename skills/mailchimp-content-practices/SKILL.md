@@ -1,6 +1,7 @@
 ---
 name: mailchimp-content-practices
 description: "Use when authoring or reviewing product/marketing copy, Mailchimp plainspoken voice, active positive language, inclusive people terms, sentence-case UI headings, descriptive links, a11y, and translation-safe SVO."
+invocation: manual
 disable-model-invocation: true
 ---
 

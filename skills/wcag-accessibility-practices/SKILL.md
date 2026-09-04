@@ -1,6 +1,7 @@
 ---
 name: wcag-accessibility-practices
 description: "Use when auditing or building web UI for WCAG 2.1 Level AA, POUR success criteria, keyboard/focus, contrast/reflow, forms/errors, name-role-value, and axe plus manual verification."
+invocation: manual
 disable-model-invocation: true
 ---
 

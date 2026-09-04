@@ -1,6 +1,7 @@
 ---
 name: github-repo-setup
 description: "Use when setting up, governing, or auditing GitHub for a project: create the repository or wire origin, set description and topics, apply namespaced labels, add the PR template and issue forms, configure rulesets with required checks and merge policy, audit the remote for drift, or run a full setup across identity, governance, security, dependencies, and releases."
+invocation: entry
 ---
 
 # GitHub Repo Setup
@@ -17,7 +18,7 @@ Inspect first, pick the smallest governance level that fits the project, change 
 
 ## Workflow
 
-0. **Mode.** `audit` (read-only, zero mutation; remote drift via `python3 scripts/github-audit.py` plus graded findings), `setup` (additive/reconciliatory), `minimal`, `team`, or `full` (only on explicit request, e.g. "full setup"). Default: "set up" → `setup`; "audit" → `audit`.
+0. **Mode.** `audit` (read-only, zero mutation; inspect current state with `gh repo view` and `gh api`, with `scripts/github-audit.py` available as an optional aggregate diagnostic), `setup` (additive/reconciliatory), `minimal`, `team`, or `full` (only on explicit request, e.g. "full setup"). Default: "set up" → `setup`; "audit" → `audit`.
    `full` means: inspect every GitHub surface that can earn its place for THIS project, configure the ones that do, delegate CI/version work to their owners, read back, then close with the per-surface report and decision log (`references/setup-matrix.md`). It never means turning every feature on.
 
    Baseline requests ("standard setup", "our baseline", "make this production-ready", "OSS-ready") select the mode from the maturity class in `references/setup-matrix.md`. Baseline requests ("standard setup", "our baseline", "make this production-ready", "OSS-ready") select the mode from the maturity class in `references/setup-matrix.md` and compose the standard baseline: `project-bootstrap` first, then this skill, then `github-actions-engineering`, then `git-workflow-and-versioning` only when the project is versioned, then the audit re-run. A plain "start a new project" requests none of this and stays with `project-bootstrap`.
@@ -30,7 +31,7 @@ Inspect first, pick the smallest governance level that fits the project, change 
 7. **Security and dependencies (full).** Audit, then enable what the project earns: Dependabot alerts, Dependabot security updates, secret scanning and push protection, private vulnerability reporting (SECURITY.md points at it), CodeQL default setup (prefer GitHub-managed default setup over a custom workflow; a custom workflow is `github-actions-engineering` work). Configure Dependabot for every ecosystem present - for SHA-pinned Actions, `package-ecosystem: github-actions` is what keeps the pins maintainable. Report plan-unavailable surfaces as unavailable, never as enabled. See `references/security.md`.
 8. **Releases (full).** Establish the release authority with `git-workflow-and-versioning` (tag + generated notes is the default), wire `.github/release.yml` to the label taxonomy, protect version tags with a ruleset (blocking deletion and update. account for moving major-version tags before restricting creation), and consider immutable releases only when published artifacts must stay fixed. The release workflow itself is `github-actions-engineering` work. See `references/releases.md`.
 9. **Governance.** Prefer rulesets over legacy branch protection. Required checks come from discovered real CI jobs only, HARD-GATE: never invent a check name; with no CI, scaffold via `github-actions-engineering` when in scope, else report that required checks cannot be configured. Solo baseline: PR required + required checks + block force-push and deletion, zero required approvals. Team: add approvals, conversation resolution, CODEOWNERS where ownership is real. Merge policy: one understandable default (squash for most), preserving intentional merge-commit or rebase setups. Apply via `gh api`, then GET the ruleset back and verify targets, rules, and bypass actors, HARD-GATE: a successful POST is not a configured ruleset until read back. See `references/governance.md`.
-10. **Report.** Close with the structured report in `references/setup-matrix.md` (Repository, Mode, per-surface Configured/Preserved/Skipped-with-reason, Needs decision, Verification), and re-run `scripts/github-audit.py` to show zero unintentional gaps. Unresolved decisions go in "Needs decision", never buried in prose.
+10. **Report.** Close with the structured report in `references/setup-matrix.md` (Repository, Mode, per-surface Configured/Preserved/Skipped-with-reason, Needs decision, Verification), and read the relevant GitHub surfaces back to show zero unintentional gaps. Unresolved decisions go in "Needs decision", never buried in prose.
 
 **Idempotency:** every step is inspect → compare → change only if necessary. A second run on a configured repository reports "No changes required" for anything already correct, no duplicate labels, templates, or rulesets.
 
@@ -49,7 +50,7 @@ Inspect first, pick the smallest governance level that fits the project, change 
 ## Verification
 
 - `gh api repos/OWNER/REPO/rulesets` lists the intended ruleset with `enforcement: active` and the expected rules.
-- `python3 scripts/github-audit.py` reports no unintentional gaps after a setup run.
+- Direct `gh repo view`, `gh api`, workflow, label, and ruleset reads show no unintentional gaps after setup.
 - `gh label list --limit 1000 --json name` matches the intended set exactly, with no duplicates (the default fetches only 30 labels, always pass an explicit limit).
 - `gh repo view --json description,repositoryTopics` reflects the metadata. Caveat: `gh repo view --json` accepts a fixed field allowlist, merge settings are NOT fields; read them via `gh api repos/OWNER/REPO --jq '.allow_squash_merge, .allow_merge_commit, .allow_rebase_merge'` (verified on gh 2.98.0).
 - Local `.github/*.yml` parses as YAML.

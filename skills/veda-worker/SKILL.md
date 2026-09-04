@@ -1,6 +1,7 @@
 ---
 name: veda-worker
 description: "Use when you want a full plan, implement, verify cycle delegated to the Veda worker agent: orchestrate and author the plan yourself, hand the whole design to one worker run that implements with write access, read its report, then run the reviewer. You never implement; branch on report status and escalate after capped retries."
+invocation: vendor
 argument-hint: "[veda-flags]"
 ---
 

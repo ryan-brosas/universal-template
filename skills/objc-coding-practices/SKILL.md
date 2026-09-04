@@ -1,6 +1,7 @@
 ---
 name: objc-coding-practices
 description: "Use when authoring or reviewing Objective-C, Google/GitHub layout, 3+ char prefixes, property/copy semantics, designated initializers, Doxygen docs, NSError errors, literals, and clang-format/static analysis in CI."
+invocation: manual
 disable-model-invocation: true
 ---
 

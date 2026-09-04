@@ -1,6 +1,7 @@
 ---
 name: coding-best-practices
 description: "Use when the user explicitly asks for engineering standards, coding best practices, quality guidance, or help selecting a quality procedure or leaf skill, routes the topic to the right leaf or mechanical gate instead of restating rules."
+invocation: entry
 ---
 
 # Coding Best Practices, topic router
@@ -57,7 +58,7 @@ General coding guidance is a **map**, not a monolith. Route each topic to one le
 
 - The chosen topic row from `references/topic-index.md` names a leaf skill or reference file you opened.
 - For implementation work: `agent-code-quality-gate` five checks recorded before claiming done.
-- For catalog edits: `SKILLS_ROOT="$PWD/skills" python3 scripts/skill-validator.py` exit 0.
+- For template catalog edits: inspect local skill metadata and run the relevant hard-contract checks documented by that repository.
 
 
 ## References

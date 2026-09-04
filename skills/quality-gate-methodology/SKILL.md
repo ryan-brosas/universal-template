@@ -1,6 +1,7 @@
 ---
 name: quality-gate-methodology
 description: "Use when writing or reviewing tests and quality gates for code, a test is only good if it catches: pre-fix FAIL and post-fix PASS, broad tests over single cases, expand existing tests instead of duplicating, promote repeated manual catches into gates when the value is proven."
+invocation: internal
 disable-model-invocation: true
 ---
 

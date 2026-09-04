@@ -1,6 +1,7 @@
 ---
 name: brainstorming
 description: "Use when a rough idea needs clarification before implementation, resolve ambiguous direction by grounding in what exists, framing the problem, exploring real alternatives, and deciding."
+invocation: entry
 ---
 
 # Brainstorming

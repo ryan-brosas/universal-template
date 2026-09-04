@@ -1,6 +1,7 @@
 ---
 name: writing-skills
 description: "Use when authoring, editing, or verifying any SKILL.md in this catalog: canonical template, frontmatter grammar, uniform anatomy, progressive disclosure, and the validation gate. Also when creating a new skill from a demonstrated procedure."
+invocation: entry
 ---
 
 # Writing Skills, The Unified SKILL.md
@@ -18,23 +19,24 @@ One standardized system for every SKILL.md: one canonical template (`~/.agents/t
 
 1. Open the template and this grammar together.
 2. Write RED first: a pressure scenario a subagent fails without the skill.
-3. Author the smallest GREEN skill (frontmatter, fixed section order, body under budget).
+3. Author the smallest GREEN skill (frontmatter, only the sections it earns, body under budget).
 4. REFACTOR against advancing adversarial prompts until 4/5 twice.
 5. Run the verification gate below. Stop when it passes clean.
 
 
 ## One System
 
-Every skill is a SKILL.md following one skeleton and one grammar.
-- **Skeleton:** the canonical template `~/.agents/templates/skill.md`.
-- **Grammar:** this file, the rules that interpret the skeleton.
+Every skill is a SKILL.md governed by one grammar and supported by one adaptable template.
+- **Template:** `~/.agents/templates/skill.md` shows the available sections.
+- **Grammar:** this file decides which sections and fields the skill earns.
 Author with both open; change one, align the other.
 
 ## 1. Frontmatter grammar
 
 - `name`: kebab-case, identical to the directory name.
 - `description`: trigger-first, `Use when <condition>`, then the capability; under 1024 characters, aim for ≤ 512. Triggers must be mutually exclusive between skills so retrieval never ties.
-- `disable-model-invocation`: visibility follows invocation ownership. Hide a skill when a router or another skill selects it, or when it is intentionally cold or manual; entry skills that a user request selects directly stay model-visible. `*-foundation` capsules live outside the active catalog in `foundation-pack/` and are never model-visible.
+- `invocation`: local ownership, one of `entry`, `internal`, `manual`, or `vendor`. The model chooses the class from the real caller and trigger.
+- `disable-model-invocation`: the host visibility field. `entry` stays visible; `internal` and `manual` stay hidden; vendor visibility follows the integration. `*-foundation` capsules live outside the active catalog.
 - YAML-safe: quote long values; avoid unescaped colons/hashes.
 
 ## 2. Minimum useful content (conditional anatomy)
@@ -90,12 +92,12 @@ For load-bearing behavioral skills, keep the adversarial protocol: RED, a subage
 ## 7. Verification gate (before you mark it done)
 
 1. `name` and `description` present; description ≤ 1024 chars and trigger-first.
-2. Required sections present for the skill kind; every `references/` line has a real file.
+2. Every section carries useful content for that skill kind; every `references/` line has a real file.
 3. Leaf body within budget; no orphan relative paths.
 4. Validation per skill type (RED/GREEN log for load-bearing behavioral skills).
 5. No duplicate skill names; the loader picks up the skill.
 6. The change passes hygiene (diff check / trailing whitespace).
-7. Prose follows the house style (`skills/house-writing-style/SKILL.md`); `scripts/style-lint.py` reports no errors on the SKILL.md.
+7. The model reviews prose in context with `skills/house-writing-style/SKILL.md`; style preferences do not become mechanical publication failures.
 
 ## Red flags (while authoring)
 

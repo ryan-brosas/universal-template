@@ -1,6 +1,7 @@
 ---
 name: nim-coding-practices
 description: "Use when authoring or reviewing Nim, NEP-1 2-space/80-col layout, PascalCase/camelCase naming, init/new and abbrev API vocabulary, result-first procs, std/ imports, and --styleCheck plus tests in CI."
+invocation: manual
 disable-model-invocation: true
 ---
 

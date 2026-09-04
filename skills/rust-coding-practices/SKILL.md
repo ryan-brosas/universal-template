@@ -1,6 +1,7 @@
 ---
 name: rust-coding-practices
 description: "Use when authoring or reviewing Rust, rustfmt defaults, RFC 430 naming, meaningful Error types, Result/? in docs, common trait impls, iter/into_iter conventions, and predictable public APIs."
+invocation: manual
 disable-model-invocation: true
 ---
 

@@ -40,7 +40,7 @@ simplify a term into inaccuracy.
 ## Non-prose surfaces
 
 Commit subjects follow the repository's commit convention (conventional
-commits here); style-lint does not run on commit messages. Code comments get
+commits here); review commit messages against the owning repository convention. Code comments get
 only the high-confidence lexical rules when a project opts in. Generated
 files, vendored code, lockfiles, fixtures, and reference corpora stay out of
 scope.

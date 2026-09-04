@@ -1,6 +1,7 @@
 ---
 name: emacs-lisp-coding-practices
 description: "Use when authoring or reviewing Emacs Lisp, lexical-binding, lisp-case prefixes, when/unless idioms, sharp quotes, provide/require/autoload, docstrings, and checkdoc/package-lint/byte-compile in CI."
+invocation: manual
 disable-model-invocation: true
 ---
 

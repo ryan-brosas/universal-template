@@ -1,6 +1,7 @@
 ---
 name: pi-provider-contracts
 description: "Use when building, debugging, or auditing the runtime behavior of a pi provider extension: registerProvider auth and apiKey semantics, refreshModels catalog lifecycle, before_provider_headers ordering, OpenAI SDK header merge, snapshot stores, or when real pi behaves differently from the probes claim. NOT for manifest structure, bundling, or publishing (pi-package-development)."
+invocation: entry
 ---
 
 # Pi Provider Runtime Contracts

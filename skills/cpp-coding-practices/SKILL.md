@@ -1,6 +1,7 @@
 ---
 name: cpp-coding-practices
 description: "Use when authoring or reviewing C++, self-contained headers, IWYU, PascalCase/snake_case naming, unique_ptr ownership, RAII, explicit conversions, and clang-format/cpplint in CI."
+invocation: manual
 disable-model-invocation: true
 ---
 

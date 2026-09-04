@@ -1,6 +1,7 @@
 ---
 name: app-experience-mapping
 description: "Use when mapping an app's user journeys, touchpoints, channels, and service seams before building, shipping, or changing it, to define hypotheses and measurable outcomes."
+invocation: manual
 disable-model-invocation: true
 license: MIT
 metadata: '{"source":"synthesis; close adaptation: browserbase/skills ui-test (MIT) and antigravity-awesome-skills (MIT, commit 75c558b); concepts only: infrasity-labs/dev-gtm-claude-skills journey-map/experience-map/service-blueprint (license unverified, discovery evidence)","adapted_from":"browserbase/skills ui-test, antigravity product-manager-toolkit, customer-research, onboarding-cro, api-onboarding, design-thinking, ux-copy"}'

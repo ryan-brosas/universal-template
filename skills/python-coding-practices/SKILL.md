@@ -1,6 +1,7 @@
 ---
 name: python-coding-practices
 description: "Use when authoring or reviewing Python, PEP 8 layout, Google import and exception rules, naming matrix, mutable-default traps, type-annotated public APIs, and import-safe main guards."
+invocation: manual
 disable-model-invocation: true
 ---
 

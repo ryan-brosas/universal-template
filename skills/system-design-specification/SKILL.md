@@ -1,6 +1,7 @@
 ---
 name: system-design-specification
 description: "Use when authoring formal, crash-proof system design documents and architectural specifications: scope fences and non-goals, 4-part state ontologies, mathematical invariants, provisioned ID pre-allocation, ASCII trace calculus (E/R/L/G/H/X), exhaustive crash matrices, and deterministic boundary testing."
+invocation: entry
 ---
 
 # System Design Specification: Formal Architecture & Design Doc Authoring

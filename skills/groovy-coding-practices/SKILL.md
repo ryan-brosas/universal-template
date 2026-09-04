@@ -1,6 +1,7 @@
 ---
 name: groovy-coding-practices
 description: "Use when authoring or reviewing Groovy, idiomatic syntax (no semicolons, POGOs, GDK, GStrings), with/tap, Groovy truth and safe nav, strong public typing, and CodeNarc/npm-groovy-lint in CI."
+invocation: manual
 disable-model-invocation: true
 ---
 

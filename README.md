@@ -5,7 +5,7 @@
 **One global baseline for AI coding agent CLIs**
 
 Clone once to `~/.agents` to share engineering policy, skills, prompts,
-templates, references, and deterministic checks across supported hosts.
+templates, references, and MCP declarations across supported hosts.
 
 [![checks](https://img.shields.io/github/actions/workflow/status/ryan-brosas/universal-template/pr-quality.yml?branch=main&style=for-the-badge&label=checks)](https://github.com/ryan-brosas/universal-template/actions/workflows/pr-quality.yml) [![release](https://img.shields.io/github/v/release/ryan-brosas/universal-template?style=for-the-badge)](https://github.com/ryan-brosas/universal-template/releases/latest)
 
@@ -13,104 +13,100 @@ templates, references, and deterministic checks across supported hosts.
 
 ## Run
 
-```sh
-python3 scripts/install-prompts.py
-```
+No implementation language or installer is required. Point a capable coding
+agent at this checkout and ask it to connect the baseline to the hosts available
+on the current machine. The canonical content is plain Markdown and JSON:
 
-This reconciles the canonical prompts in `prompts/` with each detected CLI's
-native command surface. Existing unmanaged files are preserved, and generated
-adapters are used only where a host cannot consume Markdown directly.
+- `AGENTS.md`: global engineering instructions
+- `skills/`: need-driven capabilities
+- `prompts/`: reusable workflows
+- `templates/`: project and contribution templates
+- `mcp/servers.json`: portable MCP declarations
 
-No lifecycle machinery is required for ordinary work. Project source and local
-instructions remain authoritative over this global baseline.
+Project source and local instructions remain authoritative over this baseline.
 
-## Why universal-template?
-
-| | Capability | What it unlocks |
-| :-: | --- | --- |
-| 1 | **One canonical baseline** | Keep global instructions, prompts, templates, and MCP declarations consistent across CLIs. |
-| 2 | **Reusable engineering knowledge** | Retrieve focused skills, project references, and accumulated implementation foundations when they add value. |
-| 3 | **Mechanical quality gates** | Validate the catalog, policy, prose, prompts, references, and releases before publishing changes. |
-
-## How it fits
-
-```mermaid
-flowchart LR
-  Repo["~/.agents"] --> Policy["AGENTS.md + skills/"]
-  Repo --> Prompts["prompts/"]
-  Prompts --> Installer["install-prompts.py"]
-  Installer --> Hosts["CLI-native commands"]
-  Repo --> MCP["mcp/servers.json"]
-  MCP --> Configs["requested host configs"]
-```
-
-`AGENTS.md` owns the user-wide engineering constitution. The catalog and
-references provide need-driven capabilities, while scripts derive host formats
-and enforce repository contracts. Project-local policy always wins.
-
-## Context model
-
-```text
-source/tests/runtime = current software truth
-session events       = historical work evidence
-recall/reflection    = disposable projections
-code/gates/skills    = reviewed durable promotions
-```
-
-Nothing loads or searches session history by default. Projections are
-disposable; only reviewed code, gates, skills, and rare minimal project notes
-persist.
-
-## Install
-
-### Run from source
-
-For a fresh setup:
+## Model-native setup
 
 ```sh
 git clone https://github.com/ryan-brosas/universal-template.git ~/.agents
 cd ~/.agents
+```
+
+Then have the active coding agent perform this bounded setup:
+
+1. Detect available hosts through their native commands and current runtime
+   inventory. Do not assume that an installed executable is configured.
+2. Inspect each detected host's current instruction, skill, and prompt surfaces.
+   Prefer current host documentation or runtime help over remembered paths.
+3. Link `AGENTS.md`, `skills/`, and canonical prompt Markdown directly where the
+   host supports those formats.
+4. Generate a host adapter only when the host requires a different format. The
+   adapter must name its canonical source under `prompts/` and remain derived.
+5. Preserve every unmanaged file. Replace or remove only links and adapters
+   whose ownership by this checkout is mechanically provable.
+6. Read back links or generated files, compare adapters with their source, and
+   report conflicts, unsupported hosts, and uncertain behavior.
+
+This is the ordinary setup path. It uses the agent's native filesystem and host
+capabilities, not Python.
+
+### Optional compatibility installer
+
+Maintainers who want the legacy reconciler may run:
+
+```sh
 python3 scripts/install-prompts.py
 ```
 
-Point each host's instruction and skill mounts at `AGENTS.md` and `skills/`.
-Prompt mounts are managed by the installer. MCP servers are added one at a time
-from `mcp/servers.json`; see `mcp/catalog.md` for verified host shapes and secret
-handling.
+It creates relative links for Markdown-capable hosts and generated TOML for
+Gemini CLI. `--check` audits installed mounts without changing them, and
+`--home <sandbox>` supports isolated testing. This helper is optional; Python
+is not required to consume or maintain the canonical content.
+
+## Why universal-template?
+
+| Capability | What it unlocks |
+| --- | --- |
+| One canonical baseline | Share instructions, prompts, templates, skills, and MCP declarations across hosts. |
+| Need-driven capabilities | Discover focused procedures from skill metadata and the filesystem. |
+| Exact publication checks | Protect structured data, references, generated parity, paths, secrets, and safe mutation. |
+
+## Context model
+
+Project source, tests, and runtime behavior establish current software truth.
+Session events preserve historical work evidence. Recall and reflection are
+rebuildable projections. Only reviewed code, gates, skills, and rare minimal
+project notes become durable promotions.
 
 ## Usage
 
-Audit installed prompt mounts without changing them:
-
-```sh
-python3 scripts/install-prompts.py --check
-```
-
-Search the active skill catalog:
-
-```sh
-python3 scripts/skill-catalog.py search "github release"
-```
+Use host-native skill discovery or search `skills/*/SKILL.md` directly. Read the
+frontmatter descriptions, choose the smallest relevant capability, and load only
+that skill and the references it names. `docs/skill-catalog.md` is an optional
+generated view for human browsing, not required model context.
 
 Reusable prompts include `/repo-audit`, `/plan-work`, `/implement-work`,
 `/review-work`, `/verify-work`, `/cleanup-code`, `/learn`, `/recall-session`,
-`/reflect-session`, and `/compile-skill`. `/inspo` qualifies external prior
-art; `/learn` investigates one approved source; `/recall-session` answers one
-historical question from project-scoped session evidence; `/reflect-session`
-derives temporary evidence-linked lessons; `/compile-skill` compiles a proven
-procedure into a hidden skill candidate on explicit request. Host invocation
-syntax can differ; `scripts/render-prompt.py` provides the fallback for hosts
-without a native prompt directory.
+`/reflect-session`, and `/compile-skill`. Host invocation syntax can differ.
+`scripts/render-prompt.py` remains an optional compatibility helper for hosts
+without a native prompt surface.
 
-Repository maintainers should run the verification suite in `CONTRIBUTING.md`.
-Versioned releases use `vX.Y.Z` tags and GitHub-generated notes categorized by
-`.github/release.yml`.
+MCP servers are added one at a time from `mcp/servers.json`; see
+`mcp/catalog.md` for verified host shapes and secret handling.
+
+## Maintenance
+
+The hidden `template-maintenance` skill owns semantic review of this baseline.
+Required CI is intentionally narrow and objective. See `CONTRIBUTING.md` and
+`docs/maintainer-tooling.md` for the exact publication contracts and optional
+Python helpers.
 
 ## Documentation
 
 - Engineering constitution: `AGENTS.md`
 - Contribution and verification contract: `CONTRIBUTING.md`
-- Generated skill catalog: `docs/skill-catalog.md`
+- Maintainer tool ownership: `docs/maintainer-tooling.md`
+- Human skill catalog: `docs/skill-catalog.md`
 - Current objectives: `docs/roadmap.md`
 - MCP registry and host wiring: `mcp/catalog.md`
 - Security policy: `SECURITY.md`

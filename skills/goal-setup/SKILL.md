@@ -1,6 +1,7 @@
 ---
 name: goal-setup
 description: "Use when a roughly four-day-or-longer effort needs a compact post-code work record for recovery, handoff, or an explicit user, project, or external coordination requirement."
+invocation: entry
 ---
 
 # Goal Setup

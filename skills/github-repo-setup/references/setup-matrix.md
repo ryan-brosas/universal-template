@@ -4,7 +4,7 @@
 
 | Mode | Mutates | Adds | Deliberately skips |
 |---|---|---|---|
-| `audit` | nothing | remote drift report (`scripts/github-audit.py`) + graded findings (HIGH / MEDIUM / LOW) with specific proposals | everything |
+| `audit` | nothing | direct `gh` state inspection and a graded drift report (HIGH / MEDIUM / LOW) with specific proposals | everything |
 | `setup` | additive + reconciliatory | description, topics, labels, PR template, issue forms, CONTRIBUTING/SECURITY when justified, ruleset from real CI | destructive changes, license decisions |
 | `minimal` | additive, smallest | description, topics, core labels, PR template, CI-based default-branch protection | issue forms beyond the basics, CODEOWNERS, Dependabot, release automation |
 | `team` | additive, stronger | + required approval(s), conversation resolution, CODEOWNERS (real ownership), SECURITY, dependency automation | activating team controls without evidence of a team |

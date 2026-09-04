@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """skill-catalog.py — catalog maintenance over the active skill tree.
 
-For ~/.agents maintainers and explicit catalog queries only (list, search,
-show, stats, generate). Not a runtime cognition gateway for ordinary project
-work. Classification is owned by catalog-quality.py. Zero dependencies.
+Optional human-facing catalog tooling (list, search, show, stats, generate).
+The filesystem and each skill's frontmatter are canonical. Models should use
+native filesystem or host discovery during ordinary work. Zero dependencies.
 """
 from __future__ import annotations
 
@@ -22,19 +22,18 @@ TOKEN_CHARS = 4
 DESC_TRUNC = 160
 
 
-def _load_catalog_quality():
+def _load_skill_metadata():
     spec = importlib.util.spec_from_file_location(
-        "catalog_quality", str(Path(__file__).with_name("catalog-quality.py")))
+        "skill_validator", str(Path(__file__).with_name("skill-validator.py")))
     assert spec is not None and spec.loader is not None
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     return mod
 
 
-_CQ = _load_catalog_quality()
-parse_frontmatter = _CQ.parse_frontmatter
-classify = _CQ.classify
-CLASSES = ("entry", "router", "internal", "cold", "vendor")
+_METADATA = _load_skill_metadata()
+parse_frontmatter = _METADATA.parse_frontmatter
+CLASSES = ("entry", "internal", "manual", "vendor")
 
 STOPWORDS = {
     "the", "a", "an", "of", "for", "to", "in", "on", "with", "and", "or",
@@ -44,7 +43,7 @@ STOPWORDS = {
 
 
 def scan() -> list[dict]:
-    local_dirs = _CQ.git_ignored_dirs(SKILLS)
+    local_dirs = _METADATA.git_ignored_dirs(SKILLS)
     out: list[dict] = []
     if not SKILLS.is_dir():
         return out
@@ -57,13 +56,14 @@ def scan() -> list[dict]:
         text = sm.read_text(encoding="utf-8")
         fm = parse_frontmatter(text)
         hidden = str(fm.get("disable-model-invocation", "")).strip().lower() == "true"
+        invocation = fm.get("invocation")
         out.append({
             "name": fm.get("name", d.name),
             "folder": d.name,
             "desc": fm.get("description", ""),
             "hidden": hidden,
             "local": d.name in local_dirs,
-            "cls": classify(d.name, hidden),
+            "cls": invocation,
             "path": str(sm),
             "body": text,
             "body_low": text.lower()[:20000],
@@ -205,8 +205,8 @@ def build_skill_catalog_md(skills: list[dict]) -> str:
         "",
         "# Skill Catalog",
         "",
-        "Derived from `skills/*/SKILL.md` metadata. Maintainer tool:",
-        "`python3 scripts/skill-catalog.py search \"<topic>\"`.",
+        "Derived from `skills/*/SKILL.md` metadata for human browsing.",
+        "Models discover skills from the filesystem or the host's native skill surface.",
         "",
     ]
     st = stats(skills)
@@ -216,9 +216,8 @@ def build_skill_catalog_md(skills: list[dict]) -> str:
     lines.append("")
     sections = [
         ("Entry skills", "entry", "Direct user-facing capabilities; trigger on request."),
-        ("Routers", "router", "Automatic dispatch points; visible on purpose."),
-        ("Internal", "internal", "Invoked by other skills or system components; hidden from startup metadata."),
-        ("Cold specialists", "cold", "Rare specialists; searchable here, not loaded every session."),
+        ("Internal", "internal", "Invoked by another capability; hidden from startup metadata."),
+        ("Manual specialists", "manual", "Loaded explicitly through native search or inspection; hidden from startup metadata."),
         ("Vendor-managed", "vendor", "Installed and updated by their vendor; visibility follows integration."),
     ]
     for title, key, blurb in sections:
@@ -229,8 +228,8 @@ def build_skill_catalog_md(skills: list[dict]) -> str:
         lines += [f"## {title}", "", blurb, ""] + _align_md_table(table) + [""]
     unclassified = [s["name"] for s in skills if s["cls"] is None]
     if unclassified:
-        lines += ["## Unclassified", "",
-                  "These lack a class (catalog-quality fails on unclassified visible skills): "
+        lines += ["## Invalid metadata", "",
+                  "These skills lack local invocation metadata: "
                   + ", ".join(f"`{n}`" for n in unclassified), ""]
     return "\n".join(lines)
 

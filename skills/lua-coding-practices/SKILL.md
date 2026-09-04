@@ -1,6 +1,7 @@
 ---
 name: lua-coding-practices
 description: "Use when authoring or reviewing Lua, local-first modules, 2–4 space layout, snake_case/CamelCase naming, return-M pattern, guard returns, table/LDoc idioms, and luacheck/LDoc in CI."
+invocation: manual
 disable-model-invocation: true
 ---
 

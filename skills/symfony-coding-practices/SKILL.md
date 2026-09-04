@@ -1,6 +1,7 @@
 ---
 name: symfony-coding-practices
 description: "Use when authoring or reviewing Symfony PHP, PHP CS Fixer, Yoda identical compares, naming matrix, FQCN services, PHPDoc rules, sprintf exceptions, and MIT license headers."
+invocation: manual
 disable-model-invocation: true
 ---
 

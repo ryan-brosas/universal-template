@@ -1,6 +1,7 @@
 ---
 name: sql-scripting-practices
 description: "Use when authoring or reviewing SQL, snake_case naming, uppercase keywords, river-aligned layout, portable DDL types, suffix conventions, and parameterized queries."
+invocation: manual
 disable-model-invocation: true
 ---
 

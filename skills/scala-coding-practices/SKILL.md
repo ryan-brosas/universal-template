@@ -1,6 +1,7 @@
 ---
 name: scala-coding-practices
 description: "Use when authoring or reviewing Scala, 2-space layout, camelCase naming, accessor/mutator conventions, explicit public types, immutable case classes, Option over null, and Scaladoc on public API."
+invocation: manual
 disable-model-invocation: true
 ---
 

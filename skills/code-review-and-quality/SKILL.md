@@ -1,6 +1,7 @@
 ---
 name: code-review-and-quality
 description: "Use when reviewing code or PRs before merge, after subagent work, or when a review is requested. Bloat Review mode hunts over-engineering only, with a delete-list and tagged findings."
+invocation: internal
 disable-model-invocation: true
 ---
 

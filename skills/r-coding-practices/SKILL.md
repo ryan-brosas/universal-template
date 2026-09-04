@@ -1,6 +1,7 @@
 ---
 name: r-coding-practices
 description: "Use when authoring or reviewing R, tidyverse snake_case/<-/2-space layout, native |> pipes, roxygen2 docs, Google BigCamelCase/return/:: deltas when declared, and styler/lintr/testthat in CI."
+invocation: manual
 disable-model-invocation: true
 ---
 

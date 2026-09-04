@@ -1,6 +1,7 @@
 ---
 name: webappsec-coding-practices
 description: "Use when building or reviewing web apps, Mozilla WebAppSec auth/sessions, whitelist input, output encoding, CSRF/TLS/CSP, safe uploads, generic errors, and QA checklist verification."
+invocation: manual
 disable-model-invocation: true
 ---
 

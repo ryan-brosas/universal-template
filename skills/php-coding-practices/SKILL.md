@@ -1,6 +1,7 @@
 ---
 name: php-coding-practices
 description: "Use when authoring or reviewing PHP, PSR-12 layout, PSR-1/PSR-4 file hygiene, strict_types, identical comparison, typed APIs, visibility, final classes, and constructor injection over singletons."
+invocation: manual
 disable-model-invocation: true
 ---
 

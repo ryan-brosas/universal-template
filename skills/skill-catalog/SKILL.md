@@ -1,56 +1,52 @@
 ---
 name: skill-catalog
-description: "Use when the user asks what skills exist or needs to find the right skill for a topic - deterministic search over the local catalog; return candidates and load only the chosen skill."
+description: "Use when the user asks what skills exist or needs to find the right skill for a topic; inspect local frontmatter and return only relevant candidates."
+invocation: entry
 ---
 
 # Skill Catalog
 
 ## Core Principle
 
-This skill is for **explicit catalog queries and ~/.agents maintenance**, not
-for ordinary coding work in another repository. Search returns scored
-candidates; load only the chosen skill. Hidden specialists stay out of startup
-metadata but remain available through host skill discovery.
+The filesystem and each `SKILL.md` frontmatter are the catalog. Native host
+skill discovery, file search, and repository search are sufficient. Generated
+views are optional human conveniences.
 
 ## When to Use / NOT
 
-- **Use when:** "what skills do we have?", "find a skill for CI", "show GitHub
- skills", or maintaining the catalog in `~/.agents`.
-- **NOT when:** implementing in an arbitrary project repository. Use host skill
- discovery, read relevant `SKILL.md` files directly, and reason about fit.
-- **NOT when:** a visible skill already matches the request directly, invoke
- that skill.
-- **NOT when:** choosing evidence sources or execution shape, `evidence-router`
- and `execution-router` own those decisions.
+- **Use when:** the user asks what skills exist, requests a skill for a topic,
+  or this repository's catalog is being maintained.
+- **NOT when:** a visible skill already matches directly, or ordinary project
+  source answers the task.
 
-Foundations live in `foundation-pack/`, outside this catalog. Inspect them with
-host filesystem or search capabilities when they may help; do not route through
-this script during normal project work.
+## Workflow
 
-## Workflow (catalog maintenance only)
+1. List bounded candidates under `skills/*/SKILL.md` with native filesystem or
+   repository search.
+2. Read candidate `name`, `description`, `invocation`, and
+   `disable-model-invocation` frontmatter.
+3. Judge fit from the request and overlap with neighboring candidates. Load only
+   the best match and any references it names.
+4. For catalog maintenance, update metadata in the owning skill. Regenerate
+   `docs/skill-catalog.md` only because it is retained for human browsing.
 
-When working on `~/.agents` or answering an explicit catalog question:
-
-1. `python3 scripts/skill-catalog.py search "<topic>" --limit 8`
-2. Narrow when useful: `list --visible`, `list --hidden`, `list --class cold`.
-3. `python3 scripts/skill-catalog.py show <name>` before loading.
-4. Load only the chosen candidate (`skills/<name>/SKILL.md`).
-5. After catalog edits: `python3 scripts/skill-catalog.py generate`
+`scripts/skill-catalog.py` remains optional generated-artifact tooling. It is not
+an ordinary cognitive route or a source of classification truth.
 
 ## Red Flags
 
-- Invoking catalog scripts during ordinary project implementation elsewhere.
-- Pasting the catalog into context instead of returning a few candidates.
-- Loading every candidate that matched.
-- Hand-editing `docs/skill-catalog.md`.
+- Loading the complete catalog into context.
+- Treating scored string matches as a routing decision.
+- Editing the generated catalog instead of skill frontmatter.
+- Centralizing skill names in another inventory.
 
 ## Verification
 
-- `python3 scripts/skill-catalog.py stats` exits 0.
-- `python3 scripts/skill-catalog.py generate --check` exits 0 after regeneration.
+Direct inspection finds the skill and its metadata. For publication, the
+relevant exact metadata validator and generated-parity check in
+`CONTRIBUTING.md` pass.
 
 ## References
 
-- `scripts/skill-catalog.py`, list / search / show / stats / generate.
-- `foundation-pack/`, accumulated implementation foundations; inspect directly.
-- `docs/skill-catalog.md`, generated human catalog.
+- `../../docs/skill-catalog.md`, optional generated human view.
+- `../../scripts/skill-catalog.py`, optional list/search/generate helper.

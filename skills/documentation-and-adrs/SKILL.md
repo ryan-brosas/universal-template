@@ -1,6 +1,7 @@
 ---
 name: documentation-and-adrs
 description: Use when writing technical documentation, Architecture Decision Records (ADRs), API docs, or project READMEs, covers documentation structure, ADR format, and keeping docs in sync with code
+invocation: internal
 disable-model-invocation: true
 ---
 

@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Commit messages — what makes a commit readable in `git log` and `rebase -i`?
 
-**Source:** agis/git-style-guide; Git `SubmittingPatches`; tbaggery 2008; catalog `conventional-commit.py`. **Question:** What message shape survives tooling and still explains *why*?
+**Source:** agis/git-style-guide; Git `SubmittingPatches`; tbaggery 2008; project-local commit conventions. **Question:** What message shape survives tooling and still explains *why*?
 
 ## Subject/body seam
 **Path/Symbol:** `.git/COMMIT_EDITMSG` on `git commit`.
@@ -19,7 +19,7 @@ read path. Resolves: #56
 
 **Flow:** stage logical unit → `git commit` (editor, not `-m` for non-trivial) → subject ≤50 chars of *summary* → blank line → body: problem (present) → change (imperative) → footers.
 **Invariant:** without blank line after subject, `rebase -i` and `format-patch` treat body as subject continuation (tbaggery).
-**Probe:** `git log -1 --format=%B` shows blank line after first line; `CHECK_RANGE=... python3 scripts/conventional-commit.py` exit 0 when catalog applies.
+**Probe:** `git log -1 --format=%B` shows a blank line after the first line; compare subjects directly with any project-local convention.
 
 ## Logical commit seam
 **Flow:** one logical change = one commit; feature + tests together; use `git add -p` to split hunks; `--fixup`/`--squash` for series cleanup before push.

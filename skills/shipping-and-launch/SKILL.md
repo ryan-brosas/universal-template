@@ -1,6 +1,7 @@
 ---
 name: shipping-and-launch
 description: Use when preparing to merge, deploy, release, or declare a development branch complete.
+invocation: manual
 disable-model-invocation: true
 ---
 

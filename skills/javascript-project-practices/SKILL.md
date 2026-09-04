@@ -1,6 +1,7 @@
 ---
 name: javascript-project-practices
 description: "Use when bootstrapping or reviewing JavaScript/Node projects, elsewhen git/PR workflow, README template, env config, lockfiles, feature folders, ESLint/Prettier, REST API conventions, and lighthouse/axe from day one."
+invocation: manual
 disable-model-invocation: true
 ---
 

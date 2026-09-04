@@ -1,6 +1,7 @@
 ---
 name: prototype
 description: "Use when the user wants to prototype, sanity-check a data model or state machine, mock up a UI, explore design options, or says 'prototype this', 'spike this', 'let me play with it', 'try a few designs'."
+invocation: entry
 ---
 
 

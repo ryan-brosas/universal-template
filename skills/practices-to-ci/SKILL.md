@@ -1,6 +1,7 @@
 ---
 name: practices-to-ci
 description: "Use when a repo has code practices/discipline that should be enforced automatically, turn them into mechanical CI checks instead of relying on prompting or prose rules."
+invocation: internal
 disable-model-invocation: true
 ---
 
@@ -67,9 +68,8 @@ below.
 - `repo-hygiene.py`, trailing whitespace, EOF newline, smart quotes, large
  files, mixed line endings, YAML/JSON/TOML validity, typos, secrets scan,
  forbid-submodules
-- `dead-code.py`, finds unused scripts and unreferenced skill files (farmed
- from vitest's knip dead-code practice)
-- `conventional-commit.py`, validates commit subjects follow conventional
+- Project-native dead-code tools, when their language and build graph make the answer objective.
+- Exact PR-title protocol validation when labels or release automation consume it.
  commits; `pr-title.yml` validates PR titles (farmed from graphrag's semver
  check)
 - `labeler.yml` + `labeler workflow`, auto-labels PRs by changed paths

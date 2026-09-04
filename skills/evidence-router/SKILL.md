@@ -1,6 +1,7 @@
 ---
 name: evidence-router
 description: "Use when choosing an unfamiliar external evidence source and project source or references are insufficient — cold capability map for MCPs, references, and web."
+invocation: internal
 disable-model-invocation: true
 ---
 

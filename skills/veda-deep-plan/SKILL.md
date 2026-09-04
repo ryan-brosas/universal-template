@@ -1,6 +1,7 @@
 ---
 name: veda-deep-plan
 description: "Use when a single planning call is not enough, architectural design, subtle bugs with no obvious cause, decisions with no clear answer: plan the hardest problems with Veda Deep Thinking where parallel solvers, a judge, and a verifier converge on the best plan. Drives `veda -S deep-TASKNAME -m flash deep`; does not execute."
+invocation: vendor
 argument-hint: "[veda-flags]"
 ---
 

@@ -1,6 +1,7 @@
 ---
 name: opensrc
 description: "Use when you need to understand how a library works internally, debug dependency issues, or inspect package source beyond types and docs - fetches source for npm, PyPI, crates.io, and GitHub repos."
+invocation: internal
 disable-model-invocation: true
 ---
 

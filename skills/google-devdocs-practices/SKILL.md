@@ -1,6 +1,7 @@
 ---
 name: google-devdocs-practices
 description: "Use when authoring Google-style developer docs, you/imperative voice, sentence-case headings, bold UI and code font, numbered procedures, For more information see links, and accessible global English."
+invocation: manual
 disable-model-invocation: true
 ---
 

@@ -1,6 +1,7 @@
 ---
 name: powershell-scripting-practices
 description: "Use when authoring or reviewing PowerShell, PoshCode OTBS layout, Verb-Noun CmdletBinding functions, pipeline tool patterns, try/catch with -ErrorAction Stop, PSCredential security, and PSScriptAnalyzer in CI."
+invocation: manual
 disable-model-invocation: true
 ---
 

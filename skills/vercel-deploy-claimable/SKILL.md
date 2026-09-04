@@ -1,6 +1,7 @@
 ---
 name: vercel-deploy-claimable
 description: "Use when the user requests a Vercel deployment action like deploy my app, deploy to production, create a preview deployment, or push this live. Returns a preview URL and a claimable deployment link."
+invocation: manual
 disable-model-invocation: true
 ---
 

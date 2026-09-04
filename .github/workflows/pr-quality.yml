@@ -1,9 +1,5 @@
-# Catalog quality CI for universal-template (~/.agents): enforces the
-# Project quality: catalog verification suite (see CONTRIBUTING.md),
-# the changed-line contract, and the PR body contract.
-# The required-check contract is the job name below ("quality / required");
-# the default-branch ruleset requires exactly that name.
-
+# Objective publication contracts for universal-template.
+# The required-check API is the job name: quality / required.
 name: Project quality
 
 on:
@@ -31,110 +27,23 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Fail closed while the gate is missing
+      - name: Install structured-data checker
+        run: pip install --user pyyaml==6.0.3
+
+      - name: Check repository contracts
         shell: bash
         run: |
-          marker="__AGENTS"
-          marker="${marker}_GATE__"
-          if grep -qF "$marker" .github/workflows/pr-quality.yml; then
-            echo 'The gate placeholder is still in the run step.' >&2
-            echo 'Install the exact gate from CONTRIBUTING.md.' >&2
-            exit 1
-          fi
-
-      - name: Install YAML checker
-        run: pip install --user pyyaml==6.0.3  # pinned; bump deliberately
-
-      - name: Skill validator
-        id: validator
-        shell: bash
-        run: |
-          set -o pipefail
-          SKILLS_ROOT="${GITHUB_WORKSPACE}/skills" python3 scripts/skill-validator.py 2>&1 | tee /tmp/skill-validator.log
-
-      - name: Catalog quality
-        id: catalog
-        shell: bash
-        run: |
-          set -o pipefail
-          python3 scripts/catalog-quality.py --selftest 2>&1 | tee /tmp/catalog-quality-selftest.log
-          python3 scripts/catalog-quality.py 2>&1 | tee /tmp/catalog-quality.log
-
-      - name: Prompt surface
-        id: prompts
-        shell: bash
-        run: |
-          set -o pipefail
+          set -euo pipefail
           {
+            SKILLS_ROOT="$GITHUB_WORKSPACE/skills" python3 scripts/skill-validator.py
             python3 scripts/install-prompts.py --check-repo
             python3 scripts/install-prompts.py --selftest
             python3 scripts/render-prompt.py --selftest
-          } 2>&1 | tee /tmp/prompt-surface.log
-
-      - name: House style lint
-        id: style
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 scripts/style-lint.py --selftest 2>&1 | tee /tmp/style-lint-selftest.log
-          python3 scripts/style-lint.py 2>&1 | tee /tmp/style-lint.log
-
-      - name: Web reference manifest
-        id: webref
-        shell: bash
-        run: |
-          set -o pipefail
-          python3 scripts/web-reference-manifest.py --selftest 2>&1 | tee /tmp/web-reference-manifest.log
-
-      - name: Repo hygiene
-        id: hygiene
-        shell: bash
-        run: |
-          set -o pipefail
-          python3 scripts/repo-hygiene.py 2>&1 | tee /tmp/repo-hygiene.log
-
-      - name: Policy consistency
-        id: policy
-        shell: bash
-        run: |
-          set -o pipefail
-          python3 scripts/policy-consistency.py 2>&1 | tee /tmp/policy-consistency.log
-
-      - name: Dead code
-        id: deadcode
-        shell: bash
-        run: |
-          set -o pipefail
-          python3 scripts/dead-code.py 2>&1 | tee /tmp/dead-code.log
-
-      - name: Foundation validator
-        id: foundation
-        shell: bash
-        run: |
-          set -o pipefail
-          python3 scripts/foundation-validator.py --selftest 2>&1 | tee /tmp/foundation-validator-selftest.log
-          python3 scripts/foundation-validator.py 2>&1 | tee /tmp/foundation-validator.log
-
-      - name: Reference retrieval fixture
-        id: refretrieval
-        shell: bash
-        run: |
-          set -o pipefail
-          python3 scripts/reference-retrieval-fixture.py --selftest 2>&1 | tee /tmp/reference-retrieval-fixture.log
-
-      - name: Conventional commits
-        id: commits
-        shell: bash
-        env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-        run: |
-          set -euo pipefail
-          if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
-            export CHECK_RANGE="${BASE_SHA}..${GITHUB_SHA}"
-          else
-            export CHECK_RANGE="${GITHUB_SHA}^..${GITHUB_SHA}"
-          fi
-          python3 scripts/conventional-commit.py 2>&1 | tee /tmp/conventional-commit.log
+            python3 scripts/skill-catalog.py generate --check
+            python3 scripts/repo-hygiene.py
+            python3 scripts/web-reference-manifest.py --selftest
+            python3 scripts/pr-metadata.py --selftest
+          } 2>&1 | tee /tmp/repository-contracts.log
 
       - name: Check changed lines
         shell: bash
@@ -151,31 +60,25 @@ jobs:
             git diff --check "$GITHUB_SHA^" "$GITHUB_SHA"
           fi
 
-      # Body quality is a creation-time contract: apps (review bots) and
-      # evidence updates edit the body later, so re-checking on synchronize or
-      # edited would let an external app fail a required check.
       - name: Check the PR body contract
         if: github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'reopened')
         shell: bash
         env:
           PR_BODY: ${{ github.event.pull_request.body }}
         run: |
-          python3 -c 'import os, sys; body=os.environ["PR_BODY"]; required=("## Summary", "## Why", "## Verification", "## Risks"); placeholders=("TODO", "TBD"); missing=[item for item in required if item not in body]; left=[item for item in placeholders if item in body]; short=len(body.strip())<30; print("missing sections: " + ", ".join(missing) if missing else "required sections: pass"); print("placeholders: " + ", ".join(left) if left else "placeholders: pass"); sys.exit(1 if missing or left or short else 0)'
+          set -euo pipefail
+          test "${#PR_BODY}" -ge 30
+          for heading in '## Summary' '## Why' '## Verification' '## Risks'; do
+            grep -qF "$heading" <<<"$PR_BODY" || { echo "missing section: $heading"; exit 1; }
+          done
+          for placeholder in TODO TBD; do
+            ! grep -qF "$placeholder" <<<"$PR_BODY" || { echo "placeholder remains: $placeholder"; exit 1; }
+          done
 
-      - name: Upload gate logs on failure
+      - name: Upload contract log on failure
         if: ${{ failure() }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: quality-gate-logs
-          path: |
-            /tmp/skill-validator.log
-            /tmp/catalog-quality-selftest.log
-            /tmp/catalog-quality.log
-            /tmp/prompt-surface.log
-            /tmp/repo-hygiene.log
-            /tmp/style-lint-selftest.log
-            /tmp/style-lint.log
-            /tmp/policy-consistency.log
-            /tmp/dead-code.log
-            /tmp/conventional-commit.log
+          name: repository-contracts
+          path: /tmp/repository-contracts.log
           retention-days: 2

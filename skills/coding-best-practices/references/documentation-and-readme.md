@@ -29,7 +29,7 @@ Update README **after** behavior works — documents describe what IS, not promi
 
 ## Mechanical gates
 
-- Catalog: `catalog-quality.py` (essentials indexed), `repo-hygiene.py` (typos on top-level docs).
+- Template catalog: model review for relevance and prose; `repo-hygiene.py` only for exact publication contracts.
 - Projects: spellcheck/codespell in CI optional; required only when it caught real issues before.
 
 ## Leaf skills

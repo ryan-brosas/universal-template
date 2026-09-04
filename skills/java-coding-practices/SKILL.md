@@ -1,6 +1,7 @@
 ---
 name: java-coding-practices
 description: "Use when authoring or reviewing Java, google-java-format layout, import discipline, Google naming, @Override, handled catches, static qualification, and Javadoc on public API."
+invocation: manual
 disable-model-invocation: true
 ---
 

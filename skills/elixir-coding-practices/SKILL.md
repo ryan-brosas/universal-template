@@ -1,6 +1,7 @@
 ---
 name: elixir-coding-practices
 description: "Use when authoring or reviewing Elixir, mix format, snake_case/CamelCase naming, module attribute order, pipelines, @moduledoc/@spec, Error exceptions, and mix test/credo in CI."
+invocation: manual
 disable-model-invocation: true
 ---
 

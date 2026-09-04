@@ -1,6 +1,7 @@
 ---
 name: dart-coding-practices
 description: "Use when authoring or reviewing Dart, dart format, UpperCamelCase/lowerCamelCase naming, /// documentation, null-safe idioms, async/await, typed public API, class modifiers, and dart analyze/test in CI."
+invocation: manual
 disable-model-invocation: true
 ---
 

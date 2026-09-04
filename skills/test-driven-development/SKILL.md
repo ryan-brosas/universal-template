@@ -1,6 +1,7 @@
 ---
 name: test-driven-development
 description: Use when implementing a behavior change or fixing a reproducible defect - demonstrate the failure first (RED), fix, verify GREEN; for non-reproducible issues, use the strongest available failure evidence plus deterministic verification
+invocation: internal
 disable-model-invocation: true
 ---
 

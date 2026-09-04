@@ -1,6 +1,7 @@
 ---
 name: vb-coding-practices
 description: "Use when authoring or reviewing Visual Basic.NET, Option Strict/Explicit, 4-space layout, Framework PascalCase naming, Try/Catch idioms, XML docs on public API, and dotnet format/build/test in CI."
+invocation: manual
 disable-model-invocation: true
 ---
 

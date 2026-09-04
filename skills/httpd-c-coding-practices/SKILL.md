@@ -1,6 +1,7 @@
 ---
 name: httpd-c-coding-practices
 description: "Use when authoring or reviewing Apache httpd C, 4-space 80-col layout, GNU indent profile, ANSI function/control-flow spacing, httpd cast rules, rationale comments, and build/tests in CI."
+invocation: manual
 disable-model-invocation: true
 ---
 

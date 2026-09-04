@@ -1,6 +1,7 @@
 ---
 name: ship-pr
 description: "Use when the user wants a change shipped autonomously end to end: commit, push, open the PR, watch CI, triage and address bot/human review comments in-thread, resolve threads, and merge when everything is green ('ship it', 'run the full PR cycle', 'commit, push, PR, and merge if clean'). Runs to merge without per-step asks. NOT for stepwise asks: pushing only, opening a PR only, addressing review feedback only, or merging an existing PR only (push-pr owns those)."
+invocation: entry
 ---
 
 # Ship PR (autonomous loop)

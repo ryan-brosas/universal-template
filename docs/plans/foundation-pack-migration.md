@@ -25,11 +25,11 @@ Family-alias names (e.g. `mcp-spec-and-servers` → modelcontextprotocol + serve
 
 Resolved 2026-09-02: the four residual leaves were re-indexed at their recorded pins in full mode and are ready in the Codebase Memory census (`mnt-hdd-utopia-inspo-external-ext-dsh-factory` 900n/3408e, `...-pi-autoresearch-harness` 658n/1508e, `...-pi-messenger-swarm` 2493n/5802e, `...-pi-supervisor` 504n/1304e; 0 skipped each, parse_partial per capsule caveat). Each leaf carries a dated recovery note. No residual backlog remains: all 194 leaves are now evidenced.
 
-Keep gates (foundation-validator, catalog-quality) green; never demote silently in future passes.
+Keep exact metadata, reference, and repository contract checks green; never demote silently in future passes.
 
 ## Source and evidence
 
 - Foundation claims: `foundation-pack/`
-- Structural verification: `scripts/foundation-validator.py`
+- Structural verification: foundation metadata and references through `scripts/skill-validator.py`
 - Snapshot triage bank: `foundation-pack-migration-triage-2026-09-02`
 - Retention/deferral based on direct source, tests, recorded pins, index coverage, and bounded probes. Codebase Memory stays a retrieval surface, never the source of truth.

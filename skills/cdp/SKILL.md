@@ -2,6 +2,7 @@
 name: cdp
 disable-model-invocation: true
 description: "Use when the user wants to automate, script, or inspect a Chromium-based browser through the DevTools Protocol. Runs JS snippets through the browser-harness-js CLI against a persistent CDP session: session, targets, and globals survive across calls; attach to a running browser or launch one with --remote-debugging-port."
+invocation: manual
 setup: bash /Users/monotykamary/VCS/working-remote/open-source/browser-harness-js/skills/cdp/scripts/setup
 compatibility: >-
  Requires `node` on PATH (the REPL server is Node-native, TypeScript type stripping from Node 23.6) and a Chromium-based browser with remote debugging (chrome://inspect or --remote-debugging-port).

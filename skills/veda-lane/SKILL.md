@@ -1,12 +1,13 @@
 ---
 name: veda-lane
 description: Use when a task justifies a Veda lane (navigator-plan, reviewer, worker, or deep thinking), probe availability at runtime, discover models with veda models, delegate via the Fabric Veda runner when supported or the direct veda CLI otherwise.
+invocation: internal
 disable-model-invocation: true
 ---
 
 # Veda Lane
 
-Veda is an **execution adapter and oracle lane**, a way to run a bounded task through an alternate backend, model, or persona when the execution router has already decided a Veda mechanism is justified. It is not "the Gemini tool" or "the Opus tool", and it does not own model routing: backend/model resolution is mechanical (`skills/model-resolution`); this skill covers how to execute correctly through Veda once chosen. Probe the installed pair at runtime; delegate through Fabric's Veda runner when it works, else the direct `veda` CLI; when neither is available, the normal Pi path carries the work.
+Veda is an **execution adapter and oracle lane**, a way to run a bounded task through an alternate backend, model, or persona when the execution router has already decided a Veda mechanism is justified. It is not "the Gemini tool" or "the Opus tool", and it does not own model routing: backend/model resolution uses live discovery and model judgment (`skills/model-resolution`); this skill covers how to execute correctly through Veda once chosen. Probe the installed pair at runtime; delegate through Fabric's Veda runner when it works, else the direct `veda` CLI; when neither is available, the normal Pi path carries the work.
 
 ## Core Principle
 
@@ -19,7 +20,7 @@ Veda output is advisory. Probe availability instead of trusting claims (no hard-
 
 ## Workflow
 
-1. **Probe once per session.** `veda --version` + `veda models` (installed backends and aliases) + `veda personas` (built-in vs locally installed). `python3 ~/.agents/scripts/runtime-capabilities.py` reports the whole stack including Fabric/Veda versions.
+1. **Probe once per session.** Use `veda --version`, `veda models` (installed backends and aliases), and `veda personas` (built-in versus locally installed). Inspect other host inventories directly when they affect the lane; `runtime-capabilities.py` is an optional aggregate diagnostic.
 2. **Pick the lane by task**, personas map to execution-router roles: `navigator-plan` → NAVIGATOR, `reviewer` → REVIEWER, `frontend` / `frontend-auditor` → FRONTEND-CRITIC, `worker` → WORKER, `deep` → SOLVER/JUDGE/VERIFIER (k× cost, only for hard ambiguous problems). The persona picks the *behavior*; `skills/model-resolution` picks the *backend/model* from the runtime catalog, a UI-critique lane needs a UI-capable reasoning model, whichever provider currently offers one.
 3. **Select models from the runtime catalog only**, `veda models <backend>`, `agy models`. Never hard-code a slug: AGY-hosted Claude may or may not exist in the installed catalog; Claude `opus` rides the claude-code backend when installed.
 4. **Delegate through the simplest supported path.** Prefer Fabric's `agents.run({ runner: "veda", persona, model })`, a one-shot headless child at the outer fabric_exec boundary (see the installed pi-fabric `docs/agents.md`, "Veda runner"). If the installed Fabric/Veda pair rejects it, fall back to the direct CLI and note the version pair, do not encode a temporary incompatibility as a permanent rule.

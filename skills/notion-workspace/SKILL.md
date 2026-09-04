@@ -1,6 +1,7 @@
 ---
 name: notion-workspace
 description: "Use when the user needs to search, read, create, update, organize, or synchronize Notion pages and databases, or wants a central workspace or second brain in Notion. Prefer this over driving Notion in a browser."
+invocation: manual
 disable-model-invocation: true
 ---
 

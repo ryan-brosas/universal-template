@@ -1,6 +1,7 @@
 ---
 name: pencil
 description: "Use when copying Figma or inspo into Paper, ripping a Figma file onto a Paper canvas, setting Paper tokens from Figma, or when the user says pencil, paper skill, stick to Figma, or figma-to-paper. Copies Figma literally: screenshot is the spec, variables to the bone, every Figma column (including type specimens), one Paper page per Figma page. Never invent a simplified showcase."
+invocation: entry
 ---
 
 # Pencil

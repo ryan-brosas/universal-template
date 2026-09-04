@@ -1,6 +1,7 @@
 ---
 name: project-bootstrap
 description: "Use when entering a new or unfamiliar repository, initializing a greenfield project workspace, or intentionally establishing lightweight persistent project-level agent context."
+invocation: entry
 ---
 
 # Project Bootstrap
@@ -63,7 +64,7 @@ Do not run existing-repo deep detection on an empty directory. First ask: is the
 
 - **Unclear** → `brainstorming` first (ground in the user's problem, not fabricated architecture).
 - **Clear** → scaffold the project (native tooling of the chosen stack), then: GitHub requested? → `github-repo-setup`. CI requested? → `github-actions-engineering`. Neither happens automatically, report that CI/repo setup is absent and let the user decide.
-- **Baseline requested**, phrases like "our standard setup", "our baseline", "production-ready", "OSS-ready", "full setup" authorize the standard baseline after scaffolding: `github-repo-setup` at the maturity class from its `references/setup-matrix.md`, then `github-actions-engineering`, then `git-workflow-and-versioning` only when the project is versioned. "Start a new project" or "scratch project" requests none of it, scaffold, report what was skipped.
+- **Baseline requested**, phrases like "our standard setup", "our baseline", "production-ready", "OSS-ready", "full setup" authorize the standard baseline after scaffolding: `github-repo-setup` at the maturity class from its `../github-repo-setup/references/setup-matrix.md`, then `github-actions-engineering`, then `git-workflow-and-versioning` only when the project is versioned. "Start a new project" or "scratch project" requests none of it, scaffold, report what was skipped.
 - Complex or high-risk project creation still starts from the user’s constraints and direct scaffolding; use `goal-setup` only after a verified pass if the run is expected to last roughly four days or longer with meaningful recovery/handoff needs, or the user, repository/project policy, or an external coordinator requires a record.
 
 ## Mode D, Refresh (reconcile, never rebuild)

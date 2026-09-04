@@ -2,6 +2,7 @@
 name: gmaps
 disable-model-invocation: true
 description: "Use when the user asks to find local businesses, get directions or travel time between places, or plan a multi-stop visiting order. Keyless Google Maps via CDP: structured business results, live directions in any travel mode, and a best-effort fastest route order. Requires browser-harness-js on PATH and a Chromium browser with remote debugging."
+invocation: manual
 setup: bash <skill-dir>/scripts/setup
 compatibility: >-
  Requires browser-harness-js on PATH and a running Chromium browser with remote

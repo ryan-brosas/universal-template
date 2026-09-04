@@ -1,6 +1,7 @@
 ---
 name: delphi-coding-practices
 description: "Use when authoring or reviewing Delphi/Object Pascal, 2-space layout, PascalCase T/I/E/F/A/L naming, dotted unit hierarchy, try/finally FreeAndNil, properties, XML docs, and IDE formatter in CI."
+invocation: manual
 disable-model-invocation: true
 ---
 

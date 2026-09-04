@@ -1,6 +1,7 @@
 ---
 name: pi-package-development
 description: "Use when creating, editing, structuring, testing, or shipping a pi package or pi extension (package.json pi manifest, pi-package keyword, peerDependencies, bundling, pi install -e testing, gallery metadata) — encodes the packages.md contract. Trigger-first; pick over generic npm-package advice."
+invocation: entry
 ---
 
 # Developing pi Packages
