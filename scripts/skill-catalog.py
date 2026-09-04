@@ -356,20 +356,31 @@ def build_foundation_catalog_md(skills: list[dict]) -> str:
     return "\n".join(lines)
 
 
-def cmd_list(skills: list[dict], args) -> int:
-    rows = skills
-    if args.tracked_only:
-        rows = [s for s in rows if not s.get("local")]
-    if args.visible:
+def filter_list_rows(
+    skills: list[dict], *, visible: bool = False, hidden: bool = False,
+    klass: str | None = None, kind: str | None = None,
+    surface: str | None = None, tracked_only: bool = False,
+) -> list[dict]:
+    """Apply list filters, including publication-safe local exclusion."""
+    rows = [s for s in skills if not tracked_only or not s.get("local")]
+    if visible:
         rows = [s for s in rows if not s["hidden"]]
-    if args.hidden:
+    if hidden:
         rows = [s for s in rows if s["hidden"]]
-    if args.klass:
-        rows = [s for s in rows if s["cls"] == args.klass]
-    if args.kind:
-        rows = [s for s in rows if s["kind"] == args.kind]
-    if args.surface:
-        rows = [s for s in rows if s["surface"] == args.surface]
+    if klass:
+        rows = [s for s in rows if s["cls"] == klass]
+    if kind:
+        rows = [s for s in rows if s["kind"] == kind]
+    if surface:
+        rows = [s for s in rows if s["surface"] == surface]
+    return rows
+
+
+def cmd_list(skills: list[dict], args) -> int:
+    rows = filter_list_rows(
+        skills, visible=args.visible, hidden=args.hidden, klass=args.klass,
+        kind=args.kind, surface=args.surface, tracked_only=args.tracked_only,
+    )
     if args.json:
         print(json.dumps([{k: s[k] for k in ("name", "kind", "cls", "hidden", "surface", "local", "desc", "path")}
                           for s in rows], indent=2))
@@ -615,20 +626,48 @@ def cmd_selftest(skills: list[dict], _args) -> int:
             "desc": "x",
             "kind": "skill",
             "surface": "hot",
+            "hidden": False,
+            "cls": "entry",
+            "local": False,
         },
         {
             "name": "vendor",
             "desc": "x",
             "kind": "skill",
             "surface": "cold",
+            "hidden": False,
+            "cls": "vendor",
+            "local": False,
+        },
+        {
+            "name": "local-entry",
+            "desc": "x",
+            "kind": "skill",
+            "surface": "hot",
+            "hidden": False,
+            "cls": "entry",
+            "local": True,
         },
         {
             "name": "foundation",
             "desc": "x",
             "kind": FOUNDATION_KIND,
             "surface": "cold",
+            "hidden": True,
+            "cls": "manual",
+            "local": False,
         },
     ]
+    tracked_hot = filter_list_rows(
+        fixture, surface="hot", tracked_only=True
+    )
+    if [skill["name"] for skill in tracked_hot] != ["entry"]:
+        print("selftest: tracked hot export included a local skill", file=sys.stderr)
+        return 1
+    all_hot = filter_list_rows(fixture, surface="hot")
+    if {skill["name"] for skill in all_hot} != {"entry", "local-entry"}:
+        print("selftest: local skill inspection path missing", file=sys.stderr)
+        return 1
     test_budget = {
         "global_instructions": {"path": "AGENTS.md", "max_chars": 5},
         "hot": {"max_skills": 1, "max_metadata_chars": 6},
@@ -642,13 +681,16 @@ def cmd_selftest(skills: list[dict], _args) -> int:
         budget_path = temporary / "budget.json"
         budget_path.write_text(json.dumps(test_budget), encoding="utf-8")
         loaded_budget = load_context_budget(budget_path)
-        report = context_report(fixture, loaded_budget, instruction_path)
+        tracked_fixture = [skill for skill in fixture if not skill["local"]]
+        report = context_report(tracked_fixture, loaded_budget, instruction_path)
         if report["failures"] or report["combined"]["chars"] != 11:
             print(f"selftest: configured context budget did not pass: {report}", file=sys.stderr)
             return 1
         loaded_budget["global_instructions"]["max_chars"] = 4
         loaded_budget["combined"]["max_chars"] = 10
-        failures = context_report(fixture, loaded_budget, instruction_path)["failures"]
+        failures = context_report(
+            tracked_fixture, loaded_budget, instruction_path
+        )["failures"]
         if not any(item.startswith("global_instructions") for item in failures):
             print("selftest: global instruction budget failure missing", file=sys.stderr)
             return 1

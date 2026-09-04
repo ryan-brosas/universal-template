@@ -64,7 +64,7 @@ Reconcile links from current frontmatter and preserve unmanaged host files.
 Maintainers can inspect the exact filtered set with:
 
 ```sh
-python3 scripts/skill-catalog.py list --surface hot --json
+python3 scripts/skill-catalog.py list --surface hot --tracked-only --json
 python3 scripts/skill-catalog.py context --json
 ```
 

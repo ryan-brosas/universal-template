@@ -36,11 +36,13 @@ if yaml is not None:
 
 
     def _construct_unique_mapping(loader, node, deep=False):
-        mapping = {}
-        for key_node, value_node in node.value:
+        direct_keys = set()
+        for key_node, _value_node in node.value:
+            if key_node.tag == "tag:yaml.org,2002:merge":
+                continue
             key = loader.construct_object(key_node, deep=deep)
             try:
-                duplicate = key in mapping
+                duplicate = key in direct_keys
             except TypeError as exc:
                 raise yaml.constructor.ConstructorError(
                     "while constructing a mapping",
@@ -55,8 +57,11 @@ if yaml is not None:
                     f"duplicate key: {key!r}",
                     key_node.start_mark,
                 )
-            mapping[key] = loader.construct_object(value_node, deep=deep)
-        return mapping
+            direct_keys.add(key)
+        loader.flatten_mapping(node)
+        return yaml.constructor.SafeConstructor.construct_mapping(
+            loader, node, deep=deep
+        )
 
 
     UniqueKeyLoader.add_constructor(
@@ -261,6 +266,36 @@ def selftest() -> int:
         )
         if typed["description"] != "first line\nsecond line\n" or typed["disable-model-invocation"] is not True:
             print("selftest: valid YAML scalar typing changed", file=sys.stderr)
+            return 1
+        merged = parse_frontmatter(
+            "---\ndefaults: &defaults\n  invocation: manual\n"
+            "  disable-model-invocation: true\n<<: *defaults\n"
+            "name: merged\ndescription: merged values\n---\n"
+        )
+        if (
+            merged["invocation"] != "manual"
+            or merged["disable-model-invocation"] is not True
+        ):
+            print("selftest: valid YAML merge rejected", file=sys.stderr)
+            return 1
+        overridden = parse_frontmatter(
+            "---\ndefaults: &defaults\n  invocation: manual\n<<: *defaults\n"
+            "name: override\ndescription: explicit override\ninvocation: entry\n---\n"
+        )
+        if overridden["invocation"] != "entry":
+            print("selftest: explicit merge override changed", file=sys.stderr)
+            return 1
+        try:
+            parse_frontmatter(
+                "---\nname: nested\ndescription: nested duplicate\n"
+                "extra:\n  key: first\n  key: second\n---\n"
+            )
+        except FrontmatterError as exc:
+            if "duplicate key: 'key'" not in str(exc):
+                print(f"selftest: nested duplicate error changed: {exc}", file=sys.stderr)
+                return 1
+        else:
+            print("selftest: nested duplicate key accepted", file=sys.stderr)
             return 1
         cases = [
             (valid_text.replace("invocation: manual", "invocation: entry"), "foundation invocation must be manual"),
