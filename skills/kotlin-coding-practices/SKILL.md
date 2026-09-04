@@ -7,7 +7,7 @@ disable-model-invocation: true
 
 # Kotlin Coding Practices
 
-Application skill for Kotlin style learning (from the archived `awesome-guidelines` style capsules). For Android/Compose/KMP stack patterns, load stack capsules in `foundation-pack/`.
+Application skill for Kotlin style learning (from the archived `awesome-guidelines` style capsules). For Android/Compose/KMP stack patterns, load stack capsules in `skills/*-foundation`.
 
 ## Core Principle
 

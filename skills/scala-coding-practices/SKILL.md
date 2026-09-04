@@ -7,7 +7,7 @@ disable-model-invocation: true
 
 # Scala Coding Practices
 
-Application skill for Scala style learning (from the archived `awesome-guidelines` style capsules). For Spark/Akka/ZIO stack patterns, load stack capsules in `foundation-pack/`.
+Application skill for Scala style learning (from the archived `awesome-guidelines` style capsules). For Spark/Akka/ZIO stack patterns, load stack capsules under `skills/*-foundation`.
 
 ## Core Principle
 
@@ -22,7 +22,7 @@ Scala readability is **official layout/naming plus functional safety**, immutabl
 
 - Non-Scala code.
 - Generated boilerplate, validate generators instead.
-- Spark-internal perf micro-optimizations, use Databricks guide in stack capsules in `foundation-pack/`.
+- Spark-internal perf micro-optimizations, use the Databricks guide in stack capsules under `skills/*-foundation`.
 
 ## Workflow
 

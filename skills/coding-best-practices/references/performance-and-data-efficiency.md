@@ -27,5 +27,5 @@
 
 ## Leaf skills
 
-- Stack-specific: relevant `foundation-pack/*-foundation` leaves (e.g. DuckDB, data pipelines)
+- Stack-specific: relevant `skills/*-foundation` leaves (e.g. DuckDB, data pipelines)
 - Review scope creep from "optimization" PRs: `code-review-and-quality`

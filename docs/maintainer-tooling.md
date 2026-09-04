@@ -9,7 +9,7 @@ behavior earns the dependency.
 
 | Script | Class | Exact responsibility |
 | --- | --- | --- |
-| `skill-validator.py` | REQUIRED HARD CONTRACT | Frontmatter presence, local invocation enum, visibility contradictions, name/directory identity, uniqueness, and referenced-file existence. |
+| `skill-validator.py` | REQUIRED HARD CONTRACT | One-tree frontmatter, invocation/visibility/kind invariants, name/directory identity, uniqueness, no legacy/symlink foundation tree, and complete referenced-file inventories. |
 | `repo-hygiene.py` | REQUIRED HARD CONTRACT | Required paths, whitespace and EOF bytes, JSON/YAML/TOML parsing, file-size bounds, portable MCP paths, and obvious credential patterns. |
 | `web-reference-manifest.py` | REQUIRED HARD CONTRACT | Manifest types and enums, contained paths, referenced files, capture identifiers, timestamps, and credential patterns. |
 | `pr-metadata.py` | REQUIRED HARD CONTRACT | The PR-title grammar consumed by label and release automation. |
@@ -17,7 +17,7 @@ behavior earns the dependency.
 | `render-prompt.py` | OPTIONAL COMPATIBILITY TOOL | Single-pass prompt placeholder rendering for hosts without native prompts. |
 | `runtime-capabilities.py` | OPTIONAL DIAGNOSTIC | Read-only aggregate environment report; native host inventories remain authoritative. |
 | `github-audit.py` | OPTIONAL DIAGNOSTIC | Read-only GitHub configuration snapshot; direct `gh` output remains authoritative. |
-| `skill-catalog.py` | GENERATED-ARTIFACT TOOL | Optional human catalog derived from filesystem and skill frontmatter. |
+| `skill-catalog.py` | GENERATED-ARTIFACT TOOL | Optional kind-aware search/stats plus separate operational-skill and foundation catalogs derived from filesystem/frontmatter. |
 
 ## Retired
 

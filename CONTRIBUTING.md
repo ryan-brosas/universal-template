@@ -22,9 +22,11 @@ Run the consolidated contract suite used by CI:
 
 ```bash
 SKILLS_ROOT="$PWD/skills" python3 scripts/skill-validator.py
+python3 scripts/skill-validator.py --selftest
 python3 scripts/install-prompts.py --check-repo
 python3 scripts/install-prompts.py --selftest
 python3 scripts/render-prompt.py --selftest
+python3 scripts/skill-catalog.py selftest
 python3 scripts/skill-catalog.py generate --check
 python3 scripts/repo-hygiene.py
 python3 scripts/web-reference-manifest.py --selftest
@@ -60,7 +62,10 @@ See `docs/maintainer-tooling.md` for retired-script rationale.
 
 ## Skills
 
-Every active `skills/<name>/SKILL.md` has local `invocation` metadata. The
-`name` equals the directory, references resolve within the skill, and host
-visibility remains expressed by `disable-model-invocation`. The model owns the
-classification decision; the validator checks only the resulting exact contract.
+Every `skills/<name>/SKILL.md` has local `invocation` metadata. The `name`
+equals the directory, references resolve within the skill, and host visibility
+remains expressed by `disable-model-invocation`. Cold `*-foundation` leaves live
+in the same tree with `kind: foundation`, manual invocation, hidden visibility,
+and a complete `references/index.md` inventory. They remain outside operational
+catalog and startup counts. The model owns classification; the validator checks
+only the resulting exact contract.

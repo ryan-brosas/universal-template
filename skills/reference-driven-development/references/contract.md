@@ -56,18 +56,23 @@ never triggers ingestion, and no promotion is the default.
 
 **References vs foundations:** `<project>/reference/` holds actual external
 code or captured frontend evidence for inspection and adaptation.
-`foundation-pack/<x>-foundation/` holds reusable understanding distilled
-from strong implementations (architecture, patterns, seams, pointers).
-Foundations never outrank the source they came from; project-local references
-outrank generic foundations when both apply.
+`skills/<x>-foundation/` holds reusable understanding distilled
+from strong implementations (architecture, patterns, seams, pointers) in the
+same filesystem tree, marked `kind: foundation`, manual, and hidden. Foundations
+must stay outside operational host exposure (use the filtered route in
+`../../../README.md` when the host does not enforce hidden metadata) and never
+outrank the source they came from; project-local references outrank generic
+foundations when both apply.
 
 **Foundation provenance (forward rule for new or materially touched
 foundations):** record portable upstream identity (`owner/repo` or canonical
 URL), exact source revision (commit/tag/ref), and license when known. A
 foundation explicitly promoted from owned material without upstream VCS records
 `promotion: explicit-user` in its frontmatter. Machine-local checkout paths
-are secondary convenience only. When a foundation
-points at source that is not available locally, resolve the portable identity,
+are secondary convenience only. Keep the loader as a concise source/revision
+and topic map, preserve exhaustive detail in `references/index.md`, and load one
+matching capsule rather than the inventory. When a foundation points at source
+that is not available locally, resolve the portable identity,
 acquire or reuse it under `<project>/reference/<repo>/`, and inspect source and
 tests before load-bearing claims.
 

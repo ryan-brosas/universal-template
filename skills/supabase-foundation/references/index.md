@@ -1,0 +1,153 @@
+<!-- Preserved from the pre-foundation-skill-v1 loader. Detail remains historical and revision-pinned. -->
+
+
+# Supabase: studio API data-fetching kernel foundation
+
+## Use this for
+Use when porting a dashboard-style typed API client layer: openapi-fetch client assembly with auth/request-id headers, error-body enrichment middleware, message-regex error classification into typed ResponseError subclasses, transport-level empty-body fixes, fail-fast DB-connection guards, guarded SQL-execution mutations over pg-meta, broad contextual query-cache invalidation, or per-module react-query hooks backed by a global retry gate that reads enriched error fields. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval.
+
+## Load the matching source dump
+- `./openapi-client-kernel.md` — how do I assemble one typed fetch client whose transport translates network failures and mints per-request identity headers?
+- `./empty-body-http3-normalizer.md` — why do 201-with-empty-body responses succeed on HTTP/2 but throw "Unexpected end of JSON input" on HTTP/3?
+- `./pg-meta-guard-error-enrichment-middleware.md` — where do errors get requestId/retryAfter/code/requestPathname injected, and when does the client refuse to hop to the database at all?
+- `./handle-error-classification-ladder.md` — how does a raw API error body become a typed, field-preserving ResponseError without leaking internals to UI?
+- `./dual-fetch-plane-contract.md` — when must I use the legacy fetchGet/fetchPost trio instead of the typed client, and what compat hack keeps old callers alive?
+- `./execute-sql-guard-ladder.md` — what stands between user SQL and Postgres: size caps, EXPLAIN cost preflight, impersonation line-number rewinding, and the no-results sentinel?
+- `./sql-mutation-contextual-invalidation.md` — how does one DDL mutation invalidate exactly the right slice of the query cache while emitting telemetry?
+- `./react-query-data-module-recipe.md` — what is the exact shape of a `*-query.ts` data module, and how does the global retry gate consume retryAfter/requestPathname?
+- `./sql-taint-brand-kernel.md` — how do I make untrusted SQL unrepresentable as executable at the type level?
+- `./pg-format-ident-feexec-port.md` — when does an identifier stay bare and how are the rest quoted?
+- `./pg-format-literal-escaping-ladder.md` — how does any JS value become an injection-proof SQL literal?
+- `./pg-format-keyword-allowlist.md` — how can a UI-supplied SQL keyword be interpolated without becoming an injection channel?
+- `./pg-format-specifier-engine.md` — what are the exact `%s/%I/%L` + `%n$` positional semantics, including argument reuse?
+- `./query-filter-compiler.md` — how do structured filters become a WHERE clause without string concatenation?
+- `./query-chain-toSql-pipeline.md` — what is the builder chain from `Query.from(...)` to SQL, and which guards stop unbounded DML?
+- `./helpers-list-guard-plane.md` — how do IN-clauses, row aggregation, and identifier lookups avoid bare `IN ()` and degenerate SQL?
+- `./role-impersonation-client-plane.md` — where do the impersonation wrapper and in-browser JWT that the SQL guard ladder's line-rewind consumes come from, and how do async claim resolutions survive stale tabs?
+- `./table-rows-cursor-pagination-plane.md` — how does a grid fetch every row of a large table with stable page order, throttling, and a 429-only retry ladder?
+- `./logs-sql-rewrite-offer-gate.md` — when is it safe to offer an AI dialect rewrite of a user's saved query, and how is the old dialect detected without a parser?
+- `./analytics-sql-disjoint-brand-kernel.md` — why must a second SQL engine get its own safe-SQL brand family instead of reusing the Postgres one?
+- `./query-cell-source-rebrand-plane.md` — how does a query cell's SQL body keep its taint brand correlated with its backend tag across wire round-trips and backend switches?
+- `./database-queues-infinite-query-plane.md` — how does an infiniteQuery page through a UNION ALL of two physical tables when the natural sort column is not unique?
+- `./notebook-cell-operations-reducer.md` — how do you apply a batch of insert/replace/delete/move ops to an ordered document with conflict detection and diff-noise reduction?
+- `./notebook-wire-draft-id-plane.md` — how does a document keep cell identity honest across client drafts, agent writes, and backend-assigned ids?
+- `./pg-meta-entity-retrieve-scoped-oid.md` — how do you look up one catalog relation without computing enrichment for the entire catalog?
+- `./unified-logs-shared-safe-sql-builder.md` — how do row-list, chart, facet, and count queries share ONE safe-SQL builder across two dialects behind a flag?
+- `./unified-logs-pagination-inspection-plane.md` — how do you page a log stream whose sort column is not unique, and look up one row fast?
+- `./pg-meta-rows-count-scoped-gate.md` — how do you decide exact count vs estimate when reltuples = -1 means both "empty" and "bulk-loaded"?
+- `./pg-meta-mutation-builder-plane.md` — how do you compose multi-statement DDL mutations where some statements depend on state only discoverable at runtime?
+- `./content-wire-brand-remap-plane.md` — how does a generic content API keep user-authored SQL taint-branded per dialect across the wire boundary?
+- `./unified-logs-chart-zero-fill-plane.md` — how do you keep a severity chart honest under active level filters, and render empty time buckets?
+- `./table-editor-prefetch-parse-plane.md` — how do you prefetch a table editor page and keep grid state consistent across URL, localStorage, and react-query?
+- `./table-rows-count-consumer-gate.md` — how do you consume an exact-vs-estimate row count without caching transient permission state?
+- `./table-editor-sensitive-column-masking-plane.md` — how do you mask sensitive columns by default while letting users persistently override without losing toggles across table updates?
+- `./grid-operation-queue-batch-save.md` — how does a multi-row grid batch its cell edits into one atomic save?
+- `./pg-meta-routine-mutation-plane.md` — how do trigger/function DDL builders handle enable modes, rename ordering, saved-signature reuse, and config-param grammar?
+
+## Capsule map
+
+### Typed client kernel (`data/fetchers.ts`)
+- **Transport + identity** — `openapi-client-kernel`: `fetchHandler` converts only `TypeError: Failed to fetch` into an actionable Error; `constructHeaders` mints uuidv4 `X-Request-Id` per request and sets Bearer auth only when the caller has not already set Authorization (caller override wins).
+- **Empty-body normalizer** — `empty-body-http3-normalizer`: clone-read-rebuild injects `Content-Length: 0` on empty non-204 bodies so openapi-fetch's JSON parse short-circuits regardless of HTTP version.
+- **Middleware pair** — `pg-meta-guard-error-enrichment-middleware`: `pgMetaGuard` throws ResponseError before the server hop when `x-connection-encrypted` is missing on `/platform/pg-meta/` calls; `onResponse` rewrites error JSON bodies with code/requestId/retryAfter (`Retry-After` ?? `X-RateLimit-Reset`)/requestPathname.
+- **Error classification** — `handle-error-classification-ladder`: strict duck-typed field extraction (`msg` beats `message`, typeof-checked numerics), regex→class map built from a Map so duplicate registration is impossible by construction, vague-message fallback for UI safety; direct test pins msg-priority, case-insensitive timeout matching, and field preservation.
+
+### Legacy + SQL planes
+- **Dual fetch plane** — `dual-fetch-plane-contract`: dashboard-only endpoints use fetchGet/fetchPost/fetchHeadWithTimeout with octet-stream passthrough and HEAD header projection; `handleFetchError` sets `error.error = error` as a ts-expect-error'd compatibility shim for legacy `if (response.error)` checks.
+- **SQL guard ladder** — `execute-sql-guard-ladder`: projectRef gate → 0.98 MB Blob-size cap → optional EXPLAIN preflight rejecting cost ≥ 200_000 with `{cost, sql}` metadata (preflight failure never blocks UI) → role-impersonation `LINE n:` rewind by the pinned 11-line wrapper height → `ROLE_IMPERSONATION_NO_RESULTS` marker-row collapse to `[]`.
+- **Contextual invalidation** — `sql-mutation-contextual-invalidation`: create/alter/drop detection sweeps all `['projects', ref]` keys minus a five-entry ignore list; sqlEventParser telemetry is fail-soft; onError defaults to toast.
+
+### Consumer pattern
+- **Data module recipe** — `react-query-data-module-recipe`: private fetch fn (throw-if-required → typed call → `if (error) handleError(error)`), exported `Awaited<ReturnType>` data type, keys factory rooted at `['projects', projectRef, ...]`, signal threading, enabled-gating on defined projectRef, per-hook retry overrides; global QueryClient gate skips 4xx retries except 429, honors `retryAfter * 1000` backoff, suppresses window-focus/reconnect refetch after statement timeouts.
+
+### pg-meta SQL-safety kernel (`packages/pg-meta`)
+- **Taint-brand kernel** — `sql-taint-brand-kernel`: `SafeSqlFragment`/`UntrustedSqlFragment`/`DisplayableSqlFragment` phantom brands; the `safeSql` tag accepts ONLY branded interpolations (plain string/number/object is a compile error); escape hatches are closed — `rawSql` for user-authored editor SQL, `acceptUntrustedSql` promotion allowed only inside a deliberate user-action event handler.
+- **ident() ladder** — `pg-format-ident-feexec-port`: libpq fe-exec.c port; bare fast path requires `/^[_a-z][\d$_a-z]*$/` AND non-reserved membership; else double-quote with `"` doubling; booleans → `"t"/"f"`, Date → quoted ISO, one-level array flatten, null/object/nested-array throw.
+- **literal() ladder** — `pg-format-literal-escaping-ladder`: NULL → specials (bigint/±Infinity/NaN) before generic number → `'t'/'f'` → ISO date → array recursion → object as `'json'::jsonb`; string body doubles BOTH `'` and `\`, any backslash flips prefix to explicit-escape `E''`.
+- **keyword() gate** — `pg-format-keyword-allowlist`: single-word regex OR case-insensitive closed Set (`'INSTEAD OF'`, `'BY DEFAULT'`) with original casing preserved; everything else throws — "DROP TABLE" cannot slip through.
+- **Specifier engine** — `pg-format-specifier-engine`: `%I/%L/%s` from mutable config regex; `%n$` positions advance the sequential cursor past n, enabling argument reuse (`%1$s ... null::%1$s` in insert/update builders); arg-0 and out-of-range throw. `%s` does NOT escape.
+- **Filter compiler** — `query-filter-compiler`: operator dispatch with tuple arms (arity-checked, operator-restricted), whitelisted `is null/false/true/not null`, `::text` cast for LIKE-family ops, and an ARRAY[...] literal parser that validates the cast suffix or falls back to plain `literal()` re-escaping.
+- **Builder pipeline** — `query-chain-toSql-pipeline`: Query.from(schema-default 'public') → stateless QueryAction verbs → QueryFilter accumulators (structuredClone reuse) → fresh QueryModifier projection per terminal toSql; delete/update THROW on empty filters at the SQL-builder layer; range(from,to) = `{offset: from, limit: to-from+1}` inclusive.
+- **List-guard helpers** — `helpers-list-guard-plane`: filterByList include-wins tri-state never emits bare `IN ()`; coalesceRowsToArray COALESCE-empty-array wrapper with optional deterministic inner ORDER BY; getIdentifierWhereClause id | name+schema | fail-loud trichotomy repeated across pg-meta entity modules.
+
+### Studio data-plane deepening (pass 3)
+- **Impersonation producer** — `role-impersonation-client-plane`: identity-path wrapper (undefined role ⇒ untouched SQL), wrap-time `exp` re-stamp so once-resolved claims never expire mid-session, in-browser HS256 JWT minting from the project secret, claims refined through a customize-access-token RPC invoked via executeSql itself; controlled-state guards: skip-next-resolve (no double RPC) + capture-before-await stale-write discard (no cross-tab writes).
+- **Table-rows fetch** — `table-rows-cursor-pagination-plane`: unique-keyset-first ordering with ctid second (never both when the keyset guarantees uniqueness), clone-per-page keyset filtering vs range fallback, 500-row pages with 500ms throttle, 429-only retry with retryAfter-preferred backoff, consumer-side `ROLE_IMPERSONATION_NO_RESULTS` marker-row strip, execution-mode flags kept out of cache keys.
+- **Logs rewrite gate** — `logs-sql-rewrite-offer-gate`: offer = org-migration flag ∧ conservative regex dialect sniff (unnest / cast-timestamp / FROM≠logs); word-boundary source-column detection immune to `resource=`/`datasource=` lookalikes; rewrite request declares intent with the whole query as selection and an empty prompt (server owns the instruction); model output fence-stripped and empty-guarded.
+- **Disjoint analytics brands** — `analytics-sql-disjoint-brand-kernel`: one safe-SQL brand family per dialect — Postgres escaping (`E'…'`, `::jsonb`, double-quoted idents) is wrong for BigQuery/ClickHouse, so `SafeLogSqlFragment` is intentionally disjoint; reject-don't-escape backtick identifiers, throw-on-non-finite literals, allow-list keyword canonicalization, unexported rawSql.
+- **Cell source rebrand** — `query-cell-source-rebrand-plane`: closed tag registry (wrong pick = security bug), single-boundary wire↔domain transform that brands `sql`→`unchecked_sql` by cell tag and debrands on save, mutation helpers that swap (never merge) backend-specific fields and restore the default row limit across a logs→database move.
+
+### Pass 4 deepening (queues / notebooks / pg-meta entity plane)
+- **Queues infinite query** — `database-queues-infinite-query-plane`: composite `(enqueued_at, msg_id)` keyset cursor because pgmq's default `now()` makes the time column non-unique per send_batch; status tri-state vt-filter arms UNION ALL'd with a `NULL as archived_at` shape placeholder; empty-status short-circuit before any SQL hop; full-page hasNextPage heuristic; `.filter(Boolean)` keys deviation from the rooted-keys recipe.
+- **Cell operations reducer** — `notebook-cell-operations-reducer`: closed `_tag` op union over id-less agent cells; pre-pass conflict detection (one target per batch); anchor resolution against the MOVING working list with an insertedAfter offset map; typed closed error union + separate human-description function; predecessor-set no-op-move downgrade so canceling moves emit zero diff badges.
+- **Wire/draft-id plane** — `notebook-wire-draft-id-plane`: three-schema id ladder (read-required / write-optional / agent-forbidden via `.strict()`), namespaced `draft-` prefix stripped at a single wire boundary so the backend never sees client ids, validation-before-network in payload builders, `satisfies Record<Tag, Kind>` compile-time registration point for the cell tag set.
+- **Entity retrieve + scoped OID** — `pg-meta-entity-retrieve-scoped-oid`: per-entity identifier trichotomy (id | full name-key | fail-loud, arity as union type); scoped retrieve resolves the target OID once as a scalar (literal or uncorrelated index-backed subquery) and pushes it into EVERY enrichment subquery — outer-WHERE-only still computes the whole catalog; frozen legacy twin + feature flag + execution-equivalence tests ship the rewrite.
+
+### Pass 5 deepening (unified logs / rows-count gate / mutation plane / content remap)
+- **Shared safe-SQL builder** — `unified-logs-shared-safe-sql-builder`: one WHERE compiler feeds all four query shapes (list/chart/facet/count) with view-option toggles inside it so badges match the list; per-shape excludeField so a facet counts its own other values; inlined-from-one-constant derived CASE columns when the engine rejects subqueries/alias-in-aggregate; arrayJoin/multiIf scan folding with own-scan exceptions; flag-routed dialect twin (OTEL flat vs BQ CTE) sharing one input/output contract; brand-only wire boundary over a closed endpoint union; positive-only user attribution with guaranteed-zero-combination detection.
+- **Pagination + inspection** — `unified-logs-pagination-inspection-plane`: millisecond-canonical cursors decoupled from wire format; endpoint-param range bounding over a non-unique sort column; `>= LIMIT - 1` hasMore heuristic paired with consumer-side de-dup; tight ±60s point lookups bounded by the row's own stored value; URL-originated ids shape-validated before SQL composition; format-discriminated dual-encoding timestamp normalization at one boundary.
+- **Rows-count scoped gate** — `pg-meta-rows-count-scoped-gate`: physical heap-size gate for ambiguous reltuples=-1 (partition-tree sum for parents); shared-condition value/flag pairs; read-only degradation to sentinel estimate when the helper function can't be created; literal()-quoted SQL-in-SQL embedding surviving any standard_conforming_strings; standalone-template frozen twins selected by one flag.
+- **Mutation builder plane** — `pg-meta-mutation-builder-plane`: one-transaction-per-mutation fragments with undefined-param-skip; pinned statement ordering documented at the concatenation site; RESTRICT-default destructive ops; DO $$ blocks resolving auto-named constraints from pg_constraint by position with conkey-shape asserts; recreate-only-on-impossible-transition ladders with name-based post-recreate identity; cross-entity invalidation lists on destructive consumers.
+- **Content wire-brand remap** — `content-wire-brand-remap-plane`: single-boundary type-keyed brand assignment (wire `sql` ↔ domain `unchecked_sql`, Postgres vs analytics brand per type, notebooks via dedicated schema); never-fabricate-undefined reverse remap with dev-only loud throw for missed migrations; concentrated single-assertion helper keeping call sites cast-free; opaque server-issued cursors echoed verbatim; fatal-vs-degrading error split between id lookups and lists.
+
+### Pass 6 deepening (chart zero-fill / table-editor plane)
+- **Chart zero-fill + level filter** — `unified-logs-chart-zero-fill-plane`: client-side re-derivation of the active series set from parsed URL filters (allow-list ∩ ¬deny-list) layered on top of the SQL filter; shared-threshold bucket ladder (≥48h→day / >12h→hour / else minute) duplicated between server bucketing and client zero-fill; boundary-rounded zero-fill over the selected range; closed operator-abbreviation grammar with silent-skip malformed handling, colon-in-value rejoin, no-downgrade round-trips, and per-type-key routing of timerange fields.
+- **Table-editor prefetch + parse** — `table-editor-prefetch-parse-plane`: entity-first fail-silent prefetch chain repeating under the same cache keys; persisted user state as fallback behind explicit params; single Entity→UI projection with kind-gated defaults; discriminated-union guards as the only branching point for engine-specific behavior (MS-SQL fdw sort exclusion); session-over-local read / write-to-both persistence with undefined-omission partial merges + debounce; URL-param validation against actual table columns with silent drop.
+- **Count consumer gate** — `table-rows-count-consumer-gate`: entity-first consumer chain (metadata prefetch → projection → safe-integer filter coercion → capability-flagged SQL build → impersonation wrap); async-resolved capabilities threaded into BOTH the SQL builder and the cache key; `(syncKnown || !isLoading)` enable gate refusing to fire while a false-defaulting permission check is still loading.
+- **Sensitive-column masking** — `table-editor-sensitive-column-masking-plane`: marker-in-metadata defaults with the effective set DERIVED (defaults − persisted overrides) rather than stored; two-tier reveal (persistent vs session set); membership-pruned preference merge on refresh; raw-reference capture before reactive-proxy assignment to protect shared upstream caches; subscription-triggered debounced partial persistence; warn-don't-block clipboard semantics.
+
+### Studio consumer bridge
+The studio grid plane imports this kernel directly: `apps/studio/data/table-rows/table-rows-query.ts:1-3` pulls `ident/joinSqlFragments/safeSql/ROLE_IMPERSONATION_NO_RESULTS`, `Query`, and `getTableRowsSql` from `@supabase/pg-meta` and feeds composed SQL through pass-1's execute-sql guard ladder — port the two planes together.
+
+## Extending the foundation
+Add one `./<seam>.md` capsule for one graph-selected, source-confirmed porting question. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf. Revalidate the `supabase` graph project before porting and diff against pin `master@a18253f7c7d3a967bf91599c9dcf8ae704b7d686`.
+
+## Provenance
+Supabase (Apache-2.0), `master@a18253f7c7d3a967bf91599c9dcf8ae704b7d686`; Codebase Memory project `supabase` (FULL mode, generation 2026-08-25T19:56:24Z, 94,325 nodes / 332,119 edges). Coverage caveats at mining time: 192 parse-partial files (CSS/SQL/docs/test ranges — none among cited TS paths except `packages/pg-meta/src/query/index.ts:6`, a 6-line barrel read directly); 2 skipped vendored monaco bundles (never citable); image/env exclusions by design. Pass 1 mined the studio data-fetching kernel; pass 2 deepened into the pg-meta SQL-safety kernel + query builder; pass 3 deepened into the studio data-plane stragglers (role-impersonation producer, table-rows fetch plane, logs SQL plane, query-cell source registry) — all at the identical pin. Pass 4 deepened into the database-queues infinite-query plane, the notebook domain plane (cell operations reducer + wire/draft-id schemas), and the pg-meta entity retrieve/scoped-OID plane — all at the identical pin. Pass 5 deepened into the unified-logs query family (shared safe-SQL builder across dialects + pagination/inspection plane), the pg-meta rows-count scoped gate, the pg-meta mutation builder plane, and the content wire-brand remap plane — all at the identical pin. Pass 6 deepened into the unified-logs chart zero-fill + level-filter plane and the studio table-editor plane (prefetch/parse chain, count consumer gate, sensitive-column masking) — all at the identical pin. Passes 3–6 ran without Codebase Memory MCP connected: evidence is direct whole-file source + direct-test reads at the pin (fallback recorded in the work record).
+
+## Full view (memory graph)
+Revalidate `supabase` before porting: run `index_status`, `check_index_coverage`, `search_graph`, `trace_path`, and `get_code_snippet`. Record the graph root, branch, commit, mode, node/edge counts, freshness, and any coverage caveats; source and direct tests decide shipped claims.
+
+## Boundaries
+Adopt the pure contracts: header identity rules, error-field enrichment grammar, classification ladder, guard ladders, invalidation sweep semantics, retry-gate arithmetic. Adapt host-specific integration: openapi-fetch/openapi-typescript wiring, @tanstack/react-query defaults, Sentry capture, sonner toasts, pg-meta endpoint paths, valtio/zustand state feeds. Omit Supabase-product behavior: platform env topology (`/platform` URL rewriting), feature-flag gating, billing/usage surfaces, and the studio's own component/UI layers.
+
+## Reference-file inventory
+
+Every preserved capsule/reference file in this foundation:
+
+- [`analytics-sql-disjoint-brand-kernel.md`](./analytics-sql-disjoint-brand-kernel.md)
+- [`content-wire-brand-remap-plane.md`](./content-wire-brand-remap-plane.md)
+- [`database-queues-infinite-query-plane.md`](./database-queues-infinite-query-plane.md)
+- [`dual-fetch-plane-contract.md`](./dual-fetch-plane-contract.md)
+- [`empty-body-http3-normalizer.md`](./empty-body-http3-normalizer.md)
+- [`execute-sql-guard-ladder.md`](./execute-sql-guard-ladder.md)
+- [`grid-operation-queue-batch-save.md`](./grid-operation-queue-batch-save.md)
+- [`handle-error-classification-ladder.md`](./handle-error-classification-ladder.md)
+- [`helpers-list-guard-plane.md`](./helpers-list-guard-plane.md)
+- [`logs-sql-rewrite-offer-gate.md`](./logs-sql-rewrite-offer-gate.md)
+- [`notebook-cell-operations-reducer.md`](./notebook-cell-operations-reducer.md)
+- [`notebook-wire-draft-id-plane.md`](./notebook-wire-draft-id-plane.md)
+- [`openapi-client-kernel.md`](./openapi-client-kernel.md)
+- [`pg-format-ident-feexec-port.md`](./pg-format-ident-feexec-port.md)
+- [`pg-format-keyword-allowlist.md`](./pg-format-keyword-allowlist.md)
+- [`pg-format-literal-escaping-ladder.md`](./pg-format-literal-escaping-ladder.md)
+- [`pg-format-specifier-engine.md`](./pg-format-specifier-engine.md)
+- [`pg-meta-entity-retrieve-scoped-oid.md`](./pg-meta-entity-retrieve-scoped-oid.md)
+- [`pg-meta-guard-error-enrichment-middleware.md`](./pg-meta-guard-error-enrichment-middleware.md)
+- [`pg-meta-mutation-builder-plane.md`](./pg-meta-mutation-builder-plane.md)
+- [`pg-meta-routine-mutation-plane.md`](./pg-meta-routine-mutation-plane.md)
+- [`pg-meta-rows-count-scoped-gate.md`](./pg-meta-rows-count-scoped-gate.md)
+- [`query-cell-source-rebrand-plane.md`](./query-cell-source-rebrand-plane.md)
+- [`query-chain-toSql-pipeline.md`](./query-chain-toSql-pipeline.md)
+- [`query-filter-compiler.md`](./query-filter-compiler.md)
+- [`react-query-data-module-recipe.md`](./react-query-data-module-recipe.md)
+- [`role-impersonation-client-plane.md`](./role-impersonation-client-plane.md)
+- [`sql-mutation-contextual-invalidation.md`](./sql-mutation-contextual-invalidation.md)
+- [`sql-taint-brand-kernel.md`](./sql-taint-brand-kernel.md)
+- [`table-editor-prefetch-parse-plane.md`](./table-editor-prefetch-parse-plane.md)
+- [`table-editor-sensitive-column-masking-plane.md`](./table-editor-sensitive-column-masking-plane.md)
+- [`table-rows-count-consumer-gate.md`](./table-rows-count-consumer-gate.md)
+- [`table-rows-cursor-pagination-plane.md`](./table-rows-cursor-pagination-plane.md)
+- [`unified-logs-chart-zero-fill-plane.md`](./unified-logs-chart-zero-fill-plane.md)
+- [`unified-logs-pagination-inspection-plane.md`](./unified-logs-pagination-inspection-plane.md)
+- [`unified-logs-shared-safe-sql-builder.md`](./unified-logs-shared-safe-sql-builder.md)

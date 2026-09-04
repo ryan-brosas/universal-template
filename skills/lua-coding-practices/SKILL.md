@@ -7,7 +7,7 @@ disable-model-invocation: true
 
 # Lua Coding Practices
 
-Application skill for Lua style learning (from the archived `awesome-guidelines` style capsules). For Luau/Roblox or OpenResty-specific rules, after current project code and any project-local references, consult applicable stack capsules in `foundation-pack/`.
+Application skill for Lua style learning (from the archived `awesome-guidelines` style capsules). For Luau/Roblox or OpenResty-specific rules, after current project code and any project-local references, consult applicable stack capsules in `skills/*-foundation`.
 
 ## Core Principle
 

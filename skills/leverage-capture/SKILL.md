@@ -21,7 +21,7 @@ Preserve reusable value in its cheapest appropriate representation, not everythi
 |---|---|---|
 | **CODE** | Reusable implementation? | Actual code / library / project template |
 | **REFERENCE** | Upstream implementation or website worth keeping? | `reference/<repo>/` checkout or `reference/web/<site>/` capture per the `reference-driven-development` contract |
-| **FOUNDATION** | Reusable architecture/patterns/seams cheaper to retrieve than re-derive? | `foundation-pack/<x>-foundation/` (earned; not automatic from every repo) |
+| **FOUNDATION** | Reusable architecture/patterns/seams cheaper to retrieve than re-derive? | `skills/<x>-foundation/` (earned; not automatic from every repo) |
 | **GATE** | Deterministic regression class with low false positives? | Test / lint / CI check / validator script |
 | **SKILL** | Repeated procedure or hard-won operational method? | Skill leaf in the catalog (follows `writing-skills`) |
 | **PROJECT NOTE** | Critical rationale, operational constraint, or unresolved decision: expensive to reconstruct and not obvious from source, tests, Git, configuration, or session recall? | Smallest project-appropriate tracked location |
@@ -42,14 +42,18 @@ projects remain source, not capture candidates. Owned-project promotion
 requires an explicit user request after a stable milestone; finishing a project
 does not trigger promotion. External implementations remain demand-driven.
 Record portable upstream identity and revision so the foundation reconnects to
-real source; see `../reference-driven-development/references/contract.md`.
+real source. Mark it `kind: foundation`, manual, and hidden; keep exhaustive
+evidence in `skills/<x>-foundation/references/index.md` and load one capsule at
+a time. A foundation is cold evidence, not an operational procedure; see
+`../writing-skills/references/foundation-kind.md` and
+`../reference-driven-development/references/contract.md`.
 
 ## Workflow
 
 1. Recall evidence from diffs, source, tests, and selected session events. Raw session JSONL already owns history; never re-artifact it.
 2. Classify possible durable promotions. A reflection may recommend a SKILL candidate, but only explicit `/compile-skill` or an equivalent direct user request may create it.
 3. Explicitly drop cheap or one-off material.
-4. Promote only survivors. Skill candidates follow the catalog authoring rules; gate candidates need a demonstrated regression and a low-false-positive check; foundation candidates follow `../reference-driven-development/references/contract.md` provenance rules and land in `foundation-pack/<x>-foundation/`; project notes land in the smallest project-appropriate tracked location.
+4. Promote only survivors. Skill candidates follow the catalog authoring rules; gate candidates need a demonstrated regression and a low-false-positive check; foundation candidates follow `../reference-driven-development/references/contract.md` provenance rules and land in `skills/<x>-foundation/`; project notes land in the smallest project-appropriate tracked location.
 5. Report what was deliberately not saved.
 
 ## Red Flags
@@ -63,10 +67,11 @@ real source; see `../reference-driven-development/references/contract.md`.
 
 ## Verification
 
-Each survivor exists in its claimed form (code compiles/used; gate fails on the regression class and passes clean cases; skill passes the validator; foundation has SKILL.md with portable provenance and cited capsules on disk; owned-project promotion records the explicit post-milestone request; project note exists in its tracked location). The not-saved list is explicit.
+Each survivor exists in its claimed form (code compiles/used; gate fails on the regression class and passes clean cases; skill passes the validator; foundation has a manual, hidden, `kind: foundation` SKILL.md with portable provenance, a complete local reference index, and cited capsules on disk; owned-project promotion records the explicit post-milestone request; project note exists in its tracked location). The not-saved list is explicit.
 
 ## References
 
 - `../writing-skills/SKILL.md`, skill authoring grammar
+- `../writing-skills/references/foundation-kind.md`, foundation/procedure boundary
 - `../reference-driven-development/references/contract.md`, reference-checkout rules
 - `../goal-setup/SKILL.md`, where qualified long-run post-code work state may live

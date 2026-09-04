@@ -1,0 +1,279 @@
+<!-- Preserved from the pre-foundation-skill-v1 loader. Detail remains historical and revision-pinned. -->
+
+# Roo-Code Foundation
+
+## Use this for
+Building or porting a coding-agent harness's control plane: how actions get approved (or auto-answered), how runaway loops and budgets are bounded while keeping human guidance as the recovery path, how personas and their tool surfaces are computed, and how the loop survives async config, deep delegation, context overflow, and a walked-away user.
+
+## Load the matching source dump
+### Safety & approvals
+- `./approval-classifier.md` — one pure approve/deny/ask/timeout classifier for every ask kind; followup timeout carries its own resume closure.
+- `./approval-budget-windows.md` — watermark-scoped request/cost meters that reset on user approval.
+- `./repetition-breaker.md` — canonical-JSON consecutive-call detection; block at limit, RESET on block.
+- `./mistake-breaker-delegation.md` — mistake ceiling escalates to the human with a guidance channel; delegation validation feeds the same counter.
+- `./tool-use-validation.md` — execution-time gate: alias resolution, requirements-beat-always-available precedence, param-aware edit fileRegex incl. per-file patch paths.
+
+### Personas & tools
+- `./mode-persona-routing.md` — personas advertised in-prompt for model-driven selection; alias-normalized group filtering + rename cache.
+- `./native-tool-assembly.md` — build-tools assembly: filtered array vs all-tools + alias-resolved allowedFunctionNames (Gemini), experiment-gated custom-tool loading.
+- `./promise-gate-config.md` — readiness promise beside every late-initialized field; races impossible by construction.
+
+### Loop resilience
+- `./request-stack-loop.md` — explicit StackItem loop, 75%/3-retry context-overflow policy, early global rate-slot reservation.
+- `./context-error-classification.md` — total never-throws predicate routing provider errors into overflow recovery (OpenAI/OpenRouter/Anthropic shape families).
+- `./context-management-ladder.md` — trigger math shared by manageContext/willManageContext; condense-first with truncation fallback at frac 0.5.
+
+### Context plane: non-destructive history
+- `./fresh-start-condense.md` — summary-as-user-message fresh start; every prior message tagged condenseParent; workflows re-injected from message 0.
+- `./effective-api-history.md` — existence-keyed visibility projection; orphaned parents reactivate messages after rewind.
+- `./non-destructive-truncation.md` — tag-don't-delete sliding window: even-pair rounding, first-message immunity, boundary marker at ts−1.
+- `./folded-file-context.md` — tree-sitter signature folding over a recency-sorted read ledger under a strict character budget.
+- `./file-staleness-tracking.md` — append-only staleness ledger with self-edit echo suppression and get-and-clear drains.
+
+### State & UI
+- `./message-manager-rewind.md` — single rewind choke point reconciling BOTH histories; user-message-snapped cutoffs; orphan marker/summary removal in one write.
+- `./api-request-shaping.md` — send-only repairs: dedupe → position-match tool ids → synthesize missing results; role merging with summary boundaries.
+- `./task-persistence-durability.md` — degrade-to-empty reads, parse-gated legacy migration, snapshot-before-save writes for the dual JSON logs.
+- `./shadow-checkpoints.md` — per-task shadow git repos with loud core.worktree validation.
+- `./say-ask-protocol.md` — say narrates, ask blocks; AskIgnoredError makes "user never answered" a handled path.
+- `./task-history-store.md` — per-task JSON files are truth, `_index.json` is a debounced cache: proper-lockfile + in-process lock + fs.watch + 5-min reconcile heal every drift combination.
+
+### Native tool-call streaming & protocol
+- `./native-parser-stream-tracker.md` — index-keyed raw-chunk tracker: name-gated start events flush pre-start delta buffers; finalize ends only started calls; state cleared per request.
+- `./native-parser-partial-json.md` — accumulate-and-reparse partial-JSON preview: null-on-malformed, MCP names never emit partials, finalize deletes its state (one-shot).
+- `./native-parser-fail-fast-validation.md` — two-plane result (display `params` vs execution-only typed `nativeArgs`); alias-before-validate; unknown params warn-drop; unconstructable = structured hard failure.
+- `./present-lock-single-result.md` — locked-or-coalesce presentation with an exactly-one-tool_result latch; approval feedback merges INTO the result (#10465); rejected streams still answer every tool_use; validate complete blocks only.
+- `./tool-id-sanitization.md` — sanitize chars BEFORE truncating; 64-char cap keeps an MD5-of-original suffix so distinct long ids stay distinct and replay is deterministic.
+- `./mcp-tool-name-grammar.md` — `mcp--server--tool` wire grammar: fuzzy detect (`__`/`--`) but canonical rejoin; sanitizer collapses `--+` so components can never contain the separator they split on.
+
+### Config plane
+- `./context-proxy-cache.md` — key-list-driven write-through caches over VSCode state/secrets; secret routing by key type; sanitize-before-parse to break validation update loops; customization-preserving migrations.
+- `./provider-profiles-secrets-store.md` — whole profile doc under one secrets key; promise-chain lock that never rejects; skip-poisoned-entry loads; boolean per-migration flags instead of version ints.
+- `./custom-modes-yaml-store.md` — project-over-global slug merge tagged by source; serialized write queue; TTL cache; invisible-character sanitation before YAML parse (JSON fallback for `.roomodes`).
+
+### Prompt caching & provider transport
+- `./anthropic-cache-breakpoints.md` — three fixed Anthropic breakpoints: system block REBUILT with the marker, last TWO user messages marked on their last text part, image-only turns get a `...` filler so a cacheable prefix always terminates.
+- `./multipoint-cache-strategy.md` — budgeted Bedrock `cachePoint` placement whose placements are CARRIED across requests; keeping the stale cached prefix beats tail coverage, and merging old points requires a ×1.2 token-benefit hysteresis.
+
+### Editing, streaming text & access
+- `./fuzzy-search-replace-applier.md` — SEARCH/REPLACE marker grammar → top-down blocks with shared line delta → exact/buffered/global middle-out similarity ladder → relative-indent transplant; `failParts` preserves applied edits.
+- `./typographic-normalization.md` — normalize BOTH sides for match (smart quotes/dashes/NBSP), splice ORIGINAL bytes for output; same options or scores skew.
+- `./streaming-tag-splitter.md` — char-state machine (TEXT/TAG_OPEN/TAG_CLOSE) with depth-counted nesting and same-class chunk coalescing; bounded memory over unbounded streams.
+- `./rooignore-access-control.md` — realpath-before-match ignore gating with fresh-instance reloads; deliberate split fail directions (single-read fail-open vs bulk-listing fail-closed); terminal reader-command whitelist.
+- `./mention-parsing-pipeline.md` — two-pass existence checks; @-mentions become separate tool-result-shaped content blocks with next-offset hints; ignored/binary/missing produce visible stubs, never silent omission.
+
+### Search & code-intelligence services
+- `./ripgrep-search-transport.md` — spawn-bounded `rg --json` transport: 5× line-ceiling kill-ladder, JSONL begin/match/end block merging, `--glob` omitted when no pattern (or gitignore dies), post-hoc RooIgnore filtering that consumes budget.
+- `./tree-sitter-definition-outline.md` — capture→outline walker: definition/name gating, range-key dedupe, min-span floor, 0-based rows emitted as 1-based inclusive ranges, JSX element filter with component-name bypass.
+- `./wasm-grammar-loader.md` — lazy per-extension parser map with one-time `Parser.init()`; the ejs/erb→`embedded_template` key remap vs extension lookups is a live-defect trap documented both ways.
+- `./markdown-mock-captures.md` — grammarless markdown fakes tree-sitter captures (pair-per-header, mutated section end rows) so ONE downstream processor stays untouched.
+- `./query-pack-grammar.md` — the `@definition.*`/`@name.definition.*` capture convention + `#match?` predicates that let one ~100-line walker outline ~40 languages.
+
+### Code-index RAG subsystem (`src/services/code-index/`, whole-file)
+- `./orchestrator-failure-ladder.md` — cumulative-counter scan classification: ≤10% batch loss with errors still reaches Indexed; zero-blocks and >10% rungs throw into collection-wipe cleanup.
+- `./scanner-cache-ordering.md` — file hashes persist ONLY after their batch's Qdrant upsert succeeds; delete-before-upsert for modified-but-not-new files; MAX_PENDING_BATCHES backpressure.
+- `./scanner-deletion-sweep.md` — end-of-scan GC deletes points for every cached path absent from the processed set; unreadable ≡ deleted by design.
+- `./parser-chunk-kernel.md` — 50/1000/200/1.15 char gate set, backward remainder-aware split search, oversized-line `_segment` blocks, one per-file segmentHash dedupe set across all four block factories.
+- `./markdown-section-chunking.md` — header-level-typed sections with identifier propagation + pre/post-header content; the 1-based/0-based boundary line drop between last section and tail.
+- `./watcher-upsert-noop.md` — LIVE DEFECT at pin: phase-3 `_executeBatchUpsertOperations` returns its argument; prepared points and fresh hashes are discarded on the watcher path.
+- `./point-id-duality.md` — scanner ids = uuidv5(segmentHash), watcher ids = uuidv5(`path:startLine`); mixing grammars in one collection silently duplicates blocks.
+- `./pathsegments-filter-grammar.md` — positional `pathSegments.N` equality clauses for directory filters AND file deletions (relative-path mirrored both sides); deletions swallow errors after logging.
+- `./indexing-marker-protocol.md` — deterministic-UUID metadata point rides IN the collection; completion state is store-local with a points_count>0 legacy fallback; always-merged must_not excludes it from search.
+- `./orchestrator-cache-fork.md` — failure cleanup keyed on store-connectivity: reached-Qdrant ⇒ wipe collection+cache together; never-connected ⇒ preserve cache for incremental resume.
+- `./cache-debounce-flush.md` — in-memory hash map authoritative, 1500ms debounced disk checkpoint, explicit flush() on every abort path, per-workspace hashed filenames.
+- `./embedder-batching-kernel.md` — one chars/4 greedy kernel shared by 4 providers; oversized items warn-DROPPED; query prefixes with double-prefix guard and cap-respecting skip.
+- `./base64-embed-decode.md` — SDK-backed embedders request `encoding_format:"base64"` to bypass the OpenAI package's 256-dim truncation bug; manual little-endian float32 decode.
+- `./global-rate-limiter.md` — static-per-class 429 state under a mutex: consecutive-error window 60s, delay 5s·2^(n−1) capped 5min, silent waits; openrouter duplicates the state independently.
+- `./provider-wrapper-embedders.md` — gemini/mistral/vercel compose OpenAICompatibleEmbedder (+gemini's silent text-embedding-004 migration); EMBEDDING_MODEL_PROFILES registry owns dimensions/scoreThresholds/queryPrefixes.
+- `./bedrock-model-dispatch.md` — paired request/response ladders over nova/titan/cohere-v4/cohere-v3 families; ThrottlingException retries; AWS error-name validation mapping.
+- `./restart-matrix.md` — snapshot-then-compare critical-change ladder where model swaps WITHIN the same vector dimension skip restart and unknown dimensions fail safe toward restart.
+- `./recovery-service-wipe.md` — recoverFromError nulls all four services in finally under a boolean latch; per-folder-URI enablement keys gate expensive service creation.
+- `./error-sanitization-funnel.md` — ordered redaction pipeline (URLs→emails→IPs→paths→ports with REDACTED_URL lookbehind guard) + status/connection dual-ladder i18n mapping; behavioral probe executed verbatim.
+- `./search-gating-state.md` — search allowed in Indexed OR Indexing; any search error flips Error-state then rethrows; progress reporters can never override Stopping.
+- `./dimension-recreate-ladder.md` — delete → 100ms → verify-gone → recreate with staged `.cause` context; payload indexes tolerate already-exists; recreation is destructive-by-design via the marker protocol.
+
+### MCP server plane (`src/services/mcp/`, whole-file)
+- `./mcphub-config-validation-ladder.md` — pre-schema triage (mixed-field throw, stdio type inference, url type demanded) over a three-branch discriminated Zod union with forbidden-cross-fields; every rejection is a named, human-readable error.
+- `./mcphub-stdio-start-monkey-patch.md` — start the transport yourself, attach stderr handlers, then neuter `start` to a no-op so `client.connect()` cannot restart it: the only ordering that captures pre-connection stderr.
+- `./mcphub-windows-cmd-wrap.md` — win32 wraps every command as `cmd.exe /c <cmd> <args>` for .ps1-implemented node-version-manager shims, with a lowercase double-name check preventing double-wrap.
+- `./mcphub-programmatic-write-echo-suppression.md` — latch flag → write in try/finally → reset on a 600ms timer strictly LONGER than the 500ms watcher debounce; back-to-back writes extend via timer clear.
+- `./mcphub-project-over-global-precedence.md` — one source-tagged connection array; project wins at EVERY consumer (lookup order, dedupe, sort); global stays live so un-shadowing needs no reconnect.
+- `./mcphub-disabled-placeholder-connections.md` — disabled servers stay visible as null-client placeholders carrying a DisableReason; UI visibility never implies usability (callTool still throws).
+- `./mcphub-sanitized-name-resolution.md` — exact → sanitized-name registry → `-`/`_` fuzzy ladder resolving model-mangled names back to connections; sanitize collapses `--+→-` so names can never contain the wire separator.
+- `./mcphub-toollist-policy-merge.md` — alwaysAllow/disabledTools stamped onto fetched tools by READING THE FILE (disk is truth), `"*"` wildcard evaluated per fetch; toggle polarity inverted at the disabledTools boundary.
+- `./mcphub-calltool-timeout-ladder.md` — per-call re-parse of the stored config string through the full schema; TWO independent default-60 mechanisms (schema default + catch fallback) keep corrupt configs from hanging tool calls.
+- `./mcphub-error-history-ledger.md` — single append choke-point truncating to 1000 chars, keeping last 100 entries, mirroring newest into `server.error`; success clears display but preserves audit history.
+- `./mcphub-sse-reconnecting-eventsource.md` — global EventSource swap + custom fetch wrapper that re-applies Authorization headers on EVERY reconnect attempt.
+- `./config-inject-variables-templating.md` — `${env:NAME}`/`${workspaceFolder}` expansion via stringify→regex→re-parse; missing vars keep their literal and warn instead of throwing.
+- `./safewritejson-atomic-ladder.md` — proper-lockfile → stream to `.new` tmp → backup-rename → commit-rename → rollback ladder where cleanup failures are logged but NEVER replace the original error.
+- `./mcpservermanager-singleton-promise-lock.md` — promise-slot singleton with double-check inside and finally-clear so failed init retries; `waitUntilReady()` gates publication, not construction.
+- `./mcphub-deepEqual-reconcile.md` — delete-removed → add-new → reconnect-only-if-config-differs reconcile; no-change means no-restart; invalid configs isolate to one server.
+- `./mcphub-refcount-lifecycle.md` — register/unregister bracket disposing exactly at zero-crossing; idempotent dispose drains timers → watchers → connections in fixed order through normal deleteConnection.
+- `./mcphub-restart-and-full-refresh.md` — single-server restart reuses the stored config snapshot behind a visible 500ms pause; global refresh wipes ALL connections (iterating a copy) then re-inits both sources.
+- `./mcphub-config-watcher-topology.md` — three watcher families (global settings, project `.roo/mcp.json`, workspace folders) feeding one debounced validate-before-reconcile path; project-file deletion is handled at BOTH event and read-race ENOENT.
+
+### Tool-class kernel & never-cited service planes (`src/core/tools/`, `src/services/{skills,checkpoints,glob}/`, `src/core/auto-approval/`, `src/utils/logging/`)
+- `./patch-parser-grammar-leniency.md` — Codex apply_patch grammar with exactly TWO leniencies: heredoc wrapper unwrap and first-chunk-only missing `@@`; empty line = context on both sides; un-prefixed line silently ends a started chunk.
+- `./patch-seek-multi-pass-ladder.md` — exact→trimEnd→trim→Unicode four-pass matcher where PASS ORDER beats proximity; eof chunks anchor at a SINGLE end position (docstring's fallback-to-start claim is false).
+- `./patch-apply-reverse-splice.md` — compute all `[start,len,new]` replacements against a monotonic cursor then splice in reverse; pure additions land at EOF-before-trailing-blank; one trailing-empty-string retry for newline drift.
+- `./patch-tool-commit-loop.md` — compute-all-then-commit-one-by-one: match failures abort before ANY write, but rooIgnore/approval gates run per file so multi-file patches are deliberately NOT transactional.
+- `./base-tool-kernel-contract.md` — nativeArgs-only dispatch with the loud XML-migration error; two-observation path-stabilization gate for streaming previews; singleton tools must resetPartialState() on every exit path.
+- `./edit-vs-search-replace-twins.md` — edit uses callback-literal replacement while search_replace interprets `$&`/`$1`; edit offers replace_all vs search_replace's always-single-match; absolute-path acceptance differs.
+- `./skills-discovery-override-lattice.md` — four skill homes scanned in fixed order (.agents under .roo per level), directory name IS identity (frontmatter must match), project>global + mode-specific>generic override comparator, SKILL.md watchers re-discover wholesale.
+- `./skill-invocation-envelopes.md` — mode-aware lookup returning null-not-throw, approval JSON `{tool:"skill",…}`, result text embedding instructions under the `--- Skill Instructions ---` banner.
+- `./checkpoint-exclude-families.md` — nine static gitignore families + dynamic LFS patterns parsed from `.gitattributes` `filter=lfs` lines; cross-family duplicates by design; RepoPerTaskCheckpointService is a path-shim subclass of the mined shadow-checkpoints kernel.
+- `./command-decision-longest-prefix.md` — chain-split decisions where any denial blocks all, strict longer-prefix tie-break fails CLOSED on equal length, and a full-string dangerous-substitution veto (${var@P}, ${!var}, =(…) zsh forms) forces ask_user after list checks.
+- `./compact-log-delta-format.md` — NDJSON entries whose `t` is delta-ms since previous line, file output ungated by level filter, lazy init writing a t:0 session marker that alone carries absolute time; child loggers inherit parent meta with ctx fallback.
+- `./glob-ignore-segment-matcher.md` — segment-exact + `/dir/` substring matching over DIRS_TO_IGNORE where literal `".*"` means every dot-directory; no glob semantics, cheap pre-filter only.
+
+### File read/list & artifact tool plane (`src/core/tools/{ReadFileTool,ListFilesTool,UpdateTodoListTool,ReadCommandOutputTool}.ts`, whole-file)
+- `./read-file-windowing-modes.md` — one tool, two paginations: slice offset/limit vs indentation anchor blocks; 1-based→0-based single conversion; truncation warning ABOVE content teaching next offset/limit; out-of-bounds slice errors swallowed into "Note: File is empty".
+- `./indentation-bidirectional-expansion.md` — parser-free block extractor: tab=4 indent math, blank-line inheritance, two-cursor expansion with one-min-indent-line-per-side sibling exclusion, includeHeader = comments-at-minIndent bypass (not header prepend), error-as-content anchors.
+- `./read-file-binary-ladder.md` — image → validate(process-order reasons)→process→dataUrl under a per-read cumulative MB tracker (add-after-success), PDF/DOCX/IPYNB/XLSX extract+number, unsupported notice-only; real addLineNumbers semantics differ from every mock.
+- `./read-file-approval-batch-keys.md` — `${path} (${lineSnippet})` approval keys carrying per-file JSON permissions inside ONE ask; unparseable replies fail CLOSED to all-denied; approval precedes any disk access.
+- `./list-files-format-marking.md` — 200-entry cap in the tool, dirs-first segment sort so truncated lists stay explorable, re-resolve-before-validateAccess (nested ignore grammar), 🔒-ignored / 🛡️-protected visibility markers, recovery-naming truncation notice.
+- `./todo-list-approval-edit-loop.md` — module-global stash-compare slot lets webview edits overwrite the proposal mid-ask; user version wins and the model is told via result text + user_edit_todos; md5(content+status) ids vs randomUUID; forward-only status transitions.
+- `./command-output-artifact-pagination.md` — `/^cmd-\d+\.txt$/` whitelist IS the access control for out-of-workspace artifacts; byte-based windows, 64KB chunked search with partialLine carry and pre-add byte-budget break, newline-count line reconstruction, no approval gate by design.
+- `./checkpoint-before-mutating-dispatch.md` — why do only some tool cases save a shadow checkpoint, and how often.
+- `./codebase-search-dual-emission.md` — how does the RAG search result reach BOTH the UI and the model, and who owns the gates.
+
+## Capsule map
+- **Safety & approvals** — approval-classifier, approval-budget-windows, repetition-breaker, mistake-breaker-delegation, tool-use-validation: policy as pure functions, windows not lifetimes, blocks that reset on human intervention, and a call-time gate that re-checks what build-time filtering cannot.
+- **Personas & tools** — mode-persona-routing, native-tool-assembly, promise-gate-config: data-driven modes, alias-group idempotent filtering, one assembly point with a visible-all + allowlist shape for restricting providers.
+- **Loop resilience** — promise-gate-config, request-stack-loop, context-error-classification, context-management-ladder: late-config gates, stack-not-recursion sequencing, total error predicates feeding bounded overflow retries, condense-before-truncate triggers.
+- **Context plane (non-destructive history)** — fresh-start-condense, effective-api-history, non-destructive-truncation, folded-file-context, file-staleness-tracking: tag-don't-delete condense/truncate whose visibility is existence-keyed, signature folding to survive fresh starts, staleness ledgers for out-of-band edits.
+- **State & UI** — message-manager-rewind, api-request-shaping, task-persistence-durability, shadow-checkpoints, say-ask-protocol: dual-log durability with single-choke-point rewind reconciliation, send-only shaping repairs, task-scoped undo, narration vs blocking with ignorable asks.
+- **State & UI (multi-instance history)** — task-history-store: per-task JSON files are truth and `_index.json` a debounced cache; in-process lock + proper-lockfile + fs.watch + 5-min reconcile heal every drift combination across instances.
+- **Native tool-call streaming & protocol** — native-parser-stream-tracker, native-parser-partial-json, native-parser-fail-fast-validation, present-lock-single-result, tool-id-sanitization, mcp-tool-name-grammar: index-keyed chunk reassembly into ordered events, accumulate-and-reparse partial previews, two-plane params/nativeArgs parsing that fails fast only when unconstructable, an exactly-one-tool_result presentation latch under a coalescing lock, provider-safe id sanitization, and the `mcp--server--tool` wire grammar.
+- **Config plane** — context-proxy-cache, provider-profiles-secrets-store, custom-modes-yaml-store: write-through key-list caches over VSCode state/secrets, one-secrets-key profile documents guarded by a never-rejecting promise-chain lock with per-migration flags, and serialized project-over-global YAML mode stores.
+- **Prompt caching & provider transport** — anthropic-cache-breakpoints, multipoint-cache-strategy: role-based fixed breakpoints (marker-on-text-part, system rebuilt) for Anthropic-protocol requests vs carried-placement budgeted cache points with prefix-stability hysteresis for point-budgeted backends like Bedrock.
+- **Editing, streaming text & access** — fuzzy-search-replace-applier, typographic-normalization, streaming-tag-splitter, rooignore-access-control, mention-parsing-pipeline: marker-grammar diffs with a middle-out similarity ladder over normalized text (splicing original bytes back), char-state tag splitting, realpath'd ignore gating with deliberate per-surface fail directions, and mention rewriting into pseudo-tool-result content blocks.
+- **Search & code-intelligence services** — ripgrep-search-transport, tree-sitter-definition-outline, wasm-grammar-loader, markdown-mock-captures, query-pack-grammar: one bounded JSONL ripgrep transport feeding the search tool; one tree-sitter outline walker fed by a lazy WASM loader whose query packs share a single capture convention — with a regex mock-capture protocol so markdown rides the same pipeline, and the ejs/erb key remap documented as the live keying trap.
+- **Code-index RAG subsystem** — orchestrator-failure-ladder, scanner-cache-ordering, scanner-deletion-sweep, parser-chunk-kernel, markdown-section-chunking, watcher-upsert-noop, point-id-duality, pathsegments-filter-grammar, indexing-marker-protocol, orchestrator-cache-fork, cache-debounce-flush, embedder-batching-kernel, base64-embed-decode, global-rate-limiter, provider-wrapper-embedders, bedrock-model-dispatch, restart-matrix, recovery-service-wipe, error-sanitization-funnel, search-gating-state, dimension-recreate-ladder: a workspace→Qdrant RAG pipeline where cache/store consistency is enforced by WRITE ORDERING (hashes trail upserts), scan completion lives as an in-collection metadata marker excluded from its own searches, directory filters are positional pathSegments equality clauses shared with per-file deletes, one token-budget batching kernel feeds eight provider wrappers over a model registry that owns dimensions/thresholds/prefixes, and failure semantics are explicit at every rung (≤10% block loss tolerated, connectivity-keyed cache preservation, dimension-mismatch destructive recreation) — plus two documented-at-pin defects: the watcher's no-op phase-3 upsert stub and the scanner/watcher point-ID grammar split.
+- **MCP server plane** — mcphub-config-validation-ladder, mcphub-stdio-start-monkey-patch, mcphub-windows-cmd-wrap, mcphub-programmatic-write-echo-suppression, mcphub-project-over-global-precedence, mcphub-disabled-placeholder-connections, mcphub-sanitized-name-resolution, mcphub-toollist-policy-merge, mcphub-calltool-timeout-ladder, mcphub-error-history-ledger, mcphub-sse-reconnecting-eventsource, config-inject-variables-templating, safewritejson-atomic-ladder, mcpservermanager-singleton-promise-lock, mcphub-deepEqual-reconcile, mcphub-refcount-lifecycle, mcphub-restart-and-full-refresh, mcphub-config-watcher-topology: a multi-source MCP client hub where config files are the single truth (watched, debounced, validated loudly, reconciled with no-change-no-restart deepEqual), disabled servers stay visible as reason-tagged placeholders, model-mangled tool names resolve through an exact→registry→fuzzy ladder over separator-safe sanitization, stderr is captured by start-then-monkey-patch ordering, and every self-write suppresses its own watcher echo with a reset window strictly longer than the debounce.
+- **Tool-class kernel & service planes** — patch-parser-grammar-leniency, patch-seek-multi-pass-ladder, patch-apply-reverse-splice, patch-tool-commit-loop, base-tool-kernel-contract, edit-vs-search-replace-twins, skills-discovery-override-lattice, skill-invocation-envelopes, checkpoint-exclude-families, command-decision-longest-prefix, compact-log-delta-format, glob-ignore-segment-matcher: an abstract BaseTool whose nativeArgs-only dispatch and path-stabilization gate every tool class shares; the Codex apply_patch pipeline (strict grammar with two documented leniencies → four-pass fuzzy seek where pass order beats proximity → compute-then-reverse-splice application under a monotonic cursor → per-file commit loop that is deliberately non-transactional); twin string-edit tools diverging on $-pattern interpretation and replace_all; a four-home skills lattice keyed by directory identity; pure command auto-approval where longest prefix wins ties fail-closed and dangerous shell substitutions always escalate to the human; delta-timestamp NDJSON logging with ungated file sinks; and segment-exact ignore matching for glob pre-filtering.
+- **File read/list & artifact tool plane** — read-file-windowing-modes, indentation-bidirectional-expansion, read-file-binary-ladder, read-file-approval-batch-keys, list-files-format-marking, todo-list-approval-edit-loop, command-output-artifact-pagination: the agent's workspace-perception tools where errors become content (FileResult status enums joined by `---` separators), line numbers are re-derived at every layer by three different algorithms, pagination units split by design (read_file lines vs read_command_output bytes), truncation notices name their own recovery command, approval keys carry per-item JSON permissions that fail closed, user edits can overwrite an approved proposal in-band, and out-of-workspace artifacts replace the approval gate with a whitelist id grammar.
+- **checkpoint-before-mutating-dispatch** — `checkpoint-before-mutating-dispatch`: why do only some tool cases save a shadow checkpoint, and how often.
+- **codebase_search tool plane** — `codebase-search-dual-emission`: how does the RAG search result reach BOTH the UI and the model, and who owns the gates.
+## Extending the foundation
+Add one references-file capsule per seam from `.pi/templates/foundation-capsule.md` (Source/Question, Path/Symbol, Signature, Data Shape, decisive source excerpt, Flow, Invariant, Probe, Retrieve, Verdict), add its loader line, group it in this map, and pin probes to `src/**/__tests__/` specs where they exist.
+
+## Provenance
+Indexed in Codebase Memory as `Roo-Code` (`/mnt/hdd/utopia/inspo/Roo-Code`, canonical root `/mnt/hdd/utopia/inspo/coding-agents/Roo-Code`), branch `main@b867ec9145750d0ae1ff7f02d35406e9bf2a0b16`, 36,333 nodes / 77,100 edges. Source and tests remain authoritative; the graph is a discovery index.
+Pass 5 (mem0+roo dedicated rotation lane, 2026-08-24, [DONE:310], 43→64 @ unchanged pin main@b867ec91, zero drift, graph ready 36,333n/77,100e): mined the pass-4 omit-ledger's largest never-cited mass — `src/services/code-index/` — WHOLE-FILE: all 30 production files (6,830 LOC) read top-to-bottom plus `shared/embeddingModels.ts` registry and decisive test suites → +21 capsule-v2 across a new "Code-index RAG subsystem" map group. Load-bearing invariants captured: cache/store consistency by write ordering; in-collection completion marker excluded from its own searches; positional pathSegments equality grammar shared by directory filters and file deletes; ≤10% batch-loss tolerance ladder; connectivity-keyed cache preservation fork; dimension-mismatch destructive recreation with staged causes. TWO LIVE DEFECTS documented at pin: watcher `_executeBatchUpsertOperations` is a stub returning its argument (prepared points + fresh hashes discarded — watcher edits reach the index only via next scan), and scanner-vs-watcher point-ID grammars differ (uuidv5(segmentHash) vs uuidv5(`path:startLine`) under one namespace = silent duplication if mixed). Gate evidence: 53-probe battery executed byte-exact GREEN from repo root incl. verbatim node-exec of sanitizeErrorMessage (URL/email/IP/quoted-path/port redacted in one input); coverage stdin-JSON over newly cited paths no_recorded_issue+metadata_match; parity set-diff bidirectional 64=64=64 all-v2; membership unchanged. Omitted-with-reason within code-index after whole-file sweep: none remaining (every .ts file cited); embedder twins mistral/vercel folded into provider-wrapper capsule. /// Pass 6 (mem0+roo dedicated rotation lane drain-lane-mem0-roo, 2026-08-24, [DONE:363], 64→82 @ UNCHANGED pin main@`b867ec9145750d0ae1ff7f02d35406e9bf2a0b16` = head = base_sha = origin/main zero drift after fetch (rev-list=0), graph `Roo-Code` ready 36,333n/77,100e parse_partial ×26 incl. Task.ts/ClineProvider sticky specs — none of this plane's files flagged): executed the queued conditional "McpHub.ts IF an MCP-lifecycle question emerges" — fired on the explicit multi-source-MCP-client porting question. Read WHOLE-FILE top-to-bottom: McpHub.ts (ALL 1,995L), McpServerManager.ts (86L), utils/mcp-name.ts (190L), utils/config.ts (66L), utils/safeWriteJson.ts (223L) + McpHub.spec.ts structure (2,371L: 12 describes / 44 its) → +18 capsule-v2 across a new "MCP server plane" map group. Load-bearing invariants: config-file-as-truth with validate-before-reconcile and no-change-no-restart deepEqual gate; start→attach-stderr→monkey-patch-start→connect ordering as the ONLY way to capture pre-connection stderr; programmatic-write echo suppression where flag-reset window (600ms) must exceed watcher debounce (500ms); project-over-global precedence enforced at EVERY name-keyed consumer over one source-tagged array; reason-tagged disabled placeholders keeping servers visible but unusable; sanitize `--+→-` collapse guaranteeing names never contain the `--` wire separator; TWO independent default-60 timeout mechanisms for corrupt-config safety; safeWriteJson error-priority rule (original error always wins over lock/cleanup failures); singleton promise-slot with finally-clear making failed init retryable. Gate evidence: search_graph Retrieve battery 9/9 rank#1 line-exact pre-write (connectToServer :655-896 total:70, validateServerConfig :215-273, debounceConfigChange :301-322 total:389, appendErrorMessage :898-923 total:1, fetchToolsList :980-1038 total:1, getInstance :20-54 total:8, updateServerToolList :1780-1860, sanitizeMcpName :90-115 total:5, injectVariables :35-66 total:50); probe battery v1 28 PASS/19 FAIL adjudicated → extraction-side quoting bugs fixed AND two REAL capsule count-defects repaired against live grep (cleanupProjectMcpServers refs = 3 not 4; initializationPromise sites = 5 not 3) → v2+fixups 34/34 GREEN byte-exact from repo root; direct-test pins verified present (McpHub.spec.ts cmd-wrap/timeout/wildcard/dedup/disable-reason suites + mcp-name.spec.ts 60its + config.spec.ts 19its); vitest runner standing-block (no node_modules in inspo clone). Parity disk=loader=map 82=82=82 bidirectional set-equality. OMITTED-WITH-REASON pass 6 within mcp plane: notifyWebviewOfServerChanges webview message plumbing (product render surface, sort comparator itself mined in precedence capsule), per-call i18n toast keys (t() wrappers mined as behavior not copy), chokidar watchPaths option plumbing beyond the restart contract (mined inside reconcile capsule). NEXT-PASS TARGETS (pass 7+, ONLY past `b867ec91` drift or named questions): citation-vs-inventory grep FIRST vs all 82 refs; checkpoints/ShadowCheckpointService 517L re-verification against existing shadow-checkpoints capsule; glob/list-files second execRipgrep twin only on a search-transport question; code-index service-factory URL-parse fallbacks only on a multi-endpoint Qdrant question; else squeezed-to-last-drop for cycle at 82/82 v2 /// Pass 7 (DEEPENING-B lane cron 839e2578a184 successor fire, 2026-08-24, [DONE:410], 82→94 @ UNCHANGED pin main@`b867ec9145750d0ae1ff7f02d35406e9bf2a0b16` = head = base = origin/main zero drift after fetch rev-list=0; graph `Roo-Code` ready 36,333n/77,100e; root symlink LIVE into coding-agents/Roo-Code readlink-verified — benign per [DONE:348], no twin): pass-start parity 82=82=82 all-v2 CLEAN (no interrupted-sibling orphans); executed the standing citation-vs-inventory target FIRST — full tracked-tree grep vs all 82 refs exposed 583/648 uncited src+webview files, adjudicated product-surface mass (webview components, per-provider thin twins) out and mined five never-cited planes whole-file (~4.7kL: apply-patch/ kernel 713L, ApplyPatchTool/EditTool/SearchReplaceTool/BaseTool tool classes 1,191L, skills service 773L, checkpoints/excludes.ts + RepoPerTaskCheckpointService 227L, auto-approval/commands.ts 368L, logging trio 395L, glob/ignore-utils.ts) → **+12 capsule-v2** in NEW map group "Tool-class kernel & service planes": patch-parser-grammar-leniency (two deliberate leniencies: heredoc unwrap + first-chunk-only missing @@), patch-seek-multi-pass-ladder (pass-order-beats-proximity; eof = SINGLE end position, docstring fallback claim FALSE), patch-apply-reverse-splice (monotonic cursor + reverse splice; pure additions anchor before trailing blank), patch-tool-commit-loop (compute-all-then-commit-one-by-one = deliberately NON-transactional multi-file patches), base-tool-kernel-contract (nativeArgs-only + XML-migration error; two-observation path stabilization; singleton reset discipline), edit-vs-search-replace-twins (edit callback-literal vs search_replace $&-INTERPRETING replacement; replace_all vs always-single; absolute-path divergence), skills-discovery-override-lattice (four homes, directory name IS identity, project>global/mode>generic comparator, first-wins on equal specificity), skill-invocation-envelopes, checkpoint-exclude-families (9 static families + dynamic .gitattributes LFS leg; cross-family dups by design; RepoPerTask = path-shim subclass of shadow kernel — target #2 discharged as distinct-seam finding), command-decision-longest-prefix (any-denial-blocks-all; equal-length tie fails CLOSED to deny; full-string dangerous-substitution veto AFTER list checks), compact-log-delta-format (delta-ms NDJSON; file sink UNGATED by level filter; lazy init t:0 session marker carries absolute time), glob-ignore-segment-matcher (literal ".*" magic entry = every dot-directory; no glob semantics). Probes re-derived against live grep BEFORE writing and executed byte-exact (25 greps incl. cross-family dup proofs `*.csv`→2, EOF-anchor `lines.length - pattern.length`→2); Retrieves live-resolved for apply-patch trio/ApplyPatchTool/skills/auto-approval rank#1 line-exact; CompactLogger BM25 zero-hit at pin (doc-shaped plane caveat in-capsule, search_code/grep is the retrieval primitive there); parity 94=94=94 bidirectional set-equal all-v2 post-wire. OMITTED-WITH-REASON this pass: remaining src/core/tools/* single-purpose classes (AskFollowupQuestion/AttemptCompletion/ListFiles/ReadFile/etc. — same BaseTool contract, no new invariant beyond captured kernels; revisit only on a named porting question), api/providers+fetchers+transform mass (thin provider twins per Boundaries), webview-ui/* (product surface), core/prompts bodies, tree-sitter queries/*.ts data tables (grammar loader capsule covers the mechanism). NEXT-PASS TARGETS (pass 8+, ONLY past b867ec91 drift or a named question): diff-first `git log b867ec91..origin/main --stat -- src/core/tools/ src/services/`; ReadFileTool 813L (largest uncited tool class — line-windowing/rooignore interplay) if a file-read porting question emerges; AutoApprovalHandler.spec.ts plane (155L handler wiring the commands.ts kernel); executeCommand*Tool twins if shell-exec semantics get questioned; else squeezed-to-last-drop for cycle at 94/94 v2 /// Prior passes: pass 4 ([DONE:225], commit 60dfee1) tree-sitter+ripgrep plane 38→43; pass 3 ([DONE:219]) adopted interrupted-sibling orphan set + prompt-cache seam 36→38 (commit `99234b6`, re-verified 39 symbol anchors + 14 test suites); pass 2 ([DONE:157]) condense/context/message-manager/persistence planes 21→33; pass 1 ([DONE:127]) legacy sweep 9 capsule-v2. |
+
+Pass 8 (dedicated lane miner-Roo-Code, work record CREATED this pass at Roo-Code-work/, ledger row repaired from stale pass-0; 94→101 @ UNCHANGED pin main@`b867ec9145750d0ae1ff7f02d35406e9bf2a0b16`, graph `Roo-Code` ready 36,333n/77,100e head==base==pin zero drift): deep pass on the file read/list & artifact tool plane named first in the pass-7 Boundaries omit-ledger. Whole decisive sources read: ReadFileTool.ts (813L), indentation-reader.ts (469L) + its 639L spec, read_file.ts prompt/constants (DEFAULT_LINE_LIMIT=2000/MAX_LINE_LENGTH=2000), imageHelpers.ts, formatFilesList (responses.ts:117–191), ListFilesTool/SearchFilesTool wrappers, UpdateTodoListTool.ts + webviewMessageHandler.ts updateTodoList write-back (1674–1681, via trace_path), ReadCommandOutputTool.ts (484L), extract-text.ts addLineNumbers real semantics → +7 capsule-v2 in new "File read/list & artifact tool plane" group. Key captures: dual pagination units (lines vs bytes) kept separate BY DESIGN; errors-as-content with the slice-mode out-of-bounds→"Note: File is empty" swallow asymmetry (indentation errors survive verbatim); includeHeader = comments-at-minIndent upward bypass, NOT header prepend (kernel-spec-pinned); per-read cumulative MB image budget added only after success, skipped images still trackFileContext; `${path} (${lineSnippet})` approval keys carrying per-file JSON permissions that fail CLOSED on parse errors; todo-list module-global stash-compare slot letting webview edits win post-approval with in-band model notification; `/^cmd-\d+\.txt$/` whitelist grammar AS the access control for approval-free artifact reads; three different line-numbering algorithms documented side by side. Gate evidence: vitest runner BLOCKED (no node_modules) per nest/oh-my-pi precedent → deterministic byte-exact grep probes + live MCP retrieves (search_graph qn_pattern ×5, get_code_snippet ×3, trace_path ×2, check_index_coverage over all cited paths no_recorded_issue+metadata_match); RED/GREEN deterministic retrieval checks incl. adversarial no-duplication probe against rooignore/approval capsules.
+
+## Full view (memory graph)
+Revalidate `Roo-Code` before porting: run `index_status`, `check_index_coverage`, `search_graph`, `trace_path`, and `get_code_snippet`. Graph root `/mnt/hdd/utopia/inspo/Roo-Code` (canonical root `/mnt/hdd/utopia/inspo/coding-agents/Roo-Code`), branch main, pin b867ec9145750d0ae1ff7f02d35406e9bf2a0b16, 36,333 nodes / 77,100 edges, head==base==pin verified at pass 8. Source and tests remain authoritative; the graph is a discovery index.
+
+## Boundaries
+Adopt the safety/control-plane contracts above. Adapt category flags, ask kinds, and policy constants to your host. Omit VS Code extension scaffolding, webview UI internals (ClineProvider/webviewMessageHandler remain product surface), MCP hub plumbing beyond the allow-list contract, terminal/exec implementations, individual per-tool prompt/description bodies, and prompt prose unless a target requires them. Per-provider API clients under `src/api/providers/` are thin twins adapting the captured contracts (cache-marker vocabulary per backend; gemini/vertex/vercel caching variants mirror the two cache capsules). Coverage caveats in-capsule where a seam lacks a direct spec at this HEAD (FileContextTracker, context-error-handling, TagMatcher — pinned transitively via its provider-stream consumers, multi-point merge/reuse branches, ripgrep transport — source-read + executed deterministic probe only; apply-patch kernel trio + BaseTool + glob ignore-utils — no direct spec at pin, pinned via source read + byte-exact greps). The code-index RAG subsystem is fully mined (pass 5, 21 capsules; its two at-pin defects are documented inside those capsules, not omitted), the pass-7 wave mined the tool-class kernel (apply_patch pipeline + edit/search_replace twins + BaseTool contract) plus the skills/checkpoints/auto-approval/logging/glob service planes, and pass 8 mined the file read/list & artifact tool plane (ReadFileTool whole-file + indentation-reader kernel + formatFilesList + UpdateTodoListTool approval-edit loop + ReadCommandOutputTool artifacts). Remaining mass stays omitted-with-reason until a named porting question or upstream drift past pin: CodebaseSearchTool wrapper over the mined RAG search path, api/providers+fetchers+transform thin-twin mass, webview-ui components, core/prompts bodies, tree-sitter queries data tables, roo-config/, command/ built-ins, McpHub UI notification plumbing, remaining single-purpose tool wrappers (NewTask/SwitchMode/AskFollowup/AttemptCompletion — envelope contracts already captured; bodies are prompt-shaping product surface).
+
+## Reference-file inventory
+
+Every preserved capsule/reference file in this foundation:
+
+- [`anthropic-cache-breakpoints.md`](./anthropic-cache-breakpoints.md)
+- [`api-request-shaping.md`](./api-request-shaping.md)
+- [`approval-budget-windows.md`](./approval-budget-windows.md)
+- [`approval-classifier.md`](./approval-classifier.md)
+- [`base-tool-kernel-contract.md`](./base-tool-kernel-contract.md)
+- [`base64-embed-decode.md`](./base64-embed-decode.md)
+- [`bedrock-model-dispatch.md`](./bedrock-model-dispatch.md)
+- [`cache-debounce-flush.md`](./cache-debounce-flush.md)
+- [`checkpoint-before-mutating-dispatch.md`](./checkpoint-before-mutating-dispatch.md)
+- [`checkpoint-exclude-families.md`](./checkpoint-exclude-families.md)
+- [`codebase-search-dual-emission.md`](./codebase-search-dual-emission.md)
+- [`command-decision-longest-prefix.md`](./command-decision-longest-prefix.md)
+- [`command-output-artifact-pagination.md`](./command-output-artifact-pagination.md)
+- [`compact-log-delta-format.md`](./compact-log-delta-format.md)
+- [`config-inject-variables-templating.md`](./config-inject-variables-templating.md)
+- [`context-error-classification.md`](./context-error-classification.md)
+- [`context-management-ladder.md`](./context-management-ladder.md)
+- [`context-proxy-cache.md`](./context-proxy-cache.md)
+- [`custom-modes-yaml-store.md`](./custom-modes-yaml-store.md)
+- [`dimension-recreate-ladder.md`](./dimension-recreate-ladder.md)
+- [`edit-vs-search-replace-twins.md`](./edit-vs-search-replace-twins.md)
+- [`effective-api-history.md`](./effective-api-history.md)
+- [`embedder-batching-kernel.md`](./embedder-batching-kernel.md)
+- [`error-sanitization-funnel.md`](./error-sanitization-funnel.md)
+- [`file-staleness-tracking.md`](./file-staleness-tracking.md)
+- [`folded-file-context.md`](./folded-file-context.md)
+- [`fresh-start-condense.md`](./fresh-start-condense.md)
+- [`fuzzy-search-replace-applier.md`](./fuzzy-search-replace-applier.md)
+- [`glob-ignore-segment-matcher.md`](./glob-ignore-segment-matcher.md)
+- [`global-rate-limiter.md`](./global-rate-limiter.md)
+- [`indentation-bidirectional-expansion.md`](./indentation-bidirectional-expansion.md)
+- [`indexing-marker-protocol.md`](./indexing-marker-protocol.md)
+- [`list-files-format-marking.md`](./list-files-format-marking.md)
+- [`markdown-mock-captures.md`](./markdown-mock-captures.md)
+- [`markdown-section-chunking.md`](./markdown-section-chunking.md)
+- [`mcp-tool-name-grammar.md`](./mcp-tool-name-grammar.md)
+- [`mcphub-calltool-timeout-ladder.md`](./mcphub-calltool-timeout-ladder.md)
+- [`mcphub-config-validation-ladder.md`](./mcphub-config-validation-ladder.md)
+- [`mcphub-config-watcher-topology.md`](./mcphub-config-watcher-topology.md)
+- [`mcphub-deepEqual-reconcile.md`](./mcphub-deepEqual-reconcile.md)
+- [`mcphub-disabled-placeholder-connections.md`](./mcphub-disabled-placeholder-connections.md)
+- [`mcphub-error-history-ledger.md`](./mcphub-error-history-ledger.md)
+- [`mcphub-programmatic-write-echo-suppression.md`](./mcphub-programmatic-write-echo-suppression.md)
+- [`mcphub-project-over-global-precedence.md`](./mcphub-project-over-global-precedence.md)
+- [`mcphub-refcount-lifecycle.md`](./mcphub-refcount-lifecycle.md)
+- [`mcphub-restart-and-full-refresh.md`](./mcphub-restart-and-full-refresh.md)
+- [`mcphub-sanitized-name-resolution.md`](./mcphub-sanitized-name-resolution.md)
+- [`mcphub-sse-reconnecting-eventsource.md`](./mcphub-sse-reconnecting-eventsource.md)
+- [`mcphub-stdio-start-monkey-patch.md`](./mcphub-stdio-start-monkey-patch.md)
+- [`mcphub-toollist-policy-merge.md`](./mcphub-toollist-policy-merge.md)
+- [`mcphub-windows-cmd-wrap.md`](./mcphub-windows-cmd-wrap.md)
+- [`mcpservermanager-singleton-promise-lock.md`](./mcpservermanager-singleton-promise-lock.md)
+- [`mention-parsing-pipeline.md`](./mention-parsing-pipeline.md)
+- [`message-manager-rewind.md`](./message-manager-rewind.md)
+- [`mistake-breaker-delegation.md`](./mistake-breaker-delegation.md)
+- [`mode-persona-routing.md`](./mode-persona-routing.md)
+- [`multipoint-cache-strategy.md`](./multipoint-cache-strategy.md)
+- [`native-parser-fail-fast-validation.md`](./native-parser-fail-fast-validation.md)
+- [`native-parser-partial-json.md`](./native-parser-partial-json.md)
+- [`native-parser-stream-tracker.md`](./native-parser-stream-tracker.md)
+- [`native-tool-assembly.md`](./native-tool-assembly.md)
+- [`non-destructive-truncation.md`](./non-destructive-truncation.md)
+- [`orchestrator-cache-fork.md`](./orchestrator-cache-fork.md)
+- [`orchestrator-failure-ladder.md`](./orchestrator-failure-ladder.md)
+- [`parser-chunk-kernel.md`](./parser-chunk-kernel.md)
+- [`patch-apply-reverse-splice.md`](./patch-apply-reverse-splice.md)
+- [`patch-parser-grammar-leniency.md`](./patch-parser-grammar-leniency.md)
+- [`patch-seek-multi-pass-ladder.md`](./patch-seek-multi-pass-ladder.md)
+- [`patch-tool-commit-loop.md`](./patch-tool-commit-loop.md)
+- [`pathsegments-filter-grammar.md`](./pathsegments-filter-grammar.md)
+- [`point-id-duality.md`](./point-id-duality.md)
+- [`present-lock-single-result.md`](./present-lock-single-result.md)
+- [`promise-gate-config.md`](./promise-gate-config.md)
+- [`provider-profiles-secrets-store.md`](./provider-profiles-secrets-store.md)
+- [`provider-wrapper-embedders.md`](./provider-wrapper-embedders.md)
+- [`query-pack-grammar.md`](./query-pack-grammar.md)
+- [`read-file-approval-batch-keys.md`](./read-file-approval-batch-keys.md)
+- [`read-file-binary-ladder.md`](./read-file-binary-ladder.md)
+- [`read-file-windowing-modes.md`](./read-file-windowing-modes.md)
+- [`recovery-service-wipe.md`](./recovery-service-wipe.md)
+- [`repetition-breaker.md`](./repetition-breaker.md)
+- [`request-stack-loop.md`](./request-stack-loop.md)
+- [`restart-matrix.md`](./restart-matrix.md)
+- [`ripgrep-search-transport.md`](./ripgrep-search-transport.md)
+- [`rooignore-access-control.md`](./rooignore-access-control.md)
+- [`safewritejson-atomic-ladder.md`](./safewritejson-atomic-ladder.md)
+- [`say-ask-protocol.md`](./say-ask-protocol.md)
+- [`scanner-cache-ordering.md`](./scanner-cache-ordering.md)
+- [`scanner-deletion-sweep.md`](./scanner-deletion-sweep.md)
+- [`search-gating-state.md`](./search-gating-state.md)
+- [`shadow-checkpoints.md`](./shadow-checkpoints.md)
+- [`skill-invocation-envelopes.md`](./skill-invocation-envelopes.md)
+- [`skills-discovery-override-lattice.md`](./skills-discovery-override-lattice.md)
+- [`streaming-tag-splitter.md`](./streaming-tag-splitter.md)
+- [`task-history-store.md`](./task-history-store.md)
+- [`task-persistence-durability.md`](./task-persistence-durability.md)
+- [`todo-list-approval-edit-loop.md`](./todo-list-approval-edit-loop.md)
+- [`tool-id-sanitization.md`](./tool-id-sanitization.md)
+- [`tool-use-validation.md`](./tool-use-validation.md)
+- [`tree-sitter-definition-outline.md`](./tree-sitter-definition-outline.md)
+- [`typographic-normalization.md`](./typographic-normalization.md)
+- [`wasm-grammar-loader.md`](./wasm-grammar-loader.md)
+- [`watcher-upsert-noop.md`](./watcher-upsert-noop.md)

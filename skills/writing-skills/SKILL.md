@@ -36,7 +36,8 @@ Author with both open; change one, align the other.
 - `name`: kebab-case, identical to the directory name.
 - `description`: trigger-first, `Use when <condition>`, then the capability; under 1024 characters, aim for ≤ 512. Triggers must be mutually exclusive between skills so retrieval never ties.
 - `invocation`: local ownership, one of `entry`, `internal`, `manual`, or `vendor`. The model chooses the class from the real caller and trigger.
-- `disable-model-invocation`: the host visibility field. `entry` stays visible; `internal` and `manual` stay hidden; vendor visibility follows the integration. `*-foundation` capsules live outside the active catalog.
+- `kind: foundation`: required only for cold `*-foundation` leaves. Foundations live in the unified `skills/` tree but are manual and hidden; see `references/foundation-kind.md`.
+- `disable-model-invocation`: the host visibility field. `entry` stays visible; `internal`, `manual`, and every foundation stay hidden; vendor visibility follows the integration.
 - YAML-safe: quote long values; avoid unescaped colons/hashes.
 
 ## 2. Minimum useful content (conditional anatomy)
@@ -85,7 +86,9 @@ For load-bearing behavioral skills, keep the adversarial protocol: RED, a subage
 
 ## 6. Registration and discovery
 
-- Skills live in `~/.agents/skills/`, global for all CLIs. When a `pack-*` router should surface a skill, add a one-line reference to that router.
+- Skills and cold foundations share the canonical `~/.agents/skills/` tree. Operational host exposure must exclude `kind: foundation`; eager or unverified hosts use the filtered symlink route in `../../README.md`.
+- Foundations are found by explicit catalog/filesystem search and loaded one capsule at a time.
+- When a `pack-*` router should surface an operational skill, add a one-line reference to that router.
 - After authoring, verify discovery via the catalog (or the corpus search) and confirm zero name collisions.
 - Host-neutral: no pi-only calls; make optional MCP/tool references capability-probed (probe the registry before citing a source).
 
@@ -117,6 +120,7 @@ Bible (cannot load), Tutorial (belongs in docs), Summarizer (rehashes platform r
 - `references/flowcharts-and-examples.md`, flowchart/graphviz conventions
 - `references/rationalization-hardening.md`, pre-empting hurry/rationalization failure modes
 - `references/claude-search-optimization.md`, search/description optimization notes
+- `references/foundation-kind.md`, cold source foundations versus explicitly promoted procedures
 - `anthropic-best-practices.md`, `persuasion-principles.md`, `graphviz-conventions.dot`, supporting style assets
 
 
@@ -127,4 +131,4 @@ Bible (cannot load), Tutorial (belongs in docs), Summarizer (rehashes platform r
 
 ## References
 
-No reference capsules, the skill is self-contained.
+The capsule list above is the progressive-disclosure index for this skill.

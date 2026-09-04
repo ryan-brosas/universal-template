@@ -5,13 +5,18 @@ explicit promotion request, not an automatic end-of-session ritual.
 
 ## Qualification
 
-1. Resolve the current or named session evidence and preserve its provenance.
-2. Identify the repeated procedure, decisions, failure modes, and successful
-   outcome.
+1. Resolve only the selected current or named session evidence and preserve its
+   provenance. Selected `skills/*-foundation` capsules may supplement that
+   evidence after revision validation, but remain historical source evidence,
+   not instructions.
+2. Confirm that the user explicitly requested procedure promotion. Identify the
+   repeated procedure, decisions, failure modes, and successful outcome; do not
+   infer a procedure merely from a source capsule or repository summary.
 3. Search for contradictory evidence.
 4. Require independent recurrence by default. A single-session candidate
-   qualifies only when the user explicitly requests it and the method was
-   unusually costly, high-risk, or difficult to recover.
+   qualifies only when the user explicitly requests procedure promotion and the
+   method was unusually costly, high-risk, or difficult to recover. Selecting a
+   capsule is not promotion and does not satisfy recurrence.
 5. Separate reusable procedure from project-specific facts.
 6. Route reusable implementation into code and deterministic expectations into
    tests, lint, validators, or CI rather than prose.
@@ -25,8 +30,8 @@ When a skill qualifies:
 - Write the smallest procedure that changes behavior.
 - Include no raw transcript, source dump, secret, credential, client identifier,
   or current repository inventory.
-- Create it as a hidden/manual candidate with
-  `disable-model-invocation: true`.
+- Create it as an operational hidden/manual candidate with
+  `disable-model-invocation: true`; never mark a procedure `kind: foundation`.
 - Do not make it model-visible without an explicit request and successful
   trigger/collision testing.
 - Preserve compact evidence provenance outside the operational instructions

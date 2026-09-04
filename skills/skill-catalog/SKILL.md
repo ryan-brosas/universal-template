@@ -23,12 +23,14 @@ views are optional human conveniences.
 
 1. List bounded candidates under `skills/*/SKILL.md` with native filesystem or
    repository search.
-2. Read candidate `name`, `description`, `invocation`, and
+2. Read candidate `name`, `description`, `kind`, `invocation`, and
    `disable-model-invocation` frontmatter.
 3. Judge fit from the request and overlap with neighboring candidates. Load only
-   the best match and any references it names.
-4. For catalog maintenance, update metadata in the owning skill. Regenerate
-   `docs/skill-catalog.md` only because it is retained for human browsing.
+   the best operational match. A `kind: foundation` result is cold evidence:
+   open its index and load one matching capsule, never the whole inventory.
+4. For catalog maintenance, update metadata in the owning leaf. Regenerate
+   `docs/skill-catalog.md` and `docs/foundation-catalog.md` only because they are
+   retained as separate human browsing views.
 
 `scripts/skill-catalog.py` remains optional generated-artifact tooling. It is not
 an ordinary cognitive route or a source of classification truth.
@@ -48,5 +50,6 @@ relevant exact metadata validator and generated-parity check in
 
 ## References
 
-- `../../docs/skill-catalog.md`, optional generated human view.
+- `../../docs/skill-catalog.md`, optional generated operational-skill view.
+- `../../docs/foundation-catalog.md`, optional generated cold-foundation view.
 - `../../scripts/skill-catalog.py`, optional list/search/generate helper.

@@ -181,8 +181,9 @@ capability selection, and implementation strategy to the model.
 Do not turn these principles into mandatory sequential phases, a fixed MCP
 chain, a scoring engine, a router, a decision matrix, mandatory planning
 ceremony, unconditional delegation, or unconditional research. Detailed
-procedures belong in the skills, MCP documentation, foundations, project-local
-instructions, tests, CI, and tools that own them.
+procedures belong in the skills, MCP documentation, project-local instructions,
+tests, CI, and tools that own them. Foundations hold cold, source-specific,
+revision-pinned evidence, not procedures.
 
 Be proactive about related improvements that materially advance the requested
 outcome and global engineering goals. Use the Pareto objective to prevent these

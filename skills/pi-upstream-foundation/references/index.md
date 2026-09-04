@@ -1,0 +1,130 @@
+<!-- Preserved from the pre-foundation-skill-v1 loader. Detail remains historical and revision-pinned. -->
+
+# Pi Upstream Foundation
+
+## Use this for
+Building or porting a coding-agent loop and its context engine: start/continue entries, parallel tool-call execution with source-order results, hybrid token estimation, safe compaction cut points, split turns, iterative summary state, branch-jump summarization, durable operation records, and the terminal-input/rendering seams that keep a TUI agent usable.
+
+## Load the matching source dump
+- `./agent-loop-modes.md` — two entry modes; why continue-mode guards are cheap by design.
+- `./truncated-tool-batch.md` — length-capped responses fail every tool call, never execute them.
+- `./tool-execution-modes.md` — prepare sequential, execute parallel, persist in source order; terminate = unanimity.
+- `./steering-lifecycle.md` — steering drains at boundaries only; prepareNextTurn / shouldStopAfterTurn hooks.
+- `./hybrid-token-estimate.md` — provider usage as truth, char-heuristic only the trailing delta.
+- `./safe-cut-points.md` — which entries are legal compaction cuts; turn-boundary backup.
+- `./iterative-compaction-state.md` — retained tail rides on the entry; virtual reconstruction; accumulating file ledgers.
+- `./split-turn-compaction.md` — two-request handling when the budget lands mid-turn.
+- `./summary-request-isolation.md` — cacheRetention none + fresh uuidv7 session + reserve-sliced maxTokens.
+- `./structured-summary-prompts.md` — anti-continuation framing, exact sections, PRESERVE-and-ADD updates.
+- `./branch-summarization.md` — summarize only old-leaf→common-ancestor; newest-first with the 90% dense-summary rule.
+- `./session-context-assembly.md` — last-compaction-wins transform; read-time tail expansion; deferred-message drop.
+- `./llm-boundary-conversion.md` — one convertToLlm per turn; synthetic roles become user text.
+- `./lane-record-durability.md` — operation records, 0/1/2+ open-operation recovery tri-state, replay classification.
+- `./session-state-mutations.md` — one validated mutation choke point; consecutive seq, lane chaining, stats asymmetry, fork renumbering.
+- `./durable-payload-json-gate.md` — reject non-finite numbers, cycles, prototypes, symbols, accessors, sparse arrays BEFORE any write.
+- `./open-operation-admission.md` — storage-level one-open-op-per-lane guard; in-process destination claims for timestamped filenames.
+- `./jsonl-torn-tail-repair.md` — syntax-final-line truncates atomically; schema errors refuse; tmp+rename publication.
+- `./record-log-reducer.md` — pure validate-then-derive recovery: corruption taxonomy, abort queue semantics, terminal-failure attribution.
+- `./stdin-sequence-buffering.md` — per-protocol completeness classifiers; WezTerm/Kitty traps; paste-as-event.
+- `./fuzzy-scoring.md` — muscle-memory score shape; digit-swap fallback behind a handicap.
+- `./autocomplete-triggers.md` — natural-vs-forced triggers; quote-aware completion math.
+- `./streaming-markdown.md` — trim partial closing fences; conservative pending-math; wrap ANSI after width math.
+- `./alt-screen-search.md` — mapped-corpus search across wrapped lines.
+- `./alt-screen-verified-clipboard.md` — injected `copySelection(text): Promise<boolean>` beats bare OSC 52; flash success only on verified copy.
+- `./markdown-cell-sgr-reset.md` — reset SGR attributes after every non-final wrapped cell fragment; restore the cell prefix before padding.
+- `./keybinding-registry.md` — semantic action ids over raw keys.
+- `./editor-safety-seams.md` — atomic pastes, snapshot-validated suggestions, draft-preserving history.
+- `./edit-single-object-widening.md` — coerce single `{oldText,newText}` shapes into the edits array at argument-preparation; schema stays strict.
+- `./skill-declared-quiet-skip.md` — warn on declared SKILL.md failures and all read failures; quietly skip undeclared loose-markdown parse errors.
+- `./managed-install-classification.md` — when is a running Pi an installer-managed install; why inherited launcher env must never misclassify a source checkout.
+- `./staged-managed-self-update.md` — how an installation replaces itself without ever leaving a broken one active.
+- `./sqlite-fenced-writer-lease.md` — conditional-upsert lease steals expired-only and bumps a fence per takeover; stale owners can never write again.
+- `./sqlite-transactional-write-ownership.md` — serial queue → BEGIN IMMEDIATE → renew-lease-inside-the-write-transaction; losing the lease poisons the storage permanently.
+- `./sqlite-derived-branch-cache-cow.md` — materialized root→tip paths per branch_id; tips are optimistic pointers; mid-branch appends copy-on-write through seq.
+- `./sqlite-compaction-stop-window.md` — SQL stop-boundary at the last compaction entry (inclusive); decode only after window selection; chain validation catches cache drift.
+- `./sqlite-single-sequence-log.md` — one counter row per session; every mutation spends exactly one seq; lazy-decode merge pages four streams.
+- `./sqlite-lane-operation-pointer.md` — CAS on a nullable lane pointer admits at most one open operation; recovery dereferences the pointer instead of scanning.
+- `./sqlite-session-fork-renumber.md` — fork copies ids stable but renumbers seqs 1..n; stats and branch cache are recomputed, never copied.
+- `./sqlite-fts5-search-plane.md` — external-content FTS5 with insert/delete/update triggers plus a creation-time rebuild; whole-query phrase quoting before MATCH.
+- `./sqlite-migration-bootstrap.md` — id-skip migration registry, one transaction per migration, close-on-failed-setup vs retain-on-failed-operation.
+- `./sqlite-sql-fragment-composition.md` — template tag inlines nested queries and splices params in position; text order == bind order survives any composition.
+- `./sqlite-derived-facts-stats-plane.md` — latest-per-key facts with NULL-value tombstones that remove keys from listings; cleared names omit the property; corrupted stored JSON fails loudly; usage stats fold over usage records with the cached/uncached/total split.
+- `./sqlite-session-delete-cascade.md` — nine-table cascade delete in one lease-claimed transaction, children before the sessions row; missing session short-circuits to lease cleanup; idempotent by structure.
+- `./session-state-branch-window.md` — scan-side stop-boundary windowing: first match IN SCAN DIRECTION, inclusive; one walk serves memory and JSONL while SQLite computes the MIN/MAX twin.
+- `./session-backend-conformance-harness.md` — one factory of 30 shared test cases in 5 groups proves memory/JSONL/SQLite/server backends obey the same SessionStorage contract.
+- `./jsonl-v4-codec-decode-taxonomy.md` — strict allow-list decode with the syntax/schema error split that governs crash repair; listing skips corrupt headers, opening refuses them.
+- `./sqlite-node-adapter-contract.md` — the 5-method driver wrapper that enforces synchronous transaction callbacks (BEGIN-first, ROLLBACK-on-any-failure) and named-vs-positional param dispatch.
+
+## Capsule map
+- **Agent loop** — agent-loop-modes, truncated-tool-batch, tool-execution-modes, steering-lifecycle: AgentMessage throughout, convertToLlm once at the boundary, ordered concurrent tool batches, queue-at-boundary steering.
+- **Compaction & summarization** — hybrid-token-estimate, safe-cut-points, iterative-compaction-state, split-turn-compaction, summary-request-isolation, structured-summary-prompts, branch-summarization: shouldCompact → estimate → cut → summarize → persist tail, plus branch-jump detours.
+- **Session & boundary** — session-context-assembly, llm-boundary-conversion, lane-record-durability, session-state-mutations, durable-payload-json-gate, open-operation-admission, jsonl-torn-tail-repair, jsonl-v4-codec-decode-taxonomy, record-log-reducer, session-state-branch-window: durable entries vs operation records, read-time rehydration, provider-legal payloads, crash-recovery tri-state, single-writer state machine, load-time triage, the codec-manufactured syntax/schema split that feeds the repair rule, pure validate-then-derive recovery, direction-dependent stop-boundary branch windows shared by scan and SQL backends.
+- **Terminal UX** — stdin-sequence-buffering, fuzzy-scoring, autocomplete-triggers, streaming-markdown, alt-screen-search, keybinding-registry, editor-safety-seams, alt-screen-verified-clipboard, markdown-cell-sgr-reset: input reliability, polite suggestion surfaces, streaming-tolerant rendering.
+- **Tool & skill loading (drift pass 2)** — edit-single-object-widening, skill-declared-quiet-skip: argument-layer coercion that keeps published schemas strict; declaration-driven diagnostic noise.
+- **Self-update & install lifecycle (drift pass 3)** — managed-install-classification, staged-managed-self-update: three-legged managed-install gate (env AND marker AND package-dir containment), stage → verify → atomic-rename → pointer-flip update pipeline under an exclusive lock.
+- **SQLite session backend (passes 4–11)** — sqlite-fenced-writer-lease, sqlite-transactional-write-ownership, sqlite-derived-branch-cache-cow, sqlite-compaction-stop-window, sqlite-single-sequence-log, sqlite-lane-operation-pointer, sqlite-session-fork-renumber, sqlite-fts5-search-plane, sqlite-migration-bootstrap, sqlite-sql-fragment-composition, sqlite-derived-facts-stats-plane, sqlite-session-delete-cascade, sqlite-node-adapter-contract, session-backend-conformance-harness: the third `SessionStorage` backend as the SQL witness for the durability contracts above — a 5-method driver adapter that enforces synchronous transactions and normalizes node:sqlite quirks, fenced cross-process leases renewed inside every write transaction (operation failure ≠ lease loss), a derived branch cache with copy-on-write forks and compaction stop-window reads, all-or-nothing fork copies, one total-order sequence across entries/records/lane-moves/facts, structurally-collapsed open-operation tri-state with read-validated lane pointers, id-skip migration bootstrap with fail-closed setup, bind-order-safe fragment composition, latest-value facts with tombstones plus record-folded usage stats, and a shared 30-case conformance suite that keeps all backends honest (all five groups inventoried; stats are a correction-capable ledger).
+
+## Extending the foundation
+Add one references-file capsule per seam from `.pi/templates/foundation-capsule.md` (Source/Question, Path/Symbol, Signature, Data Shape, decisive source excerpt, Flow, Invariant, Probe, Retrieve, Verdict), add its loader line, group it in this map, and pin probes to `packages/agent/test/` / `packages/tui/test/`.
+
+## Provenance
+Indexed in Codebase Memory as `pi-upstream` (`/mnt/hdd/utopia/inspo/pi-upstream`, canonical root `/mnt/hdd/utopia/inspo/pi-ecosystem/pi-upstream` via live symlink), branch `main@4af9d21d3b4d664e4a29fcabfec85171077248e3`, 18,463 nodes / 81,629 edges, full mode; parse-partial caveats limited to docs/CSS/test fixtures (none cited here). Pass 2 (2026-08-24, legacy-sweep lane) re-pinned from `main@534bcbff` (+129 upstream commits): freshness verified by resolving drift-introduced `overrideConfig`. Pass 3 (2026-08-24, legacy-sweep lane) re-pinned from `main@a470b121` (+1 commit 4af9d21d "update managed installations in place"): the `pi-upstream` graph project had silently vanished from the CBM registry between passes — re-registered by path (`index_repository --repo-path <live-symlink-root> --name pi-upstream`) and content-freshness proven by resolving drift-introduced `runManagedSelfUpdate` :171–221 rank#1 before any citation; drift seam mined into managed-install-classification, staged-managed-self-update. Source and tests remain authoritative; the graph is a discovery index. Pass 4 (2026-08-26, miner-pi-upstream lane) deep pass on the uncited `packages/session-backends/sqlite-node` subsystem at the same pin: HEAD re-verified byte-for-byte against checkout; coverage checked on all 16 cited paths (15 `no_recorded_issue`; `001_initial.sql` parse-partial read directly before citing); work record created at `inspo/pi-upstream-work/` (now canonical `inspo/.skill-mining-work/pi-upstream/`) and the stale pass-0 ledger row reconciled to the leaf's real history. Pass 5 (2026-08-26, miner-pi-upstream lane) second deep pass at the same pin (HEAD re-verified byte-for-byte; no advance ⇒ no re-index): migration bootstrap + fail-closed setup, bind-order-safe SQL fragment composition, the SessionState scan-side stop-boundary windowing twin of the SQL MIN/MAX boundary, and the full 30-case/6-group conformance inventory; Codebase Memory MCP was not connected this session so every anchor was confirmed by direct source/test read plus deterministic node:sqlite probes (P1–P3 GREEN). Pass 6 (2026-08-27, miner-pi-upstream lane) third deep pass at the same pin (HEAD re-verified byte-for-byte; no advance ⇒ no re-index): five source-confirmed refactors closing the recorded next-pass targets — scan-vs-pointer open-operation divergence anchored on the contract's `limit: 2` docstring, records-and-log conformance group deep-read with verbatim open-op cases, FTS lazy-init / sticky-latch rollback coupling from the whole search.test.ts, branch-query validation-scope witnesses, and the log-query lazy-decode witness; CBM MCP absent again ⇒ direct reads plus deterministic probes P1–P5 GREEN. Pass 7 (2026-08-28, miner-pi-upstream lane) fourth deep pass at the same pin (HEAD re-verified byte-for-byte; no advance ⇒ no re-index): four source-confirmed outcomes closing the recorded next-pass targets — all-or-nothing fork rollback witness (repository.test.ts trigger-aborted second copy ⇒ zero rows), a new derived facts & stats plane capsule (latest-per-key facts with NULL-value tombstones, cleared-name property omission, loud decode of corrupted name/metadata, usage-record-folded token/cost accounting), the operation-failure-vs-lease-loss failure-class split on the write path, and read-plane referential validation of lane leaves; CBM MCP absent ⇒ direct reads plus deterministic node:sqlite probes P1–P6 GREEN (one honest probe correction recorded). Pass 8 (2026-08-29, miner-pi-upstream lane) fifth deep pass at the same pin (HEAD re-verified byte-for-byte; no advance ⇒ no re-index): three source-confirmed outcomes closing the recorded next-pass targets — a new session-delete-cascade capsule (nine-table lease-claimed transactional teardown, structural idempotence), an explicit-repair-path section on the branch-cache capsule (release → claim → rebuild → release; missing cache stays a hard failure), and a cursor-semantics section on the single-sequence-log capsule (per-stream LIMIT then global merge-slice; validation lives in the facade, not the backend); CBM MCP absent ⇒ direct reads plus deterministic node:sqlite probes P1–P3 GREEN. Pass 9 (2026-08-29, miner-pi-upstream lane) sixth deep pass at the same pin (HEAD re-verified byte-for-byte; no advance ⇒ no re-index): three source-confirmed refactors closing the recorded next-pass targets — a fork fact-selection section on the fork capsule (latest name + labels filtered to copied keys read from the source before the txn; records and usage drop; stats recomputed; conformance :893-950 witness), a stale-cache-vs-missing-cache two-arm section on the compaction-stop-window capsule (branch-cache.test.ts :150-181; membership lookup vs chain validation detection points), and a customType post-filter section on the single-sequence-log capsule (repo.ts:522-533 two-stage filter with dropped SQL limit vs the branch-cache materialized-column path); CBM MCP absent ⇒ direct reads plus deterministic node:sqlite probes P1–P3 GREEN (11 assertions). Pass 10 (2026-08-29, miner-pi-upstream lane) seventh deep pass at the same pin (HEAD re-verified byte-for-byte; no advance ⇒ no re-index): three source-confirmed refactors closing the recorded next-pass targets — a tree-scope fork arm section on the fork capsule (lanes copy as lane-log mutations with fresh seqs AFTER entries, conformance :951-977 witness; per-tip cache rebuild, never inherited), a queries-and-facts group full inventory on the conformance capsule (negative usage adjustments fold into stats — a correction-capable ledger; explicit correction that no separate lane-operations group exists), and a cache-build-time loudness section on the branch-cache capsule (customTypeFromPayload re-validates every custom payload during cache builds, so the materialized column is never trusted); CBM MCP absent ⇒ direct reads plus deterministic node:sqlite probes P1–P3 GREEN (11 assertions). Pass 11 (2026-08-29, miner-pi-upstream lane) eighth deep pass at the same pin (HEAD re-verified byte-for-byte; no advance ⇒ no re-index): closure-audit batch of three outcomes — a new jsonl-v4-codec-decode-taxonomy capsule (the codec that MANUFACTURES the syntax/schema split the torn-tail rule consumes; strict allow-lists; list-skips/open-refuses tolerance split; no v3 migration path — legacy fields are metadata riders), a new sqlite-node-adapter-contract capsule (the 5-method driver wrapper enforcing synchronous transaction callbacks with BEGIN-first/ROLLBACK-on-any-failure — the enabling contract for lease-renew-inside-transaction), and a torn-tail Verdict correction (the "no test covers rename failure mid-repair" caveat was stale: jsonl.test.ts :720-744/:746-765 failure-inject exactly that; Source line re-pinned with ranges re-verified unchanged); CBM MCP absent ⇒ direct reads plus deterministic probes (adapter async-callback rollback probe GREEN). Pass 12 (2026-08-29, miner-pi-upstream lane) formal closure audit at the same pin (HEAD re-verified byte-for-byte; no advance ⇒ no re-index): full enumeration of both durability trees (55 entries: 15 session-tree files, 40 sqlite-node entries) with per-file adjudication against the capsule map — zero uncited reusable seams; the last unadjudicated file, sqlite-node/src/sqlite/types.ts, was read directly and confirmed type-only (its synchronous-only transaction contract is owned by sqlite-node-adapter-contract); every omission reasoned (barrels, type-only interfaces, fixture plumbing, packaging); the row is marked complete with reopen conditions (HEAD advance ⇒ full re-index + diff-first re-adjudication; a named durable-session-over-RPC or provider-SDK porter question ⇒ reopen the boundary).
+
+## Full view (memory graph)
+Revalidate `pi-upstream` before porting: run `index_status`, `check_index_coverage`, `search_graph`, `trace_path`, and `get_code_snippet`. Graph root `/mnt/hdd/utopia/inspo/pi-upstream` (canonical root `/mnt/hdd/utopia/inspo/pi-ecosystem/pi-upstream` via live symlink), branch main, pin 4af9d21d3b4d664e4a29fcabfec85171077248e3, full mode, 18,463 nodes / 81,629 edges; parse-partial caveats limited to docs/CSS/test fixtures (none cited here). Source and tests remain authoritative; the graph is a discovery index.
+
+## Boundaries
+Adopt loop/compaction/session contracts and TUI input-reliability seams. Adapt provider transports, prompt wording, and timing windows to your host. Omit pi's package scaffolding (`packages/coding-agent`, `packages/client`, `packages/server`, extension examples), the AI-provider SDK surface (`packages/ai`), evals/telemetry plumbing, and TUI styling unless a target requires them. Pass-2 additions keep those boundaries: session persistence internals and the record-log reducer were promoted from omitted to mined because durable-session porting is a recurring question; `agent-harness.ts` orchestration and `env/nodejs.ts` remain omitted (thin composition over the seams mined here). Pass-3 exception: `package-manager-cli.ts` self-update internals were mined on a named drift seam (installer-managed in-place updates) despite living under the omitted scaffolding path; release-infra (`scripts/publish-release-announcement.mjs`, installer artifact publishing) stays omitted. Pass-4 exception: `packages/session-backends` was promoted from unlisted to mined because durable-session porting is a recurring porting question and the SQLite backend is the transactional twin of the mined JSONL record-log plane; the server/client RPC surface, `packages/ai`, extension examples, and export-html remain omitted.
+
+## Reference-file inventory
+
+Every preserved capsule/reference file in this foundation:
+
+- [`agent-loop-modes.md`](./agent-loop-modes.md)
+- [`alt-screen-search.md`](./alt-screen-search.md)
+- [`alt-screen-verified-clipboard.md`](./alt-screen-verified-clipboard.md)
+- [`autocomplete-triggers.md`](./autocomplete-triggers.md)
+- [`branch-summarization.md`](./branch-summarization.md)
+- [`durable-payload-json-gate.md`](./durable-payload-json-gate.md)
+- [`edit-single-object-widening.md`](./edit-single-object-widening.md)
+- [`editor-safety-seams.md`](./editor-safety-seams.md)
+- [`fuzzy-scoring.md`](./fuzzy-scoring.md)
+- [`hybrid-token-estimate.md`](./hybrid-token-estimate.md)
+- [`iterative-compaction-state.md`](./iterative-compaction-state.md)
+- [`jsonl-torn-tail-repair.md`](./jsonl-torn-tail-repair.md)
+- [`jsonl-v4-codec-decode-taxonomy.md`](./jsonl-v4-codec-decode-taxonomy.md)
+- [`keybinding-registry.md`](./keybinding-registry.md)
+- [`lane-record-durability.md`](./lane-record-durability.md)
+- [`llm-boundary-conversion.md`](./llm-boundary-conversion.md)
+- [`managed-install-classification.md`](./managed-install-classification.md)
+- [`markdown-cell-sgr-reset.md`](./markdown-cell-sgr-reset.md)
+- [`open-operation-admission.md`](./open-operation-admission.md)
+- [`record-log-reducer.md`](./record-log-reducer.md)
+- [`safe-cut-points.md`](./safe-cut-points.md)
+- [`session-backend-conformance-harness.md`](./session-backend-conformance-harness.md)
+- [`session-context-assembly.md`](./session-context-assembly.md)
+- [`session-state-branch-window.md`](./session-state-branch-window.md)
+- [`session-state-mutations.md`](./session-state-mutations.md)
+- [`skill-declared-quiet-skip.md`](./skill-declared-quiet-skip.md)
+- [`split-turn-compaction.md`](./split-turn-compaction.md)
+- [`sqlite-compaction-stop-window.md`](./sqlite-compaction-stop-window.md)
+- [`sqlite-derived-branch-cache-cow.md`](./sqlite-derived-branch-cache-cow.md)
+- [`sqlite-derived-facts-stats-plane.md`](./sqlite-derived-facts-stats-plane.md)
+- [`sqlite-fenced-writer-lease.md`](./sqlite-fenced-writer-lease.md)
+- [`sqlite-fts5-search-plane.md`](./sqlite-fts5-search-plane.md)
+- [`sqlite-lane-operation-pointer.md`](./sqlite-lane-operation-pointer.md)
+- [`sqlite-migration-bootstrap.md`](./sqlite-migration-bootstrap.md)
+- [`sqlite-node-adapter-contract.md`](./sqlite-node-adapter-contract.md)
+- [`sqlite-session-delete-cascade.md`](./sqlite-session-delete-cascade.md)
+- [`sqlite-session-fork-renumber.md`](./sqlite-session-fork-renumber.md)
+- [`sqlite-single-sequence-log.md`](./sqlite-single-sequence-log.md)
+- [`sqlite-sql-fragment-composition.md`](./sqlite-sql-fragment-composition.md)
+- [`sqlite-transactional-write-ownership.md`](./sqlite-transactional-write-ownership.md)
+- [`staged-managed-self-update.md`](./staged-managed-self-update.md)
+- [`stdin-sequence-buffering.md`](./stdin-sequence-buffering.md)
+- [`steering-lifecycle.md`](./steering-lifecycle.md)
+- [`streaming-markdown.md`](./streaming-markdown.md)
+- [`structured-summary-prompts.md`](./structured-summary-prompts.md)
+- [`summary-request-isolation.md`](./summary-request-isolation.md)
+- [`tool-execution-modes.md`](./tool-execution-modes.md)
+- [`truncated-tool-batch.md`](./truncated-tool-batch.md)

@@ -1,0 +1,111 @@
+<!-- Preserved from the pre-foundation-skill-v1 loader. Detail remains historical and revision-pinned. -->
+
+
+# twenty-crm: Multi-Tenant CRM & Dynamic Schema Foundation
+
+## Use this for
+Use when building a multi-tenant application or CRM with dynamic schema capabilities: zero-downtime rolling upgrade repository proxies (read short-circuit / write fail-closed) driven by a cursor-based metadata adapter, dynamic Row-Level Security (RLS) query rewriting with isolated TypeORM `Brackets`, normalized database error taxonomies mapping Postgres codes to user-friendly messages with metadata-aware duplicate-key diagnostics, multi-tenant workspace DDL schema engines with PostgreSQL-standard identifier escaping, metadata-row-driven object/field catalogs with per-workspace composite uniqueness, generation-stamped promise memoizers for concurrent schema hydration, integer-gap record ordering with batched first/last placement, a conflict-group-driven upsert engine (probe-once, per-key arbitration, loud ambiguity throws, update-before-insert choreography), and tool-facing CRUD surfaces with role-resolved permissions, strict input validation ladders, and error-as-data envelopes. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval.
+
+## Load the matching source dump
+- `./upgrade-aware-repository-proxy.md` — repository Proxy returning typed empty results on reads (`*OrFail` still rejects with `EntityNotFoundError`) and rejecting writes fail-closed; strips unavailable relations/hidden columns from find options BEFORE delegation.
+- `./upgrade-cursor-metadata-adapter.md` — snapshot-before-mutate entity metadata adapter deriving availability from the upgrade sequence + DB progress row; singleton state with fail-open defaults; prototype-level EntityManager patching covers transaction-scoped repositories.
+- `./row-level-security-predicate-rewriter.md` — RLS predicate rewriting wrapping role permission filters in isolated TypeORM `Brackets` chained via `andWhere`; mutation queries switch to direct table references.
+- `./database-error-taxonomy-normalizer.md` — ordered Postgres error ladder (timeout-by-message → metadata-rich `23505` → `22P02` → constraint table → catch-all → honest rethrow).
+- `./duplicate-key-diagnostic-ladder.md` — `Key (col)=(value)` detail parsing, composite-field column-name back-mapping, permission-bypassing conflicting-record lookup that fails open to a generic message.
+- `./workspace-schema-ddl-engine.md` — workspace DDL trio (create/drop/rename) with idempotent IF EXISTS syntax, canonical UUID PK fallback, and the unqualified-but-quoted `RENAME TO` asymmetry.
+- `./sql-identifier-escaping.md` — three-layer escaping kit: whitelist stripper for GENERATED names vs PG-standard identifier/literal quoting (null-byte rejection, `E''` prefix for backslashes), plus the tsvector expression state-machine guard.
+- `./metadata-driven-entity-schema.md` — tenant objects as catalog rows with per-workspace composite unique indexes; the catalog's own columns versioned via `@WasIntroducedInUpgrade` decorators.
+- `./workspace-promise-memoizer-cache.md` — generation-symbol promise memoizer collapsing concurrent factories; generation-guarded `finally` cleanup so stale rejections never wipe newer entries.
+- `./record-position-service.md` — integer-gap record ordering: first/last/explicit placement, batch backfill folding in-request numerics into DB extrema, null-as-empty-table.
+- `./upsert-conflict-groups.md` — conflict keys derived from metadata (id + unique indexes); MANY_TO_ONE join columns; composite sub-property expansion; unresolvable index skipped silently.
+- `./upsert-where-condition-builder.md` — one IN-list per scalar key + per-record AND-tuples for composite keys with sorted-canonical-key dedupe and missing-member exclusion.
+- `./upsert-match-arbitration.md` — per-key first-match routing to update vs insert; same-id multi-key collapse; different-id ambiguity throws UPSERT_MULTIPLE_MATCHING_RECORDS_CONFLICT.
+- `./upsert-spine-choreography.md` — phase order: batch cap → probe-once → categorize → position-backfill-inserts-only → update leg (createdBy strip, deletedAt revive) → insert leg → ordered read-back.
+- `./record-crud-actor-and-error-envelope.md` — tool-facing CRUD envelope: deny-early automation gate, WORKFLOW-default actor injection, errors converted to `{success:false}` data with two-tier logging.
+- `./remove-undefined-record-cleaner.md` — recursive undefined-strip for partial composite inputs: null survives (clear semantics), arrays untouched, emptied composites pruned.
+- `./common-api-context-builder.md` — auth-kind→role ladder (API key → app default role → user-workspace), select-time restricted-field subtraction, unknown-role fail-open asymmetry.
+- `./data-arg-processor-validation-ladder.md` — strict key admission (unknown key = loud error), required-field check before transform, write-refusal for ONE_TO_MANY/TS_VECTOR, original-key preservation in processed where-values.
+- `./record-display-name-resolution.md` — labelIdentifier fallback ladder guaranteeing a non-empty label: missing metadata/value → id; FULL_NAME composed "first last".
+- `./position-write-validation.md` — finite-numbers-only admission for ordering columns (NaN/±Infinity rejected) with inspect-based safe error rendering.
+- `./orm-update-event-pairing.md` — id-keyed before/after pairing anchored on the BEFORE array; stale post-write reads pass through as pre-write records, never shrink the event set.
+- `./orm-update-timestamp-authority.md` — RETURNING forced to include id+updatedAt when the table has one; returned timestamp overrides the snapshot read as event authority.
+- `./event-snapshot-clone-discipline.md` — structuredClone at every consumer of a pre-write snapshot: legacy formatters mutate nested composites in place, shallow copies alias the before-diff away (v2.34 QA bug).
+- `./timeline-coalescing-advisory-locks.md` — sorted transaction-scoped pg advisory locks per merge identity, acquired BEFORE the recent-row read; closes the duplicate-insert coalescing race.
+- `./timeline-routing-plan-cache.md` — hash-keyed single-slot workspace cache deriving rules + eligibility together; one staleness window replaces the old two-cache pair.
+- `./timeline-junction-repoint-resolver.md` — data-driven action resolution per (eventSource × targetShape) so one junction-row update emits old-target unlinked + new-target linked from declared actions.
+- `./timeline-target-resolution.md` — unified join-column target reader gated only on SELF; shape differences live entirely in plan construction.
+- `./timeline-self-rule-and-merge-keys.md` — audit-flag-driven default CRUD actions for audited non-system objects; downward-specific merge-key candidate ladder absorbing snapshot-less legacy rows.
+- `./timeline-event-filter-ladders.md` — ordered updated-event gates: link-change filter (dual updatedFields/diff format) then declaration membership then trigger-field restriction (updated-only).
+- `./filter-logical-composition-walker.md` — and/or/not filter tree compiled into fresh TypeORM brackets per level; first entry `.where()` (replace-once), later entries `.andWhere()`; bare-object or-groups normalized to one-element arrays.
+- `./filter-field-permission-gates.md` — deny-before-SQL ladder in the field parser: unknown key throws, object `canReadObjectRecords === false` throws PERMISSION_DENIED (undefined passes — fail-open asymmetry), field readability asserted before any SQL exists.
+- `./relation-subfilter-depth-guard.md` — MANY_TO_ONE sub-filters compile as idempotent leftJoins on the OUTER builder (alias-scan dedupe) with a child parser bound to the join alias; depth capped at 1 hop with a typed user-friendly error.
+- `./composite-subfield-filter-compilation.md` — composite fields flatten via name+Capitalized(subFieldKey) column algebra with unknown-sub-field throws; documents the upstream first-subfield double-emit quirk (where()+andWhere() on the same condition).
+- `./operator-sql-ladder-param-namespacing.md` — one dispatch producing parameterized Postgres for ~18 operators: random hex param suffixes prevent same-field collisions, DATE_TIME gets ±1ms windows, unknown operators fail closed with a generic user-facing message.
+- `./null-equivalent-filter-widening.md` — type×sub-field matrix ('' text / '{}' array stored as NULL) widens eq/isEmptyArray/is-NULL and complement-narrows neq so empty-value filters match NULL-stored rows.
+- `./keyset-cursor-strict-twin-operators.md` — null-aware keyset algebra: strict eqStrict/isStrictly twins mirror the SQL scan order, or-with-IS NULL when nulls scan last, honest null return when the cursor sits in the trailing block.
+
+## Capsule map
+- **Zero-Downtime Upgrade Plane** — `upgrade-cursor-metadata-adapter`, `upgrade-aware-repository-proxy`: sequence-cursor availability truth flows adapter → singleton → proxy; reads degrade, writes fail closed.
+- **Multi-Tenant ORM & Security** — `row-level-security-predicate-rewriter`, `metadata-driven-entity-schema`: bracket-isolated RLS applier, tenant objects as versioned catalog rows.
+- **Error Handling & Diagnostics** — `database-error-taxonomy-normalizer`, `duplicate-key-diagnostic-ladder`: ordered Postgres error taxonomy feeding field-label duplicate diagnostics.
+- **Dynamic Schema & DDL Engine** — `workspace-schema-ddl-engine`, `sql-identifier-escaping`: sanitized idempotent DDL over the stripper-vs-quoter escaping kit.
+- **Caching & Hydration** — `workspace-promise-memoizer-cache`: generation-stamped promise collapse with race-safe invalidation.
+- **Record Ordering & Position** — `record-position-service`, `position-write-validation`: gap-integer ordering primitive over a finite-number-validated position column.
+- **Upsert Engine** — `upsert-conflict-groups`, `upsert-where-condition-builder`, `upsert-match-arbitration`, `upsert-spine-choreography`: metadata-derived conflict keys → batched probe → per-key arbitration with loud ambiguity throws, executed in a fixed update-before-insert choreography.
+- **Tool-Facing CRUD Surface** — `record-crud-actor-and-error-envelope`, `common-api-context-builder`, `data-arg-processor-validation-ladder`, `remove-undefined-record-cleaner`, `record-display-name-resolution`: permission-resolved context building, strict input validation ladder, undefined≠null cleaning, error-as-data envelope with total display names.
+- **ORM Update-Event Fidelity** — `orm-update-event-pairing`, `orm-update-timestamp-authority`, `event-snapshot-clone-discipline`: id-keyed before/after pairing anchored before-first, RETURNING-forced authoritative timestamps, and clone-at-boundary immutability so published events never alias or misalign.
+- **Timeline Activity Routing & Coalescing** — `timeline-routing-plan-cache`, `timeline-junction-repoint-resolver`, `timeline-target-resolution`, `timeline-self-rule-and-merge-keys`, `timeline-event-filter-ladders`, `timeline-coalescing-advisory-locks`: hash-keyed derived routing plans feed a listener gate and per-shape payload builders; junction repoints emit both sides; sorted advisory locks serialize the ten-minute coalescing window.
+- **GraphQL Record-Filter Compiler** — `filter-logical-composition-walker`, `filter-field-permission-gates`, `relation-subfilter-depth-guard`, `composite-subfield-filter-compilation`, `operator-sql-ladder-param-namespacing`, `null-equivalent-filter-widening`, `keyset-cursor-strict-twin-operators`: bracket-per-level boolean composition → permission-gated per-field dispatch (relation joins depth-capped, composites flattened) → a parameterized operator→SQL ladder whose null-equivalent widening is deliberately bypassed by the strict keyset-cursor twins.
+
+## Extending the foundation
+Add one `./<seam>.md` capsule for one graph-selected, source-confirmed porting question. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf.
+
+## Provenance
+twenty-crm (AGPL-3.0 — patterns only, never verbatim), `main@9e4717278c29efa3ba0c147f6acf0d68e99a625c`; Codebase Memory projects `ext-twenty-crm` (passes 1–4; 173,708 nodes / 651,032 edges, full mode, re-indexed in place at this head 2026-08-24 — drift symbols resolve line-exact, no stale twin) and `twenty-crm` (pass 5 fresh full index at the same HEAD, generation 2026-08-25T20:01:53Z, 651,031 edges, skipped 0, 161 parse-partial files all outside cited engine paths). Pass 1 authored the first six capsules but died pre-commit (orphan recovery); pass 2 verified every citation against source at the same pin, repaired two defective excerpts/probes, and deepened the plane to nine capsules. Pass 3 (sweep-rover, 2026-08-24) mined the record-crud/upsert/position plane whole-file (~1,900 LOC) into ten more capsule-v2 @ pin a6eedd8b. Pass 4 (sweep-rover drift re-entry, 2026-08-24) pulled +11 upstream commits (a6eedd8b→9e471727) and mined the whole drift: the timeline routing/coalescing rework (#24655/#24656/#24657/#24659/#24664 — rule-builder+eligibility services replaced by one hash-keyed routing-plan service; junction repoints now emit both sides) plus the ORM update-event fixes (#24644/#24648) into ten more capsule-v2 (20→29). Pass 5 (2026-08-25) mined the previously uncited GraphQL record-filter compiler plane (`graphql-query-runner/graphql-query-parsers` + `compute-where-condition-parts` + cursor keyset algebra) into seven capsule-v2 (29→36); jest runner blocked (no node_modules in checkout) — probes verified by direct read of spec assertions.
+
+## Full view (memory graph)
+Revalidate `ext-twenty-crm` before porting: run `index_status`, `check_index_coverage`, `search_graph`, `trace_path`, and `get_code_snippet`. Record the graph root, branch, commit, mode, node/edge counts, freshness, and any coverage caveats; source and direct tests decide shipped claims.
+
+## Boundaries
+Adopt the upgrade-aware repository proxy pattern, cursor-driven metadata adapter, RLS predicate isolation brackets, Postgres error normalization ladder, duplicate-key diagnostic chain, SQL identifier/literal escaping rules, generation-stamped promise memoizer, gap-integer record ordering, conflict-group upsert arbitration (including its loud multi-match throw and update-before-insert ordering), and the error-as-data CRUD envelope with undefined≠null input cleaning. Also adopt the update-event fidelity contracts (id-keyed before/after pairing, RETURNING-forced authoritative timestamps, clone-at-boundary snapshot immutability), the timeline routing/coalescing kernel (hash-keyed routing-plan cache, dual-emission junction repoints, sorted advisory-lock funnels, downward-specific merge-key candidates), and the record-filter compiler contracts (fresh-bracket-per-level boolean composition, gates-before-SQL permission denies, join-alias relation sub-filters with a one-hop cap, capitalize-concatenation composite columns, randomized param namespacing, complement-paired null-equivalent widening, strict keyset-cursor twins). Adapt database dialect syntax (PostgreSQL vs SQLite/MySQL) per host — the escaping kit and the operator ladder (`^@`, `@>`, `unaccent_immutable`) are PG-specific. Omit frontend React UI components (`packages/twenty-front/`), product billing integrations unless specifically required, messaging/calendar/email ingestion verticals, and the workflow-executor internals beyond the CRUD surface.
+
+## Reference-file inventory
+
+Every preserved capsule/reference file in this foundation:
+
+- [`common-api-context-builder.md`](./common-api-context-builder.md)
+- [`composite-subfield-filter-compilation.md`](./composite-subfield-filter-compilation.md)
+- [`data-arg-processor-validation-ladder.md`](./data-arg-processor-validation-ladder.md)
+- [`database-error-taxonomy-normalizer.md`](./database-error-taxonomy-normalizer.md)
+- [`duplicate-key-diagnostic-ladder.md`](./duplicate-key-diagnostic-ladder.md)
+- [`event-snapshot-clone-discipline.md`](./event-snapshot-clone-discipline.md)
+- [`filter-field-permission-gates.md`](./filter-field-permission-gates.md)
+- [`filter-logical-composition-walker.md`](./filter-logical-composition-walker.md)
+- [`keyset-cursor-strict-twin-operators.md`](./keyset-cursor-strict-twin-operators.md)
+- [`metadata-driven-entity-schema.md`](./metadata-driven-entity-schema.md)
+- [`null-equivalent-filter-widening.md`](./null-equivalent-filter-widening.md)
+- [`operator-sql-ladder-param-namespacing.md`](./operator-sql-ladder-param-namespacing.md)
+- [`orm-update-event-pairing.md`](./orm-update-event-pairing.md)
+- [`orm-update-timestamp-authority.md`](./orm-update-timestamp-authority.md)
+- [`position-write-validation.md`](./position-write-validation.md)
+- [`record-crud-actor-and-error-envelope.md`](./record-crud-actor-and-error-envelope.md)
+- [`record-display-name-resolution.md`](./record-display-name-resolution.md)
+- [`record-position-service.md`](./record-position-service.md)
+- [`relation-subfilter-depth-guard.md`](./relation-subfilter-depth-guard.md)
+- [`remove-undefined-record-cleaner.md`](./remove-undefined-record-cleaner.md)
+- [`row-level-security-predicate-rewriter.md`](./row-level-security-predicate-rewriter.md)
+- [`sql-identifier-escaping.md`](./sql-identifier-escaping.md)
+- [`timeline-coalescing-advisory-locks.md`](./timeline-coalescing-advisory-locks.md)
+- [`timeline-event-filter-ladders.md`](./timeline-event-filter-ladders.md)
+- [`timeline-junction-repoint-resolver.md`](./timeline-junction-repoint-resolver.md)
+- [`timeline-routing-plan-cache.md`](./timeline-routing-plan-cache.md)
+- [`timeline-self-rule-and-merge-keys.md`](./timeline-self-rule-and-merge-keys.md)
+- [`timeline-target-resolution.md`](./timeline-target-resolution.md)
+- [`upgrade-aware-repository-proxy.md`](./upgrade-aware-repository-proxy.md)
+- [`upgrade-cursor-metadata-adapter.md`](./upgrade-cursor-metadata-adapter.md)
+- [`upsert-conflict-groups.md`](./upsert-conflict-groups.md)
+- [`upsert-match-arbitration.md`](./upsert-match-arbitration.md)
+- [`upsert-spine-choreography.md`](./upsert-spine-choreography.md)
+- [`upsert-where-condition-builder.md`](./upsert-where-condition-builder.md)
+- [`workspace-promise-memoizer-cache.md`](./workspace-promise-memoizer-cache.md)
+- [`workspace-schema-ddl-engine.md`](./workspace-schema-ddl-engine.md)

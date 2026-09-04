@@ -61,7 +61,7 @@ is answered.
 
 ## Go deeper
 
-For repeat in-place revision of an existing Foundation Pack source, use a bounded `/learn` evidence pass on one named seam; this skill keeps ownership of external-source qualification and approval. For ordinary `go deeper`, resume the approved repository from current source, project-scoped session evidence, and any qualified work record. Choose one high-value unresolved seam,
+For repeat in-place revision of an existing `skills/*-foundation` source, use a bounded `/learn` evidence pass on one named seam; this skill keeps ownership of external-source qualification and approval. For ordinary `go deeper`, resume the approved repository from current source, project-scoped session evidence, and any qualified work record. Choose one high-value unresolved seam,
 not a broad repository sweep. Trace its entry points, data/control flow,
 invariants, failure boundaries, configuration, and direct tests. Return the
 verified model, citations, counter-evidence, and next candidate seam.

@@ -9,7 +9,7 @@
 | [bbatsov/emacs-lisp-style-guide](https://github.com/bbatsov/emacs-lisp-style-guide) (primary) | spaces not tabs; Emacs indent rules; lexical-binding; lisp-case; library prefixes; `--` private; `-p` predicates; when/unless; `#'` sharp quote; macro vs function; provide/require/autoload; docstrings; comment levels; checkdoc/package-lint |
 | [GNU Emacs Lisp Tips (tips.texi)](https://www.gnu.org/software/emacs/manual/html_node/elisp/Tips.html) (secondary) | loading must not change behavior; prefix globals; lexical-binding recommended; require not load; eval-when-compile for macros; cl-lib not cl; no hanging parens; reserved C-c keys; error message format; library header template |
 
-**Not duplicated here:** Full major/minor mode API — use stack capsules in `foundation-pack/`. Every Flycheck rule — enable project-relevant linters.
+**Not duplicated here:** Full major/minor mode API — use stack capsules in `skills/*-foundation`. Every Flycheck rule — enable project-relevant linters.
 
 ## Mental model
 
