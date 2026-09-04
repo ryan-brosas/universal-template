@@ -17,3 +17,13 @@ updates:
       prefix: ci
     labels:
       - type:dependencies
+
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: deps
+    labels:
+      - type:dependencies

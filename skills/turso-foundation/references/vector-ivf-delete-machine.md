@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Vector-IVF delete machine — why must delete be paranoid where insert is blind, and what stats drift is accepted?
 
-**Source:** turso (MIT) `main@1654d1587fab` (/mnt/hdd/utopia/inspo/turso); Codebase Memory `turso`. **Question:** What does a correct posting-list removal look like under async seeks, and which inconsistencies are tolerated after deletes?
+**Source:** turso (MIT) `main@1654d1587fab` ($REFERENCE_ROOT/turso); Codebase Memory `turso`. **Question:** What does a correct posting-list removal look like under async seeks, and which inconsistencies are tolerated after deletes?
 
 ## Eight-state machine: Found deletes in place, TryAdvance advances first, NotFound is corruption
 **Path/Symbol:** `core/index_method/toy_vector_sparse_ivf.rs`: `VectorSparseInvertedIndexDeleteState` enum (:90-137), `delete` (:785-1044).

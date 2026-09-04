@@ -28,7 +28,7 @@ for attr in attributes_of_interest:
 
 **Flow:** skill resolves page → `wait_for_non_loading_dom_state(page, 2000)` polls `document.readyState` every 50 ms until not `"loading"` OR budget elapses (loop just ends; caller proceeds regardless) → read/projection proceeds. On action failure, click/type skills build `f"Element not found with selector: {selector}"` plus `await get_element_outer_html(...)` so the critique/model sees a compact re-description of what WAS at that spot.
 **Invariant:** The readiness gate is best-effort BY DESIGN — it must never raise on timeout, because the repo treats timeouts as soft failures everywhere. The projection is an ALLOWLIST (15 attributes), not `outerHTML` — bounded payload keeps error messages inside the token budget; adding attributes is a context-budget decision.
-**Probe:** `cd /mnt/hdd/utopia/inspo/TheAgenticBrowser && grep -c "attributes_of_interest" core/utils/dom_helper.py` → `2` (decl + use); `grep -n "readyState" core/utils/dom_helper.py` → exactly `:13`; `grep -rn "wait_for_non_loading_dom_state" --include='*.py' core | grep -v "def \|dom_helper"` → 4 call sites (`get_dom_with_content_type.py:9,47,79` import+2 uses). Coverage caveat: repo ships no tests; deterministic line-pinned greps at pin `71daa28`.
+**Probe:** `cd $REFERENCE_ROOT/TheAgenticBrowser && grep -c "attributes_of_interest" core/utils/dom_helper.py` → `2` (decl + use); `grep -n "readyState" core/utils/dom_helper.py` → exactly `:13`; `grep -rn "wait_for_non_loading_dom_state" --include='*.py' core | grep -v "def \|dom_helper"` → 4 call sites (`get_dom_with_content_type.py:9,47,79` import+2 uses). Coverage caveat: repo ships no tests; deterministic line-pinned greps at pin `71daa28`.
 
 ## Get live surrounding code
 **Retrieve:**

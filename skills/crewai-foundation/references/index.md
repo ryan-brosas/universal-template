@@ -164,13 +164,13 @@ Use when porting an event/listener workflow engine (or_ / and_ / router graphs),
 - **Event bus & usage** — `usage-aggregation-ownership`: reentrant-safe listener attach/detach around kickoff ownership.
 
 ## Extending the foundation
-Add one `./<seam>.md` capsule for one graph-selected, source-confirmed porting question against project `ext-crewAI`. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf. Re-run probes byte-exact from the repo root (`/mnt/hdd/utopia/inspo/external/crewAI`, runner `.venv/bin/python -m pytest`) before shipping.
+Add one `./<seam>.md` capsule for one graph-selected, source-confirmed porting question against project `ext-crewAI`. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf. Re-run probes byte-exact from the repo root (`$REFERENCE_ROOT/external/crewAI`, runner `.venv/bin/python -m pytest`) before shipping.
 
 ## Provenance
 crewAI (MIT), `main@9e9a8577becc322f98a966ad88d7904251049744`; Codebase Memory project `ext-crewAI` (353,322 nodes / 463,414 edges, status ready, head==base==pin 9e9a8577 after ff-pull of f4731f50→9e9a8577 and in-place refresh; content freshness proven by resolving drift-introduced `project_created_span` via search_code line-exact at lib/crewai-core/src/crewai_core/telemetry.py:411; parse_partial ×142 = versioned docs .mdx + CLI templates + viz assets, none cited).
 
 ## Full view (memory graph)
-Revalidate `ext-crewAI` before porting: run `index_status`, `check_index_coverage`, `search_graph`, `trace_path`, and `get_code_snippet`. Graph root `/mnt/hdd/utopia/inspo/external/crewAI`, branch main, pin 9e9a8577, FULL mode, generation_matches verified; coverage check stdin-JSON over 14 cited kernel paths returned no_recorded_issue + metadata_match ×14. BM25 search_graph is healthy on this corpus (unlike doc-shaped repos) but search_code resolves file-stem anchors line-exact when queries miss. Source and direct tests decide shipped claims.
+Revalidate `ext-crewAI` before porting: run `index_status`, `check_index_coverage`, `search_graph`, `trace_path`, and `get_code_snippet`. Graph root `$REFERENCE_ROOT/external/crewAI`, branch main, pin 9e9a8577, FULL mode, generation_matches verified; coverage check stdin-JSON over 14 cited kernel paths returned no_recorded_issue + metadata_match ×14. BM25 search_graph is healthy on this corpus (unlike doc-shaped repos) but search_code resolves file-stem anchors line-exact when queries miss. Source and direct tests decide shipped claims.
 
 ## Boundaries
 Adopt pure engine contracts (listener ledgers, pairing invariants, append-only snapshots, backend-setter pattern); adapt transport details (Redis/file locks, SQLite, CEL) to your host stack; omit product surfaces not mined here (Crew/Agent internals, tools catalog, enterprise Plus API, telemetry exporters, visualization assets).

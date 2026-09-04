@@ -26,9 +26,10 @@ from source bytes, filesystem state, Git state, or runtime output.
    whether each instruction still earns its place.
 3. Ground factual claims in current source, Git, host inventory, and runtime
    output. Treat session history as evidence, never current truth.
-4. Run only checks that prove an affected exact contract, such as parsing,
-   names, references, path containment, generated parity, secret patterns, or
-   safe filesystem mutation.
+4. Run only checks that prove an affected exact contract, such as strict YAML
+   and metadata types, names, references, tracked-file ownership, disjoint
+   hot/cold context and its budget, path containment, generated parity, secret
+   patterns, or safe atomic filesystem mutation.
 5. Separate hard failures from judgment calls. Fix objective failures; explain
    semantic tradeoffs with evidence instead of inventing a regex proxy.
 6. Preserve unrelated files and report the commands that actually ran and their
@@ -44,6 +45,7 @@ remaining uncertainty is reported.
 - Encoding nuanced policy or prose judgment as phrase tables.
 - Running every historical script because an old checklist names it.
 - Treating generated catalogs, projections, or diagnostics as ground truth.
+- Publishing vendor runtime installs, session logs, private paths, or secrets.
 - Replacing retired Python policy machinery with another language framework.
 
 ## Verification

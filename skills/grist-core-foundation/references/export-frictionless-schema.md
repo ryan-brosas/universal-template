@@ -48,7 +48,7 @@ function getNumberSeparators(locale: string) {
 
 **Probe:** deterministic greps (coverage caveat: no dedicated unit file):
 ```bash
-cd /mnt/hdd/utopia/inspo/grist-core
+cd $REFERENCE_ROOT/grist-core
 grep -n "1000.1" app/server/lib/ExportTableSchema.ts            # 132
 grep -n 'split(":", 1)\[0\]' app/server/lib/ExportTableSchema.ts # 74
 grep -n "trueValue" app/server/lib/ExportTableSchema.ts          # 109

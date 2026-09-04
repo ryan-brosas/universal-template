@@ -38,7 +38,7 @@ if (!isPublic && roles.canEdit(docRealAccess)) {
 **Invariant:** The previewer bypasses ALL filtering (:2569). `canEditAccess` (ACL_EDIT permission) is the discriminator between owner-tiers — NOT role names. A porter who filters by role string breaks tutorials/public editors where realAccess ≠ stored access.
 
 ### Probe (direct tests)
-`bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "excludeUsersWithoutAccess" app/gen-server/lib/homedb/HomeDBManager.ts | head -2'` → :2498 signature + :2601 filter.
+`bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "excludeUsersWithoutAccess" app/gen-server/lib/homedb/HomeDBManager.ts | head -2'` → :2498 signature + :2601 filter.
 `bash -c 'grep -rn "flatten" test/gen-server/ApiServerAccess.ts | head -3'` → ≥ 2 assertions.
 Direct tests: `test/gen-server/ApiServerAccess.ts` access-listing its (owner/editor/viewer visibility matrices); `HomeDBCaches.ts` exercises the flattened previewer fetch.
 

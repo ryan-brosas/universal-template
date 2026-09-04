@@ -35,7 +35,7 @@ if (isFullReferencingType(type)) {
 
 **Flow:** `extractTypeFromColType("Ref:Table1")` → `"Ref"` (suffix stripped) → class lookup → unknown/Text types get IdentityParser (the parse-nothing default that callers short-circuit on). View-field options override column options ONLY when the field row carries a truthy widgetOptions JSON — otherwise formatting/paste would disagree between views sharing a column. For reference types the VISIBLE column's identity+type+options are injected so pasted display-values resolve through the same machinery used to render them.
 **Invariant:** Int shares NumericParser (both parse via NumberParse). Attachments share ReferenceListParser (attachment entries ARE references to the _grist_Attachments table — visibleColId defaults to id). The `field?.widgetOptions ?` guard is falsy-aware: empty-string options fall back to the COLUMN, preventing a blanked field from wiping real options.
-**Probe:** `bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && sed -n "269,271p" app/common/ValueParser.ts && grep -n "Attachments: ReferenceListParser" app/common/ValueParser.ts'` → override ternary and the attachment alias.
+**Probe:** `bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && sed -n "269,271p" app/common/ValueParser.ts && grep -n "Attachments: ReferenceListParser" app/common/ValueParser.ts'` → override ternary and the attachment alias.
 Direct tests: factory behavior exercised via paste suites; anchor `grep -rn "createParserRaw" app/ --include=*.ts` shows NumericGuesser consuming it (:121 of ValueGuesser).
 
 ### Retrieve

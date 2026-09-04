@@ -22,7 +22,7 @@ const turn = runtime.core.processTurn({ messages: coreMessages, state, config,
 ```
 **Flow:** load state via `runtime.stateFor(ctx)` → compute the calibrated sent view EXACTLY as the context transform does (`sent-view-arbitration` capsule) → processTurn → hand `turn.state` + nudge to the shared kit panel → append pi-specific footer: delegate usage ("excluded from main totals") with in/out/cost. The tool surface mirrors this through `handleStatus`. Token-truth ladder is consistent across all surfaces: env override → adapter config → learned overflow window → output-headroom-reserved live window → 150k fallback.
 **Invariant:** a status view that bypasses the production transform reports phantom content (consumed calls, pruned messages); a status view that uses a DIFFERENT token scale than the decisions reports phantom emergencies. Unattributable tokens are labeled as a residual "framework" bucket, never silently dropped from the total. Cache-hit samples must exclude no-reporting requests from AVERAGES rather than treating them as zero-hit.
-**Probe:** `cd /mnt/hdd/utopia/inspo/billion-context-pi && npx tsx --test tests/commands-kit-panel.test.ts` — GREEN at pin (shared-panel rendering with host inputs; `tests/status-parity.test.ts` does not exist at this pin — the fallback path is the live one).
+**Probe:** `cd $REFERENCE_ROOT/billion-context-pi && npx tsx --test tests/commands-kit-panel.test.ts` — GREEN at pin (shared-panel rendering with host inputs; `tests/status-parity.test.ts` does not exist at this pin — the fallback path is the live one).
 
 ## Get live surrounding code
 **Retrieve:**

@@ -41,7 +41,7 @@ The field docstring states the contract directly (:320–325): "`summary_prompt`
 
 **Invariant:** Exactly one system-prompt surface per strategy: user-turn shaping lives ONLY in `summary_prompt`; system-prompt shaping lives ONLY in `instructions`. Never hardcode either back or merge them — an endpoint that constrains the first system block cannot use `SummarizingCompaction` at all unless `instructions` stays overridable, and the default must equal the historical hardcoded string so unset behavior never drifts.
 
-**Probe:** `bash -c 'cd /mnt/hdd/utopia/inspo/pydantic-ai-harness && /tmp/harness-p6-venv/bin/python -m pytest "tests/compaction/test_compaction.py::TestSummarizingCompactionModel::test_summarizer_agent_gets_the_default_instructions" "tests/compaction/test_compaction.py::TestSummarizingCompactionModel::test_instructions_override_reaches_the_summarizer_agent" -q'` — both assert `MockAgent.call_args.kwargs['instructions']` equals the field/default (:2145–2158, :2161–2179); EXECUTED GREEN 2/2 at pin `76db3dec` (re-executed at the canonical root during pass 7; see work-record verification.md).
+**Probe:** `bash -c 'cd $REFERENCE_ROOT/pydantic-ai-harness && /tmp/harness-p6-venv/bin/python -m pytest "tests/compaction/test_compaction.py::TestSummarizingCompactionModel::test_summarizer_agent_gets_the_default_instructions" "tests/compaction/test_compaction.py::TestSummarizingCompactionModel::test_instructions_override_reaches_the_summarizer_agent" -q'` — both assert `MockAgent.call_args.kwargs['instructions']` equals the field/default (:2145–2158, :2161–2179); EXECUTED GREEN 2/2 at pin `76db3dec` (re-executed at the canonical root during pass 7; see work-record verification.md).
 
 ## Get live surrounding code
 **Retrieve:**

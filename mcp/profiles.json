@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "minimal": [],
+    "code": ["codebase-memory", "mcp-steroid"],
+    "docs": ["context7"],
+    "research": ["context7", "deepwiki", "exa"],
+    "memory": ["openviking"]
+  }
+}

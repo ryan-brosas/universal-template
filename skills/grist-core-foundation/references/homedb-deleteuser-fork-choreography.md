@@ -37,7 +37,7 @@ docs.forEach((doc) => {
 **Invariant:** The 503 is deliberate retryable-failure semantics for a race the design cannot lock away (single-process Grist combines home server and doc worker — staying outside the tx avoids deadlock). A porter who moves fork deletion inside the transaction turns slow S3/doc-worker round trips into long row locks; one who skips it strands unreachable bytes forever.
 
 ### Probe (direct tests)
-`bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "Untimely document addition" app/gen-server/lib/homedb/UsersManager.ts'` → :620.
+`bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "Untimely document addition" app/gen-server/lib/homedb/UsersManager.ts'` → :620.
 `bash -c 'grep -rn "deleteUser" test/gen-server/ApiServer.ts | head -3'` → ≥ 2 hits (user self-delete coverage).
 Direct tests: `test/gen-server/ApiServer.ts` user-management its (delete flows through /api /deleteUser path).
 

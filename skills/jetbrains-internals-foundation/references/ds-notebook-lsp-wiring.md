@@ -31,7 +31,7 @@
 **Invariant:** the suppressor is not cosmetic cleanup — shipping server diagnostics WITHOUT the same-language suppression produces duplicate error channels, and shipping the suppressor WITHOUT a live server hides real errors. They are one contract. The optional-fragment split keeps the plugin installable in hosts lacking Python while every Python-specific class stays unreferenced until load (see `optional-depends-capability-fragment` for the fragment mechanics this instance exercises).
 **Probe:**
 ```bash
-cd /mnt/hdd/utopia/inspo/dataspell/plugins && unzip -p dataspell-jupyter-lsp/lib/dataspell-jupyter-lsp.jar META-INF/plugin.xml | grep -c 'config-file="python.xml"'                       # -> 1
+cd $REFERENCE_ROOT/dataspell/plugins && unzip -p dataspell-jupyter-lsp/lib/dataspell-jupyter-lsp.jar META-INF/plugin.xml | grep -c 'config-file="python.xml"'                       # -> 1
 unzip -p dataspell-jupyter-lsp/lib/dataspell-jupyter-lsp.jar META-INF/python.xml | grep -oE 'serverSupportProvider|inspectionSuppressor' | sort | uniq -c                                  # -> 1 each, same fragment
 unzip -l dataspell-jupyter-lsp/lib/dataspell-jupyter-lsp.jar | grep -c 'instances/python/Pylance\|instances/python/PyLsp'                                                                  # -> 2
 ```

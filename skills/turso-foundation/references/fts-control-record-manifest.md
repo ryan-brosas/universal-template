@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # FTS manifest control record — how does a btree-backed file set prove its own integrity and currency?
 
-**Source:** turso (MIT) `main@d9266124f` (/mnt/hdd/utopia/inspo/memory/turso); Codebase Memory `turso`. **Question:** What must the single persisted record contain so a reader answers "is my cache current?" AND "are the stored bytes intact?" from one decode?
+**Source:** turso (MIT) `main@d9266124f` ($REFERENCE_ROOT/memory/turso); Codebase Memory `turso`. **Question:** What must the single persisted record contain so a reader answers "is my cache current?" AND "are the stored bytes intact?" from one decode?
 
 ## Incarnation + generation + per-file (size, chunks), checksum-sealed
 **Path/Symbol:** `core/index_method/fts.rs`: `FtsControlRecord` (:313-317) + `from_catalog` (:328-354) + `encode` (:356-384) + `decode` (:386-466) + `validate_catalog` (:468-491), `fts_control_checksum` (:494-498), `stage_control_record` (:3239-3280).

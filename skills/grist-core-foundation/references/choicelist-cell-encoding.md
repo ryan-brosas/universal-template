@@ -32,7 +32,7 @@ private _parseJson(value: string): string[] | undefined {
 
 **Flow:** trim once → JSON-array attempt only for `[`-prefixed strings (a bare `"123"` never becomes a one-item list) → else split newlines then CSV-decode each line (choice editor forbids embedded newlines) → trim items, drop empties → empty result returns null (no change) → prefix `"L"` tag.
 **Invariant:** The `"L"` prefix IS the type marker consumed by the data engine — returning bare arrays corrupts the cell. Zero-preservation (`v || v === 0`) distinguishes legit numeric choices from null-ish junk; nested structures are flattened to their JSON text rather than rejected. Newline splitting happens BEFORE csvDecodeRow because quoted commas survive within a line but newlines cannot exist in stored choices.
-**Probe:** `bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "\[\"L\", ...result\]" app/common/ValueParser.ts && grep -n "v || v === 0" app/common/ValueParser.ts && grep -n "value.split(/\\\\[\\\\n\\\\r\\\\]+/)" app/common/ValueParser.ts'` → :80 tag, :89 zero-guard, :97 newline split.
+**Probe:** `bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "\[\"L\", ...result\]" app/common/ValueParser.ts && grep -n "v || v === 0" app/common/ValueParser.ts && grep -n "value.split(/\\\\[\\\\n\\\\r\\\\]+/)" app/common/ValueParser.ts'` → :80 tag, :89 zero-guard, :97 newline split.
 Direct tests: `test/common/parseDate.ts` has none for this; covered via `test/common/ValueParser.ts`-adjacent suites — anchor: `grep -rn "ChoiceListParser" test/` shows paste-suite usage.
 
 ### Retrieve

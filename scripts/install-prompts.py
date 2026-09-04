@@ -276,6 +276,20 @@ def _gemini_adapter(source: Path) -> str:
     )
 
 
+def _atomic_write_text(target: Path, text: str, replace=os.replace) -> None:
+    """Write a complete adapter then atomically replace its destination."""
+    fd, raw = tempfile.mkstemp(prefix=f".{target.name}.", dir=target.parent)
+    temp = Path(raw)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as stream:
+            stream.write(text)
+            stream.flush()
+            os.fsync(stream.fileno())
+        replace(temp, target)
+    finally:
+        temp.unlink(missing_ok=True)
+
+
 def _write_adapter(source: Path, target: Path, mutate: bool, errors: list[str]) -> str:
     expected = _gemini_adapter(source)
     was_existing = target.exists()
@@ -300,7 +314,7 @@ def _write_adapter(source: Path, target: Path, mutate: bool, errors: list[str]) 
         errors.append(f"missing Gemini adapter: {target}")
         return "missing"
     try:
-        target.write_text(expected, encoding="utf-8")
+        _atomic_write_text(target, expected)
     except OSError as exc:
         errors.append(f"cannot write Gemini adapter {target}: {exc}")
         return "error"
@@ -420,7 +434,22 @@ def _selftest() -> int:
         if conflict_target.read_text(encoding="utf-8") != "user-owned\n":
             print("selftest: unmanaged-file conflict was overwritten", file=sys.stderr)
             return 1
-        print(f"PROMPT INSTALLER SELFTEST PASS ({actions} generated entries)")
+        atomic_target = home / "atomic.txt"
+        atomic_target.write_text("old\n", encoding="utf-8")
+
+        def fail_replace(_source, _target):
+            raise OSError("injected replace failure")
+        try:
+            _atomic_write_text(atomic_target, "new\n", replace=fail_replace)
+        except OSError:
+            pass
+        if atomic_target.read_text(encoding="utf-8") != "old\n":
+            print("selftest: failed atomic write changed destination", file=sys.stderr)
+            return 1
+        if list(home.glob(".atomic.txt.*")):
+            print("selftest: failed atomic write left a temporary file", file=sys.stderr)
+            return 1
+        print(f"PROMPT INSTALLER SELFTEST PASS ({actions} generated entries; atomic adapters)")
     return 0
 
 

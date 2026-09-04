@@ -5,7 +5,7 @@
 Keep the global `dsh` available as the known-good fallback. The editable checkout is:
 
 ```text
-/home/utopia/work/harness/deepseek-harness
+$DSH_SOURCE_CHECKOUT
 ```
 
 Run the source checkout on a separate port. The installed app and the source app may share `$DSH_HOME` only when their versions match; if plugin rows remain pending, stop mixing generations and use an isolated `DSH_HOME` with a matching profile. Never “fix” a source mismatch by overwriting the live installed profile.
@@ -13,7 +13,7 @@ Run the source checkout on a separate port. The installed app and the source app
 ## Normal update loop
 
 ```bash
-cd /home/utopia/work/harness/deepseek-harness
+cd $DSH_SOURCE_CHECKOUT
 git status --short --branch
 git fetch origin --prune
 ```
@@ -48,7 +48,7 @@ Resolve conflicts deliberately, inspect `git diff`, run `git diff --check`, then
 ## Edit/build/run loop
 
 ```bash
-cd /home/utopia/work/harness/deepseek-harness
+cd $DSH_SOURCE_CHECKOUT
 pnpm install --frozen-lockfile
 pnpm run build
 pnpm dsh web --no-open --host 127.0.0.1 --port 43127

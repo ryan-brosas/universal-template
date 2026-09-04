@@ -48,8 +48,9 @@ is answered.
 
    Approval applies to this exact candidate and pin. Popularity, test count,
    repository size, and clone count are evidence only, never thresholds.
-5. After approval, clone the resolved commit under
-   `/mnt/hdd/utopia/inspo/<repository-name>` without overwriting another
+5. After approval, resolve `INSPO_ROOT` from user/host configuration (default
+   `$HOME/work/inspo`) and clone the resolved commit under
+   `$INSPO_ROOT/<repository-name>` without overwriting another
    checkout. Cloning supplies source evidence; do not install dependencies,
    run a setup script, or run a bulk miner to learn it. Read direct test source;
    run a test only when it already works without setup, otherwise report the

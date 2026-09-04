@@ -24,7 +24,7 @@ and EVERY reference Retrieve block; record old→new mapping + count delta.
 
 **Flow:** cite-time verification catches the mismatch BEFORE any new citation → the live twin is identified by root_path + head_sha together (a matching sha string alone proved insufficient: the stale short-name carried the same HEAD string with older content) → repair sweeps all citations uniformly so the leaf never mixes two graph names.
 **Invariant:** A graph result may be cited only from a project whose `root_path` equals the pinned checkout AND whose `head_sha` equals the pinned commit AND whose cited files report `no_recorded_issue` at current generation; when in doubt, source line-counts from the clean worktree outrank recorded ranges.
-**Probe:** No upstream test pins MCP behavior (external service). Deterministic probe: run `list_projects`, confirm exactly one live project carries `root_path=/mnt/hdd/utopia/inspo/pi-fovea` with `head_sha=5bd4e6f…`, then `search_graph` a pin-era symbol (`syncScopeForPath`) — it must resolve only on the live twin.
+**Probe:** No upstream test pins MCP behavior (external service). Deterministic probe: run `list_projects`, confirm exactly one live project carries `root_path=$REFERENCE_ROOT/pi-fovea` with `head_sha=5bd4e6f…`, then `search_graph` a pin-era symbol (`syncScopeForPath`) — it must resolve only on the live twin.
 
 ## Get live surrounding code
 **Retrieve:**

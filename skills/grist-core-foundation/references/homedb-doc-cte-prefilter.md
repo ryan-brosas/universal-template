@@ -39,7 +39,7 @@ if (mergedOrg) {
 **Invariant:** Parameter-binding ORDER is load-bearing: TypeORM numbers parameters by first appearance in the FINAL SQL, and the CTE is spliced before the where-clause bindings exist — reorder the builder calls and Postgres throws bind-parameter mismatch. The FilteredDocument→Document prototype reset in getDocResult MUTATES the query result ("CAUTION") so downstream instanceof checks keep working.
 
 ### Probe (direct tests)
-`bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "UNION ALL" app/gen-server/lib/homedb/HomeDBManager.ts'` → :4345.
+`bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "UNION ALL" app/gen-server/lib/homedb/HomeDBManager.ts'` → :4345.
 `bash -c 'grep -n "ambiguous document request" app/gen-server/lib/homedb/HomeDBManager.ts'` → :1098.
 Direct tests: every doc-scoped suite exercises it transitively; `test/gen-server/lib/urlIds.ts` :113 pins alias-vs-doc disambiguation.
 

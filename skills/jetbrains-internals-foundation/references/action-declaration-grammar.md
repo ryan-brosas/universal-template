@@ -25,7 +25,7 @@
 
 **Flow:** class-bound action declared with stable id → optionally borrows another action's bindings via `use-shortcut-of` → optional inline `<keyboard-shortcut keymap="$default">` seeds ONLY that named keymap (never all maps) → placement via add-to-group anchor or `<reference>` inside a group → per-place text overrides and search synonyms refine UX without touching the id.
 **Invariant:** ids are global and immutable across the cluster (keymap files reference them by string); an inline shortcut without `keymap="…"` would leak into every map, which is why every inline binding observed carries explicit `keymap="$default"` or a mac name. `searchable=false` removes a group from Go-To-Action search while keeping it functional.
-**Probe:** `unzip -p /mnt/hdd/utopia/inspo/reference/jetbrains/pycharm/lib/intellij.platform.ide.impl.jar idea/PlatformActions.xml | grep -c '<action ' ` → 782; same pipe `| grep -c 'use-shortcut-of'` → 113; `grep -c 'keymap="\$default"'` → 13.
+**Probe:** `unzip -p $REFERENCE_ROOT/reference/jetbrains/pycharm/lib/intellij.platform.ide.impl.jar idea/PlatformActions.xml | grep -c '<action ' ` → 782; same pipe `| grep -c 'use-shortcut-of'` → 113; `grep -c 'keymap="\$default"'` → 13.
 **Coverage caveat:** resource plane, direct extraction.
 
 ## Get live surrounding code

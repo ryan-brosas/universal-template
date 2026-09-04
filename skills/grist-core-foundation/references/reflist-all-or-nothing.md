@@ -25,7 +25,7 @@ return ["L", ...rowIds];
 
 **Flow:** try `JSON.parse` first (arrays survive quoted commas), fall back to `csvDecodeRow(raw)` which cannot throw → each member cleaned via the visible column's own parser → empty list or empty raw ⇒ null → id-column fast path maps all members through Number and requires EVERY one integer else raw → unloaded ⇒ single lowercase tuple carrying the whole array → loaded ⇒ resolve each; one failure aborts to raw.
 **Invariant:** ALL-OR-NOTHING: partial lists (`["L", 4, 7]` from "Ford, Toyta") would silently rewrite user data — dropping "Toyta" without trace. Returning the untouched raw string makes the cell AltText, surfacing the typo. Contrast with singular ReferenceParser which has no partial-success case to guard. Empty-input ⇒ null (the RefList default) mirrors ReferenceParser's 0.
-**Probe:** `bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && sed -n "198,210p" app/common/ValueParser.ts | grep -n "return raw\|findMatchingRowId" && grep -n "csvDecodeRow should never raise" app/common/ValueParser.ts'` → loop at :199–208 with comment :204–205, throw-safety comment :171.
+**Probe:** `bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && sed -n "198,210p" app/common/ValueParser.ts | grep -n "return raw\|findMatchingRowId" && grep -n "csvDecodeRow should never raise" app/common/ValueParser.ts'` → loop at :199–208 with comment :204–205, throw-safety comment :171.
 Direct tests: RefList paste cases live with the paste-suite (`grep -rln "RefList" test/` anchors them).
 
 ### Retrieve

@@ -39,7 +39,7 @@ if (!user.lastConnectionAt || getTimestampStartOfDay(user.lastConnectionAt) !== 
 **Invariant:** firstLoginAt only stamps when `profile` was supplied — API-key-only traffic doesn't count as first login. The retry matches a POSTGRES error-string shape (`e.detail` Key (email)=...); sqlite's serialized transactions make it moot there — porters on other ORMs must map THEIR duplicate-key error shape, not copy the regex blindly.
 
 ### Probe (direct tests)
-`bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -c "NON_LOGIN_EMAILS" app/gen-server/lib/homedb/UsersManager.ts'` → ≥ 3.
+`bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -c "NON_LOGIN_EMAILS" app/gen-server/lib/homedb/UsersManager.ts'` → ≥ 3.
 `bash -c 'grep -n "parallel requests resulting in user creation give consistent results" test/gen-server/lib/HomeDBManager.ts'` → :53.
 Direct tests: `test/gen-server/lib/HomeDBManager.ts` :53 (100 concurrent creations all deep-equal), :38 ("can find existing user by email"), :68 ("can accumulate profile information"); `test/gen-server/lib/homedb/UsersManager.ts` :564 ("should normalize email address").
 

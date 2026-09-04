@@ -25,7 +25,7 @@ if (typeof TextDecoder !== "undefined") {
 
 **Flow:** sandboxed/grist-core builds compile this shared module into BOTH the browser bundle and the server/sandbox bundles; the typeof check resolves at first load in whichever runtime hosts it. Consumers (uploads, exports, doc parsing) call one API everywhere.
 **Invariant:** Encoder CONSTRUCTION is hoisted deliberately (comment: construction is expensive) — a porter creating encoders per-call regresses hot paths. The Buffer branch wraps in `new Uint8Array(...)` because Buffer IS a Uint8Array subclass but consumers expect plain views (structured-clone/serialization safety). The `declare const` shim keeps TS happy when globals are absent at compile time but present at runtime.
-**Probe:** `bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "takes time" app/common/arrayToString.ts && grep -n "Buffer.from(uint8Array)" app/common/arrayToString.ts'` → :12 comment; :23 fallback.
+**Probe:** `bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "takes time" app/common/arrayToString.ts && grep -n "Buffer.from(uint8Array)" app/common/arrayToString.ts'` → :12 comment; :23 fallback.
 Direct tests: no dedicated spec (trivial codec) — stated coverage caveat; exercised via upload/export suites.
 
 ### Retrieve

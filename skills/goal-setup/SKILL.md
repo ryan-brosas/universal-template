@@ -65,4 +65,4 @@ The record, if created, has a qualified long-run/handoff or external-coordinatio
 
 - `../brainstorming/SKILL.md`, conversational direction decision
 - `../leverage-capture/SKILL.md`, post-work knowledge classification
-- `~/.agents/templates/roadmap.md`, only when a multi-goal product roadmap is explicitly requested
+- `../../templates/roadmap.md`, only when a multi-goal product roadmap is explicitly requested

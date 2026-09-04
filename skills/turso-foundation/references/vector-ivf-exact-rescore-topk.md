@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Vector-IVF exact rescore & top-K — why does the index only nominate candidates, and how do results become a stable buffered set?
 
-**Source:** turso (MIT) `main@1654d1587fab` (/mnt/hdd/utopia/inspo/turso); Codebase Memory `turso`. **Question:** Where is the real distance computed, how is the top-K bounded, and what must hold before the first result row can be handed to the caller?
+**Source:** turso (MIT) `main@1654d1587fab` ($REFERENCE_ROOT/turso); Codebase Memory `turso`. **Question:** Where is the real distance computed, how is the top-K bounded, and what must hold before the first result row can be handed to the caller?
 
 ## Rescore from the live table; BTreeSet top-K with total_cmp; results fully materialized up-front
 **Path/Symbol:** `core/index_method/toy_vector_sparse_ivf.rs`: `FloatOrd` (:139-152), EvaluateSeek (:1462-1525), EvaluateRead (:1526-1586), Seek-state drain (:1243-1250), `query_rowid`/`query_column`/`query_next` (:1591-1612).

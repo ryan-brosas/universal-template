@@ -27,8 +27,9 @@ state. No fixed role threshold or tracked preference is universal truth.
    `pi --list-models`, `veda models`, `agy models`, provider APIs, or exposed
    model inventory tools. Check authentication in the execution environment.
 3. Choose the smallest available model that is plausibly sufficient. Use
-   `config/model-profiles.yaml` only as optional local preference hints after
-   live discovery, never as capability evidence.
+   `config/model-profiles.yaml` only for portable task needs. If present,
+   `config/model-profiles.local.yaml` may break ties after live discovery; it
+   remains untracked and is never capability evidence.
 4. Verify an uncertain capability with one bounded representative probe before
    assigning load-bearing work.
 5. Escalate only when observed output or a capability gap justifies a stronger,
@@ -57,5 +58,5 @@ when needed, selected model, and any observed reason for escalation.
 
 - `../execution-router/SKILL.md`, when execution shape must be chosen first.
 - `../veda-lane/SKILL.md`, native Veda lane execution.
-- `../../config/model-profiles.yaml`, optional local preference hints.
+- `../../config/model-profiles.yaml`, portable task-needs profiles.
 - `../../scripts/runtime-capabilities.py`, optional aggregate diagnostic.

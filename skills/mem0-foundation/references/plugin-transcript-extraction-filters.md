@@ -23,7 +23,7 @@ result = messages[-(max_exchanges * 2):]        # last N user+assistant PAIRS
 
 **Flow:** seek-tail read → per-line json.loads (tolerant) → role/type gate → noise gates (sidechain/compact-summary, min length 10 vs 20, "<"-prefix, "{"-assistant) → collect (Write|Edit file_paths into set; Bash commands; last assistant text) → cap windows.
 **Invariant:** extraction NEVER raises on malformed lines (continue); file list is deduped+sorted for determinism; caps bound payload size regardless of transcript size; two thresholds exist because snapshots want breadth while infer-captures want substance.
-**Probe:** `cd /mnt/hdd/utopia/inspo/mem0 && .venv/bin/python -m pytest integrations/mem0-plugin/tests/test_auto_capture.py -q` plus deterministic grep `grep -n 'startswith("<")' integrations/mem0-plugin/scripts/on_pre_compact.py` (upstream ships no dedicated pre-compact suite — caveat).
+**Probe:** `cd $REFERENCE_ROOT/mem0 && .venv/bin/python -m pytest integrations/mem0-plugin/tests/test_auto_capture.py -q` plus deterministic grep `grep -n 'startswith("<")' integrations/mem0-plugin/scripts/on_pre_compact.py` (upstream ships no dedicated pre-compact suite — caveat).
 
 ## Get live surrounding code
 **Retrieve:**

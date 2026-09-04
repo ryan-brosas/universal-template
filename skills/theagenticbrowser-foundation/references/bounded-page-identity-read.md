@@ -30,7 +30,7 @@ except Exception as e:   # (outer try at :17) — ALL failures launder into one 
 
 **Flow:** resolve singleton → None-page ⇒ ValueError → wait for domcontentloaded → title+URL → truncate URL → compose. Title exception ⇒ bare-except fallback string. ANY other exception (including a `page.url` property failure or wait timeout) escapes to the outer handler and is re-raised as the SAME 'No active page found' ValueError.
 **Invariant:** The payload bound (250 chars) protects the transcript from pathological URLs — keep it when you port. Title-read failure must never fail the call (URL alone answers "where am I"). KNOWN QUIRK NOT TO COPY: the outer except launders every error into 'No active page found…', so a timeout masquerades as a missing page — porters should map wait-failures distinctly.
-**Probe:** `cd /mnt/hdd/utopia/inspo/TheAgenticBrowser && grep -n ">250" core/skills/get_url.py` → `:31`; `grep -c "No active page found" core/skills/get_url.py` → `2`; `grep -n "except:" core/skills/get_url.py` → `:34`. Coverage caveat: repo ships no tests.
+**Probe:** `cd $REFERENCE_ROOT/TheAgenticBrowser && grep -n ">250" core/skills/get_url.py` → `:31`; `grep -c "No active page found" core/skills/get_url.py` → `2`; `grep -n "except:" core/skills/get_url.py` → `:34`. Coverage caveat: repo ships no tests.
 
 ## Get live surrounding code
 **Retrieve:**

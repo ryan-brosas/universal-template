@@ -32,7 +32,7 @@ get_os <- function(){
 await mcp.codebase_memory.search_graph({ project: "jetbrains-dataspell", query: "get_os sysinfo R kernel env vars", mode: "default", limit: 6 }); // rank-1: r-plugin.R.GetEnvVars.get_os :17-31
 await mcp.codebase_memory.check_index_coverage({ project: "jetbrains-dataspell", paths: ["plugins/r-plugin/R/GetEnvVars.R","plugins/r-plugin/R/init.R"] }); // no_recorded_issue x2
 // deterministic filesystem probe for the non-indexed plane:
-await tools.bash({ command: "cd /mnt/hdd/utopia/inspo/dataspell/plugins && file r-plugin/rwrapper-arm64-linux | grep -o 'ELF 64-bit LSB executable.*aarch64' | head -c 40 && ls r-plugin/R/*.R | wc -l" }); // -> ELF…aarch64 + >=9 scripts
+await tools.bash({ command: "cd $REFERENCE_ROOT/dataspell/plugins && file r-plugin/rwrapper-arm64-linux | grep -o 'ELF 64-bit LSB executable.*aarch64' | head -c 40 && ls r-plugin/R/*.R | wc -l" }); // -> ELF…aarch64 + >=9 scripts
 ```
 
 ## Verdict

@@ -1,0 +1,8 @@
+{
+  "hot": {
+    "max_skills": 40,
+    "max_metadata_chars": 11000
+  },
+  "method": "sum of name and description characters for tracked, operational skills with disable-model-invocation != true",
+  "token_estimate_divisor": 4
+}

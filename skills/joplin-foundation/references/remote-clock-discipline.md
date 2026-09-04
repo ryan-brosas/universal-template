@@ -23,7 +23,7 @@ public async currentDate() { return this.api_.remoteDate(); }
 
 **Flow:** lock TTL math uses remote mtime + remote now so a client with a skewed clock cannot steal or orphan leases; upload/delta comparisons use payload-embedded updated_time exclusively (driver mtimes deprecated for decisions since 2018 comment :842-845, partially rehabilitated 2025-08-27 ONLY for same-device targets where external sync services also write mtimes :846-854); the single deliberate LOCAL-clock use is throwing on remote items dated > now+1Day (impossible state ⇒ user must fix target).
 **Invariants:** (1) never compare a remote mtime to Date.now() for authorization/expiry semantics; (2) supportsAccurateTimestamp drivers may skip downloads only when BOTH sides' embedded clocks agree (:952-955) — capability-gated, default false; (3) enhanced basicDelta's metadata comparison still keys on persisted sync metadata, not wall time.
-**Probe:** `bash -c 'cd /mnt/hdd/utopia/inspo/joplin && grep -cF "return this.api_.remoteDate();" packages/lib/services/synchronizer/LockHandler.ts && grep -cF "updated_time is set and managed by clients so it'"'"'s always accurate" packages/lib/Synchronizer.ts && grep -cF "time.unixMs() + Day" packages/lib/Synchronizer.ts'` (anchored at repo root; expects 1 / 1 / 1).
+**Probe:** `bash -c 'cd $REFERENCE_ROOT/joplin && grep -cF "return this.api_.remoteDate();" packages/lib/services/synchronizer/LockHandler.ts && grep -cF "updated_time is set and managed by clients so it'"'"'s always accurate" packages/lib/Synchronizer.ts && grep -cF "time.unixMs() + Day" packages/lib/Synchronizer.ts'` (anchored at repo root; expects 1 / 1 / 1).
 
 ## Get live surrounding code
 **Retrieve:**

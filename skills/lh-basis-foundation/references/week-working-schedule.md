@@ -35,7 +35,7 @@ IWeekWorkingSchedule.DEFAULT_WORKING_SCHEDULE = {
 
 **Probe (executed pass 14, deterministic node-require against shipped dist modules):**
 ```bash
-node -e "const d=require('/mnt/hdd/utopia/inspo/lh-basis/core/public-methods/models/workingHours/enums.js').DayOfWeek;const s=require('/mnt/hdd/utopia/inspo/lh-basis/core/public-methods/models/workingHours/intervals/WeekWorkingSchedule.js').IWeekWorkingSchedule;console.log(d.sunday,d.saturday,s.MinInDay,s.MinInWeek,Object.keys(s.DEFAULT_WORKING_SCHEDULE).length,Object.keys(s.EMPTY_WORKING_SCHEDULE)[0]==='1',s.EMPTY_WORKING_SCHEDULE[d.sunday])"
+node -e "const d=require('$REFERENCE_ROOT/lh-basis/core/public-methods/models/workingHours/enums.js').DayOfWeek;const s=require('$REFERENCE_ROOT/lh-basis/core/public-methods/models/workingHours/intervals/WeekWorkingSchedule.js').IWeekWorkingSchedule;console.log(d.sunday,d.saturday,s.MinInDay,s.MinInWeek,Object.keys(s.DEFAULT_WORKING_SCHEDULE).length,Object.keys(s.EMPTY_WORKING_SCHEDULE)[0]==='1',s.EMPTY_WORKING_SCHEDULE[d.sunday])"
 ```
 → observed `0 6 1440 10080 7 false false` — the `[0]==='1'` check is FALSE because enumeration is ordinal-first (`0` = sunday first); follow-up probe printed `Object.keys(EMPTY).join(',')` → `0,1,2,3,4,5,6`, confirming invariant 2 live.
 

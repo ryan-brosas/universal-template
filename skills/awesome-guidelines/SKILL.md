@@ -27,7 +27,7 @@ The filesystem is the index, there is no catalog to maintain.
 ## Workflow
 
 1. Open the cited capsule by filename. Find candidates with
- `ls ~/.agents/skills/awesome-guidelines/references/` or ripgrep over that
+ `ls references/` or ripgrep over that
  directory (capsule names are `<lang>-style-<topic>.md` and
  `<topic>-style-learning-note.md`).
 2. Apply it through the practices leaf that owns the topic.

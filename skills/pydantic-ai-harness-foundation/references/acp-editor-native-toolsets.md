@@ -48,7 +48,7 @@ Path rooting + honest boundary (:71–75): "ACP requires absolute paths, but mod
 
 **Invariant:** The editor stays the authority for path authorization (the adapter adds routing, not sandboxing). Capability advertisement gates each route; the read-only-client fallback writes locally ONLY when agent and editor share the workspace disk (documented remote-editor caveat). Every terminal that came into existence is killed on cancel and released always; cleanup failures are suppressed so they cannot mask the in-flight outcome.
 
-**Probe:** `bash -c 'cd /mnt/hdd/utopia/inspo/pydantic-ai-harness && /tmp/harness-p6-venv/bin/python -m pytest tests/experimental/acp/test_client_toolsets.py "tests/experimental/acp/test_acp.py::TestCancellation::test_cancel_during_terminal_create_kills_the_terminal_end_to_end" -q'` — terminal killed+released on cancel incl. failing-kill survival; end-to-end late-create race leaves `killed == ['term-1']` and `released == ['term-1']`. (Executed this pass; see verification.md.)
+**Probe:** `bash -c 'cd $REFERENCE_ROOT/pydantic-ai-harness && /tmp/harness-p6-venv/bin/python -m pytest tests/experimental/acp/test_client_toolsets.py "tests/experimental/acp/test_acp.py::TestCancellation::test_cancel_during_terminal_create_kills_the_terminal_end_to_end" -q'` — terminal killed+released on cancel incl. failing-kill survival; end-to-end late-create race leaves `killed == ['term-1']` and `released == ['term-1']`. (Executed this pass; see verification.md.)
 
 ## Get live surrounding code
 **Retrieve:**

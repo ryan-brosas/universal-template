@@ -60,7 +60,7 @@ Use when building or porting a local LLM inference server: model lifecycle (load
 Add one `./<seam>.md` capsule for one graph-selected, source-confirmed porting question. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf.
 
 ## Provenance
-Ollama (MIT), `main@fb30760996871fa9460115c753afd2c60d4ab0f7` (2026-08-21); Codebase Memory project `ext-ollama` (root `/mnt/hdd/utopia/inspo/external/ollama`, branch main, FULL index, 153,806 nodes / 330,464 edges, generated 2026-08-23T09:10:40Z, generation_matches=true; freshness proven post-drift by resolving drift-introduced symbols `newModelRecommendationsCache`; parse_partial limited to docs/proto/jinja assets, none cited).
+Ollama (MIT), `main@fb30760996871fa9460115c753afd2c60d4ab0f7` (2026-08-21); Codebase Memory project `ext-ollama` (root `$REFERENCE_ROOT/external/ollama`, branch main, FULL index, 153,806 nodes / 330,464 edges, generated 2026-08-23T09:10:40Z, generation_matches=true; freshness proven post-drift by resolving drift-introduced symbols `newModelRecommendationsCache`; parse_partial limited to docs/proto/jinja assets, none cited).
 
 ## Full view (memory graph)
 Revalidate `ext-ollama` before porting: run `index_status`, `check_index_coverage`, `search_graph`, `trace_path`, and `get_code_snippet`. Coverage sweep on all 15 cited paths returned no_recorded_issue + metadata_match. BM25 search_graph resolves Function/Method/Struct nodes; doc-shaped Section nodes are absent but irrelevant here. Direct tests decide shipped claims: `go test ./thinking/ ./harmony/ ./tools/ ./server/ -run 'TestSched|TestInferenceModelCache|TestThinkingStreaming' ./middleware/ ./openai/ ./model/parsers/ ./model/renderers/` all PASS at the pinned commit.

@@ -3,6 +3,7 @@
 # Foundation Catalog
 
 Cold, source-specific, revision-pinned evidence under `skills/*-foundation/`.
+This is part of the cold discoverable set and never startup context.
 Foundations are manual and hidden: search explicitly, open the topic index,
 then load one matching capsule. Current source and tests outrank them.
 
@@ -52,7 +53,7 @@ then load one matching capsule. Current source and tests outrank them.
 | [`dify-foundation`](../skills/dify-foundation/SKILL.md)                                     | Use when porting Dify's workflow app-execution spine - long-running LLM workflow execution with cancellation, pause/resume, event streaming to clients, or engi... |
 | [`django-foundation`](../skills/django-foundation/SKILL.md)                                 | Use when porting Django's WSGI/ASGI handler pipeline, sync/async middleware chain, URL resolver/reverse engine, or request/response primitives - capsule-v2 sou... |
 | [`dnd-kit-foundation`](../skills/dnd-kit-foundation/SKILL.md)                               | Use when porting drag-and-drop: signal-reactive drag kernel, activation constraints, collision detection, optimistic sortable reordering, auto-scroll, a11y ann... |
-| [`docmost-foundation`](../skills/docmost-foundation/SKILL.md)                               | Use when porting docmost''s realtime collaboration kernel: Redis-synced multi-instance Yjs routing, WS auth ladders, debounced CRDT-to-SQL persistence, and pag... |
+| [`docmost-foundation`](../skills/docmost-foundation/SKILL.md)                               | Use when porting docmost's realtime collaboration kernel: Redis-synced multi-instance Yjs routing, WS auth ladders, debounced CRDT-to-SQL persistence, and page... |
 | [`dsh-codex-foundation`](../skills/dsh-codex-foundation/SKILL.md)                           | Use when porting ChatGPT-OAuth Codex provider machinery - provider-native auth adapters, single-flight browser login, cancellation and status recovery, exact-o... |
 | [`dsh-factory-foundation`](../skills/dsh-factory-foundation/SKILL.md)                       | Use when porting durable dependency-graph task-factory machinery: leader-elected lease-elected schedulers, ready-task claim loops bounded by concurrency, check... |
 | [`dsh-template-foundation`](../skills/dsh-template-foundation/SKILL.md)                     | Use when building a DeepSeek Harness (DSH) coding-agent template or harness: a dependency-free canonical check gate, a command-plugin that turns prompt files i... |
@@ -84,7 +85,7 @@ then load one matching capsule. Current source and tests outrank them.
 | [`isso-foundation`](../skills/isso-foundation/SKILL.md)                                     | Use when porting Isso's self-hosted comment-server internals: SQLite comment/thread storage, moderation modes, guard rate limits, signed edit/moderation tokens... |
 | [`jetbrains-internals-foundation`](../skills/jetbrains-internals-foundation/SKILL.md)       | Use when porting IntelliJ-platform extension-point/plugin.xml manifest patterns, file-type/language registration, inspection catalogs, or settings/registry wir... |
 | [`jobspy-foundation`](../skills/jobspy-foundation/SKILL.md)                                 | Use when scraping job listings across sites (LinkedIn, Indeed, Glassdoor, ZipRecruiter, Google, Naukri, Bayt, BDJobs): a unified Scraper abstraction, proxy rot... |
-| [`joplin-foundation`](../skills/joplin-foundation/SKILL.md)                                 | Use when porting joplin''s offline-first sync kernel: TTL lock election over dumb targets, timestamp-LWW sync-info merges, three-step sync choreography with fa... |
+| [`joplin-foundation`](../skills/joplin-foundation/SKILL.md)                                 | Use when porting joplin's offline-first sync kernel: TTL lock election over dumb targets, timestamp-LWW sync-info merges, three-step sync choreography with fai... |
 | [`kdenlive-foundation`](../skills/kdenlive-foundation/SKILL.md)                             | Use when porting kdenlive timeline document-model machinery - Fun undo-lambda composition on QUndoStack, typed move-validation with rollback, two-phase group m... |
 | [`lancedb-foundation`](../skills/lancedb-foundation/SKILL.md)                               | Use when porting LanceDB SDK patterns: hybrid search fusion (RRF/rank/normalize), MemWAL LSM read routing + shard-writer writes, IVF/HNSW index build params, c... |
 | [`langgraph-foundation`](../skills/langgraph-foundation/SKILL.md)                           | Use when building agent orchestration engines, step graphs, or durable resumable runtimes - reusable contracts from LangGraph (MIT): the Pregel execution kerne... |

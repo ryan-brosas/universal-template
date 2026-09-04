@@ -47,7 +47,7 @@ Invariants a porter gets wrong:
 8. **Re-emit is unconditional**: `emit(RECORD_HISTORY_CREATE, { recordIds })` fires even when zero rows were written (:141–143) — it signals "update processed", not "rows exist".
 
 ## Probe (direct tests)
-Anchored at repo root `/mnt/hdd/utopia/inspo/platforms/teable`:
+Anchored at repo root `$REFERENCE_ROOT/platforms/teable`:
 ```bash
 grep -c recordHistoryDisabled apps/nestjs-backend/src/event-emitter/listeners/record-history.listener.ts  # → 1
 grep -cF 'isEqual(oldValue, newValue)' apps/nestjs-backend/src/event-emitter/listeners/record-history.listener.ts  # → 1

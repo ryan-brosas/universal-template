@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # VDBE async step loop — how does a bytecode VM yield on IO and resume without blocking its thread?
 
-**Source:** turso (MIT) `main@def9a0601b8e` (/mnt/hdd/utopia/inspo/memory/turso); Codebase Memory project `turso`. **Question:** What does the VM return to the caller, what state survives across a resume, and which errors must NOT roll back?
+**Source:** turso (MIT) `main@def9a0601b8e` ($REFERENCE_ROOT/memory/turso); Codebase Memory project `turso`. **Question:** What does the VM return to the caller, what state survives across a resume, and which errors must NOT roll back?
 
 ## Step returns IO/Yield/Row/Done; instructions own their resume state
 **Path/Symbol:** `core/vdbe/mod.rs`: `Program::step` (:1661-1683), `normal_step` (:1833-1999), `InsnFunctionStepResult::{Step, Done, IO, Row}`; `core/types.rs`: `IOResult<T> = Done(T) | IO(IOCompletions)` (:3453-3456) + `return_if_io!` macro (:3483-3494) + `return_and_restore_if_io!` (:3497+); per-op resume enums in `core/vdbe/execute.rs` (e.g. `OpSeekState` :5713-5723: Start → Seek{key,op} → Advance{op} → MoveLast).

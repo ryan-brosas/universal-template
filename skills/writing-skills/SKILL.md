@@ -8,7 +8,7 @@ invocation: entry
 
 ## Core Principle
 
-One standardized system for every SKILL.md: one canonical template (`~/.agents/templates/skill.md`) plus this grammar, no per-skill format drift, enforced by the validation gate.
+One standardized system for every SKILL.md: one canonical template (`../../templates/skill.md`) plus this grammar, no per-skill format drift, enforced by the validation gate.
 
 ## When to Use / NOT
 
@@ -27,7 +27,7 @@ One standardized system for every SKILL.md: one canonical template (`~/.agents/t
 ## One System
 
 Every skill is a SKILL.md governed by one grammar and supported by one adaptable template.
-- **Template:** `~/.agents/templates/skill.md` shows the available sections.
+- **Template:** `../../templates/skill.md` shows the available sections.
 - **Grammar:** this file decides which sections and fields the skill earns.
 Author with both open; change one, align the other.
 
@@ -38,7 +38,9 @@ Author with both open; change one, align the other.
 - `invocation`: local ownership, one of `entry`, `internal`, `manual`, or `vendor`. The model chooses the class from the real caller and trigger.
 - `kind: foundation`: required only for cold `*-foundation` leaves. Foundations live in the unified `skills/` tree but are manual and hidden; see `references/foundation-kind.md`.
 - `disable-model-invocation`: the host visibility field. `entry` stays visible; `internal`, `manual`, and every foundation stay hidden; vendor visibility follows the integration.
-- YAML-safe: quote long values; avoid unescaped colons/hashes.
+- YAML is parsed strictly with PyYAML. Known scalar fields must be strings and
+  `disable-model-invocation`/`x-manual-only` must be real booleans, not quoted
+  lookalikes. Quote values containing colon-space or hash syntax.
 
 ## 2. Minimum useful content (conditional anatomy)
 
@@ -86,7 +88,10 @@ For load-bearing behavioral skills, keep the adversarial protocol: RED, a subage
 
 ## 6. Registration and discovery
 
-- Skills and cold foundations share the canonical `~/.agents/skills/` tree. Operational host exposure must exclude `kind: foundation`; eager or unverified hosts use the filtered symlink route in `../../README.md`.
+- Skills and cold foundations share the canonical `../` tree. Eager or
+  unverified hosts receive only the tracked hot set: operational and not hidden.
+  Hidden operational skills and foundations stay cold; use the filtered symlink
+  route in `../../README.md`.
 - Foundations are found by explicit catalog/filesystem search and loaded one capsule at a time.
 - When a `pack-*` router should surface an operational skill, add a one-line reference to that router.
 - After authoring, verify discovery via the catalog (or the corpus search) and confirm zero name collisions.
@@ -94,11 +99,13 @@ For load-bearing behavioral skills, keep the adversarial protocol: RED, a subage
 
 ## 7. Verification gate (before you mark it done)
 
-1. `name` and `description` present; description ≤ 1024 chars and trigger-first.
+1. Frontmatter parses as strict YAML; known fields have the required scalar or
+   boolean type; `name` and `description` are present and trigger-first.
 2. Every section carries useful content for that skill kind; every `references/` line has a real file.
 3. Leaf body within budget; no orphan relative paths.
 4. Validation per skill type (RED/GREEN log for load-bearing behavioral skills).
-5. No duplicate skill names; the loader picks up the skill.
+5. No duplicate skill names; the loader picks up the skill in exactly one of
+   the disjoint hot/cold sets.
 6. The change passes hygiene (diff check / trailing whitespace).
 7. The model reviews prose in context with `skills/house-writing-style/SKILL.md`; style preferences do not become mechanical publication failures.
 
@@ -126,8 +133,8 @@ Bible (cannot load), Tutorial (belongs in docs), Summarizer (rehashes platform r
 
 ## Related
 
-- `~/.agents/templates/skill.md`, the canonical skeleton (must stay in lockstep with this grammar).
-- `~/.agents/skills/leverage-capture/SKILL.md`, where skill candidates are classified and born (cross-skill).
+- `../../templates/skill.md`, the canonical skeleton (must stay in lockstep with this grammar).
+- `../leverage-capture/SKILL.md`, where skill candidates are classified and born (cross-skill).
 
 ## References
 

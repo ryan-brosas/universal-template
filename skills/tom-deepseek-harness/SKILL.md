@@ -9,12 +9,12 @@ disable-model-invocation: true
 # Tom DeepSeek Harness Workflow
 
 <HARD-GATE>
-The only source checkout is `/home/utopia/work/harness/deepseek-harness`. Do not create sibling clones, rename it to another harness directory, or run source commands from `/home/utopia/work/harness` itself. The expected origin is `https://github.com/monotykamary/deepseek-harness.git`.
+Use the checkout selected by `$DSH_SOURCE_CHECKOUT` (default: `$HOME/work/harness/deepseek-harness`). Do not create sibling clones or run source commands from its parent directory. The expected origin is `https://github.com/monotykamary/deepseek-harness.git`.
 </HARD-GATE>
 
 ## Core Principle
 
-One source checkout, two planes: edit and run `/home/utopia/work/harness/deepseek-harness` as the source plane while the global installed `dsh` stays the untouched stable fallback.
+One source checkout, two planes: edit and run `$DSH_SOURCE_CHECKOUT` as the source plane while the global installed `dsh` stays the untouched stable fallback.
 
 ## When to Use / NOT
 
@@ -23,7 +23,7 @@ One source checkout, two planes: edit and run `/home/utopia/work/harness/deepsee
 
 ## Two-plane rule
 
-- **Source plane:** edit and run `/home/utopia/work/harness/deepseek-harness` with `pnpm dsh web`.
+- **Source plane:** edit and run `$DSH_SOURCE_CHECKOUT` with `pnpm dsh web`.
 - **Installed plane:** the global `dsh` remains the stable installed distribution. Do not replace it with a local build while source work is in progress.
 - OpenViking repairs are a separate workflow; do not change its service or Python environment as part of a harness edit unless explicitly requested.
 
@@ -31,7 +31,9 @@ One source checkout, two planes: edit and run `/home/utopia/work/harness/deepsee
 
 1. **Orient.**
    ```bash
-   cd /home/utopia/work/harness/deepseek-harness
+   DSH_SOURCE_CHECKOUT="${DSH_SOURCE_CHECKOUT:-$HOME/work/harness/deepseek-harness}"
+   export DSH_SOURCE_CHECKOUT
+   cd "$DSH_SOURCE_CHECKOUT"
    git status --short --branch
    git remote -v
    ```
@@ -70,7 +72,7 @@ One source checkout, two planes: edit and run `/home/utopia/work/harness/deepsee
 
 ## Red Flags
 
-- Sibling clones or a renamed checkout; source commands run from `/home/utopia/work/harness` itself (HARD-GATE).
+- Sibling clones or a renamed checkout; source commands run from `${DSH_SOURCE_CHECKOUT%/*}` itself (HARD-GATE).
 - Replacing the installed `dsh` with a local build while source work is in progress (Two-plane rule).
 - Hand-editing generated `dist/` artifacts instead of rebuilding (Workflow step 3).
 - Rebasing without a WIP save point commit; stashing when a commit is not inappropriate (Workflow step 2).

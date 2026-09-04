@@ -23,7 +23,7 @@ if functions:
 
 **Flow:** hoist ALL system messages out of the array (joined, not first-wins) → strip them from messages → completion with `system=` kwarg + mandatory max_tokens → response scanned once: text blocks concatenated via `getattr(block,"text","")`, tool_use blocks mapped to canonical `{type:"function", name, parameters}` shape.
 **Invariant:** The canonical internal tool-call shape (`create_tool_call`) is produced identically by both provider families, so `sandbox_agent.run()` never branches on vendor; text extraction tolerates mixed content arrays by ignoring non-text blocks rather than raising.
-**Probe:** `cd /mnt/hdd/utopia/inspo/external/open-computer-use && grep -n 'max_tokens=4096' os_computer_use/llm_provider.py && grep -n 'input_schema' os_computer_use/llm_provider.py` (pins the mandatory kwarg at :212 and schema key at :184).
+**Probe:** `cd $REFERENCE_ROOT/external/open-computer-use && grep -n 'max_tokens=4096' os_computer_use/llm_provider.py && grep -n 'input_schema' os_computer_use/llm_provider.py` (pins the mandatory kwarg at :212 and schema key at :184).
 **Retrieve:**
 ```ts
 await mcp.codebase_memory.search_graph({ project: "ext-open-computer-use", query: "AnthropicBaseProvider system tool_use input_schema max_tokens", limit: 6, fields: ["signature", "name", "file"] });

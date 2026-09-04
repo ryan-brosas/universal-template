@@ -33,7 +33,7 @@ Read path gates on access first (`_doGetDocPrefs` runs `_verifyAclPermissions` w
 **Invariant:** openNoPublic access style exists SOLELY for this path — everyone@-shared docs must not leak prefs to the public. The owner check compares `doc.access !== roles.OWNER` on the FETCHED access (post readonly-downgrade), so billing-frozen owners also lose write rights. A porter using a plain unique index without COALESCE gets duplicate default rows on every save.
 
 ### Probe (direct tests)
-`bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "COALESCE" app/gen-server/lib/homedb/HomeDBManager.ts | head -2'` → :3432 (doc prefs) + :1486 (org prefs twin).
+`bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "COALESCE" app/gen-server/lib/homedb/HomeDBManager.ts | head -2'` → :3432 (doc prefs) + :1486 (org prefs twin).
 `bash -c 'grep -n "should cache docPrefs and refetch when invalidated or expired" test/gen-server/lib/HomeDBCaches.ts'` → :281.
 Direct tests: `test/gen-server/lib/HomeDBCaches.ts` :281 + cross-server :318; `test/gen-server/lib/prefs.ts` / `test/gen-server/lib/DocPrefs.ts` suites.
 

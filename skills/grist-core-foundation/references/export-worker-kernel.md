@@ -32,7 +32,7 @@ if (length >= threshold || flushed === 0) {
 
 **Probe:** deterministic greps (coverage caveat: no dedicated unit file):
 ```bash
-cd /mnt/hdd/utopia/inspo/grist-core
+cd $REFERENCE_ROOT/grist-core
 grep -n "throw { message: e.message, ...e };" app/server/lib/workerExporter.ts   # 40
 grep -n "flushed === 0" app/server/lib/workerExporter.ts                         # 70
 grep -n "getStub<ActiveDocSource>" app/server/lib/workerExporter.ts              # 28

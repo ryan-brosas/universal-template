@@ -28,7 +28,7 @@
 
 **Probe:** from the install root (pins discovery-by-one-extension and manifest-as-command):
 ```bash
-cd /mnt/hdd/utopia/inspo/dataspell && unzip -p plugins/pycharm-ds-sharedIndexes-bundled/lib/pycharm-ds-sharedIndexes-bundled.jar META-INF/plugin.xml | grep -c 'sharedIndexBundled'   # -> 1
+cd $REFERENCE_ROOT/dataspell && unzip -p plugins/pycharm-ds-sharedIndexes-bundled/lib/pycharm-ds-sharedIndexes-bundled.jar META-INF/plugin.xml | grep -c 'sharedIndexBundled'   # -> 1
 grep -o -- '--sdkMode=true' plugins/pycharm-ds-sharedIndexes-bundled/python-sdk/python-sdk-*.txt | wc -l          # -> 1 (flag sits at END of the 5,602-byte single-line manifest; head-truncation probes read zero)
 ls -l plugins/pycharm-ds-sharedIndexes-bundled/python-sdk/*.ijx | awk '{print $5}'                               # -> 322938847
 ```
@@ -37,7 +37,7 @@ ls -l plugins/pycharm-ds-sharedIndexes-bundled/python-sdk/*.ijx | awk '{print $5
 Jar/descriptor planes are not symbol-indexed; Retrieve is a deterministic unzip probe:
 ```ts
 await mcp.codebase_memory.check_index_coverage({ project: "jetbrains-dataspell", paths: ["plugins/pycharm-ds-sharedIndexes-bundled/python-sdk"] }); // scope check: payload intentionally outside graph
-await tools.bash({ command: "cd /mnt/hdd/utopia/inspo/dataspell && unzip -p plugins/pycharm-ds-sharedIndexes-bundled/lib/pycharm-ds-sharedIndexes-bundled.jar META-INF/plugin.xml" });
+await tools.bash({ command: "cd $REFERENCE_ROOT/dataspell && unzip -p plugins/pycharm-ds-sharedIndexes-bundled/lib/pycharm-ds-sharedIndexes-bundled.jar META-INF/plugin.xml" });
 ```
 
 ## Verdict

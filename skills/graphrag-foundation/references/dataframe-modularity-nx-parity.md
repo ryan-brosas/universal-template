@@ -30,7 +30,7 @@ if src_comm == tgt_comm:
 
 **Flow:** raw relationships → direction-canonicalize + last-wins dedup (matches nx.Graph edge overwrite) → single pass accumulating within/for-community degree sums + total weight → zero/negative total weight short-circuits to ALL-ZERO per-community dict (`dict.fromkeys(communities, 0.0)` :143-144), not an error → per-community `(intra - γ·k²/2m)/2m` formula summed.
 **Invariant:** the whole-graph metrics re-run hierarchical_leiden with the SAME pinned seed (default `0xDEADBEEF`) as clustering — modularity is only meaningful against the partitions Leiden actually produced; `calculate_weighted_modularity` filters components ≤ `min_connected_component_size` and falls back to WHOLE-GRAPH when nothing qualifies (:236-238), so tiny disconnected graphs still return a score.
-**Probe:** `tests/unit/graphs/test_modularity.py` — side-by-side NX reference asserts `< 1e-10` parity incl. reversed edges (:164), custom resolutions (:201), duplicates keeping-last (:219), reversed duplicates (:234), golden fixture (:249). Executed @pin: `/home/utopia/.venvs/grag-lane-venv/bin/python -m pytest tests/unit/graphs/ -q` → 37 passed.
+**Probe:** `tests/unit/graphs/test_modularity.py` — side-by-side NX reference asserts `< 1e-10` parity incl. reversed edges (:164), custom resolutions (:201), duplicates keeping-last (:219), reversed duplicates (:234), golden fixture (:249). Executed @pin: `$VENV_ROOT/grag-lane-venv/bin/python -m pytest tests/unit/graphs/ -q` → 37 passed.
 
 ## Get live surrounding code
 **Retrieve:**

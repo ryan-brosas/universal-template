@@ -38,7 +38,7 @@ Test matrix highlights (test/server/lib/HashUtil.ts): `"HEAD"`→0 but `"head"` 
 
 **Probe:** direct test exists and is byte-cited:
 ```bash
-cd /mnt/hdd/utopia/inspo/grist-core
+cd $REFERENCE_ROOT/grist-core
 grep -c 'finder.hashToOffset(' test/server/lib/HashUtil.ts   # 34 assertions
 grep -nF 'split(/([~^][0-9]*)/)' app/server/lib/HashUtil.ts  # 28
 grep -nF 'parseInt(part.slice(1) || "1", 10)' app/server/lib/HashUtil.ts  # 36

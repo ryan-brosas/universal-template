@@ -23,7 +23,7 @@
 
 **Flow:** build emits one descriptor per plugin → `.dat` serialization → boot loads `required` eagerly, wires `embedded` into the host module's loader, defers `optional` until something resolves against it → the XML mirror exists for humans/diffing only.
 **Invariant:** the SAME attribute lives at two layers with different owners — plugin-descriptor layer (this capsule, `loading=` on `<module>` under `<plugin>`) vs module-set layer (`loading=` on `<module>` under `<content>` in lib jars, owned by module-set-load-levels). A porter who copies the wrong specimen gets a schema the loader rejects. Also: the mirror comment ("IDE doesn't use this file") applies to EVERY file in this jar — never diff the mirror and assume runtime changed.
-**Probe:** anchored at the Rider install root `/mnt/hdd/utopia/inspo/reference/jetbrains/rider`:
+**Probe:** anchored at the Rider install root `$REFERENCE_ROOT/reference/jetbrains/rider`:
 ```bash
 python3 -c "import zipfile;z=zipfile.ZipFile('modules/module-descriptors.jar');xs=[n for n in z.namelist() if n.startswith('plugins/') and n.endswith('.xml')];t=''.join(z.read(n).decode() for n in xs);print(len(xs), t.count('loading=\"embedded\"'), t.count('loading=\"optional\"'), t.count('loading=\"required\"'))"
 ```

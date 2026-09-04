@@ -28,7 +28,7 @@ function isIOrganizationsAction(value) {
 **Invariant:** the two guards are mutually exclusive (an object carrying `messaged` can never be an org action) but their union does NOT cover "action-shaped" objects missing optional keys — validation falsifies rather than coerces. Lifecycle fields show actions are versioned (`versions`) and iterated units (`currentIterationId`, `currentIterationResultsCount`, `startAt`, `order`) whose postponement is a typed slot (`postponeReason` — see postpone-reason-tagged-union).
 **Probe:** deterministic node-require:
 ```bash
-node -e "const g=require('/mnt/hdd/utopia/inspo/lh-basis/core/public-methods/models/actions/Action/guards.js');const c=['campaignId','versions','target','queued','processed','successful','excluded','failed','skipped','name','description','excludeList','config','isInProgress','isCompleted','startAt','currentIterationId','currentIterationResultsCount','order','isDeleted','postponeReason'].reduce((o,k)=>(o[k]=k==='versions'?[]:(k==='config'?{}:1),o),{id:7});const p={...c,replied:{},messaged:{},pendingReview:{},actionLevelCustomFields:{}};console.log(g.isIAction(p),g.isIOrganizationsAction(p),g.isIAction(c),g.isIOrganizationsAction(c))"
+node -e "const g=require('$REFERENCE_ROOT/lh-basis/core/public-methods/models/actions/Action/guards.js');const c=['campaignId','versions','target','queued','processed','successful','excluded','failed','skipped','name','description','excludeList','config','isInProgress','isCompleted','startAt','currentIterationId','currentIterationResultsCount','order','isDeleted','postponeReason'].reduce((o,k)=>(o[k]=k==='versions'?[]:(k==='config'?{}:1),o),{id:7});const p={...c,replied:{},messaged:{},pendingReview:{},actionLevelCustomFields:{}};console.log(g.isIAction(p),g.isIOrganizationsAction(p),g.isIAction(c),g.isIOrganizationsAction(c))"
 ```
 → expect `true false false true` (the SAME core object flips family purely by adding/removing the four keys).
 
@@ -49,7 +49,7 @@ ActionSubListType["PendingReview"] = 9;   // ...Queued=1..Excluded=5 elided
 
 **Probe (executed pass 14):**
 ```bash
-node -e "const E=require('/mnt/hdd/utopia/inspo/lh-basis/core/public-methods/models/actions/Action/enums.js').ActionSubListType;console.log(E.Target,E.Skipped,E.Replied,E.Messaged,E.PendingReview)"
+node -e "const E=require('$REFERENCE_ROOT/lh-basis/core/public-methods/models/actions/Action/enums.js').ActionSubListType;console.log(E.Target,E.Skipped,E.Replied,E.Messaged,E.PendingReview)"
 ```
 → observed `0 6 7 8 9`. Retrieve (executed pass 14): `search_graph name_pattern ^(ActionSubListType|ActionResultStatus|commonActionProperties|commonProperties)$` → exactly 4 rows at the cited paths/lines.
 

@@ -37,7 +37,7 @@ const columns: ExportColumn[] = tableColumns
 
 **Probe:** deterministic greps (coverage caveat: no dedicated unit file):
 ```bash
-cd /mnt/hdd/utopia/inspo/grist-core
+cd $REFERENCE_ROOT/grist-core
 grep -n "filterRecords({ parentId: tableRef })" app/server/lib/Export.ts   # 223
 grep -n "metaColumns.getRecord(tc.displayCol) || tc" app/server/lib/Export.ts  # 232
 grep -n "createFullFormatterFromDocData(docData, tc.id)" app/server/lib/Export.ts  # 238

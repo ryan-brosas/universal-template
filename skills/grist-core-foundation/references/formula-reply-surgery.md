@@ -33,7 +33,7 @@ const suggestedActions = suggestedFormula ? [[
 
 **Flow:** model text → doc-side `assistanceFormulaTweak` normalizes (`rec.A` → `$A`, strips `return`) or rejects invalid formulas (then NO action is offered but the raw reply still shows) → suggested action is a plain ModifyColumn user action the CLIENT applies (server never mutates unbidden) → displayed reply has its code block REPLACED by the tweaked version so copy/paste and Apply agree.
 **Invariant:** Reply and suggestion must show the SAME formula or users paste one thing and apply another. The regex `/s` flag spans multi-line bodies; `\w*` tolerates ```python or bare fences; only the FIRST block is swapped because that's where the contract forces the function body. Invalid-formula completions degrade to prose-only replies (no action) rather than erroring.
-**Probe:** `bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && sed -n "406,412p" app/server/lib/OpenAIAssistantV1.ts | grep -n "w\|python" | head -3 && sed -n "174,190p" test/server/lib/OpenAIAssistantV1.ts | grep -c "does not suggest"'` → fence-regex lines; test title present (invalid-formula case).
+**Probe:** `bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && sed -n "406,412p" app/server/lib/OpenAIAssistantV1.ts | grep -n "w\|python" | head -3 && sed -n "174,190p" test/server/lib/OpenAIAssistantV1.ts | grep -c "does not suggest"'` → fence-regex lines; test title present (invalid-formula case).
 Direct tests: `test/server/lib/OpenAIAssistantV1.ts` :96 "can suggest a formula" (asserts full deepEqual incl. tweaked reply), :174 "does not suggest anything if formula is invalid".
 
 ### Retrieve

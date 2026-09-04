@@ -36,7 +36,7 @@ if (existing.billingAccount.status?.currentPeriodEnd && ... && !isFreePlan(...))
 **Invariant:** Limit rows are LAZY artifacts: `-1` means unlimited ("not possible to do in stripe"), products without baseMaxAssistantCalls are "basically unlimited" and skip tracking entirely. Reset correctness leans on comparing expected-vs-recorded resetAt — clock-skewed servers converge because the check re-fires every read. Porters who enforce limits at API-layer instead of mutation-layer miss moveDoc's cross-org re-check.
 
 ### Probe (direct tests)
-`bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "can enforce limits on number of workspaces" test/gen-server/lib/limits.ts'` → :82.
+`bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "can enforce limits on number of workspaces" test/gen-server/lib/limits.ts'` → :82.
 `bash -c 'grep -c "_checkRoomForAnotherDoc\|_restrictShares" app/gen-server/lib/homedb/HomeDBManager.ts'` → ≥ 6.
 Direct tests: `test/gen-server/lib/limits.ts` (615L suite: workspaces :82 + doc/share/assistant families), readonly downgrade via `features.readOnlyDocs` in Authorizer suites.
 

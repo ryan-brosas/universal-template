@@ -35,7 +35,7 @@ if (current && isWelcomed) {
 **Invariant:** Notifications fire even when the caller ignores the result — they are awaited by whoever called the manager, INSIDE the request but OUTSIDE the DB transaction: a failed email fails the API call AFTER data committed. A porter who awaits side effects inside the tx risks rollback-on-email-bounce; one who fires-and-forgets loses retry semantics. The isWelcomed bit is deliberately NOT in the public PreviousAndCurrent type — automation is an implementation detail of the facade.
 
 ### Probe (direct tests)
-`bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -c "for (const notification of notifications)" app/gen-server/lib/homedb/HomeDBManager.ts'` → ≥ 6.
+`bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -c "for (const notification of notifications)" app/gen-server/lib/homedb/HomeDBManager.ts'` → ≥ 6.
 `bash -c 'grep -n "firstLogin" app/gen-server/lib/Notifier.ts | head -2'` → interface + implementations.
 Direct tests: `test/gen-server/lib/emails.ts` (notification assertions incl. first-login mail), ApiServerAccess notificationConfig-gated asserts (:591).
 

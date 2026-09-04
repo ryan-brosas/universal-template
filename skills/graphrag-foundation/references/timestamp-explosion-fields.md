@@ -30,7 +30,7 @@ document.data.update(self.timestamp_exploder(document.create_date, "create_date"
 
 **Flow:** declare fields config → `VectorStore.__init__` detects `ftype == "date"`, demotes to str, registers `{name}_{suffix}` components + always merges TIMESTAMP_FIELDS → at `load_documents` time `_prepare_document` stamps missing create_date with UTC-now ISO, explodes create/update/user-date values into `document.data` → backend extracts declared fields per row → queries filter on components via FilterExpr.
 **Invariant:** explosion happens at WRITE time into the data dict (schema must reserve the 14+7k columns BEFORE load; adding a date field after an index exists requires re-index); empty/None timestamps explode to `{}` (no partial rows); `_now_iso` is timezone-aware UTC — naive local time would skew day_of_week/hour filters.
-**Probe:** `tests/unit/vector_stores/test_timestamp.py` — `test_quarter` parametrized across all 12 months (:52-71), `test_total_count` pins `len(TIMESTAMP_FIELDS) == 14` (:110-112), `test_empty_string_returns_empty`/`test_none_returns_empty` (:40-46). `/home/utopia/.venvs/grag-lane-venv/bin/python -m pytest tests/unit/vector_stores/test_timestamp.py -q` → 9 passed @pin.
+**Probe:** `tests/unit/vector_stores/test_timestamp.py` — `test_quarter` parametrized across all 12 months (:52-71), `test_total_count` pins `len(TIMESTAMP_FIELDS) == 14` (:110-112), `test_empty_string_returns_empty`/`test_none_returns_empty` (:40-46). `$VENV_ROOT/grag-lane-venv/bin/python -m pytest tests/unit/vector_stores/test_timestamp.py -q` → 9 passed @pin.
 
 ## Get live surrounding code
 **Retrieve:**

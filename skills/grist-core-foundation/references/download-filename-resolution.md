@@ -38,7 +38,7 @@ await downloadXLSX(activeDoc, req, res, options);
 
 **Probe:** deterministic greps:
 ```bash
-cd /mnt/hdd/utopia/inspo/grist-core
+cd $REFERENCE_ROOT/grist-core
 grep -n '_getDownloadFilename' app/server/lib/DocApi.ts | head -2       # 416, 666 (+def 1760)
 grep -n 'docTitle + suffix || "document";' app/server/lib/DocApi.ts     # 1768
 grep -n '!_.isEqual(Object.keys(req.query), \["title"\])' app/server/lib/DocApi.ts  # 1285

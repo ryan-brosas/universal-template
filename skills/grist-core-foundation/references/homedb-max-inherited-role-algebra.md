@@ -35,7 +35,7 @@ if (delta.maxInheritedRole !== roles.OWNER) {
 **Invariant:** `defaultBasicGroupNames.reverse()` MUTATES the getter-fresh array (safe only because the getter maps a new array each call) — porters caching that array get silent order corruption. Inheritance lives in group nesting, NOT a column: reading it requires populated aclRules/groups/memberGroups or `getMaxInheritedRole` throws ("group X not found"). The auto-owner-restoration means lowering inheritance NEVER strands the actor — but also means the delta applied differs from the delta requested.
 
 ### Probe (direct tests)
-`bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "moveInheritedGroups" app/gen-server/lib/homedb/GroupsManager.ts | head -1'` → :139.
+`bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "moveInheritedGroups" app/gen-server/lib/homedb/GroupsManager.ts | head -1'` → :139.
 `bash -c 'grep -c "_moveInheritedGroups" app/gen-server/lib/homedb/HomeDBManager.ts'` → ≥ 3.
 Direct tests: `test/gen-server/ApiServerAccess.ts` :587–620 ladder (viewers cap → Kiwi still 403 rename → null restore), `test/gen-server/lib/homedb/GroupsManager.ts` group suites.
 

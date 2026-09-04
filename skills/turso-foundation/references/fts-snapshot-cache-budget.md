@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # FTS snapshot cache budget — why is admission always-yes but retention bounded, and which eviction order does the budget use?
 
-**Source:** turso (MIT) `main@d9266124f` (/mnt/hdd/utopia/inspo/memory/turso); Codebase Memory `turso`. **Question:** How do you bound memory for a library whose synchronous read callbacks cannot fall back to storage I/O — without turning the budget cliff into a cold reload per statement?
+**Source:** turso (MIT) `main@d9266124f` ($REFERENCE_ROOT/memory/turso); Codebase Memory `turso`. **Question:** How do you bound memory for a library whose synchronous read callbacks cannot fall back to storage I/O — without turning the budget cliff into a cold reload per statement?
 
 ## Rejecting a snapshot saves nothing; evict OLDEST after always-inserting
 **Path/Symbol:** `core/index_method/fts.rs`: `CachedFtsStates` (:1221-1312: entries Vec, prune :1264-1273, insert :1290-1304, evict_to_fit :1307-1311), `CachedFtsState.matches_snapshot/matches_manifest` (:1235-1254), `FTS_MAX_CACHED_CONNECTIONS = 4` (:88), `FTS_MAX_RETAINED_CACHE_BYTES = 192MiB` (:98), FileCache deliberately-unbounded doc (:501-507).

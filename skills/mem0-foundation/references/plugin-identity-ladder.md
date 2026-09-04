@@ -21,7 +21,7 @@ if value and not value.startswith("$"):      # reject $VAR indirection
 
 **Flow:** MEM0_API_KEY env → CLAUDE_PLUGIN_OPTION_API_KEY (userConfig) → CLAUDE_PLUGIN_OPTION_MEM0_API_KEY (legacy) → first non-empty match in five shell profiles → "". User id: MEM0_USER_ID → $USER → "default".
 **Invariant:** first non-empty wins; a matched value that is empty after comment/quote stripping does NOT win (scan continues); $-prefixed values are treated as unresolved indirection and skipped; OSError on one profile file never aborts the walk.
-**Probe:** `cd /mnt/hdd/utopia/inspo/mem0 && .venv/bin/python -m pytest integrations/mem0-plugin/tests/test_write_path.py -q -k resolve` plus deterministic grep `grep -n 'startswith("\$")' integrations/mem0-plugin/scripts/_identity.py`.
+**Probe:** `cd $REFERENCE_ROOT/mem0 && .venv/bin/python -m pytest integrations/mem0-plugin/tests/test_write_path.py -q -k resolve` plus deterministic grep `grep -n 'startswith("\$")' integrations/mem0-plugin/scripts/_identity.py`.
 
 ## Get live surrounding code
 **Retrieve:**

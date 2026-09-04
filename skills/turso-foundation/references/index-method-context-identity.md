@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # IndexMethodContext identity — what coordinates make a parked external-index cursor safe across detach, drop, and schema churn?
 
-**Source:** turso (MIT) `main@d9266124f` (/mnt/hdd/utopia/inspo/memory/turso); Codebase Memory `turso`. **Question:** Which fields must an index-method operation capture at open time so reuse decisions never guess — and why is the connection edge Weak?
+**Source:** turso (MIT) `main@d9266124f` ($REFERENCE_ROOT/memory/turso); Codebase Memory `turso`. **Question:** Which fields must an index-method operation capture at open time so reuse decisions never guess — and why is the connection edge Weak?
 
 ## FNV identity + dual snapshot shape + Weak self-edge
 **Path/Symbol:** `core/index_method/mod.rs`: `IndexMethodContext` (:198-211), `new()` (:228-314), `IndexMethodDatabaseIdentity{id,name,incarnation}` (:148-155), `IndexMethodIdentity{...,runtime_id,schema_root}` (:158-173), `index_method_runtime_id` (:175-191), `IndexMethodSnapshotIdentity::{Wal,Mvcc}` (:112-124), `connection()` upgrade-or-error (:331-335).

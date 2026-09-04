@@ -30,7 +30,7 @@ export function csvDecodeCell(value: string): string {
 
 **Flow:** split with a CAPTURING group so even indexes are separators and odd are fields → leading/trailing non-empty separator pieces prove the row started/ended with a comma → those become explicit "" fields (the classic `a,,b` / `,x` / `x,` preservation trick). Encoding quotes any field containing comma/quote/newline OR outer whitespace; decoding trims unquoted fields so both `a,b` and `a, b` parse identically.
 **Invariant:** The whitespace-quote rule pairs with decode-side trimming — dropping either half breaks round-trips for values like `" x "`. The regex accepts quoted fields containing ANY character including newlines? No — rows here are LINE units (callers split lines first); embedded newlines must be encoded but reach this codec already split. Empty-string round-trip: encode("") stays "", decode yields [""] via the trailing-separator push — callers relying on [""] vs [] distinction (choice-list empties) depend on it.
-**Probe:** `bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && sed -n "21,30p" app/common/csvFormat.ts | grep -c "parts\[parts.length - 1\]\|parts\[0\]" && sed -n "6p" test/common/csvFormat.ts'` → 2 edge-field guards; test title line "should encode/decode csv values correctly".
+**Probe:** `bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && sed -n "21,30p" app/common/csvFormat.ts | grep -c "parts\[parts.length - 1\]\|parts\[0\]" && sed -n "6p" test/common/csvFormat.ts'` → 2 edge-field guards; test title line "should encode/decode csv values correctly".
 Direct tests: `test/common/csvFormat.ts` :6 cell cases, :24 row cases (incl. empty-field edges).
 
 ### Retrieve

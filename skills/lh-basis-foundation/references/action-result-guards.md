@@ -24,7 +24,7 @@ function isIOrganizationsActionResult(data) {
 **Invariant — the trap:** the org guard's absence set is NOT the people-only presence set. It forbids `invitedPlatform`/`messagedPlatform` (per-surface platform-history props that only person flows write); it does NOT forbid `personId` or `messages`. A porter who copies the action-guard pattern and bans `personId`/`messages` on org results will reject valid rows — each family's absence list must be read from ITS OWN guard.
 **Probe:** deterministic node-require:
 ```bash
-node -e "const g=require('/mnt/hdd/utopia/inspo/lh-basis/core/public-methods/models/actions/ActionResult/guards.js');const core=['actionVersionId','actionIterationId','liAccountId','result','createdAt','flags','targetPlatform'].reduce((o,k)=>(o[k]=1,o),{id:3});const pr={...core,personId:11,messages:[]};const or_={...core,organizationId:5};const bad={...or_,invitedPlatform:'linkedin'};console.log(g.isIActionResult(pr),g.isIOrganizationsActionResult(pr),g.isIOrganizationsActionResult(or_),g.isIOrganizationsActionResult(bad))"
+node -e "const g=require('$REFERENCE_ROOT/lh-basis/core/public-methods/models/actions/ActionResult/guards.js');const core=['actionVersionId','actionIterationId','liAccountId','result','createdAt','flags','targetPlatform'].reduce((o,k)=>(o[k]=1,o),{id:3});const pr={...core,personId:11,messages:[]};const or_={...core,organizationId:5};const bad={...or_,invitedPlatform:'linkedin'};console.log(g.isIActionResult(pr),g.isIOrganizationsActionResult(pr),g.isIOrganizationsActionResult(or_),g.isIOrganizationsActionResult(bad))"
 ```
 → expect `true false true false` (org result with organizationId passes; adding invitedPlatform breaks it; people-shaped object fails the org guard via missing organizationId).
 
@@ -47,7 +47,7 @@ ActionResultStatus[ActionResultStatus["PendingReview"] = 3] = "PendingReview";
 
 **Probe (executed pass 14):**
 ```bash
-node -e "const E=require('/mnt/hdd/utopia/inspo/lh-basis/core/public-methods/models/actions/ActionResult/enums.js').ActionResultStatus;console.log(Object.values(E).filter(v=>typeof v==='number').sort((a,b)=>a-b).join(' '),E.Successful>0,E.Failed>0)"
+node -e "const E=require('$REFERENCE_ROOT/lh-basis/core/public-methods/models/actions/ActionResult/enums.js').ActionResultStatus;console.log(Object.values(E).filter(v=>typeof v==='number').sort((a,b)=>a-b).join(' '),E.Successful>0,E.Failed>0)"
 ```
 → observed `-3 -2 -1 1 2 3 true false` (numeric domain exact, no zero; sign filter separates outcomes from dispositions).
 

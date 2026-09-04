@@ -40,7 +40,7 @@ if (!scope.showAll && (scope.showRemoved ?
 **Invariant:** Auth caching REQUIRES the unfiltered row (`showAll`) so a cached DocAuthResult records `removed` truthfully rather than 404ing into the cache; filtering happens post-cache in getDoc. Guest repairs and usage summaries repeat the `removed_at IS NULL` filter independently — four sites must stay in sync when porting. Disabled docs (`disabledAt`) share the same machinery but gate WRITES (updateDocument 403 "Document is disabled").
 
 ### Probe (direct tests)
-`bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "lists workspaces even with all docs soft-deleted" test/gen-server/lib/removedAt.ts'` → :123.
+`bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "lists workspaces even with all docs soft-deleted" test/gen-server/lib/removedAt.ts'` → :123.
 `bash -c 'grep -n "does not interfere with DocAuthKey-based caching" test/gen-server/lib/removedAt.ts'` → :355.
 Direct tests: `test/gen-server/lib/removedAt.ts` (467L: hide :76, empty-ws listing :123, revert :154/:222, combine :212, caching :355, permanent flag :367–407, showAll access :409).
 

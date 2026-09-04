@@ -28,7 +28,7 @@ this.currencyEndsInMinusSign = last(parts.get("currency"))!.type === "minusSign"
 
 **Flow:** Format one sentinel value (-1234567.5678) per mode → read part values by type → derive two derived facts: trailing-minus currencies (`"€ 1,00-"`, tested by last-part type) and the currency's default fraction digits (length of the `"fraction"` part). Non-ASCII locales get a digits map (e.g. Arabic-Indic → 0-9) built by formatting 0..9.
 **Invariant:** The runtime platform (ICU) is the single source of truth — no hardcoded separator tables to drift per locale. A porter hardcoding "." and "," breaks half the world. Two group separators are accepted simultaneously on parse but never distinguished (deliberate laxness, see digit-group-laxness). `defaultNumDecimalsCurrency` later decides whether an explicit `decimals: 0` option must be forced to suppress `$1.00`-style defaults (see format-option-voting).
-**Probe:** `bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "formatToParts(-1234567.5678)" app/common/NumberParse.ts && grep -n "getDigitsMap(locale)" app/common/NumberParse.ts'` → :81 and :126.
+**Probe:** `bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "formatToParts(-1234567.5678)" app/common/NumberParse.ts && grep -n "getDigitsMap(locale)" app/common/NumberParse.ts'` → :81 and :126.
 Direct tests: `test/common/NumberParse.ts` :8 `describe("NumberParse")`; :279 parametrized `with ${locale.code} locale` matrix over many locales.
 
 ### Retrieve

@@ -24,7 +24,8 @@ views are optional human conveniences.
 1. List bounded candidates under `skills/*/SKILL.md` with native filesystem or
    repository search.
 2. Read candidate `name`, `description`, `kind`, `invocation`, and
-   `disable-model-invocation` frontmatter.
+   `disable-model-invocation` frontmatter. The tracked hot set is operational
+   and visible; hidden operational skills plus foundations form the cold set.
 3. Judge fit from the request and overlap with neighboring candidates. Load only
    the best operational match. A `kind: foundation` result is cold evidence:
    open its index and load one matching capsule, never the whole inventory.
@@ -32,12 +33,15 @@ views are optional human conveniences.
    `docs/skill-catalog.md` and `docs/foundation-catalog.md` only because they are
    retained as separate human browsing views.
 
-`scripts/skill-catalog.py` remains optional generated-artifact tooling. It is not
+`scripts/skill-catalog.py context --json` reports the exhaustive disjoint sets
+and measured startup metadata. `scripts/skill-catalog.py` otherwise remains
+optional generated-artifact tooling. It is not
 an ordinary cognitive route or a source of classification truth.
 
 ## Red Flags
 
-- Loading the complete catalog into context.
+- Loading the complete catalog or cold set into startup context.
+- Calling every operational skill hot even when its metadata hides it.
 - Treating scored string matches as a routing decision.
 - Editing the generated catalog instead of skill frontmatter.
 - Centralizing skill names in another inventory.

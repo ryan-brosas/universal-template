@@ -30,7 +30,7 @@ if (!colMetadata.widgetOptions) {
 
 **Flow:** every cell null/"" ⇒ propose a formula-less empty Any column (cheap placeholder that never stores junk) → ANY structured object in the data vetoes guessing entirely (objects are already typed; re-coercion risks mangling lists/lookups) → else stringify non-strings and run the standard lossless ladder; converted VALUES ride back alongside metadata so AddTable applies them atomically.
 **Invariant:** The empty-column proposal is `isFormula:true` — meaning future edits compute, not store. widgetOptions must be JSON-STRING because it travels inside AddColumn user-action payloads (`MetaRowRecord` fields are strings); an absent options object must be physically DELETED, not left as undefined/null, since downstream treats presence as intent. A porter serializing `{}` here creates columns with broken option parsing.
-**Probe:** `bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "isFormula: true, formula: \"\"" app/common/ValueGuesser.ts && grep -n "delete colMetadata.widgetOptions" app/common/ValueGuesser.ts'` → :205 and :218.
+**Probe:** `bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "isFormula: true, formula: \"\"" app/common/ValueGuesser.ts && grep -n "delete colMetadata.widgetOptions" app/common/ValueGuesser.ts'` → :205 and :218.
 Direct tests: `test/common/ValueGuesser.ts` :211 `describe("guessColInfoForImports")` (empty/object/typed cases).
 
 ### Retrieve

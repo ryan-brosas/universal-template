@@ -3,7 +3,7 @@ name: cdp
 disable-model-invocation: true
 description: "Use when the user wants to automate, script, or inspect a Chromium-based browser through the DevTools Protocol. Runs JS snippets through the browser-harness-js CLI against a persistent CDP session: session, targets, and globals survive across calls; attach to a running browser or launch one with --remote-debugging-port."
 invocation: manual
-setup: bash /Users/monotykamary/VCS/working-remote/open-source/browser-harness-js/skills/cdp/scripts/setup
+setup: bash scripts/setup
 compatibility: >-
  Requires `node` on PATH (the REPL server is Node-native, TypeScript type stripping from Node 23.6) and a Chromium-based browser with remote debugging (chrome://inspect or --remote-debugging-port).
 ---
@@ -12,7 +12,7 @@ compatibility: >-
 
 Custom codegen'd CDP SDK (every method from browser_protocol.json + js_protocol.json gets a typed wrapper) plus a tiny HTTP server that holds one persistent CDP `Session`. The `browser-harness-js` CLI auto-starts the server on first use and forwards JS snippets to it.
 
-The SDK lives in the skill's `sdk/` directory. In the rest of this doc, `/Users/monotykamary/VCS/working-remote/open-source/browser-harness-js/skills/cdp` refers to wherever `npx skills add` installed the skill (Claude Code: `~/.claude/skills/cdp`; Cursor: `~/.cursor/skills/cdp`; other agents vary). The CLI should be on PATH as `browser-harness-js`.
+The SDK lives in the skill's `sdk/` directory. In the rest of this doc, `$SKILL_DIR` refers to wherever `npx skills add` installed the skill (Claude Code: `~/.claude/skills/cdp`; Cursor: `~/.cursor/skills/cdp`; other agents vary). The CLI should be on PATH as `browser-harness-js`.
 
 ## Core Principle
 
@@ -85,7 +85,8 @@ EOF
 | `browser-harness-js video init\|review\|export <recording>` | Prepare, review, and export a concise evidence-based browser video. |
 | `browser-harness-js --no-auto-allow '<js>'` | Set `session.autoAllow = false` on the daemon, then eval the JS. Opts out of auto-dismissing Dia's "Allow debugging connection?" prompt (on by default, macOS). |
 
-Env vars: `CDP_REPL_PORT` (default `9876`), `CDP_REPL_LOG` (default `/tmp/browser-harness-js.log`), `CDP_RECORD` (`1`/`0` preference override), `CDP_RECORD_IDLE_SECONDS` (automatic recording rollover, default `180`), `CDP_RECORDINGS_DIR` (storage override), `BROWSER_HARNESS_JS_HOME` (state root, default `~/.browser-harness-js`).
+Env vars: `CDP_REPL_PORT` (default `9876`), `CDP_REPL_LOG` (default `/tmp/browser-harness-js.log`), `CDP_RECORD` (`1`/`0` preference override), `CDP_RECORD_TEXT` (`1` only when
+the user explicitly permits plaintext typing to be persisted), `CDP_RECORD_IDLE_SECONDS` (automatic recording rollover, default `180`), `CDP_RECORDINGS_DIR` (storage override), `BROWSER_HARNESS_JS_HOME` (state root, default `~/.browser-harness-js`).
 
 ## API surface inside snippets
 
@@ -118,7 +119,10 @@ await stopRecording()
 return recordingDir
 ```
 
-Recording observes successful raw CDP calls, so it preserves the protocol API instead of replacing it with click/navigation helpers. Use `Input.*` for visible interactions: arbitrary `Runtime.evaluate` expressions such as `element.click()` cannot be classified as action beats. Password text is masked during capture; other typing remains hidden from video compositions unless explicitly reviewed and enabled. Never reenact a completed task to manufacture missing footage. Video review and export must run in a fresh detached Chromium profile, never in the user's interactive browser. Follow [`make-video.md`](interaction-skills/make-video.md) for consent, edit briefs, isolated rendering, full-resolution privacy review, provenance hashes, and verified MP4 export.
+Recording observes successful raw CDP calls, so it preserves the protocol API instead of replacing it with click/navigation helpers. Use `Input.*` for visible interactions: arbitrary `Runtime.evaluate` expressions such as `element.click()` cannot be classified as action beats. All typed text is masked on disk by default. Plaintext non-password typing is
+persisted only with explicit `CDP_RECORD_TEXT=1`, and remains hidden from video
+compositions unless `showTyping: true` is separately reviewed and enabled.
+Passwords and unknown focused fields always fail closed. Never reenact a completed task to manufacture missing footage. Video review and export must run in a fresh detached Chromium profile, never in the user's interactive browser. Follow [`make-video.md`](interaction-skills/make-video.md) for consent, edit briefs, isolated rendering, full-resolution privacy review, provenance hashes, and verified MP4 export.
 
 ### Calling a CDP method
 
@@ -147,8 +151,8 @@ const { nodeId } = await session.DOM.querySelector({ nodeId: root.nodeId, select
 Start here for the patterns every skill shares: [`lifecycle-readiness.md`](interaction-skills/lifecycle-readiness.md) (navigate + wait for load, the one-tab-per-call shape), [`json-navigation.md`](interaction-skills/json-navigation.md) (read a JSON URL), [`media-capture.md`](interaction-skills/media-capture.md) (record `MediaSource` / hook a native API before navigate), [`make-video.md`](interaction-skills/make-video.md) (turn consented action evidence into a short explanatory video).
 
 ```bash
-ls /Users/monotykamary/VCS/working-remote/open-source/browser-harness-js/skills/cdp/interaction-skills/
-grep -l <keyword> /Users/monotykamary/VCS/working-remote/open-source/browser-harness-js/skills/cdp/interaction-skills/*.md
+ls $SKILL_DIR/interaction-skills/
+grep -l <keyword> $SKILL_DIR/interaction-skills/*.md
 ```
 
 Each recipe leads with the shortest CDP call that works, then the trap, in `session.Domain.method(...)` form, no wrapped helpers, so it drops straight into a snippet. If the mechanic you need isn't there, that's a gap worth filing as a new recipe.
@@ -318,10 +322,10 @@ When attaching to the user's already-running browser:
 
 ## Looking up a method
 
-The full typed surface is in `/Users/monotykamary/VCS/working-remote/open-source/browser-harness-js/skills/cdp/sdk/generated.ts` (~655 KB, only loaded if you read it). Each method has its CDP description as a JSDoc comment plus typed `*Params` / `*Return` interfaces in per-domain namespaces.
+The full typed surface is in `$SKILL_DIR/sdk/generated.ts` (~655 KB, only loaded if you read it). Each method has its CDP description as a JSDoc comment plus typed `*Params` / `*Return` interfaces in per-domain namespaces.
 
 ```bash
-grep -n "navigate" /Users/monotykamary/VCS/working-remote/open-source/browser-harness-js/skills/cdp/sdk/generated.ts | head
+grep -n "navigate" $SKILL_DIR/sdk/generated.ts | head
 ```
 
 ## Regenerating the SDK
@@ -329,7 +333,7 @@ grep -n "navigate" /Users/monotykamary/VCS/working-remote/open-source/browser-ha
 When the upstream protocol JSONs change, replace `sdk/browser_protocol.json` and/or `sdk/js_protocol.json` and re-run:
 
 ```bash
-cd /Users/monotykamary/VCS/working-remote/open-source/browser-harness-js/skills/cdp/sdk && node gen.ts
+cd $SKILL_DIR/sdk && node gen.ts
 browser-harness-js --restart   # pick up the new bindings
 ```
 
@@ -337,9 +341,9 @@ Reinstalling (`npx skills add`) updates the files on disk but not the long-lived
 
 ## Files
 
-All paths are relative to `/Users/monotykamary/VCS/working-remote/open-source/browser-harness-js/skills/cdp` (the install path, see top of this doc).
+All paths are relative to `$SKILL_DIR` (the install path, see top of this doc).
 
-- `/usr/local/bin/browser-harness-js` → `/Users/monotykamary/VCS/working-remote/open-source/browser-harness-js/skills/cdp/sdk/browser-harness-js` (the CLI)
+- `/usr/local/bin/browser-harness-js` → `$SKILL_DIR/sdk/browser-harness-js` (the CLI)
 - `sdk/repl.ts`, HTTP server (`node:http` on `127.0.0.1:9876`)
 - `sdk/session.ts`, `Session` class (transport, connect, target routing, events)
 - `sdk/axview.ts`, `axView` / `axDiff` / `parseAxRefs`: compressed accessibility-tree projection + helpers, injected as globals (see `interaction-skills/snapshot.md`)
@@ -357,6 +361,8 @@ All paths are relative to `/Users/monotykamary/VCS/working-remote/open-source/br
 - Treating stdout as an `{ok,result}` envelope, output is raw result content.
 - Ignoring stderr / exit code 1 for CDP errors.
 - Starting recording without consent (fresh installs do not record).
+- Setting `CDP_RECORD_TEXT=1` without explicit need, or assuming video redaction
+  can undo plaintext already persisted to `events.jsonl`.
 - Reenacting a completed task to manufacture missing footage.
 - Running video review/export in the user's interactive browser instead of a fresh detached profile.
 

@@ -57,7 +57,7 @@ async for e in self.after_stream(): yield e
 3. `AgentRunResultEvent` handling stores `_result` BEFORE turning to `None` and before `on_complete` — completion callbacks read fresh state.
 4. The `finally` aclose of the upstream stream happens on BOTH paths; `_turn_to(None)`/`after_stream()` happen only on the normal path (in the except branch the cancel/error hooks already ended the protocol conversation).
 5. `handle_event`'s match is deliberately non-exhaustive-typed: realtime events get an explicit no-op arm because class patterns cannot reference a union alias (:485–499).
-**Probe:** `.venv/bin/python -m pytest tests/test_ui.py -k 'run_stream or cancelled_run_closes_tools or deferred' -p no:cacheprovider` (anchored at `/mnt/hdd/utopia/inspo/frameworks/pydantic-ai`; snapshot-pins full event sequences incl. `<stream>/<response>/<request>` wrapper tags).
+**Probe:** `.venv/bin/python -m pytest tests/test_ui.py -k 'run_stream or cancelled_run_closes_tools or deferred' -p no:cacheprovider` (anchored at `$REFERENCE_ROOT/frameworks/pydantic-ai`; snapshot-pins full event sequences incl. `<stream>/<response>/<request>` wrapper tags).
 
 ## Get live surrounding code
 **Retrieve:**

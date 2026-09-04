@@ -54,7 +54,7 @@ if (fileRes.data.mimeType === SPREADSHEETS_MIMETYPE) {
 
 **Probe:** deterministic greps:
 ```bash
-cd /mnt/hdd/utopia/inspo/grist-core
+cd $REFERENCE_ROOT/grist-core
 grep -n 'oauth_token' app/server/lib/GoogleExport.ts | cut -d: -f1   # 66 82
 grep -nF 'process.env.GOOGLE_API_KEY' app/server/lib/GoogleImport.ts # 16
 grep -nF 'drive({ version: "v3" })' app/server/lib/GoogleImport.ts   # 56 keyless public arm

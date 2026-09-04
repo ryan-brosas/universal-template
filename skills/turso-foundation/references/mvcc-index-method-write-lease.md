@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # MVCC index-method write lease — how can BEGIN CONCURRENT serialize external-index writes without blocking readers?
 
-**Source:** turso (MIT) `main@d9266124f` (/mnt/hdd/utopia/inspo/memory/turso); Codebase Memory `turso`. **Question:** How does a per-index write lease distinguish "another transaction is mid-write" (retryable Busy) from "my snapshot predates the published state" (restart-required WriteWriteConflict)?
+**Source:** turso (MIT) `main@d9266124f` ($REFERENCE_ROOT/memory/turso); Codebase Memory `turso`. **Question:** How does a per-index write lease distinguish "another transaction is mid-write" (retryable Busy) from "my snapshot predates the published state" (restart-required WriteWriteConflict)?
 
 ## Holder + last_publish_ts in one map entry
 **Path/Symbol:** `core/mvcc/database/mod.rs`: `IndexMethodWriteLease` (:3971-3978), `MvStore::index_method_write_leases: Mutex<HashMap<MVTableId, IndexMethodWriteLease>>` (:4050), `acquire_index_method_write_lease` (:6247-6273), `release_index_method_write_leases` (:6275-6294).

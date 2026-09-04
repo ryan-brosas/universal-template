@@ -24,7 +24,7 @@ class SearchInterface(BaseModel):
 
 **Flow:** search primitives check `driver.search_interface` BEFORE issuing generic Cypher (provider fast-path) → hosts assign their own SearchInterface subclass onto the driver to intercept specific primitives (e.g. replace similarity search with a hosted vector service) while leaving fulltext/BFS defaults intact → NotImplementedError-style fallbacks stay in the CALLER (search.py), not the interface.
 **Invariant:** (1) this is the HOST-extension surface, deliberately distinct from `SearchOperations` (the DRIVER-author ABC where every method is @abstractmethod and backends must implement all); (2) BaseModel-with-Any-methods is a deliberate pydantic trick — instances ride on the driver as validated fields while method bodies stay duck-typed; (3) partial implementation is the point: overriding two of eight primitives is a supported configuration, unlike the ops layer.
-**Probe:** `cd /mnt/hdd/utopia/inspo/memory/graphiti && grep -c '@abstractmethod' graphiti_core/driver/search_interface/search_interface.py` → `0`; `grep -c '@abstractmethod' graphiti_core/driver/operations/search_ops.py` → `14`; direct tests: none target this class directly (coverage caveat — exercised indirectly through driver.search_interface consumers in tests/utils/search/).
+**Probe:** `cd $REFERENCE_ROOT/memory/graphiti && grep -c '@abstractmethod' graphiti_core/driver/search_interface/search_interface.py` → `0`; `grep -c '@abstractmethod' graphiti_core/driver/operations/search_ops.py` → `14`; direct tests: none target this class directly (coverage caveat — exercised indirectly through driver.search_interface consumers in tests/utils/search/).
 
 ## Get live surrounding code
 **Retrieve:**

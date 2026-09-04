@@ -35,7 +35,7 @@ return items.filter(v => !this._isForbidden(v, Boolean(ignoreAccess), options.sc
 **Invariant:** Domain is NEVER stored for personal orgs — computed at read time via `normalizeOrgDomain` (:2908–2932: `docs-<prefix><ownerId>` vs merged `docs`/`docs-s` vs `o-<id>`); a porter who persists domains breaks vanity-domain suppression. Empty-list + marked-failure distinction lives in `_verifyAclPermissions` BEFORE normalization (404 vs 403), so normalization itself only ever drops CHILD entities.
 
 ### Probe (direct tests)
-`bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -c "structuredClone" app/gen-server/lib/homedb/HomeDBManager.ts'` → ≥ 10 (same file's clone discipline).
+`bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -c "structuredClone" app/gen-server/lib/homedb/HomeDBManager.ts'` → ≥ 10 (same file's clone discipline).
 `bash -c 'grep -n "does not show workspaces for docs user does not have access to" test/gen-server/lib/removedAt.ts'` → :442.
 Direct tests: `test/gen-server/lib/listing.ts` :157 ("lists empty workspaces"), `test/gen-server/lib/mergedOrgs.ts` (:38 pooling, :97 doc under merged domain).
 

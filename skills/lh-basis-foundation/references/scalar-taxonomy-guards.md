@@ -55,7 +55,7 @@ CampaignImportUrlsTargetTypes["Target"] = 1;
 
 **Probe (executed pass 14):**
 ```bash
-node -e "const I=require('/mnt/hdd/utopia/inspo/lh-basis/core/public-methods/models/people/IPersonInterest.js').InterestTypes,A=require('/mnt/hdd/utopia/inspo/lh-basis/core/public-methods/shared-types/actions/types.js').ActionImportUrlsTargetTypes,C=require('/mnt/hdd/utopia/inspo/lh-basis/core/public-methods/shared-types/campaigns/types.js').CampaignImportUrlsTargetTypes;console.log(I.SCHOOL,A.Target,C.ExcludeList,C.Target,I[4],I['no-such-value']===undefined)"
+node -e "const I=require('$REFERENCE_ROOT/lh-basis/core/public-methods/models/people/IPersonInterest.js').InterestTypes,A=require('$REFERENCE_ROOT/lh-basis/core/public-methods/shared-types/actions/types.js').ActionImportUrlsTargetTypes,C=require('$REFERENCE_ROOT/lh-basis/core/public-methods/shared-types/campaigns/types.js').CampaignImportUrlsTargetTypes;console.log(I.SCHOOL,A.Target,C.ExcludeList,C.Target,I[4],I['no-such-value']===undefined)"
 ```
 → observed `4 0 0 1 SCHOOL true` (asymmetric twin ordinals live; reverse map works; unknown member silently undefined — no guard exists).
 

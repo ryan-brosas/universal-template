@@ -32,7 +32,7 @@ class MockSandbox:
 
 **Flow:** instantiate `SandboxAgent(MockSandbox(), save_logs=False)` → run("Open the Firefox browser") → the full thought→action loop executes against static bytes; only the MODEL providers stay live (this harness verifies providers work; it is not an offline unit test).
 **Invariant:** The minimal portability surface of "a sandbox" here is FOUR verbs — screenshot bytes, synchronous command w/ timeout+background, background start, keep-alive set_timeout — plus mouse/press/write used by the tool methods (unmocked because the sample instruction never clicks). Any replacement runtime (Docker, local X, another cloud) must satisfy this surface. `self.commands = self` shows the commands namespace is a facade, not a required sub-object.
-**Probe:** `cd /mnt/hdd/utopia/inspo/external/open-computer-use && sed -n '5,23p' tests/sandbox_agent.py` (verbatim contract); note `save_logs=False` proves Logger works without log_file.
+**Probe:** `cd $REFERENCE_ROOT/external/open-computer-use && sed -n '5,23p' tests/sandbox_agent.py` (verbatim contract); note `save_logs=False` proves Logger works without log_file.
 **Retrieve:**
 ```ts
 await mcp.codebase_memory.search_graph({ project: "ext-open-computer-use", query: "MockSandbox screenshot set_timeout commands run", limit: 6, fields: ["signature", "name", "file"] });

@@ -30,7 +30,7 @@ and the update-mode guard:
 **Invariant:** Validate-before-write on EVERY path — a syntax-erroring merge aborts leaving the previous server intact. Idempotency: re-saving identical flows adds nothing. Line-exact reconstruction (never ast.unparse) preserves decorators/comments the model wrote. Porters who forget the `main_block_line += imports_to_add.count('\n') + 2` adjustment insert functions INSIDE the import block.
 **Probe:** Recorded upstream gap (no dedicated test). Deterministic probe: `cd /tmp && python3 - <<'EOF'
 import ast,sys
-src=open('/mnt/hdd/utopia/inspo/agents/cuga-agent/src/cuga/backend/cuga_graph/nodes/save_reuse/save_reuse_agent/utils/export_mcp.py').read()
+src=open('$REFERENCE_ROOT/agents/cuga-agent/src/cuga/backend/cuga_graph/nodes/save_reuse/save_reuse_agent/utils/export_mcp.py').read()
 tree=ast.parse(src)
 names={n.name for n in tree.body if isinstance(n,(ast.FunctionDef,))}
 assert {'process_text_file','generate_or_update_server','parse_existing_server','validate_python_code'} <= names

@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # MVCC lazy cursor — how does a cursor merge MVCC versions with B-tree rows across async IO?
 
-**Source:** turso (MIT) `main@def9a0601b8e` (/mnt/hdd/utopia/inspo/memory/turso); Codebase Memory project `turso`. **Question:** How are uncommitted versions, committed B-tree rows, and injected yields unified in one cursor without losing position?
+**Source:** turso (MIT) `main@def9a0601b8e` ($REFERENCE_ROOT/memory/turso); Codebase Memory project `turso`. **Question:** How are uncommitted versions, committed B-tree rows, and injected yields unified in one cursor without losing position?
 
 ## Dual-source iteration with an epoch-guarded index finger
 **Path/Symbol:** `core/mvcc/cursor.rs`: `MvccLazyCursor` (:492-540), `CursorPosition` (:23-45), advance state machines (`AdvanceBtreeState`, `NextState`, `PrevState`, :60-90), `read_mvcc_current_row` (:699), seek (:1510), insert (:1749), delete (:1846); yield plumbing `core/mvcc/yield_points.rs` (`YieldPoint{ordinal, point_count}`, `YieldInjector`, `FailureInjector`) + `core/mvcc/yield_hooks.rs`.

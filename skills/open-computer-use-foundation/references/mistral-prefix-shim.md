@@ -22,7 +22,7 @@ def call(self, messages, functions=None):
 
 **Flow:** detect trailing assistant turn → pop it → if a user turn precedes, PREPEND the prefix onto it (thought-before-instruction ordering) → else synthesize a user turn → delegate to OpenAI-compatible call path.
 **Invariant:** This is why the agent loop can append `THOUGHT:` as an assistant message universally: Mistral-family vendors reject trailing-assistant payloads and this subclass is the ONLY place that repairs them. The mutation is destructive — the caller's history object loses its final assistant entry (safe here because run() rebuilds the thought each turn; a porter who reuses histories across providers must copy first). The sibling `create_function_def` override also unwraps `{"description": {...}}` dicts to inner strings before schema-building.
-**Probe:** `cd /mnt/hdd/utopia/inspo/external/open-computer-use && sed -n '237,246p' os_computer_use/llm_provider.py && grep -n 'messages.pop()' os_computer_use/llm_provider.py` (pins the pop-mutation at :239).
+**Probe:** `cd $REFERENCE_ROOT/external/open-computer-use && sed -n '237,246p' os_computer_use/llm_provider.py && grep -n 'messages.pop()' os_computer_use/llm_provider.py` (pins the pop-mutation at :239).
 **Retrieve:**
 ```ts
 await mcp.codebase_memory.search_graph({ project: "ext-open-computer-use", query: "MistralBaseProvider call prefix assistant pop", limit: 5, fields: ["signature", "name", "file"] });

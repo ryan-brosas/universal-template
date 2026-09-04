@@ -35,7 +35,7 @@ Status stamping:
 **Invariant:** shortIds are scoped PER DESTINATION doc (human-friendly "#5" within a doc's suggestions tab), not globally — a porter keying them globally breaks the UI contract; the composite where-clause on status updates reflects that scoping. MAX()+1 inside the transaction is safe only under the backend's serialization guarantees (sqlite global; postgres relies on this low-frequency path).
 
 ### Probe (direct tests)
-`bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "mayHaveProposals" app/gen-server/lib/homedb/HomeDBManager.ts | head -2'` → :3492.
+`bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "mayHaveProposals" app/gen-server/lib/homedb/HomeDBManager.ts | head -2'` → :3492.
 `bash -c 'grep -rn "orUpdate" app/gen-server/lib/homedb/HomeDBManager.ts'` → single call site :3481.
 Direct tests: proposal suites under test/ (grep setProposal callers — comparisons module).
 

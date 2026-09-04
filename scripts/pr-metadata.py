@@ -9,12 +9,13 @@ import sys
 
 ALLOWED_TYPES = {
     "feat", "fix", "docs", "style", "refactor", "perf", "test", "chore",
-    "ci", "build", "revert", "release",
+    "ci", "build", "revert", "release", "security", "deps",
 }
 TYPE_LABELS = {
     "feat": "type:feature", "fix": "type:bug", "docs": "type:docs",
     "refactor": "type:refactor", "perf": "type:performance", "test": "type:test",
     "chore": "type:chore", "ci": "type:ci", "build": "type:build",
+    "security": "type:security", "deps": "type:dependencies",
 }
 BREAKING_LABEL = "breaking-change"
 TITLE_RE = re.compile(
@@ -63,6 +64,8 @@ def selftest() -> int:
         ("feat(routing): add cold skill discovery", ["type:feature"], True),
         ("fix!: change bootstrap contract", ["type:bug", "breaking-change"], True),
         ("style: reformat", [], True),
+        ("security(auth): reject leaked tokens", ["type:security"], True),
+        ("deps: pin context server", ["type:dependencies"], True),
         ("update stuff", [], False),
         ("feat: Add a capital", ["type:feature"], False),
     )

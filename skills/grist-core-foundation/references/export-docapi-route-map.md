@@ -36,7 +36,7 @@ this._app.get("/api/docs/:docId/download/csv", canView, withDoc(async (activeDoc
 
 **Probe:** deterministic greps:
 ```bash
-cd /mnt/hdd/utopia/inspo/grist-core
+cd $REFERENCE_ROOT/grist-core
 grep -c 'await this._getDownloadOptions(req' app/server/lib/DocApi.ts   # 5 routes use the funnel
 grep -n 'export function parseExportParameters' app/server/lib/Export.ts  # 118
 grep -n 'allowed: \["label", "colId"\]' app/server/lib/Export.ts           # 125

@@ -34,7 +34,7 @@ if (this._usersManager.isAnonymousUser(users) && !listPublicSites) {
 **Invariant:** The personal-first promise is API-level (comment: "we keep our api promise") — clients rely on it. ignoreEveryoneShares mode exists for endpoints that must not count everyone@ shares as membership. Merged-org mode rewrites id→0/domain→docs AFTER fetch so persistence never stores the pseudo values.
 
 ### Probe (direct tests)
-`bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "1 = 1" app/gen-server/lib/homedb/HomeDBManager.ts'` → :5032 area.
+`bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "1 = 1" app/gen-server/lib/homedb/HomeDBManager.ts'` → :5032 area.
 `bash -c 'grep -n "it(" test/gen-server/lib/listing.ts | head -4'` → suite entry points.
 Direct tests: `test/gen-server/lib/listing.ts` (196L), `mergedOrgs.ts` pooling its, `HomeDBManager.ts` :223–295 pool + best-user families.
 

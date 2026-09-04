@@ -35,7 +35,7 @@ return this._connection.transaction(async (manager) => {
 **Invariant:** The double-lock dance exists because a missing row cannot be locked: seeding with orIgnore() makes exactly one creator win and the loser's re-lock reads the WINNER's row. A porter who skips the re-read applies transform to their own seed and clobbers the winner. structuredClone BEFORE transform is what fills `previous`. Postgres bigint COUNTs need CAST(... AS INTEGER) elsewhere in this file — same backend-duality discipline.
 
 ### Probe (direct tests)
-`bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "does not lose concurrent requests" test/server/lib/SetupRequests.ts'` → :122.
+`bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "does not lose concurrent requests" test/server/lib/SetupRequests.ts'` → :122.
 `bash -c 'grep -c "orIgnore" app/gen-server/lib/homedb/HomeDBManager.ts'` → ≥ 3.
 Direct tests: `test/server/lib/SetupRequests.ts` :122–133 hammers transformInstallConfig with 20 concurrent single-requester merges asserting all 20 survive ("with a naive read-modify-write most of these would overwrite each other").
 

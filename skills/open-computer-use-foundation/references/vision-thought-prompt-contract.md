@@ -28,7 +28,7 @@ return vision_model.call([
 
 **Flow:** screenshot() → bytes embedded as first content element → history prepended so the vision model sees prior objectives/thoughts/observations → model returns the fixed-format assessment → the returned string is logged green as `THOUGHT: …` inside `run()` and becomes part of NEXT turn's action-model context.
 **Invariant:** The completion decision lives in TEXT (`[complete|not complete]`) consumed by a second model, not in control flow — there is no parser and no schema; robustness comes from the strict line grammar plus the action model's freedom to emit `stop()` after reading it. A porter who adds JSON parsing here breaks the design's tolerance of chatty vision models.
-**Probe:** `cd /mnt/hdd/utopia/inspo/external/open-computer-use && grep -n 'objective is' os_computer_use/sandbox_agent.py` → expect 4 hits (:160/:162/:163 grammar lines + :192 the action-model preamble "if the objective is complete"); `sed -n '152,169p' os_computer_use/sandbox_agent.py` for the verbatim prompt.
+**Probe:** `cd $REFERENCE_ROOT/external/open-computer-use && grep -n 'objective is' os_computer_use/sandbox_agent.py` → expect 4 hits (:160/:162/:163 grammar lines + :192 the action-model preamble "if the objective is complete"); `sed -n '152,169p' os_computer_use/sandbox_agent.py` for the verbatim prompt.
 **Retrieve:**
 ```ts
 await mcp.codebase_memory.search_graph({ project: "ext-open-computer-use", query: "append_screenshot vision current display objective", limit: 5, fields: ["signature", "name", "file"] });

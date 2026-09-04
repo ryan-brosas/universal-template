@@ -24,7 +24,7 @@ plugin as a dependency automatically): Python … Kotlin Notebook … R Plugin]]
 **Invariant:** the infra plugin declares ZERO end-user surface — its own description forbids direct installation; every capability must arrive as an extension contributed by a consumer or an internal module (`visibility="internal"`). The `beanClass=LanguageExtensionPoint` + `<with implements=…NotebookSpecification>` pair keeps N kernel languages from becoming N forks: new language = one contribution, no infra edit. DataSpell layers product cells the same way — `plugins/dataspell-plugin/lib/dataspell-plugin.jar:intellij.dataspell.jupyter.customCells.xml` (jar-root descriptor) declares `<extensionPoint qualifiedName="com.intellij.jupyter.cellDataFrameProvider" interface="…JupyterCellDataFrameProvider" dynamic="true"/>` plus a FUS listener on topic `com.intellij.jupyter.core.fus.JupyterNotebookUsageListener`: extending the host vocabulary, never editing it.
 **Probe:** from the plugins dir (pins non-standalone status, language-keyed EP shape, product-layer EP):
 ```bash
-cd /mnt/hdd/utopia/inspo/dataspell/plugins && unzip -p jupyter-plugin/lib/jupyter-plugin.jar META-INF/plugin.xml | grep -c 'does not provide standalone features'   # -> 1
+cd $REFERENCE_ROOT/dataspell/plugins && unzip -p jupyter-plugin/lib/jupyter-plugin.jar META-INF/plugin.xml | grep -c 'does not provide standalone features'   # -> 1
 unzip -p jupyter-plugin/lib/jupyter-plugin.jar META-INF/plugin.xml | grep -A1 'notebookSpecification' | grep -c 'implements='                                            # -> 1
 unzip -p dataspell-plugin/lib/dataspell-plugin.jar intellij.dataspell.jupyter.customCells.xml | grep -c 'cellDataFrameProvider'                                          # -> 1
 ```

@@ -32,7 +32,7 @@ private _mod(divisor: number): number {
 
 **Flow:** consumers (marshalling of BigInt cell values crossing the sandbox pipe) hold the digit representation → `toNative()` returns a Number iff `Number.isSafeInteger`, else the base-10 string → strings are what Python's int() ingests. `_divide` carries remainders downward (`digits[i-1] += (digits[i] % divisor) * base`) then pops drained high-order zeros so the while-loop terminates.
 **Invariant:** The zero case is structural: an empty digits array must render "0", not "" — and `_divide` MUST pop leading (most-significant) zeros or the loop never ends. Every multiply accumulates under `% divisor` because intermediate `base^n` overflows doubles long before the value does. Sign lives OUTSIDE the digits (magnitude-only), so negation never touches the array.
-**Probe:** `bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -cF "decimals.length === 0" app/common/BigInt.ts && sed -n "7,10p" test/common/BigInt.ts'` → exactly 1 zero-guard; test title "should represent and convert various numbers correctly".
+**Probe:** `bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -cF "decimals.length === 0" app/common/BigInt.ts && sed -n "7,10p" test/common/BigInt.ts'` → exactly 1 zero-guard; test title "should represent and convert various numbers correctly".
 Direct tests: `test/common/BigInt.ts` :6–22 (round-trips incl. unsafe magnitudes).
 
 ### Retrieve

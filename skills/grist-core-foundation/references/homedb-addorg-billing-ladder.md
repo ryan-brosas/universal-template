@@ -31,7 +31,7 @@ if (!options.setUserAsOwner) {
 **Invariant:** The shared-account path logs `log.warn("Creating org with shared billing account")` — legacy mode kept only for tests/migrations. Domain uniqueness is enforced by DB constraint NOT pre-check (isDomainAvailable exists separately for availability UI), so the catch-translation is the real gate. A porter who pre-checks then inserts still needs the catch: two racers both pass the check.
 
 ### Probe (direct tests)
-`bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "cannot duplicate a domain\|creates default plan if defined" test/gen-server/lib/HomeDBManager.ts'` → :138 / :105.
+`bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "cannot duplicate a domain\|creates default plan if defined" test/gen-server/lib/HomeDBManager.ts'` → :138 / :105.
 `bash -c 'grep -n "checkSubdomainValidity" app/gen-server/lib/homedb/HomeDBManager.ts | head -2'` → addOrg + updateOrg call sites.
 Direct tests: `test/gen-server/lib/HomeDBManager.ts` :95 ("can add an org"), :105 (default plan), :138 (dup domain), :149 ("dodgy domain" blacklist).
 

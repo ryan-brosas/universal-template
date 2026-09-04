@@ -50,7 +50,7 @@ Add one `./<seam>.md` capsule for one graph-selected, source-confirmed porting q
 codedb (MIT), `main@43bc3ca2` (v0.2.5843); Codebase Memory project `ext-codedb` (10,339n / 35,286e, ready; parse_partial limited to bench `.patch` fixtures — no cited file affected).
 
 ## Full view (memory graph)
-Revalidate `ext-codedb` before porting: run `index_status`, `check_index_coverage`, `search_graph`, `trace_path`, and `get_code_snippet`. Graph root `/mnt/hdd/utopia/inspo/external/codedb`, branch main @ `43bc3ca265a581de13aa7bb7bc18ce13cfa3f514` (head==base at pass-1 pin). Direct-test suites live beside sources (`src/test_index.zig`, `src/test_search.zig`, `src/test_explore.zig`, `src/adversarial_tests.zig`) and run via `zig build test`; source and direct tests decide shipped claims.
+Revalidate `ext-codedb` before porting: run `index_status`, `check_index_coverage`, `search_graph`, `trace_path`, and `get_code_snippet`. Graph root `$REFERENCE_ROOT/external/codedb`, branch main @ `43bc3ca265a581de13aa7bb7bc18ce13cfa3f514` (head==base at pass-1 pin). Direct-test suites live beside sources (`src/test_index.zig`, `src/test_search.zig`, `src/test_explore.zig`, `src/adversarial_tests.zig`) and run via `zig build test`; source and direct tests decide shipped claims.
 
 ## Boundaries
 Adopt the index/rerank/cache contracts (trigram+bloom, BM25+, overlay persistence, additive-only graph signals, generation-keyed caching). Adapt language-specific outline parsers and import resolvers (per-language shims are host surface) and allocator/locking strategy to your runtime. Omit codedb's product transport — MCP server framing (`mcp.zig`), HTTP server (`server.zig`), CLI daemon/proxy plumbing, auto-update and telemetry — none of it affects retrieval correctness.

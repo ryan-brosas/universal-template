@@ -45,7 +45,7 @@ class _E:
 _mk('emoji', emoji=_E())
 _mk('grapheme', grapheme=type('g', (), {'count': staticmethod(lambda s: 0)}))
 _mk('asyncio_atexit', register=lambda f: f)
-sys.path.insert(0, '/mnt/hdd/utopia/inspo/external/zendriver')
+sys.path.insert(0, '$REFERENCE_ROOT/external/zendriver')
 from zendriver.core._contradict import ContraDict
 d = ContraDict(silent=True); d['a'] = 1
 assert d.a == 1 == d['a']

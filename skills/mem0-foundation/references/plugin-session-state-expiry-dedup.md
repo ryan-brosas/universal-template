@@ -24,7 +24,7 @@ if stats.get("adds", 0) >= 1:
 
 **Flow:** every successful write path calls `session_stats.record_add()` (increments adds; appends category; pushes {id,category,ts} into a 50-item ring) → later PreCompact/Stop fallback reads the SAME per-user file → any prior add suppresses the mechanical snapshot entirely.
 **Invariant:** two-tier memory value: agent-authored durable facts have NO expiry; machine session_state expires in 90d; the fallback is strictly lower priority — one add anywhere wins; missing/corrupt stats file fails OPEN toward capturing (except → pass).
-**Probe:** `cd /mnt/hdd/utopia/inspo/mem0 && .venv/bin/python -m pytest integrations/mem0-plugin/tests/test_session_stats.py -q`.
+**Probe:** `cd $REFERENCE_ROOT/mem0 && .venv/bin/python -m pytest integrations/mem0-plugin/tests/test_session_stats.py -q`.
 
 ## Get live surrounding code
 **Retrieve:**

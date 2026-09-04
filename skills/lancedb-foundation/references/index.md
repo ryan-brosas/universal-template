@@ -5,7 +5,7 @@
 ## Use this for
 Porting the lancedb Rust crate's query and table-maintenance machinery — the
 layer between a fluent query builder (`Query`/`VectorQuery`) and Lance's dataset
-scanner/index engine. Source of truth is `/mnt/hdd/utopia/inspo/external/lancedb`
+scanner/index engine. Source of truth is `$REFERENCE_ROOT/external/lancedb`
 at pin `main@1b950188` (v0.38.0-beta.5) with direct tests under each module.
 Covers all four lane themes: filter-then-search planning (prefilter/postfilter,
 top_k pre-offsetting), segment/LSM machinery (MemWAL shards, SSTable exclusion

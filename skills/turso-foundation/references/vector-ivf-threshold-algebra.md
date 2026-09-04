@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Vector-IVF threshold algebra — how does a posting scan prune rows it cannot beat, without ever missing a true neighbor?
 
-**Source:** turso (MIT) `main@1654d1587fab` (/mnt/hdd/utopia/inspo/turso); Codebase Memory `turso`. **Question:** Given only per-component stats and each row's denormalized sum, how do you decide mid-scan that a candidate's best-case Jaccard cannot enter the top-K + delta?
+**Source:** turso (MIT) `main@1654d1587fab` ($REFERENCE_ROOT/turso); Codebase Memory `turso`. **Question:** Given only per-component stats and each row's denormalized sum, how do you decide mid-scan that a candidate's best-case Jaccard cannot enter the top-K + delta?
 
 ## Upper-bound Jaccard from sums alone; two acceptable ranges for a row's stored sum
 **Path/Symbol:** `core/index_method/toy_vector_sparse_ivf.rs`: `VectorSparseInvertedIndexSearchState` (:231-296), CollectComponentsSeek sort/take (:1094-1151), Seek-state threshold block (:1228-1310).

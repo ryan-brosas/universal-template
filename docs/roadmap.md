@@ -13,6 +13,18 @@ Progress is normally recoverable from source, Git, the project tracker, and proj
 | Mechanical quality   | Gates for demonstrated deterministic regressions, where value exceeds false-positive cost | Known regression classes are mechanically defended where practical              |
 | Test methodology     | Catch-first verification (reproducible RED, then GREEN)                                   | Strongest available evidence per defect class                                   |
 
+## Context-provable baseline
+
+The baseline treats context as an explicit publication contract: tracked visible
+operational metadata is hot; hidden operational skills and foundations are cold
+and on-demand. CI gates a measured hot budget and zero set overlap. Host payload
+evidence and MCP schema costs are versioned in
+`docs/context-measurements.json`; the six-server MCP file is a registry with an
+empty minimal profile, not an always-on connection set. Strict YAML parsing,
+Git-tracked hygiene, vendor/session exclusions, atomic prompt adapters, and
+fail-closed CDP text persistence protect the same boundary. Re-probe host
+versions and payloads when those integrations change.
+
 ## 1. Ground truth
 
 - **Reference-driven prior art (replaces mass ingestion).** Useful external

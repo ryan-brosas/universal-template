@@ -56,7 +56,7 @@ Add one `./<seam>.md` capsule for one graph-selected, source-confirmed porting q
 Flask (BSD-3-Clause), `main@d318b683471101618febed18996405ad26462110`; Codebase Memory project `ext-flask` (FULL mode @ d318b68 = head = base, 2,048n/8,490e, indexed 2026-08-23, generation_matches=true; parse_partial limited to example templates/SQL — none cited).
 
 ## Full view (memory graph)
-Revalidate `ext-flask` before porting: run `index_status`, `check_index_coverage`, `search_graph`, `trace_path`, and `get_code_snippet`. Graph root /mnt/hdd/utopia/inspo/external/flask, branch main @ d318b6834711 (=head=base, zero drift), FULL mode, nodes 2,048 / edges 8,490; exclusions by design only (.git, docs images); all 29 cited source paths returned no_recorded_issue + metadata_match. Source and direct tests decide shipped claims.
+Revalidate `ext-flask` before porting: run `index_status`, `check_index_coverage`, `search_graph`, `trace_path`, and `get_code_snippet`. Graph root $REFERENCE_ROOT/external/flask, branch main @ d318b6834711 (=head=base, zero drift), FULL mode, nodes 2,048 / edges 8,490; exclusions by design only (.git, docs images); all 29 cited source paths returned no_recorded_issue + metadata_match. Source and direct tests decide shipped claims.
 
 ## Boundaries
 Adopt the pure contracts: context push/pop semantics, hook ordering, lookup precedence, serializer grammar. Adapt transport integration (WSGI call shape, click CLI, itsdangerous cookies) to your host. Omit product surfaces: dev-server `run()`, dotenv loading, docs/benchmarks/examples trees.

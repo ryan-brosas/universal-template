@@ -9,7 +9,7 @@ mode, and the `channels-telegram` grammY long-poll plane mined COMPLETE into
 
 ## Source and evidence
 - Repository: copilotkit (MIT, LICENSE confirmed at checkout), `main@e9387e04835545c3`;
-  checkout `/mnt/hdd/utopia/inspo/copilotkit` git rev-parse HEAD == `e9387e04835545c3`,
+  checkout `$REFERENCE_ROOT/copilotkit` git rev-parse HEAD == `e9387e04835545c3`,
   origin `https://github.com/CopilotKit/CopilotKit.git`.
 - Seam audited and mined: `packages/channels-telegram/src/{listener.ts(599L),
   adapter.ts(742L), types.ts(83L), __tests__/adapter.test.ts(350L)}`: the sequential

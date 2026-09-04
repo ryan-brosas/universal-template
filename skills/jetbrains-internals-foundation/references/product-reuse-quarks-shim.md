@@ -27,7 +27,7 @@
 **Invariant:** `overrides="true"` is the ONLY sanctioned way for a second descriptor to bind an already-bound service interface — without it the duplicate registration is an error, with it the LAST override wins and ordering between competing overrides is unspecified (never stack two). Distinguish from the ACTION system's `overrides="true"` (`action-override-replacement`): same attribute name, different registry, different semantics — services replace implementations, actions neutralize by id. The shim pattern keeps the reuse surface explicit: every borrowed class appears exactly once, reviewable, in one tiny descriptor.
 **Probe:**
 ```bash
-cd /mnt/hdd/utopia/inspo/dataspell/plugins && unzip -p dataspell-pycharmQuarksIde/lib/dataspell-pycharmQuarksIde.jar META-INF/plugin.xml | grep -c 'overrides="true"'        # -> 1 (only the platform-interface swap)
+cd $REFERENCE_ROOT/dataspell/plugins && unzip -p dataspell-pycharmQuarksIde/lib/dataspell-pycharmQuarksIde.jar META-INF/plugin.xml | grep -c 'overrides="true"'        # -> 1 (only the platform-interface swap)
 unzip -p dataspell-pycharmQuarksIde/lib/dataspell-pycharmQuarksIde.jar META-INF/plugin.xml | grep -c 'serviceInterface='                                                     # -> 3
 ```
 

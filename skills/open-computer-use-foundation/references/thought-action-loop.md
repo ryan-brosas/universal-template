@@ -23,7 +23,7 @@ while should_continue:
 
 **Flow:** append objective → per turn: (1) `sandbox.set_timeout(60)` keep-alive FIRST → (2) build ephemeral context = system + history + FRESH screenshot-thought + action preamble → (3) call action model with tools → (4) append returned text as `THOUGHT` if any → (5) execute each tool call in order, breaking on `stop`, appending each call as JSON and its result as `OBSERVATION` → repeat.
 **Invariant:** History contains no images — screenshots reach the model only through the ephemeral vision-thought turn, so memory stays text-only and bounded; `should_continue = name != "stop"` means ANY other tool result keeps the loop alive, and a missing/failed stop can loop indefinitely (keep-alive exists precisely for this).
-**Probe:** `cd /mnt/hdd/utopia/inspo/external/open-computer-use && grep -n 'set_timeout(60)' os_computer_use/sandbox_agent.py && sed -n '171,216p' os_computer_use/sandbox_agent.py` (pins keep-alive placement before the model call and full turn order); direct harness: `tests/sandbox_agent.py` runs this exact loop against MockSandbox.
+**Probe:** `cd $REFERENCE_ROOT/external/open-computer-use && grep -n 'set_timeout(60)' os_computer_use/sandbox_agent.py && sed -n '171,216p' os_computer_use/sandbox_agent.py` (pins keep-alive placement before the model call and full turn order); direct harness: `tests/sandbox_agent.py` runs this exact loop against MockSandbox.
 **Retrieve:**
 ```ts
 await mcp.codebase_memory.search_graph({ project: "ext-open-computer-use", query: "run instruction should_continue sandbox timeout", limit: 8, fields: ["signature", "name", "file"] });

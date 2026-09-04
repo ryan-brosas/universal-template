@@ -29,7 +29,7 @@ DeleteExpiredSnapshots: "This method is public because it's impossible to mock
 
 **Flow:** startup constructs the collection WITHOUT touching disk → UI needing the list calls `ForceInitializeAsync` (which hops to the MAIN thread — awaiting it with `Task.Wait` from that same thread deadlocks; documented) → row state (exists/size/in-use) refreshes via background-thread queue → deletion is try-semantics: locked files return false instead of throwing → temp/expired snapshots are cleaned at lifetime termination → legacy settings keys are back-filled by `FixRecentSnapshotId` when the key schema changed.
 **Invariant:** no disk I/O before first explicit demand; per-row state is eventually-consistent via refresh queue, never read synchronously for the list view; file removal must distinguish "deleted" from "locked"; settings-key migrations need explicit default-backfill or old installs lose rows.
-**Probe:** deterministic content assertions executed this pass on `/mnt/hdd/utopia/inspo/dotmemory/JetBrains.Common.SnapshotManagement.xml`: lazy-init summary :8-10, Task.Wait caveat :14-17, locked-file false :26-27, background-refresh :40-44, guid migration :47-49, mockability confession :52-56 — verified by full 59-line read.
+**Probe:** deterministic content assertions executed this pass on `$REFERENCE_ROOT/dotmemory/JetBrains.Common.SnapshotManagement.xml`: lazy-init summary :8-10, Task.Wait caveat :14-17, locked-file false :26-27, background-refresh :40-44, guid migration :47-49, mockability confession :52-56 — verified by full 59-line read.
 
 ## Get live surrounding code
 **Retrieve:** executed live this pass:

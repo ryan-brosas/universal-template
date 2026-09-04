@@ -27,7 +27,7 @@
 
 **Flow:** enumerate functions via the Light variant (rows arrive without param/return payloads) → the few nodes actually rendered or signature-compared request their params separately through `GetFunctionParams` → scoped consumers wrap access in `ExecuteWithMetadataAssemblyProvider` (provider dies at method exit; deferred enumeration inside is forbidden because disposal beats laziness) → long-lived consumers instead obtain a Lifetime-bound provider and own its disposal window.
 **Invariant:** the expensive fields are fetched per-CONSUMER-need, never per-row; a scoped provider must never escape its scope (no storing, no `yield return`) — violating either turns O(displayed) work into O(total functions).
-**Probe:** deterministic content assertions executed on `/mnt/hdd/utopia/inspo/dotmemory/JetBrains.Profiler.Snapshot.Interface.xml`: line 99 opens the Light summary ("Same as GetFunctionItems, but does not fill Parameters"), lines 113-116 carry the no-store/no-yield note; both verified by direct read of :97-122 this pass.
+**Probe:** deterministic content assertions executed on `$REFERENCE_ROOT/dotmemory/JetBrains.Profiler.Snapshot.Interface.xml`: line 99 opens the Light summary ("Same as GetFunctionItems, but does not fill Parameters"), lines 113-116 carry the no-store/no-yield note; both verified by direct read of :97-122 this pass.
 
 ## Get live surrounding code
 **Retrieve:** executed live this pass:

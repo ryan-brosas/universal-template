@@ -41,7 +41,7 @@ public getColGetterByColId(colId: string): ColumnGetter | null {
 
 **Probe:** deterministic greps:
 ```bash
-cd /mnt/hdd/utopia/inspo/grist-core
+cd $REFERENCE_ROOT/grist-core
 grep -n 'allowed: \["label", "colId"\]' app/server/lib/Export.ts    # 125
 grep -n "req.query.activeSortSpec" app/server/lib/Export.ts         # 121
 grep -n "return (rowId: number) => rowId;" app/server/lib/ServerColumnGetters.ts  # 58

@@ -22,7 +22,7 @@ const MAX_TWO_DIGIT_YEAR = new Date().getFullYear() + TWO_DIGIT_YEAR_THRESHOLD -
 
 **Flow:** Any strict-mode format containing YY reaches this hook. Years that land at most 10 years beyond the CURRENT year get +2000 ("30" → 2030 while it's 2026); anything further ahead is assumed historical and gets +1900 ("68" → 1968, not 2068). The comment pins alignment with bootstrap-datepicker's assumeNearbyYear so the datepicker widget and the parser agree.
 **Invariant:** The threshold is relative to now, not a fixed pivot — code that snapshots `MAX_TWO_DIGIT_YEAR` at build time drifts. The override must be installed BEFORE any parsing happens; import-order dependence is real but accepted because this module is imported by every parser entry point. A porter using raw moment gets moment's own pivot (currently +50/-49-ish) which disagrees with the datepicker — dates jump decades between UI and stored value.
-**Probe:** `bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "parseTwoDigitYear" app/common/parseDate.ts && grep -n "TWO_DIGIT_YEAR_THRESHOLD" app/common/parseDate.ts'` → :18 override and :14 exported constant (reused by tests).
+**Probe:** `bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "parseTwoDigitYear" app/common/parseDate.ts && grep -n "TWO_DIGIT_YEAR_THRESHOLD" app/common/parseDate.ts'` → :18 override and :14 exported constant (reused by tests).
 Direct tests: `test/common/parseDate.ts` two-digit-year cases inside `describe("parseDate")` (:98+).
 
 ### Retrieve

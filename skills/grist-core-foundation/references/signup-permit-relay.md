@@ -25,7 +25,7 @@ return pick(permit, "prompt");
 
 **Flow:** `/api/assistant/start` stores `{prompt}` pre-auth → signup redirect sets a state COOKIE containing the permit ID → after signup, first doc creation rewrites the permit with its `docId` → opening that doc with `?assistantState=<id>` consumes the permit (deleted on read) and returns the prompt ONLY if the permit's docId matches THIS document.
 **Invariant:** Consume-on-read makes replay impossible — a captured URL works at most once. The docId equality check prevents cross-document injection (permit minted for doc A can't seed chat in doc B); mismatch ALSO consumed it already (fail-closed: the id burns either way). Cookie-size constraint is the design driver — prompts are unbounded text, permits aren't. 1h TTL bounds orphaned permits.
-**Probe:** `bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "await store.removePermit(key)" app/server/lib/AssistantStatePermit.ts && grep -n "permit.docId !== this._docName" app/server/lib/ActiveDoc.ts'` → :43 consume; :2452 docId gate.
+**Probe:** `bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "await store.removePermit(key)" app/server/lib/AssistantStatePermit.ts && grep -n "permit.docId !== this._docName" app/server/lib/ActiveDoc.ts'` → :43 consume; :2452 docId gate.
 Direct tests: no dedicated spec file; exercised through signup-flow server suites — stated coverage caveat (grep-only anchors above).
 
 ### Retrieve

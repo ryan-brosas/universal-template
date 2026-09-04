@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # MVCC version model — how are row versions and transaction fates encoded so concurrency checks need no locks?
 
-**Source:** turso (MIT) `main@def9a0601b8e` (/mnt/hdd/utopia/inspo/memory/turso); Codebase Memory project `turso`. **Question:** What must a porter encode per row version so visibility decisions reduce to lock-free lookups?
+**Source:** turso (MIT) `main@def9a0601b8e` ($REFERENCE_ROOT/memory/turso); Codebase Memory project `turso`. **Question:** What must a porter encode per row version so visibility decisions reduce to lock-free lookups?
 
 ## Two tagged u64s per boundary + one atomic fate word
 **Path/Symbol:** `core/mvcc/database/mod.rs`: `PackedTs` (:393-446), `TransactionState::encode` (:1308-1400).

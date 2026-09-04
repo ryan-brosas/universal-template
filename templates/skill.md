@@ -5,12 +5,12 @@ Copy as `<skill-dir>/SKILL.md` and fill only what earns its place. The
 
 ---
 name: <kebab-case-name>
-description: "Use when <trigger>; state the capability unlocked."
+description: "Use when <trigger>; state the capability unlocked." # strict YAML string
 invocation: entry # entry | internal | manual | vendor
 # Cold source evidence only: kind: foundation (requires a *-foundation name,
 # invocation: manual, disable-model-invocation: true, and references/index.md).
 # Host visibility. Required for internal/manual skills:
-# disable-model-invocation: true
+# disable-model-invocation: true # YAML boolean, never "true"
 ---
 
 # <Readable Title>
@@ -39,6 +39,10 @@ Keep leaf bodies under about 600 words; depth lives in capsules.
 
 ## Notes for the author (delete after filling)
 - `name` must equal the folder name.
+- Frontmatter must parse as strict YAML; known scalar fields stay strings and
+  visibility flags stay booleans.
 - The model chooses `invocation` from real callers and visibility needs.
+- Visible operational metadata is hot; hidden operational and foundation leaves
+  are cold and explicitly loaded.
 - `kind: foundation` is not a procedure category; follow `writing-skills/references/foundation-kind.md`.
 - Every cited `references/` file must exist.

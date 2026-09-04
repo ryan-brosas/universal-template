@@ -32,7 +32,7 @@ return edges.sort_values([source_column, target_column]).reset_index(drop=True)
 
 **Flow:** normalize names FIRST (`html.unescape().upper().strip()` — so `&amp;Co` and `&CO;` variants collapse BEFORE component computation, stable_lcc :47-58) → union-find over deduped edges → keep only edges whose BOTH endpoints are in component[0] → canonicalize direction → dedup → alphabetical two-column sort → reset_index. Empty input short-circuits to a COPY (:44-45), never None.
 **Invariant:** normalization happens BEFORE the LCC filter — reversing the order computes components on unnormalized names and can pick a DIFFERENT largest component; `zip(..., strict=True)` on the union loop makes column-length mismatch an error not silent truncation.
-**Probe:** `tests/unit/graphs/test_stable_lcc.py` — flipped-rows and shuffled-rows produce identical output (:60/:79), node-name normalization asserted (:101), NX side-by-side set equality (:144-182); `tests/unit/graphs/test_connected_components.py` 9 tests incl. two-component splits. Executed @pin: `/home/utopia/.venvs/grag-lane-venv/bin/python -m pytest tests/unit/graphs/ -q` → 37 passed.
+**Probe:** `tests/unit/graphs/test_stable_lcc.py` — flipped-rows and shuffled-rows produce identical output (:60/:79), node-name normalization asserted (:101), NX side-by-side set equality (:144-182); `tests/unit/graphs/test_connected_components.py` 9 tests incl. two-component splits. Executed @pin: `$VENV_ROOT/grag-lane-venv/bin/python -m pytest tests/unit/graphs/ -q` → 37 passed.
 
 ## Get live surrounding code
 **Retrieve:**

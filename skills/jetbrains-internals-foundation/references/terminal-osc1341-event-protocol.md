@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # OSC-1341 verification harness & latent-bug delta — how do you PROVE an OSC-1341 terminal integration works, and which shipped fallback must never be ported?
 
-**Source:** JetBrains MPS install `MPS-261.25134.779` (proprietary distribution; scripts headered Apache-2.0), root `/mnt/hdd/utopia/inspo/mps`; Codebase Memory project `jetbrains-mps` (1,245 nodes). **Question:** given the wire format (owned by `terminal-osc1341-command-block-protocol.md`), what deterministic probe battery pins a correct implementation, and where does the SHIPPED code itself deviate from its own spec?
+**Source:** JetBrains MPS install `MPS-261.25134.779` (proprietary distribution; scripts headered Apache-2.0), root `$REFERENCE_ROOT/mps`; Codebase Memory project `jetbrains-mps` (1,245 nodes). **Question:** given the wire format (owned by `terminal-osc1341-command-block-protocol.md`), what deterministic probe battery pins a correct implementation, and where does the SHIPPED code itself deviate from its own spec?
 
 ## Relationship to the base-protocol capsule
 This is the MPS-source DELTA companion to `terminal-osc1341-command-block-protocol.md` (PhpStorm source): that capsule owns the frame grammar/event census/hook-strategy survey. This capsule adds what only live execution can prove: byte-level framing, encoder round-trips incl. non-ASCII, gate switching, JSON escaping — plus a probe-confirmed LATENT BUG in the shipped bash fallback.

@@ -28,7 +28,7 @@ if (isPercent) result *= 0.01;
 
 **Flow:** strip currency → strip percent → strip invisible marks → paren-detect → exponent normalize → digit transliterate → drop group separators → decimal normalize → minus normalize (×2) → `Number()` (stricter than parseFloat: no trailing junk). `(123)` means −123 but `(-123)` is an ERROR (result ≤ 0 rejected).
 **Invariant:** ORDER IS THE CONTRACT. Currency before whitespace (symbols contain spaces); digits before group-separator removal (`\d` in the regex only matches after transliteration); group removal before decimal replacement (the decimal separator may equal the group separator in some locales); empty-string guard before any `Number()` because `Number('')` is 0. Percent divides by 100 AFTER sign handling. Any reorder silently misparses whole locales.
-**Probe:** `bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "value = value.replace(this.minusSign, \"-\")" app/common/NumberParse.ts && grep -cF "result *= 0.01;" app/common/NumberParse.ts'` → :191 AND :192 (two replacements) plus exactly one percent division.
+**Probe:** `bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "value = value.replace(this.minusSign, \"-\")" app/common/NumberParse.ts && grep -cF "result *= 0.01;" app/common/NumberParse.ts'` → :191 AND :192 (two replacements) plus exactly one percent division.
 Direct tests: `test/common/NumberParse.ts` locale matrix (:279+) exercises every branch incl. trailing-minus and parenthesised negatives.
 
 ### Retrieve

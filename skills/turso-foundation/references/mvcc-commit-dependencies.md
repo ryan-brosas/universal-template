@@ -1,7 +1,7 @@
 <!-- capsule-v2 -->
 # Counted commit dependencies — how do readers speculate past Preparing writers without blocking?
 
-**Source:** turso (MIT) `main@def9a0601b8e` (/mnt/hdd/utopia/inspo/memory/turso); Codebase Memory project `turso`. **Question:** How must dependency registration, draining, and the memory orderings be wired so speculative reads stay safe?
+**Source:** turso (MIT) `main@def9a0601b8e` ($REFERENCE_ROOT/memory/turso); Codebase Memory project `turso`. **Question:** How must dependency registration, draining, and the memory orderings be wired so speculative reads stay safe?
 
 ## Register instead of wait; drain before you may commit
 **Path/Symbol:** `core/mvcc/database/mod.rs`: `register_commit_dependency` (:9940-9995 region; fn at :9982 at HEAD), speculative visibility arms (:10120-10195), tombstone handling (:9820-9850), cascade-abort drain (:3281-3296: dep_set drained, each dependent gets abort_now=true, counters decremented), `WaitForDependencies` step (:2886-2965); read-only commits also drain (:2840-2852).

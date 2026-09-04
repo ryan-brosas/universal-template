@@ -89,9 +89,9 @@ Mode A: every command in the summary was executed (exit code cited). Each writte
 
 ## References
 
-- `~/.agents/templates/agents.md`, project AGENTS source
-- `~/.agents/templates/project-context.md`, compact durable-context source
-- `~/.agents/templates/roadmap.md`, only when the user explicitly requests a roadmap
+- `../../templates/agents.md`, project AGENTS source
+- `../../templates/project-context.md`, compact durable-context source
+- `../../templates/roadmap.md`, only when the user explicitly requests a roadmap
 - `../github-repo-setup/SKILL.md`, repository governance (delegated)
 - `../github-actions-engineering/SKILL.md`, CI/workflows (delegated)
 - `../brainstorming/SKILL.md`, unclear direction (delegated)

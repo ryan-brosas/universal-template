@@ -60,7 +60,7 @@ Porting any assistant backend that lets an LLM read/write user documents safely:
 - **Workflow fence semi-trusted** — `workflow-fence-semi-trusted`: how do you let the model FOLLOW installed instructions without letting them override policy.
 - **Workflow store overlay** — `workflow-store-overlay`: how do catalog workflows coexist with user workflows without crashing the chat.
 ## Extending the foundation
-Add one source-confirmed capsule: loader line, map entry, decisive source excerpt, invariant, byte-exact Probe against the repo checkout (`cd /mnt/hdd/utopia/inspo/external/mike/backend`), and `search_graph` Retrieve against project `ext-mike`. Keep the canonical pinned commit; never vendor modules.
+Add one source-confirmed capsule: loader line, map entry, decisive source excerpt, invariant, byte-exact Probe against the repo checkout (`cd $REFERENCE_ROOT/external/mike/backend`), and `search_graph` Retrieve against project `ext-mike`. Keep the canonical pinned commit; never vendor modules.
 
 ## Provenance
 mike (MikeOSS legal-AI platform), AGPL-3.0 — **patterns-only**: adopt behavior contracts, never copy code verbatim into non-AGPL hosts. main @ `3ad9a5ffafd6ad21624a7c11a23188d3dc674b7d`; Codebase Memory project `ext-mike` (7,357 nodes / 25,035 edges, FULL mode @ same HEAD = base_sha, zero drift; parse_partial x60 confined to SQL migrations/CSS/test fixtures — none cited). Pass 1 whole-file mined backend planes: lib/{access,audit,privateIp,downloadTokens}, chat/{citations,contextBuilders,routeStreaming,stream­ing,verifyCitations,types}, chat/tools/{toolDispatcher,documentOps,courtlistenerTurnState}, middleware/auth (~7,400 LOC).

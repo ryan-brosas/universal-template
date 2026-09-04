@@ -17,8 +17,9 @@ hard failures.
 
 ## Before pushing
 
-Maintainers need Python only for the current deterministic publication helpers.
-Run the consolidated contract suite used by CI:
+Maintainers need Python and the CI-pinned PyYAML version only for the current
+deterministic publication helpers. Run the consolidated contract suite used by
+CI:
 
 ```bash
 SKILLS_ROOT="$PWD/skills" python3 scripts/skill-validator.py
@@ -27,23 +28,28 @@ python3 scripts/install-prompts.py --check-repo
 python3 scripts/install-prompts.py --selftest
 python3 scripts/render-prompt.py --selftest
 python3 scripts/skill-catalog.py selftest
+python3 scripts/skill-catalog.py context --max-hot-skills 40 --max-hot-chars 11000
 python3 scripts/skill-catalog.py generate --check
+python3 scripts/repo-hygiene.py --selftest
 python3 scripts/repo-hygiene.py
+python3 mcp/configure.py --selftest
+node --test skills/cdp/sdk/recording-privacy.test.ts
 python3 scripts/web-reference-manifest.py --selftest
 python3 scripts/pr-metadata.py --selftest
 git diff --check
 ```
 
-These commands check metadata, names, references, structured-data parsing,
-required paths, portable MCP declarations, secret patterns, generated parity,
-prompt-adapter mutation safety, title protocol parsing, and changed-line
-whitespace. They do not approve policy, prose, routing, or usefulness.
+These commands check strict YAML metadata and types, names, references, disjoint
+hot/cold sets and the hot budget, tracked publication files, portable scoped MCP
+activation, secret and private-path patterns, generated parity, atomic
+prompt-adapter mutation, CDP recording privacy, title protocol parsing, and
+changed-line whitespace. They do not approve policy, prose, routing, or usefulness.
 
 ## Tool classification
 
 | Classification | Scripts | Ownership |
 | --- | --- | --- |
-| REQUIRED HARD CONTRACT | `skill-validator.py`, `repo-hygiene.py`, `web-reference-manifest.py`, `pr-metadata.py` | Exact metadata, files, paths, schemas, secrets, and automation protocols. |
+| REQUIRED HARD CONTRACT | `skill-validator.py`, `repo-hygiene.py`, `web-reference-manifest.py`, `pr-metadata.py` | Exact metadata, tracked files, paths, schemas, secrets, context limits, and automation protocols. |
 | OPTIONAL COMPATIBILITY TOOL | `install-prompts.py`, `render-prompt.py` | Legacy host installation and prompt rendering; never canonical. |
 | OPTIONAL DIAGNOSTIC | `github-audit.py`, `runtime-capabilities.py` | Read-only environment reports; current native output remains authoritative. |
 | GENERATED-ARTIFACT TOOL | `skill-catalog.py` | Derives the optional human catalog from skill frontmatter. |
@@ -67,5 +73,6 @@ equals the directory, references resolve within the skill, and host visibility
 remains expressed by `disable-model-invocation`. Cold `*-foundation` leaves live
 in the same tree with `kind: foundation`, manual invocation, hidden visibility,
 and a complete `references/index.md` inventory. They remain outside operational
-catalog and startup counts. The model owns classification; the validator checks
-only the resulting exact contract.
+catalog and startup counts. Hidden operational skills are cold too. The hot set
+is tracked operational metadata not hidden by `disable-model-invocation`; the
+validator and catalog gate check only the resulting exact contract.

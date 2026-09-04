@@ -26,7 +26,7 @@ consensus — those are product layers above these kernels.
 
 ## Load the matching source dump
 
-Repo at `/mnt/hdd/utopia/inspo/external/weaviate` @ `main@adcffc54`. Graph project:
+Repo at `$REFERENCE_ROOT/external/weaviate` @ `main@adcffc54`. Graph project:
 `ext-weaviate` (58,975 nodes / 603,991 edges). Key trees:
 
 - `adapters/repos/db/vector/hnsw/` — index.go (state), search.go (1,487L strategies),
@@ -89,7 +89,7 @@ Repo at `/mnt/hdd/utopia/inspo/external/weaviate` @ `main@adcffc54`. Graph proje
 
 ## Provenance
 
-- Repo: `/mnt/hdd/utopia/inspo/external/weaviate`, branch `main`, pin
+- Repo: `$REFERENCE_ROOT/external/weaviate`, branch `main`, pin
   `adcffc5432aa797c60e3c4e479514054254fae2a` (= graph base_sha/head_sha; upstream had
   drifted to `0508b8c1` but this pass mines the pinned state deliberately).
 - Codebase Memory project `ext-weaviate`: ready, FULL mode, generation matches working tree.

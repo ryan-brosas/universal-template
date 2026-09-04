@@ -35,7 +35,7 @@ return await this._connection.transaction(async (manager) => {
 **Invariant:** Methods that MUST have their own atomic boundary (addWorkspace's limit-check-then-insert, deleteDocument's multi-table cascade) call `_connection.transaction` directly and accept a manager param only for their INTERNAL helpers. A porter who blindly converts those to runInTransaction lets callers compose limit checks with unrelated writes, breaking the fail-closed windows.
 
 ### Probe (direct tests)
-`bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -c "runInTransaction" app/gen-server/lib/homedb/HomeDBManager.ts app/gen-server/lib/homedb/UsersManager.ts app/gen-server/lib/homedb/GroupsManager.ts'` → ≥ 20 combined.
+`bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -c "runInTransaction" app/gen-server/lib/homedb/HomeDBManager.ts app/gen-server/lib/homedb/UsersManager.ts app/gen-server/lib/homedb/GroupsManager.ts'` → ≥ 20 combined.
 `bash -c 'grep -c "_connection.transaction" app/gen-server/lib/homedb/HomeDBManager.ts'` → ≥ 15.
 Direct tests: concurrency its (`HomeDBManager.ts` :53 parallel user creation) exercise nesting indirectly; SetupRequests concurrent RMW test pins outer behavior.
 

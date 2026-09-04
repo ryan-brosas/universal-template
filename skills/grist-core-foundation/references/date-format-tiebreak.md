@@ -30,7 +30,7 @@ return formatKeys.filter(format => formats[format] === maxCount).sort();
 
 **Flow:** moment-guess proposes candidates per sampled value → >10 distinct candidates aborts guessing (returns default) → each candidate scored by how many FULL column values parse under it (strict mode) → all top scorers returned sorted; `guessDateFormat` takes the LAST — deliberately favouring early-Y/early-M layouts "to match the old dateguess.py", keeping behaviour stable across the rewrite.
 **Invariant:** Tie-break is lexicographic-last, NOT insertion order or first-match — a porter "cleaning this up" changes which format thousands of columns display with. Partial-input support comes from REMOVING trailing parts of the FORMAT (year first, then month) rather than relaxing strict mode, so defaults fill from moment's "current time" semantics deterministically (current year preferred over current month). `_buildVariations` additionally appends ` YYYY` when the column format lacks one but inputs end in a 4-digit year.
-**Probe:** `bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && sed -n "345,351p" app/common/parseDate.ts && grep -n "formatKeys.length > 10\|getDistinctValues(dateStrings, 100)" app/common/parseDate.ts'` → last-tie return plus both caps (:377, :360).
+**Probe:** `bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && sed -n "345,351p" app/common/parseDate.ts && grep -n "formatKeys.length > 10\|getDistinctValues(dateStrings, 100)" app/common/parseDate.ts'` → last-tie return plus both caps (:377, :360).
 Direct tests: `test/common/parseDate.ts` :449 `describe("guessDateFormat")` — tie ordering pinned.
 
 ### Retrieve

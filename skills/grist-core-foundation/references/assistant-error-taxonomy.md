@@ -25,7 +25,7 @@ if (errorCode === "insufficient_quota") {
 
 **Flow:** Two DIFFERENT wire signals mean "out of room": an explicit error code, OR a successful response whose finish_reason is `"length"` (model ran out mid-answer). Conversation stage picks the message: ≤2 messages (system+first user question) ⇒ "shorten your message or delete some columns"; later ⇒ adds "restart the conversation". Quota ⇒ day-scale backoff advice. Everything else non-200 becomes plain Error → retried → wrapped in RetryableError's fenced message.
 **Invariant:** finish_reason=length MUST be treated as failure even on HTTP 200 — silently returning half a formula would corrupt the cell. The ≤2 boundary counts the SYSTEM prompt: a porter counting only user turns flips the two messages' applicability. QuotaExceeded extends NonRetryable (no retry can fix billing); RetryableError deliberately embeds the technical cause in a markdown code fence so users can report it.
-**Probe:** `bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "finish_reason === \"length\"" app/server/lib/OpenAIAssistantV1.ts && grep -n "messages.length <= 2" app/server/lib/OpenAIAssistantV1.ts && grep -n "class TokensExceededError\|class QuotaExceededError" app/server/lib/Assistant.ts'` → :221, :224, :109/:137.
+**Probe:** `bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "finish_reason === \"length\"" app/server/lib/OpenAIAssistantV1.ts && grep -n "messages.length <= 2" app/server/lib/OpenAIAssistantV1.ts && grep -n "class TokensExceededError\|class QuotaExceededError" app/server/lib/Assistant.ts'` → :221, :224, :109/:137.
 Direct tests: `test/server/lib/OpenAIAssistantV1.ts` :229 quota (callCount===1), :292 finish-reason-length escalation, :312 restart-conversation message.
 
 ### Retrieve

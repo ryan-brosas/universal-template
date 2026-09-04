@@ -35,7 +35,7 @@ if (parser instanceof IdentityParser) { return values; }// no coercion for Text 
 
 **Flow:** action-name switch → per-column parser built from live metadata (`createParser` reads `_grist_Tables_column` + view-field overrides where field widgetOptions exist) → only STRING members parsed (`typeof val === "string"` guard) → non-existent table/column or identity-parser types return values verbatim.
 **Invariant:** Parsing is metadata-driven and FAILS OPEN to the engine: missing metadata never fabricates a value. Only strings are touched — a caller who already sent numbers is respected. The field-overrides-column rule (`field?.widgetOptions ? field : col`, :270) mirrors how FORMATTING picks options, keeping paste and display consistent. A porter applying this at the wrong layer (inside the engine) double-parses; it belongs at the client-facing boundary.
-**Probe:** `bash -c 'cd /mnt/hdd/utopia/inspo/platforms/grist-core && grep -n "case \"AddOrUpdateRecord\"" app/common/ValueParser.ts && grep -n "parser instanceof IdentityParser" app/common/ValueParser.ts && grep -rln "parseUserAction" app/server --include=*.ts'` → :350, :320, and the server entry point(s) consuming it.
+**Probe:** `bash -c 'cd $REFERENCE_ROOT/platforms/grist-core && grep -n "case \"AddOrUpdateRecord\"" app/common/ValueParser.ts && grep -n "parser instanceof IdentityParser" app/common/ValueParser.ts && grep -rln "parseUserAction" app/server --include=*.ts'` → :350, :320, and the server entry point(s) consuming it.
 Direct tests: exercised through ActiveDoc apply-path suites (`grep -rln "parseUserAction" test/server`).
 
 ### Retrieve

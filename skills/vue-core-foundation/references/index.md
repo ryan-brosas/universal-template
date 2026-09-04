@@ -39,7 +39,7 @@ Porting the Vue 3 reactivity model: version-counted Dep/Link doubly-linked dep g
 Add one `./<seam>.md` capsule for one graph-selected, source-confirmed porting question. Add one matching loader line and map entry; keep evidence in the capsule, not this leaf.
 
 ## Provenance
-vue-core (`MIT`), `main@e2bede96134f757aad5c5b33ac9be055022dbfc8` (= origin/main at pass 1); Codebase Memory project `ext-vue-core` root `/mnt/hdd/utopia/inspo/external/vue-core`, branch main, ready FULL mode, 6,073 nodes / 29,037 edges, generation 2026-08-23T10:09:23Z, generation_matches=true; parse_partial ×4 (compiler-sfc/parse.ts, runtime-dom/jsx.ts, vue-compat README, an e2e html — none in cited paths); check_index_coverage no_recorded_issue + metadata_match on all 13 cited paths.
+vue-core (`MIT`), `main@e2bede96134f757aad5c5b33ac9be055022dbfc8` (= origin/main at pass 1); Codebase Memory project `ext-vue-core` root `$REFERENCE_ROOT/external/vue-core`, branch main, ready FULL mode, 6,073 nodes / 29,037 edges, generation 2026-08-23T10:09:23Z, generation_matches=true; parse_partial ×4 (compiler-sfc/parse.ts, runtime-dom/jsx.ts, vue-compat README, an e2e html — none in cited paths); check_index_coverage no_recorded_issue + metadata_match on all 13 cited paths.
 
 ## Full view (memory graph)
 Revalidate `ext-vue-core` before porting: run `index_status`, `check_index_coverage`, `search_graph`, `trace_path`, and `get_code_snippet`. Record the graph root, branch, commit, mode, node/edge counts, freshness, and any coverage caveats; source and direct tests decide shipped claims. All capsule Retrieve blocks cite project `ext-vue-core`; BM25 search_graph resolves every seam symbol (verified pass 1).

@@ -44,7 +44,7 @@ export function sanitizeWorksheetName(tableName: string): string {
 
 **Probe:** deterministic greps:
 ```bash
-cd /mnt/hdd/utopia/inspo/grist-core
+cd $REFERENCE_ROOT/grist-core
 grep -n 'req.hostname === "localhost"' app/server/lib/ExportXLSX.ts  # 48
 grep -n 'Date.UTC(2018, 11, 1' app/server/lib/workerExporter.ts      # 189
 grep -n 'useStyles: true, useSharedStrings: true' app/server/lib/workerExporter.ts  # 184
