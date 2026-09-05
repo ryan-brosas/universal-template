@@ -16,6 +16,9 @@ When outside code materially reduces uncertainty, use ONE strong reference repos
 - **Use when:** a relevant project-local code reference at `reference/<repo>/` or web reference at `reference/web/<site>/` already exists and consulting it would materially reduce implementation uncertainty (even without an explicit "use this as inspiration" request).
 - **NOT when:** ordinary implementation where current project source, nearest implementation, and mechanical verification are enough; global `AGENTS.md` owns that default posture. This skill activates when outside prior art enters the loop.
 
+For an explicit discovery/admission request rather than using existing prior art,
+load `../inspo-qualify/SKILL.md`. It owns candidate qualification and approval.
+
 ## Workflow
 
 1. **Ground locally**, inspect the current project and identify the seam; decide whether outside code materially reduces uncertainty (if not, stop, implement directly).

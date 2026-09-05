@@ -38,6 +38,10 @@ parse_frontmatter = _METADATA.parse_frontmatter
 CLASSES = ("entry", "internal", "manual", "vendor")
 KINDS = ("skill", "foundation")
 FOUNDATION_KIND = "foundation"
+FOUNDATION_DISCOVERY_HINT = (
+    "Inspect the topic map; search reference filenames/headings; load 1-3 likely capsules. "
+    "Use references/index.md only if discovery remains ambiguous."
+)
 
 STOPWORDS = {
     "the", "a", "an", "of", "for", "to", "in", "on", "with", "and", "or",
@@ -338,8 +342,8 @@ def build_foundation_catalog_md(skills: list[dict]) -> str:
         "",
         "Cold, source-specific, revision-pinned evidence under `skills/*-foundation/`.",
         "This is part of the cold discoverable set and never startup context.",
-        "Foundations are manual and hidden: search explicitly, open the topic index,",
-        "then load one matching capsule. Current source and tests outrank them.",
+        "Foundations are manual and hidden. " + FOUNDATION_DISCOVERY_HINT,
+        "Current source and tests outrank them.",
         "",
         f"{len(foundations)} foundations. They are excluded from the operational skill table and startup counts.",
         "",
@@ -439,7 +443,7 @@ def cmd_show(skills: list[dict], args) -> int:
         print(f"related:       {', '.join(payload['related'])}")
     print(f"description:   {payload['description']}")
     if payload["kind"] == FOUNDATION_KIND:
-        print("(cold foundation: open references/index.md, then load one matching capsule)")
+        print(f"(cold foundation: {FOUNDATION_DISCOVERY_HINT})")
     elif not payload["model_visible"]:
         print("(hidden skills are not in startup metadata; host discovery finds them on demand)")
     return 0

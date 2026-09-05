@@ -9,7 +9,7 @@
 
 - Scope the task clearly — agree on outcome and boundaries before large diffs; code is ground truth, captured skills stack leverage.
 - Give context pointers (files, skills, graph hits) and let the agent retrieve; do not hand-script every step.
-- Maintain the project spine: `AGENTS.md` plus, only when a roughly four-day-or-longer run needs recovery or handoff or explicit coordination requires it, a compact post-code work record — source and context files beat repeating rules in chat.
+- Prefer current source, Git, the tracker, and relevant session evidence. If durable recovery or coordination state may be needed, explicitly load `../../goal-setup/SKILL.md` to qualify it; duration alone does not earn a record.
 
 ## Verification over self-report
 

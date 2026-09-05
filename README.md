@@ -70,8 +70,9 @@ python3 scripts/skill-catalog.py context --json
 
 Hidden operational skills and foundations remain cold and explicit. Use catalog
 search/show and load one selected hidden procedure. For a foundation, open its
-`SKILL.md`, inspect `references/index.md`, then load one matching capsule. See `docs/foundation-skill-v1.md` for measured host
-behavior and limitations.
+compact `SKILL.md` topic map, search reference filenames and headings, and load
+1–3 likely capsules. Open `references/index.md` only if discovery is still
+ambiguous. See `docs/foundation-skill-v1.md` for measured host behavior and limitations.
 
 ### Optional compatibility installer
 
