@@ -10,13 +10,15 @@ host is required to connect every entry.
 - Servers are declared ONCE, in the canonical registry; per-CLI host configs are
   derived copies written only when the user requests a specific server.
 - To wire a server, preview `configure.py --server NAME --target PATH`; pass
-  `--apply` only after reviewing the scoped merge. `profiles.json` provides
-  bounded sets, and `minimal` activates none.
+  `--apply` only after reviewing the change summary. `profiles.json` provides
+  bounded selections; switching profiles replaces only this tool’s managed set.
+  `minimal` removes that managed set, not independently configured servers.
 - Prefer a dry-run-style preview before writing, and back up a host config
   before its first write.
-- Never touch servers you didn't request. Never store token **values** anywhere —
-  only env var **names** (`${EXA_API_KEY}`, `${CONTEXT7_API_KEY}`, `bearerTokenEnv`).
-  The actual key values live only in shell env / a daemon env file.
+- Preserve unmanaged servers. Registry entries use env var **names**, never token
+  values (`${EXA_API_KEY}`, `${CONTEXT7_API_KEY}`, `bearerTokenEnv`). Previews show
+  names and actions, not config values. Exact local backups may contain existing
+  credentials; keep them private and never publish them.
 - Skip host shapes we haven't verified (Codex remote) instead of guessing.
 - This file is a capability registry, not a mandatory "context plane": wire
   what a host actually needs; connected is not mandatory.
@@ -61,10 +63,58 @@ These hosts already export or can export the needed vars; the `${VAR}` text in
 `code-graph`, `ide`, `docs`, `repository-research`, `web-research`, and
 `historical-context`. Codebase Memory and MCP Steroid are deliberately separate;
 there is no ambiguous `code` compatibility alias. Profiles are explicit
-selections, not always-on policy. Use `--deactivate` to remove only the selected
-profile entries while preserving unrelated host configuration. Writes are atomic. Prime translation remains
-available through `sync-to-prime.py`, but it also requires `--server` or
-`--profile`.
+selections, not always-on policy.
+
+### Managed ownership and migration
+
+- `--profile NAME` replaces the previously managed set with that profile.
+  `--profile minimal --apply` removes all unchanged managed entries; unmanaged
+  servers remain, so it does not promise an empty host configuration.
+- `--server NAME` adds or updates one entry without removing other managed entries.
+  `--deactivate` removes only selected entries whose fingerprints still match;
+  `--profile minimal --deactivate` also removes the whole managed set.
+- Same-name unmanaged entries conflict even when identical to the registry.
+  Inspect before using `--replace-unmanaged` to replace and adopt the selected
+  entries. This flag cannot authorize unmanaged deletion with `--deactivate`.
+- Modified managed entries become unmanaged: preserve them when switching away,
+  or report a conflict when selecting them again. Missing entries lose ownership.
+- Configs created by older versions have no ownership evidence. Do not infer it
+  from names. Adopt selected entries explicitly only after reviewing their values.
+  Replaced unmanaged values are not restored by `minimal`; recovery uses the backup.
+
+For target `settings.json`, the adjacent
+`settings.json.universal-template-mcp.json` sidecar stores the target path and
+per-entry SHA-256 fingerprints, not config values. Keep it with the target;
+a missing sidecar makes all existing entries unmanaged. A malformed or foreign
+sidecar blocks mutation rather than guessing ownership.
+
+### Write safety and recovery
+
+Preview is the default and writes nothing, including sidecars or directories.
+`--apply` preserves unrelated JSON values, but may reformat the file. Before the
+first change to an existing target, it saves the exact bytes as
+`settings.json.before-universal-template-mcp`; an existing backup is never replaced.
+New configs, backups, sidecars, and locks are private (mode `0600` on POSIX);
+existing config permissions are preserved. Final-component symlinks are rejected.
+
+Each file write uses a same-directory temporary file, flush, atomic replacement,
+and read-back validation. The config and sidecar are not jointly atomic: a pending
+journal records before/after config digests and ownership. On retry, a matching
+before or after digest selects the correct ownership state; any other state blocks
+mutation for manual inspection. Do not delete the journal to bypass this check.
+
+An exclusive `settings.json.universal-template-mcp.lock` serializes this helper's
+writers. After an abrupt process exit, inspect its recorded PID and remove the
+lock only after confirming no writer remains, then preview again. Stop concurrent
+host/editor writes while applying; the helper detects changes at transaction
+boundaries but cannot lock unrelated applications. Inspect target, backup, and
+sidecar together before manual recovery. Restoring a backup is a separate,
+user-authorized action; never restore it over later unrelated edits blindly.
+
+Prime translation remains available through `sync-to-prime.py`, which delegates
+the same ownership rules and requires `--server` or `--profile`. All tests run in
+temporary directories via `python3 mcp/configure.py --selftest`; no live host config
+is changed.
 
 Measured tool-contract costs and the 81,429-byte all-versus-minimal reduction
 are recorded in `../docs/context-surfaces.md` and
@@ -80,8 +130,9 @@ are recorded in `../docs/context-surfaces.md` and
 | OpenCode | `~/.config/opencode/opencode.json` | `mcp.<name>` (`type: local\|remote`, `enabled`) |
 | DSH web profile | `~/.dsh/cordis.patch.yml` | `@monotykamary/dsh-mcp-client` inserts (codebase-memory, openviking, context7, deepwiki, exa, mcp-steroid) |
 
-Wire the requested server into the target CLI config by merging its block from
-the canonical registry; merge, don't overwrite, and never touch unrequested servers.
+Wire the requested selection using the host’s verified format; preserve unrelated
+settings and unmanaged servers. `configure.py` supports JSON `mcpServers` shapes
+(generic or Prime), not the other host-specific formats listed above.
 
 When unsure whether a CLI accepts a server scheme, skip that CLI (do not
 write anything); report it as "not wired (unsupported)".
