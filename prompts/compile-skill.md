@@ -27,18 +27,29 @@ explicit promotion request, not an automatic end-of-session ritual.
 When a skill qualifies:
 
 - Follow `skills/writing-skills/SKILL.md` and the canonical skill template.
-- Write the smallest procedure that changes behavior.
+- State the lift hypothesis: what repeated error, rediscovery, or unnecessary work
+  should disappear, and which decisions remain with the model. Write the smallest
+  candidate that supplies that missing capability, not a universal workflow.
 - Include no raw transcript, source dump, secret, credential, client identifier,
   or current repository inventory.
 - Create it as an operational hidden/manual candidate with
   `disable-model-invocation: true`; never mark a procedure `kind: foundation`.
-- Do not make it model-visible without an explicit request and successful
-  trigger/collision testing.
+- Do not make it model-visible without an explicit request, evidence of distinct
+  task lift and recurring need, and reliable trigger selection. Legitimate overlap
+  needs explicit precedence or one small router, not artificial exclusivity.
 - Preserve compact evidence provenance outside the operational instructions
   only when it materially supports future review.
-- Run the exact skill validator and generated-catalog parity check. Review prose
-  and semantic quality using current writing guidance. Run affected behavior
-  tests when the skill changes behavior.
+- Select evidence proportional to the skill type using the authoring guidance.
+  For hot promotion, material load-bearing changes, overlap, or costly loaders,
+  compare representative work with and without the candidate: quality, errors,
+  turns, calls, loaded context, and side effects. Do not require behavioral A/B
+  testing for a simple reference or equate obedience with improvement.
+- Select verification for the destination using `writing-skills`: universal-template
+  publication commands apply only to changes in that checkout, not arbitrary
+  external projects. Use an external project’s own checks or report publication
+  checks as not applicable. Review prose and semantic quality using current writing
+  guidance. Report unmeasured lift honestly; structural validity alone does not
+  establish usefulness.
 
 Outside the universal-template repository, draft in the conversation unless the
 user supplies an explicit destination.
@@ -50,6 +61,7 @@ user supplies an explicit destination.
     Material routed to code or gates:
     Skill created or changed:
     Visibility:
+    Lift hypothesis and evidence (or unmeasured):
     Verification:
     Material deliberately omitted:
 
