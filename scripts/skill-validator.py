@@ -8,13 +8,19 @@ import re
 import subprocess
 import sys
 import tempfile
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
+from urllib.parse import unquote, urlsplit
 from typing import Any
 
 try:
     import yaml
 except ImportError:  # CI and contributor setup install the pinned dependency.
     yaml = None
+
+try:
+    from markdown_it import MarkdownIt
+except ImportError:
+    MarkdownIt = None
 
 BASE = Path(__file__).resolve().parents[1]
 SKILLS = Path(os.environ.get("SKILLS_ROOT", str(BASE / "skills")))
@@ -150,6 +156,51 @@ def referenced_files(skill: Path, text: str) -> list[str]:
     return errors
 
 
+def markdown_link_errors(source: Path, text: str, boundary: Path) -> list[str]:
+    """Check rendered CommonMark links/images, not code examples or HTML."""
+    if MarkdownIt is None:
+        return [f"{source}: markdown-it-py is required for local Markdown links"]
+    if text.startswith("---\n"):
+        closing = re.search(r"^---[ \t]*$", text[4:], re.MULTILINE)
+        if closing is not None:
+            text = text[4 + closing.end():]
+    destinations = set()
+    for token in MarkdownIt("commonmark").parse(text):
+        for child in token.children or []:
+            attribute = {"link_open": "href", "image": "src"}.get(child.type)
+            if attribute:
+                destination = child.attrGet(attribute)
+                if destination:
+                    destinations.add(destination)
+    errors = []
+    boundary = boundary.resolve()
+    for destination in sorted(destinations):
+        try:
+            parsed = urlsplit(destination)
+            if parsed.scheme.lower() == "file":
+                errors.append(f"{source}: absolute Markdown target not allowed: {destination}")
+                continue
+            if parsed.netloc:
+                continue  # Protocol-relative external URL, not a filesystem UNC path.
+            if PureWindowsPath(destination).drive:
+                errors.append(f"{source}: absolute Markdown target not allowed: {destination}")
+                continue
+            if parsed.scheme or not parsed.path:
+                continue  # External URI, network URL, or same-document fragment/query.
+            relative = unquote(parsed.path)
+            if Path(relative).is_absolute() or PureWindowsPath(relative).drive:
+                errors.append(f"{source}: absolute Markdown target not allowed: {destination}")
+                continue
+            target = (source.parent / relative).resolve()
+            if not target.is_relative_to(boundary):
+                errors.append(f"{source}: Markdown target escapes permitted root: {destination}")
+            elif not target.is_file():
+                errors.append(f"{source}: Markdown target missing or not a file: {destination}")
+        except (OSError, ValueError, RuntimeError) as exc:
+            errors.append(f"{source}: invalid Markdown target {destination!r}: {exc}")
+    return errors
+
+
 def validate_foundation_index(skill: Path) -> list[str]:
     references = skill.parent / "references"
     index = references / "index.md"
@@ -163,7 +214,9 @@ def validate_foundation_index(skill: Path) -> list[str]:
     return errors
 
 
-def validate_skill(skill: Path, require_invocation: bool = True) -> tuple[str | None, list[str]]:
+def validate_skill(
+    skill: Path, require_invocation: bool = True, link_root: Path | None = None,
+) -> tuple[str | None, list[str]]:
     try:
         text = skill.read_text(encoding="utf-8")
     except OSError as exc:
@@ -209,10 +262,14 @@ def validate_skill(skill: Path, require_invocation: bool = True) -> tuple[str | 
                 errors.append(f"{skill}: foundations must disable model invocation")
             errors.extend(validate_foundation_index(skill))
     errors.extend(referenced_files(skill, text))
+    errors.extend(markdown_link_errors(skill, text, link_root or skill.parent))
     return name, errors
 
 
-def validate_tree(root: Path, require_invocation: bool = True, ignored: set[str] | None = None) -> list[str]:
+def validate_tree(
+    root: Path, require_invocation: bool = True, ignored: set[str] | None = None,
+    link_root: Path | None = None,
+) -> list[str]:
     errors: list[str] = []
     seen: set[str] = set()
     if not root.is_dir():
@@ -231,7 +288,7 @@ def validate_tree(root: Path, require_invocation: bool = True, ignored: set[str]
         if not skill.is_file():
             errors.append(f"{directory}: SKILL.md missing")
             continue
-        name, skill_errors = validate_skill(skill, require_invocation)
+        name, skill_errors = validate_skill(skill, require_invocation, link_root or root)
         errors.extend(skill_errors)
         if name in seen:
             errors.append(f"{skill}: duplicate skill name: {name}")
@@ -259,6 +316,56 @@ def selftest() -> int:
         if validate_tree(root):
             print("selftest: valid foundation rejected", file=sys.stderr)
             return 1
+        (valid / "LOGIC.md").write_text("# Logic\n", encoding="utf-8")
+        (valid / "space name.md").write_text("# Space\n", encoding="utf-8")
+        (valid / "paren(one).md").write_text("# Parens\n", encoding="utf-8")
+        (root / "shared.md").write_text("# Shared\n", encoding="utf-8")
+        outside = Path(temp) / "outside.md"
+        outside.write_text("outside the permitted skill collection\n", encoding="utf-8")
+        (valid / "escape.md").symlink_to(outside)
+        link_cases = [
+            ("[logic](LOGIC.md#section)", False),
+            ("[shared](../shared.md)", False),
+            ("[space](<space name.md>)", False),
+            ("[space](space%20name.md?raw=1#section)", False),
+            ("[paren](paren(one).md)", False),
+            ("[ref][logic]\n\n[logic]: LOGIC.md", False),
+            ("[site](https://example.com/missing.md) [mail](mailto:a@example.com)", False),
+            ("[anchor](#missing-heading)", False),
+            ("[network](//example.com/missing.md)", False),
+            # markdown-it-py declines file:/javascript: as links and parses them
+            # as literal text; no destination is emitted. These pin that behavior:
+            # if the parser changes, the explicit file: rejection in
+            # markdown_link_errors turns them into failures.
+            ("[file-uri](file:///etc/passwd)", False),
+            ("[file-host](file://host/etc/passwd)", False),
+            ("[windows](C:/outside.md)", True),
+            ("[nul](%00.md)", True),
+            ("`[example](missing.md)`\n\n```md\n[x](missing.md)\n```", False),
+            ("[missing](missing.md)", True),
+            ("![image](missing.png)", True),
+            ("[escape](../../outside.md)", True),
+            ("[encoded](%2e%2e/%2e%2e/outside.md)", True),
+            ("[absolute](/etc/passwd)", True),
+            ("[symlink](escape.md)", True),
+        ]
+        for markdown, should_fail in link_cases:
+            errors = markdown_link_errors(valid / "SKILL.md", markdown, root)
+            if bool(errors) != should_fail:
+                print(f"selftest: Markdown link {markdown!r}: {errors}", file=sys.stderr)
+                return 1
+        (valid / "SKILL.md").write_text(valid_text + "\n[broken](missing.md)\n", encoding="utf-8")
+        errors = validate_tree(root)
+        if not any("Markdown target missing" in error for error in errors):
+            print("selftest: local Markdown check is not integrated into tree validation", file=sys.stderr)
+            return 1
+        metadata_example = valid_text.replace("description: cold evidence",
+                                              'description: "[example](missing.md)"')
+        (valid / "SKILL.md").write_text(metadata_example, encoding="utf-8")
+        if validate_tree(root):
+            print("selftest: frontmatter parsed as Markdown body", file=sys.stderr)
+            return 1
+        (valid / "SKILL.md").write_text(valid_text, encoding="utf-8")
         typed = parse_frontmatter(
             "---\nname: 'quoted-name'\ndescription: |\n"
             "  first line\n  second line\n"
@@ -325,11 +432,16 @@ def selftest() -> int:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--selftest", action="store_true")
+    parser.add_argument("--link-root", type=Path, help="explicit permitted root for local Markdown targets")
     args = parser.parse_args()
     if args.selftest:
         return selftest()
     ignored = git_ignored_dirs(SKILLS) if SKILLS == BASE / "skills" else set()
-    errors = validate_tree(SKILLS, True, ignored)
+    if MarkdownIt is None:
+        print("FAIL  markdown-it-py is required; install requirements-dev.txt")
+        return 1
+    link_root = args.link_root or (BASE if SKILLS.resolve() == (BASE / "skills").resolve() else SKILLS)
+    errors = validate_tree(SKILLS, True, ignored, link_root)
     if SKILLS == BASE / "skills" and (LEGACY_FOUNDATIONS.exists() or LEGACY_FOUNDATIONS.is_symlink()):
         errors.append("retired foundation directory must not exist (including symlinks)")
     for error in errors:

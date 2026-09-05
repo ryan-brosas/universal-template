@@ -49,6 +49,30 @@ has no canonical per-skill runtime telemetry. It does not activate MCP, infer a
 profile from prose, or treat absent observations as zero usage. Pair this inventory
 with a scoped host probe or representative task comparison before claiming lift.
 
+## Local Markdown links
+
+`skill-validator.py` checks CommonMark inline/reference-style links and image
+paths in each `SKILL.md` body, using the pinned `markdown-it-py` dependency in
+`requirements-dev.txt`. It ignores fenced/inline code examples, frontmatter,
+external URLs, and same-document fragments. It strips query/fragment components,
+decodes URL escapes, and requires local targets to be files inside the permitted
+root after symlink resolution. Absolute filesystem targets and path escapes fail.
+It does not validate fragment headings, raw HTML links, or fetch remote content.
+Unsafe schemes (`file:`, `javascript:`) are not emitted as links by the parser,
+so their destinations are literal text rather than validated targets; an explicit
+`file:` rejection guards against parser-behavior changes and the self-test pins
+that boundary.
+
+For this checkout the default permitted root is the repository. With an external
+`SKILLS_ROOT`, it defaults to that skill collection; use `--link-root <project>`
+when sibling project documents are deliberately allowed. Existing backticked
+`references/...` checks retain their narrower per-skill boundary.
+
+This is a loader-link gate, not a recursive audit of every linked document or
+archived source capsule. The separate foundation-index inventory check remains in
+place. Run `python3 scripts/skill-validator.py --selftest` for syntax, missing-file,
+code-example, encoded-path, and symlink-boundary regression fixtures.
+
 ## Retired
 
 - `policy-consistency.py`: interpreted natural-language policy with expanding

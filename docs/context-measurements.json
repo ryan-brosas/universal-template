@@ -75,5 +75,46 @@
     "mcp-steroid": {"tools": 8, "input_schema_bytes": 8889, "description_bytes": 37039, "total_contract_bytes": 45928},
     "all_declared_total_contract_bytes": 81429,
     "minimal_profile_total_contract_bytes": 0
+  },
+  "historical_probe_provenance": {
+    "status": "unresolved",
+    "measured_tree_sha": null,
+    "sanitized_request_sha256": null,
+    "limitation": "The recorded historical PR snapshot has no exact tree identifier or sanitized request digest. Its source/request binding has not been recovered; do not attribute these runtime measurements to the later static snapshot."
+  },
+  "static_snapshot": {
+    "measured_commit": "184590233fed12e0413ace13704e4e9f1bd4e51e",
+    "measured_tree_sha": "d4b94b5201d670fdc24d7d65b3290424f36a9534",
+    "observed_checkout_commit": "673eb938e3a450452a225e7519ad8d5e815418f2",
+    "observed_at": "2026-09-05T03:04:22Z",
+    "command": "SKILLS_ROOT=\"$PWD/skills\" python3 scripts/skill-catalog.py context --json",
+    "scope": "Tracked repository static context only. The clean observed checkout and published commit have identical Git trees. No host payload or MCP schema capture was performed.",
+    "result": {
+      "global_instructions": {
+        "path": "AGENTS.md",
+        "chars": 2824,
+        "tokens_approx": 706,
+        "max_chars": 3000
+      },
+      "hot": {
+        "skills": 29,
+        "metadata_chars": 7674,
+        "tokens_approx": 1918,
+        "max_skills": 40,
+        "max_metadata_chars": 11000
+      },
+      "combined": {
+        "chars": 10498,
+        "tokens_approx": 2624,
+        "max_chars": 14000
+      },
+      "cold": {
+        "operational": 125,
+        "foundations": 194
+      },
+      "overlap": [],
+      "token_estimate_divisor": 4,
+      "failures": []
+    }
   }
 }
