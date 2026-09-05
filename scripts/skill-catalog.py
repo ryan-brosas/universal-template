@@ -256,8 +256,7 @@ def _md_row(s: dict) -> str:
     if len(desc) > DESC_TRUNC:
         desc = desc[:DESC_TRUNC - 1].rstrip() + "..."
     desc = desc.replace("|", "\\|")
-    vis = "hidden" if s["hidden"] else "visible"
-    return f"| [`{s['name']}`](../skills/{s['folder']}/SKILL.md) | {s['cls'] or 'unclassified'} | {vis} | {desc} |"
+    return f"| [`{s['name']}`](../skills/{s['folder']}/SKILL.md) | {s['cls'] or 'unclassified'} | {s['surface']} | {desc} |"
 
 
 def _split_md_row(row: str) -> list[str]:
@@ -325,7 +324,7 @@ def build_skill_catalog_md(skills: list[dict]) -> str:
         rows = [s for s in skills if s["cls"] == key]
         if not rows:
             continue
-        table = ["| Skill | Class | Visible | Description |", "|---|---|---|---|"] + [_md_row(s) for s in rows]
+        table = ["| Skill | Class | Surface | Description |", "|---|---|---|---|"] + [_md_row(s) for s in rows]
         lines += [f"## {title}", "", blurb, ""] + _align_md_table(table) + [""]
     unclassified = [s["name"] for s in skills if s["cls"] is None]
     if unclassified:
@@ -416,6 +415,13 @@ def cmd_search(skills: list[dict], args) -> int:
     return 0
 
 
+def host_visibility(skill: dict) -> str:
+    """Host-managed visibility; vendor skills are owned by their integration."""
+    if skill["cls"] == "vendor":
+        return "owning integration"
+    return "visible" if not skill["hidden"] else "hidden"
+
+
 def cmd_show(skills: list[dict], args) -> int:
     sk = next((s for s in skills if s["name"] == args.name or s["folder"] == args.name), None)
     if sk is None:
@@ -426,7 +432,9 @@ def cmd_show(skills: list[dict], args) -> int:
         "description": sk["desc"],
         "kind": sk["kind"],
         "class": sk["cls"],
-        "model_visible": not sk["hidden"],
+        "invocation_owner": sk["cls"],
+        "host_visibility": host_visibility(sk),
+        "generic_surface": sk["surface"],
         "path": sk["path"],
         "references": sk["refs"],
         "related": related(skills, sk["name"]),
@@ -434,11 +442,12 @@ def cmd_show(skills: list[dict], args) -> int:
     if args.json:
         print(json.dumps(payload, indent=2))
         return 0
-    print(f"name:          {payload['name']}")
-    print(f"kind:          {payload['kind']}")
-    print(f"class:         {payload['class']}")
-    print(f"model-visible: {'yes' if payload['model_visible'] else 'no (hidden)'}")
-    print(f"path:          {payload['path']}")
+    print(f"name:             {payload['name']}")
+    print(f"kind:             {payload['kind']}")
+    print(f"invocation-owner: {payload['invocation_owner']}")
+    print(f"host-visibility:  {payload['host_visibility']}")
+    print(f"generic-surface:  {payload['generic_surface']}")
+    print(f"path:             {payload['path']}")
     if payload["references"]:
         print(f"references:    {', '.join(payload['references'])}")
     if payload["related"]:
@@ -446,8 +455,8 @@ def cmd_show(skills: list[dict], args) -> int:
     print(f"description:   {payload['description']}")
     if payload["kind"] == FOUNDATION_KIND:
         print(f"(cold foundation: {FOUNDATION_DISCOVERY_HINT})")
-    elif not payload["model_visible"]:
-        print("(hidden skills are not in startup metadata; host discovery finds them on demand)")
+    elif payload["generic_surface"] == "cold":
+        print("(cold: not in startup metadata; explicit requests, prompts, project instructions, or host discovery select it)")
     return 0
 
 
@@ -597,8 +606,10 @@ def context_report(
         "overlap": surfaces["overlap"],
         "token_estimate_divisor": divisor,
         "failures": [],
+        "warnings": [],
     }
     failures = result["failures"]
+    warnings = result["warnings"]
     if result["overlap"]:
         failures.append("hot/cold overlap: " + ", ".join(result["overlap"]))
     if instruction_chars > result["global_instructions"]["max_chars"]:
@@ -607,8 +618,9 @@ def context_report(
             f"{instruction_chars} exceed {result['global_instructions']['max_chars']}"
         )
     if result["hot"]["skills"] > result["hot"]["max_skills"]:
-        failures.append(
+        warnings.append(
             f"hot skills {result['hot']['skills']} exceed {result['hot']['max_skills']}"
+            " (advisory review threshold, not a publication failure)"
         )
     if result["hot"]["metadata_chars"] > result["hot"]["max_metadata_chars"]:
         failures.append(
@@ -658,6 +670,8 @@ def cmd_context(skills: list[dict], args) -> int:
             f"{cold['foundations']} foundations"
         )
         print(f"overlap: {len(result['overlap'])}")
+        for warning in result["warnings"]:
+            print(f"WARN  {warning}")
         for failure in result["failures"]:
             print(f"FAIL  {failure}")
     return 1 if result["failures"] else 0
@@ -780,6 +794,13 @@ def cmd_selftest(skills: list[dict], _args) -> int:
             return 1
         if not any(item.startswith("combined") for item in failures):
             print("selftest: combined context budget failure missing", file=sys.stderr)
+            return 1
+        loaded_budget["global_instructions"]["max_chars"] = 5
+        loaded_budget["combined"]["max_chars"] = 11
+        loaded_budget["hot"]["max_skills"] = 0
+        advisory = context_report(tracked_fixture, loaded_budget, instruction_path)
+        if advisory["failures"] or not advisory["warnings"]:
+            print("selftest: hot skill count is not advisory", file=sys.stderr)
             return 1
     with tempfile.TemporaryDirectory(prefix="invocation-cost-") as raw:
         root = Path(raw) / "sample"
