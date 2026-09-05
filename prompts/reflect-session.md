@@ -62,6 +62,9 @@ Present each candidate in this form:
 - Treat this output as disposable until the user deliberately promotes part of
   it.
 
+If the user later explicitly requests promotion, the installed `leverage-capture` skill
+owns representation choice. Do not invoke capture as part of this read-only reflection.
+
 Focus:
 
 $ARGUMENTS

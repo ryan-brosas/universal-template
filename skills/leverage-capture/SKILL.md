@@ -1,7 +1,8 @@
 ---
 name: leverage-capture
-description: "Use when work has finished and something may be worth preserving: classify it into code, references, foundations, gates, skills, project notes, or nothing, and capture only that in the cheapest form."
-invocation: entry
+description: "Use when capture is explicitly requested, a hard procedure recurs, or an expensive failure or milestone yields a concrete reusable candidate; classify it into code, references, foundations, gates, skills, project notes, or nothing."
+invocation: manual
+disable-model-invocation: true
 ---
 
 # Capture Reusable Value
@@ -74,4 +75,4 @@ Each survivor exists in its claimed form (code compiles/used; gate fails on the 
 - `../writing-skills/SKILL.md`, skill authoring grammar
 - `../writing-skills/references/foundation-kind.md`, foundation/procedure boundary
 - `../reference-driven-development/references/contract.md`, reference-checkout rules
-- `../goal-setup/SKILL.md`, where qualified long-run post-code work state may live
+- `../goal-setup/SKILL.md`, where earned recovery or handoff state may live

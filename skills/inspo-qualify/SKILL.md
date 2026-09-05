@@ -1,7 +1,8 @@
 ---
 name: inspo-qualify
 description: "Use when an active project needs external GitHub prior art: discover or assess one candidate, then clone and full-index it in Codebase Memory only after explicit approval."
-invocation: entry
+invocation: manual
+disable-model-invocation: true
 ---
 
 # Inspiration Qualification
