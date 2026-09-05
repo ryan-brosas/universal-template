@@ -987,6 +987,18 @@ def fixture_test() -> int:
         require("draft/SKILL.md" in local.stderr and "ignored/SKILL.md" in local.stderr, "draft diagnostics missing")
         run("selftest")
         tracked = root / "skills/demo/SKILL.md"
+        marker = "sensitive-" + "catalog-canary"
+        for source in (f"description: [{marker}\n", f"{marker}: a\n{marker}: b\n"):
+            tracked.write_text("---\n" + source + "---\n", encoding="utf-8")
+            for args, expected in (
+                (("list", "--json"), 0),
+                (("list", "--tracked-only", "--json"), 1),
+                (("context",), 1),
+                (("generate", "--check"), 1),
+            ):
+                result = run(*args, expected=expected)
+                require(marker not in result.stdout + result.stderr, "diagnostic echoed input")
+                require("invalid YAML" in result.stderr, "missing safe YAML diagnostic")
         tracked.write_text("invalid uncommitted edit\n", encoding="utf-8")
         for args in (("list", "--tracked-only", "--json"), ("context",), ("generate", "--check")):
             require("demo/SKILL.md" in run(*args, expected=1).stderr, "invalid working-tree edit not diagnosed")

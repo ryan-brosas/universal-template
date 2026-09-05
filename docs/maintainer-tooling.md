@@ -9,7 +9,7 @@ behavior earns the dependency.
 
 | Script | Class | Exact responsibility |
 | --- | --- | --- |
-| `skill-validator.py` | REQUIRED HARD CONTRACT | Strict YAML frontmatter, known-field types, invocation/visibility/kind invariants, name/directory identity, uniqueness, no legacy/symlink foundation tree, and complete referenced-file inventories. |
+| `skill-validator.py` | REQUIRED HARD CONTRACT | Strict YAML frontmatter with input-free diagnostics, known-field types, invocation/visibility/kind invariants, name/directory identity, uniqueness, no legacy/symlink foundation tree, and complete referenced-file inventories. |
 | `repo-hygiene.py` | REQUIRED HARD CONTRACT | Git-tracked publication paths, required files, whitespace, structured parsing, file-size bounds, vendor/session exclusions, portable paths, and credential patterns. |
 | `web-reference-manifest.py` | REQUIRED HARD CONTRACT | Manifest types and enums, contained paths, referenced files, capture identifiers, timestamps, and credential patterns. |
 | `pr-metadata.py` | REQUIRED HARD CONTRACT | The PR-title grammar consumed by label and release automation. |

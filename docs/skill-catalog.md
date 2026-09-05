@@ -7,7 +7,7 @@ Models discover skills from the filesystem or the host's native skill surface.
 Only visible locally owned entry metadata is hot.
 Internal, manual, vendor, and foundation capabilities are cold.
 
-154 skills: 28 hot, 126 cold. Hot startup metadata: ~7110 chars (~1777 tokens).
+154 skills: 28 hot, 126 cold. Hot startup metadata: ~7135 chars (~1783 tokens).
 
 ## Entry skills
 
@@ -41,7 +41,7 @@ Hot direct user-facing capabilities; trigger on request.
 | [`reference-driven-development`](../skills/reference-driven-development/SKILL.md)           | entry | hot     | Use when outside prior art reduces uncertainty: adapting a reference repo, porting a pattern, or when a relevant project-local reference/<repo>/ or reference/w... |
 | [`security-and-hardening`](../skills/security-and-hardening/SKILL.md)                       | entry | hot     | Use when auditing for security vulnerabilities, implementing auth or authz, handling secrets, or hardening against OWASP Top 10 - covers input validation, auth... |
 | [`ship-pr`](../skills/ship-pr/SKILL.md)                                                     | entry | hot     | Use when the user wants a change shipped autonomously end to end: commit, push, open the PR, watch CI, triage and address bot/human review comments in-thread,...  |
-| [`skill-catalog`](../skills/skill-catalog/SKILL.md)                                         | entry | hot     | Use when finding a skill, or when a specialized tool, platform, or delivery task has no clear hot owner; search the cold catalog before inventing a replacement... |
+| [`skill-catalog`](../skills/skill-catalog/SKILL.md)                                         | entry | hot     | Use when useful expertise is missing from the visible skills, a task could benefit from a source-specific foundation, or the user asks what capabilities exist.... |
 | [`test-generation`](../skills/test-generation/SKILL.md)                                     | entry | hot     | Use when writing, expanding, or auditing tests, converting exact recurring failures into gates, or deciding what to test. Catch-first method: prove a test can...  |
 
 ## Internal
@@ -59,16 +59,16 @@ Cold: invoked by another capability and hidden from startup metadata.
 | [`documentation-and-adrs`](../skills/documentation-and-adrs/SKILL.md)       | internal | cold    | Use when writing technical documentation, Architecture Decision Records (ADRs), API docs, or project READMEs, covers documentation structure, ADR format, and k... |
 | [`evidence-router`](../skills/evidence-router/SKILL.md)                     | internal | cold    | Use when choosing an unfamiliar external evidence source and project source or references are insufficient - cold capability map for MCPs, references, and web.    |
 | [`execution-router`](../skills/execution-router/SKILL.md)                   | internal | cold    | Use when Main alone is insufficient and child, parallel, RLM, actor, or alternate-model execution is already justified - cold escalation reference.                |
-| [`fabric-native-execution`](../skills/fabric-native-execution/SKILL.md)     | internal | cold    | Use when working inside Pi Fabric: core fabric_exec execution first, native providers (memory, state, compact) as helpers, and deliberate escalation to agents/... |
+| [`fabric-native-execution`](../skills/fabric-native-execution/SKILL.md)     | internal | cold    | Use when choosing an optional Pi Fabric execution capability or recovering from stale Fabric guidance; installed host schemas and package skills own the API.      |
 | [`fallow`](../skills/fallow/SKILL.md)                                       | internal | cold    | Use when analyzing code quality, finding dead code, detecting duplication, assessing complexity, checking blast radius, or cleaning up a TS or JS codebase with... |
 | [`grill-with-docs`](../skills/grill-with-docs/SKILL.md)                     | internal | cold    | Use when user wants to stress-test a plan against their project's language and documented decisions.                                                               |
 | [`model-resolution`](../skills/model-resolution/SKILL.md)                   | internal | cold    | Use when a task or delegated lane needs a concrete model or backend; inspect live availability, choose the smallest sufficient option, probe uncertainty, and e... |
 | [`opensrc`](../skills/opensrc/SKILL.md)                                     | internal | cold    | Use when you need to understand how a library works internally, debug dependency issues, or inspect package source beyond types and docs - fetches source for n... |
 | [`performance-optimization`](../skills/performance-optimization/SKILL.md)   | internal | cold    | Use when profiling, optimizing, or adding performance budgets to applications, covers measure-first workflow, Core Web Vitals, common anti-patterns, and perfor... |
-| [`practices-to-ci`](../skills/practices-to-ci/SKILL.md)                     | internal | cold    | Use when a repo has code practices/discipline that should be enforced automatically, turn them into mechanical CI checks instead of relying on prompting or pro... |
+| [`practices-to-ci`](../skills/practices-to-ci/SKILL.md)                     | internal | cold    | Use when a recurring, objective failure may deserve an automated check; reuse existing project gates before adding a custom validator or CI step.                  |
 | [`quality-gate-methodology`](../skills/quality-gate-methodology/SKILL.md)   | internal | cold    | Use when an internal caller asks for the legacy quality-gate methodology name; compatibility route to the canonical test-generation procedure.                     |
 | [`root-cause-tracing`](../skills/root-cause-tracing/SKILL.md)               | internal | cold    | Use when errors occur deep in execution and you need to trace back to the original trigger - trace bugs backward through the call stack, adding instrumentation... |
-| [`source-driven-development`](../skills/source-driven-development/SKILL.md) | internal | cold    | Use when shipping code that depends on unfamiliar libraries, external APIs, or framework behavior: cite the authoritative source or mark the decision unverifie... |
+| [`source-driven-development`](../skills/source-driven-development/SKILL.md) | internal | cold    | Use when an implementation depends on unfamiliar library, API, or framework behavior; verify the relevant version and behavioral claim from authoritative evide... |
 | [`test-driven-development`](../skills/test-driven-development/SKILL.md)     | internal | cold    | Use when implementing a behavior change or fixing a reproducible defect - demonstrate the failure first (RED), fix, verify GREEN; for non-reproducible issues,...  |
 | [`testing-anti-patterns`](../skills/testing-anti-patterns/SKILL.md)         | internal | cold    | Use when writing or changing tests, adding mocks, or tempted to add test-only methods to production code - prevents testing mock behavior, production pollution... |
 | [`veda-lane`](../skills/veda-lane/SKILL.md)                                 | internal | cold    | Use when a task justifies a Veda lane (navigator-plan, reviewer, worker, or deep thinking), probe availability at runtime, discover models with veda models, de... |

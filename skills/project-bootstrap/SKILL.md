@@ -4,76 +4,43 @@ description: "Use when entering a new or unfamiliar repository, initializing a g
 invocation: entry
 ---
 
-# Project Bootstrap
+# Enter a project
 
-Teach the agent how to enter the project, not document the universe. Default to
-read-only understanding; persist only valuable, non-obvious context. Ordinary
-work in a known repository stays in the normal development loop.
+Orient just enough to do the requested work. For an existing repository, local
+instructions, dirty state, entrypoints, manifests, tests and CI usually answer
+what it is, where to change it and how to verify. A complete inventory or an
+onboarding report is not a prerequisite for implementation. Distinguish commands
+found in source from commands actually run; do not run every build merely to
+learn the repository.
 
-## Select from repository state and user intent
+If `reference/` or `reference/web/` exists, a top-level listing can reveal useful
+prior art without ingesting it. Reach for graph tools or the cold
+`../skill-catalog/SKILL.md` discovery path only when they close a knowledge gap.
 
-### A. Onboarding (read-only default)
+## Persistent setup, when requested
 
-Answer: what is this, how does it run/test/build, where are the main seams, and
-what matters before editing? Inspect relevant instructions, README, manifests,
-lockfiles, runtime files, entrypoints, CI, dirty state, generated/vendor boundaries,
-and known traps. Use source first; graphs, history, or cold capability maps should
-close a named gap, not become mandatory exploration.
+Reconcile existing instructions rather than replacing them. Use
+`../../templates/agents.md` for non-obvious project invariants, traps and useful
+verification commands. Run a command before recommending it as a verified gate.
+A separate context file (`../../templates/project-context.md`) earns its place
+only for durable intent or decisions expensive to recover from source. Do not
+create a default host-state pack, roadmap, personal profile or manifest cache.
+Runtime state belongs to the host; personal data does not belong in project Git.
 
-If `reference/` or `reference/web/` exists, list top-level checkout/capture names
-only. Do not ingest their contents during onboarding.
+For a greenfield project, clarify only unresolved requirements, then scaffold
+with the stack's native tooling. GitHub, CI and release setup are separate scope:
 
-Return a compact **conversation summary**, not files: project/type/stack/runtime;
-run/test/build commands with executed results; key paths, boundaries, current
-state, traps, and reference asset names. An unexecuted command is not verified.
-Do not create a roadmap, architecture encyclopedia, version cache, or user profile.
+- A scratch/local project does not authorize remote setup.
+- An explicitly requested standard or production/OSS baseline can use
+  `../github-repo-setup/SKILL.md` and `../github-actions-engineering/SKILL.md`.
+  Preserve the user's choices of ownership, visibility and license.
+- Unclear product direction may benefit from `../brainstorming/SKILL.md`; a
+  durable recovery or coordination need may benefit from `../goal-setup/SKILL.md`.
+  Neither is an automatic phase.
 
-### B. Govern (persistent context requested)
+Finish the requested task, or give a short orientation if that was the task.
+Report actual checks and unresolved setup gaps without creating work records
+merely to prove onboarding happened.
 
-Inspect existing instructions before adding anything. Use
-`../../templates/agents.md` for missing, valuable local instructions: verified
-commands, non-obvious invariants, traps, and enforced conventions. Optionally
-create one 30–60-line context file from `../../templates/project-context.md` at
-`docs/project-context.md` or the native location. Record expensive-to-reconstruct
-intent and unsupported behavior, not a manifest cache. Use
-`../../templates/roadmap.md` only for an explicitly requested roadmap.
-
-Delegate requested GitHub governance to `../github-repo-setup/SKILL.md` and CI to
-`../github-actions-engineering/SKILL.md`; neither is an automatic side effect.
-
-### C. Greenfield
-
-Skip deep existing-repo detection in an empty directory. Unclear direction goes
-to `../brainstorming/SKILL.md`; clear direction goes to native stack scaffolding.
-"Start a new project" alone does not request GitHub or CI setup: report what was
-skipped. Requests for "our baseline", "standard setup", "production-ready",
-"OSS-ready", or "full setup" authorize the baseline after scaffolding: GitHub
-setup at the maturity class in
-`../github-repo-setup/references/setup-matrix.md`, then CI, then
-`../git-workflow-and-versioning/SKILL.md` only for a versioned project.
-
-Start complex/high-risk creation from user constraints too. When durable recovery
-or coordination state may be needed, explicitly load `../goal-setup/SKILL.md`;
-it owns qualification, not a duration threshold.
-
-### D. Refresh
-
-Inspect, compare, and update only stale guidance. Preserve handwritten decisions
-and intentional local instructions; never rebuild from scratch. A second run on
-a current repository reports "nothing to change".
-
-## Verify and stop
-
-If setup or refresh verification fails, do not claim completion: reopen the
-evidence, record the reproducible failure and its root cause, and load
-`../debugging-and-error-recovery/SKILL.md` before retrying or reporting.
-
-Onboarding writes no files. For persistent changes, confirm files exist, reconcile
-with prior content, and contain verified or `[NEEDS CLARIFICATION]` claims. Never
-record a failing command as a working Verify command. Refresh changes only the
-identified stale set.
-
-Do not persist machine-recoverable versions, branches, dependency lists, or dirty
-state. Do not create personal-preference files or default host artifact packs
-(such as `.pi/project.md`/`.pi/state.md`); host runtime state belongs in host
-configuration or explicitly requested project governance.
+If setup or refresh fails, diagnose the failure before retrying or claiming
+completion; `../debugging-and-error-recovery/SKILL.md` can help.
