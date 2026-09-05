@@ -4,7 +4,7 @@
 
 Cold, source-specific, revision-pinned evidence under `skills/*-foundation/`.
 This is part of the cold discoverable set and never startup context.
-Foundations are manual and hidden. Inspect the topic map; search reference filenames/headings; load 1–3 likely capsules. Use references/index.md only if discovery remains ambiguous.
+Foundations are manual and hidden. Inspect the topic map; search reference filenames/headings; load 1-3 likely capsules. Use references/index.md only if discovery remains ambiguous.
 Current source and tests outrank them.
 
 194 foundations. They are excluded from the operational skill table and startup counts.

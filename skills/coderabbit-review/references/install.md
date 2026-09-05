@@ -18,11 +18,26 @@ git -C "$checkout" checkout --detach aa49953c4cb2590e35480637b1b6a29cf4187cfa
 
 Verify that `git -C "$checkout" rev-parse HEAD` is exactly the requested commit,
 the checkout is clean, and inspect its selected `skills/code-review/SKILL.md` and
-`LICENSE` before copying. Stop on any mismatch. From the intended destination
+`LICENSE` before copying. Stop on any mismatch.
+
+Installer tested: `skills@1.5.23`, published from
+[vercel-labs/skills](https://github.com/vercel-labs/skills). The downloaded
+[package archive](https://registry.npmjs.org/skills/-/skills-1.5.23.tgz) matched:
+
+```text
+sha512-+hMNBSi35yfX0sKD+ZcRm9y5or7u313OdkcvrRvJAsAzGCaA8wRTu2OmVdN0KRbk9ybqKby5dijkn6OVvNTUmw==
+```
+
+Verify downloaded installer bytes against that integrity before first use, or
+use a locally verified copy. Do not silently substitute a newer installer or
+vendor revision; review and test an intentional update. This pin records package
+identity and tested behavior, not a comprehensive security audit.
+
+From the intended destination
 repository root, install from that verified local checkout:
 
 ```sh
-npx skills add "$checkout" --skill code-review --agent pi --copy -y
+npx --yes skills@1.5.23 add "$checkout" --skill code-review --agent pi --copy -y
 ```
 
 The inspected installer writes `.pi/skills/code-review/`. Verify the installed

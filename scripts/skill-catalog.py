@@ -39,7 +39,7 @@ CLASSES = ("entry", "internal", "manual", "vendor")
 KINDS = ("skill", "foundation")
 FOUNDATION_KIND = "foundation"
 FOUNDATION_DISCOVERY_HINT = (
-    "Inspect the topic map; search reference filenames/headings; load 1–3 likely capsules. "
+    "Inspect the topic map; search reference filenames/headings; load 1-3 likely capsules. "
     "Use references/index.md only if discovery remains ambiguous."
 )
 
