@@ -63,9 +63,10 @@ versions and payloads when those integrations change.
   host-rendered agent prompts, and this repo's policy docs: strip restrictive
   behavioral rules, and replace them with outcome contracts, binary pass/fail
   conditions, and mechanical validator commands.
-- **Fast conclusive PR loop.** Keep this repo's CI jobs (catalog gates, repo
-  hygiene, policy consistency, pr-title) fast and conclusive, with
-  machine-readable annotations and auto-fix triggers on pull requests.
+- **Fast conclusive PR loop.** Keep metadata, context, repository hygiene, prompt
+  parity, MCP configuration, security, and PR protocol checks fast and conclusive,
+  with machine-readable annotations and auto-fix triggers on pull requests.
+  Semantic consistency remains a `template-maintenance` review responsibility.
 - **Demonstrated-regression gates.** Promote deterministic regression classes
   into low-false-positive gates when correctness and maintenance value exceed
   the cost. Aesthetic preference alone is not a valid gate.

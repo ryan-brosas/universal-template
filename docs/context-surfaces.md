@@ -1,9 +1,29 @@
 # Context surfaces and host probes
 
-This document defines the context contract and records reproducible measurements.
+This document defines the context contract and records measurements and their limits.
 The JSON companion, `context-measurements.json`, is the machine-readable result.
 Measurements are version-specific evidence, not timeless host promises or exact
 tokenizer output.
+
+## Measurement provenance
+
+The original PR snapshot and Pi/MCP figures below are historical evidence. Their
+exact source tree and sanitized outbound-request digest were not recorded; that
+binding remains unresolved in `historical_probe_provenance` in the JSON companion.
+The original numbers are retained, not silently updated or assigned to a later
+commit. They do not establish an exact-tree reproduction claim.
+
+`static_snapshot` records a separate, fresh static catalog measurement with an
+exact published commit, Git tree SHA, observation time, command, and results.
+The observed clean checkout was verified to have the same tree as that published
+commit. This measures tracked instruction/metadata files only, not a Pi request,
+selected-skill invocation, or live MCP schemas. Read its values for that snapshot;
+run the catalog command below for the working tree being inspected now.
+
+A new runtime probe would need its own exact source snapshot, host version,
+configuration, and sanitized request digest before making a stronger provenance
+claim. Do not substitute a hash of this summary or the static catalog report for
+an outbound-request digest.
 
 ## Static and dynamic context
 
@@ -41,7 +61,7 @@ manual, vendor, and foundation leaves are **cold** in the generic cross-host
 surface. Vendor capabilities may still be exposed by their owning host or
 package. Untracked or Git-ignored local skills are outside publication metrics.
 
-The measured commit has 33 hot skills with 8,449 metadata characters and 120
+The historical PR snapshot reported 33 hot skills with 8,449 metadata characters and 120
 cold operational skills plus 194 foundations. `AGENTS.md` has 2,824 characters,
 so combined static context is 11,273 characters (~2,818 tokens at
 the configured four-characters-per-token estimate). The starting tree had 38
