@@ -1,12 +1,20 @@
 # Trace Calculus Grammar — ASCII Sequence Notation for Asynchronous State Machines
 
-Use this reference when authoring architectural specifications for complex distributed, concurrent, or asynchronous systems.
+Use this optional notation when an event-history/WAL model benefits from compact
+interleaving traces. Keep another notation if it already exposes the relevant
+ordering, causality, and persistence boundaries.
 
 ## The Problem
-Prose descriptions of async interleaved operations (e.g. "if the user steers while tool call 1 is running but tool call 2 has not started and abort is requested") are error-prone, ambiguous, and impossible to verify exhaustively.
+
+Dense prose can hide interleavings and crash boundaries. A trace, sequence
+diagram, state machine, or formal model can make them easier to inspect. The
+notation alone does not establish exhaustive coverage.
 
 ## The 6-Letter Trace Notation
-Every system event is classified into one of 6 primitive categories:
+
+For this event-system example, six labels describe the relevant operations.
+Extend or replace them when the model needs other events; do not treat vertical
+layout as a global clock across independent processes:
 
 ```text
 E   Entry / data node appended to shared persistent state (e.g. conversation DAG)

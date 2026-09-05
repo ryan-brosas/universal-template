@@ -7,11 +7,14 @@ disable-model-invocation: true
 
 # Angular Coding Practices
 
-Application skill for angular.dev Style Guide (2025) ingest (`awesome-guidelines`). TypeScript general: `typescript-coding-standards`. SPA compare: `vue-coding-practices`.
+Application skill for angular.dev Style Guide (2025) ingest (`awesome-guidelines`). TypeScript style: `typescript-coding-practices`; domain modeling: `typescript-coding-standards`. SPA compare: `vue-coding-practices`.
 
 ## Core Principle
 
-Angular apps stay navigable with **feature-first `src/` layout**, **kebab-case colocated files**, **`inject()` + signal inputs**, **presentation-focused components**, and **hyphenated prefixed selectors** verified by angular-eslint.
+Use the installed Angular version and project conventions. The 2025 guide offers
+feature-first layout, colocated files, injection, and signal patterns; it does not
+require an unrelated app to migrate its layout or working constructor injection.
+Treat the review prompts below as contextual checks, not automatic defects.
 
 ## When to Use / NOT
 
@@ -21,7 +24,7 @@ Angular apps stay navigable with **feature-first `src/` layout**, **kebab-case c
 
 **NOT when:**
 
-- Generic TypeScript only, `typescript-coding-standards`.
+- Generic TypeScript style only, `typescript-coding-practices`.
 - AngularJS 1.x, archived style guide.
 - Framework package contributions, Angular repo CONTRIBUTING.
 
@@ -42,7 +45,6 @@ Angular apps stay navigable with **feature-first `src/` layout**, **kebab-case c
 - Public members only used in template
 - Reassigning readonly input/model properties
 - ngClass/ngStyle for simple static class/style toggles
-- `(click)="handleClick()"` on labeled action buttons
 - Long inlined ngOnInit logic
 - Missing lifecycle interface (OnInit, etc.)
 - Selector without hyphen or using `ng-` prefix
@@ -69,6 +71,7 @@ Angular apps stay navigable with **feature-first `src/` layout**, **kebab-case c
 
 ## Related skills
 
-- `typescript-coding-standards`, Google TS baseline
+- `typescript-coding-practices`, project TS style and optional Google baseline
+- `typescript-coding-standards`, domain-modeling choices
 - `wcag-accessibility-practices`, accessible templates
 - `javascript-project-practices`, wider JS repo workflow

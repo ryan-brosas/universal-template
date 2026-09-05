@@ -1,57 +1,45 @@
 ---
 name: typescript-coding-practices
-description: "Use when authoring or reviewing TypeScript style, named ES module exports, import type, unknown over any, nullable-at-use-site, optional params over overload sprawl, readonly/parameter properties, and banned default exports/namespaces/const enum."
+description: "Use when reviewing TypeScript style, modules, imports, nullability, or compiler/linter configuration; follow project conventions and consult Google TypeScript guidance as optional source-specific practice."
 invocation: manual
 disable-model-invocation: true
 ---
 
-# TypeScript Coding Practices
+# TypeScript Style and Module Practices
 
-Application skill for TypeScript **style and module** learning (from the archived `awesome-guidelines` style capsules). For domain modeling, branded types, and schema boundaries, load `typescript-coding-standards`; for plain JS, `javascript-coding-practices`.
+For domain models, runtime validation, or failure semantics, select
+`../typescript-coding-standards/SKILL.md`. For plain JavaScript, use
+`../javascript-coding-practices/SKILL.md`. Review generated declarations through
+their source or generator instead of hand-editing them.
 
-## Core Principle
+Start with the project's TypeScript version, `tsconfig`, lint rules, framework,
+and representative files. The archived Google-style capsules below are prior art,
+not language restrictions. Apply them where adopted or where they close a named
+gap; do not migrate a project's style during an unrelated change.
 
-TypeScript maintainability is **typed modules with honest nullability**, named exports, `import type`, `unknown` at boundaries, no nullable aliases, minimal assertions.
+## Review the relevant surface
 
-## When to Use / NOT
+- **Modules:** choose imports and exports consistent with runtime resolution and
+  packaging. Named exports and `import type` can clarify intent; default exports,
+  CommonJS, or namespaces may be required by a framework or declaration format.
+- **Types:** represent actual nullability and callback behavior. Prefer narrowing
+  over unchecked assertions, but judge `any` at a compatibility boundary against
+  the alternatives rather than hiding it with a cast. Nullable aliases and
+  overloads are choices, not automatic defects.
+- **Classes:** use `readonly`, parameter properties, `#private`, or TypeScript
+  visibility according to runtime needs and project style. Check `const enum`
+  against compilation and consumer constraints rather than banning it universally.
+- **Verification:** run the project's typecheck and lint commands on the affected
+  surface. Use `tsc --noEmit` only when appropriate for its build configuration.
+  Check module output or a consuming build when resolution/export behavior changes.
 
-- `.ts`/`.tsx` source, ESLint + `tsc` setup, import/export review.
-- Callback/overload cleanup, class visibility/readonly habits.
+## Focused source references
 
-**NOT when:**
+Load only a capsule relevant to the active question. These describe the source's
+conventions; the project decides whether to adopt them.
 
-- Domain architecture, Effect/Result, schema parsing, `typescript-coding-standards`.
-- Generated `.d.ts` or bundled output, validate source instead.
-
-## Workflow
-
-1. **Modules**, named exports, `import type`, no namespaces/require, dedupe imports (`typescript-style-modules-imports.md`).
-2. **Types**, primitives lowercase, `unknown` not `any`, null at use site, optional params (`typescript-style-types-nullability.md`).
-3. **Classes**, parameter properties, `readonly`, no `#private`/`const enum`, rare `as` (`typescript-style-classes-api.md`).
-4. **Verify**, `tsc --noEmit` + eslint on changed paths (`typescript-style-verify.md`).
-5. **Domain pass**, when handling untrusted input or errors-as-data, also run `typescript-coding-standards`.
-
-## Red Flags
-
-- `export default` without documented exception
-- `export let` mutated externally
-- `namespace`, `import = require`, `/// <reference>`
-- `type Foo = Bar | null` in shared aliases
-- `catch (e: any)` or `(x: () => any)` callbacks
-- `#private` fields or `const enum` without migration note
-- Nullable alias re-exported across modules
-
-## Verification
-
-- `tsc --noEmit` exit 0 on project or changed files
-- ESLint (`@typescript-eslint/no-explicit-any`, `no-non-null-assertion`, import rules) on changed paths
-- Capsule checklist in `typescript-style-verify.md`
-
-
-## References
-
-- `awesome-guidelines/references/typescript-style-learning-note.md`
-- `awesome-guidelines/references/typescript-style-modules-imports.md`
-- `awesome-guidelines/references/typescript-style-types-nullability.md`
-- `awesome-guidelines/references/typescript-style-classes-api.md`
-- `awesome-guidelines/references/typescript-style-verify.md`
+- `../awesome-guidelines/references/typescript-style-learning-note.md`
+- `../awesome-guidelines/references/typescript-style-modules-imports.md`
+- `../awesome-guidelines/references/typescript-style-types-nullability.md`
+- `../awesome-guidelines/references/typescript-style-classes-api.md`
+- `../awesome-guidelines/references/typescript-style-verify.md`

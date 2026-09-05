@@ -1,109 +1,57 @@
 ---
 name: api-and-interface-design
-description: Use when designing REST/GraphQL APIs, SDK interfaces, or public module boundaries, covers contract-first design, versioning, error shapes, and backward compatibility
+description: "Use when designing or reviewing REST/GraphQL APIs, SDK interfaces, or public module boundaries; choose contracts, failure semantics, and compatibility from consumer needs and project conventions."
 invocation: entry
 ---
 
+# API and Interface Design
 
-# API & Interface Design
+This is the canonical API-design owner. `api-design-practices` remains a cold
+compatibility entry, not a second rule set. Internal implementation changes with
+no consumer-facing contract usually need only the normal engineering loop.
 
-## Core Principle
+## Establish the contract that matters
 
-Contract first, implementation second, the API is the contract; internal code can change freely, the contract cannot.
+1. Identify consumers, trust boundaries, deployment independence, existing
+   conventions, and promised compatibility. Distinguish public HTTP APIs,
+   internal services, GraphQL schemas, SDKs, and in-process modules.
+2. Find the canonical description already maintained: source types, a schema,
+   generated bindings, or documentation. Use schema-first when it helps multiple
+   teams or generators; code-first can be appropriate when code generates the
+   contract. Keep one owner and verify derived artifacts rather than requiring
+   a new schema or generation tool for every interface.
+3. Choose the smallest stable surface: inputs, outputs, resource ownership,
+   lifecycle, failure/retry behavior, and any ordering or concurrency promises.
+   Validate untrusted values at the responsible boundary; avoid redundant decoding
+   inside trusted code.
+4. Decide how consumers detect and recover from failures. Reuse their established
+   error protocol, including standard framework shapes. Stable machine-readable
+   distinctions matter when callers branch on them; a fixed four-field envelope,
+   correlation field, or exception/result style is not universal. Do not expose
+   secrets, internal paths, or stack traces to untrusted consumers.
+5. Assess evolution against actual clients. Versioning, deprecation, idempotency,
+   pagination, and quotas solve particular problems, not a checklist every API
+   must implement. Explain important tradeoffs and preserve promised behavior.
 
-## When to Use / NOT
+## Load only the relevant detail
 
-- **Use when:** designing REST/GraphQL APIs, SDK interfaces, or public module boundaries, contract-first design, versioning, error shapes, backward compatibility.
-- **NOT when:** N/A, no explicit exclusion stated in this skill.
+- HTTP methods, retries, errors, collections, and quotas:
+  `references/rest-contracts.md`.
+- GraphQL nullability, partial results, schema evolution, and query cost:
+  `references/graphql-contracts.md`.
+- Public modules, SDK ownership, errors, cancellation, and dependencies:
+  `references/sdk-boundaries.md`.
+- Compatibility assessment, version selection, and migration:
+  `references/compatibility.md`.
 
-## Workflow
+Azure and Google API conventions are useful prior art, not interchangeable
+universal standards. Their retained source capsules are linked from the REST
+reference; load only those relevant to the chosen contract.
 
-1. Write the schema (OpenAPI, GraphQL SDL, Protobuf, JSON Schema).
-2. Generate types from the schema (client + server).
-3. Validate at the boundary (decode unknown → typed value).
-4. Implement against the types, never raw input.
-5. Choose a versioning strategy; shape errors (code, message, details, traceId); add idempotency, pagination, and rate-limit headers.
+## Verify the consumer experience
 
-## Iron Laws
-
-<EXTREMELY-IMPORTANT>
-- **Contract first, implementation second.** The API is the contract. Internal code can change freely; the contract cannot.
-- **Version explicitly.** `/v1/`, `/v2/`, or header. Implied versions break unexpectedly.
-- **Errors are part of the contract.** Shape them as deliberately as the success response.
-- **Backward compatibility is a feature.** Breaking changes cost users; every break must justify.
-- **Document what you ship, not what you intended.** Generated docs from the schema, not hand-written.
-</EXTREMELY-IMPORTANT>
-
-## Contract-First Design
-
-1. **Write the schema** (OpenAPI, GraphQL SDL, Protobuf, JSON Schema).
-2. **Generate types** from the schema (client + server).
-3. **Validate** at the boundary (decode unknown → typed value).
-4. **Implement** against the types, not the raw input.
-
-Never let a request body reach the implementation as `any` or `unknown`. Decode first.
-
-## Versioning Strategy
-
-| Strategy | When |
-|-------------------------------------------------|---------------------------------------------------|
-| URL path (`/v1/`, `/v2/`) | Public API, multiple versions live simultaneously |
-| Header (`Accept: application/vnd.api+json;v=2`) | Internal API, more flexible |
-| Query param (`?v=2`) | Web-only, simple cases |
-| None (breaking is breaking) | Internal-only, single consumer |
-
-For public APIs, prefer URL path. It's visible, cacheable, and easy to reason about.
-
-## Error Shape
-
-```json
-{
-  "error": {
-    "code": "user_not_found",
-    "message": "User 123 not found",
-    "details": { "userId": "123" },
-    "traceId": "abc-def-ghi"
-  }
-}
-```
-
-Always: machine-readable `code` (stable, never localized), human-readable `message` (localized OK), `details` (structured context), `traceId` (correlation). Never: stack traces, internal paths, secrets.
-
-## Backward Compatibility
-
-**Add only.** Never change existing field meanings. Avoid tightening validation or removing fields. Do not rename.
-
-If you must break: new version, deprecation period, migration guide, codemod if possible.
-
-## Idempotency
-
-`PUT` should be idempotent. `POST` for creation can be made idempotent with an `Idempotency-Key` header. `DELETE` should be idempotent. The client should be able to retry safely.
-
-## Pagination
-
-Prefer **cursor-based** for feeds and large lists. Skip-relations are slow on big tables. Return a `nextCursor` and `hasMore`. Document the cursor format if you can.
-
-## Rate Limiting
-
-Return headers: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`, `Retry-After` (on 429). Make limits visible. Document them.
-
-## Common Mistakes
-
-Schema after impl (backwards); no version; generic errors; no idempotency; no pagination (returns 10k items); no rate limit headers; breaking without bump; hand-written docs; field reused for new purpose; no `traceId`; asymmetric shapes.
-
-## Red Flags
-
-`/api/` (no version); error as string; no idempotency; no pagination; no rate limit; hand-written docs; breaking in minor; field reused; no `traceId`; "schema is in the code".
-
-## Anti-Patterns
-
-**Schema after impl**; **no version**; **generic errors**; **breaking without bump**; **hand-written docs**; **no idempotency**; **no pagination**; **silent breaking**.
-
-## Verification
-
-Generated docs from the schema match what you ship; every error carries machine-readable `code`, human-readable `message`, `details`, and `traceId`; version is explicit; rate limits visible via headers; no stack traces, internal paths, or secrets in responses.
-
-
-## References
-
-N/A, no reference files; this skill is self-contained.
+Compare the exposed surface with its canonical description. Exercise representative
+success and failure paths, boundary validation, and actual consumers. Add retry,
+pagination, authorization, or compatibility tests only where that contract exists.
+Check generated outputs if generation is used. Report untested integrations and
+migration risks instead of inferring correctness from a schema alone.
