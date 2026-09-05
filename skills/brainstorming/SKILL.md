@@ -44,7 +44,7 @@ Then route:
 
 - **clear + normal** → implement directly
 - **needs runnable learning** → `prototype`
-- **roughly four-day-or-longer run with real recovery/handoff needs, or an explicit user, project, or external coordination requirement** → `goal-setup` after the first verified pass unless that requirement needs the record sooner
+- **potential durable recovery, handoff, compliance, or coordination need** → explicitly load `../goal-setup/SKILL.md` to qualify the record; duration alone is not a gate
 
 ## Question policy
 
@@ -52,7 +52,7 @@ Ask the **fewest high-value questions** required to close load-bearing uncertain
 
 ## Artifact policy
 
-Normal brainstorming: the conversation is the artifact, no `design.md`, `brainstorm.md`, or `plan.md` by default. High risk, ambiguity, or multiple sessions alone do not earn a file. Promote only a genuinely long-running or handoff-heavy effort into `goal-setup`, and only as a compact post-code work record after its first verified pass.
+Normal brainstorming: the conversation is the artifact, no `design.md`, `brainstorm.md`, or `plan.md` by default. High risk, ambiguity, or multiple sessions alone do not earn a file. If durable state may be needed, route qualification and timing to `goal-setup`; it checks whether existing sources suffice and honors explicit record requirements.
 
 ## Red Flags
 
@@ -64,9 +64,9 @@ Normal brainstorming: the conversation is the artifact, no `design.md`, `brainst
 
 ## Verification
 
-The exchange ends with a stated decision (or an explicit blocked-on-user note listing the exact missing decisions), grounded in inspected repository truth, with the next step routed. No planning files exist unless a qualified long-running or handoff need promotes verified work into `goal-setup`.
+The exchange ends with a stated decision (or an explicit blocked-on-user note listing the exact missing decisions), grounded in inspected repository truth, with the next step routed. No planning files exist unless requested or earned under `goal-setup` qualification.
 
 ## References
 
 - `../prototype/SKILL.md`, cheap runnable learning
-- `../goal-setup/SKILL.md`, qualified long-run post-code work record
+- `../goal-setup/SKILL.md`, earned recovery or coordination state

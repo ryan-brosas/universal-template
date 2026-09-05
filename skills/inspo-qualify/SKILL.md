@@ -68,11 +68,9 @@ not a broad repository sweep. Trace its entry points, data/control flow,
 invariants, failure boundaries, configuration, and direct tests. Return the
 verified model, citations, counter-evidence, and next candidate seam.
 
-When the user explicitly starts a long-running or handoff-heavy campaign,
-create one compact `docs/plans/inspo-learning-<repo>.md` coordinator before the
-clone/index action. It records the exact pin and license, named questions,
-non-goals, completion criteria, freshness policy, verified passes,
-counter-evidence, and next target. One-off qualification stays in chat.
+If the campaign needs durable recovery or coordination state, explicitly load
+`../goal-setup/SKILL.md` to qualify the record, timing, and project-native location.
+Duration alone does not create a coordinator. One-off qualification stays in chat.
 
 ## Promotion
 
@@ -84,8 +82,9 @@ repository. Never generate either automatically.
 
 ## Red Flags
 
-- Search, clone, index, or promotion without a current-project question and
-  explicit approval.
+- Discovery without a current-project question, or cloning/indexing without
+  approval for the exact candidate and commit. Read-only reuse, identity, and
+  candidate searches are part of qualification, not gated mutation.
 - Dependency installation, generated-analysis scripts, or bulk repository
   mining used as a shortcut.
 - Codebase Memory output treated as behavioral truth.
