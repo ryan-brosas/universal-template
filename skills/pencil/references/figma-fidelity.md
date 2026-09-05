@@ -58,4 +58,23 @@ Paper cannot switch Figma modes (Accent-2, Typeface-2, Dark) on one node. Docume
 
 ## Inspo
 
-When the source is a Figma file or a captured inspo frame, treat that frame as Figma: screenshot, node metrics, tokens, compare. Do not restyle it into a Paper-default kit.
+For an accessible Figma file, use the source-node and variable workflow above.
+
+For a captured visual reference without Figma nodes:
+
+1. Use the original captured image as the render specification. Record its
+   dimensions, scale, crop, and requested scope; do not invent a Figma file or
+   call `get_node` or `get_variable_defs` for an image-only source.
+2. Measure visible bounds, spacing, colors, and text from the capture. Label
+   inferred structure and uncertain font/geometry measurements. Figma variables,
+   semantic bindings, hidden states, and original node metrics are **unavailable**,
+   not absent or verified. Do not fabricate their names or values.
+3. Build editable Paper layers from that evidence. Reuse matching project tokens
+   when verified; distinguish measured paint from recovered source variables.
+   Use supplied assets where available rather than flattening the whole capture
+   into the deliverable. Report assets or detail that cannot be recovered.
+4. Capture a fresh Paper render at the same scale/crop and compare it with the
+   reference. Verify visible likeness; do not claim recovered source structure,
+   variable fidelity, or unknown states. Report remaining uncertainty explicitly.
+
+Neither route authorizes restyling the source into a Paper-default kit.

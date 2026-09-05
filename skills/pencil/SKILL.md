@@ -22,6 +22,11 @@ Numeric reference values are examples, not defaults. Independent inspections and
 mutations may be batched using verified tools; preserve real dependencies such
 as selecting the target page and creating tokens before referencing them.
 
+Select the evidence route first: the steps below use an accessible Figma source.
+For a captured image without source nodes, use the captured-reference branch in
+`references/figma-fidelity.md` instead of Figma node/variable calls. Paper page
+selection, editable-layer construction, and visual comparison still apply.
+
 1. Probe MCP (`references/mcp.md`). Paper Desktop must have the target file open. Prefer Figma screenshot + `get_node`. Official Figma `get_design_context` if authorized. Script-assisted inspection may complement, but never replace, visual evidence.
 2. Screenshot the Figma node. Keep that image beside the Paper work.
 3. **HARD-GATE: variables to the bone, then HTML.** `get_variable_defs` first (`references/tokens.md`). Every Figma variable used by the frame becomes a Paper token (path, alias, resolved value). Bound fills/spacing/type use `var(--that-token)`. Raw hex or px only when Figma has no variable on that property. Order token creation by actual dependencies, not incidental color or size sorting. A Figma paste into Paper detaches components and variables ([paste/figma](https://paper.design/docs/paste/figma)); paste is not a substitute for this step.
