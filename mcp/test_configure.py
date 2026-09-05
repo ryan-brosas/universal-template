@@ -4,6 +4,8 @@ from __future__ import annotations
 import importlib.util
 import json
 import os
+import errno
+import struct
 from pathlib import Path
 import subprocess
 import sys
@@ -123,6 +125,57 @@ class ConfigureTests(unittest.TestCase):
         self.assertFalse(configure.backup_path(self.target).exists())
         if os.name == "posix":
             self.assertEqual(self.target.stat().st_mode & 0o777, 0o600)
+
+    def test_empty_apply_does_not_create_missing_parent(self):
+        self.target = self.root / "missing" / "nested" / "settings.json"
+        self.cli("--profile", "minimal", "--apply")
+        self.assertFalse((self.root / "missing").exists())
+
+    @unittest.skipUnless(sys.platform.startswith("linux"), "Linux access metadata")
+    def test_existing_acl_is_preserved(self):
+        acl = struct.pack("<I", 2) + b"".join(
+            struct.pack("<HHI", tag, permissions, identifier)
+            for tag, permissions, identifier in [
+                (1, 6, 0xffffffff), (2, 4, 65534), (4, 4, 0xffffffff),
+                (16, 4, 0xffffffff), (32, 0, 0xffffffff),
+            ]
+        )
+        try:
+            os.setxattr(self.target, "system.posix_acl_access", acl)
+        except OSError as exc:
+            if exc.errno in (errno.ENOTSUP, errno.EOPNOTSUPP):
+                self.skipTest("filesystem does not support POSIX ACLs")
+            raise
+        self.cli("--profile", "docs", "--apply")
+        self.assertEqual(os.getxattr(self.target, "system.posix_acl_access"), acl)
+        self.cli("--profile", "minimal", "--apply")
+        self.assertEqual(os.getxattr(self.target, "system.posix_acl_access"), acl)
+
+    @unittest.skipUnless(sys.platform.startswith("linux"), "Linux access metadata")
+    def test_existing_custom_group_is_preserved(self):
+        groups = [gid for gid in os.getgroups() if gid != os.getegid()]
+        if not groups:
+            self.skipTest("no supplementary group available")
+        os.chown(self.target, -1, groups[0])
+        self.cli("--profile", "docs", "--apply")
+        self.assertEqual(self.target.stat().st_gid, groups[0])
+
+    def test_unsupported_access_metadata_fails_before_target_or_journal_write(self):
+        before = self.snapshot()
+        with mock.patch.object(configure.sys, "platform", "unsupported-platform"):
+            with self.assertRaisesRegex(ValueError, "access-metadata support"):
+                self.run_direct()
+        self.assertEqual(self.snapshot(), before)
+
+    def test_metadata_copy_failure_preserves_target(self):
+        before = self.target.read_bytes()
+        with mock.patch.object(configure, "set_access_metadata", side_effect=PermissionError("fixture denial")):
+            with self.assertRaises(PermissionError):
+                self.run_direct()
+        self.assertEqual(self.target.read_bytes(), before)
+        self.assertIn("pending", configure.load_json(configure.sidecar(self.target)))
+        self.cli("--profile", "docs", "--apply")
+        self.assertNotIn("pending", configure.load_json(configure.sidecar(self.target)))
 
     def test_noop_does_not_rewrite_files(self):
         self.cli("--profile", "docs", "--apply")

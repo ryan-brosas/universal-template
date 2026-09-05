@@ -91,11 +91,18 @@ sidecar blocks mutation rather than guessing ownership.
 ### Write safety and recovery
 
 Preview is the default and writes nothing, including sidecars or directories.
-`--apply` preserves unrelated JSON values, but may reformat the file. Before the
+An empty apply also creates nothing. Plans requiring writes are recomputed under
+the exclusive lock before mutation. `--apply` preserves unrelated JSON values,
+but may reformat the file. Before the
 first change to an existing target, it saves the exact bytes as
 `settings.json.before-universal-template-mcp`; an existing backup is never replaced.
 New configs, backups, sidecars, and locks are private (mode `0600` on POSIX);
-existing config permissions are preserved. Final-component symlinks are rejected.
+Linux config replacements preserve owner, group, mode, and extended attributes
+(including POSIX ACLs), with verification before replacement and after read-back.
+If metadata cannot be preserved, replacement fails rather than dropping access.
+Existing-file replacement on other platforms is refused because Python’s standard
+library cannot inspect their native ACLs reliably; use host-native tooling there.
+Final-component symlinks are rejected.
 
 Each file write uses a same-directory temporary file, flush, atomic replacement,
 and read-back validation. The config and sidecar are not jointly atomic: a pending

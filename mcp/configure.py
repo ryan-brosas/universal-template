@@ -10,6 +10,7 @@ import json
 import os
 import re
 import stat
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -181,21 +182,53 @@ def sync_directory(path: Path) -> None:
             os.close(fd)
 
 
-def atomic_write(path: Path, raw: bytes, *, mode: int = 0o600, replace=os.replace) -> None:
+def access_metadata(path: Path) -> tuple:
+    # Python exposes Linux ACLs through xattrs, but not macOS/Windows ACLs.
+    # Refuse existing-file replacement where we cannot prove preservation.
+    if not sys.platform.startswith("linux") or not hasattr(os, "listxattr"):
+        raise ValueError("existing config replacement requires Linux access-metadata support; use host-native tooling on this platform")
+    info = path.stat()
+    attrs = {name: os.getxattr(path, name, follow_symlinks=False)
+             for name in os.listxattr(path, follow_symlinks=False)}
+    return info.st_uid, info.st_gid, stat.S_IMODE(info.st_mode), attrs
+
+
+def set_access_metadata(path: Path, access: tuple) -> None:
+    uid, gid, mode, attrs = access
+    info = path.stat()
+    if (info.st_uid, info.st_gid) != (uid, gid):
+        os.chown(path, uid, gid)
+    for name in set(os.listxattr(path)) - set(attrs):
+        os.removexattr(path, name)
+    os.chmod(path, mode)
+    for name, value in attrs.items():
+        if name not in os.listxattr(path) or os.getxattr(path, name) != value:
+            os.setxattr(path, name, value)
+    if access_metadata(path) != access:
+        raise OSError("cannot preserve existing config access metadata")
+
+
+def atomic_write(path: Path, raw: bytes, *, mode: int = 0o600,
+                 access: tuple | None = None, replace=os.replace) -> None:
     read_bytes(path)  # Refuse symlink targets, including dangling ones.
     path.parent.mkdir(parents=True, exist_ok=True)
     fd, name = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
     temp = Path(name)
     try:
         with os.fdopen(fd, "wb") as stream:
-            os.chmod(temp, mode)
             stream.write(raw)
             stream.flush()
+            if access is None:
+                os.chmod(temp, mode)
+            else:
+                set_access_metadata(temp, access)
             os.fsync(stream.fileno())
         replace(temp, path)
         sync_directory(path.parent)
         if read_bytes(path) != raw:
             raise OSError(f"read-back validation failed: {path}")
+        if access is not None and access_metadata(path) != access:
+            raise OSError(f"access metadata read-back validation failed: {path}")
     finally:
         temp.unlink(missing_ok=True)
 
@@ -244,6 +277,7 @@ def apply_plan(path: Path, before: bytes | None, state_before: bytes | None,
     if read_bytes(path) != before or read_bytes(state_path) != state_before:
         raise ValueError("MCP target or ownership changed during planning; retry")
     if after != before:
+        access = access_metadata(path) if before is not None else None
         if before is not None:
             first_backup(path, before)
         journal = state_document(path, managed)
@@ -251,8 +285,7 @@ def apply_plan(path: Path, before: bytes | None, state_before: bytes | None,
         atomic_write(state_path, encoded(journal))
         if read_bytes(path) != before:
             raise ValueError("MCP target changed before replacement; inspect the pending transaction")
-        mode = stat.S_IMODE(path.stat().st_mode) if before is not None else 0o600
-        atomic_write(path, after, mode=mode)
+        atomic_write(path, after, access=access)
     # Empty unmanaged selections are no-ops; existing journals are finalized.
     if state_before is not None or next_managed or after != before:
         if read_bytes(state_path) != final:
@@ -270,10 +303,14 @@ def configure_target(path: Path, names: list[str], registry: dict, *, profile: b
         current, names, registry, deactivate, format_name, managed,
         profile=profile, replace_unmanaged=replace_unmanaged,
     )
+    final_state = encoded(state_document(path, next_managed))
+    would_write = updated != current or (
+        (state_before is not None or bool(next_managed)) and state_before != final_state
+    )
     if apply:
         apply_plan(path, before, state_before, current, updated, managed, next_managed)
     # Never dump config values: unmanaged entries may contain literal credentials.
-    return {"target": str(path), **changes, "applied": apply}
+    return {"target": str(path), **changes, "would_write": would_write, "applied": apply}
 
 
 def selftest() -> int:
@@ -310,12 +347,15 @@ def main() -> int:
         names, registry = selection(args.profile, args.server)
         options = dict(profile=args.profile is not None, deactivate=args.deactivate,
                        format_name=args.format, replace_unmanaged=args.replace_unmanaged,
-                       apply=args.apply)
-        if args.apply:
+                       apply=False)
+        summary = configure_target(path, names, registry, **options)
+        if args.apply and summary["would_write"]:
+            # Replan under the lock; the unlocked preview is not mutation authority.
+            options["apply"] = True
             with locked(path):
                 summary = configure_target(path, names, registry, **options)
-        else:
-            summary = configure_target(path, names, registry, **options)
+        elif args.apply:
+            summary["applied"] = True
         print(json.dumps(summary, indent=2))
         if not args.apply:
             print("[preview only] pass --apply to write")
