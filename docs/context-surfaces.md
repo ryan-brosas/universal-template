@@ -42,8 +42,11 @@ MCP contract costs are reported separately because profiles activate them at
 runtime.
 
 `config/context-budget.json` is the canonical owner of the instruction, hot, and
-combined limits and the character-to-token estimate divisor. Run the normal
-publication check without repeated numeric limits:
+combined limits and the character-to-token estimate divisor. Character budgets,
+hot/cold overlap, and hidden-in-hot checks are the publication gate; the hot
+skill **count** (`max_skills`) is an advisory review threshold reported as
+`WARN`, never a publication failure. Run the normal publication check without
+repeated numeric limits:
 
 ```bash
 python3 scripts/skill-catalog.py context
