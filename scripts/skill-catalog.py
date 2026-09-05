@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """skill-catalog.py — catalog maintenance over the unified skills tree.
 
-Optional human-facing catalog tooling (list, search, show, stats, generate).
+Optional human-facing catalog tooling (list, search, show, stats, invocation, generate).
 The filesystem and each skill's frontmatter are canonical. Models should use
 native filesystem or host discovery during ordinary work. PyYAML is shared with
 the strict skill validator.
@@ -9,6 +9,8 @@ the strict skill validator.
 from __future__ import annotations
 
 import argparse
+import contextlib
+import io
 import importlib.util
 import json
 import os
@@ -449,6 +451,84 @@ def cmd_show(skills: list[dict], args) -> int:
     return 0
 
 
+def invocation_report(skill: dict) -> dict:
+    """On-disk Markdown inventory, not measured runtime context or task lift."""
+    root = Path(skill["path"]).parent
+    refs = root / "references"
+    references = []
+    skipped = []
+    if refs.is_symlink():
+        skipped.append("references")
+    elif refs.is_dir():
+        def raise_walk_error(error):
+            raise error
+
+        for directory, dirs, files in os.walk(refs, onerror=raise_walk_error):
+            parent = Path(directory)
+            for name in sorted(dirs):
+                path = parent / name
+                if path.is_symlink():
+                    skipped.append(path.relative_to(root).as_posix())
+                    dirs.remove(name)
+            for name in sorted(files):
+                path = parent / name
+                if path.suffix != ".md":
+                    continue
+                if path.is_symlink() or not path.is_file():
+                    skipped.append(path.relative_to(root).as_posix())
+                    continue
+                references.append({
+                    "path": path.relative_to(root).as_posix(),
+                    "chars": len(path.read_text(encoding="utf-8")),
+                })
+    references.sort(key=lambda item: item["path"])
+    return {
+        "name": skill["name"],
+        "path": skill["path"],
+        "loader_chars": len(skill["body"]),
+        "loader_words": len(skill["body"].split()),
+        "reference_count": len(references),
+        "total_reference_chars": sum(item["chars"] for item in references),
+        "largest_reference": max(references, key=lambda item: item["chars"], default=None),
+        "skipped_reference_paths": sorted(skipped),
+        "required_mcp_profile": None,
+        "mcp_schema_chars": None,
+        "observed_invocation_count": None,
+        "observed_average_followup_request_growth_bytes": None,
+    }
+
+
+def cmd_invocation(skills: list[dict], args) -> int:
+    if args.limit < 1:
+        print("invocation: --limit must be positive", file=sys.stderr)
+        return 2
+    if args.name:
+        rows = [s for s in skills if args.name in (s["name"], s["folder"])]
+        if not rows:
+            print(f"no such skill: {args.name}", file=sys.stderr)
+            return 2
+    else:
+        rows = [s for s in skills if not s.get("local")]
+    rows = sorted(rows, key=lambda s: (-len(s["body"]), s["name"]))[:args.limit]
+    try:
+        reports = [invocation_report(skill) for skill in rows]
+    except (OSError, UnicodeError) as error:
+        print(f"invocation: cannot read inventory: {error}", file=sys.stderr)
+        return 2
+    if args.json:
+        print(json.dumps(reports, indent=2))
+        return 0
+    print("On-disk inventory only; no size gate. Runtime fields are unknown, not zero.")
+    for report in reports:
+        print(f"\n{report['name']}")
+        for key, value in report.items():
+            if key == "name":
+                continue
+            absent = "none" if key == "largest_reference" else "unknown / not measured"
+            print(f"  {key}: {value if value is not None else absent}")
+    return 0
+
+
 def cmd_stats(skills: list[dict], args) -> int:
     st = stats(skills)
     if args.json:
@@ -701,6 +781,82 @@ def cmd_selftest(skills: list[dict], _args) -> int:
         if not any(item.startswith("combined") for item in failures):
             print("selftest: combined context budget failure missing", file=sys.stderr)
             return 1
+    with tempfile.TemporaryDirectory(prefix="invocation-cost-") as raw:
+        root = Path(raw) / "sample"
+        root.mkdir()
+        loader = "---\nname: sample\n---\n# Café 🧪\n"
+        skill = {"name": "sample", "path": str(root / "SKILL.md"), "body": loader}
+        empty = invocation_report(skill)
+        if (empty["loader_chars"] != len(loader)
+                or empty["loader_words"] != len(loader.split())
+                or empty["reference_count"] != 0
+                or empty["total_reference_chars"] != 0
+                or empty["largest_reference"] is not None):
+            print("selftest: empty/Unicode invocation inventory failed", file=sys.stderr)
+            return 1
+        refs = root / "references"
+        (refs / "nested").mkdir(parents=True)
+        (refs / "small.md").write_text("é\n", encoding="utf-8")
+        (refs / "nested" / "large.md").write_text("x" * 25000, encoding="utf-8")
+        (refs / "image.bin").write_bytes(b"\xff\x00")
+        outside = Path(raw) / "outside.md"
+        outside.write_bytes(b"\xff")  # Must not be read through a symlink.
+        (refs / "external.md").symlink_to(outside)
+        populated = invocation_report(skill)
+        expected_largest = {"path": "references/nested/large.md", "chars": 25000}
+        if (populated["reference_count"] != 2
+                or populated["total_reference_chars"] != 25002
+                or populated["largest_reference"] != expected_largest
+                or populated["skipped_reference_paths"] != ["references/external.md"]):
+            print("selftest: recursive invocation inventory or symlink exclusion failed", file=sys.stderr)
+            return 1
+        unknown_fields = ("required_mcp_profile", "mcp_schema_chars",
+                          "observed_invocation_count",
+                          "observed_average_followup_request_growth_bytes")
+        if any(populated[key] is not None for key in unknown_fields):
+            print("selftest: unavailable runtime evidence was invented", file=sys.stderr)
+            return 1
+        linked_root = Path(raw) / "linked"
+        linked_root.mkdir()
+        (linked_root / "references").symlink_to(refs, target_is_directory=True)
+        linked = invocation_report({**skill, "path": str(linked_root / "SKILL.md")})
+        if linked["reference_count"] or linked["skipped_reference_paths"] != ["references"]:
+            print("selftest: linked reference root was traversed", file=sys.stderr)
+            return 1
+        inventory_fixture = [
+            {**skill, "folder": "sample", "body": "small"},
+            {**skill, "name": "big", "folder": "big", "body": "x" * 50000},
+            {**skill, "name": "local", "folder": "local-folder",
+             "body": "x" * 60000, "local": True},
+        ]
+        args = argparse.Namespace(name=None, limit=1, json=True)
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            status = cmd_invocation(inventory_fixture, args)
+        result = json.loads(output.getvalue())
+        if status or len(result) != 1 or result[0]["name"] != "big":
+            print("selftest: largest/limited/tracked invocation selection failed", file=sys.stderr)
+            return 1
+        args.name = "local-folder"
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            status = cmd_invocation(inventory_fixture, args)
+        if status or json.loads(output.getvalue())[0]["name"] != "local":
+            print("selftest: explicit local invocation selection failed", file=sys.stderr)
+            return 1
+        for name, limit in (("missing", 1), (None, 0)):
+            with contextlib.redirect_stderr(io.StringIO()):
+                status = cmd_invocation(inventory_fixture, argparse.Namespace(
+                    name=name, limit=limit, json=True))
+            if status != 2:
+                print("selftest: invalid invocation query did not fail", file=sys.stderr)
+                return 1
+        (refs / "invalid.md").write_bytes(b"\xff")
+        with contextlib.redirect_stderr(io.StringIO()):
+            status = cmd_invocation(inventory_fixture, args)
+        if status != 2:
+            print("selftest: unreadable reference did not fail", file=sys.stderr)
+            return 1
     escaped = _align_md_table(["| A | B |", "|---|---|", r"| x | one \| two |"])
     if "one \| two" not in escaped[-1] or len(_split_md_row(escaped[-1])) != 2:
         print("selftest: escaped Markdown pipe changed table shape", file=sys.stderr)
@@ -757,6 +913,10 @@ def main() -> int:
     p = sub.add_parser("show", help="inspect one skill")
     p.add_argument("name")
     p.add_argument("--json", action="store_true")
+    p = sub.add_parser("invocation", help="optional loader/reference inventory; no size gate")
+    p.add_argument("name", nargs="?", help="one skill; otherwise largest tracked loaders")
+    p.add_argument("--limit", type=int, default=10)
+    p.add_argument("--json", action="store_true")
     p = sub.add_parser("stats", help="catalog and context-budget stats")
     p.add_argument("--json", action="store_true")
     p = sub.add_parser("context", help="measure and optionally gate disjoint hot/cold surfaces")
@@ -771,7 +931,8 @@ def main() -> int:
     args = ap.parse_args()
     skills = scan()
     return {"list": cmd_list, "search": cmd_search, "show": cmd_show,
-            "stats": cmd_stats, "context": cmd_context, "generate": cmd_generate,
+            "invocation": cmd_invocation, "stats": cmd_stats,
+            "context": cmd_context, "generate": cmd_generate,
             "selftest": cmd_selftest}[args.cmd](skills, args)
 
 

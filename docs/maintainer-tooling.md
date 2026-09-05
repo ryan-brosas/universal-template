@@ -19,6 +19,36 @@ behavior earns the dependency.
 | `github-audit.py` | OPTIONAL DIAGNOSTIC | Read-only GitHub configuration snapshot; direct `gh` output remains authoritative. |
 | `skill-catalog.py` | GENERATED-ARTIFACT TOOL | Entry-only hot/cold sets, the complete AGENTS.md-plus-metadata static budget, optional search/stats, and separate generated catalogs derived from tracked filesystem/frontmatter. |
 
+## Optional invocation-cost inventory
+
+Run from the checkout being inspected (an explicit `SKILLS_ROOT` may select a
+separate skill tree):
+
+```bash
+python3 scripts/skill-catalog.py invocation push-pr --json
+python3 scripts/skill-catalog.py invocation --limit 10
+```
+
+Without a name, report the largest tracked loaders; an explicit name or folder
+can inspect a machine-local skill. JSON is always an array. `--limit` must be
+positive. Unknown names and unreadable reference Markdown return exit 2; size
+alone never fails this diagnostic. No invocation-size limit is added to publication CI.
+
+`loader_chars` counts Unicode characters in the complete `SKILL.md`, including
+frontmatter; `loader_words` counts whitespace-separated words. References are
+recursive `.md` files under that skill's `references/`, not shared cross-skill
+links, scripts, assets, or every document linked by Markdown. The report gives
+count, total characters, and the largest reference's relative path and size.
+Symlinks are not followed; `skipped_reference_paths` identifies omitted entries.
+An empty inventory has zero references and no largest reference.
+
+These are on-disk sizes, not instructions to load all references or estimates of
+actual task context. MCP profile/schema costs, invocation counts, and average
+follow-up request growth in bytes remain `null` (unknown/not measured): the catalog
+has no canonical per-skill runtime telemetry. It does not activate MCP, infer a
+profile from prose, or treat absent observations as zero usage. Pair this inventory
+with a scoped host probe or representative task comparison before claiming lift.
+
 ## Retired
 
 - `policy-consistency.py`: interpreted natural-language policy with expanding

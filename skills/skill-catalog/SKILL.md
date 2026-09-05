@@ -31,4 +31,6 @@ decisions with the model; scripts validate metadata and disjoint surfaces.
 Check explicit callers and host visibility after metadata changes. Run the target
 checkout’s applicable publication checks; do not run template scripts in an
 unrelated project. `../../scripts/skill-catalog.py` provides optional list, search,
-context, and generated-view diagnostics.
+context, invocation-size, and generated-view diagnostics. Use `invocation <name>`
+for one loader or `invocation --limit 10` for the largest tracked loaders; these
+are optional inventories, not runtime-cost measurements or publication limits.
