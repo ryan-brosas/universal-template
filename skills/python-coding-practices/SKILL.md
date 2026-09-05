@@ -11,7 +11,9 @@ Application skill for Python style learning (from the archived `awesome-guidelin
 
 ## Core Principle
 
-Python readability is **enforced consistency plus semantic footgun avoidance**, format mechanically, import modules explicitly, never mutable defaults, validate with exceptions not assert.
+Follow the project formatter, import conventions, and error model. Google-style
+imports are optional unless adopted; mutable-default sharing and input validation
+need behavioral review, not just a style check.
 
 ## When to Use / NOT
 
@@ -29,7 +31,8 @@ Python readability is **enforced consistency plus semantic footgun avoidance**, 
 2. **Name**, public vs `_` internal; `CapWords` classes; `.py` filenames (`python-style-naming-modules.md`).
 3. **Errors**, narrow `raise`/`except`; debug-only `assert`; idiomatic `is None`/empty seq (`python-style-exceptions-truthiness.md`).
 4. **API surface**, no mutable defaults; type public functions; `main()` guard (`python-style-defaults-types-main.md`).
-5. **Verify**, ruff/black + typecheck on changed paths.
+5. **Verify**, use configured formatter/lint/typecheck commands on changed paths;
+   do not introduce Ruff, Black, or a typechecker merely to run this checklist.
 
 ## Red Flags
 
@@ -37,7 +40,7 @@ Python readability is **enforced consistency plus semantic footgun avoidance**, 
 - Bare `except:` or silent `except Exception:`
 - `assert` for user input validation
 - Side effects at import time
-- `from module import MyClass` in application code (Google rule)
+- A Google-specific import convention applied where the project has not adopted it
 
 ## Verification
 

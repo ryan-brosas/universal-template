@@ -11,7 +11,9 @@ Application skill for Rust style learning (from the archived `awesome-guidelines
 
 ## Core Principle
 
-Rust quality is **rustfmt-mechanical + API-guidelines semantic**, formatted code and public surfaces that interoperate without surprises.
+Follow the project rustfmt, lint, and API conventions. The retained API-guideline
+capsules are options for predictable public surfaces, not universal requirements
+for every type or private helper.
 
 ## When to Use / NOT
 
@@ -26,19 +28,21 @@ Rust quality is **rustfmt-mechanical + API-guidelines semantic**, formatted code
 ## Workflow
 
 1. **Format & names**, `cargo fmt`, casing, conversion prefixes (`rust-style-formatting-naming.md`).
-2. **Errors**, meaningful `Error + Send + Sync`, no `()`, `?` in examples (`rust-style-errors-result.md`).
+2. **Errors**, choose useful error information for callers. Add `Error`, `Send`,
+   or `Sync` bounds where consumers/runtime boundaries require them; a local
+   sentinel error can be enough (`rust-style-errors-result.md`).
 3. **Interop**, common traits, `From`, iterator naming (`rust-style-traits-interop.md`).
 4. **API shape**, methods, `new`, no out-params, Deref discipline, docs (`rust-style-api-predictability.md`).
 5. **Verify**, `cargo fmt --check`, `cargo clippy`, `cargo test --doc`.
 
 ## Red Flags
 
-- `Result<T, ()>`
+- `Result<T, ()>` losing distinctions a caller needs
 - `unwrap()` in public docs
 - `get_*` on ordinary field getters
 - `Deref` on domain wrapper for `.` syntax sugar
 - Manual formatting vs rustfmt
-- Missing `Debug` on public types
+- Missing useful diagnostics on public types, or diagnostics exposing secrets
 
 ## Verification
 

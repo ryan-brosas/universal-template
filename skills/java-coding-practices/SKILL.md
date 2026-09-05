@@ -11,7 +11,9 @@ Application skill for Java style learning (from the archived `awesome-guidelines
 
 ## Core Principle
 
-Java readability is **mechanical Google format plus explicit API contracts**, formatted consistently, imports explicit, overrides annotated, catches never silent.
+Follow the project formatter and API conventions. Google formatting is one
+source-specific choice, not a reason to reformat an unrelated change. Review
+exception handling for lost failures and intentional recovery.
 
 ## When to Use / NOT
 
@@ -25,7 +27,8 @@ Java readability is **mechanical Google format plus explicit API contracts**, fo
 
 ## Workflow
 
-1. **Format & imports**, 2-space, 100 cols, braces, no star imports (`java-style-formatting-imports.md`).
+1. **Format & imports**, use project settings. Google's 2-space/100-column and
+   import rules apply when adopted (`java-style-formatting-imports.md`).
 2. **Naming**, camelCase algorithm, constants discipline (`java-style-naming-types.md`).
 3. **Practices**, `@Override`, catches, static qualify, null-safe equals (`java-style-exceptions-practices.md`).
 4. **Docs**, Javadoc on public/protected API (`java-style-javadoc-public-api.md`).

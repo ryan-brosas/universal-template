@@ -1,141 +1,56 @@
 ---
 name: typescript-coding-standards
-description: Use when writing, refactoring, or reviewing TypeScript code that needs strong domain modeling, typed errors, schema parsing, safe adapters, test seams, or maintainable module boundaries.
+description: "Use when choosing TypeScript domain models, validation boundaries, failure semantics, adapters, or test seams. Follow the project's architecture; brands, Result/Effect, and pure-core designs are options, not universal standards."
 invocation: manual
 disable-model-invocation: true
 ---
 
+# TypeScript Domain Modeling Choices
 
-# TypeScript Coding Standards
+Keep the existing caller path, but choose patterns from the domain's risks and
+the project's conventions. For style, imports, or compiler/linter configuration,
+use `../typescript-coding-practices/SKILL.md`. A simple script or module without
+a meaningful domain boundary does not need a new architecture.
 
-## Core Principle
+## Inspect before introducing a pattern
 
-Types describe the domain and errors are data: no `any` (branded primitives, `unknown` + narrow), `Result<T,E>`/`Effect<T,E>` instead of thrown domain errors, pure core with effects at the edges.
+Read representative code, public types, runtime validation, error handling,
+dependencies, and tests. Preserve working conventions unless changing them solves
+a demonstrated problem. Do not add an effect library, schema generator, adapter
+layer, or branding scheme merely because this skill mentions one.
 
-## When to Use / NOT
+## Decisions
 
-- **Use when:** writing, refactoring, or reviewing TypeScript code that needs strong domain modeling, typed errors, schema parsing, safe adapters, test seams, or maintainable module boundaries.
-- **NOT when:** the file has no domain surface to model, a throwaway script with no untrusted input, no external systems, and no shared types; or the code is not TypeScript.
-- **NOT when:** the question is only ESLint/tsc style (imports, `any`, formatting), load `typescript-coding-practices` instead.
-
-## Workflow
-
-1. Model the domain first: branded primitives (`UserId` not `string`), discriminated unions with `kind` discriminants (Domain Modeling).
-2. Decode untrusted input at the edge with schema validation; never let `req.body`, `JSON.parse`, `process.env`, or query strings reach the core (Schema Boundaries).
-3. Model errors as data with `_tag`; the return type is the contract, handlers switch on `_tag` (Error Modeling).
-4. Keep business logic pure; put I/O at the edges behind adapters that implement domain interfaces (Pure Functions, Adapters).
-5. Enforce module boundaries: one concern per module, explicit public exports, no circular deps, minimal index files (Module Boundaries).
-6. Check Common Mistakes and Red Flags before shipping.
-
-## Iron Laws
-
-<EXTREMELY-IMPORTANT>
-- **No `any`.** Branded primitives, schema boundaries, `unknown` + narrow.
-- **Errors as data.** `Result<T, E>` or `Effect<T, E>`. Never `throw new Error(...)` for domain.
-- **Pure core, effects at edges.** Business logic takes inputs, returns values.
-- **Types describe the domain.** `UserId` not `string`.
-- **Test seams over mocking.** Inject dependencies as values.
-</EXTREMELY-IMPORTANT>
-
-## Domain Modeling
-
-```ts
-// Branded primitives (no runtime cost)
-type UserId = string & { readonly __brand: "UserId" }
-const UserId = (s: string): UserId => s as UserId
-
-// Discriminated unions
-type RequestState<T> =
-  | { kind: "idle" }
-  | { kind: "loading" }
-  | { kind: "success"; data: T }
-  | { kind: "error"; error: AppError }
-```
-
-Use `kind` for discriminants (not `type`, collides with TS).
-
-## Schema Boundaries
-
-Validate untrusted input at the edge. Inside, trust the types.
-
-```ts
-const input = Schema.decodeUnknownSync(UserSchema)(req.body)
-// Now `input` is `User`, not `unknown`
-```
-
-Never let `req.body`, `JSON.parse`, `process.env`, or query strings reach the core. Decode at the boundary.
-
-## Error Modeling
-
-```ts
-class UserNotFound extends Error {
-  readonly _tag = "UserNotFound" as const
-  constructor(readonly userId: UserId) { super(`User ${userId} not found`) }
-}
-
-type GetUser = (id: UserId) => Effect.Effect<User, UserNotFound | DbError>
-```
-
-The return type is the contract. Handlers switch on `_tag`.
-
-## Pure Functions
-
-```ts
-// Pure: input → output, no I/O
-const calculateTotal = (items: Item[]): number =>
-  items.reduce((sum, i) => sum + i.price * i.qty, 0)
-
-// Impure: I/O, time, randomness
-const fetchUser = (id: UserId): Effect.Effect<User, DbError> =>
-  Effect.tryPromise(() => db.query(...))
-```
-
-Pure = testable without setup. Impure = testable with `TestLayer` or mock implementation.
-
-## Adapters
-
-External systems get an adapter. Adapter implements a domain interface, hides the external API.
-
-```ts
-interface UserRepo {
-  findById: (id: UserId) => Effect.Effect<User, UserNotFound | DbError>
-}
-
-class PostgresUserRepo implements UserRepo {
-  findById = (id) => Effect.tryPromise({
-    try: () => pg.query("SELECT * FROM users WHERE id = $1", [id]),
-    catch: (e) => toDbError(e)
-  })
-}
-```
-
-Business code depends on `UserRepo`, not `pg`. Tests use in-memory `UserRepo`.
-
-## Module Boundaries
-
-- One concern per module. Name after the concept, not the file type.
-- Public API: explicit exports. Internal: not exported or in `internal/`.
-- No circular deps. If A imports B, B does not import A.
-- Index files are minimal, only the public surface.
-
-## Common Mistakes
-
-`any`; `throw` for domain; raw errors in `Promise<T>`; `console.log` / `Date.now` in business logic; `JSON.parse` deep in stack; tests that mock what they test; types that mirror DB schema; stringly-typed enums; global state; `as` casts.
-
-## Red Flags
-
-`any` in production; untyped `JSON.parse`; `try/catch` around `await`; `Date.now()` in logic; `console.log` left; `data: any`; circular imports; tests that don't test.
-
-## Anti-Patterns
-
-**"Just a string"** (no branded type); **"errors are exceptions"**; **"types later"**; **"test with mock"** (test seam); **"any to unblock"**; **"utils.ts"**.
+- **Domain values:** use branded primitives when confusing compatible identifiers
+  is a real risk. Plain strings/numbers can be enough for local values. A cast
+  does not validate input; construct branded values at a trusted or validated
+  boundary. Use discriminated unions when they rule out meaningful invalid
+  states. Follow the existing discriminator (`kind`, `type`, `_tag`, or another);
+  `type` is a valid property name.
+- **Trust boundaries:** treat external input as untrusted and check what the
+  operation requires. Use an existing schema decoder, parser, or explicit guard.
+  Type assertions and TypeScript types alone provide no runtime validation.
+  Prefer `unknown` plus narrowing over allowing unchecked values to spread;
+  isolate a necessary `any` in a compatibility boundary and explain the limit
+  rather than replacing it with an equally unsafe assertion.
+- **Failure semantics:** use discriminated results or typed errors when callers
+  need exhaustive recovery. Keep exceptions or rejected promises when they fit
+  the framework and project contract. An established Effect/Result codebase
+  should retain its model; an exception-based codebase need not migrate to it.
+  Translate external failures at the boundary that owns that responsibility.
+- **Effects and tests:** separate deterministic calculations from I/O where it
+  makes testing or reasoning easier. Inject time, randomness, or clients when
+  repeatability matters; direct calls can be appropriate in small orchestration
+  code. Use adapters for meaningful isolation, not one interface per dependency.
+  Choose real integration tests, fakes, or mocks for the behavior under test.
+- **Modules:** expose the smallest useful public surface and keep ownership clear.
+  Investigate cycles that cause initialization or coupling problems. Follow
+  existing export and packaging conventions rather than banning all barrel files.
 
 ## Verification
 
-- Scan for red flags: no `any` in production, no untyped `JSON.parse`, no `try/catch` around `await`, no `Date.now()` in logic, no leftover `console.log`, no `data: any`, no circular imports.
-- Tests exercise behavior through test seams, in-memory implementations of the domain interfaces, not mocks of what they test (Adapters, Common Mistakes).
-
-
-## References
-
-N/A, no references/ directory; the skill is a self-contained prompt corpus.
+Run the project's typecheck, lint, and relevant behavior tests. Exercise invalid
+external input, caller recovery, and effect boundaries where changed. Verify that
+brands are not mistaken for validation and mocks are not merely testing themselves.
+Do not classify `try/catch`, `throw`, `Date.now()`, `any`, or an unbranded string as
+a defect without its context and an actual failure risk.

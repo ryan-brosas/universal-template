@@ -1,9 +1,15 @@
 # State Ontology and Invariants — Formal Separation of Data vs Orchestration
 
-Use this reference when designing domain models, multi-agent systems, or storage layers.
+Use this optional pattern for event-history systems with separate execution and
+recovery state. It is not a required ontology for arbitrary domain models.
 
 ## The Core Discipline: Active vs Passive State
-Do not lump all state into a single monolithic document or JSON blob. Formally split state into **passive shared data** and **active execution lines**:
+
+When history must survive independently of execution bookkeeping, separating
+passive data from active execution can clarify ownership. The following four-part
+model is an example, not a fixed category count. It assumes execution logs are not
+the authoritative event store; do not apply its deletion rule to an event store.
+Cross-lane effects on shared mutable resources still need coordination.
 
 ```text
 1. Shared Passive Data (The DAG / Tree)
@@ -27,7 +33,9 @@ Do not lump all state into a single monolithic document or JSON blob. Formally s
 ```
 
 ## How to Formulate Mathematical Invariants
-Every system specification must list 5–10 unbreakable invariant rules written as hard constraints:
+State the invariants needed for the actual guarantees. Make each checkable where
+practical; there is no minimum or maximum count. The following examples apply to
+the event-history model above, not every system specification:
 
 ### Example Invariant List:
 - *Invariant 1 (Tree Purity)*: The tree is conversation only. No lane state, no orchestration pointers live in it.
