@@ -25,6 +25,8 @@ projection and decide what ships.
 
 - Representative topics: Queue core; Worker admission; Enqueue contract; Event
   fan-out; Long-poll surface; Versioned migrations; Cache safety; Redis queue.
+- Airtable LongText / PostgreSQL NUL (U+0000) removal, per-field coercion and
+  SingleSelect quirks: `references/import-record-coercion-ladder.md`.
 - Scope and retrieval questions: `references/index.md#use-this-for`.
 - Complete capsule chooser: `references/index.md#load-the-matching-source-dump`.
 - Detailed grouped map: `references/index.md#capsule-map`.
@@ -32,7 +34,8 @@ projection and decide what ships.
 
 ## Retrieval
 
-Open the index, choose one capsule matching the active question, and load only
-that capsule. Revalidate its cited source and revision before relying on it. Do
+Choose a capsule from the topic map or index and load only the matching evidence.
+Capsules span revisions; use the selected capsule’s own file and pin, not the
+headline revision above. Revalidate that source before relying on it. Do
 not bulk-load the inventory, treat historical claims as current truth, or apply
 this foundation as a procedure.

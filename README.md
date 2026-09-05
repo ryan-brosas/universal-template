@@ -38,12 +38,11 @@ Then have the active coding agent perform this bounded setup:
    inventory. Do not assume that an installed executable is configured.
 2. Inspect each detected host's current instruction, skill, and prompt surfaces.
    Prefer current host documentation or runtime help over remembered paths.
-3. Inspect the host's skill discovery behavior before linking `skills/`. A host
-   that eagerly scans the tree or whose hidden-field behavior is unverified must
-   receive a host-owned filtered symlink view containing only the tracked **hot**
-   set (visible, locally owned `invocation: entry` leaves), never the unified
-   root. Only a host proven to discover lazily without scanning the full
-   tree may use the root.
+3. Inspect the host's skill discovery behavior before exposing `skills/`. Prefer
+   native resource filtering when it can load only the tracked **hot** set
+   (visible, locally owned `invocation: entry` leaves). Otherwise use a host-owned
+   filtered symlink view. Do not expose the unified root unfiltered on eager or
+   unverified hosts; hiding descriptions need not prevent body scanning.
 4. Generate a host adapter only when the host requires a different format. The
    adapter must name its canonical source under `prompts/` and remain derived.
 5. Preserve every unmanaged file. Replace or remove only links and adapters
@@ -57,22 +56,28 @@ capabilities, not Python.
 ### Skill exposure on eager hosts
 
 `skills/` is the one canonical source tree; do not copy it or maintain a second
-foundation tree. For eager or unverified hosts, create a host-owned directory of
-symlinks to tracked hot skill directories only, configure the host to scan that
-directory, and disable its automatic `~/.agents/skills` scan where supported.
-Reconcile links from current frontmatter and preserve unmanaged host files.
-Maintainers can inspect the exact filtered set with:
+foundation tree. Native filters can avoid maintaining another symlink inventory:
+Pi 0.85.1 was verified with an exclusion for the canonical skill root and exact
+hot-file inclusions. This avoids loading cold bodies, though directory discovery
+still occurs. See `docs/template-effectiveness.md` for the tested boundary.
+
+Where native filtering is unavailable, expose a host-owned hot symlink view and
+disable competing automatic discovery where supported. Derive exposure from
+current frontmatter, preserving intentional host extras and unmanaged files.
+This is setup work, not a step before each project task. Optional maintainer
+commands can inspect the exact publication set:
 
 ```sh
 python3 scripts/skill-catalog.py list --surface hot --tracked-only --json
 python3 scripts/skill-catalog.py context --json
 ```
 
-Hidden operational skills and foundations remain cold and explicit. Use catalog
-search/show and load one selected hidden procedure. For a foundation, open its
-compact `SKILL.md` topic map, search reference filenames and headings, and load
-1–3 likely capsules. Open `references/index.md` only if discovery is still
-ambiguous. See `docs/foundation-skill-v1.md` for measured host behavior and limitations.
+Hidden operational skills and foundations remain cold and searchable with native
+file tools. The visible `skill-catalog` entry explains where to look when useful
+expertise is missing; no catalog command is required. For a foundation, inspect
+its topic map and reference filenames/headings to select likely capsules and
+their own source pins. Use the index only when discovery remains ambiguous. See
+`docs/foundation-skill-v1.md` for earlier host measurements and limitations.
 
 ### Optional compatibility installer
 
@@ -142,6 +147,7 @@ Python helpers.
 - Human foundation catalog: `docs/foundation-catalog.md`
 - Foundation migration evidence: `docs/foundation-skill-v1.md`
 - Context definitions, budgets, host probes, and MCP costs: `docs/context-surfaces.md`
+- Template simplification and current host/task evidence: `docs/template-effectiveness.md`
 - Licensing status and blockers: `docs/licensing.md`
 - Current objectives: `docs/roadmap.md`
 - MCP registry and host wiring: `mcp/catalog.md`

@@ -54,13 +54,14 @@ def is_vendored(rel: str) -> bool:
     return "/sdk/" in f"/{rel}/" or "/learnings/" in f"/{rel}/"
 
 
-def decodable_head(raw: bytes, *, truncated: bool = False) -> str | None:
+def decodable_head(raw: bytes, *, truncated: bool = False, text_file: bool = False) -> str | None:
     """Decode a bounded head for content scanning, or None for binary data.
 
     Strict decoding rejects unsupported bytes; only an actual bounded read may
-    leave an incomplete trailing UTF-8 character.
+    leave an incomplete trailing UTF-8 character. Declared text keeps NULs for
+    scanning; the caller rejects them rather than classifying the file as binary.
     """
-    if b"\0" in raw:
+    if not text_file and b"\0" in raw:
         return None
     try:
         return codecs.getincrementaldecoder("utf-8")().decode(raw, final=not truncated)
@@ -184,10 +185,13 @@ def check(paths: list[Path]) -> list[str]:
             continue
         truncated = len(raw) > MAX_SCAN_BYTES
         raw = raw[:MAX_SCAN_BYTES]
-        head = decodable_head(raw, truncated=truncated)
+        text_file = path.suffix.lower() in TEXT_EXT
+        if text_file and b"\0" in raw:
+            errors.append(f"NUL byte in text file: {rel}")
+        head = decodable_head(raw, truncated=truncated, text_file=text_file)
         if head is None:
             print(f"SKIP text safety scan (binary or unsupported UTF-8): {rel}", file=sys.stderr)
-            if path.suffix.lower() in TEXT_EXT and b"\0" not in raw:
+            if text_file:
                 errors.append(f"unsupported text encoding: {rel}")
         else:
             errors.extend(content_errors(rel, head))
@@ -350,6 +354,10 @@ def fixture_test() -> int:
         defect[rel] = (token + "\n").encode()
     defect["late-token"] = b"a\n" * (160 * 1024) + (token + "\n").encode()
     defect["unsupported.md"] = b"\xff\xfe"
+    # A text suffix is a publication contract, not a binary-skip hint.
+    for rel in ("nul.md", "nul.MD", "skills/demo/references/sdk/nul.md"):
+        defect[rel] = b"before\0" + (token + "\n").encode()
+    defect["nul-invalid.md"] = b"\0\xff\n"
     defect["secret.yaml"] = ("[\n" + token + "\n").encode()
     clean = dict(scaffold)
     clean.update(
@@ -369,6 +377,12 @@ def fixture_test() -> int:
         "OpenAI-style key in notes.md",
         *(f"GitHub token in {rel}" for rel in ("github.md", "github.env", "github.tsx", "github-config", "late-token", "secret.yaml")),
         "unsupported text encoding: unsupported.md",
+        *(f"NUL byte in text file: {rel}" for rel in (
+            "nul.md", "nul.MD", "skills/demo/references/sdk/nul.md", "nul-invalid.md",
+        )),
+        *(f"GitHub token in {rel}" for rel in (
+            "nul.md", "nul.MD", "skills/demo/references/sdk/nul.md",
+        )),
         "private key material in key.pem",
         "private key material in skills/demo/references/private.md",
         "OpenAI-style key in secrets.env",

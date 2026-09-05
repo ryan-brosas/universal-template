@@ -60,7 +60,7 @@ if yaml is not None:
                 raise yaml.constructor.ConstructorError(
                     "while constructing a mapping",
                     node.start_mark,
-                    f"duplicate key: {key!r}",
+                    "duplicate mapping key",
                     key_node.start_mark,
                 )
             direct_keys.add(key)
@@ -91,7 +91,10 @@ def parse_frontmatter(text: str) -> dict[str, Any]:
     try:
         value = yaml.load(source, Loader=UniqueKeyLoader)
     except yaml.YAMLError as exc:
-        raise FrontmatterError(f"invalid YAML: {exc}") from exc
+        # PyYAML messages and marks can contain arbitrary input, including secrets.
+        mark = getattr(exc, "problem_mark", None)
+        location = f" at line {mark.line + 2}, column {mark.column + 1}" if mark else ""
+        raise FrontmatterError(f"invalid YAML ({type(exc).__name__}){location}") from None
     if not isinstance(value, dict):
         raise FrontmatterError("frontmatter must be a YAML mapping")
     if not all(isinstance(key, str) for key in value):
@@ -231,21 +234,21 @@ def validate_skill(
     if name is None:
         errors.append(f"{skill}: name missing")
     elif not NAME_RE.fullmatch(name):
-        errors.append(f"{skill}: invalid skill name: {name!r}")
+        errors.append(f"{skill}: invalid skill name")
     elif name != skill.parent.name:
-        errors.append(f"{skill}: name {name!r} != directory {skill.parent.name!r}")
+        errors.append(f"{skill}: name does not match directory")
     description = metadata.get("description")
     if not isinstance(description, str) or not description.strip():
         errors.append(f"{skill}: description missing")
     if require_invocation:
         invocation = metadata.get("invocation")
-        if invocation not in INVOCATIONS:
-            errors.append(f"{skill}: invocation must be one of {sorted(INVOCATIONS)}, got {invocation!r}")
+        if not isinstance(invocation, str) or invocation not in INVOCATIONS:
+            errors.append(f"{skill}: invocation must be one of {sorted(INVOCATIONS)}")
         hidden_value = metadata.get("disable-model-invocation", False)
         hidden = hidden_value is True
         if invocation == "entry" and hidden:
             errors.append(f"{skill}: entry invocation contradicts hidden visibility")
-        if invocation in {"internal", "manual"} and not hidden:
+        if invocation in ("internal", "manual") and not hidden:
             errors.append(f"{skill}: {invocation} invocation requires hidden visibility")
         kind = metadata.get("kind")
         foundation_name = bool(name and name.endswith("-foundation"))
@@ -253,8 +256,8 @@ def validate_skill(
             errors.append(f"{skill}: *-foundation requires kind: foundation")
         if kind == FOUNDATION_KIND and not foundation_name:
             errors.append(f"{skill}: kind: foundation requires a *-foundation name")
-        if kind not in {None, FOUNDATION_KIND}:
-            errors.append(f"{skill}: unsupported kind: {kind!r}")
+        if kind not in (None, FOUNDATION_KIND):
+            errors.append(f"{skill}: unsupported kind; expected foundation or no kind")
         if kind == FOUNDATION_KIND:
             if invocation != "manual":
                 errors.append(f"{skill}: foundation invocation must be manual")
@@ -291,7 +294,7 @@ def validate_tree(
         name, skill_errors = validate_skill(skill, require_invocation, link_root or root)
         errors.extend(skill_errors)
         if name in seen:
-            errors.append(f"{skill}: duplicate skill name: {name}")
+            errors.append(f"{skill}: duplicate skill name")
         elif name:
             seen.add(name)
     return errors
@@ -398,12 +401,43 @@ def selftest() -> int:
                 "extra:\n  key: first\n  key: second\n---\n"
             )
         except FrontmatterError as exc:
-            if "duplicate key: 'key'" not in str(exc):
+            if "invalid YAML (ConstructorError)" not in str(exc):
                 print(f"selftest: nested duplicate error changed: {exc}", file=sys.stderr)
                 return 1
         else:
             print("selftest: nested duplicate key accepted", file=sys.stderr)
             return 1
+        # Diagnostics must identify the location/class, never echo source values.
+        marker = "sensitive-" + "canary-value"
+        for source in (
+            f"description: [{marker}\n",
+            f"{marker}: first\n{marker}: second\n",
+            f"extra: !{marker} value\n",
+            f"description: {marker}\x00\n",
+        ):
+            try:
+                parse_frontmatter("---\n" + source + "---\n")
+            except FrontmatterError as exc:
+                if marker in str(exc):
+                    print("selftest: YAML diagnostic echoed source input", file=sys.stderr)
+                    return 1
+            else:
+                print("selftest: malformed YAML accepted", file=sys.stderr)
+                return 1
+        for field, value in (
+            ("name", marker), ("invocation", marker), ("kind", marker),
+            ("invocation", "[manual]"), ("kind", "[foundation]"),
+        ):
+            bad = re.sub(rf"^{field}:.*$", f"{field}: {value}", valid_text, flags=re.MULTILINE)
+            (valid / "SKILL.md").write_text(bad, encoding="utf-8")
+            try:
+                _name, errors = validate_skill(valid / "SKILL.md")
+            except (TypeError, ValueError):
+                print("selftest: invalid metadata crashed validation", file=sys.stderr)
+                return 1
+            if not errors or marker in "\n".join(errors):
+                print("selftest: metadata diagnostic missing or echoed source input", file=sys.stderr)
+                return 1
         cases = [
             (valid_text.replace("invocation: manual", "invocation: entry"), "foundation invocation must be manual"),
             (valid_text.replace("kind: foundation\n", ""), "*-foundation requires kind: foundation"),
@@ -412,11 +446,11 @@ def selftest() -> int:
             (valid_text.replace("kind: foundation", "kind: [foundation"), "frontmatter unparseable"),
             (
                 valid_text.replace("name: demo-foundation", "name: first\nname: second"),
-                "duplicate key: 'name'",
+                "invalid YAML (ConstructorError)",
             ),
             (
                 valid_text.replace("invocation: manual", "invocation: entry\ninvocation: manual"),
-                "duplicate key: 'invocation'",
+                "invalid YAML (ConstructorError)",
             ),
         ]
         for bad, expected in cases:

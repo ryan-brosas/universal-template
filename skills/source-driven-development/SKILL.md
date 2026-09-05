@@ -1,79 +1,30 @@
 ---
 name: source-driven-development
-description: "Use when shipping code that depends on unfamiliar libraries, external APIs, or framework behavior: cite the authoritative source or mark the decision unverified; route discovery itself to evidence-router."
+description: "Use when an implementation depends on unfamiliar library, API, or framework behavior; verify the relevant version and behavioral claim from authoritative evidence."
 invocation: internal
 disable-model-invocation: true
 ---
 
-# Source-Driven Development (gate)
+# Verify an external behavior
 
-This is a delivery-time gate, not a research workflow. Discovery belongs to the research leaves (`evidence-router`, `codex-websearch`, `opensrc`, `grill-with-docs`); this skill only enforces the rule that non-trivial external decisions are not shipped on a guess.
+Use the installed version's source, docs or a direct probe for the unfamiliar
+behavior the change actually depends on. Current local tests and implementation
+outrank a remembered API or a historical capsule. State material uncertainty
+when evidence is unavailable rather than inventing a flag, import or guarantee.
 
-## Iron Rule
+Useful shortcuts:
 
-For any non-trivial external API, framework, or version decision:
+- A capsule's file path and exact revision can take you straight to upstream
+  source. Capsules in one foundation may describe different revisions; the
+  selected capsule's pin matters more than the index's headline revision.
+- A direct raw-file fetch or installed source read usually needs no checkout,
+  code index, model resolver or research workflow. Save a fetched file when
+  several reads will use it instead of repeatedly downloading it.
+- A small behavioral probe can settle semantics that docs leave ambiguous.
+  Check the real boundary, not just a mock that restates the assumption.
+- Copy source links exactly. A correct implementation with an invented citation
+  path is still a misleading report.
 
-- Cite the authoritative source (URL, docs, or local precedent), **or**
-- Mark the decision `[UNVERIFIED: reason]` explicitly.
-
-No citation and no unverified label → the claim does not ship.
-
-## Core Principle
-
-This is a delivery-time gate, not a research workflow: non-trivial external decisions
-are not shipped on a guess. Cite the authoritative source (URL, docs, or local
-precedent), or mark the decision `[UNVERIFIED: reason]` explicitly, no citation and no
-unverified label means the claim does not ship.
-
-## When to Use / NOT
-
-- **Use when:** shipping code that depends on unfamiliar libraries, external APIs, or
- framework behavior, any non-trivial external API, framework, or version decision.
-- **NOT when:** doing the discovery itself, discovery belongs to the research leaves
- (`evidence-router`, `codex-websearch`, `opensrc`, `grill-with-docs`); this skill only
- enforces the rule at delivery time.
-
-## Workflow
-
-1. Identify every non-trivial external API, framework, or version decision in the
- change.
-2. Route discovery to `evidence-router` instead of re-deriving a retrieval
- workflow here.
-3. Run the Gate Checklist: version-check → behavioral probe → cite or mark unverified →
- conflict resolution.
-4. Ship only claims that carry a citation or an explicit `[UNVERIFIED: reason]` label.
-
-## Route discovery to the evidence owner
-
-There is one evidence-routing owner: `evidence-router`. When an external
-behavior materially affects the implementation, delegate source selection to
-it (local code, Fovea, Codebase Memory, Context7, web, it picks the smallest
-capable source). This skill enforces only the delivery-time rule: the claim
-ships cited or labeled `[UNVERIFIED: reason]`.
-
-## Gate Checklist
-
-1. **Version-check**: docs/package version vs the project's declared version.
-2. **Behavioral probe**: verify with a direct run when the cost is low.
-3. **Cite or mark unverified** (Iron Rule).
-4. **Conflict resolution**: local code and tests > official docs/source > maintained examples > dated community posts.
-
-## Red Flags
-
-- Unfamiliar API used without citation or local precedent.
-- Community answer conflicts with official docs.
-- Docs version differs from package version.
-- Agent invents options, flags, or imports.
-- Research dump with no recommendation.
-
-## Verification
-
-- Key claims cite authoritative sources or are labeled unverified.
-- Project/library versions considered.
-- Recommendation is specific.
-- External claims probed when cheap.
-
-
-## References
-
-N/A, no reference files; routing and the gate checklist are fully specified in this file.
+Cite the evidence that carries the consequential claim and distinguish it from
+inference. `../evidence-router/SKILL.md` is an optional capability map when you
+do not know where to look, not a prerequisite before using a known source.

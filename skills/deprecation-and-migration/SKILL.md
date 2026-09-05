@@ -4,126 +4,45 @@ description: Use when deprecating APIs, migrating between library versions, remo
 invocation: entry
 ---
 
+# Deprecation and migration
 
-# Deprecation & Migration
+Start with the consumers and compatibility contract. A public API with unknown
+consumers needs notice and a usable replacement; a private helper whose callers
+are changed together may need neither a deprecation period nor a migration guide.
+Use the project's release policy for timing and versioning. There is no universal
+three-month wait, one-break-per-major rule, or requirement for parallel paths.
 
-## Core Principle
+## Give consumers a usable path
 
-Deprecate first, remove later, and document the migration path. "Deprecated" without "do this instead" is a wall, not a path; keep both working during deprecation, until the removal version.
-
-## When to Use / NOT
-
-**Use**, deprecating APIs, migrating between library versions, removing legacy code, or planning breaking changes.
-
-**NOT**, when nothing is being removed or replaced: there is no deprecation period, migration path, or codemod to design.
-
-## Iron Laws
-
-<EXTREMELY-IMPORTANT>
-- **Deprecate first, remove later.** Users need time to migrate.
-- **One major version per breaking change.** Don't bundle breaks.
-- **Document the migration path.** "Deprecated" without "do this instead" is a wall, not a path.
-- **Keep both working during deprecation.** Until the removal version.
-- **Communicate in changelog, docs, runtime warnings.** All three.
-</EXTREMELY-IMPORTANT>
-
-## Workflow, Deprecation Lifecycle
-
-```
-[1] Add @deprecated notice + runtime warning
-[2] Document migration path (with codemod if possible)
-[3] Wait at least one minor version (or 3 months, whichever longer)
-[4] Remove in next major version
-[5] Changelog: "Removed X. Use Y. Migration: <link>"
-```
-
-Skipping steps breaks trust. Users need time. The cadence is conservative on purpose.
-
-## Deprecation Notice Template
+For published APIs, say what replaces the old behavior, what changes semantically,
+and when removal is intended. Put the notice where affected consumers will see
+it: type annotations, release notes, docs or bounded runtime warnings as fits
+the interface. Do not add noisy runtime logging merely to duplicate a type notice.
 
 ```ts
 /**
- * @deprecated since 2.3.0. Use `newApi()` instead.
- * Will be removed in 3.0.0.
- * Migration: https://docs.example.com/migration/2.3
+ * @deprecated since 2.3.0. Use newApi() instead.
+ * Planned removal: 3.0.0. See the 2.3 migration guide.
  */
-function oldApi() { ... }
 ```
 
-In code: `@deprecated` JSDoc + runtime `console.warn` (rate-limited). In docs: a migration guide. In changelog: the same notice.
+A migration note often needs only the smallest before/after example and the
+non-obvious semantic differences. Add rollout, rollback or mixed-version
+compatibility details when data, distributed deployments or external consumers
+make them consequential. A feature flag is one option, not a required layer.
 
-## Migration Guide Anatomy
+## Automate repetition, not ambiguity
 
-```markdown
-# Migrating from X to Y
+A codemod earns its place for repeated, reliably identifiable transformations.
+Prefer an existing upstream migration tool. If authoring one, resolve imported
+bindings rather than renaming every call with the same spelling; preserve
+comments and unrelated code, and leave ambiguous cases for review. Check real
+call sites, alias/shadowing cases, and a second run for unintended further edits.
+Small migrations may be safer as direct edits. Inability to automate a semantic
+change is not a reason to forbid the migration.
 
-## Why
-[What changed and why.]
-
-## TL;DR
-[Smallest possible change.]
-
-## Step-by-step
-1. [First change. With code example.]
-2. [...]
-
-## Codemod
-[Link to or inline a script that does the migration.]
-
-## FAQ
-[Common questions from the team or community.]
-```
-
-The TL;DR is for the impatient. The step-by-step is for the careful. Codemods serve the many teams.
-
-## Codemod
-
-A codemod script that automates the migration. Lives in `scripts/codemod/`. Tested on real code (not just samples).
-
-```ts
-// jscodeshift example
-module.exports = (file, api) => {
-  const j = api.jscodeshift
-  return j(file.source)
-    .find(j.CallExpression, { callee: { name: "oldApi" } })
-    .replaceWith(({ node }) => j.callExpression(j.identifier("newApi"), node.arguments))
-    .toSource()
-}
-```
-
-If you can't write a codemod, the migration is too complex for a deprecation. Reconsider.
-
-## Staged Rollout
-
-For breaking changes in libraries: feature flag the new behavior, default to old, opt-in for early adopters, default to new in next major.
-
-```ts
-function process(input) {
-  if (featureFlags.newBehavior) return newProcess(input)
-  return oldProcess(input) // deprecated path
-}
-```
-
-## Common Mistakes
-
-Removing without deprecation period. "deprecated" without a migration guide. bundling multiple breaks into one major. no runtime warning. no changelog entry. codemod that doesn't run on real code. guide that's only the TL;DR. deprecating without telling users; @deprecated JSDoc forever. "we removed it, use the new one" (no link).
-
-## Red Flags
-
-Removal without notice; `@deprecated` without runtime warning. no migration guide. codemod not tested. deprecation period < 1 minor version. "deprecated" not in changelog. multiple breaks in one major. asking users to read source for migration. no opt-in for early adopters. "we'll keep both forever" (that's a feature, not a migration).
-
-## Anti-Patterns
-
-**Remove without deprecating**; **deprecate without migration path**; **silent deprecation**; **codemod that breaks real code**; **bundled breaking changes**; **no changelog entry**; **"forever deprecated"** (commit to the timeline).
-
-## Verification
-
-- Changelog entry present: "Removed X. Use Y. Migration: <link>".
-- Runtime warning fires (rate-limited `console.warn`) alongside the `@deprecated` JSDoc.
-- Migration guide ships with a codemod tested on real code, not just samples.
-- Both old and new paths still work during the deprecation period.
-
-
-## References
-
-N/A, no reference files; all templates and examples are inline in this skill.
+Verify the new path through actual consumers. During a promised compatibility
+window, test the old path too; after removal, check exports, registrations and
+remaining callers. For data migrations, exercise retry/interruption and recovery
+where those risks exist. Report incompatibilities rather than inferring safety
+from compilation alone.

@@ -33,10 +33,14 @@ available source without a fixed tool chain.
 Handle meaningful findings proportionately: reproduce when practical, verify,
 assess impact, then fix, defer, document, or reject with a reason.
 
-Keep context bounded. Load only task-relevant files, skills, foundations,
-history, references, and tool schemas. Delegate only when it materially improves
-parallelism, specialization, or context isolation; keep one writer per ownership
-area.
+Skills supply context and shortcuts; the model owns the approach. Choose,
+combine, skip or adapt methods to the task. Ordinary work needs no prerequisite
+template infrastructure. Load only relevant context; cold skills and foundations
+are searchable beside this file under `skills/` (`skill-catalog` helps on a gap).
+Use helpers when they remove work or protect a real boundary.
+
+Delegate only when it materially improves parallelism, specialization, or context
+isolation; keep one writer per ownership area.
 
 ## Verification
 
@@ -60,6 +64,5 @@ radius and obtain confirmation. Never expose, invent, or commit secrets.
 
 ## Boundary
 
-This file defines outcomes and constraints, not a mandatory workflow, router,
-scoring system, fixed tool chain, or planning ceremony. Detailed procedures
-belong in project-local instructions, skills, prompts, tests, CI, and tools.
+This constitution sets outcomes and constraints, not a workflow. Procedures
+belong with their project, skill, prompt, test, or tool.
