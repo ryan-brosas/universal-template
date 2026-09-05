@@ -12,6 +12,8 @@ import sys
 import tempfile
 from pathlib import Path
 
+from publication_fixtures import fixture_environment, fixture_git, require
+
 BASE = Path(__file__).resolve().parents[1]
 MAX_BYTES = 1024 * 1024
 MAX_SCAN_BYTES = MAX_BYTES
@@ -279,15 +281,9 @@ def selftest() -> int:
 
 
 def _git_commit(root: Path) -> None:
-    subprocess.run(["git", "init", "-q"], cwd=root, check=True)
-    subprocess.run(
-        ["git", "-c", "user.email=fixture@example.com", "-c", "user.name=fixture", "add", "-A"],
-        cwd=root, check=True,
-    )
-    subprocess.run(
-        ["git", "-c", "user.email=fixture@example.com", "-c", "user.name=fixture", "commit", "-qm", "fixture"],
-        cwd=root, check=True,
-    )
+    fixture_git(root, "init", "-q")
+    fixture_git(root, "add", "-A")
+    fixture_git(root, "commit", "-qm", "fixture")
 
 
 def _make_repo(root: Path, files: dict[str, bytes]) -> Path:
@@ -298,6 +294,7 @@ def _make_repo(root: Path, files: dict[str, bytes]) -> Path:
         target.write_bytes(blob)
     (root / "scripts").mkdir()
     shutil.copy2(Path(__file__), root / "scripts" / "repo-hygiene.py")
+    shutil.copy2(Path(__file__).with_name("publication_fixtures.py"), root / "scripts" / "publication_fixtures.py")
     _git_commit(root)
     return root
 
@@ -385,7 +382,7 @@ def fixture_test() -> int:
     with tempfile.TemporaryDirectory(prefix="repo-hygiene-fixture-") as tmp:
         defect_root = _make_repo(Path(tmp) / "defect", defect)
         run = subprocess.run(
-            [sys.executable, "scripts/repo-hygiene.py"], cwd=defect_root,
+            [sys.executable, "scripts/repo-hygiene.py"], cwd=defect_root, env=fixture_environment(defect_root),
             capture_output=True, text=True,
         )
         if run.returncode != 1:
@@ -395,25 +392,25 @@ def fixture_test() -> int:
         if missing:
             print(f"fixture-test failed: defect classes not detected: {missing}\n{run.stdout}", file=sys.stderr)
             return 1
-        assert token not in run.stdout + run.stderr, "diagnostic leaked credential payload"
-        assert "PARTIAL text safety scan" in run.stderr
-        assert "SKIP text safety scan" in run.stderr
+        require(token not in run.stdout + run.stderr, "diagnostic leaked credential payload")
+        require("PARTIAL text safety scan" in run.stderr, "partial-scan diagnostic missing")
+        require("SKIP text safety scan" in run.stderr, "skipped-scan diagnostic missing")
         clean_root = _make_repo(Path(tmp) / "clean", clean)
         run = subprocess.run(
-            [sys.executable, "scripts/repo-hygiene.py"], cwd=clean_root,
+            [sys.executable, "scripts/repo-hygiene.py"], cwd=clean_root, env=fixture_environment(clean_root),
             capture_output=True, text=True,
         )
         if run.returncode != 0:
             print(f"fixture-test failed: clean repo exit {run.returncode}\n{run.stdout}", file=sys.stderr)
             return 1
-        assert "SKIP text safety scan" in run.stderr
+        require("SKIP text safety scan" in run.stderr, "skipped-scan diagnostic missing")
         # Check the production read boundary, not just the decoding helper.
         from unittest.mock import patch
         with patch.dict(globals(), BASE=clean_root), patch.object(
             Path, "read_bytes", side_effect=AssertionError("unbounded read")
         ):
             errors = check([clean_root / "scripts/repo-hygiene.py"])
-        assert not errors, errors
+        require(not errors, f"bounded-read check failed: {errors}")
     print("REPOSITORY HYGIENE FIXTURE TEST PASS")
     return 0
 

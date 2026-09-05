@@ -13,7 +13,7 @@ Figma is the spec. Paper tokens are the one settings set. Screenshot the Figma n
 ## When to Use / NOT
 
 - **Use when:** the user wants a Figma frame, component set, or template copied into Paper; wants Paper to stick to Figma or inspo; wants Paper tokens from Figma; requests literal source transfer, not generic Paper-native component work.
-- **NOT when:** the source is a live website (`web-reference`); the job is app code from Figma; Paper work has no Figma source (design in Paper directly).
+- **NOT when:** the source is a live website (`web-reference`); the job is app code from Figma; Paper work has no design source (design in Paper directly). Captured visual references remain in scope.
 
 ## Workflow
 

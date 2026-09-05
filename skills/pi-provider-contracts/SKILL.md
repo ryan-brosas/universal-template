@@ -23,7 +23,10 @@ Provider extensions are stitched together by ordering-sensitive contracts (auth 
    - `before_provider_headers` runs before the OpenAI SDK adds `Authorization` from the resolved key. To keep a placeholder off the wire: register `authHeader: true` and null the header in the hook; a nulled `defaultHeaders` entry deletes the SDK's own auth header.
    - Never re-register the provider inside `refreshModels`: every registration fires an offline refresh, which loops. Return the list instead.
    - Online catalog refresh happens only in interactive sessions (session start, `/model`). Headless `-p` runs and `pi update --models` (bare runtime, no extensions) never fetch.
-3. **Wire-verify the relevant runtime claims.** Use a controlled loopback HTTP endpoint and synthetic sentinel credentials, then drive real `pi -e . --model <provider>/<id> -p` sessions in a temporary `PI_CODING_AGENT_DIR`. Capture method, path, authorization presence/sentinel equality, and only the payload fields needed for keyless, keyed, or thinking-on scenarios. Never log raw live authorization values. A fake-pi probe can pass while the real wire leaks credentials. If a real integration needs live credentials or external effects, stay within the user's authorization and retain only redacted/presence evidence.
+3. **Wire-verify the relevant runtime claims.** Use a controlled loopback HTTP endpoint with synthetic sentinel credentials only, in a temporary `PI_CODING_AGENT_DIR`. A fake-pi probe can pass while the real wire leaks credentials.
+   - Request behavior: drive real `pi -e . --model <provider>/<id> -p` sessions across the relevant keyless, keyed, and thinking-on scenarios. Inspect every configured credential channel, including Authorization, custom headers, and provider-defined credential fields. Retain only presence/sentinel-equality evidence and necessary payload fields, never raw live credentials.
+   - Online catalog behavior: use a separate real interactive session, exercising session-start and `/model` refresh while observing `/v1/models` and the published catalog. Headless `-p` and `pi update --models` do not establish extension online-refresh behavior.
+   - Live integration: require authorized HTTPS endpoints with certificate verification. Redaction is not transport security. Reject redirects or allow only approved destinations; use synthetic sentinels to inspect each hop and verify no credentials reach an unapproved destination. Never test that boundary by sending live credentials to unapproved hosts.
 4. **Finish at the requested boundary.**
    - Audit: return evidence-backed findings (`file:line` or redacted runtime evidence), impact, and uncertainty. Do not automatically edit or ship.
    - Implementation: fix and verify the authorized scope, including an appropriate regression probe. Ordinary reversible work in that scope needs no repeated permission; push, PR, publication, and merge are not implied.
@@ -41,6 +44,7 @@ Provider extensions are stitched together by ordering-sensitive contracts (auth 
 - For implemented fixes, run relevant repo gates and extend the owning probe. Name any unavailable runtime evidence.
 
 ## Related
+
 - `pi-package-development` skill: manifest, bundling, install, publish.
 - `ship-pr` skill: only for an explicitly authorized autonomous shipping request. `push-pr` owns a requested push or PR without automatic merge.
 - pi docs: `packages.md`, `extensions.md` (hook semantics), custom-provider reference.

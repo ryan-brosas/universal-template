@@ -6,6 +6,7 @@
 !/scripts/pr-metadata.py
 !/scripts/render-prompt.py
 !/scripts/repo-hygiene.py
+!/scripts/publication_fixtures.py
 !/scripts/runtime-capabilities.py
 !/scripts/skill-catalog.py
 !/scripts/skill-validator.py

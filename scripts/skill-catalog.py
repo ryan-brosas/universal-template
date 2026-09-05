@@ -20,6 +20,9 @@ import subprocess
 import shutil
 import tempfile
 from pathlib import Path
+from unittest.mock import patch
+
+from publication_fixtures import fixture_environment, fixture_git, require, verify_fixture_support
 
 BASE = Path(__file__).resolve().parents[1]
 SKILLS = Path(os.environ.get("SKILLS_ROOT", str(BASE / "skills")))
@@ -578,9 +581,7 @@ def cmd_stats(skills: list[dict], args) -> int:
     print(f"  foundations: {foundation_stats['total']}  visible: {foundation_stats['visible']}"
           f"  loader words min/median/max: {foundation_stats['loader_words_min']}/"
           f"{foundation_stats['loader_words_median']}/{foundation_stats['loader_words_max']}")
-    n_local = sum(1 for s in skills if s.get("local"))
-    if n_local:
-        print(f"  machine-local (git-ignored; excluded from generated catalogs): {n_local}")
+    print("  population: Git-tracked skills (local drafts excluded)")
     print(f"  hot metadata: {st['hot_chars']} chars (~{st['hot_tokens_approx']} tokens)")
     for c in sorted(st["classes"]):
         print(f"  class {c:13} {st['classes'][c]}")
@@ -927,28 +928,29 @@ def isolated_selftest(args) -> int:
         root = Path(temp) / "skills"
         _fixture_skills(root)
         # The selftest never dispatches through ambient discovery.
-        subprocess.run(["git", "init", "-q", str(root.parent)], check=True)
-        subprocess.run(["git", "-C", str(root.parent), "add", "."], check=True)
-        rows = scan(tracked_only=True, root=root)
+        fixture_git(root.parent, "init", "-q")
+        fixture_git(root.parent, "add", ".")
+        with patch.dict(os.environ, fixture_environment(root.parent), clear=True):
+            rows = scan(tracked_only=True, root=root)
         return cmd_selftest(rows, args)
 
 
 def fixture_test() -> int:
     """Exercise current CLI discovery, working-tree parsing and publication."""
+    verify_fixture_support()
     with tempfile.TemporaryDirectory(prefix="catalog-cli-") as temp:
         root = Path(temp)
         (root / "scripts").mkdir()
         (root / "config").mkdir()
-        for name in ("skill-catalog.py", "skill-validator.py"):
+        for name in ("skill-catalog.py", "skill-validator.py", "publication_fixtures.py"):
             shutil.copy2(BASE / "scripts" / name, root / "scripts" / name)
         shutil.copy2(CONTEXT_BUDGET, root / "config/context-budget.json")
         (root / "AGENTS.md").write_text("fixture\n", encoding="utf-8")
         _fixture_skills(root / "skills")
-        subprocess.run(["git", "init", "-q", str(root)], check=True)
-        subprocess.run(["git", "-C", str(root), "add", "."], check=True)
-        subprocess.run(["git", "-C", str(root), "-c", "user.name=Fixture",
-                        "-c", "user.email=fixture@example.invalid", "commit", "-qm", "fixture"], check=True)
-        env = {**os.environ, "SKILLS_ROOT": str(root / "skills")}
+        fixture_git(root, "init", "-q")
+        fixture_git(root, "add", ".")
+        fixture_git(root, "commit", "-qm", "fixture")
+        env = {**fixture_environment(root), "SKILLS_ROOT": str(root / "skills")}
 
         def run(*args, expected=0):
             result = subprocess.run(
@@ -961,7 +963,10 @@ def fixture_test() -> int:
 
         def publication():
             rows = json.loads(run("list", "--surface", "hot", "--tracked-only", "--json").stdout)
-            assert [row["name"] for row in rows] == ["demo"]
+            require([row["name"] for row in rows] == ["demo"], "tracked export population changed")
+            report = run("stats")
+            require("population: Git-tracked skills" in report.stdout, "stats population is not explicit")
+            require("machine-local" not in report.stdout, "stats still reports an unreachable local count")
             run("context", "--json")
             run("generate", "--check")
 
@@ -978,19 +983,19 @@ def fixture_test() -> int:
             "---\nname: local\ndescription: valid local\ninvocation: entry\n---\n", encoding="utf-8")
         publication()
         local = run("list", "--json")
-        assert {row["name"] for row in json.loads(local.stdout)} == {"demo", "demo-foundation", "local"}
-        assert "draft/SKILL.md" in local.stderr and "ignored/SKILL.md" in local.stderr
+        require({row["name"] for row in json.loads(local.stdout)} == {"demo", "demo-foundation", "local"}, "local discovery lost valid candidates")
+        require("draft/SKILL.md" in local.stderr and "ignored/SKILL.md" in local.stderr, "draft diagnostics missing")
         run("selftest")
         tracked = root / "skills/demo/SKILL.md"
         tracked.write_text("invalid uncommitted edit\n", encoding="utf-8")
         for args in (("list", "--tracked-only", "--json"), ("context",), ("generate", "--check")):
-            assert "demo/SKILL.md" in run(*args, expected=1).stderr
-        subprocess.run(["git", "-C", str(root), "add", str(tracked)], check=True)
-        assert "demo/SKILL.md" in run("generate", expected=1).stderr
+            require("demo/SKILL.md" in run(*args, expected=1).stderr, "invalid working-tree edit not diagnosed")
+        fixture_git(root, "add", str(tracked))
+        require("demo/SKILL.md" in run("generate", expected=1).stderr, "invalid tracked skill not diagnosed")
         # Git failure must not promote an external collection to publication.
         shutil.rmtree(root / ".git")
-        assert "Git tracking unavailable" in run("context", expected=1).stderr
-        assert "Git tracking unavailable" in run("list", "--json").stderr
+        require("Git tracking unavailable" in run("context", expected=1).stderr, "publication inferred an outer Git repository")
+        require("Git tracking unavailable" in run("list", "--json").stderr, "local discovery omitted tracking limitation")
     print("SKILL CATALOG FIXTURE TEST PASS")
     return 0
 
