@@ -4,35 +4,40 @@ description: "Use when the user wants a change shipped autonomously end to end: 
 invocation: entry
 ---
 
-# Ship PR (autonomous loop)
+# Ship PR
 
-## Core Principle
-One evidence path from working tree to merge: gates before push, a PR body built from real output, review findings triaged against the code, and a merge only after every hard signal is green. Invoking this loop pre-authorizes the merge; the evidence still gates it.
+This is the orchestration layer for an explicitly requested full lifecycle through
+merge. Individual push, PR, review, or merge requests belong to
+`../push-pr/SKILL.md`. Full-cycle authorization permits merge, but evidence still
+gates it. If the repository has no quality gate, report that gap instead of
+inventing CI or claiming a clean full cycle.
 
-## When to Use / NOT
-- **Use when:** the user asks for the full cycle in one request ("ship it", "commit, push, PR, and merge if it's clean", "handle the whole PR lifecycle").
-- **NOT when:** a single step is asked for (push only, PR only, feedback only, merge only); `push-pr` owns those; or the target repo has no quality gate (report the verification gap, do not invent CI).
+## Loop
 
-## Workflow
-1. **Scope and branch.** Inspect the diff; split scoped conventional commits (data, behavior, tests, docs are separate concerns). Discover the repository's default or requested base branch, then branch from it. Never commit unrelated churn.
-2. **Gates before push.** Run the repo's verification on the committed tree (record commands + exit codes) and `git diff --check <base>..HEAD`. A red gate blocks the push.
-3. **PR.** Discover the repo's PR template and fill it from real evidence (commands, exit codes, probe output). Write the body through `mktemp`, never shell-interpolated. `gh pr create --base <base>`; if a PR exists for the branch, update it instead.
-4. **Watch CI.** `gh pr checks <n> --watch` to a final state. A green review-bot check is not "no findings"; fetch the threads.
-5. **Review triage.** REST `pulls/<n>/comments` + GraphQL `reviewThreads` every cycle. For each finding: verify against the code first. Valid → smallest fix, extend probes where the repo demands them, gates, commit, push → reply **in-thread** `Updated in <sha>.` + what changed → resolve the thread. Invalid → rebut **in-thread** with evidence and leave it unresolved for the reviewer. Conflicts → merge/rebase `main`, re-run gates, push.
-6. **Merge when all hold:** `mergeStateStatus` `CLEAN`, required checks green, every thread resolved (a rebuttal backed by evidence is a deliberate disposition; findings needing a human decision do not count, so stop and report instead), local gates green. Use a merge method the repo allows (`gh repo view --json *MergeAllowed`), delete the branch, sync `main`.
-7. **Stop:** report the PR link, merge sha, and any threads left for a human.
+1. Inspect authored scope and the requested/default base. Create a branch and
+   scoped conventional commits without unrelated changes. Run the repository's
+   gates on the committed tree and `git diff --check <base>..HEAD`. A red local
+   gate blocks push.
+2. Load `../push-pr/SKILL.md` and use its evidence, template, PR creation/update,
+   and metadata procedure. Do not duplicate endpoint mechanics here.
+3. Watch required CI to a final state. Read review findings, not just review-bot
+   status. For each feedback cycle, use
+   `../push-pr/references/review-threads.md`: verify findings against source, fix
+   and test valid issues, commit/push, reply in-thread, then resolve appropriately.
+   Rebut invalid findings with evidence in-thread; leave them open for reviewer
+   confirmation when needed. A reply alone never resolves a thread.
+4. For conflicts, integrate the current base and rerun gates before pushing.
+   Repeat verification after every fix; stop and report findings requiring a
+   human decision.
+5. Merge only with `mergeStateStatus: CLEAN`, green local gates and required CI,
+   and every review thread resolved. Use a repository-allowed merge method;
+   never bypass protections. Auto-merge is not implied by repository capability.
+6. Delete the merged task branch and sync the local base without discarding user
+   work. If local changes prevent safe cleanup, report the remaining cleanup
+   rather than reset them.
 
-## Red Flags
-- **HARD-GATE:** never merge with failing required checks or unresolved threads.
-- **HARD-GATE:** a green review-bot check is not "the review has no findings"; fetch and read the threads.
-- **HARD-GATE:** never resolve a thread merely because a reply was posted; never merge while a thread waits on a human decision.
-- **HARD-GATE:** never push with a red gate; never fabricate evidence, SHAs, CI states, or probe output.
-- **HARD-GATE:** replies go in-thread (REST `in_reply_to` = the top-level comment's database id; thread state lives on the GraphQL `PRRT_…` node id, a different id).
-- Do not hand-add labels/milestones automation derives; do not enable auto-merge unless the user asked.
-
-## Verification
-- `gh pr view <n> --json state,mergedAt,mergeCommit` → `MERGED` with a sha; `gh pr checks <n>` all pass; `gh api .../reviewThreads` → all `isResolved`; local gates exit 0 on the final tree; `main` synced, branch deleted.
-
-## Related
-- `push-pr` skill: the full in-thread reply/resolution protocol (REST + GraphQL id semantics, body construction, template discovery).
-- `git-workflow-and-versioning` skill: commit/merge-method conventions.
+Verify completion with `gh pr view <n> --json state,mergedAt,mergeCommit,statusCheckRollup`
+(`MERGED`, a merge SHA, and every rollup check passing) plus paginated GraphQL
+`reviewThreads.isResolved` all true. Report the PR link, merge SHA, and any
+cleanup limitation. Commit/merge conventions belong to
+`../git-workflow-and-versioning/SKILL.md`.

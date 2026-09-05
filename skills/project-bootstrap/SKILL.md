@@ -6,93 +6,74 @@ invocation: entry
 
 # Project Bootstrap
 
-## When to Use / NOT
+Teach the agent how to enter the project, not document the universe. Default to
+read-only understanding; persist only valuable, non-obvious context. Ordinary
+work in a known repository stays in the normal development loop.
 
-- **Use when:** entering a new or unfamiliar repository, greenfield project
-  setup, or intentional lightweight project governance.
-- **NOT when:** continuing ordinary work in a known repo; that stays in the
-  normal development loop.
+## Select from repository state and user intent
 
-## Core Principle
+### A. Onboarding (read-only default)
 
-Initialization teaches the agent how to enter the project, it does not document the universe. Default to read-only understanding; create persistent artifacts only when durable, non-obvious context earns them; reconcile rather than rebuild on later runs.
+Answer: what is this, how does it run/test/build, where are the main seams, and
+what matters before editing? Inspect relevant instructions, README, manifests,
+lockfiles, runtime files, entrypoints, CI, dirty state, generated/vendor boundaries,
+and known traps. Use source first; graphs, history, or cold capability maps should
+close a named gap, not become mandatory exploration.
 
-## Workflow: Pick a mode from repository state + user intent
+If `reference/` or `reference/web/` exists, list top-level checkout/capture names
+only. Do not ingest their contents during onboarding.
 
-| Situation | Mode |
-|---|---|
-| "help me understand / set me up on this repo", unfamiliar checkout | **A, Onboarding** (read-only, default) |
-| "set up this repo for long-term agent work", "create project instructions" | **B, Govern** |
-| empty/minimal directory, "start a new project" | **C, Greenfield** |
-| later invocation on a bootstrapped repo | **D, Refresh** (reconcile) |
+Return a compact **conversation summary**, not files: project/type/stack/runtime;
+run/test/build commands with executed results; key paths, boundaries, current
+state, traps, and reference asset names. An unexecuted command is not verified.
+Do not create a roadmap, architecture encyclopedia, version cache, or user profile.
 
-## Mode A, Onboarding (read-only)
+### B. Govern (persistent context requested)
 
-Inspect enough to answer: *What is this? How do I run it? How do I test it? Where are the main seams? What should I know before touching it?*
+Inspect existing instructions before adding anything. Use
+`../../templates/agents.md` for missing, valuable local instructions: verified
+commands, non-obvious invariants, traps, and enforced conventions. Optionally
+create one 30–60-line context file from `../../templates/project-context.md` at
+`docs/project-context.md` or the native location. Record expensive-to-reconstruct
+intent and unsupported behavior, not a manifest cache. Use
+`../../templates/roadmap.md` only for an explicitly requested roadmap.
 
-Read, as relevant: repo root, local `AGENTS.md`/instructions, README, manifests, lockfiles, language/runtime files, project structure, main entrypoints, real build/test/lint commands (run them, a command you have not run is not verified), existing CI, current dirty state, docs, obvious generated/vendor directories. Use direct source first; reach for Fovea, Steroid, Codebase Memory, or cold capability maps only when they close a named gap. Recent Git history only when useful.
+Delegate requested GitHub governance to `../github-repo-setup/SKILL.md` and CI to
+`../github-actions-engineering/SKILL.md`; neither is an automatic side effect.
 
-**Project-local prior art (cheap inventory):** when `reference/` or
-`reference/web/` exists at the repo root, list top-level entry names only
-(filesystem listing; no bulk read): `reference/<name>/` checkouts and
-`reference/web/<site>/` captures. Note what reusable assets exist so later
-work can consult them; do not ingest every reference during onboarding.
+### C. Greenfield
 
-**Output, a compact session summary (conversation, not files):**
+Skip deep existing-repo detection in an empty directory. Unclear direction goes
+to `../brainstorming/SKILL.md`; clear direction goes to native stack scaffolding.
+"Start a new project" alone does not request GitHub or CI setup: report what was
+skipped. Requests for "our baseline", "standard setup", "production-ready",
+"OSS-ready", or "full setup" authorize the baseline after scaffolding: GitHub
+setup at the maturity class in
+`../github-repo-setup/references/setup-matrix.md`, then CI, then
+`../git-workflow-and-versioning/SKILL.md` only for a versioned project.
 
-```
-Project / Type / Stack / Package+runtime
-Run / Test / Build (verified commands)
-Key paths · Important boundaries · Current state · Known traps
-Reference assets · (when present: names under reference/ and reference/web/)
-```
+Start complex/high-risk creation from user constraints too. When durable recovery
+or coordination state may be needed, explicitly load `../goal-setup/SKILL.md`;
+it owns qualification, not a duration threshold.
 
-No persistent files. No roadmap, user profile, project encyclopedia, tech-stack cache, or architecture summary. The user asked to enter the project, not document it.
+### D. Refresh
 
-## Mode B, Govern
+Inspect, compare, and update only stale guidance. Preserve handwritten decisions
+and intentional local instructions; never rebuild from scratch. A second run on
+a current repository reports "nothing to change".
 
-Inspect what already exists first (AGENTS.md, instructions, docs). Create only what is missing and valuable:
+## Verify and stop
 
-- `AGENTS.md` from `templates/agents.md`, local Verify commands (run them), repository facts, non-obvious invariants, traps, enforced conventions only.
-- Optionally ONE compact context file (`docs/project-context.md` from `templates/project-context.md`, or the repository's native location), 30–60 lines of expensive-to-reconstruct intent: decisions, constraints, boundaries, traps, intentionally unsupported behavior. Not a manifest cache.
+If setup or refresh verification fails, do not claim completion: reopen the
+evidence, record the reproducible failure and its root cause, and load
+`../debugging-and-error-recovery/SKILL.md` before retrying or reporting.
 
-GitHub setup → delegate to `github-repo-setup`. CI → `github-actions-engineering`. Do not run either automatically.
+Onboarding writes no files. For persistent changes, confirm files exist, reconcile
+with prior content, and contain verified or `[NEEDS CLARIFICATION]` claims. Never
+record a failing command as a working Verify command. Refresh changes only the
+identified stale set.
 
-## Mode C, Greenfield
-
-Do not run existing-repo deep detection on an empty directory. First ask: is the direction clear?
-
-- **Unclear** → `brainstorming` first (ground in the user's problem, not fabricated architecture).
-- **Clear** → scaffold the project (native tooling of the chosen stack), then: GitHub requested? → `github-repo-setup`. CI requested? → `github-actions-engineering`. Neither happens automatically, report that CI/repo setup is absent and let the user decide.
-- **Baseline requested**, phrases like "our standard setup", "our baseline", "production-ready", "OSS-ready", "full setup" authorize the standard baseline after scaffolding: `github-repo-setup` at the maturity class from its `../github-repo-setup/references/setup-matrix.md`, then `github-actions-engineering`, then `git-workflow-and-versioning` only when the project is versioned. "Start a new project" or "scratch project" requests none of it, scaffold, report what was skipped.
-- Complex or high-risk project creation still starts from the user’s constraints and direct scaffolding. If durable recovery or coordination state may be needed, explicitly load `../goal-setup/SKILL.md`; it owns qualification, not a duration threshold.
-
-## Mode D, Refresh (reconcile, never rebuild)
-
-Inspect → compare → update only what is stale. Preserve hand-written decisions and intentional local instructions, regenerate nothing from scratch. Detect stale guidance (retired tool names, dead commands, outdated invariants) and fix exactly that. A second run on a current repository reports "nothing to change".
-
-## Red Flags
-
-- Creating default host artifact packs by default (for pi: `.pi/project.md`,
-  `.pi/state.md`, and similar). HARD-GATE. Host runtime state belongs under
-  the host config (e.g. `~/.pi/` for pi) or explicit project governance, not
-  automatic bootstrap output.
-- Creating a user-profile/personal-preference file in a repository. HARD-GATE.
-- Persisting machine-recoverable facts (versions, commands, branch, dirty state, dependency lists), detect them when needed instead.
-- Running GitHub or CI setup as an automatic side effect of local bootstrap.
-- Overwriting intentional local instructions during refresh.
-- Writing a failing command as the project's verify command.
-
-## Verification
-
-Mode A: every command in the summary was executed (exit code cited). Each written file in Modes B/C exists, reconciles against prior content, and holds only verified or `[NEEDS CLARIFICATION]` claims. In Mode D the diff shows only the stale-set that changed.
-
-## References
-
-- `../../templates/agents.md`, project AGENTS source
-- `../../templates/project-context.md`, compact durable-context source
-- `../../templates/roadmap.md`, only when the user explicitly requests a roadmap
-- `../github-repo-setup/SKILL.md`, repository governance (delegated)
-- `../github-actions-engineering/SKILL.md`, CI/workflows (delegated)
-- `../brainstorming/SKILL.md`, unclear direction (delegated)
-- `../goal-setup/SKILL.md`, earned recovery or coordination record (delegated)
+Do not persist machine-recoverable versions, branches, dependency lists, or dirty
+state. Do not create personal-preference files or default host artifact packs
+(such as `.pi/project.md`/`.pi/state.md`); host runtime state belongs in host
+configuration or explicitly requested project governance.
