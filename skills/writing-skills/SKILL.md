@@ -63,9 +63,20 @@ protocol integrity, or demonstrated expensive failures, not architectural taste.
 
 ## Verify and stop
 
-Run `python3 scripts/skill-validator.py`, regenerate catalogs with
-`python3 scripts/skill-catalog.py generate`, then check with `generate --check`.
-Confirm referenced files exist, discovery selects exactly one hot/cold set, and
-changed callers still work. Check diff hygiene. Review prose using
-`../house-writing-style/SKILL.md`; models review meaning, scripts check exact
-contracts. Report evidence, unmeasured claims, and remaining limitations separately.
+Choose checks for the destination, not the shell's current directory. For changes
+inside universal-template, resolve the target checkout root from the changed files
+and run there: `python3 scripts/skill-validator.py`,
+`python3 scripts/skill-catalog.py generate`, then
+`python3 scripts/skill-catalog.py generate --check`. Ensure `SKILLS_ROOT`, if set,
+points to that checkout's `skills/`, not another installed copy.
+
+For external skills, use that project's available checks and conventions. If it
+has no publication tooling, inspect metadata, links, discovery, and callers
+directly; report universal-template publication checks as not applicable. Do not
+run or regenerate the global catalog to validate an unrelated external skill.
+
+Confirm referenced files exist, intended host discovery works, and changed callers
+still work; universal-template additionally requires disjoint hot/cold sets. Check
+diff hygiene. Review prose using `../house-writing-style/SKILL.md`; models review
+meaning, scripts check exact contracts. Report evidence, unmeasured claims, and
+remaining limitations separately.

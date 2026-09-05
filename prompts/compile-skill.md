@@ -44,9 +44,12 @@ When a skill qualifies:
   compare representative work with and without the candidate: quality, errors,
   turns, calls, loaded context, and side effects. Do not require behavioral A/B
   testing for a simple reference or equate obedience with improvement.
-- Run the exact skill validator and generated-catalog parity check. Review prose
-  and semantic quality using current writing guidance. Report unmeasured lift
-  honestly; structural validity alone does not establish usefulness.
+- Select verification for the destination using `writing-skills`: universal-template
+  publication commands apply only to changes in that checkout, not arbitrary
+  external projects. Use an external project’s own checks or report publication
+  checks as not applicable. Review prose and semantic quality using current writing
+  guidance. Report unmeasured lift honestly; structural validity alone does not
+  establish usefulness.
 
 Outside the universal-template repository, draft in the conversation unless the
 user supplies an explicit destination.
