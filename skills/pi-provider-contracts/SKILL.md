@@ -23,8 +23,11 @@ Provider extensions are stitched together by ordering-sensitive contracts (auth 
    - `before_provider_headers` runs before the OpenAI SDK adds `Authorization` from the resolved key. To keep a placeholder off the wire: register `authHeader: true` and null the header in the hook; a nulled `defaultHeaders` entry deletes the SDK's own auth header.
    - Never re-register the provider inside `refreshModels`: every registration fires an offline refresh, which loops. Return the list instead.
    - Online catalog refresh happens only in interactive sessions (session start, `/model`). Headless `-p` runs and `pi update --models` (bare runtime, no extensions) never fetch.
-3. **Wire-verify like a hostile tester.** Stand up a recording HTTP server (method, url, authorization, body), then drive real `pi -e . --model <provider>/<id> -p` sessions in a clean `PI_CODING_AGENT_DIR` across keyless, keyed, and thinking-on variants. A fake-pi probe can pass while the real wire leaks credentials.
-4. **Land it.** Every finding gets evidence (wire line or source `file:line`), a fix, an extended probe, and the repo gates; then the ship loop (see Related).
+3. **Wire-verify the relevant runtime claims.** Use a controlled loopback HTTP endpoint and synthetic sentinel credentials, then drive real `pi -e . --model <provider>/<id> -p` sessions in a temporary `PI_CODING_AGENT_DIR`. Capture method, path, authorization presence/sentinel equality, and only the payload fields needed for keyless, keyed, or thinking-on scenarios. Never log raw live authorization values. A fake-pi probe can pass while the real wire leaks credentials. If a real integration needs live credentials or external effects, stay within the user's authorization and retain only redacted/presence evidence.
+4. **Finish at the requested boundary.**
+   - Audit: return evidence-backed findings (`file:line` or redacted runtime evidence), impact, and uncertainty. Do not automatically edit or ship.
+   - Implementation: fix and verify the authorized scope, including an appropriate regression probe. Ordinary reversible work in that scope needs no repeated permission; push, PR, publication, and merge are not implied.
+   - Explicit delivery: use the existing delivery owner for the authorized action. Opening a PR does not authorize merging it.
 
 ## Red Flags
 - **HARD-GATE:** never declare keyless/header/auth behavior fixed from a fake-pi probe alone; capture the wire.
@@ -33,10 +36,11 @@ Provider extensions are stitched together by ordering-sensitive contracts (auth 
 - Honest metadata: vision/reasoning claims only for verified families; an `input: ["image"]` over-claim sends images to text-only upstreams.
 
 ## Verification
-- Wire log shows the expected authorization state per scenario (keyless: header absent; keyed: real key; reasoning: `reasoning_effort` only for reasoning models with thinking on).
-- Repo gates green; every fix extends a probe.
+- Report evidence appropriate to the request: source-backed audit findings or verified fixes. Do not claim wire behavior from a fake harness.
+- Wire evidence records authorization presence or synthetic-sentinel equality, never live credential values; reasoning captures show `reasoning_effort` only for supported models with thinking on.
+- For implemented fixes, run relevant repo gates and extend the owning probe. Name any unavailable runtime evidence.
 
 ## Related
 - `pi-package-development` skill: manifest, bundling, install, publish.
-- `ship-pr` skill: the autonomous commit-to-merge loop used to land contract fixes.
+- `ship-pr` skill: only for an explicitly authorized autonomous shipping request. `push-pr` owns a requested push or PR without automatic merge.
 - pi docs: `packages.md`, `extensions.md` (hook semantics), custom-provider reference.

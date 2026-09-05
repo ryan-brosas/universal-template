@@ -2,7 +2,11 @@
 
 Paper `write_html` rejects `display:grid`. A Figma `COMPONENT_SET` with `autoLayout.direction: GRID` still has a cell size. Copy that cell, not only the gap.
 
-## The spacing miss
+## Worked example: the spacing miss
+
+The following values belong to one source snapshot, not a Button size policy.
+For each active source, measure its actual column tracks, variant bounds,
+alignment, gap, and padding. A track need not equal the largest variant.
 
 Atomize **Button** (`8003:300`):
 
@@ -14,7 +18,7 @@ Atomize **Button** (`8003:300`):
 
 A flex row with `gap: 24px` between 217px buttons puts 24px of air between chromes. Figma puts each button in a 297px track, so md-to-md gutter is `(297 - 217) + 24 = 104px`. That is the "not enough spacing" screenshot: the gap token was right, the cell was missing.
 
-## Recipe
+## Example translation
 
 Each state is a **cell**, then the button inside it:
 
@@ -29,7 +33,7 @@ Each state is a **cell**, then the button inside it:
 </div>
 ```
 
-- `--button-col` = max width in the set (xl).
+- In this example, `--button-col` is the measured track, equal to the xl width. Derive it from the active grid, not a global maximum-width rule.
 - `--space-gap-set` = Figma GRID gap (24px).
 - Align the button to the start of the cell (`align-items:center` vertically, default horizontal start).
 - Do not stretch the button to 297px; that changes the chrome.
@@ -39,6 +43,6 @@ Paper MCP `write_html` forbids `display:grid` and `margin`. Official paste from 
 ## Checklist before writing the next row
 
 1. Figma screenshot of that row in view.
-2. Cell width equals the largest variant in the column.
+2. Cell width equals the measured source track; it need not equal the largest variant.
 3. Button width equals that variant's bounds, not the cell.
 4. Gap and artboard padding come from tokens, not a new number.

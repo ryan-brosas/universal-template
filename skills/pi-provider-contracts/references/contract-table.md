@@ -41,9 +41,9 @@ Verified against `@earendil-works/pi-ai` + `@earendil-works/pi-coding-agent` 0.8
 
 ## Wire-verification recipe
 
-1. Recording server: log `{method, url, authorization}` per request plus the first N KB of chat bodies; answer `/v1/models` with a catalog, `/v1/chat/completions` with a minimal SSE stream (`delta.content` chunk, finish chunk with usage, `data: [DONE]`).
+1. Controlled loopback server: record method, path, authorization presence or synthetic-sentinel equality, and only required payload fields. Never retain raw live authorization or unrelated prompt bodies; answer `/v1/models` with a catalog, `/v1/chat/completions` with a minimal SSE stream (`delta.content` chunk, finish chunk with usage, `data: [DONE]`).
 2. Clean environment: `PI_CODING_AGENT_DIR=<tmp>` with a settings file listing only the package under test; `--no-session --no-tools -p '<prompt>'`.
-3. Scenarios: keyless (expect no `Authorization`), keyed (expect the real key), reasoning model with `--thinking high` (expect `reasoning_effort`), unknown provider/model fallback.
+3. Scenarios: keyless (expect no `Authorization`), keyed (expect the synthetic sentinel), reasoning model with `--thinking high` (expect `reasoning_effort`), unknown provider/model fallback. Live integration credentials require the existing authorization boundary and redacted evidence.
 4. Read the log after each run; before/after captures are the review evidence.
 
 ## Traps that cost us time
