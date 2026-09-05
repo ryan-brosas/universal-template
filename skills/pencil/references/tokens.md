@@ -20,15 +20,17 @@ Paper tokens are CSS variables ([docs/tokens](https://paper.design/docs/tokens))
 
 Tokens are per file. Copying tokens to another Paper file does not keep them in sync. Figma paste into Paper detaches variables, so MCP `create_tokens` is the path that keeps names.
 
-## Order (server rule)
+## Ordering
 
-1. Color: neutrals first, then primary, secondary, accent.
-2. Spacing, radius, fontSize: smallest value first.
-3. Reuse `var(--other)` for aliases. Do not mint a second primary.
+Create alias targets before aliases when required by the verified tool contract.
+Sorting colors or sizes is an organizational choice, not a universal server
+requirement. Independent token creation may be batched when supported.
 
-## Fallback set (no Figma variable on that property)
+## Worked Atomize example (not a fallback palette)
 
-Use this table only for Button properties that `get_variable_defs` does not cover. If Atomize already has a variable, that name wins and this row is skipped.
+This table records one source snapshot. Do not apply these values to a different
+source or missing measurement. Read the active node when a property has no bound
+variable; use its measured value. Existing source variable names take precedence.
 
 | name | type | value |
 |---|---|---|

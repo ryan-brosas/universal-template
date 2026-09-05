@@ -41,9 +41,9 @@ Verified against `@earendil-works/pi-ai` + `@earendil-works/pi-coding-agent` 0.8
 
 ## Wire-verification recipe
 
-1. Recording server: log `{method, url, authorization}` per request plus the first N KB of chat bodies; answer `/v1/models` with a catalog, `/v1/chat/completions` with a minimal SSE stream (`delta.content` chunk, finish chunk with usage, `data: [DONE]`).
-2. Clean environment: `PI_CODING_AGENT_DIR=<tmp>` with a settings file listing only the package under test; `--no-session --no-tools -p '<prompt>'`.
-3. Scenarios: keyless (expect no `Authorization`), keyed (expect the real key), reasoning model with `--thinking high` (expect `reasoning_effort`), unknown provider/model fallback.
+1. Controlled loopback HTTP server with synthetic credentials only: record method, path, presence or synthetic-sentinel equality for every configured credential channel (Authorization, custom headers, and provider-defined fields), and only required payload fields. Never retain live credential values or unrelated prompt bodies; answer `/v1/models` with a catalog, `/v1/chat/completions` with a minimal SSE stream (`delta.content` chunk, finish chunk with usage, `data: [DONE]`).
+2. Clean environment: `PI_CODING_AGENT_DIR=<tmp>` with a settings file listing only the package under test. Use `--no-session --no-tools -p '<prompt>'` for request verification. For online catalog behavior, separately run the real interactive session and `/model` refresh; verify `/v1/models` and catalog updates. Headless requests and `pi update --models` do not prove extension online refresh.
+3. Scenarios: keyless (expect no `Authorization`), keyed (expect the synthetic sentinel), reasoning model with `--thinking high` (expect `reasoning_effort`), unknown provider/model fallback. Live credentials require an authorized HTTPS endpoint with certificate verification and redacted evidence. Test redirects using synthetic sentinels: reject redirects or permit only approved destinations, inspect each hop, and verify no credential channel reaches an unapproved destination. Do not probe unapproved destinations with live credentials.
 4. Read the log after each run; before/after captures are the review evidence.
 
 ## Traps that cost us time

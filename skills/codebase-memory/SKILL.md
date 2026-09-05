@@ -26,6 +26,12 @@ A rebuildable cross-repository index, not a default step: the graph is a derived
 
 ## Workflow
 
+Use these steps only for graph-assisted work. If relevant source is accessible
+and sufficient, inspect it directly without connecting, listing projects,
+requesting architecture, or waiting for an index. Graph coverage/readiness
+checks are not applicable to that route; qualify exhaustive claims against
+the actual source scope instead.
+
 1. Connect to the `codebase-memory` MCP and read its server instructions.
 2. Call `codebase-memory_list_projects` before first use. If the repository is
  absent, use direct source or a project-local reference unless the user
@@ -66,13 +72,13 @@ closed.
 - Treating the graph as source of truth.
 - Calling `codebase-memory_delete_project` without approval.
 - Treating the first page as complete (truncation fields unchecked).
-- Negative or exhaustive claims without `codebase-memory_check_index_coverage`.
+- Graph-based negative or exhaustive claims without `codebase-memory_check_index_coverage`.
 - Cloning or re-indexing another repository after the evidence gap is closed.
 - Automatically indexing an active or newly completed owned project.
 
 ## Verification
 
-Exact source confirmation before editing; coverage checked for cited paths/scopes before negative or exhaustive claims; blast radius identified before editing; after editing, trust source, IDE diagnostics, and behavioral checks over stale graph output.
+Exact source confirmation before editing; graph coverage checked for cited paths/scopes before graph-based negative or exhaustive claims; blast radius identified before editing; after editing, trust source, IDE diagnostics, and behavioral checks over stale graph output.
 
 
 ## References

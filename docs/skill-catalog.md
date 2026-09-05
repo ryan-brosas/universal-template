@@ -7,7 +7,7 @@ Models discover skills from the filesystem or the host's native skill surface.
 Only visible locally owned entry metadata is hot.
 Internal, manual, vendor, and foundation capabilities are cold.
 
-154 skills: 28 hot, 126 cold. Hot startup metadata: ~7373 chars (~1843 tokens).
+154 skills: 28 hot, 126 cold. Hot startup metadata: ~7110 chars (~1777 tokens).
 
 ## Entry skills
 
@@ -31,7 +31,7 @@ Hot direct user-facing capabilities; trigger on request.
 | [`house-writing-style`](../skills/house-writing-style/SKILL.md)                             | entry | hot     | Use when rewriting, polishing, or auditing natural-language prose in the house style: agent output, docs, release notes, PR and issue text, or when a style cho... |
 | [`improve-codebase-architecture`](../skills/improve-codebase-architecture/SKILL.md)         | entry | hot     | Use when the user wants to improve architecture, find refactoring opportunities, consolidate tightly-coupled modules, or make a codebase more testable and AI-n... |
 | [`npm-trusted-publishing`](../skills/npm-trusted-publishing/SKILL.md)                       | entry | hot     | Use when setting up npm publishing from GitHub Actions for a package, adding a publish job or workflow, or answering 'how do I publish this to npm' - the AI do... |
-| [`pencil`](../skills/pencil/SKILL.md)                                                       | entry | hot     | Use when copying Figma or inspo into Paper, ripping a Figma file onto a Paper canvas, setting Paper tokens from Figma, or when the user says pencil, paper skil... |
+| [`pencil`](../skills/pencil/SKILL.md)                                                       | entry | hot     | Use when copying a Figma frame, component set, variables, or visual reference into Paper with literal source fidelity.                                             |
 | [`pi-package-development`](../skills/pi-package-development/SKILL.md)                       | entry | hot     | Use when creating, editing, structuring, testing, or shipping a pi package or pi extension (package.json pi manifest, pi-package keyword, peerDependencies, bun... |
 | [`pi-provider-contracts`](../skills/pi-provider-contracts/SKILL.md)                         | entry | hot     | Use when building, debugging, or auditing the runtime behavior of a pi provider extension: registerProvider auth and apiKey semantics, refreshModels catalog li... |
 | [`pixel-perfect`](../skills/pixel-perfect/SKILL.md)                                         | entry | hot     | Use when a design copy must match its source pixel-perfectly - Paper↔Figma fidelity checks, fixing 'it looks off' or 'not accurate' feedback, verifying fills,...  |
@@ -120,7 +120,7 @@ Cold: loaded explicitly through native search or inspection; hidden from startup
 | [`gsearch`](../skills/gsearch/SKILL.md)                                               | manual | cold    | Use when the user asks to search the web, look something up, find a link, or research a topic. Google via CDP returns title, URL, and snippet in about a second... |
 | [`haskell-coding-practices`](../skills/haskell-coding-practices/SKILL.md)             | manual | cold    | Use when authoring or reviewing Haskell, 4-space/80-col layout, Haddock, explicit imports, type signatures, avoid partial functions, strict data, IO separation... |
 | [`httpd-c-coding-practices`](../skills/httpd-c-coding-practices/SKILL.md)             | manual | cold    | Use when authoring or reviewing Apache httpd C, 4-space 80-col layout, GNU indent profile, ANSI function/control-flow spacing, httpd cast rules, rationale comm... |
-| [`inspo-qualify`](../skills/inspo-qualify/SKILL.md)                                   | manual | cold    | Use when an active project needs external GitHub prior art: discover or assess one candidate, then clone and full-index it in Codebase Memory only after explic... |
+| [`inspo-qualify`](../skills/inspo-qualify/SKILL.md)                                   | manual | cold    | Use when an active project needs external GitHub prior art: assess one candidate from relevant source; acquire a checkout or create an index only when useful a... |
 | [`java-coding-practices`](../skills/java-coding-practices/SKILL.md)                   | manual | cold    | Use when authoring or reviewing Java, google-java-format layout, import discipline, Google naming, @Override, handled catches, static qualification, and Javado... |
 | [`javascript-coding-practices`](../skills/javascript-coding-practices/SKILL.md)       | manual | cold    | Use when authoring or reviewing JavaScript, named ES module exports, const/let, strict equality, semicolons and braces, trailing commas, arrow callbacks, JSDoc... |
 | [`javascript-project-practices`](../skills/javascript-project-practices/SKILL.md)     | manual | cold    | Use when bootstrapping or reviewing JavaScript/Node projects, elsewhen git/PR workflow, README template, env config, lockfiles, feature folders, ESLint/Prettie... |

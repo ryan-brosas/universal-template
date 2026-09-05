@@ -8,7 +8,7 @@ invocation: entry
 
 ## Core Principle
 
-When outside code materially reduces uncertainty, use ONE strong reference repository at `<project>/reference/<repo>/`, read its actual source and direct tests, compare boundaries, adopt/adapt/omit deliberately, and verify against the CURRENT project's gates. Never blind-copy; never mass-ingest.
+When outside code materially reduces uncertainty, start with ONE strong source, read its actual code and direct tests, compare boundaries, adopt/adapt/omit deliberately, and verify against the CURRENT project's gates. If a checkout helps, use `<project>/reference/<repo>/`; accessible source does not require a checkout or index. Never blind-copy; never mass-ingest.
 
 ## When to Use / NOT
 
@@ -23,7 +23,7 @@ load `../inspo-qualify/SKILL.md`. It owns candidate qualification and approval.
 
 1. **Ground locally**, inspect the current project and identify the seam; decide whether outside code materially reduces uncertainty (if not, stop, implement directly).
 2. **Notice existing references**, if `reference/` or `reference/web/` exists, scan top-level names and open only candidates relevant to the seam (bounded listing, not bulk ingestion).
-3. **Select the reference**, place or reuse it at the conventional path. Code references: ONE strong repository at `<project>/reference/<repo>/`; add a second only after naming the gap the first left. Web references: synthesis may combine several captured sites when each contributes a named quality. Full rules: `references/contract.md` (kinds, authority, defaults, licensing, lifecycle).
+3. **Select the reference**, inspect accessible source directly when sufficient; acquire a checkout within authorized scope only when it materially helps, without overwriting an existing checkout. No indexing or setup execution is implied. When a checkout is useful, place or reuse it at the conventional path. Code references: ONE strong repository at `<project>/reference/<repo>/`; add a second only after naming the gap the first left. Web references: synthesis may combine several captured sites when each contributes a named quality. Full rules: `references/contract.md` (kinds, authority, defaults, licensing, lifecycle).
 4. **Check freshness when it matters**, for a checkout reference, record the
    current revision and working-tree state; inspect configured upstream/remote
    when VCS and network capability exist; compare local revision to upstream
@@ -65,7 +65,7 @@ never become foundations (see the reference contract).
 
 ## Verification
 
-- Reference checkout exists at the conventional path; provenance + license recorded.
+- Relevant source was inspected; provenance + license recorded. A checkout path is required only when a checkout was used. Index/graph checks are not applicable to direct-source work.
 - The ADOPT/ADAPT/OMIT decision is stated per concern.
 - Changes verified against the current project's gates (named check + exit code).
 

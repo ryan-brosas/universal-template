@@ -28,10 +28,12 @@ python3 scripts/install-prompts.py --check-repo
 python3 scripts/install-prompts.py --selftest
 python3 scripts/render-prompt.py --selftest
 python3 scripts/skill-catalog.py selftest
+python3 scripts/skill-catalog.py fixture-test
 python3 scripts/skill-catalog.py context
 python3 scripts/skill-catalog.py generate --check
 python3 scripts/repo-hygiene.py --selftest
 python3 scripts/repo-hygiene.py
+python3 scripts/repo-hygiene.py --fixture-test
 python3 mcp/configure.py --selftest
 node --test skills/cdp/sdk/recording-privacy.test.ts
 python3 scripts/web-reference-manifest.py --selftest
@@ -41,9 +43,15 @@ git diff --check
 
 These commands check strict YAML metadata and types, names, references, disjoint
 hot/cold sets and the hot budget, tracked publication files, portable scoped MCP
-activation, secret and private-path patterns, generated parity, atomic
-prompt-adapter mutation, CDP recording privacy, title protocol parsing, and
-changed-line whitespace. They do not approve policy, prose, routing, or usefulness.
+activation, secret, private-key, and private-path patterns, generated parity, atomic
+prompt-adapter mutation, CDP recording privacy, title protocol parsing,
+changed-line whitespace, and committed publication fixtures. They do not approve
+policy, prose, routing, or usefulness.
+
+Catalog `generate`, `context`, `stats`, and `list --tracked-only` parse only
+Git-tracked skill paths, using current working-tree content. Other discovery
+commands retain valid local results and report incomplete drafts on stderr.
+Publication fails when Git tracking is unavailable; selftests use isolated inputs.
 
 ## Tool classification
 

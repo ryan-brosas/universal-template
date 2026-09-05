@@ -30,9 +30,16 @@ Paper:
 2. Page **Buttons**: artboard `Button`, artboard `Icon-button`, artboard `Button-success`, artboard `Button-danger`. Optional artboard `Overview-sheet` if you copy the docs chrome.
 3. Later, page **Input fields**, page **Toggle**, and so on. Same pattern.
 
-`create_artboard` places the next board in empty space. Keep **80px** between artboards (Paper default). Do not nest a second component set inside the Button artboard.
+Derive artboard positions and spacing from the active source. An automatic
+placement default is not source evidence. For an exact transfer, preserve source
+coordinates and grouping; use project-approved spacing only where the source
+leaves placement unspecified. Do not nest unrelated component sets merely to
+save space.
 
-## Order of work on a page
+## Example order of work on a page
+
+Open the target page before mutations. Independent sibling work may be batched
+when verified tools support it; the sequence below is not a global requirement.
 
 1. `create_page` named after the Figma page. `open_file` to that page.
 2. Artboard for the first component set. Copy until it matches Figma.

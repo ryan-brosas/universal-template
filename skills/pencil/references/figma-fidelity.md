@@ -13,7 +13,9 @@ Use this when ripping Atomize (or any Figma file) into Paper, or when the user s
 
 ## What must appear
 
-Copy every column and label Figma shows.
+Copy every column and label the active source shows. The examples below are
+from one Atomize snapshot, not required columns, counts, or dimensions for
+other files.
 
 - Typefaces: header pill **and** Size + Weights. Left scale names **and** Normal / Medium / Semibold / Bold `Abc` columns. OVERLINE samples are `ABC`.
 - Colors: the four boards Figma has (Primary/Secondary/Tertiary, Functional, Gray and Dark, Neutral Black and White). Swatch size 160×168, radius 12, 11 (or 15) stops. Neutral labels follow the Figma text nodes (3, 6, 9, …) even when the bound variable is `Color/black/2`.
@@ -23,7 +25,11 @@ If Figma has a specimen column and Paper only has the name column, the copy is w
 
 ## Section organizers (Overview-sheets)
 
-Figma pages often group their boards under `Overview-sheet` frames. Copy them, not just the boards.
+If the active source groups boards under organizer frames, preserve those
+frames and their measured geometry within the requested scope. Do not invent
+an Overview-sheet for a source without one.
+
+Worked Atomize example only (derive all values anew for other sources):
 
 - Each sheet is one rounded card (`#f9f9fa`, radius 64, drop shadow `0 1px 2px -1.5px` + inner `0 -4px 6px`).
 - White 1216-wide sidebar on the left: header pill (gradient, radius 1000, "Foundation — {name}" dimmed + section name on a white sub-pill), heading (88px display), description (32px, line-height 40, letter-spacing −0.5), footer pills (atomizedesign.com + version).
@@ -48,8 +54,27 @@ Paper cannot switch Figma modes (Accent-2, Typeface-2, Dark) on one node. Docume
 
 ## Fonts
 
-`get_basic_info.fontFamilies` is the allow-list. If Figma's family is missing, use an installed family and say so once. Do not add a caption in the design that Figma does not have.
+`get_basic_info.fontFamilies` is the allow-list. If Figma's family is missing, report the constraint; use a fallback only with user acceptance, and do not claim pixel-perfect fidelity. Do not add a caption in the design that Figma does not have.
 
 ## Inspo
 
-When the source is a Figma file or a captured inspo frame, treat that frame as Figma: screenshot, node metrics, tokens, compare. Do not restyle it into a Paper-default kit.
+For an accessible Figma file, use the source-node and variable workflow above.
+
+For a captured visual reference without Figma nodes:
+
+1. Use the original captured image as the render specification. Record its
+   dimensions, scale, crop, and requested scope; do not invent a Figma file or
+   call `get_node` or `get_variable_defs` for an image-only source.
+2. Measure visible bounds, spacing, colors, and text from the capture. Label
+   inferred structure and uncertain font/geometry measurements. Figma variables,
+   semantic bindings, hidden states, and original node metrics are **unavailable**,
+   not absent or verified. Do not fabricate their names or values.
+3. Build editable Paper layers from that evidence. Reuse matching project tokens
+   when verified; distinguish measured paint from recovered source variables.
+   Use supplied assets where available rather than flattening the whole capture
+   into the deliverable. Report assets or detail that cannot be recovered.
+4. Capture a fresh Paper render at the same scale/crop and compare it with the
+   reference. Verify visible likeness; do not claim recovered source structure,
+   variable fidelity, or unknown states. Report remaining uncertainty explicitly.
+
+Neither route authorizes restyling the source into a Paper-default kit.

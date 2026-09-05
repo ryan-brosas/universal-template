@@ -1,6 +1,6 @@
 ---
 name: inspo-qualify
-description: "Use when an active project needs external GitHub prior art: discover or assess one candidate, then clone and full-index it in Codebase Memory only after explicit approval."
+description: "Use when an active project needs external GitHub prior art: assess one candidate from relevant source; acquire a checkout or create an index only when useful and explicitly authorized."
 invocation: manual
 disable-model-invocation: true
 ---
@@ -11,8 +11,8 @@ disable-model-invocation: true
 
 `/inspo` starts with a real question in the active project, not a repository
 quota. It finds or accepts one external implementation that can close that
-gap. Codebase Memory maps the approved external source; direct source and tests
-prove claims. The process is manual, evidence-led, and stops when the question
+gap. Direct source and tests prove claims; an existing useful index can accelerate
+retrieval but is not a prerequisite. The process is manual, evidence-led, and stops when the question
 is answered.
 
 ## When to Use / NOT
@@ -29,8 +29,9 @@ is answered.
 1. Inspect the active project's relevant source and tests. State the named
    question. If the user gives only `/inspo`, derive the most useful unresolved
    question from that evidence instead of starting a questionnaire.
-2. Check existing Codebase Memory projects and Git remote identity. Reuse an
-   equivalent source when it closes the question. Otherwise search GitHub
+2. Check accessible relevant source and Git remote identity. Query an existing
+   useful index when it saves work, not as mandatory setup. Reuse an equivalent
+   source when it closes the question. Otherwise search GitHub
    manually or assess the nominated URL. Inspect its source tree, direct tests,
    pin, license, maintenance signals, and transferable boundary.
 3. Stop discovery for a missing current-project question, duplicate inspiration
@@ -49,17 +50,21 @@ is answered.
 
    Approval applies to this exact candidate and pin. Popularity, test count,
    repository size, and clone count are evidence only, never thresholds.
-5. After approval, resolve `INSPO_ROOT` from user/host configuration (default
+5. If a checkout materially helps and acquisition is approved, resolve
+   `INSPO_ROOT` from user/host configuration (default
    `$HOME/work/inspo`) and clone the resolved commit under
    `$INSPO_ROOT/<repository-name>` without overwriting another
    checkout. Cloning supplies source evidence; do not install dependencies,
    run a setup script, or run a bulk miner to learn it. Read direct test source;
    run a test only when it already works without setup, otherwise report the
    caveat.
-6. Follow `codebase-memory` to request `mode: "full"`, then verify ready status,
-   coverage for cited source/test paths, and one bounded graph probe. Record the
-   root, pin, license, coverage caveat, and graph result in the chat. The graph
-   is a retrieval map, not proof.
+6. Finish directly from accessible source when sufficient. Repeated structural
+   questions may justify proposing an index; create one only when explicitly
+   authorized, following `codebase-memory`. If used, check readiness and coverage
+   for the cited scope and make only the graph queries the question needs. No
+   mandatory architecture dump, full-index request, or graph-readiness wait for
+   a direct-source answer. Record the pin, license, source/test evidence, and
+   material caveats in chat. The graph is a retrieval map, not proof.
 
 ## Go deeper
 
@@ -82,9 +87,9 @@ repository. Never generate either automatically.
 
 ## Red Flags
 
-- Discovery without a current-project question, or cloning/indexing without
-  approval for the exact candidate and commit. Read-only reuse, identity, and
-  candidate searches are part of qualification, not gated mutation.
+- Search without a current-project question; clone, index creation, upload, or
+  promotion without authorization for that operation. Source-read approval
+  does not authorize setup execution or upload.
 - Dependency installation, generated-analysis scripts, or bulk repository
   mining used as a shortcut.
 - Codebase Memory output treated as behavioral truth.
@@ -97,8 +102,9 @@ Pressure-check the procedure: a duplicate is reused; an active owned project
 is rejected; an unapproved candidate stops before clone/index; an unrunnable
 test is a caveat rather than an install request; and a first-pass repository
 can become neither a foundation nor a Skill automatically. For an admitted
-source, confirm the pin, license, full-index request, ready status, cited-path
-coverage, graph probe, and exact source/test evidence.
+source, confirm the pin, license, and exact source/test evidence. Verify graph
+readiness and relevant coverage only when using an index; otherwise report
+index/graph checks as not applicable. Stop when the source answers the question.
 
 ## References
 
