@@ -41,10 +41,12 @@ jobs:
             python3 scripts/install-prompts.py --selftest
             python3 scripts/render-prompt.py --selftest
             python3 scripts/skill-catalog.py selftest
+            python3 scripts/skill-catalog.py fixture-test
             python3 scripts/skill-catalog.py context
             python3 scripts/skill-catalog.py generate --check
             python3 scripts/repo-hygiene.py --selftest
             python3 scripts/repo-hygiene.py
+            python3 scripts/repo-hygiene.py --fixture-test
             python3 mcp/configure.py --selftest
             node --test skills/cdp/sdk/recording-privacy.test.ts
             python3 scripts/web-reference-manifest.py --selftest

@@ -16,6 +16,8 @@ import json
 import os
 import re
 import sys
+import subprocess
+import shutil
 import tempfile
 from pathlib import Path
 
@@ -58,22 +60,46 @@ def context_surface(kind: str, invocation: str | None, hidden: bool) -> str:
     return "cold"
 
 
-def scan() -> list[dict]:
-    local_dirs = (
-        _METADATA.git_ignored_dirs(SKILLS)
-        | _METADATA.git_untracked_dirs(SKILLS)
-    )
+def tracked_skill_paths(root: Path) -> set[Path]:
+    """Enumerate index paths, never infer publication from workspace contents."""
+    try:
+        result = subprocess.run(
+            ["git", "-C", str(root), "ls-files", "-z", "--", "*/SKILL.md"],
+            capture_output=True, check=True,
+        )
+    except (OSError, subprocess.CalledProcessError) as exc:
+        raise ValueError("Git tracking unavailable; publication inputs cannot be established") from exc
+    return {root / os.fsdecode(raw) for raw in result.stdout.split(b"\0")
+            if raw and len(Path(os.fsdecode(raw)).parts) == 2
+            and not Path(os.fsdecode(raw)).parts[0].startswith(".")}
+
+
+def scan(tracked_only: bool = False, root: Path = SKILLS) -> list[dict]:
+    try:
+        tracked = tracked_skill_paths(root)
+    except ValueError:
+        if tracked_only:
+            raise
+        print("WARNING: Git tracking unavailable; discovery results treated as local", file=sys.stderr)
+        tracked = set()
     out: list[dict] = []
-    if not SKILLS.is_dir():
-        return out
-    for d in sorted(SKILLS.iterdir()):
-        if not d.is_dir() or d.name.startswith("."):
+    candidates = sorted(tracked) if tracked_only else sorted(root.glob("*/SKILL.md"))
+    for sm in candidates:
+        d = sm.parent
+        if d.name.startswith("."):
             continue
-        sm = d / "SKILL.md"
-        if not sm.is_file():
+        try:
+            text = sm.read_text(encoding="utf-8")
+            fm = parse_frontmatter(text)
+            type_errors = _METADATA.metadata_type_errors(sm, fm)
+            if type_errors:
+                raise ValueError("; ".join(type_errors))
+        except (OSError, UnicodeError, ValueError) as exc:
+            diagnostic = f"{sm}: {exc}"
+            if tracked_only:
+                raise ValueError(diagnostic) from exc
+            print(f"WARNING: skipped skill: {diagnostic}", file=sys.stderr)
             continue
-        text = sm.read_text(encoding="utf-8")
-        fm = parse_frontmatter(text)
         hidden = fm.get("disable-model-invocation", False) is True
         invocation = fm.get("invocation")
         kind = fm.get("kind") or "skill"
@@ -85,7 +111,7 @@ def scan() -> list[dict]:
             "kind": kind,
             "hidden": hidden,
             "surface": surface,
-            "local": d.name in local_dirs,
+            "local": sm not in tracked,
             "cls": invocation,
             "path": str(sm),
             "body": text,
@@ -886,6 +912,88 @@ def cmd_selftest(skills: list[dict], _args) -> int:
     return 0
 
 
+def _fixture_skills(root: Path) -> None:
+    for name, kind, invocation in (("demo", "skill", "entry"), ("demo-foundation", "foundation", "manual")):
+        directory = root / name
+        directory.mkdir(parents=True)
+        (directory / "SKILL.md").write_text(
+            f"---\nname: {name}\ndescription: fixture\nkind: {kind}\n"
+            f"invocation: {invocation}\ndisable-model-invocation: {str(kind == FOUNDATION_KIND).lower()}\n---\n# Fixture\n", encoding="utf-8",
+        )
+
+
+def isolated_selftest(args) -> int:
+    with tempfile.TemporaryDirectory(prefix="catalog-unit-") as temp:
+        root = Path(temp) / "skills"
+        _fixture_skills(root)
+        # The selftest never dispatches through ambient discovery.
+        subprocess.run(["git", "init", "-q", str(root.parent)], check=True)
+        subprocess.run(["git", "-C", str(root.parent), "add", "."], check=True)
+        rows = scan(tracked_only=True, root=root)
+        return cmd_selftest(rows, args)
+
+
+def fixture_test() -> int:
+    """Exercise current CLI discovery, working-tree parsing and publication."""
+    with tempfile.TemporaryDirectory(prefix="catalog-cli-") as temp:
+        root = Path(temp)
+        (root / "scripts").mkdir()
+        (root / "config").mkdir()
+        for name in ("skill-catalog.py", "skill-validator.py"):
+            shutil.copy2(BASE / "scripts" / name, root / "scripts" / name)
+        shutil.copy2(CONTEXT_BUDGET, root / "config/context-budget.json")
+        (root / "AGENTS.md").write_text("fixture\n", encoding="utf-8")
+        _fixture_skills(root / "skills")
+        subprocess.run(["git", "init", "-q", str(root)], check=True)
+        subprocess.run(["git", "-C", str(root), "add", "."], check=True)
+        subprocess.run(["git", "-C", str(root), "-c", "user.name=Fixture",
+                        "-c", "user.email=fixture@example.invalid", "commit", "-qm", "fixture"], check=True)
+        env = {**os.environ, "SKILLS_ROOT": str(root / "skills")}
+
+        def run(*args, expected=0):
+            result = subprocess.run(
+                [sys.executable, str(root / "scripts/skill-catalog.py"), *args],
+                cwd=tempfile.gettempdir(), env=env, capture_output=True, text=True,
+            )
+            if result.returncode != expected:
+                raise AssertionError(f"{args}: exit {result.returncode}, expected {expected}\n{result.stdout}\n{result.stderr}")
+            return result
+
+        def publication():
+            rows = json.loads(run("list", "--surface", "hot", "--tracked-only", "--json").stdout)
+            assert [row["name"] for row in rows] == ["demo"]
+            run("context", "--json")
+            run("generate", "--check")
+
+        run("generate")
+        publication()
+        for name in ("draft", "ignored"):
+            directory = root / "skills" / name
+            directory.mkdir()
+            (directory / "SKILL.md").write_text("unfinished\n", encoding="utf-8")
+        (root / ".gitignore").write_text("skills/ignored/\n", encoding="utf-8")
+        valid_local = root / "skills/local"
+        valid_local.mkdir()
+        (valid_local / "SKILL.md").write_text(
+            "---\nname: local\ndescription: valid local\ninvocation: entry\n---\n", encoding="utf-8")
+        publication()
+        local = run("list", "--json")
+        assert {row["name"] for row in json.loads(local.stdout)} == {"demo", "demo-foundation", "local"}
+        assert "draft/SKILL.md" in local.stderr and "ignored/SKILL.md" in local.stderr
+        run("selftest")
+        tracked = root / "skills/demo/SKILL.md"
+        tracked.write_text("invalid uncommitted edit\n", encoding="utf-8")
+        for args in (("list", "--tracked-only", "--json"), ("context",), ("generate", "--check")):
+            assert "demo/SKILL.md" in run(*args, expected=1).stderr
+        subprocess.run(["git", "-C", str(root), "add", str(tracked)], check=True)
+        assert "demo/SKILL.md" in run("generate", expected=1).stderr
+        # Git failure must not promote an external collection to publication.
+        shutil.rmtree(root / ".git")
+        assert "Git tracking unavailable" in run("context", expected=1).stderr
+        assert "Git tracking unavailable" in run("list", "--json").stderr
+    print("SKILL CATALOG FIXTURE TEST PASS")
+    return 0
+
 def build_docs(skills: list[dict]) -> dict[str, str]:
     pub = [s for s in skills if not s.get("local")]
     return {
@@ -949,8 +1057,18 @@ def main() -> int:
     p = sub.add_parser("generate", help="write generated skill and foundation catalogs")
     p.add_argument("--check", action="store_true", help="verify generated docs are current")
     sub.add_parser("selftest", help="verify kind-aware search, stats, and catalog separation")
+    sub.add_parser("fixture-test", help="test publication isolation through the production CLI")
     args = ap.parse_args()
-    skills = scan()
+    if args.cmd == "selftest":
+        return isolated_selftest(args)
+    if args.cmd == "fixture-test":
+        return fixture_test()
+    publication = args.cmd in {"generate", "context", "stats"} or getattr(args, "tracked_only", False)
+    try:
+        skills = scan(tracked_only=publication)
+    except ValueError as exc:
+        print(f"FAIL  {exc}", file=sys.stderr)
+        return 1
     return {"list": cmd_list, "search": cmd_search, "show": cmd_show,
             "invocation": cmd_invocation, "stats": cmd_stats,
             "context": cmd_context, "generate": cmd_generate,
