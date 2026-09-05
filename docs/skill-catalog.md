@@ -7,7 +7,7 @@ Models discover skills from the filesystem or the host's native skill surface.
 Only visible locally owned entry metadata is hot.
 Internal, manual, vendor, and foundation capabilities are cold.
 
-153 skills: 33 hot, 120 cold. Hot startup metadata: ~8449 chars (~2112 tokens).
+153 skills: 32 hot, 121 cold. Hot startup metadata: ~8195 chars (~2048 tokens).
 
 ## Entry skills
 
@@ -47,7 +47,6 @@ Hot direct user-facing capabilities; trigger on request.
 | [`skill-catalog`](../skills/skill-catalog/SKILL.md)                                         | entry | visible | Use when the user asks what skills exist or needs to find the right skill for a topic; inspect local frontmatter and return only relevant candidates.              |
 | [`system-design-specification`](../skills/system-design-specification/SKILL.md)             | entry | visible | Use when authoring formal, crash-proof system design documents and architectural specifications: scope fences and non-goals, 4-part state ontologies, mathemati... |
 | [`test-generation`](../skills/test-generation/SKILL.md)                                     | entry | visible | Use when writing, expanding, or auditing tests, converting exact recurring failures into gates, or deciding what to test. Catch-first method: prove a test can...  |
-| [`writing-skills`](../skills/writing-skills/SKILL.md)                                       | entry | visible | Use when authoring, editing, or verifying any SKILL.md in this catalog: canonical template, frontmatter grammar, uniform anatomy, progressive disclosure, and t... |
 
 ## Internal
 
@@ -174,6 +173,7 @@ Cold: loaded explicitly through native search or inspection; hidden from startup
 | [`web-reference`](../skills/web-reference/SKILL.md)                                   | manual | hidden  | Use when a live website or web page should be captured and studied as frontend, visual, layout, interaction, or design-system prior art for implementation.        |
 | [`webappsec-coding-practices`](../skills/webappsec-coding-practices/SKILL.md)         | manual | hidden  | Use when building or reviewing web apps, Mozilla WebAppSec auth/sessions, whitelist input, output encoding, CSRF/TLS/CSP, safe uploads, generic errors, and QA...  |
 | [`wordpress-coding-practices`](../skills/wordpress-coding-practices/SKILL.md)         | manual | hidden  | Use when authoring or reviewing WordPress themes/plugins, WPCS PHP naming, Yoda conditions, late esc_* output, $wpdb->prepare, i18n text domains, HTML/CSS/JS h... |
+| [`writing-skills`](../skills/writing-skills/SKILL.md)                                 | manual | hidden  | Use when authoring, editing, or verifying a SKILL.md, or promoting a demonstrated procedure into a skill; select evidence of task lift and preserve the catalog... |
 | [`xml-markup-practices`](../skills/xml-markup-practices/SKILL.md)                     | manual | hidden  | Use when designing or reviewing machine-readable XML formats, reuse-first schemas, RELAX NG namespaces, lowerCamelCase names, element/attribute rules, UTF-8 in... |
 | [`xsearch`](../skills/xsearch/SKILL.md)                                               | manual | hidden  | Use when the user asks to search X (Twitter) for posts, discussions, or an author. Returns author, handle, text, URL, and timestamp per result. Requires browse... |
 | [`ytdl`](../skills/ytdl/SKILL.md)                                                     | manual | hidden  | Use when the user wants to download or save a YouTube video (audio or video) to disk. Browser-native capture, no yt-dlp or signature solving: the page plays th... |
