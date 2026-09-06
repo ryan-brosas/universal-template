@@ -7,7 +7,7 @@ Models discover skills from the filesystem or the host's native skill surface.
 Only visible locally owned entry metadata is hot.
 Internal, manual, vendor, and foundation capabilities are cold.
 
-154 skills: 28 hot, 126 cold. Hot startup metadata: ~7135 chars (~1783 tokens).
+155 skills: 28 hot, 127 cold. Hot startup metadata: ~7135 chars (~1783 tokens).
 
 ## Entry skills
 
@@ -142,6 +142,7 @@ Cold: loaded explicitly through native search or inspection; hidden from startup
 | [`notion-workspace`](../skills/notion-workspace/SKILL.md)                             | manual | cold    | Use when the user needs to search, read, create, update, organize, or synchronize Notion pages and databases, or wants a central workspace or second brain in N... |
 | [`objc-coding-practices`](../skills/objc-coding-practices/SKILL.md)                   | manual | cold    | Use when authoring or reviewing Objective-C, Google/GitHub layout, 3+ char prefixes, property/copy semantics, designated initializers, Doxygen docs, NSError er... |
 | [`october-coding-practices`](../skills/october-coding-practices/SKILL.md)             | manual | cold    | Use when authoring or reviewing October CMS plugins/themes, PSR-1/2/4, camelCase/snake_case split, marketplace naming, Rain exceptions, composer -plugin/-theme... |
+| [`paper-design`](../skills/paper-design/SKILL.md)                                     | manual | cold    | Use when working with Paper's documented features, themes and CSS-variable tokens, Figma or HTML paste, SVG editing, MCP setup, Snapshot, or checking new Paper... |
 | [`pascal-coding-practices`](../skills/pascal-coding-practices/SKILL.md)               | manual | cold    | Use when authoring or reviewing Free Pascal/GNU Pascal, 2-space/no-tab layout, lowercase keywords, PascalCase T/P types, unit block order, brace comments, resu... |
 | [`pdf-extract`](../skills/pdf-extract/SKILL.md)                                       | manual | cold    | Use when extracting text, images, tables, or metadata from PDF files. MUST load to choose the correct extraction library based on PDF complexity, simple text v... |
 | [`perl-coding-practices`](../skills/perl-coding-practices/SKILL.md)                   | manual | cold    | Use when authoring or reviewing Perl, v5.36/strict/warnings, 4-space aligned layout, snake_case and Mixed::Case modules, 3-arg open, explicit subs/I/O, anti-pa... |
