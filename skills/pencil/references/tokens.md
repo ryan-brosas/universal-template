@@ -67,3 +67,7 @@ Use `var(--token)` in HTML. If a Figma value is missing, `get_node` that variant
 ## After create_tokens
 
 `get_basic_info` must list them. Later types (success, danger) add semantic colors; they do not replace `--color-primary` unless Figma does.
+
+Paper-specific UI/MCP mechanics, code and cross-file copy, and current roadmap
+boundaries: `../../paper-design/references/themes-and-tokens.md`.
+Official source: [Paper tokens](https://paper.design/docs/tokens).

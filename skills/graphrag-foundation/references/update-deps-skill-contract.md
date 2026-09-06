@@ -24,7 +24,7 @@
 "graspologic-native>=1.2,<1.3",
 ```
 
-**Flow:** baseline green first (`uv run poe check` + `poe test_unit`) so failures are attributable → edit specifiers only in member `[project] dependencies` / root dev group → `uv lock [--upgrade]` + `uv sync --all-packages` → repair breakage via `references/migration-gotchas.md` patterns → record via `uv run semversioner add-change` → checklist re-verifies every rule including "no `graphrag-*==` pin edited while editing nearby specifiers".
+**Flow:** baseline green first (`uv run poe check` + `poe test_unit`) so failures are attributable → edit specifiers only in member `[project] dependencies` / root dev group → `uv lock [--upgrade]` + `uv sync --all-packages` → repair breakage via `references/migration-gotchas-ledger.md` patterns → record via `uv run semversioner add-change` → checklist re-verifies every rule including "no `graphrag-*==` pin edited while editing nearby specifiers".
 **Invariant:** the skill fences THREE classes of lines: cross-package pins (script-owned), `version` fields (semversioner-owned), and behavior-bearing held pins (`graspologic-native<1.3` protects the golden-file regression suite — bumping it silently invalidates `test_values_match_golden_file`). A porter who treats all pyproject lines as fair game breaks both the release tooling and determinism tests that other capsules pin.
 **Probe:** `grep -cF 'packagefeedproxy.microsoft.io' .agents/skills/update-deps/SKILL.md` = 2 (:18,:46); `grep -nF 'graspologic-native' .agents/skills/update-deps/SKILL.md` hits :56,:136; same needle in `packages/graphrag/pyproject.toml` hits :49 (pin) with the rationale comment at :46.
 

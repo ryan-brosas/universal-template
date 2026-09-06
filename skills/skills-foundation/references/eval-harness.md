@@ -26,7 +26,7 @@ task notification and isn't persisted elsewhere.
 
 **Flow:** Save 2-3 realistic prompts to `evals/evals.json` (no assertions yet) → snapshot the old skill if improving (`cp -r <skill> <workspace>/skill-snapshot/`) → spawn ALL with-skill + baseline subagents in one turn (baseline = no skill when creating, old version when improving) → draft assertions while runs execute → persist each completion notification's tokens/duration to `timing.json` on arrival → grade against assertions (script where checkable) → aggregate into benchmark.json with mean ± stddev deltas → analyst pass for non-discriminating assertions / high-variance evals → launch viewer for human review → improve from feedback → iterate.
 **Invariant:** Baseline and treated runs must be spawned together (temporal comparability); grading field names are load-bearing ("the viewer depends on these exact field names"); empty user feedback means satisfied — improvements target only cases with specific complaints.
-**Probe:** `skills/skill-creator/scripts/aggregate_benchmark.py` produces `benchmark.json`/`benchmark.md`; `references/schemas.md` pins the JSON schemas the viewer consumes.
+**Probe:** `skills/skill-creator/scripts/aggregate_benchmark.py` produces `benchmark.json`/`benchmark.md`; `references/eval-json-schema-plane.md` pins the JSON schemas the viewer consumes.
 
 ## Get live surrounding code
 **Retrieve:**

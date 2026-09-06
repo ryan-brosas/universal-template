@@ -109,6 +109,24 @@ def large_file_error(rel: str, size: int) -> str | None:
     return None
 
 
+CAPSULE_REF_PATTERN = re.compile(r"`(\./[\w-]+\.md|references/[\w./-]+\.md)`")
+
+
+def capsule_link_errors(rel: str, text: str, base: Path) -> list[str]:
+    """Foundation capsule links must resolve from the file's directory or the foundation root."""
+    parts = rel.split("/")
+    if not parts[0] == "skills" or not parts[1].endswith("-foundation") or not rel.endswith(".md"):
+        return []
+    file_path = base / rel
+    root = base / parts[0] / parts[1]
+    errors: list[str] = []
+    for target in CAPSULE_REF_PATTERN.findall(text):
+        if (file_path.parent / target).exists() or (root / target).exists():
+            continue
+        errors.append(f"foundation capsule link target missing: {rel} -> {target}")
+    return errors
+
+
 def line_ending_errors(rel: str, text: str) -> list[str]:
     errors: list[str] = []
     if "\r\n" in text and "\n" in text.replace("\r\n", ""):
@@ -161,6 +179,7 @@ def path_contract_errors(rels: set[str]) -> list[str]:
 
 def check(paths: list[Path]) -> list[str]:
     errors: list[str] = []
+    capsule_texts: list[tuple[str, str]] = []
     rels = {str(path.relative_to(BASE)) for path in paths}
     errors.extend(path_contract_errors(rels))
     for relative in REQUIRED:
@@ -207,6 +226,14 @@ def check(paths: list[Path]) -> list[str]:
                 pass
         if text is None:
             continue
+        capsule_parts = rel.split("/")
+        if (
+            len(capsule_parts) >= 3
+            and capsule_parts[0] == "skills"
+            and capsule_parts[1].endswith("-foundation")
+            and (capsule_parts[-1] == "SKILL.md" or "/references/" in f"/{rel}/")
+        ):
+            capsule_texts.append((rel, text))
         errors.extend(line_ending_errors(rel, text))
         # Preserve read_text()'s historical formatting/parsing semantics only
         # after checking the original line endings.
@@ -217,6 +244,8 @@ def check(paths: list[Path]) -> list[str]:
             errors.append(f"missing EOF newline: {rel}")
         parse_structured(path, text, errors)
     check_mcp(errors)
+    for rel, text in capsule_texts:
+        errors.extend(capsule_link_errors(rel, text, BASE))
     return errors
 
 
@@ -336,6 +365,8 @@ def fixture_test() -> int:
     defect = dict(scaffold)
     defect.update(
         {
+            "skills/awf-foundation/SKILL.md": b"See `references/ghost.md` for the missing capsule.\n",
+            "skills/awf-foundation/references/real.md": b"Pair with `references/ghost.md`.\n",
             "sessions/run.jsonl": b"{}\n",
             "secrets.env": ("TOKEN = \"sk-" + "abcdefghijklmnopqrstuvwxyz123456\"\n").encode(),
             "key.pem": ("-----BEGIN " + "RSA PRIVATE KEY-----\nabc\n").encode(),
@@ -362,7 +393,9 @@ def fixture_test() -> int:
     clean = dict(scaffold)
     clean.update(
         {
-            # False-positive controls: public key, env placeholder, uniform CRLF.
+            # False-positive controls: valid foundation links (root- and sibling-relative), public key, env placeholder, uniform CRLF.
+            "skills/awf-foundation/SKILL.md": b"Load `references/real.md` first.\n",
+            "skills/awf-foundation/references/real.md": b"Index: `./real.md`.\n",
             "keys.txt": b"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIExample user@host\n",
             "compose.yml": b"password: ${DB_PASSWORD}\n",
             "crlf-only.md": b"a\r\nb\r\n",
@@ -373,6 +406,8 @@ def fixture_test() -> int:
         }
     )
     expected = (
+        "foundation capsule link target missing: skills/awf-foundation/SKILL.md -> references/ghost.md",
+        "foundation capsule link target missing: skills/awf-foundation/references/real.md -> references/ghost.md",
         "runtime/session artifact",
         "OpenAI-style key in notes.md",
         *(f"GitHub token in {rel}" for rel in ("github.md", "github.env", "github.tsx", "github-config", "late-token", "secret.yaml")),

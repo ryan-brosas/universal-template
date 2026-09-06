@@ -10,6 +10,11 @@ invocation: entry
 
 Figma is the spec. Paper tokens are the one settings set. Screenshot the Figma node, copy its bounds and every column it shows, bind paints to `var(--token)`. Do not invent a simpler layout. Spread the file: one Paper page per Figma page, one artboard per component set.
 
+For Paper platform mechanics, themes/CSS variables, clipboard import, and new
+capabilities, load `../paper-design/SKILL.md`. Direct Figma paste is a candidate
+editable fast path; inspect translation losses and repair detached bindings before
+treating it as a transferred system.
+
 ## When to Use / NOT
 
 - **Use when:** the user wants a Figma frame, component set, or template copied into Paper; wants Paper to stick to Figma or inspo; wants Paper tokens from Figma; requests literal source transfer, not generic Paper-native component work.
