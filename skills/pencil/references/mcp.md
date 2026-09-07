@@ -17,8 +17,11 @@
 ## get_node
 
 - Page IDs list frames. Component-set children are variants (`Type=primary, Size=md, State=default`).
-- Adapter text may truncate. If JSON parse fails, screenshot and `get_node` a **single variant**, not the whole set.
-- Do not write a Python walker over the dump to invent a reduced matrix.
+- Adapter text may truncate. Do not parse the displayed prefix as a complete tree.
+  Inspect the adapter’s saved complete response when available, extracting only
+  relevant nodes and retaining source identity/counts. Otherwise fetch a bounded
+  frame or variant rather than replaying the full set. A local walker can reduce
+  context; it must not invent missing variants or silently narrow requested scope.
 
 ## Timeouts
 
@@ -28,4 +31,7 @@
 
 ## Fonts
 
-`get_basic_info.fontFamilies` is the allow-list. If Figma's family is absent, use an installed one and keep going. Do not add a token caption about the fallback.
+Use font inventory as a preflight signal, then verify the intended family renders.
+If unavailable, report the constraint; substitute only with explicit user acceptance
+and use `approved-fallback`, never `pixel-perfect` (`completion-contract.md`).
+Do not add a caption absent from the source to conceal the substitution.

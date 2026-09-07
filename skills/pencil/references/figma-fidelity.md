@@ -50,7 +50,7 @@ Bound Figma variables become Paper tokens (same path, kebab, `--` prefix). Unbou
 
 Do not flatten `Color/brand/500` to a one-off hex in HTML. Do not mint `--color-primary` when Figma already named the variable.
 
-Paper cannot switch Figma modes (Accent-2, Typeface-2, Dark) on one node. Document extra modes as extra boards, still bound to tokens created from those mode values.
+Resolve relevant inherited modes and probe current Paper switching/scoping support (`tokens.md`). Use labeled alternatives only where direct mapping is unavailable; distinguish previews from working switches.
 
 ## Fonts
 

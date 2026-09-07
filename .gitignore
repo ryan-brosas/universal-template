@@ -13,8 +13,12 @@
 !/scripts/web-reference-manifest.py
 # Generated runtime capability state (machine-local, never committed).
 /state/
-# Skill-local helper scripts stay out of the catalog repo.
+# Skill-local helpers stay local except the published fidelity gate and tests.
 skills/*/scripts/
+!/skills/pencil/scripts/
+/skills/pencil/scripts/*
+!/skills/pencil/scripts/verify-fidelity-manifest.py
+!/skills/pencil/scripts/test-verify-fidelity-manifest.py
 # Host/vendor-managed runtime skills stay installed locally, never published.
 /skills/.system/
 # Optional machine-local model preferences.

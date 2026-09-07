@@ -6,6 +6,7 @@
     "docs": ["context7"],
     "repository-research": ["deepwiki"],
     "web-research": ["exa"],
-    "historical-context": ["openviking"]
+    "historical-context": ["openviking"],
+    "design": ["paper", "figma-bridge"]
   }
 }

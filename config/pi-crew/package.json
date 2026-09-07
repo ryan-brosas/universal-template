@@ -1,0 +1,11 @@
+{
+  "name": "local-pi-crew",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "keywords": ["pi-package"],
+  "pi": {"extensions": ["./index.ts"]},
+  "files": ["index.ts", "crew.mjs", "identity.mjs", "memory.mjs", "trigger.mjs", "results.mjs", "roles/", "README.md"],
+  "peerDependencies": {"@earendil-works/pi-coding-agent": "*"},
+  "scripts": {"test": "node --test crew.test.mjs lineage.test.mjs trigger.test.mjs workflow.test.mjs"}
+}

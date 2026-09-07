@@ -5,10 +5,10 @@ Concrete probes for the pixel-perfect workflow. MCP names follow the Paper/Figma
 ## Enumerating structure under dump truncation
 Figma `get_node` dumps get truncated (same node, different lengths between calls). Never parse one truncated dump as truth.
 
-1. Re-fetch up to 3 times and keep the longest raw string.
-2. Bracket-scan the top-level `"children":[` — track depth, skip strings with escape handling, collect each direct child as a substring.
-3. Per child, regex out `id`, `name`, `type`, `bounds`, and root `fills`.
-4. Sanity check: every sibling after the first must appear; if the count changed between fetches, the dump is still truncated.
+1. Prefer the tool's saved full-output file over a truncated display. Parse complete JSON and check identity and child counts.
+2. If no complete artifact exists, request smaller source subtrees. A longer truncated response is still incomplete evidence.
+3. Pair visible children by verified identity and order; skip hidden native subtrees when the source omitted them. Treat vector-to-SVG expansion separately.
+4. Keep counts and identity mismatches explicit instead of repairing unpaired nodes by guesswork.
 
 ## Full-page reference render
 - Page nodes often cannot be exported directly ("No nodes to export"). Export each top-level item at a scale that fits (`scale: 0.12` for an 8392px sheet), save into the bridge's working directory (rejects `/tmp`), and view them side by side.
@@ -28,11 +28,11 @@ Missing on both → keep the established stand-in family and say so in the repor
 
 ## Screenshot sessions
 - Whole-artboard shots time out or return empty above ~3000px — shoot per block instead.
-- Empty results across ALL nodes = stale MCP session, not a rendering bug. Restart Paper Desktop / reconnect the MCP plugin once, then retry.
+- Repeated empty or black captures may indicate a stale session, a render limitation, or a file issue; they do not establish which. Retry once on a bounded target. Then coordinate reconnect/restart if available, protecting unsaved work; otherwise record visual verification as pending.
 - Returned image payloads are base64; decode with `base64 -d` and `file` the result before viewing.
 
 ## Ghost-hunting
-A faint blob in the render with no matching node is an app rendering artifact — verify with a full tree summary plus a `find_nodes` sweep for image fills before blaming the file.
+A faint blob without an obvious node is not enough to diagnose an app artifact. Inspect the tree, image fills, effects, clipping, and overlapping siblings. Preserve source-owned effects until a canary isolates the cause. For repair and stale-geometry handling, see `../../pencil/references/component-repair.md`.
 
 ## Restore discipline
 Capture `get_jsx` of every node before deleting. `write_html` with `mode: insert-children` + absolute `left/top` restores exact positions; keep one write per visual block; de-duplicate by re-listing children after each batch.
