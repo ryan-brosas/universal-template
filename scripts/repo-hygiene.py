@@ -117,7 +117,7 @@ _validator = importlib.util.module_from_spec(_validator_spec)
 _validator_spec.loader.exec_module(_validator)
 
 
-CAPSULE_REF_PATTERN = re.compile(r"`(\./[\w-]+\.md|references/[\w./-]+\.md)`")
+CAPSULE_REF_PATTERN = re.compile(r"`(\./[\w./-]+\.md|references/[\w./-]+\.md)(?:#[^`\s]*)?`")
 
 
 def capsule_link_errors(rel: str, text: str, base: Path, tracked: set[Path]) -> list[str]:
@@ -384,6 +384,8 @@ def fixture_test() -> int:
                 b"[reference][lost]\n\n[lost]: lost.md\n"
             ),
             "skills/awf-foundation/references/local-links.md": b"`./local.md` [local](local.md)\n",
+            "skills/awf-foundation/references/anchored.md": b"`references/anchor-missing.md#section` `./sibling-missing.md#section`\n",
+            "skills/awf-foundation/references/nested.md": b"`./nested/missing.md`\n",
             "skills/awf-foundation/references/dir-links.md": b"`./directory.md`\n",
             "skills/awf-foundation/references/directory.md/child.txt": b"not a capsule\n",
             "sessions/run.jsonl": b"{}\n",
@@ -421,6 +423,12 @@ def fixture_test() -> int:
                 b"`[example](absent.md)`\n\n```md\n[example](absent.md)\n```\n"
             ),
             "skills/awf-foundation/references/space name.md": b"# Space\n",
+            "skills/awf-foundation/references/token-controls.md": (
+                b"`./nested/real.md` `./nested/real.md#section`\n"
+                b"`references/real.md#section` `./real.md#section`\n"
+                b"`./missing.mdx` `./nested/missing.mdx#section` `references/missing.mdx`\n"
+            ),
+            "skills/awf-foundation/references/nested/real.md": b"# Section\n",
             "skills/awf-foundation/references/image.svg": b"<svg/>\n",
             "keys.txt": b"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIExample user@host\n",
             "compose.yml": b"password: ${DB_PASSWORD}\n",
@@ -442,6 +450,9 @@ def fixture_test() -> int:
         "foundation capsule link target missing: skills/awf-foundation/references/dir-links.md -> ./directory.md",
         "foundation capsule link target missing: skills/awf-foundation/references/local-links.md -> ./local.md",
         "Markdown target is not tracked: local.md",
+        "foundation capsule link target missing: skills/awf-foundation/references/anchored.md -> references/anchor-missing.md",
+        "foundation capsule link target missing: skills/awf-foundation/references/anchored.md -> ./sibling-missing.md",
+        "foundation capsule link target missing: skills/awf-foundation/references/nested.md -> ./nested/missing.md",
         "runtime/session artifact",
         "OpenAI-style key in notes.md",
         *(f"GitHub token in {rel}" for rel in ("github.md", "github.env", "github.tsx", "github-config", "late-token", "secret.yaml")),
