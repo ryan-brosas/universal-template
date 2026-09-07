@@ -96,7 +96,7 @@ test('automatic trigger set is stage-bounded and reuses existing durable actors'
   const ctx = { invocation: { extensionContext: { cwd: inRepo, sessionManager: { getSessionId: () => 'sess-1' } } }, call };
   const roleDir = join(tmpdir(), 'roles-');
   const legacy = Object.values(AUTO_ROLES).map(policy => ({
-    id: 'old-' + policy.name(identity.id), name: policy.name(identity.id),
+    id: 'old-' + policy.name(identity.id.slice(0, 8)), name: policy.name(identity.id.slice(0, 8)),
     extensions: true, tools: ['read', 'grep', 'find', 'ls'],
   }));
   const built = await buildTriggers(ctx, { roleDir }, { hindsight_recall: async () => ({ details: { results: [] } }) }, legacy);
@@ -120,6 +120,14 @@ test('automatic trigger set is stage-bounded and reuses existing durable actors'
   assert.equal(again.desired.every(d => d.reused), true, 'second activation reuses durable actors');
   assert.equal(creates.length, 6, 'no duplicate creation');
   for (const [role, policy] of Object.entries(AUTO_ROLES)) assert.ok(STAGES[policy.stage].includes(role));
+});
+
+test('AUTO registry names preserve the complete project identity', () => {
+  const ids = ['deadbeef1111111111111111', 'deadbeef2222222222222222'];
+  for (const policy of Object.values(AUTO_ROLES)) {
+    assert.notEqual(policy.name(ids[0]), policy.name(ids[1]), 'eight-character collisions must not share actor history');
+    for (const id of ids) assert.ok(policy.name(id).endsWith(id));
+  }
 });
 
 test('stage gating and scope keys bound duplicate work', () => {

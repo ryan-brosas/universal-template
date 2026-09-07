@@ -5,12 +5,12 @@ import { projectScoped } from './memory.mjs';
 // Automatic trigger policy. Component-side queueing only: actors receive one
 // bounded activation per event class; their replies cannot spawn more work.
 export const AUTO_ROLES = {
-  scout: { stage: 'input', delivery: 'mailbox', triggerTurn: false, name: id => 'auto-scout-' + id.slice(0, 8) },
-  supervisor: { stage: 'input', delivery: 'mailbox', triggerTurn: false, name: id => 'auto-supervisor-' + id.slice(0, 8) },
-  verifier: { stage: 'settled', delivery: 'mailbox', triggerTurn: false, name: id => 'auto-verifier-' + id.slice(0, 8) },
-  advisor: { stage: 'settled', delivery: 'mailbox', triggerTurn: false, name: id => 'auto-advisor-' + id.slice(0, 8) },
-  reflector: { stage: 'compact', delivery: 'mailbox', triggerTurn: false, name: id => 'auto-reflector-' + id.slice(0, 8) },
-  foundation: { stage: 'compact', delivery: 'followUp', triggerTurn: false, name: id => 'auto-foundation-' + id.slice(0, 8) },
+  scout: { stage: 'input', delivery: 'mailbox', triggerTurn: false, name: id => 'auto-scout-' + id },
+  supervisor: { stage: 'input', delivery: 'mailbox', triggerTurn: false, name: id => 'auto-supervisor-' + id },
+  verifier: { stage: 'settled', delivery: 'mailbox', triggerTurn: false, name: id => 'auto-verifier-' + id },
+  advisor: { stage: 'settled', delivery: 'mailbox', triggerTurn: false, name: id => 'auto-advisor-' + id },
+  reflector: { stage: 'compact', delivery: 'mailbox', triggerTurn: false, name: id => 'auto-reflector-' + id },
+  foundation: { stage: 'compact', delivery: 'followUp', triggerTurn: false, name: id => 'auto-foundation-' + id },
 };
 
 const READ_ONLY_TOOLS = ['read', 'grep', 'find', 'ls'];
