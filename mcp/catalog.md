@@ -39,6 +39,8 @@ host is required to connect every entry.
 | exa               | stdio | `npx -y exa-mcp-server@3.4.1`                      | `EXA_API_KEY`                    | live web search |
 | openviking        | remote| `http://127.0.0.1:1933/mcp`                  | none (local daemon)              | optional rebuildable projection/cache over mined corpus; register only when the daemon runs; never canonical, never auto-synced, never a blocker |
 | mcp-steroid       | stdio | `devrig mcp` (PATH-resolved)                  | none (local IDE bridge)          | JetBrains PSI/refactoring/test/debugger access via devrig |
+| figma-bridge      | stdio | `npx -y @gethopp/figma-mcp-bridge@0.0.21`     | none                             | live Figma document bridge; requires the companion plugin in an open Figma file |
+| paper             | remote| `http://127.0.0.1:29979/mcp`                 | none (local desktop app)         | Paper design canvas; available while Paper is running |
 
 ### Deliberately not registered (researched)
 
@@ -59,9 +61,10 @@ These hosts already export or can export the needed vars; the `${VAR}` text in
 
 ## Scoped profiles
 
-`profiles.json` defines `minimal` (none) and six one-server profiles:
+`profiles.json` defines `minimal` (none), six one-server profiles, and one
+two-server design profile:
 `code-graph`, `ide`, `docs`, `repository-research`, `web-research`, and
-`historical-context`. Codebase Memory and MCP Steroid are deliberately separate;
+`historical-context`; `design` selects `paper` and `figma-bridge`. Codebase Memory and MCP Steroid are deliberately separate;
 there is no ambiguous `code` compatibility alias. Profiles are explicit
 selections, not always-on policy.
 
@@ -151,7 +154,7 @@ overlay files that this repo does not own — document them, never hand-edit
 both sides blindly:
 
 - `~/.pi/agent/mcp.json` — pi's host-owned selected subset; never regenerate
-  all six by default.
+  the full registry by default.
 - `~/.mcporter/mcporter.json` — the pi-mcp-adapter layer (subset; env values
   support `${VAR}` expansion — never store literal keys there; use env vars).
 - `~/.prime/agent/settings.json` — scoped writes only through
@@ -171,3 +174,7 @@ both sides blindly:
 - **openviking**: local streamable-HTTP daemon (port matches the running
   daemon, default `1933`). If the daemon is not running the server will fail to
   connect — treat as optional context, never a blocker.
+- **figma-bridge**: run the companion Figma plugin in each file the agent should
+  access; the stdio server brokers those live plugin connections.
+- **paper**: Paper exposes its local Streamable HTTP endpoint while the desktop
+  app is running; a stopped app makes the registry entry dormant.

@@ -159,7 +159,9 @@ def referenced_files(skill: Path, text: str) -> list[str]:
     return errors
 
 
-def markdown_link_errors(source: Path, text: str, boundary: Path) -> list[str]:
+def markdown_link_errors(
+    source: Path, text: str, boundary: Path, tracked: set[Path] | None = None,
+) -> list[str]:
     """Check rendered CommonMark links/images, not code examples or HTML."""
     if MarkdownIt is None:
         return [f"{source}: markdown-it-py is required for local Markdown links"]
@@ -199,6 +201,8 @@ def markdown_link_errors(source: Path, text: str, boundary: Path) -> list[str]:
                 errors.append(f"{source}: Markdown target escapes permitted root: {destination}")
             elif not target.is_file():
                 errors.append(f"{source}: Markdown target missing or not a file: {destination}")
+            elif tracked is not None and target not in tracked:
+                errors.append(f"{source}: Markdown target is not tracked: {destination}")
         except (OSError, ValueError, RuntimeError) as exc:
             errors.append(f"{source}: invalid Markdown target {destination!r}: {exc}")
     return errors

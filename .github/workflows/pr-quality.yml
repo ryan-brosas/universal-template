@@ -37,6 +37,7 @@ jobs:
           {
             SKILLS_ROOT="$GITHUB_WORKSPACE/skills" python3 scripts/skill-validator.py
             python3 scripts/skill-validator.py --selftest
+            python3 skills/pencil/scripts/test-verify-fidelity-manifest.py
             python3 scripts/install-prompts.py --check-repo
             python3 scripts/install-prompts.py --selftest
             python3 scripts/render-prompt.py --selftest

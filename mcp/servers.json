@@ -49,6 +49,20 @@
         "mcp"
       ],
       "lifecycle": "keep-alive"
+    },
+    "figma-bridge": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@gethopp/figma-mcp-bridge@0.0.21"
+      ],
+      "lifecycle": "keep-alive"
+    },
+    "paper": {
+      "type": "remote",
+      "url": "http://127.0.0.1:29979/mcp",
+      "lifecycle": "lazy"
     }
   }
 }
