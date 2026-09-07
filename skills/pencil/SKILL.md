@@ -6,65 +6,75 @@ invocation: entry
 
 # Pencil
 
-## Core Principle
+For exact transfer, Figma is the spec. For intentional project adaptation, preserve
+source evidence but use approved project theme and component owners; record
+meaningful differences. Never silently blend systems. **No fresh visual comparison
+means no pixel-perfect claim.**
 
-Figma is the spec. Paper tokens are the one settings set. Screenshot the Figma node, copy its bounds and every column it shows, bind paints to `var(--token)`. Do not invent a simpler layout. Spread the file: one Paper page per Figma page, one artboard per component set.
+Use for Figma/reference transfer into Paper, not application implementation or
+website copying. For Paper-native composition and maintenance, load
+`../paper-component-consistency/SKILL.md`. For Paper platform mechanics, themes/CSS
+variables, clipboard import, and new capabilities, load `../paper-design/SKILL.md`.
+Direct Figma paste is a candidate editable fast path; inspect translation losses
+and repair detached bindings before treating it as a transferred system.
 
-For Paper platform mechanics, themes/CSS variables, clipboard import, and new
-capabilities, load `../paper-design/SKILL.md`. Direct Figma paste is a candidate
-editable fast path; inspect translation losses and repair detached bindings before
-treating it as a transferred system.
+## Working approach
 
-## When to Use / NOT
+Derive scope, measurements, and organization from the active source, not reference
+examples. Choose efficient tools and ordering; preserve actual dependencies such
+as creating referenced tokens and confirming the destination before mutation.
+For captured images without source nodes, use the captured-reference branch in
+`references/figma-fidelity.md` instead of Figma node/variable calls. Editable
+construction, destination checks, and fresh visual comparison still apply.
 
-- **Use when:** the user wants a Figma frame, component set, or template copied into Paper; wants Paper to stick to Figma or inspo; wants Paper tokens from Figma; requests literal source transfer, not generic Paper-native component work.
-- **NOT when:** the source is a live website (`web-reference`); the job is app code from Figma; Paper work has no design source (design in Paper directly). Captured visual references remain in scope.
+- **Establish context.** Confirm connected Figma and Paper file/page identities.
+  Run small render canaries. Verify required fonts are available and actually
+  render; a retained family name is insufficient. Missing fonts block pixel-perfect
+  claims; use fallbacks only with explicit acceptance.
+- **Understand the system.** Inspect targeted source nodes and renders: components,
+  instances, overrides, styles, variable aliases, inherited modes, content, and
+  layout behavior. Truncated dumps are incomplete evidence; split reads or inspect
+  saved complete output (`references/mcp.md`).
+- **Carry the theme.** Compare source decisions with existing Paper bindings and
+  project code tokens when present. Resolve ownership, reuse appropriate tokens,
+  and bind actual properties, not matching literals. Probe current mode/scope
+  capabilities; distinguish working switches from previews (`references/tokens.md`).
+- **Reuse built work.** Inspect relevant Paper specimens and page patterns before
+  rebuilding. Prefer established owners; a copied screen is usage evidence, not
+  automatically canonical. Reuse matching anatomy, nested components, slots,
+  variants, and assets through verified native linkage or explicit copy projections
+  (`../paper-component-consistency/SKILL.md`). Build only missing/divergent parts.
+- **Preserve fidelity.** For exact transfer, retain source page/artboard organization,
+  Overview sheets within scope, coordinates, text, and variant matrices
+  (`references/organization.md`). Match fills, strokes, effects, layout, and type
+  metrics. Export actual IMAGE fills and SVG vectors, not convenient substitutes.
+  Component image fills are valid; whole-component/page screenshots are reference
+  evidence, never editable deliverables.
+- **Mutate safely.** Open the intended page and pass explicit file identity on Paper
+  mutations. Capture recovery proportional to risk; snapshot JSX before destructive
+  edits. After ambiguous failure, inspect before retrying: inner mutations may have
+  succeeded (`references/completion-contract.md`).
+- **Verify.** Audit names, counts, bounds, content, assets, and bindings. Inspect
+  fresh source/Paper renders and a diff per block (`references/figma-fidelity.md`).
+  Structural agreement is not visual proof. Pending rendering means
+  **structurally verified, visual pending**, not permission to announce the next
+  page. Customized compositions need their own content/variant checks, not a false
+  claim of identical source pixels.
 
-## Workflow
+## Completion
 
-Derive measurements and organization from the active source and project scope.
-Numeric reference values are examples, not defaults. Independent inspections and
-mutations may be batched using verified tools; preserve real dependencies such
-as selecting the target page and creating tokens before referencing them.
+Distinguish **built**, **structurally verified**, **visually verified**, and
+**pixel-perfect**. Only passing structural, visual, theme, asset, and font gates
+permits an unqualified exact-transfer completion claim.
 
-Select the evidence route first: the steps below use an accessible Figma source.
-For a captured image without source nodes, use the captured-reference branch in
-`references/figma-fidelity.md` instead of Figma node/variable calls. Paper page
-selection, editable-layer construction, and visual comparison still apply.
+For exact transfers, run `scripts/verify-fidelity-manifest.py <manifest.json>` and
+inspect its saved source, Paper, and diff artifacts before advancing. Release
+working indicators. Report exact affected file/page/artboard IDs, reused owners,
+intentional differences, constraints, and actual verification, not assumed linkage.
 
-1. Probe MCP (`references/mcp.md`). Paper Desktop must have the target file open. Prefer Figma screenshot + `get_node`. Official Figma `get_design_context` if authorized. Script-assisted inspection may complement, but never replace, visual evidence.
-2. Screenshot the Figma node. Keep that image beside the Paper work.
-3. **HARD-GATE: variables to the bone, then HTML.** `get_variable_defs` first (`references/tokens.md`). Every Figma variable used by the frame becomes a Paper token (path, alias, resolved value). Bound fills/spacing/type use `var(--that-token)`. Raw hex or px only when Figma has no variable on that property. Order token creation by actual dependencies, not incidental color or size sorting. A Figma paste into Paper detaches components and variables ([paste/figma](https://paper.design/docs/paste/figma)); paste is not a substitute for this step.
-4. **HARD-GATE: spread the file** (`references/organization.md`). `create_page` for each Figma page you are ripping. One artboard per Figma component set or top-level frame. Derive artboard gaps and organizer placement from the active source. Preserve source Overview-sheets within the requested scope; do not invent them when absent. Cover stays on Cover; Buttons do not land on Cover.
-5. Size each artboard from that Figma frame: bounds, padding, gap, radius, fill, dashed stroke. Paper forbids `display:grid`. Emulate a Figma GRID with flex rows whose **cells** match the measured source tracks (`references/layout.md`).
-6. Copy one variant from `get_node`: fills, padding, radius, type, gap. Export IMAGE fills and VECTOR icons with Figma screenshot tools onto disk, then `paper-asset://`. Do not draw a substitute for an image fill.
-7. `write_html` one visual row, inline styles only ([paste/html](https://paper.design/docs/paste/html)). Repeat with `duplicate_nodes`, `update_styles`, or `<x-paper-clone>`. Primary and Secondary stay separate text nodes (Paper has no rich text). Break large Figma trees into parts ([mcp](https://paper.design/docs/mcp)).
-8. **HARD-GATE: screenshot compare** (`references/figma-fidelity.md`). Paper `get_screenshot` of the artboard vs the Figma screenshot. Missing columns (type specimens), wrong labels, or a backdrop Figma does not use means the copy is not done. Fix before the next artboard.
-9. **Stop** when the requested Figma frames match, or the user redirects. Do not start the next Figma page on the same Paper page.
+## Focused references
 
-## Red Flags
-
-- Inventing a showcase, dropping Figma specimen columns, or demo labels Figma does not use.
-- Skipping tokens, flattening a bound Figma variable to a hex in HTML, or minting `--color-primary` when Figma already named the variable.
-- Flex-packing buttons with only `gap` between intrinsic widths when Figma uses a GRID whose cell has a distinct measured track width.
-- Treating script-derived node metrics as a substitute for a fresh visual comparison.
-- A footer that documents a font fallback as if it were the design. If Paper lacks the Figma family, report the constraint and obtain acceptance before a fallback; do not claim pixel-perfect fidelity with a substituted font; do not decorate it.
-- Putting Cover, Tip, Button, Icon-button, success, and danger on one Paper page or one artboard.
-- Leaving content boards floating without their Figma Overview-sheet section organizer (sidebar, "Foundation —" pill, heading, description, footer).
-- Treating Figma paste as a full import: Paper detaches components and variables; masks hide; code-connected components do not convert.
-
-## Verification
-
-- `get_basic_info` lists Paper tokens that match Figma variable paths (kebab, `--` prefix). Bound styles in HTML are `var(--token)`, not baked hex.
-- Paper screenshot vs Figma screenshot: same labels, fills, column count (Typeface Normal/Medium/Semibold/Bold `Abc`), and column rhythm.
-- Each state column width equals the active source track, gap equals Figma `autoLayout.gap`.
-- `list_files` / `get_basic_info`: component work lives on a page named after the Figma page; each component set is its own artboard.
-
-## References
-
-- `references/layout.md`: Figma GRID to Paper flex cells; why gap-24 on 217px buttons looks tight
-- `references/tokens.md`: `create_tokens` order and a starter Button set
-- `references/mcp.md`: Paper and Figma tool probe, asset export, timeout rules
-- `references/organization.md`: Paper pages vs artboards; do not dump a Figma file onto one page
-- `references/official.md`: paper.design/docs limits (paste, tokens, MCP, SVG, HTML)
-- `references/figma-fidelity.md`: screenshot is the spec; Typefaces/Colors/Surfaces must include every Figma column
+- `references/layout.md`: source grid translation.
+- `references/component-repair.md`: pasted-family repair patterns, canaries, and trustworthy verification baselines.
+- `references/official.md`: platform notes; current capabilities outrank snapshots.
+- `references/behavior-tests.md`: fidelity and reuse regression scenarios.

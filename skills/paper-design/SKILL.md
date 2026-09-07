@@ -1,6 +1,6 @@
 ---
 name: paper-design
-description: "Use when working with Paper's documented features, themes and CSS-variable tokens, Figma or HTML paste, SVG editing, MCP setup, Snapshot, or checking new Paper capabilities. Supplies platform mechanics; pencil owns exact Figma transfer."
+description: "Use when working with Paper's documented features, themes and CSS-variable tokens, Figma or HTML paste, SVG editing, MCP setup, Snapshot, or checking new Paper capabilities. Supplies platform mechanics; pencil owns exact Figma transfer and paper-component-consistency owns reusable composition."
 invocation: manual
 disable-model-invocation: true
 ---
@@ -22,8 +22,9 @@ component-management procedure. Load only the relevant reference.
 | New capabilities or repeated transfer problems | `references/improvement-loop.md` |
 | Full docs coverage and source freshness | `references/index.md` |
 
-For exact Figma transfer, use `../pencil/SKILL.md`; for fidelity diagnosis, use
-`../pixel-perfect/SKILL.md`. Their ownership and fidelity gates still apply. Application implementation belongs to the project's frontend workflow.
+For exact Figma transfer, use `../pencil/SKILL.md`; for reusable Paper composition,
+use `../paper-component-consistency/SKILL.md`. Their ownership and fidelity gates
+still apply. Application implementation belongs to the project's frontend workflow.
 
 ## Useful defaults
 

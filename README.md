@@ -121,7 +121,8 @@ generated views for human browsing, not required model context.
 
 Reusable prompts include `/repo-audit`, `/plan-work`, `/implement-work`,
 `/review-work`, `/verify-work`, `/cleanup-code`, `/learn`, `/recall-session`,
-`/reflect-session`, and `/compile-skill`. Host invocation syntax can differ.
+`/reflect-session`, `/compile-skill`, and `/compile-session-improvements`. Host
+invocation syntax can differ.
 `scripts/render-prompt.py` remains an optional compatibility helper for hosts
 without a native prompt surface.
 

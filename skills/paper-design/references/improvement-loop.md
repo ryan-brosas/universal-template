@@ -61,7 +61,7 @@ For structural reuse, test layout/anatomy propagation separately from token chan
 | New Paper feature / changed import limit | Matching reference in this skill, with source and review date |
 | Figma identity, mode, or binding transfer policy | `../../pencil/references/tokens.md` |
 | Source layout / visual mismatch | Existing Pencil layout/fidelity references or its regression fixture |
-| Duplicated structure / content fitting | Existing component-owner skills and project owners |
+| Duplicated structure / content fitting | `../../paper-component-consistency/SKILL.md` and existing owners |
 | Product token values / intended variants | The consuming project's code/theme/component owner |
 | Repeatable exact regression | Existing targeted test or gate, if it earns maintenance cost |
 

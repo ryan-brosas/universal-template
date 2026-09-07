@@ -108,6 +108,20 @@ aliased consumers render the new value. Also verify spacing/radius consumers;
 color-only success does not test the whole theme. Do not temporarily recolor a live
 shared theme with unknown consumers.
 
+## Reconnecting a pasted template
+
+Before treating a pasted or duplicated file as customizable, distinguish:
+
+- **Tokens exist:** Theme entries are present.
+- **Properties are bound:** editable nodes store references to the intended entries.
+- **Theme works:** changing an owner token reaches the expected direct and aliased consumers without per-node repainting.
+
+Check all three. Inventory detached literals by semantic role within the requested scope, not by color equality alone. Reconnect a representative property to an existing token while preserving its intended resolved appearance; then use an authorized theme change or isolated fixture to demonstrate propagation. Repeat for the non-color categories being customized. Batch equivalent binding repairs only after the representative check passes.
+
+Inspect gradients, borders, SVG paints, and text overrides separately when they are in scope; matching a frame background does not prove its nested assets or text are bound. Preserve intentional literals and unsupported properties as named exceptions. Do not tokenize every coordinate, force all artwork into the brand palette, or claim token-copying establishes cross-file synchronization.
+
+For applying project branding to a duplicate, use `../../paper-project-branding/SKILL.md`. This workflow does not require a new import or a parallel token system.
+
 ## Copying out and between files
 
 In Theme, right-click a token → Copy. Cmd+A selects the full set; Shift selects

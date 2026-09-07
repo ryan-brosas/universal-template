@@ -52,7 +52,7 @@ a time. A foundation is cold evidence, not an operational procedure; see
 ## Workflow
 
 1. Recall evidence from diffs, source, tests, and selected session events. Raw session JSONL already owns history; never re-artifact it.
-2. Classify possible durable promotions. A reflection may recommend a SKILL candidate, but only explicit `/compile-skill` or an equivalent direct user request may create it.
+2. Classify possible durable promotions. A reflection may recommend a SKILL candidate, but only explicit `/compile-skill`, `/compile-session-improvements`, or an equivalent direct user request may create it.
 3. Explicitly drop cheap or one-off material.
 4. Promote only survivors. Skill candidates follow the catalog authoring rules; gate candidates need a demonstrated regression and a low-false-positive check; foundation candidates follow `../reference-driven-development/references/contract.md` provenance rules and land in `skills/<x>-foundation/`; project notes land in the smallest project-appropriate tracked location.
 5. Report what was deliberately not saved.

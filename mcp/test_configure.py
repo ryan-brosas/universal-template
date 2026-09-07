@@ -330,7 +330,8 @@ class ConfigureTests(unittest.TestCase):
     def test_profiles_and_prime_translation(self):
         expected = {"minimal": [], "code-graph": ["codebase-memory"], "ide": ["mcp-steroid"],
                     "docs": ["context7"], "repository-research": ["deepwiki"],
-                    "web-research": ["exa"], "historical-context": ["openviking"]}
+                    "web-research": ["exa"], "historical-context": ["openviking"],
+                     "design": ["paper", "figma-bridge"]}
         for profile, names in expected.items():
             self.assertEqual(configure.selection(profile, None)[0], names)
         self.assertNotIn("code", configure.load_json(configure.PROFILES)["profiles"])

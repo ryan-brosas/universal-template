@@ -16,7 +16,10 @@ lifecycle through merge. An existing PR is updated, not duplicated.
 1. Inspect status, the base branch, commit range, and authored diff. Run the
    project's relevant gates and `git diff --check` on that range; record commands
    and exit statuses. If no quality gate exists, run the strongest applicable
-   checks and report the gap rather than inventing CI.
+   checks and report the gap rather than inventing CI. Use
+   `../pre-pr-validation/SKILL.md` for local readiness and revision-bound evidence.
+   A blocked local verdict stops delivery unless the user requests a draft/WIP PR;
+   carry the blockers honestly into that draft.
 2. For PR creation or body updates, load `references/pull-request-format.md`.
    Use the repository's own template first; fall back to
    `../../templates/pull-request.md`. Include only evidence actually obtained.
