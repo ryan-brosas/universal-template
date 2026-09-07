@@ -90,12 +90,17 @@ test('automatic trigger set is stage-bounded and reuses existing durable actors'
   const identity = await projectIdentity(inRepo);
   const creates = [];
   const call = async (ref, args) => {
-    if (ref === 'agents.create') { creates.push(args); return { id: 'new-' + args.name, name: args.name, status: 'idle' }; }
+    if (ref === 'agents.create') { creates.push(args); return { ...args, id: 'new-' + args.name, status: 'idle' }; }
     throw new Error('unexpected ' + ref);
   };
   const ctx = { invocation: { extensionContext: { cwd: inRepo, sessionManager: { getSessionId: () => 'sess-1' } } }, call };
   const roleDir = join(tmpdir(), 'roles-');
-  const built = await buildTriggers(ctx, { roleDir }, { hindsight_recall: async () => ({ details: { results: [] } }) }, []);
+  const legacy = Object.values(AUTO_ROLES).map(policy => ({
+    id: 'old-' + policy.name(identity.id), name: policy.name(identity.id),
+    extensions: true, tools: ['read', 'grep', 'find', 'ls'],
+  }));
+  const built = await buildTriggers(ctx, { roleDir }, { hindsight_recall: async () => ({ details: { results: [] } }) }, legacy);
+  assert.equal(built.desired.some(d => d.reused), false, 'legacy extension-enabled actors remain untouched and unused');
   assert.equal(built.desired.length, 6);
   assert.equal(creates.length, 6);
   for (const created of creates) {
@@ -104,8 +109,14 @@ test('automatic trigger set is stage-bounded and reuses existing durable actors'
     assert.equal(created.responseMode, 'directive');
     assert.equal(created.triggerTurn, false, 'actors never steal the turn');
     assert.deepEqual(created.tools, ['read', 'grep', 'find', 'ls'], 'AUTO assessment never inherits implementation privileges');
+    assert.equal(created.extensions, false, 'AUTO must not expose Fabric or Hindsight');
+    assert.match(created.name, /-readonly-v1$/, 'do not reuse old extension-enabled actors');
   }
-  const again = await buildTriggers(ctx, { roleDir }, {}, built.desired.map(d => d.actor));
+  const rows = built.desired.map(d => d.actor);
+  for (const changed of [{ extensions: true }, { tools: ['read', 'bash'] }, { tools: undefined }]) {
+    await assert.rejects(buildTriggers(ctx, { roleDir }, {}, [{ ...rows[0], ...changed }, ...rows.slice(1)]), /Unsafe auto actor/);
+  }
+  const again = await buildTriggers(ctx, { roleDir }, {}, rows);
   assert.equal(again.desired.every(d => d.reused), true, 'second activation reuses durable actors');
   assert.equal(creates.length, 6, 'no duplicate creation');
   for (const [role, policy] of Object.entries(AUTO_ROLES)) assert.ok(STAGES[policy.stage].includes(role));

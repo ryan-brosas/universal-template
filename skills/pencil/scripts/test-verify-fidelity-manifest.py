@@ -2,6 +2,7 @@
 """Exercise evidence boundaries through the public manifest CLI."""
 
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -30,16 +31,22 @@ class ManifestEvidenceTests(unittest.TestCase):
             "fonts": {"unavailable": [], "fallbackApproved": False},
         }
 
-    def check_manifest(self, accepted, diagnostic="font", raw=None):
+    def check_manifest(self, accepted, diagnostic="font", raw=None, env=None):
         self.path.write_bytes(raw if raw is not None else json.dumps(self.data).encode("utf-8"))
         result = subprocess.run(
             [sys.executable, str(Path(__file__).with_name("verify-fidelity-manifest.py")),
-             str(self.path)], capture_output=True, text=True, check=False,
+             str(self.path)], capture_output=True, text=True, check=False, env=env,
         )
         self.assertEqual(result.returncode, 0 if accepted else 1, result.stdout + result.stderr)
         if not accepted:
             self.assertIn(diagnostic, result.stderr.lower())
             self.assertNotIn("Traceback", result.stderr)
+
+    def test_utf8_ids_under_ascii_locale(self):
+        self.data['target']['fileId'] = 'café-東京'
+        raw = json.dumps(self.data, ensure_ascii=False).encode('utf-8')
+        env = dict(os.environ, LC_ALL='C', PYTHONUTF8='0', PYTHONCOERCECLOCALE='0')
+        self.check_manifest(True, raw=raw, env=env)
 
     def test_invalid_utf8(self):
         self.check_manifest(False, "cannot read manifest", raw=b"\xff\xfe")

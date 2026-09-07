@@ -74,6 +74,13 @@ test('compact dedupe is reserved before awaits; each role has at most one pendin
   await Promise.all([f.hooks.session_compact(event, f.ctx), f.hooks.session_compact(event, f.ctx)]);
   await new Promise(resolve => setImmediate(resolve));
   assert.equal(asks(f).length, 2);
+  for (const [, args] of asks(f)) {
+    const actor = f.rows.find(row => row.id === args.id);
+    assert.match(actor.name, /^auto-(reflector|foundation)-.*-readonly-v1$/);
+    assert.equal(actor.extensions, false);
+    assert.deepEqual(actor.tools, ['read', 'grep', 'find', 'ls']);
+  }
+  assert.ok(f.rows.find(row => row.name === 'foundation-actor').tools.includes('write'));
   release();
   await f.drain();
   await f.hooks.session_compact(event, f.ctx);

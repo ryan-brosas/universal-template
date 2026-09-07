@@ -21,7 +21,7 @@ def main() -> int:
 
     manifest_path = Path(sys.argv[1])
     try:
-        data = json.loads(manifest_path.read_text())
+        data = json.loads(manifest_path.read_text(encoding="utf-8"))
     except (OSError, ValueError) as exc:
         return fail([f"cannot read manifest: {exc}"])
 

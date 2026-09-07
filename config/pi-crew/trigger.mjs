@@ -13,6 +13,8 @@ export const AUTO_ROLES = {
   foundation: { stage: 'compact', delivery: 'followUp', triggerTurn: false, name: id => 'auto-foundation-' + id.slice(0, 8) },
 };
 
+const READ_ONLY_TOOLS = ['read', 'grep', 'find', 'ls'];
+
 export const STAGES = { input: ['scout', 'supervisor'], settled: ['verifier', 'advisor'], compact: ['reflector', 'foundation'] };
 
 export async function buildTriggers(context, config, extensions, existingRows) {
@@ -23,16 +25,24 @@ export async function buildTriggers(context, config, extensions, existingRows) {
   const broker = { identity, memory, sessionId };
   const desired = [];
   for (const [role, policy] of Object.entries(AUTO_ROLES)) {
-    const name = policy.name(identity.id);
+    const name = policy.name(identity.id) + '-readonly-v1';
     const matches = existingRows.filter(row => row.name === name);
     if (matches.length > 1) throw Error('Ambiguous auto actor ' + name);
     const prior = matches[0];
-    if (prior) { desired.push({ role, policy, actor: prior, reused: true }); continue; }
+    if (prior) {
+      if (prior.extensions !== false || !Array.isArray(prior.tools) ||
+          prior.tools.length !== READ_ONLY_TOOLS.length ||
+          !READ_ONLY_TOOLS.every(tool => prior.tools.includes(tool))) {
+        throw Error('Unsafe auto actor ' + name + ': extensions must be disabled and tools read-only');
+      }
+      desired.push({ role, policy, actor: prior, reused: true });
+      continue;
+    }
     desired.push({ role, policy, reused: false, actor: await context.call('agents.create', {
       name,
       runner: 'pi',
       residency: 'durable',
-      extensions: true,
+      extensions: false,
       transport: 'process',
       ...(config.model ? { model: config.model } : {}),
       responseMode: 'directive',
@@ -40,7 +50,7 @@ export async function buildTriggers(context, config, extensions, existingRows) {
       triggerTurn: policy.triggerTurn,
       coalesce: true,
       events: [],
-      tools: ['read', 'grep', 'find', 'ls'],
+      tools: [...READ_ONLY_TOOLS],
       instructions: 'Read ' + JSON.stringify(join(config.roleDir, role + '.md')) + ' on each activation and follow that role. Return only a Fabric directive.',
     }) });
   }
