@@ -22,34 +22,47 @@ def main() -> int:
     manifest_path = Path(sys.argv[1])
     try:
         data = json.loads(manifest_path.read_text())
-    except (OSError, json.JSONDecodeError) as exc:
+    except (OSError, ValueError) as exc:
         return fail([f"cannot read manifest: {exc}"])
 
-    errors: list[str] = []
+    if not isinstance(data, dict):
+        return fail(["manifest must be an object"])
+    errors = [f"{section} must be an object" for section in (
+        "target", "artifacts", "structure", "assets", "visual", "theme"
+    ) if not isinstance(data.get(section), dict)]
+    if errors:
+        return fail(errors)
+
     status = data.get("status")
-    if status not in {"pixel-perfect", "approved-fallback"}:
+    if status not in ("pixel-perfect", "approved-fallback"):
         errors.append("status must be pixel-perfect or approved-fallback")
 
     target = data.get("target", {})
     for key in ("fileId", "pageId", "nodeId"):
-        if not target.get(key):
-            errors.append(f"target.{key} is required")
+        value = target.get(key)
+        if not isinstance(value, str) or not value.strip() or "\0" in value:
+            errors.append(f"target.{key} must be a nonempty string without NULs")
 
     artifacts = data.get("artifacts", {})
     for key in ("sourceScreenshot", "paperScreenshot", "diffImage", "structuralAudit"):
         value = artifacts.get(key)
-        if not value:
-            errors.append(f"artifacts.{key} is required")
-        elif not os.path.isfile(value) or os.path.getsize(value) == 0:
-            errors.append(f"artifacts.{key} does not exist or is empty: {value}")
+        if not isinstance(value, str) or not value.strip() or "\0" in value:
+            errors.append(f"artifacts.{key} must be a nonempty path string without NULs")
+            continue
+        try:
+            if not os.path.isfile(value) or os.path.getsize(value) == 0:
+                errors.append(f"artifacts.{key} does not exist or is empty")
+        except (OSError, ValueError):
+            errors.append(f"artifacts.{key} cannot be inspected")
 
     structure = data.get("structure", {})
     for key in ("nameMismatches", "boundsMismatches", "countMismatches"):
-        if structure.get(key) != 0:
-            errors.append(f"structure.{key} must equal 0")
+        if type(structure.get(key)) is not int or structure[key] != 0:
+            errors.append(f"structure.{key} must be integer 0")
 
-    if data.get("assets", {}).get("flattenedScreenshotRefs") != 0:
-        errors.append("flattened screenshot references must equal 0")
+    flattened = data["assets"].get("flattenedScreenshotRefs")
+    if type(flattened) is not int or flattened != 0:
+        errors.append("assets.flattenedScreenshotRefs must be integer 0")
     if data.get("visual", {}).get("status") != "passed":
         errors.append("visual.status must be passed")
     if data.get("theme", {}).get("status") != "passed":

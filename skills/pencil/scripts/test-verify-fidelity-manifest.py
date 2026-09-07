@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Exercise font-evidence boundaries through the public manifest CLI."""
+"""Exercise evidence boundaries through the public manifest CLI."""
 
 import json
 import subprocess
@@ -9,7 +9,7 @@ import unittest
 from pathlib import Path
 
 
-class FontEvidenceTests(unittest.TestCase):
+class ManifestEvidenceTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
@@ -30,16 +30,58 @@ class FontEvidenceTests(unittest.TestCase):
             "fonts": {"unavailable": [], "fallbackApproved": False},
         }
 
-    def check_manifest(self, accepted):
-        self.path.write_text(json.dumps(self.data))
+    def check_manifest(self, accepted, diagnostic="font", raw=None):
+        self.path.write_bytes(raw if raw is not None else json.dumps(self.data).encode("utf-8"))
         result = subprocess.run(
             [sys.executable, str(Path(__file__).with_name("verify-fidelity-manifest.py")),
              str(self.path)], capture_output=True, text=True, check=False,
         )
         self.assertEqual(result.returncode, 0 if accepted else 1, result.stdout + result.stderr)
         if not accepted:
-            self.assertIn("font", result.stderr.lower())
+            self.assertIn(diagnostic, result.stderr.lower())
             self.assertNotIn("Traceback", result.stderr)
+
+    def test_invalid_utf8(self):
+        self.check_manifest(False, "cannot read manifest", raw=b"\xff\xfe")
+
+    def test_non_object_roots(self):
+        for value in (None, [], "manifest", True, 0):
+            with self.subTest(value=value):
+                self.data = value
+                self.check_manifest(False, "manifest")
+
+    def test_non_object_sections(self):
+        for section in ("target", "artifacts", "structure", "assets", "visual", "theme"):
+            original = self.data[section]
+            for value in (None, [], "section", True, 0):
+                with self.subTest(section=section, value=value):
+                    self.data[section] = value
+                    self.check_manifest(False, section)
+            self.data[section] = original
+
+    def test_numeric_evidence_requires_integer_zero(self):
+        for section, keys in (("structure", ("nameMismatches", "boundsMismatches", "countMismatches")),
+                              ("assets", ("flattenedScreenshotRefs",))):
+            for key in keys:
+                for value in (False, True, "0", None, -1, 1, 0.0, [], {}):
+                    with self.subTest(section=section, key=key, value=value):
+                        self.data[section][key] = value
+                        self.check_manifest(False, key.lower())
+                self.data[section][key] = 0
+
+    def test_malformed_leaf_values(self):
+        for section, key in (("target", "fileId"), ("target", "pageId"), ("target", "nodeId"),
+                             *(("artifacts", key) for key in self.data["artifacts"])):
+            original = self.data[section][key]
+            for value in (True, 1, [], {}, None, "", "  ", "bad\u0000path"):
+                with self.subTest(section=section, key=key, value=value):
+                    self.data[section][key] = value
+                    self.check_manifest(False, key.lower())
+            self.data[section][key] = original
+        for status in ([], {}, None, True):
+            with self.subTest(status=status):
+                self.data["status"] = status
+                self.check_manifest(False, "status")
 
     def test_explicit_available_fonts(self):
         self.check_manifest(True)

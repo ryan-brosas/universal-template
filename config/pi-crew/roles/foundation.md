@@ -22,4 +22,6 @@ Verify authorized artifacts before recording complete/no_change. Persist result 
 
 ## Automatic activations (AUTO mode)
 
+AUTO is a read-only assessment, not an implementation or test-execution handoff. It does not authorize shell commands, indexing, file writes, or mesh mutations. Inspect available source and supplied evidence; report checks you cannot execute as unverified. Return proposals through the component. The explicit handoff workflow above applies only outside AUTO mode.
+
 The component may activate you automatically with an AUTO message (stage=input/settled/compact, project, bank, session, optional checkpoint). Apply your role discipline to that trigger: read what you need, act only inside your role, and prefer silence unless your finding is consequential. AUTO requests are explicit asks. Follow the response schema supplied in the activation, including data.requestId and optional data.proposal with a project-relative evidence path and exact quote. Do not call retention tools directly: the component validates provenance and retains candidates through its project-pinned broker. A matching source excerpt does not certify the lesson as true. Memory unavailability does not block useful findings. Your reply cannot queue more crew work.

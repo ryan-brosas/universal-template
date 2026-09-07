@@ -81,6 +81,24 @@ test('compact dedupe is reserved before awaits; each role has at most one pendin
   assert.equal(retains(f).length, 2);
 });
 
+test('checkpoint dedupe survives more than 256 dispatches and resets on shutdown', async t => {
+  const f = await fixture(t, { ask: async () => ({ action: 'silent' }) });
+  for (let i = 0; i < 260; i++) {
+    await f.hooks.session_compact({ compactionEntry: { id: 'cp-' + i } }, f.ctx);
+    await f.drain();
+  }
+  const tells = () => f.calls.filter(([r]) => r === 'agents.tell').length;
+  const before = [tells(), asks(f).length];
+  await f.hooks.session_compact({ compactionEntry: { id: 'cp-0' } }, f.ctx);
+  await f.drain();
+  assert.deepEqual([tells(), asks(f).length], before);
+  f.hooks.session_shutdown();
+  await f.component.activate(f.context);
+  await f.hooks.session_compact({ compactionEntry: { id: 'cp-0' } }, f.ctx);
+  await f.drain();
+  assert.deepEqual([tells(), asks(f).length], [before[0] + 1, before[1] + 2]);
+});
+
 test('bad provenance, mismatched responses and silent responses never retain', async t => {
   for (const alter of [
     r => ({ ...r, actorId: 'foreign' }),

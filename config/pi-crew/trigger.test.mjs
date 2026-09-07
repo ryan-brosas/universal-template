@@ -103,6 +103,7 @@ test('automatic trigger set is stage-bounded and reuses existing durable actors'
     assert.equal(created.residency, 'durable');
     assert.equal(created.responseMode, 'directive');
     assert.equal(created.triggerTurn, false, 'actors never steal the turn');
+    assert.deepEqual(created.tools, ['read', 'grep', 'find', 'ls'], 'AUTO assessment never inherits implementation privileges');
   }
   const again = await buildTriggers(ctx, { roleDir }, {}, built.desired.map(d => d.actor));
   assert.equal(again.desired.every(d => d.reused), true, 'second activation reuses durable actors');

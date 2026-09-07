@@ -136,7 +136,9 @@ import re
 from pathlib import Path
 text = Path('skills/frontend-ui-implementation/references/pdf-coverage-matrix.md').read_text()
 pages = [int(x) for x in re.findall(r'^\| (\d+) \|', text, re.M)]
-assert pages == list(range(8, 108)), (len(pages), sorted(set(range(8,108)) - set(pages)))
+expected = list(range(8, 108))
+if pages != expected:
+    raise SystemExit(f'PDF COVERAGE FAILED: rows={len(pages)}, missing={sorted(set(expected) - set(pages))}')
 print('PDF COVERAGE: 100/100')
 PY
 ```

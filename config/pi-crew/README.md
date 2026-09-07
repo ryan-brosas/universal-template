@@ -5,12 +5,14 @@
 ## Automatic operation
 
 - User `input` schedules scout + supervisor; `agent_settled` schedules verifier + advisor; `session_compact` schedules reflector + foundation. Extension-injected input is ignored.
-- Hooks return without awaiting model inference. The component uses native `agents.ask` in background jobs, with one pending request per actor and a 10-minute non-checkpoint cooldown, including failures. Compaction deduplication uses exact session/checkpoint/role keys in a bounded 256-key session window. This is not crash-proof exactly-once processing.
+- Hooks return without awaiting model inference. The component uses native `agents.ask` in background jobs, with one pending request per actor and a 10-minute non-checkpoint cooldown, including failures. Compaction deduplication retains exact session/checkpoint/role keys for the session lifetime. Only non-checkpoint dispatch uses a bounded 256-key window; in-flight work remains protected by the per-actor busy guard. This is not crash-proof exactly-once processing.
 - Replies must match the actor and request ID. Useful findings enter Main via `nextTurn`, without triggering a turn. `/crew` shows per-role running, delivered, degraded, retention-queued or retention-accepted results.
 - Optional proposals require an exact excerpt from a bounded source file inside the current project; escaping paths and symlinks are rejected. They are retained as **UNVERIFIED PROPOSAL**, tagged `source-checked-proposal`, never silently promoted to facts. Deterministic document IDs deduplicate the same request; separate sessions retain separate provenance.
 - Hindsight queue receipts remain `retention-queued`. Neither a receipt nor an accepted API response proves extraction/indexing has completed. Memory failures leave findings deliverable and report degraded status.
 - Existing actors/history are reused from the full registry under the creation lock. Replies arriving after shutdown or component replacement are discarded. Work still running in Fabric is subject to its native timeout; there is no custom polling daemon.
 - Load this revision in a new Pi session (or a normal supported reload); this session's old component closure is not hot-patched by editing source.
+
+All automatic actors deliberately receive only `read`, `grep`, `find`, and `ls`: they assess source and supplied evidence, not execute tests or implement changes. Explicit verifier/foundation handoffs use the separately provisioned legacy actors and their role-specific tools. In a full-code Pi parent, Fabric supplies the outer `fabric_exec` tool while constraining nested tool calls to the allowlist; adding `fabric_exec` is not a substitute for granting a nested capability.
 
 ## Project-isolated memory (broker boundary)
 

@@ -31,7 +31,7 @@
 
 - Prevent accidental duplicate submission while maintaining perceivable state. Server-side idempotency owns financial or irreversible duplicate safety.
 - Auto-submit a complete verification code only when completion is unambiguous, paste/autofill work, errors are recoverable, repeated attempts are safe, and status is announced. Otherwise retain an explicit submit action.
-- Structure SMS/push verification text so the code and purpose are visible in notification previews without leaking sensitive context.
+- Keep verification purposes clear without deliberately exposing authentication codes in lock-screen or mirrored-device previews. For app-controlled push notifications, use redacted previews and reveal codes only after unlock. Prefer OS-controlled OTP autofill; SMS senders cannot guarantee how a recipient's messaging app displays previews, so do not claim wording alone makes delivery private.
 
 ## State contract
 

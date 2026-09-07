@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import codecs
 import json
+import importlib.util
 import re
 import shutil
 import subprocess
@@ -109,19 +110,27 @@ def large_file_error(rel: str, size: int) -> str | None:
     return None
 
 
+# Reuse the publication validator's CommonMark parser and path boundary rules.
+_validator_spec = importlib.util.spec_from_file_location(
+    "skill_validator", Path(__file__).with_name("skill-validator.py"))
+_validator = importlib.util.module_from_spec(_validator_spec)
+_validator_spec.loader.exec_module(_validator)
+
+
 CAPSULE_REF_PATTERN = re.compile(r"`(\./[\w-]+\.md|references/[\w./-]+\.md)`")
 
 
-def capsule_link_errors(rel: str, text: str, base: Path) -> list[str]:
+def capsule_link_errors(rel: str, text: str, base: Path, tracked: set[Path]) -> list[str]:
     """Foundation capsule links must resolve from the file's directory or the foundation root."""
     parts = rel.split("/")
-    if not parts[0] == "skills" or not parts[1].endswith("-foundation") or not rel.endswith(".md"):
+    if len(parts) < 3 or parts[0] != "skills" or not parts[1].endswith("-foundation") or not rel.endswith(".md"):
         return []
     file_path = base / rel
     root = base / parts[0] / parts[1]
-    errors: list[str] = []
+    errors = _validator.markdown_link_errors(file_path, text, root, tracked)
     for target in CAPSULE_REF_PATTERN.findall(text):
-        if (file_path.parent / target).exists() or (root / target).exists():
+        candidates = [(file_path.parent / target).resolve(), (root / target).resolve()]
+        if any(p.is_relative_to(root.resolve()) and p.is_file() and p in tracked for p in candidates):
             continue
         errors.append(f"foundation capsule link target missing: {rel} -> {target}")
     return errors
@@ -244,8 +253,9 @@ def check(paths: list[Path]) -> list[str]:
             errors.append(f"missing EOF newline: {rel}")
         parse_structured(path, text, errors)
     check_mcp(errors)
+    tracked = {path.absolute() for path in paths}
     for rel, text in capsule_texts:
-        errors.extend(capsule_link_errors(rel, text, BASE))
+        errors.extend(capsule_link_errors(rel, text, BASE, tracked))
     return errors
 
 
@@ -327,7 +337,8 @@ def _make_repo(root: Path, files: dict[str, bytes]) -> Path:
         target.write_bytes(blob)
     (root / "scripts").mkdir()
     shutil.copy2(Path(__file__), root / "scripts" / "repo-hygiene.py")
-    shutil.copy2(Path(__file__).with_name("publication_fixtures.py"), root / "scripts" / "publication_fixtures.py")
+    for name in ("publication_fixtures.py", "skill-validator.py"):
+        shutil.copy2(Path(__file__).with_name(name), root / "scripts" / name)
     _git_commit(root)
     return root
 
@@ -367,6 +378,14 @@ def fixture_test() -> int:
         {
             "skills/awf-foundation/SKILL.md": b"See `references/ghost.md` for the missing capsule.\n",
             "skills/awf-foundation/references/real.md": b"Pair with `references/ghost.md`.\n",
+            "skills/awf-foundation/references/links.md": (
+                b"[missing](missing.md) [encoded](missing%20file.md#part)\n"
+                b"![image](missing.png) [escape](../../demo/SKILL.md)\n"
+                b"[reference][lost]\n\n[lost]: lost.md\n"
+            ),
+            "skills/awf-foundation/references/local-links.md": b"`./local.md` [local](local.md)\n",
+            "skills/awf-foundation/references/dir-links.md": b"`./directory.md`\n",
+            "skills/awf-foundation/references/directory.md/child.txt": b"not a capsule\n",
             "sessions/run.jsonl": b"{}\n",
             "secrets.env": ("TOKEN = \"sk-" + "abcdefghijklmnopqrstuvwxyz123456\"\n").encode(),
             "key.pem": ("-----BEGIN " + "RSA PRIVATE KEY-----\nabc\n").encode(),
@@ -396,6 +415,13 @@ def fixture_test() -> int:
             # False-positive controls: valid foundation links (root- and sibling-relative), public key, env placeholder, uniform CRLF.
             "skills/awf-foundation/SKILL.md": b"Load `references/real.md` first.\n",
             "skills/awf-foundation/references/real.md": b"Index: `./real.md`.\n",
+            "skills/awf-foundation/references/links.md": (
+                b"[sibling](real.md#section) [root](../SKILL.md)\n"
+                b"[encoded](space%20name.md?raw=1#section) ![image](image.svg)\n"
+                b"`[example](absent.md)`\n\n```md\n[example](absent.md)\n```\n"
+            ),
+            "skills/awf-foundation/references/space name.md": b"# Space\n",
+            "skills/awf-foundation/references/image.svg": b"<svg/>\n",
             "keys.txt": b"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIExample user@host\n",
             "compose.yml": b"password: ${DB_PASSWORD}\n",
             "crlf-only.md": b"a\r\nb\r\n",
@@ -408,6 +434,14 @@ def fixture_test() -> int:
     expected = (
         "foundation capsule link target missing: skills/awf-foundation/SKILL.md -> references/ghost.md",
         "foundation capsule link target missing: skills/awf-foundation/references/real.md -> references/ghost.md",
+        "Markdown target missing or not a file: missing.md",
+        "Markdown target missing or not a file: missing%20file.md#part",
+        "Markdown target missing or not a file: missing.png",
+        "Markdown target missing or not a file: lost.md",
+        "Markdown target escapes permitted root: ../../demo/SKILL.md",
+        "foundation capsule link target missing: skills/awf-foundation/references/dir-links.md -> ./directory.md",
+        "foundation capsule link target missing: skills/awf-foundation/references/local-links.md -> ./local.md",
+        "Markdown target is not tracked: local.md",
         "runtime/session artifact",
         "OpenAI-style key in notes.md",
         *(f"GitHub token in {rel}" for rel in ("github.md", "github.env", "github.tsx", "github-config", "late-token", "secret.yaml")),
@@ -430,6 +464,8 @@ def fixture_test() -> int:
     )
     with tempfile.TemporaryDirectory(prefix="repo-hygiene-fixture-") as tmp:
         defect_root = _make_repo(Path(tmp) / "defect", defect)
+        local = defect_root / "skills/awf-foundation/references/local.md"
+        local.write_text("untracked local evidence\n", encoding="utf-8")
         run = subprocess.run(
             [sys.executable, "scripts/repo-hygiene.py"], cwd=defect_root, env=fixture_environment(defect_root),
             capture_output=True, text=True,

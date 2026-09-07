@@ -77,6 +77,7 @@ export function registerCrew(pi, { configDir, sharedRoot, env = process.env }) {
   let active;
   let report = { state: 'waiting', reason: 'Fabric component has not activated' };
   const sent = new Set();
+  const checkpoints = new Set(); // Session-lifetime checkpoint dedupe, never window-evicted.
   const child = () => !!(env.PI_FABRIC_PARENT_RUN || env.PI_FABRIC_ACTOR_ID || Number(env.PI_FABRIC_DEPTH) > 0);
   const component = {
     name: 'local-pi-crew', guarantee: 'managed',
@@ -129,10 +130,11 @@ export function registerCrew(pi, { configDir, sharedRoot, env = process.env }) {
       const now = Date.now();
       if (stage !== 'compact' && now - (lastSent.get(rateKey) ?? 0) < 600000) continue;
       const key = scopeKey(stage, sessionId, checkpoint) + '/' + role + (stage === 'compact' ? '' : '/' + digest(subject));
-      if (sent.has(key)) continue;
+      const dedupe = stage === 'compact' ? checkpoints : sent;
+      if (dedupe.has(key)) continue;
       // Reserve synchronously: concurrent hooks cannot race across registry/recall awaits.
       busy.add(entry.actor.id);
-      sent.add(key);
+      dedupe.add(key);
       if (sent.size > 256) sent.delete(sent.values().next().value);
       lastSent.set(rateKey, now);
       const requestId = digest(owner.auto.identity.projectId + '/' + key);
@@ -151,7 +153,7 @@ export function registerCrew(pi, { configDir, sharedRoot, env = process.env }) {
         if (live()) report.auto.results = { ...report.auto.results, [role]: result };
       })().catch(error => {
         if (live()) {
-          sent.delete(key);
+          dedupe.delete(key);
           report.auto.results = { ...report.auto.results, [role]: { state: 'degraded', reason: String(error).slice(0, 180) } };
         }
       }).finally(() => { busy.delete(entry.actor.id); jobs.delete(job); });
@@ -168,10 +170,10 @@ export function registerCrew(pi, { configDir, sharedRoot, env = process.env }) {
       const request = reflectionRequest(ctx, event);
       checkpointId = request.data.checkpointId;
       const key = `${request.data.sessionId}/${request.data.checkpointId}`;
-      if (!sent.has(key)) {
-        sent.add(key);
+      if (!checkpoints.has(key)) {
+        checkpoints.add(key);
         try { await active.call('agents.tell', { id: active.reflector.id, ...request }); }
-        catch (e) { sent.delete(key); report = { ...report, reflectionError: String(e) }; ctx.ui?.notify?.(`Crew reflection not queued: ${e}`, 'warning'); }
+        catch (e) { checkpoints.delete(key); report = { ...report, reflectionError: String(e) }; ctx.ui?.notify?.(`Crew reflection not queued: ${e}`, 'warning'); }
       }
     }
     if (active.auto?.desired) dispatch('compact', 'Session checkpoint ready for reflection and foundation review', event.compactionEntry?.id ?? checkpointId);
@@ -181,7 +183,7 @@ export function registerCrew(pi, { configDir, sharedRoot, env = process.env }) {
     return { action: 'continue' };
   });
   pi.on('agent_settled', (_event, ctx) => { if (!active || child() || !ctx?.isProjectTrusted?.()) return; dispatch('settled', 'Agent settled: review the latest changes and completion claims'); });
-  pi.on('session_shutdown', () => { active = undefined; current = undefined; sent.clear(); lastSent.clear(); report = { ...report, state: 'inactive' }; });
+  pi.on('session_shutdown', () => { active = undefined; current = undefined; sent.clear(); checkpoints.clear(); lastSent.clear(); report = { ...report, state: 'inactive' }; });
   pi.registerCommand('crew', { description: 'Show automatic project crew status and preserved legacy subscriptions', handler: async (_args, ctx) => { ctx.ui.notify(JSON.stringify(report), report.state === 'active' ? 'info' : 'warning'); } });
   pi.registerCommand('crew-model', {
     description: 'Pin or clear the model for all six crew actors in THIS session (usage: /crew-model <provider/id> | clear)',

@@ -18,7 +18,7 @@ The mapper uses `unwrap_or(true)` independently for focus and show. Explicit fal
 
 ## Direct tests
 
-Read `renderer.rs:5898-5972`: `defaults_open_a_focused_visible_window`, `unset_focus_and_show_still_default_to_true`, `focus_false_leaves_the_window_visible`, `show_false_keeps_focus_independent`, and `existing_options_are_still_mapped`. The first two distinguish object defaults from missing-option normalization. The next two establish independent flags. The final test checks title, resize, blurred background, and paired minimum dimensions. These do not prove invalid-string fallback, partial pairs, numeric validation, or Linux window behavior. Upstream tests were read, not executed; no dependency installation or setup.
+Read `renderer.rs:5898-5971`: `defaults_open_a_focused_visible_window`, `unset_focus_and_show_still_default_to_true`, `focus_false_leaves_the_window_visible`, `show_false_keeps_focus_independent`, and `existing_options_are_still_mapped`. The first two distinguish object defaults from missing-option normalization. The next two establish independent flags. The final test checks title, resize, blurred background, and paired minimum dimensions. These do not prove invalid-string fallback, partial pairs, numeric validation, or Linux window behavior. Upstream tests were read, not executed; no dependency installation or setup.
 
 ## Active-project comparison
 

@@ -4,7 +4,7 @@ Source: [tahayvr/omarchist](https://github.com/tahayvr/omarchist) at `d892f7d45c
 
 ## Entry, data and control flow
 
-`src/system/ui_theme_watcher.rs:20-53` builds the older HOME/.config/omarchy/current paths and reads trimmed theme.name as Option<String>. `spawn_ui_theme_watcher` at :360-385 captures that name, waits one second, checks whether updating the app still works, then compares the current name with the captured name. Only inequality arms the thread-local `PENDING_UI_THEME_RELOAD` boolean and requests refresh.
+`src/system/ui_theme_watcher.rs:20-53` builds the older HOME/.config/omarchy/current paths and reads trimmed theme.name as Option<String>. `spawn_ui_theme_watcher` at :360-384 captures that name, waits one second, checks whether updating the app still works, then compares the current name with the captured name. Only inequality arms the thread-local `PENDING_UI_THEME_RELOAD` boolean and requests refresh.
 
 `src/ui/app_view.rs:563-574` consumes the boolean during rendering, clears it before loading, calls `load_and_apply_omarchy_theme`, then refreshes windows. `ui_theme_watcher.rs:341-357` reads the palette, builds ThemeConfig, replaces the corresponding global dark/light theme, and changes mode. The source paths and these symbol names are the retrieval anchors.
 

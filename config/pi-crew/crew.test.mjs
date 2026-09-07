@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { definitions, attach, locked, reflectionRequest, registerCrew } from './crew.mjs';
-import { mkdtemp } from 'node:fs/promises';
+import { mkdtemp, readFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -45,6 +45,14 @@ test('six roles, unique names, native durable contract',()=>{
  assert.ok(D[2].tools.includes('bash')); assert.ok(!D[4].tools.includes('edit'));
 });
 
+test('role prompts derive project identity from activation rather than a fixed remote', async () => {
+ for (const role of ['advisor', 'supervisor']) {
+  const text = await readFile(new URL(`./roles/${role}.md`, import.meta.url), 'utf8');
+  assert.match(text, /project root stated in your activation instructions/);
+  assert.doesNotMatch(text, /https:\/\/github\.com\/ryan-brosas\/universal-template/);
+ }
+});
+
 function fakeCall(rows=[],created=[]){
  const calls=[];
  const call=async(ref,args)=>{ calls.push([ref,args]);
@@ -81,7 +89,7 @@ test('attach rejects duplicate desired definitions up front',async()=>{
 
 test('install lock serializes and releases',async()=>{
  const fs=await import('node:fs/promises');
- const dir=await fs.mkdtemp('/tmp/crew-lock-');
+ const dir=await fs.mkdtemp(join(tmpdir(), 'crew-lock-'));
  let inside=0,maxInside=0;
  await Promise.all([1,2,3].map(()=>locked(dir,'.pi',async()=>{
   inside++; maxInside=Math.max(maxInside,inside); await new Promise(r=>setTimeout(r,20)); inside--; })));

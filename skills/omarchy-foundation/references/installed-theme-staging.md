@@ -61,7 +61,7 @@ reimplementation. Its temporary-home EXIT trap is at :12-13, not production clea
   the generated Alacritty config. It does not assert a shell payload was executed
   or sandboxed; it checks staged contents.
 - :164-205 covers stock overlays, unfiltered personal/symlinked roots and rejected
-  traversal names. :207-229 classifies built-in generated template names; this
+  traversal names. :207-228 classifies built-in generated template names; this
   does not enumerate every file a theme could ship.
 
 No direct nested-link, symlinked legacy input, check/copy race, scratch interruption,
