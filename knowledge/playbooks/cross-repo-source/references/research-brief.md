@@ -1,9 +1,3 @@
----
-title: research-brief
-summary: Use when delegating a cross-repository investigation to Sourcebot's research agent (ask_codebase) — the assignment to send and the evidence to demand back.
-kind: playbook-reference
----
-
 # Research brief for `ask_codebase`
 
 `ask_codebase` runs Sourcebot's own agent (code search, symbol lookup, file reads) and

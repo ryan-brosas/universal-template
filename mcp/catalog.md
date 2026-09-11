@@ -17,6 +17,7 @@ The `minimal` profile enables nothing.
 | `exa` | Web research when ordinary web access is insufficient |
 | `mcp-steroid` | Language-aware local IDE integration where the host needs it |
 | `paper`, `figma-bridge` | Design workflows, when relevant |
+| `github` | Repository hosting: code browsing, issues and pull requests |
 
 Each remaining server covers a distinct problem. Do not add a second server for
 a capability already listed, keep a declaration only because it was once
@@ -34,7 +35,7 @@ Sourcebot is retrieval first: search it, read the decisive source and tests, and
 let the coding agent reason. Do not require it for local work, and do not add a
 knowledge layer in front of it.
 
-The deployment configures one language model - the OmniRoute `top-tool` combo -
+The deployment configures one language model — the OmniRoute `top-tool` combo —
 for delegated research only. `ask_codebase` is opt-in and runs only when the
 user's prompt asks for it by name, since retrieval and reasoning otherwise stay
 with the calling agent. Assignment and evidence contract:
