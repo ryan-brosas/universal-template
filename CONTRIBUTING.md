@@ -12,10 +12,20 @@ references, preserve useful source provenance, and avoid publishing credentials,
 private configuration, or session artifacts. Test executable skill examples when
 the change affects their behavior; use their existing focused tests.
 
-Skill names and descriptions should make selection clear. Keep names consistent
-with their directory, references resolvable, and host-specific metadata valid for
-the host that reads it. Search the skill files directly; generated catalogs and
-static context budgets are not publication requirements.
+Pack names and descriptions should make selection clear. Specialists belong in
+`knowledge/playbooks/<name>/README.md` with `title`, `summary`, and `kind: playbook`;
+link each from one pack index. Only routers use `skills/<name>-pack/SKILL.md`.
+Keep references and helper callers resolvable, and verify the host's actual
+discovery behavior. Use `templates/skill.md` for either content shape. Generated
+catalogs and static context budgets are not publication requirements.
+
+## Keep the template lean
+
+Publish reusable instructions, source evidence, and helpers with real consumers.
+Keep local experiments, session output, completed plans, audit snapshots, and
+host runtimes outside the template. Git preserves removed historical material;
+do not create a replacement archive or generated inventory. Keep necessary
+contracts beside their owning content and update callers when removing paths.
 
 ## Pull requests
 

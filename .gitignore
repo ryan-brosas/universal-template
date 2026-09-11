@@ -1,15 +1,21 @@
 .pi/
+# Local experiments and test caches are not template content.
+/tool-smoke-test/
+/devdocs/
+/config/pi-crew/
+.pytest_cache/
 # Only the GitHub metadata helper is published; other root scripts stay local.
 /scripts/*
 !/scripts/pr-metadata.py
 # Generated runtime capability state (machine-local, never committed).
 /state/
-# Skill-local helpers stay local except the published fidelity gate and tests.
+# Local helpers stay local except the published fidelity gate and tests.
 skills/*/scripts/
-!/skills/pencil/scripts/
-/skills/pencil/scripts/*
-!/skills/pencil/scripts/verify-fidelity-manifest.py
-!/skills/pencil/scripts/test-verify-fidelity-manifest.py
+knowledge/playbooks/*/scripts/
+!/knowledge/playbooks/pencil/scripts/
+/knowledge/playbooks/pencil/scripts/*
+!/knowledge/playbooks/pencil/scripts/verify-fidelity-manifest.py
+!/knowledge/playbooks/pencil/scripts/test-verify-fidelity-manifest.py
 # Host/vendor-managed runtime skills stay installed locally, never published.
 /skills/.system/
 # Optional machine-local model preferences.

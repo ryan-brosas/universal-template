@@ -4,7 +4,7 @@ Run the full session-improvement compiler so the user does not need to restate t
 
 ## Contract
 
-1. Load `skills/session-improvement-compiler/SKILL.md` and follow it end to end.
+1. Load `knowledge/playbooks/session-improvement-compiler/README.md` and follow it end to end.
 2. Use the current project/current session unless the current request names another bounded scope.
 3. Treat raw session events and current source as authority. Use Fabric recall to locate evidence and Hindsight recall/reflect to propose patterns; verify projection claims against their provenance.
 4. Build the evidence ledger, search for contradictions, and classify every candidate through `leverage-capture`.
