@@ -6,5 +6,4 @@ CLI interface and report source-validated findings. This request authorizes the
 scoped CodeRabbit review, not unrelated uploads, paid overages, fixes, or GitHub
 mutations unless requested below.
 
-Scope and requested actions:
-$ARGUMENTS
+Apply the procedure above to the user's current request in this conversation; ask for scope if it is not already clear.

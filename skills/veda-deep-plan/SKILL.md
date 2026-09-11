@@ -1,6 +1,6 @@
 ---
 name: veda-deep-plan
-description: "Use when a single planning call is not enough, architectural design, subtle bugs with no obvious cause, decisions with no clear answer: plan the hardest problems with Veda Deep Thinking where parallel solvers, a judge, and a verifier converge on the best plan. Drives `veda -S deep-TASKNAME -m flash deep`; does not execute."
+description: "Use when the user explicitly asks for Veda Deep Thinking to converge several independent solver attempts on one hard problem, or when you deliberately choose that tool. Drives `veda -S deep-TASKNAME -m flash deep`; does not execute and does not mandate any provider. Not the default route for architectural design or difficult decisions: reason with your own capabilities unless Veda is requested or selected."
 invocation: vendor
 argument-hint: "[veda-flags]"
 ---
@@ -12,7 +12,7 @@ Converge on the hardest problems with k parallel solvers (default 6), a judge, a
 ## When to Use / NOT
 
 - **Use when:** architectural design with many tradeoffs, subtle bugs where the cause is opaque, or decisions where you want independent perspectives before committing; when the user says deep plan, hard problem, multiple approaches, converge.
-- **NOT when:** a single planning call is the cheaper default, routine problems where one pass suffices (Deep mode costs k× more tokens). and per Model routing, the final load-bearing architecture decision still comes from claude-opus via `agy --mode plan`, `veda deep` runs on gemini and is only for "N independent attempts".
+- **NOT when:** the user has not asked for Veda Deep Thinking and you have no reason to choose it, or a single planning call suffices (Deep mode costs k× more tokens). This is one available tool, never the required path for hard problems.
 
 ## Workflow
 
@@ -24,12 +24,12 @@ Converge on the hardest problems with k parallel solvers (default 6), a judge, a
 6. Confirm alignment with the user; follow up on the same `-S` session with `navigator-chat` (cheaper than re-running deep mode) (Execution).
 7. Do not execute, converge on the plan only; execution happens after alignment, by you with native tools.
 
-## Model routing (authoritative, do not substitute)
+## Model choice
 
-- Load-bearing planning / architecture / high-risk review → `agy --model claude-opus-4-6-thinking --mode plan` (direct `agy` CLI, NOT veda/gemini).
-- Critique / follow-up → `agy --model claude-sonnet-4-6 --mode plan`.
-- Cheap discovery / context curation → `veda` + gemini (`gemini-3.7-flash-*`, `gemini-3.1-pro-low`).
-- `veda deep` (parallel solvers) runs on gemini and is only for "N independent attempts"; the final architecture decision still comes from claude-opus.
+Which model or backend to use is a live decision owned by `model-resolution` and
+the active host's own inventory. This skill mandates no provider, and no planning
+task belongs here merely because some other model is preferred elsewhere: choose
+this tool because the user asked for it or because you decided it fits.
 
 ## Invocation, veda deep (confirmed working)
 
@@ -222,7 +222,8 @@ Do not execute yet; all we want to do is converge on a solid plan.
 - Sending prompts without `veda sel add` first, solvers and judge see only what you share (Setting Context).
 - Open-ended questions instead of a committed position in the opening message (Running Deep Mode).
 - Re-running deep mode for routine mid-execution questions, use a single `navigator-chat` call (Execution).
-- Substituting the model routing: load-bearing architecture decisions come from claude-opus via agy, not `veda deep` on gemini (Model routing).
+- Treating this skill as the default route for architecture decisions or any
+  hard problem, or importing another tool's model mandate into it.
 - Generic `-S` session names under multi-agent concurrency (Session Naming).
 
 

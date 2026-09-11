@@ -45,6 +45,4 @@ evidence.
 - Hindsight, OpenViking, Fabric recall, and similar systems are optional
   adapters, never independent authority.
 
-Request:
-
-$ARGUMENTS
+Apply the procedure above to the user's current request in this conversation; ask for scope if it is not already clear.

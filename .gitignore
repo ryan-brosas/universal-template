@@ -1,9 +1,7 @@
 .pi/
 # Retained publication helpers are tracked; other root scripts stay local.
 /scripts/*
-!/scripts/install-prompts.py
 !/scripts/pr-metadata.py
-!/scripts/render-prompt.py
 !/scripts/repo-hygiene.py
 !/scripts/publication_fixtures.py
 !/scripts/skill-catalog.py

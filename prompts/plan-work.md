@@ -13,5 +13,4 @@ Ground the plan in the current source, instructions, tests, and configuration. U
 - Choose the smallest change that satisfies the need; plan the removal of dead or duplicated paths, not new layers.
 - Reuse existing checks for objective properties. Propose a new gate only when the failure it prevents justifies its maintenance cost.
 
-Request:
-$ARGUMENTS
+Apply the procedure above to the user's current request in this conversation; ask for scope if it is not already clear.

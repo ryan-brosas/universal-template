@@ -15,5 +15,4 @@ Do not modify files or external state unless the request explicitly asks for a f
 - A failing check is evidence of a defect, not a reason to weaken it; investigate to root cause first.
 - Where a property is mechanically checkable, prefer the gate and record its command and exit, not a hand-wave.
 
-Scope:
-$ARGUMENTS
+Apply the procedure above to the user's current request in this conversation; ask for scope if it is not already clear.

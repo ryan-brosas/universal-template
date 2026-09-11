@@ -17,5 +17,4 @@ add an external review or upload step.
 - Weight correctness, security, and regression risk over style; a claim without evidence is a question, not a verdict.
 - Prefer proposed checks or tests as the fix where they exist; a silent assertion is worth less than a run that fails.
 
-Scope:
-$ARGUMENTS
+Apply the procedure above to the user's current request in this conversation; ask for scope if it is not already clear.

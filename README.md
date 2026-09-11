@@ -13,9 +13,12 @@ templates, references, and MCP declarations across supported hosts.
 
 ## Run
 
-No implementation language or installer is required. Point a capable coding
-agent at this checkout and ask it to connect the baseline to the hosts available
-on the current machine. The canonical content is plain Markdown and JSON:
+Read the relevant Markdown and apply it to the current task. No installation,
+prompt renderer, host configuration, external planning model, or prescribed
+workflow is required. The template supplies knowledge; the active agent chooses
+its approach using the project's requirements and available tools.
+
+The canonical content is plain Markdown and JSON:
 
 - `AGENTS.md`: global engineering instructions
 - `skills/`: operational capabilities plus manual, hidden `kind: foundation` evidence leaves
@@ -25,33 +28,26 @@ on the current machine. The canonical content is plain Markdown and JSON:
 
 Project source and local instructions remain authoritative over this baseline.
 
-## Model-native setup
+## Using it
 
 ```sh
 git clone https://github.com/ryan-brosas/universal-template.git ~/.agents
-cd ~/.agents
 ```
 
-Then have the active coding agent perform this bounded setup:
+Point a coding agent at the checkout and let it read what the task needs. Exposing
+this content to a host is the host's own work: there is no installer, no generated
+adapter, and no required setup sequence.
 
-1. Detect available hosts through their native commands and current runtime
-   inventory. Do not assume that an installed executable is configured.
-2. Inspect each detected host's current instruction, skill, and prompt surfaces.
-   Prefer current host documentation or runtime help over remembered paths.
-3. Inspect the host's skill discovery behavior before exposing `skills/`. Prefer
-   native resource filtering when it can load only the tracked **hot** set
-   (visible, locally owned `invocation: entry` leaves). Otherwise use a host-owned
-   filtered symlink view. Do not expose the unified root unfiltered on eager or
-   unverified hosts; hiding descriptions need not prevent body scanning.
-4. Generate a host adapter only when the host requires a different format. The
-   adapter must name its canonical source under `prompts/` and remain derived.
-5. Preserve every unmanaged file. Replace or remove only links and adapters
-   whose ownership by this checkout is mechanically provable.
-6. Read back links or generated files, compare adapters with their source, and
-   report conflicts, unsupported hosts, and uncertain behavior.
+Two facts matter when a host discovers `skills/`:
 
-This is the ordinary setup path. It uses the agent's native filesystem and host
-capabilities, not Python.
+- It is the one canonical tree. Do not copy it or maintain a second one.
+- Eager hosts load every skill body they find. Prefer the host's native resource
+  filter, loading only the tracked **hot** set (visible, locally owned
+  `invocation: entry` leaves); otherwise expose a host-owned filtered view. Do not
+  expose the unified root unfiltered on an eager or unverified host, because
+  hiding a description does not prevent body loading.
+
+See `docs/template-effectiveness.md` for the measured host boundary.
 
 ### Skill exposure on eager hosts
 
@@ -79,20 +75,6 @@ its topic map and reference filenames/headings to select likely capsules and
 their own source pins. Use the index only when discovery remains ambiguous. See
 `docs/foundation-skill-v1.md` for earlier host measurements and limitations.
 
-### Optional compatibility installer
-
-Maintainers who want the legacy reconciler may run:
-
-```sh
-python3 scripts/install-prompts.py
-```
-
-It installs prompts only; it does not expose skills. It creates relative links
-for Markdown-capable hosts and generated TOML for Gemini CLI. `--check` audits
-installed mounts without changing them, and
-`--home <sandbox>` supports isolated testing. This helper is optional; Python
-is not required to consume or maintain the canonical content.
-
 ## Why universal-template?
 
 | Capability | What it unlocks |
@@ -119,18 +101,16 @@ historical evidence: select one explicitly and load one matching capsule.
 `docs/skill-catalog.md` and `docs/foundation-catalog.md` are separate optional
 generated views for human browsing, not required model context.
 
-Reusable prompts include `/repo-audit`, `/plan-work`, `/implement-work`,
-`/review-work`, `/verify-work`, `/cleanup-code`, `/learn`, `/recall-session`,
-`/reflect-session`, `/compile-skill`, and `/compile-session-improvements`. Host
-invocation syntax can differ.
-`scripts/render-prompt.py` remains an optional compatibility helper for hosts
-without a native prompt surface.
+`prompts/` holds reusable workflows: `repo-audit`, `plan-work`, `implement-work`,
+`review-work`, `verify-work`, `cleanup-code`, `learn`, `recall-session`,
+`reflect-session`, `compile-skill`, and `compile-session-improvements`. Read one
+and apply it to the current request. Some hosts expose these as slash commands;
+that syntax differs by host and is not required.
 
 `mcp/servers.json` is a registry, not a default connection set. The `minimal`
-profile activates nothing; select one single-purpose profile or server through
-`mcp/configure.py`. Code graph and IDE semantics use separate profiles. See
-`mcp/catalog.md` for verified host shapes, package pins,
-and secret handling.
+profile activates nothing; wire only what a host actually needs, using that
+host's own MCP configuration. Code graph and IDE semantics use separate profiles.
+See `mcp/catalog.md` for verified host shapes, package pins, and secret handling.
 
 ## Maintenance
 

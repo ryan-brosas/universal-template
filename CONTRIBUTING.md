@@ -24,9 +24,6 @@ CI:
 ```bash
 SKILLS_ROOT="$PWD/skills" python3 scripts/skill-validator.py
 python3 scripts/skill-validator.py --selftest
-python3 scripts/install-prompts.py --check-repo
-python3 scripts/install-prompts.py --selftest
-python3 scripts/render-prompt.py --selftest
 python3 scripts/skill-catalog.py selftest
 python3 scripts/skill-catalog.py fixture-test
 python3 scripts/skill-catalog.py context
@@ -34,7 +31,6 @@ python3 scripts/skill-catalog.py generate --check
 python3 scripts/repo-hygiene.py --selftest
 python3 scripts/repo-hygiene.py
 python3 scripts/repo-hygiene.py --fixture-test
-python3 mcp/configure.py --selftest
 node --test skills/cdp/sdk/recording-privacy.test.ts
 python3 scripts/web-reference-manifest.py --selftest
 python3 scripts/pr-metadata.py --selftest
@@ -42,11 +38,10 @@ git diff --check
 ```
 
 These commands check strict YAML metadata and types, names, references, disjoint
-hot/cold sets and the hot budget, tracked publication files, portable scoped MCP
-activation, secret, private-key, and private-path patterns, generated parity, atomic
-prompt-adapter mutation, CDP recording privacy, title protocol parsing,
-changed-line whitespace, and committed publication fixtures. They do not approve
-policy, prose, routing, or usefulness.
+hot/cold sets and the hot budget, tracked publication files, secret, private-key,
+and private-path patterns, generated parity, CDP recording privacy, title protocol
+parsing, changed-line whitespace, and committed publication fixtures. They do not
+approve policy, prose, routing, or usefulness.
 
 Catalog `generate`, `context`, and `list --tracked-only` parse only Git-tracked
 skill paths, using current working-tree content. The plain `list` command retains
@@ -58,7 +53,6 @@ Publication fails when Git tracking is unavailable; selftests use isolated input
 | Classification | Scripts | Ownership |
 | --- | --- | --- |
 | REQUIRED HARD CONTRACT | `skill-validator.py`, `repo-hygiene.py`, `web-reference-manifest.py`, `pr-metadata.py` | Exact metadata, tracked files, paths, schemas, secrets, context limits, and automation protocols. |
-| OPTIONAL COMPATIBILITY TOOL | `install-prompts.py`, `render-prompt.py` | Legacy host installation and prompt rendering; never canonical. |
 | GENERATED-ARTIFACT TOOL | `skill-catalog.py` | Derives the optional human catalog from skill frontmatter. |
 
 See `docs/maintainer-tooling.md` for retired-script rationale.

@@ -10,7 +10,7 @@
 
 <!-- only checks actually run, with results -->
 
-- Repository contracts: `skill-validator` / `install-prompts --check-repo` / prompt self-tests / `skill-catalog generate --check` / `repo-hygiene` / manifest and PR-metadata self-tests
+- Repository contracts: `skill-validator` / `skill-catalog selftest` + `context` + `generate --check` / `repo-hygiene` / manifest and PR-metadata self-tests
 - `git diff --check`
 
 ## Risks

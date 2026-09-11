@@ -8,5 +8,4 @@ Preserve unrelated changes and existing public contracts unless the request requ
 
 Verify the result with targeted tests and direct behavioral probes. Inspect failures, iterate when needed, and finish with the changed paths, evidence, and known limitations.
 
-Request:
-$ARGUMENTS
+Apply the procedure above to the user's current request in this conversation; ask for scope if it is not already clear.

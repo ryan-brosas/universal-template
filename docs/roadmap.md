@@ -22,8 +22,8 @@ one canonical config to gate the constitution, hot metadata, combined budget,
 and zero set overlap. Host payload evidence and dynamic MCP schema costs are
 versioned in `docs/context-measurements.json`; the six-server MCP file is a
 registry with an empty minimal profile, not an always-on connection set. Strict YAML parsing,
-Git-tracked hygiene, vendor/session exclusions, atomic prompt adapters, and
-fail-closed CDP text persistence protect the same boundary. Re-probe host
+Git-tracked hygiene, vendor/session exclusions, and fail-closed CDP text
+persistence protect the same boundary. Re-probe host
 versions and payloads when those integrations change.
 
 ## 1. Ground truth
@@ -64,7 +64,7 @@ versions and payloads when those integrations change.
   behavioral rules, and replace them with outcome contracts, binary pass/fail
   conditions, and mechanical validator commands.
 - **Fast conclusive PR loop.** Keep metadata, context, repository hygiene, prompt
-  parity, MCP configuration, security, and PR protocol checks fast and conclusive,
+  security, and PR protocol checks fast and conclusive,
   with machine-readable annotations and auto-fix triggers on pull requests.
   Semantic consistency remains a `template-maintenance` review responsibility.
 - **Demonstrated-regression gates.** Promote deterministic regression classes

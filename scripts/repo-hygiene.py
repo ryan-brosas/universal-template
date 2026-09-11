@@ -21,7 +21,7 @@ MAX_SCAN_BYTES = MAX_BYTES
 TEXT_EXT = {".md", ".json", ".yml", ".yaml", ".py", ".mjs", ".ts", ".toml", ".txt", ".sh"}
 REQUIRED = (
     "AGENTS.md", "README.md", "CONTRIBUTING.md", "SECURITY.md", "prompts", "skills",
-    "templates", "mcp/servers.json", "mcp/profiles.json", "mcp/configure.py",
+    "templates", "mcp/servers.json", "mcp/profiles.json",
     "templates/agents.md", "templates/project-context.md", "templates/roadmap.md",
     "templates/readme.md", "templates/pull-request.md", "templates/github-pr-ci.yml",
     "templates/skill.md",
@@ -360,7 +360,6 @@ def _required_scaffold() -> dict[str, bytes]:
         "templates/skill.md": text,
         "mcp/servers.json": b'{"mcpServers":{}}\n',
         "mcp/profiles.json": b"{}\n",
-        "mcp/configure.py": b'print("fixture")\n',
         "skills/demo/SKILL.md": text,
     }
 

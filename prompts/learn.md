@@ -45,6 +45,4 @@ capture campaign.
 - Keep ordinary findings in the conversation.
 - Direct source and tests outrank structural maps and generated explanations.
 
-Request:
-
-$ARGUMENTS
+Apply the procedure above to the user's current request in this conversation; ask for scope if it is not already clear.

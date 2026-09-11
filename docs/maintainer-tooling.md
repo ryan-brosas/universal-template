@@ -13,8 +13,6 @@ behavior earns the dependency.
 | `repo-hygiene.py` | REQUIRED HARD CONTRACT | Git-tracked publication paths, required files, whitespace, structured parsing, file-size bounds, vendor/session exclusions, portable paths, and credential patterns. |
 | `web-reference-manifest.py` | REQUIRED HARD CONTRACT | Manifest types and enums, contained paths, referenced files, capture identifiers, timestamps, and credential patterns. |
 | `pr-metadata.py` | REQUIRED HARD CONTRACT | The PR-title grammar consumed by label and release automation. |
-| `install-prompts.py` | OPTIONAL COMPATIBILITY TOOL | Safe reconciliation for legacy host prompt surfaces; preserves unmanaged files and atomically derives adapters from Markdown. |
-| `render-prompt.py` | OPTIONAL COMPATIBILITY TOOL | Single-pass prompt placeholder rendering for hosts without native prompts. |
 | `skill-catalog.py` | GENERATED-ARTIFACT TOOL | Entry-only hot/cold sets, the complete AGENTS.md-plus-metadata static budget, the tracked-surface listing, and separate generated catalogs derived from tracked filesystem and frontmatter. |
 
 ## Local Markdown links
@@ -68,8 +66,14 @@ code-example, encoded-path, and symlink-boundary regression fixtures.
   probe native inventories instead.
 - `github-audit.py`: re-serialized `gh api` responses. `github-repo-setup` reads
   `gh repo view` and `gh api` directly in audit mode.
-- `sync-to-prime.py`: a thin alias over `mcp/configure.py --format prime` with a
-  default target. Direct invocation owns the same ownership rules.
+- `install-prompts.py` and `render-prompt.py`: host prompt installation,
+  ownership reconciliation, and a private `$ARGUMENTS` placeholder language.
+  Reading `prompts/*.md` and applying it is the whole contract; hosts expose
+  their own prompt surfaces.
+- `mcp/configure.py` and `sync-to-prime.py`: host MCP config mutation with
+  locking, journaling, backups, and Prime translation. `mcp/servers.json` and
+  `mcp/catalog.md` carry the declarations and the verified host shapes; each
+  host wires its own configuration.
 - The `skill-catalog.py` invocation-cost and search/stats reports: on-disk size
   inventories and heuristic ranking that never measured runtime context; listing,
   the static budget gate, and catalog generation remain.
