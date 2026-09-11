@@ -15,7 +15,7 @@ current API; do not load a different kernel's instructions.
   [pi-package-development](../../knowledge/playbooks/pi-package-development/README.md).
 - Provider authentication, model catalogs and runtime behavior:
   [pi-provider-contracts](../../knowledge/playbooks/pi-provider-contracts/README.md).
-- Fabric execution and transactional boundaries:
+- Fabric execution, tool availability, and transactional boundaries:
   [fabric-native-execution](../../knowledge/playbooks/fabric-native-execution/README.md).
 - Runner/execution choice:
   [execution-router](../../knowledge/playbooks/execution-router/README.md).

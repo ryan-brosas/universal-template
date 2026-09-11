@@ -37,7 +37,8 @@ inventing CI or claiming a clean full cycle.
    rather than reset them.
 
 Verify completion with `gh pr view <n> --json state,mergedAt,mergeCommit,statusCheckRollup`
-(`MERGED`, a merge SHA, and every rollup check passing) plus paginated GraphQL
-`reviewThreads.isResolved` all true. Report the PR link, merge SHA, and any
-cleanup limitation. Commit/merge conventions belong to
+(`MERGED`, a merge SHA, and the newest run of each check passing — superseded runs
+may appear `cancelled`, see `../push-pr/references/ci-and-observation.md`) plus
+paginated GraphQL `reviewThreads.isResolved` all true. Report the PR link, merge
+SHA, and any cleanup limitation. Commit/merge conventions belong to
 `../git-workflow-and-versioning/README.md`.
