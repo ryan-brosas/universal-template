@@ -28,7 +28,7 @@ Bash is for **thin orchestration**, quote aggressively, avoid subshell traps, ch
 2. **Arguments**, `"$@"` forwarding; arrays for flag lists; quote all expansions.
 3. **Conditionals**, `[[`/`((`/`readarray`; no pipe-to-while when parent needs state.
 4. **Structure**, constants → functions → `main "$@"`; `local` + split declare/assign; STDERR `err()`.
-5. **Verify**, `shellcheck` exit 0; exercise empty args, spaces in paths, and failure paths.
+5. **Verify**, `shellcheck` exit 0; exercise empty args, spaces in paths, and failure paths; read a piped command's status from `set -o pipefail` or `${PIPESTATUS[0]}`, because `$?` after a pipe is the last stage's status.
 
 ## Red Flags
 
@@ -36,9 +36,10 @@ Bash is for **thin orchestration**, quote aggressively, avoid subshell traps, ch
 - `eval`, SUID bit, or string-built command lines.
 - `cmd | while read` then read parent variable.
 - `local x="$(cmd)"` followed by `$?` check.
+- `cmd | tail` (or `| grep`) followed by a `$?` check, or under `set -e`: without `pipefail` a failing command passes green.
 - Script past 100 lines without migration plan.
 
 ## Verification
 
 - `shellcheck -x script.sh` (or project wrapper) exit 0.
-- Manual: args with spaces, empty optional flags, failing command path.
+- Manual: args with spaces, empty optional flags, failing command path, and a failing command inside a pipeline still exits nonzero.

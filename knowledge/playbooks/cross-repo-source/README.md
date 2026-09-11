@@ -43,7 +43,11 @@ its index and its database live outside this template.
 ## Workflow
 
 1. `list_repos` (optionally with `query`) to confirm the repository name; note its
-   default branch and whether the branch is indexed.
+   default branch and whether the branch is indexed. Match the exact branch across
+   pagination or a filtered query; never substitute the first returned branch.
+   For readiness probes, require actual result records/counts, not a substring such
+   as `match` (which also accepts “no matches”). Searchability and freshness are
+   separate checks; a successful search does not prove a recent sync succeeded.
 2. Narrow with `grep` (`groupByRepo: true` across many repos, `include` to filter
    file types) or `glob`; use `list_tree` to orient in an unfamiliar repository.
 3. For a symbol, prefer `find_symbol_definitions` / `find_symbol_references` over
@@ -66,3 +70,6 @@ prefer direct tool calls.
 
 The claim names the file(s) read and the revision; symbol or call-graph claims are
 confirmed by reading source; absence claims state the search scope and index limits.
+After the MCP deployment was restarted, query from a fresh session: a pooled session
+created before the restart fails with `Server not initialized`, which is a stale
+session rather than a missing index.

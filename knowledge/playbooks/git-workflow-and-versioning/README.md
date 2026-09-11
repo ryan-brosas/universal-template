@@ -60,7 +60,10 @@ change users must react to is at least minor.
  unless the project chooses lightweight deliberately; read the release back
  after publishing.
 8. **Evidence** - status, diff summary, gates run, version/tag/release action
- or explicit skip.
+ or explicit skip. Before reporting, read the branch and publish state you
+ actually observe (`git status -sb`, `git rev-parse --abbrev-ref HEAD`,
+ `git branch -r --contains <sha>`): a shared worktree can be switched, or your
+ uncommitted edits committed, by another writer between the edit and the report.
 
 ## Recovery & non-interactive continuation
 
