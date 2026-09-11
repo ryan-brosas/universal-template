@@ -126,6 +126,28 @@ concurrent session can push to a merged branch, leaving commits no PR covers
 (`git fetch origin <branch> && git log --oneline <merged-head>..FETCH_HEAD`), and a
 stale remote-tracking ref makes that log look empty.
 
+## Rewriting an open PR branch on a protected base
+
+A base ruleset can make a rewrite unmergeable. With
+`require_extra_approval_for_unattributed_changes` enabled, a force-push that rewrites an
+open PR's commits leaves the PR at `mergeable_state: blocked` ("the base branch policy
+prohibits the merge") even though every commit is authored by the PR author and the push
+actor is that author. Where the author is the only collaborator the extra approval cannot
+be granted at all, so only a non-rewriting push clears it.
+
+Verified while landing the three-dot comparison above: rebasing an open PR onto `main`
+(ruleset `21868040`, `ryan-brosas/universal-template`) flipped it from `clean` to
+`blocked`, and the next fast-forward push returned it to `clean` with no content change.
+
+- Read the rule before rewriting:
+ `gh api repos/OWNER/REPO/rulesets/ID --jq '.rules[]|select(.type=="pull_request").parameters.require_extra_approval_for_unattributed_changes'`.
+- Prefer a new commit over `--amend`/rebase while the PR is open; a squash merge discards
+ the extra commit anyway.
+- After a necessary rewrite, push something fast-forward (`git commit --allow-empty`) and
+ re-read `gh api repos/OWNER/REPO/pulls/N --jq .mergeable_state` before calling the PR
+ mergeable. `--admin` is not the fix: a ruleset with `bypass_actors: []` grants no bypass,
+ and the block is a policy verdict rather than a stale cache.
+
 ## Common Rationalizations
 
 | Rationalization | Rebuttal |
@@ -146,6 +168,9 @@ stale remote-tracking ref makes that log look empty.
 - Breaking change shipped as PATCH.
 - Force-push of shared history without explicit approval.
 - Rebasing a diverged branch without checking whether upstream already contains the work.
+- Rewrote an open PR branch (`--amend`, rebase) on a base whose ruleset requires extra
+ approval for unattributed changes, then reported it mergeable without re-reading
+ `mergeable_state`.
 
 ## Verification
 
