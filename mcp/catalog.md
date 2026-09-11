@@ -141,8 +141,10 @@ both sides blindly:
   GitHub public read-only, so it can only ever read public repositories. MCP
   authentication uses a Sourcebot API key held in the machine-local host config
   (0600), never here; the deployment's `.env` is the only other place a secret
-  may live. No language model is configured, so ask-style summarization stays
-  unavailable on purpose: the agent retrieves evidence and reasons itself.
+  may live. A model is configured for delegated research only: `ask_codebase` is opt-in,
+  model-gated and never spontaneous, while retrieval and reasoning stay with the
+  calling agent. Assignment and evidence contract: the `cross-repo-source`
+  playbook and its `references/research-brief.md`.
   If the deployment is not running the entry is dormant; treat indexed source as
   optional context, never a blocker.
 - **figma-bridge**: run the companion Figma plugin in each file the agent should
