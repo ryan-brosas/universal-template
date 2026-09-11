@@ -13,7 +13,7 @@
 
 ## Verification over self-report
 
-- **HARD-GATE:** "I checked" without command output is a fail. Run the project gate and paste exit codes (`agent-code-quality-gate`; the global AGENTS.md owns the rule).
+- Follow the [agent code quality gate](../../agent-code-quality-gate/README.md): inspect the diff and decisive verification output, then report commands, results, and remaining limitations. "I checked" alone is not evidence.
 
 Evidence hierarchy (what backs each claim):
 
