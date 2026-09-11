@@ -45,8 +45,13 @@ change users must react to is at least minor.
 
 ## Process
 
-1. **Worktree** - `git status --short`; never `git add .` in a mixed tree;
- stage by path.
+1. **Worktree** - re-read `git status --short` immediately before staging;
+ stage only owned paths (or owned hunks in shared files), never `git add .` or
+ `git add -A` in a mixed tree. Read `git diff --cached` itself, not only its
+ `--stat`: a whole-file diff of a shared file also picks up lines another writer
+ added to it since your last read. An unexpected path or hunk is a stop signal,
+ not something to audit after pushing. Unstage unrelated changes without
+ changing their working-tree content.
 2. **Branch** - short lowercase hyphenated name; project caps live in
  `AGENTS.md`.
 3. **Commit unit** - one logical change; feature + tests together; `git add -p`
@@ -75,6 +80,19 @@ change users must react to is at least minor.
  restore additively (`git branch rescue <sha>`, cherry-pick, or a new commit
  of the recovered tree). Recover without destroying more history; reflog is a
  recovery mechanism, not a license for destructive operations.
+- **Never discard work you did not write.** `git reset --hard`,
+ `git checkout -- <path>` and `git restore <path>` destroy another writer's
+ unsaved edits in a shared tree, and the loss is silent. `git reset --keep
+ <sha>` keeps uncommitted changes and aborts when one would be overwritten, but
+ it is not a no-op: clean files still move with HEAD. To read another revision
+ without disturbing the tree at all, use `git worktree add` or
+ `git show <sha>:<path>`. When only your own paths need to be clean, commit or
+ stash those paths by name instead of resetting the tree.
+- **A discarded edit is often recoverable.** Content can survive as a dangling
+ object after a reset, stash drop or history rewrite. Check `git reflog`,
+ `git fsck --lost-found`, and any commit that staged the path
+ (`git show <sha>:<path>`), then restore it into the file additively and
+ confirm the resulting diff is exactly the change that was lost.
 - **Ceremonial editors:** when the message/content is already decided, suppress
  only the editor - `GIT_EDITOR=true git rebase --continue`,
  `GIT_SEQUENCE_EDITOR=true ...`, `git commit --no-edit`. Never override a
