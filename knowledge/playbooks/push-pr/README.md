@@ -9,14 +9,18 @@ kind: playbook
 Use one evidence path: local checks verify the branch, CI verifies the pushed
 commit, and the PR body records scope, proof, and limitations. This skill owns
 individual PR and review operations; `../ship-pr/README.md` owns a requested full
-lifecycle through merge. An existing PR is updated, not duplicated.
+lifecycle through merge. An existing PR is updated, not duplicated: before creating
+one, check `gh pr list --state open` for a PR that already covers the change, including
+one opened by a concurrent session or agent.
 
 ## Workflow
 
 1. Inspect status, the base branch, commit range, and authored diff. Run the
-   project's relevant gates and `git diff --check` on that range; record commands
-   and exit statuses. Pre-PR, also run `coderabbit review --agent` (add `--light`
-   for large diffs; `--committed` when the tree is clean) and triage the
+   project's relevant gates and `git diff --check` on that range, compared from the
+   merge base (`<base>...HEAD`); a tip-to-tip `<base>..HEAD` diff reports the base's
+   own newer work as deletions (`../git-workflow-and-versioning/README.md`). Record
+   commands and exit statuses. Pre-PR, also run `coderabbit review --agent` (add
+   `--light` for large diffs; `--committed` when the tree is clean) and triage the
    structured findings before opening: fix valid correctness findings, skip the
    rest with a one-line reason, and note skipped conflicts with prior reviewed
    behavior. If no quality gate exists, run the strongest applicable

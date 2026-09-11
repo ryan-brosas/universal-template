@@ -1,6 +1,6 @@
 ---
 title: git-workflow-and-versioning
-summary: 'Use when preparing a release, choosing a version bump, creating or moving tags, writing changelog or release-note content, or when git hygiene for shared history is in question: commits, branches, divergence and squash-merge reconciliation, recovery, non-interactive continuation.'
+summary: 'Use when preparing a release, choosing a version bump, creating or moving tags, writing changelog or release-note content, or when git hygiene for shared history is in question: commits, branches, base comparison and stale-base rebases, divergence and squash-merge reconciliation, post-merge branch state, recovery, non-interactive continuation.'
 kind: playbook
 ---
 
@@ -63,7 +63,10 @@ change users must react to is at least minor.
  or explicit skip. Before reporting, read the branch and publish state you
  actually observe (`git status -sb`, `git rev-parse --abbrev-ref HEAD`,
  `git branch -r --contains <sha>`): a shared worktree can be switched, or your
- uncommitted edits committed, by another writer between the edit and the report.
+ uncommitted edits committed, by another writer between the edit and the report. A
+ concurrent writer holding a stale copy can also revert a change you just pushed when
+ they save their file: re-read the file and your own commit before reading intent into
+ the revert, then re-apply without discarding their newer lines.
 
 ## Recovery & non-interactive continuation
 
@@ -86,7 +89,7 @@ change users must react to is at least minor.
 A squash merge creates new commit SHAs, so a local branch "ahead" of upstream
 may contain no work upstream lacks. Reconcile by content before rebasing:
 
-1. Compare content, not counts: `git diff origin/main <branch> --stat` and
+1. Compare content, not counts: `git diff origin/main...<branch> --stat` and
    `git log --oneline origin/main..<branch>`.
 2. Treat a local commit whose change already exists upstream (typically
    refined) as stale, not extra. During rebase, git may drop it with "patch
@@ -96,9 +99,28 @@ may contain no work upstream lacks. Reconcile by content before rebasing:
    with `GIT_EDITOR=true git rebase --continue`.
 4. Keep staging by path through conflict resolution (Process 1); a bare
    `git add -A` sweeps unrelated untracked scratch into the rebased commit.
-5. Verify the residual diff (`git diff origin/main <branch> --stat`) contains
+5. Verify the residual diff (`git diff origin/main...<branch> --stat`) contains
    only intended work, and run affected tests from the directory their runner
    expects.
+
+## Comparing a branch with its base
+
+Two comparisons answer different questions; do not substitute one for the other:
+
+- `git diff <base>...HEAD` (three-dot, measured from the merge base) is what the PR
+  shows and what a merge preserves: only the branch's own changes. Use it for pre-PR
+  review, `git diff --check`, and gate ranges.
+- `git diff <base>..HEAD` (two-dot, tip to tip) additionally reports everything the
+  base gained while the branch was open, as deletions. A stale base therefore looks
+  like a regression the merge would never cause.
+
+Test drift directly with `git merge-base --is-ancestor <base-tip> HEAD`. A stale base
+is a conflict-hygiene reason to rebase, not evidence that the merge discards base work:
+keep the base's newer content, and rebase only when the same files are touched.
+
+After a merge, re-read the branch's remote ref before reporting the work finished. A
+concurrent session can push to the merged branch, leaving commits that no PR covers
+(`git log --oneline <merged-head>..origin/<branch>`).
 
 ## Common Rationalizations
 
