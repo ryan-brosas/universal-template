@@ -103,7 +103,10 @@ selected servers rather than treating historical schema sizes as a budget.
 | DSH web profile | `~/.dsh/cordis.patch.yml` | `@monotykamary/dsh-mcp-client` inserts (codebase-memory, openviking, context7, deepwiki, exa, mcp-steroid) |
 
 Wire the requested selection using the host’s verified format; preserve unrelated
-settings and unmanaged servers. Each host has its own MCP command or config file;
+settings and unmanaged servers. A host config path names only where that CLI
+reads servers: the canonical definitions stay in this repository’s
+`servers.json` and `profiles.json`, and each host file is a local mirror or
+overlay of the requested subset, never the registry itself. Each host has its own MCP command or config file;
 this repository supplies no shared writer.
 
 When unsure whether a CLI accepts a server scheme, skip that CLI (do not
