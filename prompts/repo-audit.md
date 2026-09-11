@@ -1,11 +1,9 @@
-# Audit the current repository
+---
+description: Deep audit of this repository
+argument-hint: "[focus]"
+---
+Take a deep look at this repository, focusing on the concerns we've discussed.
+Identify real problems and worthwhile simplifications, explain the evidence, and
+prioritize what to address. Don't make changes yet.
 
-Deep-audit the current repository for the request below.
-
-Treat the request as a signal, not a predetermined solution. Optimize toward the Pareto frontier: increase usefulness, correctness, clarity, and evidence quality while reducing unnecessary complexity, duplication, hot context, and maintenance burden. Do not improve one dimension by materially degrading another unless the tradeoff is justified by the request or repository evidence.
-
-Inspect the applicable instructions, current structure, and relevant execution paths before judging. Separate confirmed findings from hypotheses. Preserve unrelated user changes and existing public contracts unless the request requires a change.
-
-Use your judgment to select and implement worthwhile improvements when implementation is requested. Verify the result with targeted tests and direct behavioral probes, then report the evidence and remaining risk.
-
-Apply the procedure above to the user's current request in this conversation; ask for scope if it is not already clear.
+${ARGUMENTS:-}

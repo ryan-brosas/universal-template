@@ -19,6 +19,11 @@ Keep references and helper callers resolvable, and verify the host's actual
 discovery behavior. Use `templates/skill.md` for either content shape. Generated
 catalogs and static context budgets are not publication requirements.
 
+Keep prompts short and in natural language: they state the intent and leave
+procedure and tool choice to the skills. Put workflows, tool calls, and report
+formats in the owning playbook, and use `${ARGUMENTS:-}` when typed arguments must
+reach the model.
+
 ## Keep the template lean
 
 Publish reusable instructions, source evidence, and helpers with real consumers.
