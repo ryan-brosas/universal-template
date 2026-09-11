@@ -17,7 +17,7 @@ You have a plan, spec, ADR, or architecture that you want to stress-test before 
 
 ## Workflow
 
-Ask one question at a time; let the person answer fully before asking another. Walk the Common Targets as needed. Stop when the grillee has a concrete, specific answer to each question, or when the questions are repeating (same shape, different topic).
+Inspect the supplied proposal and available project evidence before asking questions; do not ask for facts the repository already answers. Ask one question at a time and let the person answer fully. Walk only relevant Common Targets. Stop when consequential uncertainty is resolved, the direction needs reconsidering, or questions repeat. No fixed question count is required.
 
 ## How to Grill
 
@@ -41,7 +41,7 @@ One question at a time. Let the person answer fully before asking another.
 - Questions surface assumptions, not opinions.
 - The griller is curious, not confrontational.
 - The grillee answers in "I think" and "I'm assuming", not "it's obvious".
-- After 10-15 questions, the plan is either stronger or abandoned.
+- Stop when consequential uncertainty is resolved or the direction needs reconsidering; there is no question quota.
 - The griller doesn't need to "win", they need to find the hole.
 
 ## Common Targets
@@ -59,7 +59,7 @@ One question at a time. Let the person answer fully before asking another.
 
 ## When to Stop Grilling
 
-Stop when the grillee has a concrete, specific answer to each question, not "I'll figure it out later." Stop when the questions are repeating (same shape, different topic).
+Use the stop rule in Workflow; concrete answers are needed for consequential uncertainties, not every possible question. If the direction needs reconsidering or questions repeat, report the remaining blocked decisions rather than implying they are resolved.
 
 ## Common Mistakes
 
@@ -75,7 +75,7 @@ No assumptions stated. "I'll figure it out later" as a crutch. "everyone agrees"
 
 ## Verification
 
-After 10–15 questions, the plan is either stronger or abandoned, and the answers are documented, not left in chat.
+End with the strengthened or rejected direction, consequential assumptions resolved, and any decisions still blocked on the user. Summarize answers in the conversation. During project setup, carry agreed durable decisions into the existing project context or the requested bootstrap output; do not create a separate grilling document by default.
 
 
 ## References

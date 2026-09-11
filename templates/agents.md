@@ -1,12 +1,12 @@
 ---
 purpose: Source template for project-local AGENTS.md (/init or bootstrap).
-updated: 2026-09-01
+updated: 2026-09-11
 ---
 
 # AGENTS.md template
 
 Render only repository-specific facts the model cannot cheaply infer from the
-tree. Global defaults live in the user's global `AGENTS.md`; do not restate them.
+tree. Standing rules live in the user's global `AGENTS.md`; do not restate them.
 
 ## How to render
 
@@ -16,12 +16,17 @@ tree. Global defaults live in the user's global `AGENTS.md`; do not restate them
    dangerous operations only when verified.
 4. Omit empty sections. Link durable context (e.g. `docs/project-context.md`)
    instead of duplicating it.
+5. Keep the global-rules pointer in every rendered file. The global rules
+   govern every project; never copy their text.
 
 Do not copy generic coding doctrine, router skills, or examples from other repos.
 
 ---
 
 # Agent Rules
+
+The user's global `AGENTS.md` supplies standing rules. This file adds
+project-specific context, not exceptions. Surface conflicts for clarification.
 
 ## Check
 
@@ -47,4 +52,4 @@ Omit when none verified.
 
 - [Production, data, credential, or infra boundary specific to this repo.]
 
-Omit when none beyond global defaults.
+Omit when none beyond global rules.

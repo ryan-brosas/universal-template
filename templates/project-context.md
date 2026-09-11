@@ -1,11 +1,12 @@
 ---
 purpose: Compact durable project context — only what is expensive to reconstruct from the repository itself.
-updated: 2026-08-30
+updated: 2026-09-11
 ---
 
 # Project Context — <project name>
 
-Render 30–60 meaningful lines. Every line must survive this test:
+Keep only useful, durable context; omit empty sections. Every line must
+survive this test:
 *would reconstructing this from source, Git, manifests, or CI be expensive or
 unreliable?* If not, leave it out — bootstrap detects it on demand.
 
@@ -13,6 +14,11 @@ unreliable?* If not, leave it out — bootstrap detects it on demand.
 
 - [What this project is for and who it serves — the part not obvious from code.]
 - [The decision that shaped the architecture, if it constrains future work.]
+
+## Scope
+
+- [Agreed first useful outcome and how success will be recognized.]
+- [Explicit non-goals or deferred scope that future work must respect.]
 
 ## Non-obvious constraints
 

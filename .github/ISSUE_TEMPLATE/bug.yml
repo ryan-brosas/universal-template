@@ -28,4 +28,4 @@ body:
     attributes:
       label: Local gates
       options:
-        - label: I ran the catalog gate suite from AGENTS.md (Finish line) before filing
+        - label: I ran the repository checks from .github/workflows/pr-quality.yml before filing
