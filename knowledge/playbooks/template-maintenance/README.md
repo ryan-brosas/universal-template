@@ -52,6 +52,11 @@ The report names changed ownership boundaries, relevant hard checks and output,
 semantic decisions made by review, preserved unrelated changes, and unresolved
 uncertainty. Never claim a pass that was not observed.
 
+When canonical rules, skills, or prompts that installed hosts consume change,
+verify propagation to those consumers by content, not by filename or path:
+alternate names (`CLAUDE.md`, `GEMINI.md`) and moved paths escape a name-based
+sweep, and a copied file goes stale where a symlink stays live.
+
 ## References
 
 - `../../../CONTRIBUTING.md`, content review and retained helper checks.
