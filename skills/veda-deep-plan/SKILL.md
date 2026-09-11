@@ -33,7 +33,7 @@ this tool because the user asked for it or because you decided it fits.
 
 ## Invocation, veda deep (confirmed working)
 
-`deep` is a veda CLI subcommand, not a persona. Default backend/model now fixed in `~/.config/veda/config` (`BACKEND="agy"`, `MODEL="gemini-3.7-flash-high"`):
+`deep` is a veda CLI subcommand, not a persona. Default backend/model come from your own `~/.config/veda/config` (observed here as `BACKEND="agy"`, `MODEL="gemini-3.7-flash-high"`):
 
 ```bash
 veda -S deep-<task> deep '<problem — inline ALL relevant file contents; veda sees only what you paste>'

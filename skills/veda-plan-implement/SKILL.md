@@ -1,6 +1,6 @@
 ---
 name: veda-plan-implement
-description: "Use when the user explicitly asks to align on a plan with the Veda Navigator model. Drives `veda -S plan-TASKNAME -m flash -p navigator-plan` to align; does not execute. Not a general planning substitute: when the user asks to plan and has not asked for Veda, plan with native capabilities instead."
+description: "Use when the user explicitly asks to align on a plan with the Veda Navigator model. Drives `veda -S plan-TASKNAME -m flash -p navigator-plan` to align; you then implement with native tools. Not a general planning substitute: when the user asks to plan and has not asked for Veda, plan with native capabilities instead."
 invocation: vendor
 argument-hint: "[veda-flags]"
 ---
@@ -22,16 +22,17 @@ Align with Navigator before executing: Navigator advises (no tool access), the D
 4. Execute with native tools, checkpointing at plan-step boundaries with evidence. Stop when the task is complete or blocked on input only the user can provide.
 
 
-## Model routing (authoritative, do not substitute)
+## Model choice
 
-- Load-bearing planning / architecture / high-risk review → `agy --model claude-opus-4-6-thinking --mode plan` (direct `agy` CLI, NOT veda/gemini).
-- Critique / follow-up → `agy --model claude-sonnet-4-6 --mode plan`.
-- Cheap discovery / context curation → `veda` + gemini (`gemini-3.7-flash-*`, `gemini-3.1-pro-low`).
-- `veda deep` (parallel solvers) runs on gemini and is only for "N independent attempts"; the final architecture decision still comes from claude-opus.
+Which backend and model to use is a live decision owned by
+`../model-resolution/SKILL.md` and the active host's own inventory; this skill
+mandates no provider. Pick a capable reasoning seat for load-bearing planning or
+high-risk review, a cheaper seat for discovery and context curation, and probe
+the lane before trusting it.
 
 ## Invocation, veda CLI (confirmed working)
 
-Use the veda CLI with a **positional** prompt. The default backend/model are now fixed in `~/.config/veda/config` (`BACKEND="agy"`, `MODEL="gemini-3.7-flash-high"`), no flags needed:
+Use the veda CLI with a **positional** prompt. The default backend/model come from your own `~/.config/veda/config` (observed here as `BACKEND="agy"`, `MODEL="gemini-3.7-flash-high"`), so no flags are needed when that is what you want:
 
 ```bash
 veda -S plan-<task> -p navigator-plan '<your prompt — inline ALL relevant file contents; veda sees only what you paste>'

@@ -22,16 +22,17 @@ Align → implement → close with a reviewer loop until `review: pass`. Navigat
 4. Fix P0/P1 yourself, regenerate the diff, re-review. Stop at `review: pass` (P2 stays open, non-blocking).
 
 
-## Model routing (authoritative, do not substitute)
+## Model choice
 
-- Load-bearing planning / architecture / high-risk review → `agy --model claude-opus-4-6-thinking --mode plan` (direct `agy` CLI, NOT veda/gemini).
-- Critique / follow-up → `agy --model claude-sonnet-4-6 --mode plan`.
-- Cheap discovery / context curation → `veda` + gemini (`gemini-3.7-flash-*`, `gemini-3.1-pro-low`).
-- `veda deep` (parallel solvers) runs on gemini and is only for "N independent attempts"; the final architecture decision still comes from claude-opus.
+Which backend and model to use is a live decision owned by
+`../model-resolution/SKILL.md` and the active host's own inventory; this skill
+mandates no provider. Pick a capable reasoning seat for load-bearing planning or
+high-risk review, a cheaper seat for review follow-ups and discovery, and probe
+the lane before trusting it.
 
 ## Invocation, veda CLI (confirmed working)
 
-Use the veda CLI with **positional** prompts. Default backend/model now fixed in `~/.config/veda/config` (`BACKEND="agy"`, `MODEL="gemini-3.7-flash-high"`):
+Use the veda CLI with **positional** prompts. Default backend/model come from your own `~/.config/veda/config` (observed here as `BACKEND="agy"`, `MODEL="gemini-3.7-flash-high"`):
 
 ```bash
 veda -S impl-<task> -p navigator-plan '<goal + context>'     # align (read-only)
