@@ -30,9 +30,15 @@ this architecture. Its deployment, credentials, indexes, database and repository
 configuration live outside this template. This repository describes when to use
 it, not how it is deployed.
 
-Sourcebot is retrieval, not reasoning. Search it, read the decisive source and
-tests, and let the coding agent reason. Do not add a summary or knowledge layer
-in front of it, and do not require it for local work.
+Sourcebot is retrieval first: search it, read the decisive source and tests, and
+let the coding agent reason. Do not require it for local work, and do not add a
+knowledge layer in front of it.
+
+The deployment configures one language model - the OmniRoute `top-tool` combo -
+for delegated research only. `ask_codebase` is opt-in and runs only when the
+user's prompt asks for it by name, since retrieval and reasoning otherwise stay
+with the calling agent. Assignment and evidence contract:
+`knowledge/playbooks/cross-repo-source/references/research-brief.md`.
 
 ## Profiles
 
