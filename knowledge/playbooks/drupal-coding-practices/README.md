@@ -6,7 +6,7 @@ kind: playbook
 
 # Drupal Coding Practices
 
-Application skill for Drupal official coding standards ingest (`awesome-guidelines`). Generic PHP: `php-coding-practices`. WordPress CMS: `wordpress-coding-practices`. Accessibility: `wcag-accessibility-practices`.
+Application skill for Drupal official coding standards. Generic PHP: `php-coding-practices`. WordPress CMS: `wordpress-coding-practices`. Accessibility: `wcag-accessibility-practices`.
 
 ## Core Principle
 
@@ -22,15 +22,15 @@ Drupal maintainability is **always-current handbook discipline plus typed PSR-4 
 
 - Non-Drupal PHP, `php-coding-practices`.
 - WordPress themes/plugins, `wordpress-coding-practices`.
-- Entity design, routing, or migration architecture, Drupal foundation docs.
+- Entity design, routing, or migration architecture, Drupal core source or docs.
 - Obsolete drupal.org wiki copies, use GitLab Pages canonical docs.
 
 ## Workflow
 
-1. **PHP layout/naming**, 2-space, prefixes, casing (`drupal-style-php-naming.md`).
-2. **Namespaces/types**, PSR-4, use, hints (`drupal-style-namespaces-types.md`).
-3. **Documentation/i18n**, docblocks, hooks, t() (`drupal-style-documentation-i18n.md`).
-4. **Assets/verify**, YAML, Twig, JS, CI (`drupal-style-assets-verify.md`).
+1. **PHP layout/naming**, 2-space, prefixes, casing.
+2. **Namespaces/types**, PSR-4, use, hints.
+3. **Documentation/i18n**, docblocks, hooks, t().
+4. **Assets/verify**, YAML, Twig, JS, CI.
 
 ## Red Flags
 
@@ -58,14 +58,6 @@ Drupal maintainability is **always-current handbook discipline plus typed PSR-4 
 - Docblock spot-check on new hooks/classes
 - WCAG checklist on changed UI (`wcag-accessibility-practices`)
 
-
-## References
-
-- `awesome-guidelines/references/drupal-style-learning-note.md`
-- `awesome-guidelines/references/drupal-style-php-naming.md`
-- `awesome-guidelines/references/drupal-style-namespaces-types.md`
-- `awesome-guidelines/references/drupal-style-documentation-i18n.md`
-- `awesome-guidelines/references/drupal-style-assets-verify.md`
 
 ## Related skills
 

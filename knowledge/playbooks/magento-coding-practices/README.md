@@ -6,7 +6,7 @@ kind: playbook
 
 # Magento Coding Practices
 
-Application skill for Adobe Commerce / Magento Open Source coding standards ingest (`awesome-guidelines`). Generic PHP: `php-coding-practices`. Security depth: `webappsec-coding-practices`. Sibling CMS: `drupal-coding-practices`, `wordpress-coding-practices`.
+Application skill for Adobe Commerce / Magento Open Source coding standards. Generic PHP: `php-coding-practices`. Security depth: `webappsec-coding-practices`. Sibling CMS: `drupal-coding-practices`, `wordpress-coding-practices`.
 
 ## Core Principle
 
@@ -27,10 +27,10 @@ Magento extension quality is **PSR-12 mechanics plus Magento2 PHPCS security sni
 
 ## Workflow
 
-1. **PHP/types**, strict_types, return types,::class (`magento-style-php-types.md`).
-2. **Class/DI**, composition, constructors, di.xml (`magento-style-class-di.md`).
-3. **Security/exceptions**, SQL, XSS, superglobals, exceptions (`magento-style-security-exceptions.md`).
-4. **Layers/verify**, Api modules, docblocks, PHPCS (`magento-style-layers-verify.md`).
+1. **PHP/types**, strict_types, return types,::class.
+2. **Class/DI**, composition, constructors, di.xml.
+3. **Security/exceptions**, SQL, XSS, superglobals, exceptions.
+4. **Layers/verify**, Api modules, docblocks, PHPCS.
 
 ## Red Flags
 
@@ -58,14 +58,6 @@ Magento extension quality is **PSR-12 mechanics plus Magento2 PHPCS security sni
 - DocBlock spot-check on new public API
 - di.xml preference/plugin review for new services
 
-
-## References
-
-- `awesome-guidelines/references/magento-style-learning-note.md`
-- `awesome-guidelines/references/magento-style-php-types.md`
-- `awesome-guidelines/references/magento-style-class-di.md`
-- `awesome-guidelines/references/magento-style-security-exceptions.md`
-- `awesome-guidelines/references/magento-style-layers-verify.md`
 
 ## Related skills
 

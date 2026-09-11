@@ -6,7 +6,7 @@ kind: playbook
 
 # Node.js Coding Practices
 
-Application skill for felixge Node style + Microsoft nodejs-guidelines platform ingest (`awesome-guidelines`). For generic JS modules, load `javascript-coding-practices`. TypeScript Node: add `typescript-coding-standards`.
+Application skill for felixge Node style + Microsoft nodejs-guidelines platform. For generic JS modules, load `javascript-coding-practices`. TypeScript Node: add `typescript-coding-standards`.
 
 ## Core Principle
 
@@ -25,10 +25,10 @@ Node quality is **small modules with strict style and reproducible npm packaging
 
 ## Workflow
 
-1. **Format**, 2-space, semicolons, quotes, braces (`node-style-formatting-layout.md`).
-2. **Functions/modules**, size, closures, requires (`node-style-functions-modules.md`).
-3. **Naming/conditionals**, ===, predicates, camelCase (`node-style-conditionals-naming.md`).
-4. **Platform**, npm, PORT, Windows, native (`node-style-platform-verify.md`).
+1. **Format**, 2-space, semicolons, quotes, braces.
+2. **Functions/modules**, size, closures, requires.
+3. **Naming/conditionals**, ===, predicates, camelCase.
+4. **Platform**, npm, PORT, Windows, native.
 5. **Verify**, ESLint/EditorConfig + `npm test` + platform notes for native deps.
 
 ## Red Flags
@@ -60,17 +60,8 @@ Node quality is **small modules with strict style and reproducible npm packaging
 - ESLint (felixge-aligned or project config) on changed files
 - EditorConfig indent/charset/end_of_line
 - `npm install && npm test` (or `npm start` smoke)
-- Capsule probes on server PORT and require placement
 - Native addon: document/build verify on Windows if `node-gyp` in tree
 
-
-## References
-
-- `awesome-guidelines/references/node-style-learning-note.md`
-- `awesome-guidelines/references/node-style-formatting-layout.md`
-- `awesome-guidelines/references/node-style-functions-modules.md`
-- `awesome-guidelines/references/node-style-conditionals-naming.md`
-- `awesome-guidelines/references/node-style-platform-verify.md`
 
 ## Related skills
 

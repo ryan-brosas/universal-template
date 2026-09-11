@@ -5,7 +5,6 @@ This is a routing index, not a reading list. Known procedure paths can be opened
 
 - [android-coding-practices](../../../knowledge/playbooks/android-coding-practices/README.md)
 - [angular-coding-practices](../../../knowledge/playbooks/angular-coding-practices/README.md)
-- [api-design-practices](../../../knowledge/playbooks/api-design-practices/README.md)
 - [arduino-coding-practices](../../../knowledge/playbooks/arduino-coding-practices/README.md)
 - [c-coding-practices](../../../knowledge/playbooks/c-coding-practices/README.md)
 - [clojure-coding-practices](../../../knowledge/playbooks/clojure-coding-practices/README.md)

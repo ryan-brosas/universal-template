@@ -6,7 +6,7 @@ kind: playbook
 
 # JSON API Practices
 
-Application skill for JSON style learning (from the archived `awesome-guidelines` style capsules). For HTTP resource design and versioning policy, load `api-design-practices`.
+Application skill for JSON style. For HTTP resource design and versioning policy, load `api-and-interface-design`.
 
 ## Core Principle
 
@@ -24,10 +24,10 @@ JSON APIs are **strict JSON with predictable names and envelopes**, camelCase pr
 
 ## Workflow
 
-1. **Syntax**, quotes, camelCase, plural arrays, omit null (`json-style-syntax-properties.md`).
-2. **Types**, enums, dates, durations, geo (`json-style-types-formats.md`).
-3. **Envelope**, apiVersion, data/error, kind/items ordering (`json-style-envelope-errors.md`).
-4. **Maps & paging**, map docs, paging links, ordering (`json-style-maps-paging.md`).
+1. **Syntax**, quotes, camelCase, plural arrays, omit null.
+2. **Types**, enums, dates, durations, geo.
+3. **Envelope**, apiVersion, data/error, kind/items ordering.
+4. **Maps & paging**, map docs, paging links, ordering.
 5. **Verify**, JSON parse + schema/OpenAPI validation on fixtures and samples.
 
 ## Red Flags
@@ -45,13 +45,3 @@ JSON APIs are **strict JSON with predictable names and envelopes**, camelCase pr
 - `jq` / `python -m json.tool` on fixtures
 - OpenAPI/JSON Schema validation
 - Contract tests for envelope + error shape
-- Capsule checklist on API review
-
-
-## References
-
-- `awesome-guidelines/references/json-style-learning-note.md`
-- `awesome-guidelines/references/json-style-syntax-properties.md`
-- `awesome-guidelines/references/json-style-types-formats.md`
-- `awesome-guidelines/references/json-style-envelope-errors.md`
-- `awesome-guidelines/references/json-style-maps-paging.md`

@@ -6,7 +6,7 @@ kind: playbook
 
 # Visual Basic Coding Practices
 
-Application skill for VB.NET style (archived `awesome-guidelines` capsules). Legacy VB6 Wikibooks Hungarian rules apply only when maintaining pre-.NET code.
+Application skill for VB.NET style. Legacy VB6 Wikibooks Hungarian rules apply only when maintaining pre-.NET code.
 
 ## Core Principle
 
@@ -24,10 +24,10 @@ VB.NET quality is **Framework-aligned naming plus Strict options and readable bl
 
 ## Workflow
 
-1. **Formatting**, indent, statements, comments (`vb-style-formatting-layout.md`).
-2. **Naming**, PascalCase/camelCase, `m_` fields (`vb-style-naming-types.md`).
-3. **Idioms**, options, Try/Catch, LINQ, events (`vb-style-idioms-control.md`).
-4. **Docs/verify**, XML docs, file layout, build (`vb-style-docs-verify.md`).
+1. **Formatting**, indent, statements, comments.
+2. **Naming**, PascalCase/camelCase, `m_` fields.
+3. **Idioms**, options, Try/Catch, LINQ, events.
+4. **Docs/verify**, XML docs, file layout, build.
 5. **Verify**, `dotnet build`, `dotnet format`, tests on changed projects.
 
 ## Red Flags
@@ -58,13 +58,3 @@ VB.NET quality is **Framework-aligned naming plus Strict options and readable bl
 - `dotnet format --verify-no-changes` when repo configures it
 - Option Strict/Explicit header on new/changed `.vb`
 - Public API XML doc spot-check
-- Capsule checklist on legacy-vs-.NET naming boundary
-
-
-## References
-
-- `awesome-guidelines/references/vb-style-learning-note.md`
-- `awesome-guidelines/references/vb-style-formatting-layout.md`
-- `awesome-guidelines/references/vb-style-naming-types.md`
-- `awesome-guidelines/references/vb-style-idioms-control.md`
-- `awesome-guidelines/references/vb-style-docs-verify.md`

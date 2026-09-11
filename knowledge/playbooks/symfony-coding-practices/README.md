@@ -6,7 +6,7 @@ kind: playbook
 
 # Symfony Coding Practices
 
-Application skill for Symfony official coding standards ingest (`awesome-guidelines`). Generic PHP: `php-coding-practices`. PSR layout overlap shared; Symfony adds Yoda, service ids, and exception prose rules.
+Application skill for Symfony official coding standards. Generic PHP: `php-coding-practices`. PSR layout overlap shared; Symfony adds Yoda, service ids, and exception prose rules.
 
 ## Core Principle
 
@@ -21,15 +21,15 @@ Symfony PHP reads uniformly, **PSR-12 via PHP CS Fixer**, **Yoda identical compa
 **NOT when:**
 
 - Generic PHP without Symfony conventions, `php-coding-practices`.
-- Laravel/WordPress-specific style, stack capsules in `knowledge/foundations`.
-- Runtime Symfony architecture (DI tags, events), framework docs/foundation.
+- Laravel/WordPress-specific style, the framework's own source or docs.
+- Runtime Symfony architecture (DI tags, events), framework docs.
 
 ## Workflow
 
-1. **Structure**, spacing, Yoda, control flow, class order (`symfony-style-structure-control.md`).
-2. **Naming/services**, case matrix, FQCN ids (`symfony-style-naming-services.md`).
-3. **PHPDoc/errors**, docs, exceptions, license (`symfony-style-phpdoc-exceptions.md`).
-4. **Verify**, PHP CS Fixer + tests (`symfony-style-verify.md`).
+1. **Structure**, spacing, Yoda, control flow, class order.
+2. **Naming/services**, case matrix, FQCN ids.
+3. **PHPDoc/errors**, docs, exceptions, license.
+4. **Verify**, PHP CS Fixer + tests.
 
 ## Red Flags
 
@@ -57,19 +57,10 @@ Symfony PHP reads uniformly, **PSR-12 via PHP CS Fixer**, **Yoda identical compa
 - PHPUnit on touched components
 - License header on new files
 - debug:container for new service ids
-- Capsule checklist on exceptions and Yoda compares
 
-
-## References
-
-- `awesome-guidelines/references/symfony-style-learning-note.md`
-- `awesome-guidelines/references/symfony-style-structure-control.md`
-- `awesome-guidelines/references/symfony-style-naming-services.md`
-- `awesome-guidelines/references/symfony-style-phpdoc-exceptions.md`
-- `awesome-guidelines/references/symfony-style-verify.md`
 
 ## Related skills
 
 - `php-coding-practices`, PSR-12, strict_types, DI baseline
-- `api-design-practices`, HTTP API adjacent to Symfony routes
+- `api-and-interface-design`, HTTP API adjacent to Symfony routes
 - `webappsec-coding-practices`, web security on Symfony apps

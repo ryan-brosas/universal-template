@@ -6,7 +6,7 @@ kind: playbook
 
 # Linux Kernel C Coding Practices
 
-Application skill for kernel coding-style (archived `awesome-guidelines` capsules). For GNU userspace C, load `gnu-c-coding-practices`. Generic portable C: `c-coding-practices`. Apache httpd: `httpd-c-coding-practices`.
+Application skill for kernel coding-style. For GNU userspace C, load `gnu-c-coding-practices`. Generic portable C: `c-coding-practices`. Apache httpd: `httpd-c-coding-practices`.
 
 ## Core Principle
 
@@ -25,10 +25,10 @@ Kernel C quality is **checkpatch-clean tab layout and maintainable control flow*
 
 ## Workflow
 
-1. **Indent/braces**, tabs, 80 cols, switch alignment (`linux-kernel-style-indent-braces.md`).
-2. **Naming/types**, pointers, typedefs, terminology (`linux-kernel-style-naming-types.md`).
-3. **Functions/goto**, size, prototypes, cleanup (`linux-kernel-style-functions-goto.md`).
-4. **Macros/verify**, kernel-doc, alloc, checkpatch (`linux-kernel-style-macros-verify.md`).
+1. **Indent/braces**, tabs, 80 cols, switch alignment.
+2. **Naming/types**, pointers, typedefs, terminology.
+3. **Functions/goto**, size, prototypes, cleanup.
+4. **Macros/verify**, kernel-doc, alloc, checkpatch.
 5. **Verify**, `./scripts/checkpatch.pl --strict` on changed files/patch; build + `make` targets for subsystem.
 
 ## Red Flags
@@ -57,16 +57,7 @@ Kernel C quality is **checkpatch-clean tab layout and maintainable control flow*
 - `./scripts/checkpatch.pl --strict --file <changed.c>` (or on `.patch`)
 - Optional `scripts/Lindent` on touched C (separate cleanup commit if mass reformat)
 - Subsystem `make` / `make CHECK=1` / `kselftest` as applicable
-- Capsule probes on new gotos, exports, and alloc calls
 
-
-## References
-
-- `awesome-guidelines/references/linux-kernel-style-learning-note.md`
-- `awesome-guidelines/references/linux-kernel-style-indent-braces.md`
-- `awesome-guidelines/references/linux-kernel-style-naming-types.md`
-- `awesome-guidelines/references/linux-kernel-style-functions-goto.md`
-- `awesome-guidelines/references/linux-kernel-style-macros-verify.md`
 
 ## Related skills
 

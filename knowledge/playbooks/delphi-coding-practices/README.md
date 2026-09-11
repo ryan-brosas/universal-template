@@ -6,7 +6,7 @@ kind: playbook
 
 # Delphi Coding Practices
 
-Application skill for Delphi/Object Pascal style learning (from the archived `awesome-guidelines` style capsules). Follow Embarcadero baseline; apply DelphiStandards namespace rules when project adopts them.
+Application skill for Delphi/Object Pascal style. Follow Embarcadero baseline; apply DelphiStandards namespace rules when project adopts them.
 
 ## Core Principle
 
@@ -24,10 +24,10 @@ Delphi quality is **PascalCase clarity + unit hierarchy + deterministic cleanup*
 
 ## Workflow
 
-1. **Layout**, indent, begin/end, whitespace (`delphi-style-formatting-layout.md`).
-2. **Naming**, T/I/E/F/A/L, PascalCase (`delphi-style-naming-types.md`).
-3. **Units**, hierarchy, uses, structure (`delphi-style-units-structure.md`).
-4. **Resources**, try/finally, except, docs (`delphi-style-resources-errors.md`).
+1. **Layout**, indent, begin/end, whitespace.
+2. **Naming**, T/I/E/F/A/L, PascalCase.
+3. **Units**, hierarchy, uses, structure.
+4. **Resources**, try/finally, except, docs.
 5. **Verify**, compile, formatter, tests on changed units.
 
 ## Red Flags
@@ -48,13 +48,3 @@ Delphi quality is **PascalCase clarity + unit hierarchy + deterministic cleanup*
 - IDE formatter / `.editorconfig` indent=2
 - DUnit/DUnitX or project test runner
 - XML documentation compile (if enabled)
-- Capsule checklist on new units
-
-
-## References
-
-- `awesome-guidelines/references/delphi-style-learning-note.md`
-- `awesome-guidelines/references/delphi-style-formatting-layout.md`
-- `awesome-guidelines/references/delphi-style-naming-types.md`
-- `awesome-guidelines/references/delphi-style-units-structure.md`
-- `awesome-guidelines/references/delphi-style-resources-errors.md`

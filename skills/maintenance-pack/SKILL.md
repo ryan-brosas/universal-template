@@ -25,4 +25,4 @@ planning infrastructure as a prerequisite.
 
 All maintained procedures are in [this index](references/topics.md). Ordinary
 planning stays in the conversation unless a durable artifact is requested or
-has a concrete recovery need. Source evidence remains in foundation-pack.
+has a concrete recovery need. Source evidence is read directly from the repository in question.

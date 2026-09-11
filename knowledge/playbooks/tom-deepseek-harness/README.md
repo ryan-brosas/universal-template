@@ -18,13 +18,12 @@ One source checkout, two planes: edit and run `$DSH_SOURCE_CHECKOUT` as the sour
 ## When to Use / NOT
 
 - **Use when:** working on Tom's DeepSeek Harness source checkout, updating from Tom's remote, editing safely, building, running the source web app.
-- **NOT when:** doing normal work with the installed `dsh` distribution (that is the installed plane, not source work), or repairing OpenViking (a separate workflow per the Two-plane rule).
+- **NOT when:** doing normal work with the installed `dsh` distribution (that is the installed plane, not source work).
 
 ## Two-plane rule
 
 - **Source plane:** edit and run `$DSH_SOURCE_CHECKOUT` with `pnpm dsh web`.
 - **Installed plane:** the global `dsh` remains the stable installed distribution. Do not replace it with a local build while source work is in progress.
-- OpenViking repairs are a separate workflow; do not change its service or Python environment as part of a harness edit unless explicitly requested.
 
 ## Workflow
 

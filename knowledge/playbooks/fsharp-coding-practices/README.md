@@ -6,7 +6,7 @@ kind: playbook
 
 # F# Coding Practices
 
-Application skill for F# component design learning (from the archived `awesome-guidelines` style capsules). When targeting C# consumers, prioritize vanilla.NET API rules over F#-only idioms on the public surface.
+Application skill for F# component design. When targeting C# consumers, prioritize vanilla.NET API rules over F#-only idioms on the public surface.
 
 ## Core Principle
 
@@ -24,10 +24,10 @@ F# library quality is **audience-shaped APIs**, F#-facing modules and unions int
 
 ## Workflow
 
-1. **Names & docs**,.NET casing, `///` XML, `.fsi` if stable (`fsharp-style-naming-documentation.md`).
-2. **Modules & types**, encapsulation, DUs, interfaces (`fsharp-style-modules-types.md`).
-3. **Functions & async**, Async naming, extensions, constraints (`fsharp-style-functions-async.md`).
-4. **Interop**, Func, IEnumerable, Task, null guards (`fsharp-style-dotnet-interop.md`).
+1. **Names & docs**,.NET casing, `///` XML, `.fsi` if stable.
+2. **Modules & types**, encapsulation, DUs, interfaces.
+3. **Functions & async**, Async naming, extensions, constraints.
+4. **Interop**, Func, IEnumerable, Task, null guards.
 5. **Verify**, Fantomas, `dotnet build`, optional C# consumer compile check on public API.
 
 ## Red Flags
@@ -51,13 +51,3 @@ F# library quality is **audience-shaped APIs**, F#-facing modules and unions int
 - `dotnet format` / Fantomas check (project config)
 - `dotnet build` with XML documentation warnings as errors (if enabled)
 - Reflect or C# snippet compile against public API
-- Capsule checklist on F#-facing vs vanilla.NET audience
-
-
-## References
-
-- `awesome-guidelines/references/fsharp-style-learning-note.md`
-- `awesome-guidelines/references/fsharp-style-naming-documentation.md`
-- `awesome-guidelines/references/fsharp-style-modules-types.md`
-- `awesome-guidelines/references/fsharp-style-functions-async.md`
-- `awesome-guidelines/references/fsharp-style-dotnet-interop.md`

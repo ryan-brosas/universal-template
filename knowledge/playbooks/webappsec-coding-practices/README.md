@@ -6,7 +6,7 @@ kind: playbook
 
 # WebAppSec Secure Coding Practices
 
-Application skill for Mozilla WebAppSec Secure Coding Guidelines + QA checklist ingest (`awesome-guidelines`). General security baseline: `security-and-hardening`. Accessibility overlap: `wcag-accessibility-practices`.
+Application skill for Mozilla WebAppSec Secure Coding Guidelines + QA checklist. General security baseline: `security-and-hardening`. Accessibility overlap: `wcag-accessibility-practices`.
 
 ## Core Principle
 
@@ -61,14 +61,6 @@ Secure web apps **validate all request data**, **encode at output boundaries**, 
 - Upload test cases (extension spoof, archive size)
 - Pair with `npm audit`/dependency check from `security-and-hardening`
 
-
-## References
-
-- `awesome-guidelines/references/webappsec-style-learning-note.md`
-- `awesome-guidelines/references/webappsec-auth-session.md`
-- `awesome-guidelines/references/webappsec-input-output.md`
-- `awesome-guidelines/references/webappsec-cross-domain-transport.md`
-- `awesome-guidelines/references/webappsec-uploads-errors-verify.md`
 
 ## Related skills
 

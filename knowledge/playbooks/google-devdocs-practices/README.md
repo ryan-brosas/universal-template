@@ -6,7 +6,7 @@ kind: playbook
 
 # Google Developer Documentation Practices
 
-Application skill for Google developer documentation style guide (archived `awesome-guidelines` capsules). For repo Markdown mechanics, load `markdown-writing-practices`. For MDN ``` code blocks, load `mdn-code-examples-practices`. For marketing voice, load `mailchimp-content-practices`.
+Application skill for Google developer documentation style guide. For repo Markdown mechanics, load `markdown-writing-practices`. For MDN ``` code blocks, load `mdn-code-examples-practices`. For marketing voice, load `mailchimp-content-practices`.
 
 ## Core Principle
 
@@ -25,10 +25,10 @@ Google devdoc quality is **you-focused clarity built for translation**, active c
 
 ## Workflow
 
-1. **Voice/person**, you, active, no please (`google-devdocs-style-voice-person.md`).
-2. **Format/headings**, sentence case, bold UI, code font (`google-devdocs-style-format-headings.md`).
-3. **Procedures/links**, numbered steps, cross-refs (`google-devdocs-style-procedures-links.md`).
-4. **Accessibility/global**, alt text, i18n wording (`google-devdocs-style-accessibility-global.md`).
+1. **Voice/person**, you, active, no please.
+2. **Format/headings**, sentence case, bold UI, code font.
+3. **Procedures/links**, numbered steps, cross-refs.
+4. **Accessibility/global**, alt text, i18n wording.
 5. **Verify**, heading outline; link text out-of-context test; please/click here grep; term consistency scan.
 
 ## Red Flags
@@ -65,14 +65,6 @@ Google devdoc quality is **you-focused clarity built for translation**, active c
 - Optional: accessibility lint (alt, heading order) on rendered HTML
 - Cross-check project-specific style overrides first in reference hierarchy
 
-
-## References
-
-- `awesome-guidelines/references/google-devdocs-style-learning-note.md`
-- `awesome-guidelines/references/google-devdocs-style-voice-person.md`
-- `awesome-guidelines/references/google-devdocs-style-format-headings.md`
-- `awesome-guidelines/references/google-devdocs-style-procedures-links.md`
-- `awesome-guidelines/references/google-devdocs-style-accessibility-global.md`
 
 ## Related skills
 

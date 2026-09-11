@@ -33,12 +33,12 @@ the whole catalog or copy its rules into a new checklist.
   tools and use `../mcp-steroid/README.md`. Confirm the correct project and ready
   index, inspect changed symbols and consumers, and review targeted diagnostics.
   Do not silently apply broad quick-fixes or treat inspections as tests.
-- **Graph review:** use the active working-set graph when available. For an
-  existing Codebase Memory index, load `../codebase-memory/README.md`, confirm
-  repository/revision and coverage, then trace affected callers and dependencies.
-  Confirm findings in current source. A stale or partial index cannot prove
-  absence of callers. Do not create, rebuild or delete indexes without the
-  authorization required by that skill. Use source search and tests as fallback.
+- **Cross-repo source:** when the change affects a seam shared with another
+  repository, use `../cross-repo-source/README.md` to locate the counterpart and
+  trace affected callers or dependencies, then confirm findings in current
+  source. An index snapshot is not live, so a search miss cannot prove absence
+  of callers. The active project's source, IDE and tests remain the primary
+  evidence.
 - **AI-slop rejection:** run the project's objective artifact gate when present.
   Review the actual diff for competing owners, unnecessary abstractions,
   speculative fallbacks, swallowed errors, vacuous tests, unrelated churn and

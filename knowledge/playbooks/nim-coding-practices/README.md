@@ -6,7 +6,7 @@ kind: playbook
 
 # Nim Coding Practices
 
-Application skill for NEP-1 style learning (from the archived `awesome-guidelines` style capsules). For legacy codebases with non-NEP spellings, prefer `--styleCheck:usages` over full NEP-1 enforcement until migrated.
+Application skill for NEP-1 style. For legacy codebases with non-NEP spellings, prefer `--styleCheck:usages` over full NEP-1 enforcement until migrated.
 
 ## Core Principle
 
@@ -24,10 +24,10 @@ Nim library quality is **guessable names + mechanical layout**, PascalCase types
 
 ## Workflow
 
-1. **Layout**, 2-space, 80 cols, multiline breaks (`nim-style-formatting-layout.md`).
-2. **Naming/types**, PascalCase, enums, init/new (`nim-style-naming-types.md`).
-3. **Procedures**, result, let, API verbs (`nim-style-procedures-api.md`).
-4. **Modules/verify**, std imports, styleCheck (`nim-style-modules-verify.md`).
+1. **Layout**, 2-space, 80 cols, multiline breaks.
+2. **Naming/types**, PascalCase, enums, init/new.
+3. **Procedures**, result, let, API verbs.
+4. **Modules/verify**, std imports, styleCheck.
 5. **Verify**, `nim c --styleCheck:error`, tests on changed modules.
 
 ## Red Flags
@@ -55,13 +55,3 @@ Nim library quality is **guessable names + mechanical layout**, PascalCase types
 - `nim c --styleCheck:error [--styleCheck:usages] <files>`
 - Project test command (`nim test`, testament, nimble task)
 - 80-column and 2-space spot check on changed hunks
-- Capsule checklist on public API naming (`fileExists`, `initFoo`, `newFoo`)
-
-
-## References
-
-- `awesome-guidelines/references/nim-style-learning-note.md`
-- `awesome-guidelines/references/nim-style-formatting-layout.md`
-- `awesome-guidelines/references/nim-style-naming-types.md`
-- `awesome-guidelines/references/nim-style-procedures-api.md`
-- `awesome-guidelines/references/nim-style-modules-verify.md`

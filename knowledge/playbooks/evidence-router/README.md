@@ -1,37 +1,26 @@
----
-title: evidence-router
-summary: Use when choosing an unfamiliar external evidence source and project source or references are insufficient — cold capability map for MCPs, references, and web.
-kind: playbook
----
-
 # Evidence capability map
 
-Cold reference. **Evidence priority:** current project source/tests → project
-`reference/` / `reference/web/` when relevant → one applicable capsule reached
-through `../../../skills/foundation-pack/SKILL.md`, or an operational skill on a named gap →
-external source/docs/web only for that gap. No fixed tool chain.
+Cold reference. Resolve code questions from the nearest sufficient evidence; no
+tool is a mandatory first step.
+
+**Default:** the current project's source and tests, using the tools the host
+already has — filesystem search, Git, IDE/LSP, compiler and test output.
 
 | Need | Capability |
 |---|---|
-| Active or owned repo orientation / neighborhoods | Direct source + Fovea (`fovea_sketch` → `fovea_focus` → `fovea_dwell`) |
-| IDE-aware types / semantic refactor | `ide` profile: MCP Steroid / JetBrains (`steroid_*`) + source |
+| Local project orientation, known file/symbol | Direct source, Git, IDE/LSP (`fovea_*` when available) |
+| Cross-repository or architectural question | Indexed source (Sourcebot profile `cross-repo-source`): `list_repos` → `grep`/`glob`/`find_symbol_*` → `read_file`/`list_commits` |
+| Implementation outside the indexed corpus | GitHub or equivalent source discovery, then read the actual source |
+| Current library/framework behavior | installed source, official docs, or Context7 |
 | Runtime behavior | tests, debugger, runtime output |
-| Named inspiration repo | project `reference/<repo>/` + source/tests |
-| Live site capture | `reference/web/<site>/` or `web-reference` |
-| Stack patterns from prior implementations | `knowledge/foundations` + cited source |
-| Code graph / cross-repo pattern index | `code-graph` profile: Codebase Memory → verify candidate in source |
-| Past attempts / lessons | Project-scoped session history (`/recall-session`); OpenViking only as an optional rebuildable cache |
-| Current library docs | official docs / Context7 |
+| IDE-aware types / semantic refactor of the active project | `ide` profile: MCP Steroid / JetBrains (`steroid_*`) |
+| Live site capture / browser | `reference/web/<site>/` or CDP |
+| Past attempts / lessons | project-scoped session history (`/recall-session`) |
 | External facts / advisories | Exa or read-only fetch |
-| GitHub repo overview | DeepWiki → repository |
 
 Name one uncertainty, select its primary source, and escalate only when that
-source is insufficient. Model output is not evidence until verified against
-source/tests/runtime. MCP capabilities are selected per task from
-`../../../mcp/profiles.json`; each profile selects at most one server and `minimal`
-connects none. For execution or model escalation, see `execution-router` and
-`model-resolution`.
-
-## References
-
-- `references/openviking.md`, retrieval, capture, and degraded-path boundaries
+source is insufficient. Indexed results and model output are evidence, not
+authority: confirm exact code before editing or making exhaustive claims. MCP
+capabilities are selected per task from `../../../mcp/profiles.json`; each profile
+selects at most one server and `minimal` connects none. For execution or model
+escalation, see `execution-router` and `model-resolution`.

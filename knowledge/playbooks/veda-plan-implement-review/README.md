@@ -228,4 +228,4 @@ The diff is in selection (`sel ls` shows it); the reviewer ends with `review: pa
 
 ## References
 
-No reference capsules, the skill is self-contained.
+No separate references; the skill is self-contained.

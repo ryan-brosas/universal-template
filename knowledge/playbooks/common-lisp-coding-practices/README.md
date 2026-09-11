@@ -6,7 +6,7 @@ kind: playbook
 
 # Common Lisp Coding Practices
 
-Application skill for Common Lisp style learning (from the archived `awesome-guidelines` style capsules). For Emacs Lisp, use `emacs-lisp-coding-practices` when ingested.
+Application skill for Common Lisp style. For Emacs Lisp, use `emacs-lisp-coding-practices`.
 
 ## Core Principle
 
@@ -24,10 +24,10 @@ Common Lisp quality is **idiomatic names + explicit packages + documented CLOS**
 
 ## Workflow
 
-1. **Format & files**, indent, columns, headers (`lisp-style-formatting-files.md`).
-2. **Naming**, lisp-case, *, +, predicates (`lisp-style-naming-symbols.md`).
-3. **Packages**, defpackage, ASDF (`lisp-style-packages-systems.md`).
-4. **CLOS & control**, classes, when/unless (`lisp-style-clos-control.md`).
+1. **Format & files**, indent, columns, headers.
+2. **Naming**, lisp-case, *, +, predicates.
+3. **Packages**, defpackage, ASDF.
+4. **CLOS & control**, classes, when/unless.
 5. **Verify**, load/test system; SBCL `(declaim (optimize ...))` policy; review exports.
 
 ## Red Flags
@@ -47,13 +47,3 @@ Common Lisp quality is **idiomatic names + explicit packages + documented CLOS**
 - `asdf:test-system` / project test script
 - SBCL compile with project warning policy
 - SLIME/common-lisp-indent style check
-- Capsule checklist on package export list
-
-
-## References
-
-- `awesome-guidelines/references/lisp-style-learning-note.md`
-- `awesome-guidelines/references/lisp-style-formatting-files.md`
-- `awesome-guidelines/references/lisp-style-naming-symbols.md`
-- `awesome-guidelines/references/lisp-style-packages-systems.md`
-- `awesome-guidelines/references/lisp-style-clos-control.md`

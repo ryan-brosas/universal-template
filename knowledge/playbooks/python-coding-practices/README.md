@@ -6,7 +6,7 @@ kind: playbook
 
 # Python Coding Practices
 
-Application skill for Python style learning (from the archived `awesome-guidelines` style capsules). For framework-specific patterns, load the stack capsules in `knowledge/foundations`.
+Application skill for Python style. For framework-specific patterns, consult the framework's own source or docs.
 
 ## Core Principle
 
@@ -21,15 +21,15 @@ need behavioral review, not just a style check.
 
 **NOT when:**
 
-- Stack-specific rules dominate (Django ORM, Pydantic models, etc.), load `knowledge/foundations`.
+- Stack-specific rules dominate (Django ORM, Pydantic models, etc.), consult the framework's own source or docs.
 - Non-Python code.
 
 ## Workflow
 
-1. **Format**, 4 spaces, grouped imports, project line length (`python-style-layout-imports.md`).
-2. **Name**, public vs `_` internal; `CapWords` classes; `.py` filenames (`python-style-naming-modules.md`).
-3. **Errors**, narrow `raise`/`except`; debug-only `assert`; idiomatic `is None`/empty seq (`python-style-exceptions-truthiness.md`).
-4. **API surface**, no mutable defaults; type public functions; `main()` guard (`python-style-defaults-types-main.md`).
+1. **Format**, 4 spaces, grouped imports, project line length.
+2. **Name**, public vs `_` internal; `CapWords` classes; `.py` filenames.
+3. **Errors**, narrow `raise`/`except`; debug-only `assert`; idiomatic `is None`/empty seq.
+4. **API surface**, no mutable defaults; type public functions; `main()` guard.
 5. **Verify**, use configured formatter/lint/typecheck commands on changed paths;
    do not introduce Ruff, Black, or a typechecker merely to run this checklist.
 
@@ -45,13 +45,3 @@ need behavioral review, not just a style check.
 
 - `ruff check`, formatter check, `mypy`/`pyright` on public package (project commands).
 - Import module without env/network side effects.
-- Capsule checklist on review.
-
-
-## References
-
-- `awesome-guidelines/references/python-style-learning-note.md`
-- `awesome-guidelines/references/python-style-layout-imports.md`
-- `awesome-guidelines/references/python-style-naming-modules.md`
-- `awesome-guidelines/references/python-style-exceptions-truthiness.md`
-- `awesome-guidelines/references/python-style-defaults-types-main.md`

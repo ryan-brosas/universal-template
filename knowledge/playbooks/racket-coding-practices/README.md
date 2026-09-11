@@ -6,7 +6,7 @@ kind: playbook
 
 # Racket Coding Practices
 
-Application skill for official Racket style learning (from the archived `awesome-guidelines` style capsules). Scribble and Typed Racket files follow guide exceptions noted in upstream docs.
+Application skill for official Racket style. Scribble and Typed Racket files follow guide exceptions noted in upstream docs.
 
 ## Core Principle
 
@@ -24,10 +24,10 @@ Racket quality is **DrRacket-readable text + explicit module contracts**, kebab-
 
 ## Workflow
 
-1. **Textual**, indent, parens, width (`racket-style-formatting-textual.md`).
-2. **Naming/constructs**, kebab-case, define/cond/for (`racket-style-naming-constructs.md`).
-3. **Modules**, provide, contracts, size (`racket-style-modules-contracts.md`).
-4. **Testing**, rackunit, handlers (`racket-style-testing-verify.md`).
+1. **Textual**, indent, parens, width.
+2. **Naming/constructs**, kebab-case, define/cond/for.
+3. **Modules**, provide, contracts, size.
+4. **Testing**, rackunit, handlers.
 5. **Verify**, DrRacket indent-all, `raco test` on changed files.
 
 ## Red Flags
@@ -68,13 +68,3 @@ Racket quality is **DrRacket-readable text + explicit module contracts**, kebab-
 - `raco test path/to/changed.rkt` (or package test suite)
 - provide/contract-out audit on new exports
 - Handler predicate precision review
-- Capsule checklist on kebab-case + top-down module layout
-
-
-## References
-
-- `awesome-guidelines/references/racket-style-learning-note.md`
-- `awesome-guidelines/references/racket-style-formatting-textual.md`
-- `awesome-guidelines/references/racket-style-naming-constructs.md`
-- `awesome-guidelines/references/racket-style-modules-contracts.md`
-- `awesome-guidelines/references/racket-style-testing-verify.md`

@@ -245,4 +245,4 @@ Exit 0 with a well-formed `report.yaml` (`status`, `whatWasImplemented`, `verifi
 
 ## References
 
-No reference capsules, the skill is self-contained.
+No separate references; the skill is self-contained.

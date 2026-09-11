@@ -6,7 +6,7 @@ kind: playbook
 
 # Vue Coding Practices
 
-Application skill for official Vue Style Guide ingest (`awesome-guidelines`). Generic JS: `javascript-coding-practices`. a11y: `wcag-accessibility-practices`. HTML/CSS: `frontend-markup-practices`.
+Application skill for official Vue Style Guide. Generic JS: `javascript-coding-practices`. a11y: `wcag-accessibility-practices`. HTML/CSS: `frontend-markup-practices`.
 
 ## Core Principle
 
@@ -19,16 +19,16 @@ Vue maintainability is **tiered style guide discipline**, Priority A prevents er
 
 **NOT when:**
 
-- React/Svelte, use stack capsules in `knowledge/foundations`.
+- React/Svelte, use the framework's own source or docs.
 - Pure JS utilities outside Vue, `javascript-coding-practices`.
-- Full app architecture (Pinia routing), Vue/Pinia foundation docs.
+- Full app architecture (Pinia routing), Vue/Pinia source or docs.
 
 ## Workflow
 
-1. **Essential (A)**, names, props, keys, styles (`vue-style-essential-errors.md`).
-2. **Naming/files (B)**, component tree conventions (`vue-style-components-naming.md`).
-3. **Templates (B/C)**, expressions, order, shorthands (`vue-style-templates-composition.md`).
-4. **Caution/verify (D)**, props/events, eslint (`vue-style-caution-verify.md`).
+1. **Essential (A)**, names, props, keys, styles.
+2. **Naming/files (B)**, component tree conventions.
+3. **Templates (B/C)**, expressions, order, shorthands.
+4. **Caution/verify (D)**, props/events, eslint.
 
 ## Red Flags
 
@@ -55,16 +55,7 @@ Vue maintainability is **tiered style guide discipline**, Priority A prevents er
 - vue-tsc / volar typecheck if TypeScript
 - Vitest component tests on changed behavior
 - Manual v-for key and scoped style spot check
-- Capsule probes cited in review notes
 
-
-## References
-
-- `awesome-guidelines/references/vue-style-learning-note.md`
-- `awesome-guidelines/references/vue-style-essential-errors.md`
-- `awesome-guidelines/references/vue-style-components-naming.md`
-- `awesome-guidelines/references/vue-style-templates-composition.md`
-- `awesome-guidelines/references/vue-style-caution-verify.md`
 
 ## Related skills
 

@@ -6,7 +6,7 @@ kind: playbook
 
 # Kotlin Coding Practices
 
-Application skill for Kotlin style learning (from the archived `awesome-guidelines` style capsules). For Android/Compose/KMP stack patterns, load stack capsules in `knowledge/foundations`.
+Application skill for Kotlin style. For Android/Compose/KMP stack patterns, load the framework's own source or docs.
 
 ## Core Principle
 
@@ -21,14 +21,14 @@ Kotlin readability is **official formatter mechanics plus immutability-first idi
 
 - Non-Kotlin code.
 - Generated code, validate generators, not hand-edits.
-- Compose/Android-only rules, use Android style guide / foundation when stack is Android.
+- Compose/Android-only rules, load `android-coding-practices` when the stack is Android.
 
 ## Workflow
 
-1. **Format & layout**, 4-space, braces, modifiers, trailing commas (`kotlin-style-formatting-layout.md`).
-2. **Naming & files**, packages, files, constants, backing props (`kotlin-style-naming-files.md`).
-3. **Organization**, directories, class layout, overloads (`kotlin-style-organization-classes.md`).
-4. **Idioms & API**, val, defaults, expression control flow, library KDoc (`kotlin-style-idioms-api.md`).
+1. **Format & layout**, 4-space, braces, modifiers, trailing commas.
+2. **Naming & files**, packages, files, constants, backing props.
+3. **Organization**, directories, class layout, overloads.
+4. **Idioms & API**, val, defaults, expression control flow, library KDoc.
 5. **Verify**, ktlint/detekt + `./gradlew check` (or project equivalent) on changed modules.
 
 ## Red Flags
@@ -46,13 +46,3 @@ Kotlin readability is **official formatter mechanics plus immutability-first idi
 
 - ktlint/detekt on changed files
 - Compile + tests for touched modules
-- Capsule checklist on public API review
-
-
-## References
-
-- `awesome-guidelines/references/kotlin-style-learning-note.md`
-- `awesome-guidelines/references/kotlin-style-formatting-layout.md`
-- `awesome-guidelines/references/kotlin-style-naming-files.md`
-- `awesome-guidelines/references/kotlin-style-organization-classes.md`
-- `awesome-guidelines/references/kotlin-style-idioms-api.md`

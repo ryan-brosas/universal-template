@@ -6,7 +6,7 @@ kind: playbook
 
 # Groovy Coding Practices
 
-Application skill for Groovy style learning (from the archived `awesome-guidelines` style capsules). For Grails-specific conventions, combine with stack capsules in `knowledge/foundations` and project CodeNarc rulesets.
+Application skill for Groovy style. For Grails-specific conventions, combine with the framework's own source or docs and project CodeNarc rulesets.
 
 ## Core Principle
 
@@ -24,10 +24,10 @@ Groovy quality is **idiomatic expressiveness with typed public seams**, GDK and 
 
 ## Workflow
 
-1. **Syntax**, semicolons, def, parens, strings (`groovy-style-syntax-idioms.md`).
-2. **Objects**, POGOs, with/tap, equality (`groovy-style-objects-properties.md`).
-3. **Collections**, GDK, truth, nav (`groovy-style-collections-gdk.md`).
-4. **API**, public typing, assert (`groovy-style-typing-api.md`).
+1. **Syntax**, semicolons, def, parens, strings.
+2. **Objects**, POGOs, with/tap, equality.
+3. **Collections**, GDK, truth, nav.
+4. **API**, public typing, assert.
 5. **Verify**, CodeNarc/npm-groovy-lint, compile, tests on changed sources.
 
 ## Red Flags
@@ -51,13 +51,3 @@ Groovy quality is **idiomatic expressiveness with typed public seams**, GDK and 
 - CodeNarc / npm-groovy-lint (project ruleset)
 - `./gradlew compileGroovy` or project build
 - Spock/JUnit tests on changed modules
-- Capsule checklist on public method signatures
-
-
-## References
-
-- `awesome-guidelines/references/groovy-style-learning-note.md`
-- `awesome-guidelines/references/groovy-style-syntax-idioms.md`
-- `awesome-guidelines/references/groovy-style-objects-properties.md`
-- `awesome-guidelines/references/groovy-style-collections-gdk.md`
-- `awesome-guidelines/references/groovy-style-typing-api.md`

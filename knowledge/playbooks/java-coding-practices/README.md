@@ -6,12 +6,12 @@ kind: playbook
 
 # Java Coding Practices
 
-Application skill for Java style learning (from the archived `awesome-guidelines` style capsules). For Spring/Jakarta/EE patterns, load stack capsules in `knowledge/foundations`.
+Application skill for Java style. For Spring/Jakarta/EE patterns, load the framework's own source or docs.
 
 ## Core Principle
 
-Follow the project formatter and API conventions. Google formatting is one
-source-specific choice, not a reason to reformat an unrelated change. Review
+Follow the project formatter and API conventions. Google formatting is one choice
+among valid project conventions, not a reason to reformat an unrelated change. Review
 exception handling for lost failures and intentional recovery.
 
 ## When to Use / NOT
@@ -27,10 +27,10 @@ exception handling for lost failures and intentional recovery.
 ## Workflow
 
 1. **Format & imports**, use project settings. Google's 2-space/100-column and
-   import rules apply when adopted (`java-style-formatting-imports.md`).
-2. **Naming**, camelCase algorithm, constants discipline (`java-style-naming-types.md`).
-3. **Practices**, `@Override`, catches, static qualify, null-safe equals (`java-style-exceptions-practices.md`).
-4. **Docs**, Javadoc on public/protected API (`java-style-javadoc-public-api.md`).
+   import rules apply when adopted.
+2. **Naming**, camelCase algorithm, constants discipline.
+3. **Practices**, `@Override`, catches, static qualify, null-safe equals.
+4. **Docs**, Javadoc on public/protected API.
 5. **Verify**, formatter + Checkstyle (project rules) on changed paths.
 
 ## Red Flags
@@ -46,13 +46,3 @@ exception handling for lost failures and intentional recovery.
 
 - google-java-format / project formatter check
 - Checkstyle or equivalent on changed modules
-- Capsule checklist on public API review
-
-
-## References
-
-- `awesome-guidelines/references/java-style-learning-note.md`
-- `awesome-guidelines/references/java-style-formatting-imports.md`
-- `awesome-guidelines/references/java-style-naming-types.md`
-- `awesome-guidelines/references/java-style-exceptions-practices.md`
-- `awesome-guidelines/references/java-style-javadoc-public-api.md`

@@ -6,7 +6,7 @@ kind: playbook
 
 # Arduino Coding Practices
 
-Application skill for Arduino library + sketch guides (archived `awesome-guidelines` capsules). For portable C++ outside Arduino core, load `cpp-coding-practices`. Professional embedded without Arduino APIs: follow project RTOS/SDK docs.
+Application skill for Arduino library + sketch guides. For portable C++ outside Arduino core, load `cpp-coding-practices`. Professional embedded without Arduino APIs: follow project RTOS/SDK docs.
 
 ## Core Principle
 
@@ -25,10 +25,10 @@ Arduino quality is **beginner-first APIs and compile-ready packaging**, camelCas
 
 ## Workflow
 
-1. **API**, naming, read/write/begin, Stream, no pointer traps (`arduino-style-library-api.md`).
-2. **Structure**, guards, ctor vs begin, `_private` fields (`arduino-style-library-structure.md`).
-3. **Sketches**, setup/loop, camelCase, braces, AVR loop discipline (`arduino-style-sketch-code.md`).
-4. **Packaging**, keywords, examples, properties, compile (`arduino-style-packaging-verify.md`).
+1. **API**, naming, read/write/begin, Stream, no pointer traps.
+2. **Structure**, guards, ctor vs begin, `_private` fields.
+3. **Sketches**, setup/loop, camelCase, braces, AVR loop discipline.
+4. **Packaging**, keywords, examples, properties, compile.
 5. **Verify**, `arduino-cli compile` on example; hardware smoke if available.
 
 ## Red Flags
@@ -55,14 +55,6 @@ Arduino quality is **beginner-first APIs and compile-ready packaging**, camelCas
 - `keywords.txt` tab-separated spot check
 - Optional: compare API to Adafruit high-level wrapper pattern (one call → one user value)
 
-
-## References
-
-- `awesome-guidelines/references/arduino-style-learning-note.md`
-- `awesome-guidelines/references/arduino-style-library-api.md`
-- `awesome-guidelines/references/arduino-style-library-structure.md`
-- `awesome-guidelines/references/arduino-style-sketch-code.md`
-- `awesome-guidelines/references/arduino-style-packaging-verify.md`
 
 ## Related skills
 

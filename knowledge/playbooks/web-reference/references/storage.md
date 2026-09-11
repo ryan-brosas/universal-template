@@ -76,4 +76,4 @@ ADOPT / ADAPT / OMIT sections belong here when the project has decided how the r
 - Small structured bundles (REFERENCE.md, manifest, design JSON, selected screenshots) may be committed under project policy.
 - Raw archives stay out of Git by default: local, ignored, LFS, or an artifact store, per project decision. Inspect size before committing.
 - Crawler cache and temp files are discarded after normalization.
-- The reference contract lifecycle applies: project-local, read-only, disposable; captures do not promote to skills or foundations.
+- The reference contract lifecycle applies: project-local, read-only, disposable; captures do not promote to skills or template content.

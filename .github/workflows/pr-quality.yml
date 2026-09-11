@@ -39,6 +39,8 @@ jobs:
           {
             python3 knowledge/playbooks/pencil/scripts/test-verify-fidelity-manifest.py
             node --test knowledge/playbooks/cdp/sdk/recording-privacy.test.ts
+            python3 scripts/check-retired-paths.py --selftest
+            python3 scripts/check-retired-paths.py
             python3 scripts/pr-metadata.py --selftest
           } 2>&1 | tee /tmp/repository-contracts.log
 

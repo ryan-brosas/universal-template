@@ -4,15 +4,14 @@ Choose one matching procedure; its summary and body own the detailed contract.
 This is a routing index, not a reading list. Known procedure paths can be opened directly.
 
 - [cdp](../../../knowledge/playbooks/cdp/README.md)
-- [codebase-memory](../../../knowledge/playbooks/codebase-memory/README.md)
 - [codex-websearch](../../../knowledge/playbooks/codex-websearch/README.md)
+- [cross-repo-source](../../../knowledge/playbooks/cross-repo-source/README.md)
 - [evidence-router](../../../knowledge/playbooks/evidence-router/README.md)
 - [findata](../../../knowledge/playbooks/findata/README.md)
 - [gmaps](../../../knowledge/playbooks/gmaps/README.md)
 - [gnews](../../../knowledge/playbooks/gnews/README.md)
 - [grill-with-docs](../../../knowledge/playbooks/grill-with-docs/README.md)
 - [gsearch](../../../knowledge/playbooks/gsearch/README.md)
-- [inspo-qualify](../../../knowledge/playbooks/inspo-qualify/README.md)
 - [math-schema](../../../knowledge/playbooks/math-schema/README.md)
 - [mcp-steroid](../../../knowledge/playbooks/mcp-steroid/README.md)
 - [opensrc](../../../knowledge/playbooks/opensrc/README.md)

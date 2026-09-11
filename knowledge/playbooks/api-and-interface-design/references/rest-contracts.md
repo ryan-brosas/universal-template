@@ -30,17 +30,3 @@ version placement, or error envelopes.
   Do not invent legacy `X-RateLimit-*` headers where no such contract exists.
 - Choose versioning from compatibility needs; see `compatibility.md`. Neither
   `/v1/` nor an `api-version` query parameter is mandatory for every API.
-
-## Retained prior art
-
-These archived `awesome-guidelines` capsules preserve the Azure/Google learning
-that previously lived behind `api-design-practices`. They are source-specific
-options, not authority over a project's current standard. Recheck current upstream
-requirements before claiming conformance to either provider.
-
-- `../../awesome-guidelines/references/api-design-learning-note.md`
-- `../../awesome-guidelines/references/api-design-resource-names.md`
-- `../../awesome-guidelines/references/api-design-http-idempotency.md`
-- `../../awesome-guidelines/references/api-design-errors-machine-readable.md`
-- `../../awesome-guidelines/references/api-design-pagination-and-lists.md`
-- `../../awesome-guidelines/references/api-design-versioning-contract.md`

@@ -6,7 +6,7 @@ kind: playbook
 
 # Clojure Coding Practices
 
-Application skill for Clojure style learning (from the archived `awesome-guidelines` style capsules). For ClojureScript-specific tooling, follow project `shadow-cljs` / `cljs` conventions.
+Application skill for Clojure style. For ClojureScript-specific tooling, follow project `shadow-cljs` / `cljs` conventions.
 
 ## Core Principle
 
@@ -24,10 +24,10 @@ Clojure readability is **consistent layout + idiomatic expressions**, namespaces
 
 ## Workflow
 
-1. **Layout & ns**, indent, parens, `ns` hygiene (`clojure-style-layout-namespaces.md`).
-2. **Naming**, lisp-case, `?`, `!`, dynamics (`clojure-style-naming-types.md`).
-3. **Functions**, when/if-let, threading, arity (`clojure-style-functions-idioms.md`).
-4. **Data & safety**, collections, errors, macros (`clojure-style-data-safety.md`).
+1. **Layout & ns**, indent, parens, `ns` hygiene.
+2. **Naming**, lisp-case, `?`, `!`, dynamics.
+3. **Functions**, when/if-let, threading, arity.
+4. **Data & safety**, collections, errors, macros.
 5. **Verify**, cljfmt, clj-kondo, `clojure -M:test` on changed namespaces.
 
 ## Red Flags
@@ -48,13 +48,3 @@ Clojure readability is **consistent layout + idiomatic expressions**, namespaces
 - `cljfmt check` / project formatter
 - `clj-kondo --lint` on changed paths
 - `clojure -M:test` or `lein test` / `bb test`
-- Capsule checklist on namespace review
-
-
-## References
-
-- `awesome-guidelines/references/clojure-style-learning-note.md`
-- `awesome-guidelines/references/clojure-style-layout-namespaces.md`
-- `awesome-guidelines/references/clojure-style-naming-types.md`
-- `awesome-guidelines/references/clojure-style-functions-idioms.md`
-- `awesome-guidelines/references/clojure-style-data-safety.md`

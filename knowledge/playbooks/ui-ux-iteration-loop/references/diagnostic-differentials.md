@@ -1,6 +1,6 @@
 # Diagnostic Differentials for UI/UX Symptoms
 
-A behavior is not a diagnosis. Use this capsule when several psychology labels could explain the same observation. Record the observation without theory, list at least two plausible explanations, then run the cheapest probe that separates them.
+A behavior is not a diagnosis. Use this reference when several psychology labels could explain the same observation. Record the observation without theory, list at least two plausible explanations, then run the cheapest probe that separates them.
 
 | Observed symptom | Plausible explanations | Disambiguating probe | Avoid |
 |---|---|---|---|

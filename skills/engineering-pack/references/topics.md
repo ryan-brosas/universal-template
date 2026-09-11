@@ -5,7 +5,6 @@ This is a routing index, not a reading list. Known procedure paths can be opened
 
 - [agent-code-quality-gate](../../../knowledge/playbooks/agent-code-quality-gate/README.md)
 - [api-and-interface-design](../../../knowledge/playbooks/api-and-interface-design/README.md)
-- [awesome-guidelines](../../../knowledge/playbooks/awesome-guidelines/README.md)
 - [brainstorming](../../../knowledge/playbooks/brainstorming/README.md)
 - [code-cleanup](../../../knowledge/playbooks/code-cleanup/README.md)
 - [code-discipline](../../../knowledge/playbooks/code-discipline/README.md)

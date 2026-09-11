@@ -6,7 +6,7 @@ kind: playbook
 
 # C Coding Practices
 
-Application skill for C style learning (from the archived `awesome-guidelines` style capsules). For Linux kernel or GNU projects, follow tree-specific style (tabs, 80 cols) when documented locally.
+Application skill for C style. For Linux kernel or GNU projects, follow tree-specific style (tabs, 80 cols) when documented locally.
 
 ## Core Principle
 
@@ -24,10 +24,10 @@ C quality is **explicit scope, explicit control flow, explicit failures**, the l
 
 ## Workflow
 
-1. **Format & control**, K&R braces, Yoda `==`, switch default (`c-style-formatting-control.md`).
-2. **Naming**, snake_case, `g_`, pointers (`c-style-naming-types.md`).
-3. **Headers**, guards, extern/define split (`c-style-headers-modules.md`).
-4. **Macros & safety**, parenthesized macros, init-all, error checks (`c-style-macros-safety.md`).
+1. **Format & control**, K&R braces, Yoda `==`, switch default.
+2. **Naming**, snake_case, `g_`, pointers.
+3. **Headers**, guards, extern/define split.
+4. **Macros & safety**, parenthesized macros, init-all, error checks.
 5. **Verify**, compiler warnings (`-Wall -Wextra`), static analyzer on changed files.
 
 ## Red Flags
@@ -46,13 +46,3 @@ C quality is **explicit scope, explicit control flow, explicit failures**, the l
 - `clang -Wall -Wextra -Werror` (project policy)
 - cppcheck / Coverity / sparse on changed TUs
 - Link test: header included from multiple `.c` files without duplicate symbols
-- Capsule checklist on review
-
-
-## References
-
-- `awesome-guidelines/references/c-style-learning-note.md`
-- `awesome-guidelines/references/c-style-formatting-control.md`
-- `awesome-guidelines/references/c-style-naming-types.md`
-- `awesome-guidelines/references/c-style-headers-modules.md`
-- `awesome-guidelines/references/c-style-macros-safety.md`

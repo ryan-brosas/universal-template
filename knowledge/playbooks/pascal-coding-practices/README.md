@@ -6,7 +6,7 @@ kind: playbook
 
 # Pascal Coding Practices
 
-Application skill for classic Pascal style learning (from the archived `awesome-guidelines` style capsules). For Lazarus/LCL or Delphi VCL/Object Pascal, use `delphi-coding-practices` instead.
+Application skill for classic Pascal style. For Lazarus/LCL or Delphi VCL/Object Pascal, use `delphi-coding-practices` instead.
 
 ## Core Principle
 
@@ -24,10 +24,10 @@ Pascal library quality is **dialect-picked layout + ordered units**, declare FPC
 
 ## Workflow
 
-1. **Layout**, indent, begin/end, spacing profile (`pascal-style-formatting-layout.md`).
-2. **Naming**, keywords, T/P types (`pascal-style-naming-types.md`).
-3. **Units**, files, order, uses (`pascal-style-units-structure.md`).
-4. **Comments/control**, braces, flow, CI (`pascal-style-comments-control.md`).
+1. **Layout**, indent, begin/end, spacing profile.
+2. **Naming**, keywords, T/P types.
+3. **Units**, files, order, uses.
+4. **Comments/control**, braces, flow, CI.
 5. **Verify**, `fpc -Wall`, fpsonar optional, tests on changed units.
 
 ## Red Flags
@@ -61,13 +61,3 @@ Pascal library quality is **dialect-picked layout + ordered units**, declare FPC
 - `fpc -Wall` (and project `-O3` if GPC baseline) on changed units
 - fpsonar or house linter (NoTabs, LowercaseKeywords, BeginEndRequired)
 - Uses-cycle and interface-order review on new units
-- Capsule checklist on spacing profile declaration in AGENTS/project docs
-
-
-## References
-
-- `awesome-guidelines/references/pascal-style-learning-note.md`
-- `awesome-guidelines/references/pascal-style-formatting-layout.md`
-- `awesome-guidelines/references/pascal-style-naming-types.md`
-- `awesome-guidelines/references/pascal-style-units-structure.md`
-- `awesome-guidelines/references/pascal-style-comments-control.md`

@@ -6,7 +6,7 @@ kind: playbook
 
 # Fortran Coding Practices
 
-Application skill for Fortran style learning (from the archived `awesome-guidelines` style capsules). For HPC parallelism (OpenMP/OpenACC), combine with domain stack capsules in `knowledge/foundations`.
+Application skill for Fortran style. For HPC parallelism (OpenMP/OpenACC), consult the domain library's own source or docs.
 
 ## Core Principle
 
@@ -24,10 +24,10 @@ Fortran quality is **modern-standard clarity**, explicit modules, assumed-shape 
 
 ## Workflow
 
-1. **Layout**, fprettify, files, indent (`fortran-style-formatting-layout.md`).
-2. **Modules**, names, intent, exports (`fortran-style-naming-modules.md`).
-3. **Arrays**, dp, assumed-shape, storage (`fortran-style-arrays-types.md`).
-4. **API**, modern std, FORD (`fortran-style-modern-api.md`).
+1. **Layout**, fprettify, files, indent.
+2. **Modules**, names, intent, exports.
+3. **Arrays**, dp, assumed-shape, storage.
+4. **API**, modern std, FORD.
 5. **Verify**, fprettify, `ford`, compiler warnings, tests on changed units.
 
 ## Red Flags
@@ -52,13 +52,3 @@ Fortran quality is **modern-standard clarity**, explicit modules, assumed-shape 
 - `ford` documentation build (if project uses FORD)
 - `gfortran -std=f2008 -Wall` (or project flags) on changed sources
 - `ctest` / project test runner
-- Capsule checklist on `public ::` export lists
-
-
-## References
-
-- `awesome-guidelines/references/fortran-style-learning-note.md`
-- `awesome-guidelines/references/fortran-style-formatting-layout.md`
-- `awesome-guidelines/references/fortran-style-naming-modules.md`
-- `awesome-guidelines/references/fortran-style-arrays-types.md`
-- `awesome-guidelines/references/fortran-style-modern-api.md`

@@ -6,7 +6,7 @@ kind: playbook
 
 # Elixir Coding Practices
 
-Application skill for Elixir style learning (from the archived `awesome-guidelines` style capsules). For OTP/supervision design, combine with stack capsules in `knowledge/foundations`.
+Application skill for Elixir style. For OTP/supervision design, combine with the framework's own source or docs.
 
 ## Core Principle
 
@@ -19,15 +19,15 @@ Elixir quality is **formatter-mechanical + explicit modules**, ordered attribute
 
 **NOT when:**
 
-- Erlang `.erl`, use Erlang practices when ingested.
+- Erlang `.erl`, use Erlang practices.
 - HEEx/templates only, validate `.ex` context modules.
 
 ## Workflow
 
-1. **Format & modules**, mix format, module order (`elixir-style-formatting-modules.md`).
-2. **Naming**, snake/Camel,?, Error (`elixir-style-naming-functions.md`).
-3. **Expressions**, pipes, cond, defs (`elixir-style-expressions-pipelines.md`).
-4. **Docs & types**, moduledoc, spec, errors (`elixir-style-docs-types-errors.md`).
+1. **Format & modules**, mix format, module order.
+2. **Naming**, snake/Camel,?, Error.
+3. **Expressions**, pipes, cond, defs.
+4. **Docs & types**, moduledoc, spec, errors.
 5. **Verify**, `mix format`, `mix test`, Credo/Dialyzer per project.
 
 ## Red Flags
@@ -49,13 +49,3 @@ Elixir quality is **formatter-mechanical + explicit modules**, ordered attribute
 - `mix test`
 - `mix credo` / `mix dialyzer` (project policy)
 - ExDoc build for public packages
-- Capsule checklist on new modules
-
-
-## References
-
-- `awesome-guidelines/references/elixir-style-learning-note.md`
-- `awesome-guidelines/references/elixir-style-formatting-modules.md`
-- `awesome-guidelines/references/elixir-style-naming-functions.md`
-- `awesome-guidelines/references/elixir-style-expressions-pipelines.md`
-- `awesome-guidelines/references/elixir-style-docs-types-errors.md`

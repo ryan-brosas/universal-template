@@ -6,7 +6,7 @@ kind: playbook
 
 # D Coding Practices
 
-Application skill for D style learning (from the archived `awesome-guidelines` style capsules). For Phobos contributions, follow full official dstyle Phobos section.
+Application skill for D style. For Phobos contributions, follow full official dstyle Phobos section.
 
 ## Core Principle
 
@@ -24,10 +24,10 @@ D quality is **dstyle naming + explicit types/docs + tested modules**, propertie
 
 ## Workflow
 
-1. **Layout**, indent, braces, imports (`d-style-formatting-layout.md`).
-2. **Naming**, modules, types, acronyms (`d-style-naming-types.md`).
-3. **API**, alias, properties, UFCS (`d-style-declarations-api.md`).
-4. **Docs & tests**, Ddoc, unittest, attributes (`d-style-docs-testing.md`).
+1. **Layout**, indent, braces, imports.
+2. **Naming**, modules, types, acronyms.
+3. **API**, alias, properties, UFCS.
+4. **Docs & tests**, Ddoc, unittest, attributes.
 5. **Verify**, dfmt, dub test, coverage on changed modules.
 
 ## Red Flags
@@ -49,13 +49,3 @@ D quality is **dstyle naming + explicit types/docs + tested modules**, propertie
 - `dub test` or project test runner
 - `-cov` or project coverage gate on touched code
 - ddox/Ddoc generation for public modules
-- Capsule checklist on review
-
-
-## References
-
-- `awesome-guidelines/references/d-style-learning-note.md`
-- `awesome-guidelines/references/d-style-formatting-layout.md`
-- `awesome-guidelines/references/d-style-naming-types.md`
-- `awesome-guidelines/references/d-style-declarations-api.md`
-- `awesome-guidelines/references/d-style-docs-testing.md`

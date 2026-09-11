@@ -6,7 +6,7 @@ kind: playbook
 
 # Markdown Writing Practices
 
-Application skill for Markdown style learning (from the archived `awesome-guidelines` style capsules). For HTML/CSS page templates, load `frontend-markup-practices`. For platform wiki syntax (Confluence), use stack conventions.
+Application skill for Markdown style. For HTML/CSS page templates, load `frontend-markup-practices`. For platform wiki syntax (Confluence), use stack conventions.
 
 ## Core Principle
 
@@ -20,14 +20,14 @@ Documentation Markdown is **maintainable plain text**, one H1, wrapped prose, fe
 **NOT when:**
 
 - Generated API docs from source comments, validate generator templates.
-- Rich wiki with non-Markdown macros only, use platform foundation.
+- Rich wiki with non-Markdown macros only, use the platform’s own documentation.
 
 ## Workflow
 
-1. **Layout**, H1, intro, TOC, headings, 80-col wrap (`markdown-style-document-layout.md`).
-2. **Lists & code**, lazy numbering, fences, languages (`markdown-style-lists-code.md`).
-3. **Links & media**, paths, reference links, alt text (`markdown-style-links-media.md`).
-4. **Tables**, 2D data only; Markdown not HTML (`markdown-style-tables-portability.md`).
+1. **Layout**, H1, intro, TOC, headings, 80-col wrap.
+2. **Lists & code**, lazy numbering, fences, languages.
+3. **Links & media**, paths, reference links, alt text.
+4. **Tables**, 2D data only; Markdown not HTML.
 5. **Verify**, markdownlint/remark + `git diff --check` on changed `.md` files.
 
 ## Red Flags
@@ -46,13 +46,3 @@ Documentation Markdown is **maintainable plain text**, one H1, wrapped prose, fe
 - markdownlint (or project remark config) on changed files
 - `git diff --check` clean
 - Render preview spot-check for TOC, fences, tables
-- Capsule checklist on doc review
-
-
-## References
-
-- `awesome-guidelines/references/markdown-style-learning-note.md`
-- `awesome-guidelines/references/markdown-style-document-layout.md`
-- `awesome-guidelines/references/markdown-style-lists-code.md`
-- `awesome-guidelines/references/markdown-style-links-media.md`
-- `awesome-guidelines/references/markdown-style-tables-portability.md`

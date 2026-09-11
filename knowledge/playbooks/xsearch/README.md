@@ -180,4 +180,4 @@ Results parse as JSON with the five fields per item; count ≤ requested; permal
 
 ## References
 
-No reference capsules, the skill is self-contained.
+No separate references; the skill is self-contained.

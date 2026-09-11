@@ -6,7 +6,7 @@ kind: playbook
 
 # Ruby Coding Practices
 
-Application skill for Ruby style learning (from the archived `awesome-guidelines` style capsules). For Rails/RSpec stack patterns, load stack capsules in `knowledge/foundations`.
+Application skill for Ruby style. For Rails/RSpec stack patterns, load the framework's own source or docs.
 
 ## Core Principle
 
@@ -21,14 +21,14 @@ Ruby readability is **RuboCop-community layout plus idiomatic naming and explici
 
 - Non-Ruby code.
 - Generated files, validate generator config instead.
-- Rails-specific cops only, use Rails style guide / foundation when stack is Rails.
+- Rails-specific cops only, follow the Rails guides when the stack is Rails.
 
 ## Workflow
 
-1. **Format & layout**, 2-space, spacing, safe nav, blank lines (`ruby-style-formatting-layout.md`).
-2. **Naming & files**, snake_case, CapitalCase, `?`/`!`, one class per file (`ruby-style-naming-files.md`).
-3. **Methods**, keyword args, parens, `&&`/`||` vs `and`/`or` (`ruby-style-methods-blocks.md`).
-4. **Classes & exceptions**, layout, nesting, rescue/raise (`ruby-style-classes-exceptions.md`).
+1. **Format & layout**, 2-space, spacing, safe nav, blank lines.
+2. **Naming & files**, snake_case, CapitalCase, `?`/`!`, one class per file.
+3. **Methods**, keyword args, parens, `&&`/`||` vs `and`/`or`.
+4. **Classes & exceptions**, layout, nesting, rescue/raise.
 5. **Verify**, RuboCop (project `.rubocop.yml`) + test suite on changed paths.
 
 ## Red Flags
@@ -47,13 +47,3 @@ Ruby readability is **RuboCop-community layout plus idiomatic naming and explici
 
 - `bundle exec rubocop` (or project equivalent) on changed files
 - Autoload/Zeitwerk check if namespace/files touched
-- Capsule checklist on public API review
-
-
-## References
-
-- `awesome-guidelines/references/ruby-style-learning-note.md`
-- `awesome-guidelines/references/ruby-style-formatting-layout.md`
-- `awesome-guidelines/references/ruby-style-naming-files.md`
-- `awesome-guidelines/references/ruby-style-methods-blocks.md`
-- `awesome-guidelines/references/ruby-style-classes-exceptions.md`

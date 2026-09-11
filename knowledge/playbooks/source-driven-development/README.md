@@ -8,14 +8,13 @@ kind: playbook
 
 Use the installed version's source, docs or a direct probe for the unfamiliar
 behavior the change actually depends on. Current local tests and implementation
-outrank a remembered API or a historical capsule. State material uncertainty
+outrank a remembered API or a remembered summary. State material uncertainty
 when evidence is unavailable rather than inventing a flag, import or guarantee.
 
 Useful shortcuts:
 
-- A capsule's file path and exact revision can take you straight to upstream
-  source. Capsules in one foundation may describe different revisions; the
-  selected capsule's pin matters more than the index's headline revision.
+- Pin what you read: cite the repository, path, and commit or release for the
+  behavior you verified, and prefer that source over a remembered API.
 - Pin raw-file URLs used as evidence to the relevant commit SHA; resolve a
   release tag to its commit when needed. Moving branches can help discovery but
   are not reproducible citations. A direct fetch or installed source read usually

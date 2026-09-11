@@ -1,6 +1,6 @@
 # Research and Voice of Customer
 
-Load this capsule when customer material exists, inputs are weak, or the message
+Load this reference when customer material exists, inputs are weak, or the message
 must be discovered rather than polished. The output feeds
 `messaging-positioning.md`. It is not a page outline, email sequence, test plan,
 or framework assignment.
@@ -300,7 +300,7 @@ Deliver with the package:
 - **CTA seed list:** the three to five strongest “I want ___” completions,
   labeled as CTA or call-to-value candidates.
 - **Explicit non-handoff:** no page structure, email sequences, test plans, or
-  framework assignments. Those belong to their own capsules.
+  framework assignments. Those belong to their own references.
 
 ## Stopping rules
 

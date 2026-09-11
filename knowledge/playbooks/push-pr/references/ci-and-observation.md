@@ -22,9 +22,9 @@ rollup. A partial page is not evidence that all checks passed.
 
 ## Structural observation (conditional)
 
-Graph observation is **evidence-driven, not mandatory**. Reach for Codebase Memory (`check_index_coverage` → `search_graph`/`trace_path`) when the change is structurally complex and a blast-radius claim adds value; reach for Fovea (`fovea_impact`) for local structural questions. Skip silently when the change is small or direct reading settles it — a skip needs no justification line.
+Structural observation is **evidence-driven, not mandatory**. Use the active project's IDE/LSP or Fovea (`fovea_impact`) for precise local symbol and type questions. Use the indexed source capability (`../cross-repo-source/README.md`) when a change crosses repositories and a blast-radius claim adds value. Skip silently when the change is small or direct reading settles it — a skip needs no justification line.
 
-When used: the graph is a map; source and tests confirm. Record the project, covered paths, and caveats. Do not turn a missing index into an exhaustive claim — and do not cite a graph you did not verify covers the code.
+Source and tests confirm every structural claim. Record the repository, revision, and covered paths; do not turn a search miss into an exhaustive claim.
 
 ## Learnable rules
 

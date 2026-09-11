@@ -6,7 +6,7 @@ kind: playbook
 
 # Django Coding Practices
 
-Application skill for Django official coding style ingest (`awesome-guidelines`). Generic Python: `python-coding-practices`. Framework architecture: `knowledge/foundations/django`.
+Application skill for Django official coding style. Generic Python: `python-coding-practices`. Framework architecture: consult the Django source or docs.
 
 ## Core Principle
 
@@ -21,15 +21,15 @@ Django code reads as **one codebase**, black-formatted Python, isort import grou
 **NOT when:**
 
 - Non-Django Python, `python-coding-practices`.
-- ORM/query design, middleware architecture, `knowledge/foundations/django`.
+- ORM/query design, middleware architecture, consult the Django source or docs.
 - Django admin JavaScript, Django JS style doc (separate).
 
 ## Workflow
 
-1. **Python/imports**, black, isort, tests (`django-style-python-imports.md`).
-2. **Templates/views**, DTL + `request` (`django-style-templates-views.md`).
-3. **Models/settings**, field order, choices, lazy settings (`django-style-models-settings.md`).
-4. **Misc/verify**, i18n, hygiene, pre-commit (`django-style-misc-verify.md`).
+1. **Python/imports**, black, isort, tests.
+2. **Templates/views**, DTL + `request`.
+3. **Models/settings**, field order, choices, lazy settings.
+4. **Misc/verify**, i18n, hygiene, pre-commit.
 
 ## Red Flags
 
@@ -59,16 +59,8 @@ Django code reads as **one codebase**, black-formatted Python, isort import grou
 - i18n grep on new user-facing strings
 
 
-## References
-
-- `awesome-guidelines/references/django-style-learning-note.md`
-- `awesome-guidelines/references/django-style-python-imports.md`
-- `awesome-guidelines/references/django-style-templates-views.md`
-- `awesome-guidelines/references/django-style-models-settings.md`
-- `awesome-guidelines/references/django-style-misc-verify.md`
-
 ## Related skills
 
 - `python-coding-practices`, PEP 8/Google baseline
-- `knowledge/foundations/django`, Django framework patterns
+- The Django source or docs for framework patterns
 - `frontend-markup-practices`, non-DTL HTML/CSS

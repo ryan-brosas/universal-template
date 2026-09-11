@@ -6,7 +6,7 @@ kind: playbook
 
 # C# Coding Practices
 
-Application skill for C# /.NET style learning (from the archived `awesome-guidelines` style capsules). For ASP.NET/Blazor/MAUI patterns, load stack capsules in `knowledge/foundations`.
+Application skill for C# /.NET style. For ASP.NET/Blazor/MAUI patterns, load the framework's own source or docs.
 
 ## Core Principle
 
@@ -25,10 +25,10 @@ C# readability is **Framework Design naming plus modern idioms enforced by Edito
 
 ## Workflow
 
-1. **Format & layout**, Allman braces, file-scoped namespace, usings (`csharp-style-formatting-layout.md`).
-2. **Naming**, Pascal/camel, interfaces, suffixes (`csharp-style-naming-types.md`).
-3. **Modern idioms**, var, collections, strings, required (`csharp-style-modern-idioms.md`).
-4. **Exceptions & API**, catch, using, statics, XML docs (`csharp-style-exceptions-api.md`).
+1. **Format & layout**, Allman braces, file-scoped namespace, usings.
+2. **Naming**, Pascal/camel, interfaces, suffixes.
+3. **Modern idioms**, var, collections, strings, required.
+4. **Exceptions & API**, catch, using, statics, XML docs.
 5. **Verify**, `dotnet format`, analyzer warnings as errors, tests on changed projects.
 
 ## Red Flags
@@ -47,13 +47,3 @@ C# readability is **Framework Design naming plus modern idioms enforced by Edito
 
 - `dotnet format --verify-no-changes` on changed projects
 - Analyzer/StyleCop/IDE rules per `.editorconfig`
-- Capsule checklist on public API review
-
-
-## References
-
-- `awesome-guidelines/references/csharp-style-learning-note.md`
-- `awesome-guidelines/references/csharp-style-formatting-layout.md`
-- `awesome-guidelines/references/csharp-style-naming-types.md`
-- `awesome-guidelines/references/csharp-style-modern-idioms.md`
-- `awesome-guidelines/references/csharp-style-exceptions-api.md`

@@ -31,11 +31,9 @@ host is required to connect every entry.
 
 | Server            | Kind  | Connection / command                                    | Key / env                        | Notes |
 |-------------------|-------|---------------------------------------------------------|----------------------------------|-------|
-| codebase-memory   | stdio | `codebase-memory-mcp` (PATH-resolved; mise shim)         | `CBM_CACHE_DIR` (machine-local)  | local graph, keep-alive |
+| sourcebot         | remote| `http://localhost:3000/api/mcp`                    | bearer token in host config      | indexed cross-repo source search, lazy |
 | context7          | stdio | `npx -y @upstash/context7-mcp@4.0.4`               | `CONTEXT7_API_KEY`               | library docs + code examples |
-| deepwiki          | stdio | `npx -y deepwiki-mcp@0.0.6`                        | none                             | OSS architecture pages |
 | exa               | stdio | `npx -y exa-mcp-server@3.4.1`                      | `EXA_API_KEY`                    | live web search |
-| openviking        | remote| `http://127.0.0.1:1933/mcp`                  | none (local daemon)              | optional rebuildable projection/cache over mined corpus; register only when the daemon runs; never canonical, never auto-synced, never a blocker |
 | mcp-steroid       | stdio | `devrig mcp` (PATH-resolved)                  | none (local IDE bridge)          | JetBrains PSI/refactoring/test/debugger access via devrig |
 | figma-bridge      | stdio | `npx -y @gethopp/figma-mcp-bridge@0.0.21`     | none                             | live Figma document bridge; requires the companion plugin in an open Figma file |
 | paper             | remote| `http://127.0.0.1:29979/mcp`                 | none (local desktop app)         | Paper design canvas; available while Paper is running |
@@ -59,12 +57,12 @@ These hosts already export or can export the needed vars; the `${VAR}` text in
 
 ## Scoped profiles
 
-`profiles.json` defines `minimal` (none), six one-server profiles, and one
-two-server design profile:
-`code-graph`, `ide`, `docs`, `repository-research`, `web-research`, and
-`historical-context`; `design` selects `paper` and `figma-bridge`. Codebase Memory and MCP Steroid are deliberately separate;
-there is no ambiguous `code` compatibility alias. Profiles are explicit
-selections, not always-on policy.
+`profiles.json` defines `minimal` (none), four one-server profiles, and one
+two-server design profile: `cross-repo-source`, `ide`, `docs`, `web-research`,
+and `design` (selects `paper` and `figma-bridge`). The
+indexed-source profile and the IDE profile are deliberately separate; there is
+no ambiguous `code` compatibility alias. Profiles are explicit selections, not
+always-on policy.
 
 ### Existing host configuration
 
@@ -72,13 +70,6 @@ Profiles describe useful selections; they do not manage installed servers or
 remove anything. Selecting `minimal` does not clear an existing host config.
 Inspect the host's current configuration before adding, changing, or removing
 servers, and preserve unrelated entries.
-
-Older installations may have `settings.json.universal-template-mcp.json`
-ownership sidecars, backups, locks, or pending journals. These are legacy local
-artifacts, not an active management protocol. Preserve them until any interrupted
-write is understood; do not infer permission to remove servers from their names
-or fingerprints. Recovery or cleanup requires review of the actual host state
-and user authorization before destructive changes.
 
 ### Write safety and recovery
 
@@ -100,7 +91,7 @@ selected servers rather than treating historical schema sizes as a budget.
 | Claude Code | `~/.claude.json` | `mcpServers` (same shape) |
 | Codex | `~/.codex/config.toml` | `[mcp_servers.<name>]` (stdio only) |
 | OpenCode | `~/.config/opencode/opencode.json` | `mcp.<name>` (`type: local\|remote`, `enabled`) |
-| DSH web profile | `~/.dsh/cordis.patch.yml` | `@monotykamary/dsh-mcp-client` inserts (codebase-memory, openviking, context7, deepwiki, exa, mcp-steroid) |
+| DSH web profile | `~/.dsh/cordis.patch.yml` | `@monotykamary/dsh-mcp-client` inserts (sourcebot, context7, exa, mcp-steroid) |
 
 Wire the requested selection using the host’s verified format; preserve unrelated
 settings and unmanaged servers. A host config path names only where that CLI
@@ -125,9 +116,6 @@ both sides blindly:
   `configPath`/`MCPORTER_CONFIG` is set (`$XDG_CONFIG_HOME/mcporter/mcporter.json[.jsonc]`
   first, then this path), followed by a project `<root>/config/mcporter.json`.
   Env values support `${VAR}` expansion — never store literal keys there; use env vars.
-- `~/.pi/agent/mcp.json` — retired pi-mcp-adapter-era file (it still lists a `composio`
-  entry); pi-fabric does not read it. Preserve until reviewed; never treat it as the
-  live config.
 - `~/.prime/agent/settings.json` — scoped writes only: add one server or an
   explicit profile, never by regenerating the full registry.
 - The IntelliJ **built-in** MCP server (`http://localhost:64442`) is a
@@ -141,10 +129,12 @@ both sides blindly:
   was launched with; ensure `EXA_API_KEY` / `CONTEXT7_API_KEY` are exported.
 - **Claude Code / Codex / OpenCode**: same merge rule per host block; stdio
   entries use `command` + `args`; secrets stay env-only.
-- **sonatype-guide**: intentionally uninstalled — not part of the registry; do not re-register.
-- **openviking**: local streamable-HTTP daemon (port matches the running
-  daemon, default `1933`). If the daemon is not running the server will fail to
-  connect — treat as optional context, never a blocker.
+- **sourcebot**: remote MCP at the local Sourcebot deployment
+  (`http://localhost:3000/api/mcp`). The bearer token is supplied by the host
+  config (`~/.pi/agent/mcporter.json`), never committed here. If the deployment
+  is not running the entry is dormant; treat indexed source as optional context,
+  never a blocker. It is the primary capability for cross-repository code
+  questions (`knowledge/playbooks/cross-repo-source/README.md`).
 - **figma-bridge**: run the companion Figma plugin in each file the agent should
   access; the stdio server brokers those live plugin connections.
 - **paper**: Paper exposes its local Streamable HTTP endpoint while the desktop

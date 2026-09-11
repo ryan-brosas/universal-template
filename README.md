@@ -6,9 +6,8 @@ No installer, prompt renderer, prescribed model or mandatory workflow is require
 ## Contents
 
 - `AGENTS.md`: standing global rules; project instructions add context, not exceptions.
-- `skills/`: eight small pack routers, the template's only discoverable skills.
+- `skills/`: seven small pack routers, the template's only discoverable skills.
 - `knowledge/playbooks/`: specialist procedures with their references and helpers.
-- `knowledge/foundations/`: cold, source-specific implementation evidence.
 - `prompts/` and `templates/`: optional task prompts and reusable documents.
 - `mcp/`: optional server declarations and profiles, not an active connection set.
 - `config/model-profiles.yaml`: optional task needs, not model rankings.
@@ -26,16 +25,35 @@ Point your agent at the checkout. Choose a pack by the task:
 | [Engineering](skills/engineering-pack/SKILL.md) | Code, debugging, tests, architecture, security, language practices |
 | [Design](skills/design-pack/SKILL.md) | UI/UX, visual prototypes, Paper/Figma, accessibility, fidelity |
 | [Delivery](skills/delivery-pack/SKILL.md) | Git, PRs, CI, GitHub governance, deployment and releases |
-| [Research](skills/research-pack/SKILL.md) | Source investigation, documentation, search, browser and data research |
+| [Research](skills/research-pack/SKILL.md) | Source and documentation investigation, search, browser and data research |
 | [Writing](skills/writing-pack/SKILL.md) | Copy, prose, documentation and content |
 | [Agent tooling](skills/agent-tooling-pack/SKILL.md) | Pi, Fabric, providers, models and explicit Veda workflows |
 | [Maintenance](skills/maintenance-pack/SKILL.md) | This template, authoring and missing-specialist discovery |
-| [Foundations](skills/foundation-pack/SKILL.md) | Historical source-specific implementation evidence |
 
 Read the selected router, then one matching playbook and only its needed
-references. Large branches have a cold topic index. Known playbook paths can be
-read directly; trivial tasks do not require a procedure. Project requirements,
-source, tests and runtime behavior remain authoritative.
+references. Known playbook paths can be read directly; trivial tasks do not
+require a procedure. Project requirements, source, tests and runtime behavior
+remain authoritative.
+
+### Where code context comes from
+
+The template keeps no copy of other repositories. A code question resolves from
+the nearest sufficient evidence:
+
+- the current project's source, tests, Git history and IDE/LSP, using the tools
+  the host already has;
+- Sourcebot indexed cross-repository search when the question spans
+  repositories we intentionally index or needs an implementation we do not have
+  locally (`knowledge/playbooks/cross-repo-source/README.md`);
+- GitHub discovery when the implementation is unknown, followed by reading the
+  actual source and tests;
+- installed source, official docs or Context7 for library documentation;
+- tests, compiler and runtime output for behavior that must be observed.
+
+An index or summary is a fast map, not authority: confirm exact code before
+editing or claiming absence. Sources and boundaries are mapped in
+`knowledge/playbooks/evidence-router/README.md`; MCP selection lives in
+`mcp/catalog.md`.
 
 ### Keep startup small
 
@@ -46,7 +64,7 @@ Do not create specialist `SKILL.md` aliases or copied inventories.
 
 Hosts differ: verify their real discovery and outgoing context. Some list every
 skill, some preload bodies, and extensions can inject additional resources.
-Private and package-owned skills are separate from the eight template routers;
+Private and package-owned skills are separate from the seven template routers;
 use supported host filters where needed, without moving installed package files
 or removing essential runtime instructions.
 

@@ -6,7 +6,7 @@ kind: playbook
 
 # Elm Coding Practices
 
-Application skill for Elm style learning (from the archived `awesome-guidelines` style capsules). For TEA architecture and `Html` patterns, combine with stack capsules in `knowledge/foundations`.
+Application skill for Elm style. For TEA architecture and `Html` patterns, combine with the framework's own source or docs.
 
 ## Core Principle
 
@@ -24,10 +24,10 @@ Elm quality is **regular layout plus compiler support**, formatted mechanically,
 
 ## Workflow
 
-1. **Layout**, elm-format, 80 cols, declaration shape (`elm-style-formatting-layout.md`).
-2. **Modules**, names, imports, focus (`elm-style-naming-modules.md`).
-3. **Types**, unions, IDs, decoders (`elm-style-types-declarations.md`).
-4. **Expressions**, pipes, case, let (`elm-style-pipelines-expressions.md`).
+1. **Layout**, elm-format, 80 cols, declaration shape.
+2. **Modules**, names, imports, focus.
+3. **Types**, unions, IDs, decoders.
+4. **Expressions**, pipes, case, let.
 5. **Verify**, `elm-format --validate`, `elm-test`, `elm-review` on changed modules.
 
 ## Red Flags
@@ -49,13 +49,3 @@ Elm quality is **regular layout plus compiler support**, formatted mechanically,
 - `elm-format --validate`
 - `elm-test` / `npm test` (project)
 - `elm-review` (project rules)
-- Capsule checklist on module `exposing` lists
-
-
-## References
-
-- `awesome-guidelines/references/elm-style-learning-note.md`
-- `awesome-guidelines/references/elm-style-formatting-layout.md`
-- `awesome-guidelines/references/elm-style-naming-modules.md`
-- `awesome-guidelines/references/elm-style-types-declarations.md`
-- `awesome-guidelines/references/elm-style-pipelines-expressions.md`

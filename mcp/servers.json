@@ -1,9 +1,9 @@
 {
   "mcpServers": {
-    "codebase-memory": {
-      "command": "codebase-memory-mcp",
-      "args": [],
-      "lifecycle": "keep-alive"
+    "sourcebot": {
+      "type": "remote",
+      "url": "http://localhost:3000/api/mcp",
+      "lifecycle": "lazy"
     },
     "context7": {
       "type": "stdio",
@@ -17,15 +17,6 @@
       },
       "lifecycle": "keep-alive"
     },
-    "deepwiki": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "-y",
-        "deepwiki-mcp@0.0.6"
-      ],
-      "lifecycle": "keep-alive"
-    },
     "exa": {
       "type": "stdio",
       "command": "npx",
@@ -37,10 +28,6 @@
         "EXA_API_KEY": "${EXA_API_KEY}"
       },
       "lifecycle": "keep-alive"
-    },
-    "openviking": {
-      "type": "remote",
-      "url": "http://127.0.0.1:1933/mcp"
     },
     "mcp-steroid": {
       "type": "stdio",

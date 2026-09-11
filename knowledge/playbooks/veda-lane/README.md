@@ -59,4 +59,4 @@ Veda output is advisory. Probe availability instead of trusting claims (no hard-
 
 ## References
 
-No reference capsules, the skill is self-contained; routing policy lives in `evidence-router`.
+No separate references; the skill is self-contained; routing policy lives in `evidence-router`.

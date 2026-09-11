@@ -6,7 +6,7 @@ kind: playbook
 
 # PowerShell Scripting Practices
 
-Application skill for PoshCode PowerShellPracticeAndStyle (archived `awesome-guidelines` capsules). For bash glue, use `shell-scripting-practices`. For.NET library API naming, use `dotnet-coding-practices`.
+Application skill for PoshCode PowerShellPracticeAndStyle. For bash glue, use `shell-scripting-practices`. For.NET library API naming, use `dotnet-coding-practices`.
 
 ## Core Principle
 
@@ -25,10 +25,10 @@ PowerShell quality is **advanced functions emitting pipeline objects with explic
 
 ## Workflow
 
-1. **Formatting**, OTBS, blocks, splatting (`powershell-style-formatting-layout.md`).
-2. **Naming**, Verb-Noun, full cmdlets, paths (`powershell-style-naming-commands.md`).
-3. **Functions/tools**, process output, raw objects (`powershell-style-functions-tools.md`).
-4. **Errors/security**, Stop, try/catch, PSCredential (`powershell-style-errors-security.md`).
+1. **Formatting**, OTBS, blocks, splatting.
+2. **Naming**, Verb-Noun, full cmdlets, paths.
+3. **Functions/tools**, process output, raw objects.
+4. **Errors/security**, Stop, try/catch, PSCredential.
 5. **Verify**, PSScriptAnalyzer + `Invoke-Formatter` on changed scripts.
 
 ## Red Flags
@@ -58,13 +58,3 @@ PowerShell quality is **advanced functions emitting pipeline objects with explic
 - `Invoke-Formatter` / project formatter check when configured
 - Pipeline test for `ValueFromPipeline` functions
 - Failure-path test with `-ErrorAction Stop` behavior
-- Capsule checklist on tool vs controller split
-
-
-## References
-
-- `awesome-guidelines/references/powershell-style-learning-note.md`
-- `awesome-guidelines/references/powershell-style-formatting-layout.md`
-- `awesome-guidelines/references/powershell-style-naming-commands.md`
-- `awesome-guidelines/references/powershell-style-functions-tools.md`
-- `awesome-guidelines/references/powershell-style-errors-security.md`

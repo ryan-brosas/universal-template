@@ -6,7 +6,7 @@ kind: playbook
 
 # Shell Scripting Practices
 
-Application skill for shell learning (from the archived `awesome-guidelines` style capsules). Load learning note for *why*; capsules for probes.
+Application skill for shell.
 
 ## Core Principle
 
@@ -20,14 +20,14 @@ Bash is for **thin orchestration**, quote aggressively, avoid subshell traps, ch
 **NOT when:**
 
 - Logic exceeds ~100 lines or needs structured data, use Python/Go/etc.
-- PowerShell-only environment (see awesome-guidelines PowerShell guide separately).
+- PowerShell-only environment, use `powershell-scripting-practices`.
 
 ## Workflow
 
-1. **Scope**, confirm shell is appropriate; bash shebang + `set` for strict modes if project uses them (`shell-style-scope-and-safety.md`).
-2. **Arguments**, `"$@"` forwarding; arrays for flag lists; quote all expansions (`shell-style-quoting-and-arrays.md`).
-3. **Conditionals**, `[[`/`((`/`readarray`; no pipe-to-while when parent needs state (`shell-style-control-flow-subshells.md`).
-4. **Structure**, constants → functions → `main "$@"`; `local` + split declare/assign; STDERR `err()` (`shell-style-structure-and-errors.md`).
+1. **Scope**, confirm shell is appropriate; bash shebang + `set` for strict modes if project uses them.
+2. **Arguments**, `"$@"` forwarding; arrays for flag lists; quote all expansions.
+3. **Conditionals**, `[[`/`((`/`readarray`; no pipe-to-while when parent needs state.
+4. **Structure**, constants → functions → `main "$@"`; `local` + split declare/assign; STDERR `err()`.
 5. **Verify**, `shellcheck` exit 0; exercise empty args, spaces in paths, and failure paths.
 
 ## Red Flags
@@ -42,13 +42,3 @@ Bash is for **thin orchestration**, quote aggressively, avoid subshell traps, ch
 
 - `shellcheck -x script.sh` (or project wrapper) exit 0.
 - Manual: args with spaces, empty optional flags, failing command path.
-- Capsule checklist on review.
-
-
-## References
-
-- `awesome-guidelines/references/shell-style-learning-note.md`
-- `awesome-guidelines/references/shell-style-scope-and-safety.md`
-- `awesome-guidelines/references/shell-style-quoting-and-arrays.md`
-- `awesome-guidelines/references/shell-style-control-flow-subshells.md`
-- `awesome-guidelines/references/shell-style-structure-and-errors.md`

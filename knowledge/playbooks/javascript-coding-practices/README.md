@@ -6,7 +6,7 @@ kind: playbook
 
 # JavaScript Coding Practices
 
-Application skill for JavaScript style learning (from the archived `awesome-guidelines` style capsules). For TypeScript domain rules, load `typescript-coding-standards`; for React, `knowledge/foundations/react`.
+Application skill for JavaScript style. For TypeScript domain rules, load `typescript-coding-standards`; for React, consult React's own source or docs.
 
 ## Core Principle
 
@@ -24,10 +24,10 @@ JavaScript maintainability is **explicit modules and lint-enforced habits**, nam
 
 ## Workflow
 
-1. **Modules**, named exports, immutable export surface, dedupe imports (`javascript-style-modules-exports.md`).
-2. **Bindings**, `const`/`let`, `===`, explicit empty string/length checks (`javascript-style-variables-equality.md`).
-3. **Format**, 2 spaces, semicolons, braces, trailing commas, switch `default` (`javascript-style-formatting-control.md`).
-4. **Functions**, camelCase, arrows in callbacks, JSDoc on exports, ban eval/with/var (`javascript-style-functions-disallowed.md`).
+1. **Modules**, named exports, immutable export surface, dedupe imports.
+2. **Bindings**, `const`/`let`, `===`, explicit empty string/length checks.
+3. **Format**, 2 spaces, semicolons, braces, trailing commas, switch `default`.
+4. **Functions**, camelCase, arrows in callbacks, JSDoc on exports, ban eval/with/var.
 5. **Verify**, eslint + formatter on changed paths.
 
 ## Red Flags
@@ -42,13 +42,3 @@ JavaScript maintainability is **explicit modules and lint-enforced habits**, nam
 
 - `eslint` (project config) exit 0 on changed files
 - Prettier/clang-format check if configured
-- Capsule checklist on review
-
-
-## References
-
-- `awesome-guidelines/references/javascript-style-learning-note.md`
-- `awesome-guidelines/references/javascript-style-modules-exports.md`
-- `awesome-guidelines/references/javascript-style-variables-equality.md`
-- `awesome-guidelines/references/javascript-style-formatting-control.md`
-- `awesome-guidelines/references/javascript-style-functions-disallowed.md`

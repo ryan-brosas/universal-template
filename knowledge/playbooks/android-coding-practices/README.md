@@ -6,7 +6,7 @@ kind: playbook
 
 # Android Coding Practices
 
-Application skill for ribot + Xmartlabs Android guides (archived `awesome-guidelines` capsules). For Kotlin syntax alone, load `kotlin-coding-practices`. Greenfield architecture: prefer Jetpack over legacy MVP/Rx verbatim.
+Application skill for ribot + Xmartlabs Android guides. For Kotlin syntax alone, load `kotlin-coding-practices`. Greenfield architecture: prefer Jetpack over legacy MVP/Rx verbatim.
 
 ## Core Principle
 
@@ -25,10 +25,10 @@ Android quality is **prefixed resources + factory-based navigation + layered UI/
 
 ## Workflow
 
-1. **Resources**, drawables, layouts, strings (`android-style-resources-layout.md`).
-2. **Code**, imports, fields, logs, wrap (`android-style-code-conventions.md`).
-3. **Components**, factories, keys, tests (`android-style-components-tests.md`).
-4. **Architecture**, layers, lint/tests (`android-style-architecture-verify.md`).
+1. **Resources**, drawables, layouts, strings.
+2. **Code**, imports, fields, logs, wrap.
+3. **Components**, factories, keys, tests.
+4. **Architecture**, layers, lint/tests.
 5. **Verify**, `./gradlew lint`, unit/Espresso on changed flows.
 
 ## Red Flags
@@ -54,18 +54,9 @@ Android quality is **prefixed resources + factory-based navigation + layered UI/
 
 - `./gradlew :app:lint` (or project lint task) on changed modules
 - Unit tests (`*Test`) and Espresso (`*ActivityTest`) on touched screens
-- Resource naming spot-check vs capsules
+- Resource naming spot-check against project conventions
 - Package boundary check: UI does not import data IO directly
-- Capsule checklist on factory methods for new Activities/Fragments
 
-
-## References
-
-- `awesome-guidelines/references/android-style-learning-note.md`
-- `awesome-guidelines/references/android-style-resources-layout.md`
-- `awesome-guidelines/references/android-style-code-conventions.md`
-- `awesome-guidelines/references/android-style-components-tests.md`
-- `awesome-guidelines/references/android-style-architecture-verify.md`
 
 ## Related skills
 

@@ -1,12 +1,21 @@
 {
   "profiles": {
     "minimal": [],
-    "code-graph": ["codebase-memory"],
-    "ide": ["mcp-steroid"],
-    "docs": ["context7"],
-    "repository-research": ["deepwiki"],
-    "web-research": ["exa"],
-    "historical-context": ["openviking"],
-    "design": ["paper", "figma-bridge"]
+    "cross-repo-source": [
+      "sourcebot"
+    ],
+    "ide": [
+      "mcp-steroid"
+    ],
+    "docs": [
+      "context7"
+    ],
+    "web-research": [
+      "exa"
+    ],
+    "design": [
+      "paper",
+      "figma-bridge"
+    ]
   }
 }
