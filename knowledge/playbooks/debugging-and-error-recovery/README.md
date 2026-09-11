@@ -24,7 +24,12 @@ Feature work with no failure signal (source-first implementation); pure research
 2. Reproduce the failure or state why it cannot be reproduced.
 3. Localize the failing layer: input, boundary, business logic, integration, environment.
 4. Reduce to the smallest failing case.
-5. Form one hypothesis; test it with one change or one diagnostic.
+5. Form one hypothesis; test it with one change or one diagnostic. Choose a probe
+   that distinguishes competing explanations. A status label is not its implementation:
+   trace its producer when it contradicts behavior. HTTP 5xx alone does not establish
+   rate limiting; inspect the response and rate-limit headers for the failing request.
+   Keep observations, hypotheses, and confirmed causes separate in reports and runbooks.
+   Successful reads prove availability, not freshness or successful background sync.
 6. Write a failing regression test when behavior can be tested.
 7. Fix the root cause, not just the symptom.
 8. Re-run the original reproduction and relevant regression checks.
