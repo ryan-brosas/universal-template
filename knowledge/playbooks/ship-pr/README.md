@@ -16,7 +16,8 @@ inventing CI or claiming a clean full cycle.
 
 1. Inspect authored scope and the requested/default base. Create a branch and
    scoped conventional commits without unrelated changes. Run the repository's
-   gates on the committed tree and `git diff --check <base>..HEAD`. A red local
+   gates on the committed tree and `git diff --check <base>...HEAD` (merge base; the
+   comparison rule lives in `../git-workflow-and-versioning/README.md`). A red local
    gate blocks push.
 2. Load `../push-pr/README.md` and use its evidence, template, PR creation/update,
    and metadata procedure. Do not duplicate endpoint mechanics here.
@@ -33,8 +34,12 @@ inventing CI or claiming a clean full cycle.
    and every review thread resolved. Use a repository-allowed merge method;
    never bypass protections. Auto-merge is not implied by repository capability.
 6. Delete the merged task branch and sync the local base without discarding user
-   work. If local changes prevent safe cleanup, report the remaining cleanup
-   rather than reset them.
+   work. Before deleting, fetch and compare (`git fetch origin <branch> && git log
+   --oneline <merged-head>..FETCH_HEAD`): a concurrent session can push commits whose PR
+   is already merged, so they carry no PR at all, and a stale remote-tracking ref makes
+   the log look empty. Land those through a fresh PR or report them explicitly. If
+   local changes prevent safe cleanup, report the remaining cleanup rather than reset
+   them.
 
 Verify completion with `gh pr view <n> --json state,mergedAt,mergeCommit,statusCheckRollup`
 (`MERGED`, a merge SHA, and the newest run of each check passing — superseded runs

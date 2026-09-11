@@ -1,6 +1,6 @@
 ---
 title: git-workflow-and-versioning
-summary: 'Use when preparing a release, choosing a version bump, creating or moving tags, writing changelog or release-note content, or when git hygiene for shared history is in question: commits, branches, divergence and squash-merge reconciliation, recovery, non-interactive continuation.'
+summary: 'Use when preparing a release, choosing a version bump, creating or moving tags, writing changelog or release-note content, or when git hygiene for shared history is in question: commits, branches, base comparison and stale-base rebases, divergence and squash-merge reconciliation, post-merge branch state, recovery, non-interactive continuation.'
 kind: playbook
 ---
 
@@ -28,8 +28,9 @@ authority and keep it:
 
 1. **Tag + GitHub generated notes (default for GitHub-native projects).**
  Choose the version, push the `vX.Y.Z` tag, and let release CI verify the
- tree and publish with generated notes (categories driven by labels in
- `.github/release.yml`). No manual changelog to drift.
+ tree and publish with generated notes. Add a `.github/release.yml` only when the
+ project wants label-driven categories; without one, GitHub applies its default
+ taxonomy. No manual changelog to drift.
 2. **Curated CHANGELOG.** When the project intentionally maintains one: move
  `[Unreleased]` to `[x.y.z] - date`, list `Deprecated` before `Removed`, tag
  after the changelog lands.
@@ -63,7 +64,10 @@ change users must react to is at least minor.
  or explicit skip. Before reporting, read the branch and publish state you
  actually observe (`git status -sb`, `git rev-parse --abbrev-ref HEAD`,
  `git branch -r --contains <sha>`): a shared worktree can be switched, or your
- uncommitted edits committed, by another writer between the edit and the report.
+ uncommitted edits committed, by another writer between the edit and the report. A
+ concurrent writer holding a stale copy can also revert a change you just pushed when
+ they save their file: re-read the file and your own commit before reading intent into
+ the revert, then re-apply without discarding their newer lines.
 
 ## Recovery & non-interactive continuation
 
@@ -99,6 +103,28 @@ may contain no work upstream lacks. Reconcile by content before rebasing:
 5. Verify the residual diff (`git diff origin/main <branch> --stat`) contains
    only intended work, and run affected tests from the directory their runner
    expects.
+
+## Comparing a branch with its base
+
+Two comparisons answer different questions; do not substitute one for the other:
+
+- `git diff <base>...HEAD` (three-dot, measured from the merge base) is what the PR
+  shows and what a merge preserves: only the branch's own changes. Use it for pre-PR
+  review, `git diff --check`, and gate ranges.
+- `git diff <base>..HEAD` (two-dot, tip to tip) compares the two trees directly. It
+  reports everything the base gained while the branch was open as deletions, so a stale
+  base looks like a regression the merge would never cause - but it is the correct
+  comparison when the question is whether the trees differ, as when deciding whether a
+  squash-merged change is already upstream (see above).
+
+Test drift directly with `git merge-base --is-ancestor <base-tip> HEAD`. A stale base
+is a conflict-hygiene reason to rebase, not evidence that the merge discards base work:
+keep the base's newer content, and rebase only when the same files are touched.
+
+After a merge, fetch the branch before concluding that nothing else landed on it. A
+concurrent session can push to a merged branch, leaving commits no PR covers
+(`git fetch origin <branch> && git log --oneline <merged-head>..FETCH_HEAD`), and a
+stale remote-tracking ref makes that log look empty.
 
 ## Common Rationalizations
 
