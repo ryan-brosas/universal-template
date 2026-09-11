@@ -11,8 +11,14 @@ The `github-actions-engineering` skill authors/reviews the project workflow. The
 A check name can carry several runs on one commit. When concurrency cancels
 superseded runs — a body edit, reopen, or synchronize re-fires the workflow —
 the older runs remain `cancelled` in the rollup while the newest run holds the
-verdict. Read the latest run per check name: a `cancelled` entry that a later
-run superseded is not a failure and does not make the PR unclean.
+verdict. Select the latest run per check name and provider (app ID or integration
+identity when available); identical names from different providers are not
+interchangeable. A `cancelled` entry that a later run of that same check superseded
+is not a failure and does not make the PR unclean.
+
+When reading raw GraphQL `statusCheckRollup.contexts`, follow
+`pageInfo.hasNextPage` and `endCursor` through every page before evaluating the
+rollup. A partial page is not evidence that all checks passed.
 
 ## Structural observation (conditional)
 
