@@ -1,0 +1,207 @@
+---
+argument-hint: '[veda-flags]'
+title: veda-plan-implement
+summary: 'Use when the user explicitly asks to plan and implement with the Veda Navigator model. Drives `veda -S plan-TASKNAME -m flash -p navigator-plan` to align; you then implement with native tools. Not a general planning substitute: when the user asks to plan and has not asked for Veda, plan with native capabilities instead.'
+kind: playbook
+---
+
+## Core Principle
+
+Align with Navigator before executing: Navigator advises (no tool access), the Driver executes with native tools. Everything Navigator knows comes from `veda sel add` files and the prompt text.
+
+## When to Use / NOT
+
+- Use when planning a refactor, debugging approach, research, analysis, writing, or any course of action before implementing.
+- NOT when the user wants immediate execution without an alignment pass.
+
+## Workflow
+
+An explicit planning-only or do-not-implement request stops after the aligned
+plan. Agreement with a plan alone does not authorize implementation. This
+boundary overrides the execution steps and completion reminders below.
+
+1. `veda -S plan-TASKNAME sel clear` + `sel add` (full files first; slice only above 125k).
+2. `veda -S plan-TASKNAME -m flash -p navigator-plan` once, commit to a position, carry the user's ask verbatim.
+3. Continue via `resume` / `-p navigator-chat` until aligned; involve the user on scope/cost/direction.
+4. Execute with native tools, checkpointing at plan-step boundaries with evidence. Stop when the task is complete or blocked on input only the user can provide.
+
+
+## Model choice
+
+Which backend and model to use is a live decision owned by
+`../model-resolution/README.md` and the active host's own inventory; this skill
+mandates no provider. Pick a capable reasoning seat for load-bearing planning or
+high-risk review, a cheaper seat for discovery and context curation, and probe
+the lane before trusting it.
+
+## Invocation, veda CLI (confirmed working)
+
+Use the veda CLI with a **positional** prompt. The default backend/model come from your own `~/.config/veda/config` (observed here as `BACKEND="agy"`, `MODEL="gemini-3.7-flash-high"`), so no flags are needed when that is what you want:
+
+```bash
+veda -S plan-<task> -p navigator-plan '<your prompt — inline ALL relevant file contents; veda sees only what you paste>'
+```
+
+- Pin explicitly with `-b agy -m gemini-3.7-flash-high` if you ever need to override.
+- Keep one `-S` session name; follow up with `veda -S plan-<task> resume '...'` or `-p navigator-chat`. You implement afterwards with native tools.
+
+**Do NOT use `agents.run({ runner: "veda", ... })`:** broken with veda-ts 0.75.8, pi-fabric pipes the prompt to stdin, but veda reads positionals only (`src/cli/validate.ts` throws "No prompt provided"). Use the CLI until pi-fabric fixes the runner.
+
+## Your Task
+
+Collaborate, discuss, and align with the Navigator model on a plan using `veda -S plan-TASKNAME -m flash -p navigator-plan`. This applies to any kind of work: solving a problem, debugging, research, writing, analysis, or planning a course of action. Navigator has no tool access; everything it knows comes from the files you share via `veda sel add` and what you write in your prompts.
+
+**Model:** `flash` is auto-detected by `veda init` from your installed harnesses. If a `-m`/`-b` (or other veda flags) was passed when this skill was invoked, use those instead of `-m flash` in every `veda` command below.
+
+**Reuse the same `-S` session name** across `navigator-plan` and follow-up `resume`/`navigator-chat` so the conversation continues rather than restarting.
+
+Use `-p navigator-plan` to start, then switch to `-p navigator-chat` for follow-up discussion. Only use `navigator-plan` once per task unless the user instructs otherwise.
+
+**Involve the user when the work requires them.** Use your `ask_user` tool (or plain questions if unavailable) when the goal is ambiguous, a decision would change scope, cost, or direction, or input only the user can provide. Navigator advises; the user decides. Otherwise, when you have enough information to act, act.
+
+### Escaping Backticks in Prompts (Critical)
+
+**Backticks in double-quoted prompts get evaluated by bash as command substitution.** If your prompt contains examples with backticks, they will be executed as commands:
+
+```bash
+# BAD - double quotes evaluate backticks:
+veda -p navigator-plan "The function uses `console.log`"
+# Results in: sh: console.log: command not found
+
+# GOOD - use single quotes (simplest):
+veda -S plan-auth-refactor -m flash -p navigator-plan 'The function uses `console.log` to output.'
+
+# GOOD - escape backticks in double quotes:
+veda -p navigator-plan "The function uses \`console.log\`"
+```
+
+**Recommendation:** Use single quotes (`'...'`) for prompts containing backticks. If you need variable expansion, escape backticks with backslash in double quotes.
+
+## Session Naming (Critical for Multi-Agent)
+
+**Use a descriptive, contextual session ID** with `-S` to isolate your selection from other concurrent agents. Format: `plan-TASKNAME` where TASKNAME briefly describes the work.
+
+```bash
+veda -S plan-auth-refactor -m flash ...    # Planning a refactor
+veda -S plan-pricing-research -m flash ... # Researching pricing options
+veda -S plan-launch-doc -m flash ...       # Drafting a launch document
+```
+
+---
+
+## Setting Context (Critical)
+
+**You must run `veda sel add` before sending prompts.** This is how Navigator sees your working materials: source code, drafts, notes, specs, data, research documents, transcripts. Any text file works.
+
+```bash
+# Clear and build selection (use your session name)
+veda -S plan-auth-refactor sel clear
+veda -S plan-auth-refactor sel add "src/feature/" "docs/notes.md"
+
+# Check token count
+veda -S plan-auth-refactor sel ls
+```
+
+**Token budget (one rule):** Always start with full files. Check `sel ls`. 75k-125k tokens is acceptable. Only use slices if you exceed 125k, and pare down starting with the largest files. More context is better for Navigator, so prefer full files when possible.
+
+**What to share:** whatever the problem touches, plus its immediate neighbors. Navigator cannot see your terminal or environment, so put observations in the prompt itself: error output, a causal timeline, data you collected, drafts under discussion. State your hypothesis if you have one; if you are stuck, say where.
+
+### File Slices (Line Ranges)
+
+Only when over the 125k budget:
+
+```bash
+veda -S plan-auth-refactor sel add main.c:10-50       # Lines 10-50 only
+veda -S plan-auth-refactor sel add main.c:100-        # Line 100 to end of file
+veda -S plan-auth-refactor sel add config.ts:25       # Single line 25
+veda -S plan-auth-refactor sel add "src/*.c:1-80"     # First 80 lines of each file
+```
+
+| Syntax | Description |
+|--------|-------------|
+| `file.c:10-20` | Lines 10 to 20 (inclusive) |
+| `file.c:15-` | Line 15 to end of file |
+| `file.c:8` | Single line 8 |
+| `"src/*.c:1-50"` | First 50 lines of each matched file |
+
+---
+
+## Collaborating with Navigator
+
+Think of Navigator as a senior collaborator you're pairing with. Your opening message should commit to a position, not ask an open-ended question:
+
+- Share the user's prompt verbatim, plus who the work is for and what the output enables, so Navigator understands the actual ask rather than your interpretation
+- State the goal and your proposed approach (take a stance; Navigator stress-tests it)
+- Provide evidence anchors: file and section references for your key claims
+- Name constraints and non-goals
+- Ask 1-2 specific questions where you are uncertain
+- Invite Navigator to help in any way, especially if you're stuck; a fresh perspective on a dead end is often the breakthrough
+
+Example flow:
+```bash
+# 1. Set the context
+veda -S plan-auth-refactor sel clear
+veda -S plan-auth-refactor sel add "src/auth/" "src/api/users.ts"
+
+# 2. Start planning conversation - commit to a position, carrying the ask VERBATIM
+#
+# Lead with the USER'S EXACT WORDS (quoted verbatim), then your framing —
+# Navigator plans against the ask as given, so don't paraphrase it away:
+veda -S plan-auth-refactor -m flash -p navigator-plan \
+  '<USER PROMPT, verbatim, exactly as the user wrote it>
+
+My understanding: [situation + evidence]. Proposed approach: [details]. Non-goals: [scope limits]. Key question: [your real uncertainty]. What do you think?'
+
+# 3. Continue discussion (session-scoped resume)
+veda -S plan-auth-refactor -m flash resume "What about edge case X?"
+# Or switch to chat mode for back-and-forth
+veda -S plan-auth-refactor -m flash -p navigator-chat "What about edge case X?"
+```
+
+Confirm alignment before you start executing. **Once aligned, you (the Driver) proceed to execution.** Navigator does not execute; you do.
+
+---
+
+## Execution
+
+After aligning with Navigator:
+- Carry out the plan using your native tools; keep it scoped to what was agreed
+- Checkpoint with Navigator at plan-step boundaries, reporting only what you can point to evidence for: "step N done, verified by X"
+- When results contradict expectations, paste the actual output verbatim and ask "repair or switch?"
+- Two similar failures = mandatory Navigator consult before a third attempt
+- Escalate to the user (via `ask_user`) per the rule above: scope, cost, or direction changes, or input only they can provide
+- You can consult Navigator mid-execution:
+  ```bash
+  veda -S plan-auth-refactor -m flash -p navigator-chat "Quick question: should X handle Y this way?"
+  ```
+
+Before ending your turn, check your last paragraph. If it is a plan, a list of next steps, or a promise about work you have not done ("I'll...", "let me know when..."), do that work now. End your turn only when the task is complete or you are blocked on input only the user can provide.
+
+When you write your final summary, write it for a reader who did not see any of the working thread. Lead with the outcome in one sentence, then the supporting detail. Drop the working shorthand: write complete sentences, spell out terms, and don't use arrow chains or labels you made up earlier. If you have to choose between short and clear, choose clear.
+
+## Reminders
+
+Onboard yourself with veda at `~/.pi/agent/docs/veda.md` before acting.
+Key commands:
+- `veda -S plan-TASKNAME sel add` to build context (quote globs: `"src/*.c"`)
+- `veda -S plan-TASKNAME sel add file.c:10-50` to add line-range slices
+- `veda -S plan-TASKNAME sel ls` to verify selection and token count
+- `veda -S plan-TASKNAME -m flash -p navigator-plan` for initial planning (high reasoning)
+- `veda -S plan-TASKNAME -m flash -p navigator-chat` for follow-up discussion (medium reasoning)
+- `veda -S plan-TASKNAME -m flash resume` to continue a conversation (session-scoped)
+- Output goes to stdout; use `-o file.md` to save response
+
+During alignment, iterate on the plan only. Proceed to implementation only when the user's request authorizes it.
+
+## Red Flags
+
+Open-ended opening questions instead of a committed position; paraphrasing the user's ask; a third attempt after two similar failures without a mandatory Navigator consult; backticks in double-quoted prompts; piping veda with `2>&1`.
+
+## Verification
+
+Alignment confirmed before execution starts; every checkpoint cites evidence ("step N done, verified by X"); contradictions are pasted verbatim and asked "repair or switch?".
+
+
+## References
+
+No reference capsules, the skill is self-contained.

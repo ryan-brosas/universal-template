@@ -25,6 +25,6 @@ revision before relying on it. Do not bulk-load a category or an inventory.
 
 ## Adding one
 
-Follow `../../skills/writing-skills/references/foundation-kind.md`, then add the
-directory to the one matching file under `categories/`. Do not add citations,
+Follow [the foundation authoring guide](../playbooks/writing-skills/references/foundation-kind.md),
+then add the directory to the one matching file under `categories/`. Do not add citations,
 source pins, or evidence indexes anywhere else in the repository.

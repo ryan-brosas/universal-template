@@ -1,134 +1,72 @@
-<div align="center">
-
 # universal-template
 
-**One global baseline for AI coding agent CLIs**
+A shared, content-first baseline for coding agents. Read what the task needs.
+No installer, prompt renderer, prescribed model or mandatory workflow is required.
 
-Clone once to `~/.agents` to share engineering policy, skills, prompts,
-templates, references, and MCP declarations across supported hosts.
+## Contents
 
-[![checks](https://img.shields.io/github/actions/workflow/status/ryan-brosas/universal-template/pr-quality.yml?branch=main&style=for-the-badge&label=checks)](https://github.com/ryan-brosas/universal-template/actions/workflows/pr-quality.yml) [![release](https://img.shields.io/github/v/release/ryan-brosas/universal-template?style=for-the-badge)](https://github.com/ryan-brosas/universal-template/releases/latest)
+- `AGENTS.md`: engineering principles; project-local instructions take precedence.
+- `skills/`: eight small pack routers, the template's only discoverable skills.
+- `knowledge/playbooks/`: specialist procedures with their references and helpers.
+- `knowledge/foundations/`: cold, source-specific implementation evidence.
+- `prompts/` and `templates/`: optional task prompts and reusable documents.
+- `mcp/`: optional server declarations and profiles, not an active connection set.
+- `config/model-profiles.yaml`: optional task needs, not model rankings.
 
-</div>
-
-## Run
-
-Read the relevant Markdown and apply it to the current task. No installation,
-prompt renderer, host configuration, external planning model, or prescribed
-workflow is required. The template supplies knowledge; the active agent chooses
-its approach using the project's requirements and available tools.
-
-The canonical content is plain Markdown and JSON:
-
-- `AGENTS.md`: global engineering instructions
-- `skills/`: operational capabilities (visible entries plus hidden manuals)
-- `knowledge/foundations/`: cold, source-specific evidence, reached through
-  `skills/foundation-pack/`
-- `prompts/`: reusable workflows
-- `templates/`: project and contribution templates
-- `mcp/servers.json`: portable MCP declarations
-
-Project source and local instructions remain authoritative over this baseline.
-
-## Using it
+## Use
 
 ```sh
 git clone https://github.com/ryan-brosas/universal-template.git ~/.agents
 ```
 
-Point a coding agent at the checkout and let it read what the task needs. Exposing
-this content to a host is the host's own work: there is no installer, no generated
-adapter, and no required setup sequence.
+Point your agent at the checkout. Choose a pack by the task:
 
-Two facts matter when a host discovers `skills/`:
-
-- It is the one canonical tree. Do not copy it or maintain a second one.
-- Eager hosts load every skill body they find. Prefer the host's native resource
-  filter, loading only the tracked **hot** set (visible, locally owned
-  `invocation: entry` leaves); otherwise expose a host-owned filtered view. Do not
-  expose the unified root unfiltered on an eager or unverified host, because
-  hiding a description does not prevent body loading.
-
-See `docs/template-effectiveness.md` for the measured host boundary.
-
-### Skill exposure on eager hosts
-
-`skills/` is the one canonical skill tree; do not copy it or maintain a second
-one. Source evidence lives outside it under `knowledge/foundations/`. Native
-filters can avoid maintaining another symlink inventory:
-Pi 0.85.1 was verified with an exclusion for the canonical skill root and exact
-hot-file inclusions. This avoids loading cold bodies, though directory discovery
-still occurs. See `docs/template-effectiveness.md` for the tested boundary.
-
-Where native filtering is unavailable, expose a host-owned hot symlink view and
-disable competing automatic discovery where supported. Derive exposure from
-current frontmatter, preserving intentional host extras and unmanaged files.
-This is host setup work, not a step before each project task. Inspect tracked
-`skills/*/SKILL.md` frontmatter directly: select locally owned `invocation: entry`
-skills without `disable-model-invocation: true`.
-
-Hidden operational skills remain cold and searchable with native file tools. The
-visible `skill-catalog` entry explains where to look when useful expertise is
-missing; no catalog command is required. Source evidence is not a skill: the
-visible `foundation-pack` entry routes through one category to one foundation and
-one matching capsule, using that capsule's own source pin. See
-`docs/foundation-skill-v1.md` for earlier host measurements and limitations.
-
-## Why universal-template?
-
-| Capability | What it unlocks |
+| Pack | Task |
 | --- | --- |
-| One canonical baseline | Share instructions, prompts, templates, skills, and MCP declarations across hosts. |
-| Need-driven capabilities | Discover focused procedures from skill metadata and the filesystem. |
-| Content-first maintenance | Review Markdown directly; use focused tests for executable helpers. |
+| [Engineering](skills/engineering-pack/SKILL.md) | Code, debugging, tests, architecture, security, language practices |
+| [Design](skills/design-pack/SKILL.md) | UI/UX, visual prototypes, Paper/Figma, accessibility, fidelity |
+| [Delivery](skills/delivery-pack/SKILL.md) | Git, PRs, CI, GitHub governance, deployment and releases |
+| [Research](skills/research-pack/SKILL.md) | Source investigation, documentation, search, browser and data research |
+| [Writing](skills/writing-pack/SKILL.md) | Copy, prose, documentation and content |
+| [Agent tooling](skills/agent-tooling-pack/SKILL.md) | Pi, Fabric, providers, models and explicit Veda workflows |
+| [Maintenance](skills/maintenance-pack/SKILL.md) | This template, authoring and missing-specialist discovery |
+| [Foundations](skills/foundation-pack/SKILL.md) | Historical source-specific implementation evidence |
 
-## Context model
+Read the selected router, then one matching playbook and only its needed
+references. Large branches have a cold topic index. Known playbook paths can be
+read directly; trivial tasks do not require a procedure. Project requirements,
+source, tests and runtime behavior remain authoritative.
 
-Static global context is `AGENTS.md` plus hot skill names and descriptions.
-Selected skill bodies and references, project instructions, active tool schemas,
-and conversation state are task context and are not counted as always loaded.
-Project source, tests, and runtime behavior establish current software truth.
-Session events preserve historical work evidence; recall and reflection are
-rebuildable projections.
+### Keep startup small
 
-## Usage
+Expose only `skills/` to host discovery, never `knowledge/`. Playbooks use
+`README.md` with `title`, `summary` and `kind: playbook`, not skill frontmatter.
+Their helpers and relative references resolve from that playbook's directory.
+Do not create specialist `SKILL.md` aliases or copied inventories.
 
-Use host-native operational-skill discovery or search `skills/*/SKILL.md`
-directly. Read frontmatter, choose the smallest relevant capability, and load
-only that skill and the references it names. For source-specific prior art, start
-at `skills/foundation-pack/SKILL.md` and load one matching capsule. The skill tree
-itself is the inventory; there are no generated catalogs.
+Hosts differ: verify their real discovery and outgoing context. Some list every
+skill, some preload bodies, and extensions can inject additional resources.
+Private and package-owned skills are separate from the eight template routers;
+use supported host filters where needed, without moving installed package files
+or removing essential runtime instructions.
 
-`prompts/` holds reusable workflows: `repo-audit`, `plan-work`, `implement-work`,
-`review-work`, `verify-work`, `cleanup-code`, `learn`, `recall-session`,
-`reflect-session`, `compile-skill`, and `compile-session-improvements`. Read one
-and apply it to the current request. Some hosts expose these as slash commands;
-that syntax differs by host and is not required.
+Old leaf commands such as `/skill:ship-pr` are no longer registered by the
+template. On hosts supporting skill commands, use `/skill:delivery-pack ship-pr`,
+or read `knowledge/playbooks/ship-pr/README.md` directly. Slash commands are
+optional; no host-specific syntax is required to use the content.
 
-`mcp/servers.json` is a registry, not a default connection set. The `minimal`
-profile activates nothing; wire only what a host actually needs, using that
-host's own MCP configuration. Code graph and IDE semantics use separate profiles.
-See `mcp/catalog.md` for verified host shapes, package pins, and secret handling.
+### Optional tools
+
+`mcp/servers.json` is a registry. The `minimal` profile activates nothing. Connect
+only needed tools through the host's configuration; see `mcp/catalog.md`.
 
 ## Maintenance
 
-The hidden `template-maintenance` skill owns semantic review of this baseline.
-CI tests the retained executable helpers and PR metadata. See `CONTRIBUTING.md`
-for direct content review and the remaining checks.
+Keep reusable procedures and evidence, not session output, completed plans,
+historical audit reports or host runtimes. Git preserves retired material.
+Add content for demonstrated reuse, not merely because a repository was studied.
 
-## Documentation
-
-- Engineering constitution: `AGENTS.md`
-- Contribution and verification contract: `CONTRIBUTING.md`
-- Foundation migration evidence: `docs/foundation-skill-v1.md` (historical layout)
-- Context definitions, historical host probes, and MCP costs: `docs/context-surfaces.md`
-- Template simplification and current host/task evidence: `docs/template-effectiveness.md`
-- Licensing status and blockers: `docs/licensing.md`
-- Current objectives: `docs/roadmap.md`
-- MCP registry and host wiring: `mcp/catalog.md`
-- Security policy: `SECURITY.md`
-
-> [!WARNING]
->
-> This repository is active global configuration. Changes to linked instructions,
-> skills, or prompts can affect every configured host immediately.
+See `CONTRIBUTING.md`, `SECURITY.md` and `LICENSING.md` for review, reporting and
+licensing. `scripts/pr-metadata.py` supports GitHub title/label/release automation;
+it is not required to use the template. Changes here can immediately affect
+hosts linked to this checkout.

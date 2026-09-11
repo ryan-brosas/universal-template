@@ -26,14 +26,15 @@ explicit promotion request, not an automatic end-of-session ritual.
 
 When a skill qualifies:
 
-- Follow `skills/writing-skills/SKILL.md` and the canonical skill template.
+- Follow `knowledge/playbooks/writing-skills/README.md` and the canonical skill template.
 - State the lift hypothesis: what repeated error, rediscovery, or unnecessary work
   should disappear, and which decisions remain with the model. Write the smallest
   candidate that supplies that missing capability, not a universal workflow.
 - Include no raw transcript, source dump, secret, credential, client identifier,
   or current repository inventory.
-- Create it as an operational hidden/manual candidate with
-  `disable-model-invocation: true`; never mark a procedure `kind: foundation`.
+- In this template, create a cold `knowledge/playbooks/<name>/README.md` with
+  `title`, `summary`, and `kind: playbook`, then link it from one existing pack
+  index. Do not add a specialist `SKILL.md` or mark it `kind: foundation`.
 - Do not make it model-visible without an explicit request, evidence of distinct
   task lift and recurring need, and reliable trigger selection. Legitimate overlap
   needs explicit precedence or one small router, not artificial exclusivity.

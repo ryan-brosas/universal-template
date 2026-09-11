@@ -4,6 +4,7 @@
 area:skills:
   - changed-files:
       - any-glob-to-any-file: skills/**
+      - any-glob-to-any-file: knowledge/playbooks/**
 area:scripts:
   - changed-files:
       - any-glob-to-any-file: scripts/**
