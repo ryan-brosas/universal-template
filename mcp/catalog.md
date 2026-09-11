@@ -50,7 +50,9 @@ I look at", "what exists outside that corpus", "show me this repository's source
 "what issues, pull requests or commits are relevant" and performs repository
 operations. Read GitHub evidence directly instead of ingesting repositories into
 Sourcebot: admission to the corpus is a deliberate, repeated-need decision, not a
-side effect of reading one repository.
+side effect of reading one repository. On this host the GitHub server
+authenticates with a bearer token in the private host config (MCPorter
+`bearerToken`); the declaration in this repository carries no secret.
 
 ## Profiles
 
@@ -58,6 +60,4 @@ side effect of reading one repository.
 tooling: `minimal` (nothing), `cross-repo-source` (Sourcebot),
 `repository-host` (GitHub), `docs` (Context7), `web-research` (Exa),
 `ide` (local IDE/LSP), `design` (Paper/Figma).
-On this host the GitHub server authenticates with a bearer token in the private
-host config (MCPorter `bearerToken`); the declaration here carries no secret.
 Profiles describe useful selections; they do not install or remove anything.
