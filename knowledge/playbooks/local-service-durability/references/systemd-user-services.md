@@ -21,18 +21,25 @@ parsing instead of counting lines.
 `~/.config/systemd/user/myservice.service.d/override.conf`
 
 ```ini
+[Unit]
+StartLimitIntervalSec=60
+StartLimitBurst=10
+
 [Service]
 Restart=always
 RestartSec=5
-StartLimitIntervalSec=60
-StartLimitBurst=10
-ExecStartPre=            # clears an installer-added preflight
+# Clear an installer-added preflight, then replace the inherited command.
+ExecStartPre=
 ExecStart=
 ExecStart=/usr/bin/myservice --foreground
 ```
 
 A drop-in survives the installer regenerating the main unit; re-run
-`systemctl --user daemon-reload` after editing it.
+`systemctl --user daemon-reload` after editing it. Run
+`systemd-analyze verify <unit>` on a unit or drop-in before installing it:
+unit files have no inline comments, so `Key= # text` becomes a command, and
+`StartLimitIntervalSec` / `StartLimitBurst` are ignored outside `[Unit]`.
+Verify reports both, as it did on the example above before this note was added.
 
 ## Classify the unit before deciding
 
