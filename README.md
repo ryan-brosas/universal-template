@@ -21,7 +21,9 @@ its approach using the project's requirements and available tools.
 The canonical content is plain Markdown and JSON:
 
 - `AGENTS.md`: global engineering instructions
-- `skills/`: operational capabilities plus manual, hidden `kind: foundation` evidence leaves
+- `skills/`: operational capabilities (visible entries plus hidden manuals)
+- `knowledge/foundations/`: cold, source-specific evidence, reached through
+  `skills/foundation-pack/`
 - `prompts/`: reusable workflows
 - `templates/`: project and contribution templates
 - `mcp/servers.json`: portable MCP declarations
@@ -51,8 +53,9 @@ See `docs/template-effectiveness.md` for the measured host boundary.
 
 ### Skill exposure on eager hosts
 
-`skills/` is the one canonical source tree; do not copy it or maintain a second
-foundation tree. Native filters can avoid maintaining another symlink inventory:
+`skills/` is the one canonical skill tree; do not copy it or maintain a second
+one. Source evidence lives outside it under `knowledge/foundations/`. Native
+filters can avoid maintaining another symlink inventory:
 Pi 0.85.1 was verified with an exclusion for the canonical skill root and exact
 hot-file inclusions. This avoids loading cold bodies, though directory discovery
 still occurs. See `docs/template-effectiveness.md` for the tested boundary.
@@ -62,13 +65,13 @@ disable competing automatic discovery where supported. Derive exposure from
 current frontmatter, preserving intentional host extras and unmanaged files.
 This is host setup work, not a step before each project task. Inspect tracked
 `skills/*/SKILL.md` frontmatter directly: select locally owned `invocation: entry`
-skills without `kind: foundation` or `disable-model-invocation: true`.
+skills without `disable-model-invocation: true`.
 
-Hidden operational skills and foundations remain cold and searchable with native
-file tools. The visible `skill-catalog` entry explains where to look when useful
-expertise is missing; no catalog command is required. For a foundation, inspect
-its topic map and reference filenames/headings to select likely capsules and
-their own source pins. Use the index only when discovery remains ambiguous. See
+Hidden operational skills remain cold and searchable with native file tools. The
+visible `skill-catalog` entry explains where to look when useful expertise is
+missing; no catalog command is required. Source evidence is not a skill: the
+visible `foundation-pack` entry routes through one category to one foundation and
+one matching capsule, using that capsule's own source pin. See
 `docs/foundation-skill-v1.md` for earlier host measurements and limitations.
 
 ## Why universal-template?
@@ -92,9 +95,9 @@ rebuildable projections.
 
 Use host-native operational-skill discovery or search `skills/*/SKILL.md`
 directly. Read frontmatter, choose the smallest relevant capability, and load
-only that skill and the references it names. `kind: foundation` leaves are cold,
-historical evidence: select one explicitly and load one matching capsule.
-The skill tree itself is the inventory; there are no generated catalogs.
+only that skill and the references it names. For source-specific prior art, start
+at `skills/foundation-pack/SKILL.md` and load one matching capsule. The skill tree
+itself is the inventory; there are no generated catalogs.
 
 `prompts/` holds reusable workflows: `repo-audit`, `plan-work`, `implement-work`,
 `review-work`, `verify-work`, `cleanup-code`, `learn`, `recall-session`,
@@ -117,7 +120,7 @@ for direct content review and the remaining checks.
 
 - Engineering constitution: `AGENTS.md`
 - Contribution and verification contract: `CONTRIBUTING.md`
-- Foundation migration evidence: `docs/foundation-skill-v1.md`
+- Foundation migration evidence: `docs/foundation-skill-v1.md` (historical layout)
 - Context definitions, historical host probes, and MCP costs: `docs/context-surfaces.md`
 - Template simplification and current host/task evidence: `docs/template-effectiveness.md`
 - Licensing status and blockers: `docs/licensing.md`

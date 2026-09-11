@@ -9,7 +9,7 @@ capture campaign.
 1. Inspect the active project's relevant source, tests, and runtime boundary.
 2. State the exact unanswered question.
 3. Use one approved project-local reference, indexed external source, or one
-   explicitly selected `skills/*-foundation` capsule when outside prior art can
+   explicitly selected `knowledge/foundations` capsule when outside prior art can
    materially answer it. Verify its identity and revision still match the
    approval; if they drift, stop and report the mismatch. A foundation is
    historical evidence, not a procedure or timeless truth.

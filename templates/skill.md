@@ -8,8 +8,7 @@ name: <kebab-case-name>
 description: "Use when <trigger>; state the capability unlocked." # strict YAML string
 invocation: manual # entry | internal | manual | vendor; choose from actual callers
 disable-model-invocation: true # required for internal/manual; entry stays visible
-# Cold source evidence only: kind: foundation requires a *-foundation name,
-# invocation: manual, disable-model-invocation: true, and references/index.md.
+# Source evidence is not a skill: foundations live in knowledge/foundations/.
 ---
 
 # <Readable Title>
@@ -47,7 +46,7 @@ Use deterministic checks for exact contracts; model review for meaning and trade
   usefulness, not size alone. Load references selectively, not as prerequisites.
 - `name` equals the directory name; strict YAML scalar/boolean types are required.
 - Only visible local `entry` metadata is generically hot. Internal, manual,
-  vendor, and foundation leaves stay cold in the generic surface. Promote only
+  and vendor leaves stay cold in the generic surface. Promote only
   when recurring need and distinct lift justify exposure.
 - For foundations, follow `skills/writing-skills/references/foundation-kind.md`.
 - Verify local references, metadata, discovery, callers, and diff hygiene.

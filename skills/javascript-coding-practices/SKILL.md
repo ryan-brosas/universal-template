@@ -7,7 +7,7 @@ disable-model-invocation: true
 
 # JavaScript Coding Practices
 
-Application skill for JavaScript style learning (from the archived `awesome-guidelines` style capsules). For TypeScript domain rules, load `typescript-coding-standards`; for React, `skills/react-foundation`.
+Application skill for JavaScript style learning (from the archived `awesome-guidelines` style capsules). For TypeScript domain rules, load `typescript-coding-standards`; for React, `knowledge/foundations/react`.
 
 ## Core Principle
 

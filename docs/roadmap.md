@@ -17,7 +17,8 @@ Progress is normally recoverable from source, Git, the project tracker, and proj
 
 The baseline treats context as an explicit publication contract: the compact
 global constitution plus tracked, visible entry metadata is static context.
-Internal, manual, vendor, and foundation leaves are cold and on demand. CI reads
+Internal, manual, and vendor skill leaves are cold and on demand, and the
+foundations tree is outside skill discovery. CI reads
 one canonical config to gate the constitution, hot metadata, combined budget,
 and zero set overlap. Host payload evidence and dynamic MCP schema costs are
 versioned in `docs/context-measurements.json`; the six-server MCP file is a
@@ -31,9 +32,9 @@ versions and payloads when those integrations change.
 - **Reference-driven prior art (replaces mass ingestion).** Useful external
   repositories become project-local `reference/<repo>/` checkouts: read source
   and tests, adopt, adapt, or omit. `skills/` is the one capability tree;
-  `kind: foundation` leaves hold accumulated, source-specific implementation
-  evidence (architecture, patterns, seams) while remaining excluded from the
-  operational catalog and startup metadata. Create or expand one only when reusable
+  `knowledge/foundations/` holds accumulated, source-specific implementation
+  evidence (architecture, patterns, seams) outside skill discovery, reached
+  through `skills/foundation-pack/`. Create or expand one only when reusable
   understanding is cheaper to retrieve than to re-derive. Active owned projects
   stay in project source; completion creates no ingestion or mining backlog.
   Only an explicit user decision after a stable milestone may promote reusable

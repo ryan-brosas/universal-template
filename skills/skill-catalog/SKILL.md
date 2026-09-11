@@ -23,19 +23,18 @@ clearly owns the request wins. The canonical inventory is the parent directory
 3. **Prefer the narrow owner.** Choose an operational specialist over a generic
    guide. Named languages and frameworks route to an existing matching
    `*-coding-practices` leaf; when none exists, search for a matching operational
-   specialist or foundation and use a foundation only when source-specific
-   evidence helps. Exact tools, document/media formats, and service names route
-   to the matching specialist. Session-to-skill or retrospective requests route
-   to `../session-improvement-compiler/SKILL.md`.
+   specialist. Exact tools, document/media formats, and service names route to
+   the matching specialist. Session-to-skill or retrospective requests route to
+   `../session-improvement-compiler/SKILL.md`.
 4. **Load only what helps.** Read the selected `SKILL.md`, then only references
    it identifies for the active question. Combine skills only when they own
    distinct parts of the request.
 
-Foundations are cold, source-specific evidence. Use one only when porting a
-pattern or filling a real source gap: inspect its topic map, search reference
-filenames/headings, and open 1–3 matching capsules. Revalidate source pins before
-relying on historical claims. If no specialist adds useful context, continue
-from project source rather than forcing a match.
+Source evidence is not a skill. For a concrete prior-art question, load
+`../foundation-pack/SKILL.md` and follow one category to one foundation; read the
+capsule its topic map names, then revalidate that capsule's own source pin. If no
+specialist adds useful context, continue from project source rather than forcing
+a match.
 
 ## Maintenance and verification
 

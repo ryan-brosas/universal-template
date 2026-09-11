@@ -38,8 +38,8 @@ static global context
 
 Task-selected additions are selected skill bodies and references, project-local
 instructions, and active tool schemas. Conversation state contains user and
-assistant history plus host/runtime state. Cold skill bodies, foundations,
-generated human catalogs, and MCP schemas are not part of the static number.
+assistant history plus host/runtime state. Cold skill bodies, the
+`knowledge/foundations/` tree, and MCP schemas are not part of the static number.
 MCP contract costs are reported separately because profiles activate them at
 runtime.
 
@@ -50,14 +50,17 @@ not proof of model quality or exact token usage.
 
 ## Hot and cold sets
 
-A tracked skill is **hot** only when it is not a foundation, has
-`invocation: entry`, and does not set `disable-model-invocation: true`. Internal,
-manual, vendor, and foundation leaves are **cold** in the generic cross-host
-surface. Vendor capabilities may still be exposed by their owning host or
-package. Untracked or Git-ignored local skills are outside publication metrics.
+A tracked skill is **hot** only when it has `invocation: entry` and does not set
+`disable-model-invocation: true`. Internal, manual, and vendor leaves are **cold**
+in the generic cross-host surface. Foundations are no longer skills: they live
+under `knowledge/foundations/`, outside skill discovery, reached through the
+visible `foundation-pack` entry. Vendor capabilities may still be exposed by
+their owning host or package. Untracked or Git-ignored local skills are outside
+publication metrics.
 
 The historical PR snapshot reported 33 hot skills with 8,449 metadata characters and 120
-cold operational skills plus 194 foundations. `AGENTS.md` has 2,824 characters,
+cold operational skills plus 194 foundation leaves that are now outside the skill
+tree. `AGENTS.md` has 2,824 characters,
 so combined static context is 11,273 characters (~2,818 tokens at
 the historical four-characters-per-token estimate). The starting tree had 38
 hot skills, 10,315 hot metadata characters, and a 9,484-character constitution:

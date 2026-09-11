@@ -19,7 +19,7 @@ that gap. No fixed tool chain.
 | Runtime behavior | tests, debugger, runtime output |
 | Named inspiration repo | project `reference/<repo>/` + source/tests |
 | Live site capture | `reference/web/<site>/` or `web-reference` |
-| Stack patterns from prior implementations | `skills/*-foundation` + cited source |
+| Stack patterns from prior implementations | `knowledge/foundations` + cited source |
 | Code graph / cross-repo pattern index | `code-graph` profile: Codebase Memory → verify candidate in source |
 | Past attempts / lessons | Project-scoped session history (`/recall-session`); OpenViking only as an optional rebuildable cache |
 | Current library docs | official docs / Context7 |
