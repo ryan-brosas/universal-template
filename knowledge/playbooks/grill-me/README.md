@@ -63,7 +63,7 @@ Use the stop rule in Workflow; concrete answers are needed for consequential unc
 
 ## Common Mistakes
 
-Asking 5 questions in one message; grilling from a position of "I know better" (stifles ideas); stopping too early (first two questions are easy); stopping too late (grilling the trivial parts); not documenting the answers; "grilling as attack" (destroys trust, not plans).
+Asking 5 questions in one message; grilling from a position of "I know better" (stifles ideas); stopping too early (first two questions are easy); stopping too late (grilling the trivial parts); letting resolved answers go unrecorded; "grilling as attack" (destroys trust, not plans).
 
 ## Red Flags
 
@@ -71,7 +71,7 @@ No assumptions stated. "I'll figure it out later" as a crutch. "everyone agrees"
 
 ## Anti-Patterns
 
-**5 questions at once**; **"I know better"** (stifles); **stop too early** (first 2 are easy); **grill the trivial**; **no doc**; **attack mode**.
+**5 questions at once**; **"I know better"** (stifles); **stop too early** (first 2 are easy); **grill the trivial**; **answers go unrecorded**; **attack mode**.
 
 ## Verification
 
