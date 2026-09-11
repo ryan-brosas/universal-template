@@ -8,7 +8,7 @@ invocation: entry
 
 Use this as a fallback bridge, not a phase before every task. A visible skill that
 clearly owns the request wins. The canonical inventory is the parent directory
-(`../`); generated catalogs are optional human views.
+(`../`); search the files directly.
 
 ## Route
 
@@ -42,7 +42,6 @@ from project source rather than forcing a match.
 Frontmatter owns names, descriptions, invocation, and visibility. Hot promotion
 requires recurring need, reliable selection, and distinct demonstrated lift;
 missing telemetry is unknown, not evidence of disuse. After metadata changes,
-check explicit callers and host visibility, then run this checkout's publication
-checks. `../../scripts/skill-catalog.py` remains an optional maintainer diagnostic
-for the tracked-surface listing and the static hot/cold context gate; it is not a
-runtime prerequisite.
+check explicit callers, referenced files, and intended host visibility directly.
+Use `../../CONTRIBUTING.md` for review guidance; no generated inventory or
+static context gate is required.

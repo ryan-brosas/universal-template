@@ -12,7 +12,8 @@ live in their owners.
 - **Web reference**: a capture of a live website at
   `<project>/reference/web/<site>/` — visual and interaction evidence
   (rendered HTML, CSS, screenshots, archives), produced by the `web-reference`
-  skill; its exact manifest and path contracts can be checked by the optional `scripts/web-reference-manifest.py` maintainer tool.
+  skill; inspect its manifest and paths with native JSON and filesystem tools
+  against `../../web-reference/references/storage.md`.
 - **Approved design artifact**: an approved design state (for example an
   OpenDesign project) — target design evidence for the intended visual or UX
   outcome after explicit approval; it does not override project acceptance

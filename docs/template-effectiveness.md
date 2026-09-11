@@ -8,6 +8,14 @@ fixtures, invocation diagnostics and native-discovery improvements were retained
 Host counts and model trials below describe the earlier local investigation, not
 a fresh benchmark of the rebased publication tree.
 
+## Subsequent simplification
+
+The publication validators, catalog generator, static-budget configuration,
+prompt installation/rendering, and MCP configuration scripts described below
+have since been removed. Their fixes and test results are historical evidence,
+not current commands or requirements. Current maintenance is direct content
+review plus focused tests for retained helpers; see `../CONTRIBUTING.md`.
+
 ## What became easier
 
 - `AGENTS.md` keeps authority, safety and verification, while saying that skills
@@ -144,7 +152,7 @@ repaired capsule in both arms. Task completion and easier retrieval are observed
 broad skill lift, other models, full extension stacks and other hosts remain
 uncertain. No permanent evaluation framework or score gate was introduced.
 
-## Helpers that still earn their place
+## Historical helper assessment (superseded)
 
 - Strict metadata/reference validation and tracked-file hygiene protect objective
   publication boundaries, including the repaired error and byte-handling cases.
@@ -157,7 +165,7 @@ uncertain. No permanent evaluation framework or score gate was introduced.
   PR metadata parsing serves the actual release protocol. None is an ordinary
   project-entry requirement.
 
-## Validation scope
+## Historical validation scope
 
 Relevant checks: strict skill validation and selftest; catalog selftest and CLI
 fixtures; context budget and generated parity; hygiene selftest, committed

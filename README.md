@@ -60,13 +60,9 @@ still occurs. See `docs/template-effectiveness.md` for the tested boundary.
 Where native filtering is unavailable, expose a host-owned hot symlink view and
 disable competing automatic discovery where supported. Derive exposure from
 current frontmatter, preserving intentional host extras and unmanaged files.
-This is setup work, not a step before each project task. Optional maintainer
-commands can inspect the exact publication set:
-
-```sh
-python3 scripts/skill-catalog.py list --surface hot --tracked-only --json
-python3 scripts/skill-catalog.py context --json
-```
+This is host setup work, not a step before each project task. Inspect tracked
+`skills/*/SKILL.md` frontmatter directly: select locally owned `invocation: entry`
+skills without `kind: foundation` or `disable-model-invocation: true`.
 
 Hidden operational skills and foundations remain cold and searchable with native
 file tools. The visible `skill-catalog` entry explains where to look when useful
@@ -81,7 +77,7 @@ their own source pins. Use the index only when discovery remains ambiguous. See
 | --- | --- |
 | One canonical baseline | Share instructions, prompts, templates, skills, and MCP declarations across hosts. |
 | Need-driven capabilities | Discover focused procedures from skill metadata and the filesystem. |
-| Exact publication checks | Protect structured data, references, generated parity, paths, secrets, and safe mutation. |
+| Content-first maintenance | Review Markdown directly; use focused tests for executable helpers. |
 
 ## Context model
 
@@ -98,8 +94,7 @@ Use host-native operational-skill discovery or search `skills/*/SKILL.md`
 directly. Read frontmatter, choose the smallest relevant capability, and load
 only that skill and the references it names. `kind: foundation` leaves are cold,
 historical evidence: select one explicitly and load one matching capsule.
-`docs/skill-catalog.md` and `docs/foundation-catalog.md` are separate optional
-generated views for human browsing, not required model context.
+The skill tree itself is the inventory; there are no generated catalogs.
 
 `prompts/` holds reusable workflows: `repo-audit`, `plan-work`, `implement-work`,
 `review-work`, `verify-work`, `cleanup-code`, `learn`, `recall-session`,
@@ -115,19 +110,15 @@ See `mcp/catalog.md` for verified host shapes, package pins, and secret handling
 ## Maintenance
 
 The hidden `template-maintenance` skill owns semantic review of this baseline.
-Required CI is intentionally narrow and objective. See `CONTRIBUTING.md` and
-`docs/maintainer-tooling.md` for the exact publication contracts and optional
-Python helpers.
+CI tests the retained executable helpers and PR metadata. See `CONTRIBUTING.md`
+for direct content review and the remaining checks.
 
 ## Documentation
 
 - Engineering constitution: `AGENTS.md`
 - Contribution and verification contract: `CONTRIBUTING.md`
-- Maintainer tool ownership: `docs/maintainer-tooling.md`
-- Human operational skill catalog: `docs/skill-catalog.md`
-- Human foundation catalog: `docs/foundation-catalog.md`
 - Foundation migration evidence: `docs/foundation-skill-v1.md`
-- Context definitions, budgets, host probes, and MCP costs: `docs/context-surfaces.md`
+- Context definitions, historical host probes, and MCP costs: `docs/context-surfaces.md`
 - Template simplification and current host/task evidence: `docs/template-effectiveness.md`
 - Licensing status and blockers: `docs/licensing.md`
 - Current objectives: `docs/roadmap.md`

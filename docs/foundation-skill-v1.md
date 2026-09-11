@@ -67,14 +67,11 @@ Keep `skills/` canonical. For eager or unverified hosts, create a host-owned
 **symlink view** containing only tracked hot skill directories (visible, locally
 owned `invocation: entry` leaves) and configure that host to
 scan the view. Do not copy files and do not create a second canonical tree.
-Maintainers can obtain the exact source set with:
-
-```sh
-python3 scripts/skill-catalog.py list --surface hot --tracked-only --json
-```
+Inspect tracked `skills/*/SKILL.md` frontmatter directly to identify this set;
+exclude foundation, hidden, internal, manual, and vendor skills.
 
 A foundation remains available through explicit native discovery: search the
-skill tree or `docs/foundation-catalog.md`, then load its `SKILL.md`, index, and
+skill tree, then load its `SKILL.md`, index, and
 one selected capsule. Rebuild/reconcile the symlink view after catalog
 changes, preserving unrelated host files. The temporary filtered-view probe was
 observed on Claude, Gemini, and OpenCode; other hosts retain the limitations in

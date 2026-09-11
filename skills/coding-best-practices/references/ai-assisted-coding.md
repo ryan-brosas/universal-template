@@ -3,7 +3,7 @@
 ## Treat generated code like a junior PR
 
 - Review every diff: logic, security, scope, duplication, missing tests.
-- Never commit credentials, `.env` contents, or copied secrets — `repo-hygiene.py` and project secret scans are backstops, not excuses to skip review.
+- Never commit credentials, `.env` contents, or copied secrets — project secret scans are backstops, not excuses to skip review.
 
 ## Prompt and scope discipline
 

@@ -1,12 +1,7 @@
 .pi/
-# Retained publication helpers are tracked; other root scripts stay local.
+# Only the GitHub metadata helper is published; other root scripts stay local.
 /scripts/*
 !/scripts/pr-metadata.py
-!/scripts/repo-hygiene.py
-!/scripts/publication_fixtures.py
-!/scripts/skill-catalog.py
-!/scripts/skill-validator.py
-!/scripts/web-reference-manifest.py
 # Generated runtime capability state (machine-local, never committed).
 /state/
 # Skill-local helpers stay local except the published fidelity gate and tests.

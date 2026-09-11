@@ -24,25 +24,17 @@ jobs:
           fetch-depth: 2
           persist-credentials: false
 
-      - name: Install structured-data checker
-        run: pip install --user -r requirements-dev.txt
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '24'
 
-      - name: Check repository contracts
+      - name: Test published helpers
         shell: bash
         run: |
           set -euo pipefail
-          SKILLS_ROOT="$GITHUB_WORKSPACE/skills" python3 scripts/skill-validator.py
-          python3 scripts/skill-validator.py --selftest
           python3 skills/pencil/scripts/test-verify-fidelity-manifest.py
-          python3 scripts/skill-catalog.py selftest
-          python3 scripts/skill-catalog.py fixture-test
-          python3 scripts/skill-catalog.py context
-          python3 scripts/skill-catalog.py generate --check
-          python3 scripts/repo-hygiene.py --selftest
-          python3 scripts/repo-hygiene.py
-          python3 scripts/repo-hygiene.py --fixture-test
           node --test skills/cdp/sdk/recording-privacy.test.ts
-          python3 scripts/web-reference-manifest.py --selftest
           python3 scripts/pr-metadata.py --selftest
           git diff --check "$GITHUB_SHA^" "$GITHUB_SHA"
 
@@ -57,6 +49,7 @@ jobs:
       - name: Publish the release with generated notes
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
         run: |
           gh release create "$GITHUB_REF_NAME" --verify-tag --generate-notes --title "$GITHUB_REF_NAME"
           gh release view "$GITHUB_REF_NAME" --json url,name,isDraft --jq '{url, name, isDraft}'

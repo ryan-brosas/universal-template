@@ -18,7 +18,9 @@ exact published commit, Git tree SHA, observation time, command, and results.
 The observed clean checkout was verified to have the same tree as that published
 commit. This measures tracked instruction/metadata files only, not a Pi request,
 selected-skill invocation, or live MCP schemas. Read its values for that snapshot;
-run the catalog command below for the working tree being inspected now.
+the recorded command belongs to the historical revision, not the current
+checkout. For new measurements, inspect current metadata and the host payload
+directly with available tools.
 
 A new runtime probe would need its own exact source snapshot, host version,
 configuration, and sanitized request digest before making a stronger provenance
@@ -27,7 +29,7 @@ an outbound-request digest.
 
 ## Static and dynamic context
 
-The gated static global baseline is:
+The conceptual static global baseline is:
 
 ```text
 static global context
@@ -41,20 +43,10 @@ generated human catalogs, and MCP schemas are not part of the static number.
 MCP contract costs are reported separately because profiles activate them at
 runtime.
 
-`config/context-budget.json` is the canonical owner of the instruction, hot, and
-combined limits and the character-to-token estimate divisor. Character budgets,
-hot/cold overlap, and hidden-in-hot checks are the publication gate; the hot
-skill **count** (`max_skills`) is an advisory review threshold reported as
-`WARN`, never a publication failure. Run the normal publication check without
-repeated numeric limits:
-
-```bash
-python3 scripts/skill-catalog.py context
-python3 scripts/skill-catalog.py context --json
-```
-
-CLI limit overrides remain available for experiments, but CI and release checks
-read the config by default.
+There is no static-budget configuration or catalog publication gate. Keep
+startup exposure deliberate by reviewing current frontmatter and the host's
+actual discovery behavior. Character counts are rough diagnostic estimates,
+not proof of model quality or exact token usage.
 
 ## Hot and cold sets
 
@@ -67,7 +59,7 @@ package. Untracked or Git-ignored local skills are outside publication metrics.
 The historical PR snapshot reported 33 hot skills with 8,449 metadata characters and 120
 cold operational skills plus 194 foundations. `AGENTS.md` has 2,824 characters,
 so combined static context is 11,273 characters (~2,818 tokens at
-the configured four-characters-per-token estimate). The starting tree had 38
+the historical four-characters-per-token estimate). The starting tree had 38
 hot skills, 10,315 hot metadata characters, and a 9,484-character constitution:
 19,799 combined characters (~4,949 estimated tokens).
 

@@ -57,7 +57,7 @@ Capture ids are `YYYY-MM-DD`, or `YYYY-MM-DDTHHMM` when a second capture happens
 
 ## Validation
 
-Inspect `manifest.json` and referenced files with native filesystem and JSON tools. Confirm field types, exact enums, capture identifiers, path containment, file existence, and credential hygiene. `scripts/web-reference-manifest.py` is an optional Python implementation of those hard checks for maintainers and CI. It does not judge coverage, trust, visual quality, or ADOPT / ADAPT / OMIT.
+Inspect `manifest.json` and referenced files with native filesystem and JSON tools. Confirm field types, exact enums, capture identifiers, path containment, file existence, and credential hygiene. Judge coverage, trust, visual quality, and ADOPT / ADAPT / OMIT separately from structural correctness.
 
 ## REFERENCE.md
 
