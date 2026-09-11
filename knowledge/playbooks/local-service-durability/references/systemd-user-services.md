@@ -34,6 +34,27 @@ ExecStart=/usr/bin/myservice --foreground
 A drop-in survives the installer regenerating the main unit; re-run
 `systemctl --user daemon-reload` after editing it.
 
+## Classify the unit before deciding
+
+`systemctl is-active` exits nonzero for both `inactive` and `failed`, so the
+printed state, never the exit status, picks the branch. Verified on a real host:
+a `start-limit-hit` unit printed `failed` with `Result=start-limit-hit`, a
+deliberately stopped unit printed `inactive`, and both exited 3.
+
+```sh
+state=$(systemctl --user is-active myservice.service)
+case "$state" in
+  active)  probe the service ;;                                    # then recover on probe failure
+  failed)  reset-failed; restart ;;                                # systemd is NOT retrying a failed unit
+  activating|deactivating|inactive) : ;;                           # already retrying, or a human stopped it
+esac
+```
+
+`try-restart` is a no-op on any unit that is not running, so a recovery path
+built on it silently does nothing exactly when the unit is down. Treat
+`failed` as conclusive (recover on first observation, still paced) and leave
+`inactive` alone so deliberate stops are respected.
+
 ## Crash-loop-safe healthcheck
 
 ```sh
