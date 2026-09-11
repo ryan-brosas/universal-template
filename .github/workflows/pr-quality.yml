@@ -52,7 +52,11 @@ jobs:
           zero_sha=0000000000000000000000000000000000000000
           if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
             git diff --check "$BASE_SHA...$GITHUB_SHA"
-          elif [[ -n "${GITHUB_EVENT_BEFORE:-}" && "$GITHUB_EVENT_BEFORE" != "$zero_sha" ]]; then
+          elif [[ -n "${GITHUB_EVENT_BEFORE:-}" && "$GITHUB_EVENT_BEFORE" != "$zero_sha" ]] \
+            && git cat-file -e "${GITHUB_EVENT_BEFORE}^{commit}" 2>/dev/null; then
+            # A force-push discards the recorded "before" commit, so it is not
+            # reachable from any ref and checkout cannot fetch it. Fall back to
+            # the pushed commit's own parent instead of failing on a bad object.
             git diff --check "$GITHUB_EVENT_BEFORE" "$GITHUB_SHA"
           else
             git diff --check "$GITHUB_SHA^" "$GITHUB_SHA"
