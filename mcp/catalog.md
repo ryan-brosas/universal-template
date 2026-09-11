@@ -38,9 +38,11 @@ it, not how it is deployed.
 
 Sourcebot is retrieval, never reasoning: search it, read the decisive source and
 tests, and let the coding agent interpret the evidence. Do not require it for
-local work, and do not add a knowledge layer in front of it. No language model is
-configured for it: its delegated `ask_codebase` agent duplicates the calling
-agent's reasoning, so it is not part of this architecture.
+local work, and do not add a knowledge layer in front of it. The host may
+configure a language model for Sourcebot's own chat and delegated-research
+features; that is a deployment decision and not this architecture's, so do not
+remove it on architectural grounds. Either way, do not delegate interpretation
+to `ask_codebase`: retrieve the evidence and read the source yourself.
 
 ## Repository hosting
 
