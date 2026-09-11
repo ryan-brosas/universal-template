@@ -1,44 +1,47 @@
 ---
 name: skill-catalog
-description: "Use when useful expertise is missing from the visible skills, a task could benefit from a source-specific foundation, or the user asks what capabilities exist. Discover cold context with native file search; no catalog command required."
+description: "Use when no visible skill clearly owns a task, a named technology may have a hidden specialist, the user asks what capabilities exist, or selection seems wrong. Search cold SKILL.md frontmatter; load only the narrowest match."
 invocation: entry
 ---
 
-# Find useful context
+# Find the missing specialist
 
-The filesystem and skill frontmatter are canonical; generated catalogs are human
-browsing aids. The canonical tree is this directory's parent (`../`), including
-cold capabilities omitted from the host's startup list. Skip discovery when a
-visible skill clearly owns the request or ordinary project source is enough.
+Use this as a fallback bridge, not a phase before every task. A visible skill that
+clearly owns the request wins. The canonical inventory is the parent directory
+(`../`); generated catalogs are optional human views.
 
-Search bounded filenames and descriptions for the active question. From the
-skill-tree root, `rg -l --glob SKILL.md 'migration|codemod' .` is one possible
-candidate search, not a scoring system or required command. Inspect plausible
-candidates' name, description, kind, invocation and visibility, then load what
-helps. Combine matches for distinct needs, not every overlapping procedure.
-Hidden/manual skills remain usable through explicit requests, prompts, project
-instructions or this search. No Python, generated inventory or model resolver
-is required; a search miss does not require building a new inventory.
+## Route
 
-For a foundation, inspect its compact topic map, search reference filenames and
-headings, then open the likely capsules. Use the index only when discovery
-remains ambiguous; it is an inventory, not a mandatory context load. Check each
-selected capsule's own revision, limits and source links. A remembered graph
-project or tool name is a retrieval hint, not a required integration.
+1. **Handle this checkout explicitly.** Work on `~/.agents`,
+   `universal-template`, `AGENTS.md`, prompts, skills, templates, MCP declarations,
+   or publication tooling loads `../template-maintenance/SKILL.md`. Creating,
+   editing, auditing, or verifying a skill also loads
+   `../writing-skills/SKILL.md`.
+2. **Search metadata first.** Search bounded skill names and frontmatter
+   descriptions using distinctive task nouns, product names, file formats, and
+   user intent. Inspect only the best 1–3 candidates before choosing.
+3. **Prefer the narrow owner.** Choose an operational specialist over a generic
+   guide. Named languages and frameworks route to an existing matching
+   `*-coding-practices` leaf; when none exists, search for a matching operational
+   specialist or foundation and use a foundation only when source-specific
+   evidence helps. Exact tools, document/media formats, and service names route
+   to the matching specialist. Session-to-skill or retrospective requests route
+   to `../session-improvement-compiler/SKILL.md`.
+4. **Load only what helps.** Read the selected `SKILL.md`, then only references
+   it identifies for the active question. Combine skills only when they own
+   distinct parts of the request.
 
-For maintenance, change the owning frontmatter and regenerate the retained
-operational/foundation catalogs. Promote nothing automatically. Hot exposure needs
-recurring use, reliable selection, and distinct demonstrated lift. Missing usage
-telemetry is unknown, not proof that a skill is unused. Keep meaning and promotion
-decisions with the model; scripts validate metadata and disjoint surfaces.
-Hiding a description does not necessarily prevent the host from scanning its body.
+Foundations are cold, source-specific evidence. Use one only when porting a
+pattern or filling a real source gap: inspect its topic map, search reference
+filenames/headings, and open 1–3 matching capsules. Revalidate source pins before
+relying on historical claims. If no specialist adds useful context, continue
+from project source rather than forcing a match.
 
-## Verification
+## Maintenance and verification
 
-Check explicit callers and host visibility after metadata changes. Run the target
-checkout's applicable publication checks; do not run template scripts in an
-unrelated project. `../../scripts/skill-catalog.py` provides optional list, search,
-context, invocation-size and generated-view diagnostics. `invocation <name>`
-inspects one loader; `invocation --limit 10` lists the largest tracked loaders.
-These are optional inventories, not runtime-cost measurements or publication
-limits. The model owns the approach, not these diagnostic commands.
+Frontmatter owns names, descriptions, invocation, and visibility. Hot promotion
+requires recurring need, reliable selection, and distinct demonstrated lift;
+missing telemetry is unknown, not evidence of disuse. After metadata changes,
+check explicit callers and host visibility, then run this checkout's publication
+checks. `../../scripts/skill-catalog.py` remains an optional diagnostic for list,
+search, context, and invocation-size reports; it is not a runtime prerequisite.
