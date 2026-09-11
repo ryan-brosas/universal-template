@@ -9,9 +9,10 @@ capture campaign.
 1. Inspect the active project's relevant source, tests, and runtime boundary.
 2. State the exact unanswered question.
 3. Use one approved project-local reference, indexed external source, or one
-   explicitly selected `knowledge/foundations` capsule when outside prior art can
-   materially answer it. Verify its identity and revision still match the
-   approval; if they drift, stop and report the mismatch. A foundation is
+   explicitly selected capsule reached through `skills/foundation-pack/SKILL.md`
+   when outside prior art can materially answer it. Verify its identity and
+   revision still match the approval; if they drift, stop and report the
+   mismatch. A foundation is
    historical evidence, not a procedure or timeless truth.
 4. Use direct search, AST-aware tools, Fovea, or Codebase Memory only to locate
    the relevant implementation and tests.
