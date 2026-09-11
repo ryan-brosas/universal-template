@@ -50,15 +50,16 @@ which lives outside this template together with the index and database.
 3. For a symbol, prefer `find_symbol_definitions` / `find_symbol_references` over
    text grep. Symbol matching is exact, so pass the precise identifier.
 4. `read_file` the decisive file (paginate with offset/limit; output is capped)
-   and read its direct tests. Use `list_commits` / `list_branches` when revision
-   or history matters.
+   and read its direct tests. Use `list_commits` / `list_branches` when the
+   index's own revision or history matters.
 5. Report the repository, revision, and any coverage caveat. Results come from
    the index's snapshot, not live, and a search miss is not proof of absence.
    The index advances on its own schedule, so before treating an answer as the
    current revision — above all for a repository just changed — compare the
-   indexed commit with the repository head (`list_commits`). Otherwise the
-   answer can quote a superseded revision with confident, plausible line
-   numbers.
+   indexed commit with the live repository head using GitHub or direct Git
+   (`git ls-remote <remote> <ref>`), not Sourcebot's own `list_commits`.
+   Otherwise the answer can quote a superseded revision with confident,
+   plausible line numbers.
 
 ## Inspiration and adaptation
 
