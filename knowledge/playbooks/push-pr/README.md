@@ -86,7 +86,12 @@ required check had passed, no approval was required, and no thread was open. On 
 second PR the branch had never been rewritten, and retrying the unchanged head about a
 minute later merged it with no push in between - so a rewrite, a missing approval, and a
 failing check were each ruled out by observation rather than by argument. Re-read
-`gh api repos/OWNER/REPO/pulls/N --jq .mergeable_state` and retry, or let `--auto` wait
-for the state to settle; do not infer a missing requirement from the refusal, do not add
-an approval to satisfy a rule that did not fire, and do not reach for `--admin`, which
-bypasses a real requirement whenever one exists.
+`gh api repos/OWNER/REPO/pulls/N --jq .mergeable_state`, keep the revision you validated
+(`.headRefOid`), revalidate that revision against local gates, required checks, and review
+threads, then retry with `gh pr merge <N> --match-head-commit <validated-head>`: a
+concurrent session can push between validation and merge, and a bare retry would merge a
+head nobody checked. Do not infer a missing requirement from the refusal, do not add an
+approval to satisfy a rule that did not fire, do not reach for `--admin` (which bypasses a
+real requirement whenever one exists), and do not enable `--auto` to work around a
+refusal: auto-merge is a persistent instruction that still needs the explicit request
+step 4 requires.
