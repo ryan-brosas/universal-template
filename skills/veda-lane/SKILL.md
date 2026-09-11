@@ -20,7 +20,7 @@ Veda output is advisory. Probe availability instead of trusting claims (no hard-
 
 ## Workflow
 
-1. **Probe once per session.** Use `veda --version`, `veda models` (installed backends and aliases), and `veda personas` (built-in versus locally installed). Inspect other host inventories directly when they affect the lane; `runtime-capabilities.py` is an optional aggregate diagnostic.
+1. **Probe once per session.** Use `veda --version`, `veda models` (installed backends and aliases), and `veda personas` (built-in versus locally installed). Inspect other host inventories directly when they affect the lane.
 2. **Pick the lane by task**, personas map to execution-router roles: `navigator-plan` → NAVIGATOR, `reviewer` → REVIEWER, `frontend` / `frontend-auditor` → FRONTEND-CRITIC, `worker` → WORKER, `deep` → SOLVER/JUDGE/VERIFIER (k× cost, only for hard ambiguous problems). The persona picks the *behavior*; `skills/model-resolution` picks the *backend/model* from the runtime catalog, a UI-critique lane needs a UI-capable reasoning model, whichever provider currently offers one.
 3. **Select models from the runtime catalog only**, `veda models <backend>`, `agy models`. Never hard-code a slug: AGY-hosted Claude may or may not exist in the installed catalog; Claude `opus` rides the claude-code backend when installed.
 4. **Delegate through the simplest supported path.** Prefer Fabric's `agents.run({ runner: "veda", persona, model })`, a one-shot headless child at the outer fabric_exec boundary (see the installed pi-fabric `docs/agents.md`, "Veda runner"). If the installed Fabric/Veda pair rejects it, fall back to the direct CLI and note the version pair, do not encode a temporary incompatibility as a permanent rule.

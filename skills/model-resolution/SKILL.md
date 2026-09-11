@@ -59,4 +59,3 @@ when needed, selected model, and any observed reason for escalation.
 - `../execution-router/SKILL.md`, when execution shape must be chosen first.
 - `../veda-lane/SKILL.md`, native Veda lane execution.
 - `../../config/model-profiles.yaml`, portable task-needs profiles.
-- `../../scripts/runtime-capabilities.py`, optional aggregate diagnostic.

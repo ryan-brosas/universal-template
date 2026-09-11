@@ -121,10 +121,10 @@ boundaries but cannot lock unrelated applications. Inspect target, backup, and
 sidecar together before manual recovery. Restoring a backup is a separate,
 user-authorized action; never restore it over later unrelated edits blindly.
 
-Prime translation remains available through `sync-to-prime.py`, which delegates
-the same ownership rules and requires `--server` or `--profile`. All tests run in
-temporary directories via `python3 mcp/configure.py --selftest`; no live host config
-is changed.
+Prime translation remains available through `configure.py --format prime`, which
+enforces the same ownership rules and requires `--server` or `--profile`. All tests
+run in temporary directories via `python3 mcp/configure.py --selftest`; no live host
+config is changed.
 
 Measured tool-contract costs and the 81,429-byte all-versus-minimal reduction
 are recorded in `../docs/context-surfaces.md` and
@@ -158,7 +158,8 @@ both sides blindly:
 - `~/.mcporter/mcporter.json` — the pi-mcp-adapter layer (subset; env values
   support `${VAR}` expansion — never store literal keys there; use env vars).
 - `~/.prime/agent/settings.json` — scoped writes only through
-  `mcp/sync-to-prime.py --server NAME --apply` or an explicit profile.
+  `python3 mcp/configure.py --format prime --target ~/.prime/agent/settings.json
+  --server NAME --apply` or an explicit profile.
 - The IntelliJ **built-in** MCP server (`http://localhost:64442`) is a
   separate transport from mcp-steroid; it needs `JETBRAINS_MCP_TOKEN` exported
   or it fails auth (401) — wire the token or treat the entry as dormant.

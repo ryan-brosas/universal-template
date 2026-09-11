@@ -15,39 +15,7 @@ behavior earns the dependency.
 | `pr-metadata.py` | REQUIRED HARD CONTRACT | The PR-title grammar consumed by label and release automation. |
 | `install-prompts.py` | OPTIONAL COMPATIBILITY TOOL | Safe reconciliation for legacy host prompt surfaces; preserves unmanaged files and atomically derives adapters from Markdown. |
 | `render-prompt.py` | OPTIONAL COMPATIBILITY TOOL | Single-pass prompt placeholder rendering for hosts without native prompts. |
-| `runtime-capabilities.py` | OPTIONAL DIAGNOSTIC | Read-only aggregate environment report; native host inventories remain authoritative. |
-| `github-audit.py` | OPTIONAL DIAGNOSTIC | Read-only GitHub configuration snapshot; direct `gh` output remains authoritative. |
-| `skill-catalog.py` | GENERATED-ARTIFACT TOOL | Entry-only hot/cold sets, the complete AGENTS.md-plus-metadata static budget, optional search/stats, and separate generated catalogs derived from tracked filesystem/frontmatter. |
-
-## Optional invocation-cost inventory
-
-Run from the checkout being inspected (an explicit `SKILLS_ROOT` may select a
-separate skill tree):
-
-```bash
-python3 scripts/skill-catalog.py invocation push-pr --json
-python3 scripts/skill-catalog.py invocation --limit 10
-```
-
-Without a name, report the largest tracked loaders; an explicit name or folder
-can inspect a machine-local skill. JSON is always an array. `--limit` must be
-positive. Unknown names and unreadable reference Markdown return exit 2; size
-alone never fails this diagnostic. No invocation-size limit is added to publication CI.
-
-`loader_chars` counts Unicode characters in the complete `SKILL.md`, including
-frontmatter; `loader_words` counts whitespace-separated words. References are
-recursive `.md` files under that skill's `references/`, not shared cross-skill
-links, scripts, assets, or every document linked by Markdown. The report gives
-count, total characters, and the largest reference's relative path and size.
-Symlinks are not followed; `skipped_reference_paths` identifies omitted entries.
-An empty inventory has zero references and no largest reference.
-
-These are on-disk sizes, not instructions to load all references or estimates of
-actual task context. MCP profile/schema costs, invocation counts, and average
-follow-up request growth in bytes remain `null` (unknown/not measured): the catalog
-has no canonical per-skill runtime telemetry. It does not activate MCP, infer a
-profile from prose, or treat absent observations as zero usage. Pair this inventory
-with a scoped host probe or representative task comparison before claiming lift.
+| `skill-catalog.py` | GENERATED-ARTIFACT TOOL | Entry-only hot/cold sets, the complete AGENTS.md-plus-metadata static budget, the tracked-surface listing, and separate generated catalogs derived from tracked filesystem and frontmatter. |
 
 ## Local Markdown links
 
@@ -95,6 +63,16 @@ code-example, encoded-path, and symlink-boundary regression fixtures.
   `skill-validator.py`.
 - `conventional-commit.py`: duplicated PR metadata parsing and imposed commit
   prose style. The PR title remains the release-facing protocol.
+- `runtime-capabilities.py`: re-serialized `pi`/`veda`/`gh` version and catalog
+  output that the model reads directly; `veda-lane` and `model-resolution` now
+  probe native inventories instead.
+- `github-audit.py`: re-serialized `gh api` responses. `github-repo-setup` reads
+  `gh repo view` and `gh api` directly in audit mode.
+- `sync-to-prime.py`: a thin alias over `mcp/configure.py --format prime` with a
+  default target. Direct invocation owns the same ownership rules.
+- The `skill-catalog.py` invocation-cost and search/stats reports: on-disk size
+  inventories and heuristic ranking that never measured runtime context; listing,
+  the static budget gate, and catalog generation remain.
 
 ## Model-owned decisions
 

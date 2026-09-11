@@ -1,13 +1,11 @@
 .pi/
 # Retained publication helpers are tracked; other root scripts stay local.
 /scripts/*
-!/scripts/github-audit.py
 !/scripts/install-prompts.py
 !/scripts/pr-metadata.py
 !/scripts/render-prompt.py
 !/scripts/repo-hygiene.py
 !/scripts/publication_fixtures.py
-!/scripts/runtime-capabilities.py
 !/scripts/skill-catalog.py
 !/scripts/skill-validator.py
 !/scripts/web-reference-manifest.py
