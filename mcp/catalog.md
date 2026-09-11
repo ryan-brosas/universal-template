@@ -31,7 +31,7 @@ host is required to connect every entry.
 
 | Server            | Kind  | Connection / command                                    | Key / env                        | Notes |
 |-------------------|-------|---------------------------------------------------------|----------------------------------|-------|
-| sourcebot         | remote| `http://localhost:3000/api/mcp`                    | API key in the host config (0600, machine-local, never here) | the only cross-repository code-context server |
+| sourcebot         | remote| `http://localhost:3000/api/mcp`                    | API key in the host config (0600, machine-local, never here) | the only cross-repository code-context server; `ask_codebase` (delegated research) is opt-in and runs only when the user's prompt asks for it |
 | context7          | stdio | `npx -y @upstash/context7-mcp@4.0.4`               | `CONTEXT7_API_KEY`               | library docs + code examples |
 | exa               | stdio | `npx -y exa-mcp-server@3.4.1`                      | `EXA_API_KEY`                    | live web search |
 | mcp-steroid       | stdio | `devrig mcp` (PATH-resolved)                  | none (local IDE bridge)          | JetBrains PSI/refactoring/test/debugger access via devrig |
@@ -141,8 +141,10 @@ both sides blindly:
   GitHub public read-only, so it can only ever read public repositories. MCP
   authentication uses a Sourcebot API key held in the machine-local host config
   (0600), never here; the deployment's `.env` is the only other place a secret
-  may live. No language model is configured, so ask-style summarization stays
-  unavailable on purpose: the agent retrieves evidence and reasons itself.
+  may live. A model is configured for delegated research only: `ask_codebase` is opt-in
+  and runs only when the user's prompt asks for it, while retrieval and reasoning stay
+  with the calling agent. Assignment and evidence contract: the `cross-repo-source`
+  playbook and its `references/research-brief.md`.
   If the deployment is not running the entry is dormant; treat indexed source as
   optional context, never a blocker.
 - **figma-bridge**: run the companion Figma plugin in each file the agent should
