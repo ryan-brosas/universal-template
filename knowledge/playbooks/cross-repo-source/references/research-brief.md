@@ -8,10 +8,11 @@ kind: playbook-reference
 
 `ask_codebase` runs Sourcebot's own agent (code search, symbol lookup, file reads) and
 returns a cited answer plus a link to the saved session. Its value is context isolation:
-the exploration happens on Sourcebot's side. Upstream's tool description forbids calling it
-unless explicitly asked, and it blocks for a minute or more — so it is opt-in, invoked when
-the user asked for it or when a broad question was deliberately delegated, never
-speculatively.
+the exploration happens on Sourcebot's side. Its own contract gates the call: the tool
+description reads "DO NOT USE THIS TOOL UNLESS EXPLICITLY ASKED TO … THE PROMPT MUST
+SPECIFICALLY ASK TO USE THE ask_codebase TOOL", and the call blocks for 60 seconds or
+more. Breadth is the reason to *offer* delegation, never to invoke it: offer it, wait for
+the user's request, then send the brief below.
 
 ## Assignment (state this in the query)
 

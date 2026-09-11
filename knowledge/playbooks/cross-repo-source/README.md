@@ -63,9 +63,10 @@ its index and its database live outside this template.
 Use one strong implementation per question. Compare it with the current project's
 constraints and decide ADOPT / ADAPT / OMIT per concern; never blind-copy.
 Provenance and licensing live in `../reference-driven-development/README.md`.
-Delegated research (`ask_codebase`) is opt-in and blocking: bound the assignment with
-[the brief](references/research-brief.md) when a broad question would flood this context,
-then read the decisive source yourself.
+Delegated research (`ask_codebase`) is opt-in and blocking: its contract forbids the
+call unless the user's prompt asks for it, so a broad question is a reason to offer it, not
+to invoke it. Once asked, bound the assignment with
+[the brief](references/research-brief.md), then read the decisive source yourself.
 
 ## Verification
 

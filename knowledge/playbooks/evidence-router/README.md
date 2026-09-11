@@ -9,7 +9,7 @@ already has — filesystem search, Git, IDE/LSP, compiler and test output.
 | Need | Capability |
 |---|---|
 | Local project orientation, known file/symbol | Direct source, Git, IDE/LSP (`fovea_*` when available) |
-| Cross-repository or architectural question | Indexed source (Sourcebot profile `cross-repo-source`): `list_repos` → `grep`/`glob`/`find_symbol_*` → `read_file`/`list_commits`; delegate a broad question to `ask_codebase` only when the exploration itself would flood this context |
+| Cross-repository or architectural question | Indexed source (Sourcebot profile `cross-repo-source`): `list_repos` → `grep`/`glob`/`find_symbol_*` → `read_file`/`list_commits`; offer `ask_codebase` (delegated research) when the exploration itself would flood this context — it runs only when the user's prompt asks for it |
 | Implementation outside the indexed corpus | GitHub or equivalent source discovery, then read the actual source |
 | Current library/framework behavior | installed source, official docs, or Context7 |
 | Runtime behavior | tests, debugger, runtime output |
