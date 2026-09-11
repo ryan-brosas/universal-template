@@ -26,8 +26,11 @@ from source bytes, filesystem state, Git state, or runtime output.
 3. Ground factual claims in current source, Git, host inventory, and runtime
    output. Treat session history as evidence, never current truth.
 4. Inspect metadata, names, references, intended host visibility, paths, and
-   credential hygiene directly. Use existing focused tests when executable
-   helpers change; no catalog generation or custom publication gate is required.
+   credential hygiene directly. Copy a live host file before rewriting it in
+   place — installed configs such as pi's `APPEND_SYSTEM.md` and MCP host
+   configs sit outside Git and are unrecoverable once overwritten. Use existing
+   focused tests when executable helpers change; no catalog generation or custom
+   publication gate is required.
 5. Separate hard failures from judgment calls. Fix objective failures; explain
    semantic tradeoffs with evidence instead of inventing a regex proxy.
 6. Preserve unrelated files and report the commands that actually ran and their
