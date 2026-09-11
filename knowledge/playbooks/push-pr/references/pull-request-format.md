@@ -23,8 +23,9 @@ category each section must carry. Current template sections:
 the required `quality / required` check when one is absent:
 
 - the body is at least 30 characters;
-- it contains `## Summary`, `## Why`, `## Verification` and `## Risks` exactly as
-  written — `## What`, `## Changes` or `## Summary of changes` do not match;
+- it contains the literal substrings `## Summary`, `## Why`, `## Verification`
+  and `## Risks`, matched anywhere in the body: `## Summary of changes` satisfies
+  the check, while `## What`, `## Overview` or `## Changes` do not;
 - it contains no `TODO` or `TBD`, including inside a checklist.
 
 The remaining template sections are house format, not machine-checked. A body
