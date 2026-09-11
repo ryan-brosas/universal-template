@@ -76,5 +76,6 @@ intentional differences, constraints, and actual verification, not assumed linka
 
 - `references/layout.md`: source grid translation.
 - `references/component-repair.md`: pasted-family repair patterns, canaries, and trustworthy verification baselines.
+- `references/mcp.md`: MCP probe order, published-library access, and provenance checks.
 - `references/official.md`: platform notes; current capabilities outrank snapshots.
 - `references/behavior-tests.md`: fidelity and reuse regression scenarios.

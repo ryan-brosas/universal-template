@@ -11,6 +11,35 @@
    - Place with `figma_instantiate_component`, or inside `figma_execute` with `figma.importComponentSetByKeyAsync(key)` followed by `variant.createInstance()`. Prefer instantiating a real library component over redrawing it from primitives, and confirm `mainComponent.remote === true` with a resolvable key before calling the asset linked.
 6. Large or deep Figma trees error. Split by frame or variant. Figma MCP often returns SVG fills as images and drops spacer frames; screenshot is still ground truth.
 
+## Published libraries
+
+A file's Assets panel, not its canvas, is the source of truth: a canvas can hold zero
+components while three libraries are enabled. `figma_get_library_variables` names every
+enabled library and its collections, which shows who owns the system in play before any
+node is placed.
+
+No tool lists libraries, their file keys, or a team's files. Recover a missing key from the
+desktop client's own state — its recent-tabs setting and the browser or shell history that
+opened the library — then verify each candidate with
+`figma_get_library_components({ libraryFileKey })`: a readable library answers with its
+component count, while a wrong key answers `0` with `apiErrors` rather than throwing.
+
+Identify the owning library before composing. Resolve a placed instance's bound variables
+(`node.boundVariables` → `figma.variables.getVariableByIdAsync` → `variableCollectionId` →
+collection name) and match that name against
+`getAvailableLibraryVariableCollectionsAsync()`. An instance bound to `📐 Space`,
+`🟢 Radius` and `🌈 Theme` belongs to Atomize PRO whatever the file is called. Bind new
+containers to those same collections via `figma.variables.importVariableByKeyAsync(key)` so
+the tokens stay linked instead of copied.
+
+Cold imports from a large library are slow: a first `importComponentByKeyAsync` can pass
+30s, and the bridge then reports a timeout for work that never happened. Warm it once, then
+batch; `importComponentSetByKeyAsync` on the set key is the reliable route to a variant
+instance. Instances reject new children, so compose by placing instances as siblings inside
+a layout-only frame — detaching an artboard to hold content destroys the library link. A
+component whose font is absent locally cannot be instantiated at all (`unloaded font`);
+report that gap instead of substituting a lookalike.
+
 ## Screenshots
 
 - `save_screenshots` paths must sit inside the Figma bridge working directory (often the user home). `/tmp` is rejected.

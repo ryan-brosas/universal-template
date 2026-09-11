@@ -16,6 +16,8 @@ recursively or treat a visual request as permission for unrelated redesign.
   [ui-ux-iteration-loop](../../knowledge/playbooks/ui-ux-iteration-loop/README.md).
 - Copy a Figma frame into Paper:
   [pencil](../../knowledge/playbooks/pencil/README.md).
+- Compose from the libraries the file already has enabled instead of redrawing:
+  [pencil references/mcp.md](../../knowledge/playbooks/pencil/references/mcp.md).
 - Verify or fix a reference match:
   [pixel-perfect](../../knowledge/playbooks/pixel-perfect/README.md).
 - Interactive mockups or exploratory prototypes:
