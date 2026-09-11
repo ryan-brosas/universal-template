@@ -31,7 +31,7 @@ host is required to connect every entry.
 
 | Server            | Kind  | Connection / command                                    | Key / env                        | Notes |
 |-------------------|-------|---------------------------------------------------------|----------------------------------|-------|
-| sourcebot         | remote| `http://localhost:3000/api/mcp`                    | bearer token in host config      | indexed cross-repo source search, lazy |
+| sourcebot         | remote| `http://localhost:3000/api/mcp`                    | API key in the host config (0600, machine-local, never here) | the only cross-repository code-context server |
 | context7          | stdio | `npx -y @upstash/context7-mcp@4.0.4`               | `CONTEXT7_API_KEY`               | library docs + code examples |
 | exa               | stdio | `npx -y exa-mcp-server@3.4.1`                      | `EXA_API_KEY`                    | live web search |
 | mcp-steroid       | stdio | `devrig mcp` (PATH-resolved)                  | none (local IDE bridge)          | JetBrains PSI/refactoring/test/debugger access via devrig |
@@ -130,11 +130,21 @@ both sides blindly:
 - **Claude Code / Codex / OpenCode**: same merge rule per host block; stdio
   entries use `command` + `args`; secrets stay env-only.
 - **sourcebot**: remote MCP at the local Sourcebot deployment
-  (`http://localhost:3000/api/mcp`). The bearer token is supplied by the host
-  config (`~/.pi/agent/mcporter.json`), never committed here. If the deployment
-  is not running the entry is dormant; treat indexed source as optional context,
-  never a blocker. It is the primary capability for cross-repository code
-  questions (`knowledge/playbooks/cross-repo-source/README.md`).
+  (`http://localhost:3000/api/mcp`, bound to loopback). It is the primary
+  capability for cross-repository code questions
+  (`knowledge/playbooks/cross-repo-source/README.md`); no second code-graph
+  server belongs in the registry.
+  Deployment and corpus live outside this repository (on this machine:
+  `~/sourcebot/` — `compose.yaml`, `config.json`, `.env`); the
+  index, cloned repositories and database are Docker volumes there. The corpus is
+  a deliberate explicit repository list in that `config.json`; the connection is
+  GitHub public read-only, so it can only ever read public repositories. MCP
+  authentication uses a Sourcebot API key held in the machine-local host config
+  (0600), never here; the deployment's `.env` is the only other place a secret
+  may live. No language model is configured, so ask-style summarization stays
+  unavailable on purpose: the agent retrieves evidence and reasons itself.
+  If the deployment is not running the entry is dormant; treat indexed source as
+  optional context, never a blocker.
 - **figma-bridge**: run the companion Figma plugin in each file the agent should
   access; the stdio server brokers those live plugin connections.
 - **paper**: Paper exposes its local Streamable HTTP endpoint while the desktop

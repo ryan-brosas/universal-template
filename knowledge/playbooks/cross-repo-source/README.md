@@ -10,7 +10,25 @@ kind: playbook
 
 Retrieve the minimum source needed to answer a specific question, then read the
 actual files and their tests. An indexed search is a fast map, not authority;
-confirm findings in source before editing or claiming absence.
+confirm findings in source before editing or claiming absence. Sourcebot is the
+single indexed cross-repository source: never co-load a second code-graph server
+for the same question.
+
+## Corpus
+
+Sourcebot indexes a small deliberate corpus, not the public GitHub universe. The
+corpus is declared once as an explicit repository list in the deployment's
+config (on this machine `~/sourcebot/config.json`); the deployment,
+its index and its database live outside this template.
+
+- Default branches only. Add a long-lived branch explicitly, and only while a
+  specific comparison needs it.
+- Forked and archived repositories are excluded; an owned repository is listed
+  under its canonical upstream when the local fork carries no unique work.
+- Admission is earned: a repository joins after it repeatedly proves useful in
+  cross-repository work, never automatically because one task touched it.
+- A miss is the normal boundary, not a failure: discover the repository with
+  GitHub, read the real source and tests, then decide about admission.
 
 ## When to use / NOT
 

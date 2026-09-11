@@ -17,7 +17,7 @@ import sys
 PATTERNS = [
     r"awesome-guidelines",
     r"api-design-practices",
-    r"codebase-memory",
+    r"codebase[- ]memory",
     r"deepwiki",
     r"knowledge/foundations",
     r"foundation-pack",
@@ -54,6 +54,7 @@ def scan():
 def selftest():
     assert MATCHER.search("see knowledge/foundations/turso")
     assert MATCHER.search("deepwiki-mcp")
+    assert MATCHER.search("Codebase Memory held this role")
     assert MATCHER.search("openviking")
     assert not MATCHER.search("foundational principles")
     assert not MATCHER.search("a solid foundation")
