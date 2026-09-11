@@ -4,6 +4,9 @@
     "cross-repo-source": [
       "sourcebot"
     ],
+    "repository-host": [
+      "github"
+    ],
     "ide": [
       "mcp-steroid"
     ],

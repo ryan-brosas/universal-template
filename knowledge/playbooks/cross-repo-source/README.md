@@ -65,10 +65,10 @@ which lives outside this template together with the index and database.
 Use one strong implementation per question. Compare it with the current project's
 constraints and decide ADOPT / ADAPT / OMIT per concern; never blind-copy.
 Provenance and licensing live in `../reference-driven-development/README.md`.
-Delegated research (`ask_codebase`) is opt-in and blocking: its contract forbids the
-call unless the user's prompt asks for it, so a broad question is a reason to offer it, not
-to invoke it. Once asked, bound the assignment with
-[the brief](references/research-brief.md), then read the decisive source yourself.
+Sourcebot retrieves; this agent reasons. Do not delegate the interpretation to
+Sourcebot's own `ask_codebase` agent: retrieve the evidence, then read the
+decisive source yourself. For a repository outside the corpus, use GitHub to
+discover it and read it there.
 
 ## Verification
 

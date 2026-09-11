@@ -50,6 +50,11 @@
       "type": "remote",
       "url": "http://127.0.0.1:29979/mcp",
       "lifecycle": "lazy"
+    },
+    "github": {
+      "type": "remote",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "lifecycle": "lazy"
     }
   }
 }

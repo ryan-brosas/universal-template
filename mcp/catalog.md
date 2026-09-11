@@ -9,7 +9,9 @@ environment variables or a private host config, and never commit secret values.
 Read such a config by field name instead of printing it: a credential echoed
 into a transcript or command line is exposed even though the file is private
 (`knowledge/playbooks/security-and-hardening/README.md`).
-The `minimal` profile enables nothing.
+The `minimal` profile enables nothing. When a host enables or drops a declared
+server, update `servers.json` and the table below in the same change — the host
+config is private and local, this registry is not.
 
 ## Capabilities
 
@@ -20,7 +22,7 @@ The `minimal` profile enables nothing.
 | `exa` | Web research when ordinary web access is insufficient |
 | `mcp-steroid` | Language-aware local IDE integration where the host needs it |
 | `paper`, `figma-bridge` | Design workflows, when relevant |
-| `github` | Repository hosting: code browsing, issues and pull requests |
+| `github` | Repository hosting and discovery: browse repositories outside the indexed corpus, inspect their source, issues, pull requests and commits, and perform GitHub operations |
 
 Each remaining server covers a distinct problem. Do not add a second server for
 a capability already listed, keep a declaration only because it was once
@@ -34,18 +36,28 @@ this architecture. Its deployment, credentials, indexes, database and repository
 configuration live outside this template. This repository describes when to use
 it, not how it is deployed.
 
-Sourcebot is retrieval first: search it, read the decisive source and tests, and
-let the coding agent reason. Do not require it for local work, and do not add a
-knowledge layer in front of it.
+Sourcebot is retrieval, never reasoning: search it, read the decisive source and
+tests, and let the coding agent interpret the evidence. Do not require it for
+local work, and do not add a knowledge layer in front of it. No language model is
+configured for it: its delegated `ask_codebase` agent duplicates the calling
+agent's reasoning, so it is not part of this architecture.
 
-The deployment configures one language model — the OmniRoute `top-tool` combo —
-for delegated research only. `ask_codebase` is opt-in and runs only when the
-user's prompt asks for it by name, since retrieval and reasoning otherwise stay
-with the calling agent. Assignment and evidence contract:
-`knowledge/playbooks/cross-repo-source/references/research-brief.md`.
+## Repository hosting
+
+GitHub is a separate capability from Sourcebot's index. Sourcebot answers "search
+the repositories we intentionally indexed"; GitHub answers "what repository should
+I look at", "what exists outside that corpus", "show me this repository's source",
+"what issues, pull requests or commits are relevant" and performs repository
+operations. Read GitHub evidence directly instead of ingesting repositories into
+Sourcebot: admission to the corpus is a deliberate, repeated-need decision, not a
+side effect of reading one repository.
 
 ## Profiles
 
 `profiles.json` groups selections by capability rather than by historical
-tooling: `minimal`, `cross-repo-source`, `ide`, `docs`, `web-research`, `design`.
+tooling: `minimal` (nothing), `cross-repo-source` (Sourcebot),
+`repository-host` (GitHub), `docs` (Context7), `web-research` (Exa),
+`ide` (local IDE/LSP), `design` (Paper/Figma).
+On this host the GitHub server authenticates with a bearer token in the private
+host config (MCPorter `bearerToken`); the declaration here carries no secret.
 Profiles describe useful selections; they do not install or remove anything.
