@@ -63,8 +63,9 @@ its index and its database live outside this template.
 Use one strong implementation per question. Compare it with the current project's
 constraints and decide ADOPT / ADAPT / OMIT per concern; never blind-copy.
 Provenance and licensing live in `../reference-driven-development/README.md`.
-`ask_codebase` is a blocking AI summary — invoke it only when explicitly asked and
-prefer direct tool calls.
+Delegated research (`ask_codebase`) is opt-in and blocking: bound the assignment with
+[the brief](references/research-brief.md) when a broad question would flood this context,
+then read the decisive source yourself.
 
 ## Verification
 

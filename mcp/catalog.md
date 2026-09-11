@@ -31,7 +31,7 @@ host is required to connect every entry.
 
 | Server            | Kind  | Connection / command                                    | Key / env                        | Notes |
 |-------------------|-------|---------------------------------------------------------|----------------------------------|-------|
-| sourcebot         | remote| `http://localhost:3000/api/mcp`                    | API key in the host config (0600, machine-local, never here) | the only cross-repository code-context server |
+| sourcebot         | remote| `http://localhost:3000/api/mcp`                    | API key in the host config (0600, machine-local, never here) | the only cross-repository code-context server; `ask_codebase` (delegated research) is model-gated and opt-in |
 | context7          | stdio | `npx -y @upstash/context7-mcp@4.0.4`               | `CONTEXT7_API_KEY`               | library docs + code examples |
 | exa               | stdio | `npx -y exa-mcp-server@3.4.1`                      | `EXA_API_KEY`                    | live web search |
 | mcp-steroid       | stdio | `devrig mcp` (PATH-resolved)                  | none (local IDE bridge)          | JetBrains PSI/refactoring/test/debugger access via devrig |
