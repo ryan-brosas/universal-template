@@ -39,6 +39,12 @@ Use a harmless read through the actual exposed route and inspect its tool result
 A newly configured server can register while reporting no tools until first use;
 prove the connection and its credential with one read-only call that requires
 the credential, not with a registration listing.
+A long-lived process serves the tool surface it loaded at startup, so a server
+added to the host config afterwards looks absent and a removed server looks
+present until that configuration is reloaded (`mcp.$reload` in Fabric).
+Observed 2026-09-11: `github` gained 47 tools and `deepwiki`/`openviking`
+vanished after one reload. An absent entry is not evidence that a server is
+unavailable; reload and re-list before concluding anything from it.
 A model naming a file proves neither that it read the file nor that it followed
 its instructions. Report prompt inclusion, tool execution, and behavioral
 compliance separately; stop when the requested claim has sufficient evidence.
