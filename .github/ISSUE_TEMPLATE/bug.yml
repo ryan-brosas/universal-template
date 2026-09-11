@@ -1,6 +1,5 @@
 name: Bug report
-description: Something in the catalog, gates, or skills is broken
-labels: ["type:bug"]
+description: Something in the instructions, routers, or helpers is broken
 body:
   - type: textarea
     id: what-happened

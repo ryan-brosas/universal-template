@@ -1,6 +1,6 @@
 ---
 name: agent-tooling-pack
-description: "Use when creating or troubleshooting Pi packages/providers, configuring Fabric execution or models, selecting agent runners, or explicitly requesting Veda planning, implementation or review. Ordinary planning uses engineering-pack; Oracle consultation uses research-pack."
+description: "Use when building or troubleshooting agent integrations: Pi packages and extensions, provider authentication and model catalogs, or Fabric execution surface. Ordinary planning uses engineering-pack; external model consultation uses research-pack."
 invocation: entry
 ---
 
@@ -17,14 +17,7 @@ current API; do not load a different kernel's instructions.
   [pi-provider-contracts](../../knowledge/playbooks/pi-provider-contracts/README.md).
 - Fabric execution, tool availability, and transactional boundaries:
   [fabric-native-execution](../../knowledge/playbooks/fabric-native-execution/README.md).
-- Runner/execution choice:
-  [execution-router](../../knowledge/playbooks/execution-router/README.md).
-- Resolve task needs against live model inventory:
-  [model-resolution](../../knowledge/playbooks/model-resolution/README.md).
-- Explicit Veda request: select the requested scope in
-  [veda-lane](../../knowledge/playbooks/veda-lane/README.md).
 
-The [tooling index](references/topics.md) covers specific Veda lanes, large-context
-consultation and harness procedures. A planning-only request never authorizes
-implementation. Do not install or configure an external planner just to answer
-an ordinary planning question.
+The host chooses which model runs. This pack does not rank models or route tasks.
+Do not install or configure an external planner just to answer an ordinary
+planning question.

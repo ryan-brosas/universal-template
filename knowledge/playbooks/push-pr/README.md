@@ -39,7 +39,8 @@ lifecycle through merge. An existing PR is updated, not duplicated.
    `gh pr create --title "..." --body-file <file> --base <base>`, or update the
    existing PR. Incomplete implementation is draft; ready implementation can
    enter review while CI runs. A failing required check blocks merge, not review.
-4. Let repository automation derive labels. Reviewers follow CODEOWNERS or an
+4. Apply labels only when explicitly requested; this repository has no label
+automation. Reviewers follow CODEOWNERS or an
    explicit request; milestones/projects follow issue relationships. Link only
    real issues. If the batch already landed on the base branch, move it to a
    feature branch first — `git reset --soft` to the pre-batch point keeps the

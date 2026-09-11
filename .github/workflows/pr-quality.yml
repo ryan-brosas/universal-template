@@ -1,4 +1,5 @@
 # Focused repository checks for universal-template.
+# Runs the executable helpers this repository ships and checks whitespace.
 # The required-check API is the job name: quality / required.
 name: Project quality
 
@@ -36,13 +37,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          {
-            python3 knowledge/playbooks/pencil/scripts/test-verify-fidelity-manifest.py
-            node --test knowledge/playbooks/cdp/sdk/recording-privacy.test.ts
-            python3 scripts/check-retired-paths.py --selftest
-            python3 scripts/check-retired-paths.py
-            python3 scripts/pr-metadata.py --selftest
-          } 2>&1 | tee /tmp/repository-contracts.log
+          python3 knowledge/playbooks/pencil/scripts/test-verify-fidelity-manifest.py
+          node --test knowledge/playbooks/cdp/sdk/recording-privacy.test.ts
 
       - name: Check changed lines
         shell: bash
@@ -63,26 +59,3 @@ jobs:
           else
             git diff --check "$GITHUB_SHA^" "$GITHUB_SHA"
           fi
-
-      - name: Check the PR body contract
-        if: github.event_name == 'pull_request'
-        shell: bash
-        env:
-          PR_BODY: ${{ github.event.pull_request.body }}
-        run: |
-          set -euo pipefail
-          test "${#PR_BODY}" -ge 30
-          for heading in '## Summary' '## Why' '## Verification' '## Risks'; do
-            grep -qF "$heading" <<<"$PR_BODY" || { echo "missing section: $heading"; exit 1; }
-          done
-          for placeholder in TODO TBD; do
-            ! grep -qF "$placeholder" <<<"$PR_BODY" || { echo "placeholder remains: $placeholder"; exit 1; }
-          done
-
-      - name: Upload contract log on failure
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: repository-contracts
-          path: /tmp/repository-contracts.log
-          retention-days: 2

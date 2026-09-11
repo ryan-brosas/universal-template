@@ -17,21 +17,8 @@ category each section must carry. Current template sections:
    Model review is not rendered proof.
 7. Breaking Changes / Migration: what breaks and how to migrate; else N/A
 
-### CI-enforced subset
-
-`.github/workflows/pr-quality.yml` checks the body by literal substring and fails
-the required `quality / required` check when one is absent:
-
-- the body is at least 30 characters;
-- it contains the literal substrings `## Summary`, `## Why`, `## Verification`
-  and `## Risks`, matched anywhere in the body: `## Summary of changes` satisfies
-  the check, while `## What`, `## Overview` or `## Changes` do not;
-- it contains no `TODO` or `TBD`, including inside a checklist.
-
-The remaining template sections are house format, not machine-checked. A body
-edited after the PR opened re-runs the check; the failing step names the missing
-literal (`missing section: ## Risks`). Add the missing heading instead of renaming
-a section that already exists.
+These sections are house format, not machine-checked. The repository's CI runs
+the executable helper tests and `git diff --check`; it does not parse the PR body.
 
 ## Rules
 
@@ -43,10 +30,8 @@ a section that already exists.
   evidence a reviewer reads as current.
 - Visual changes need actual before/after rendered evidence; text-only changes
   state N/A.
-- Metadata (labels, reviewers, milestone) is set by repository automation or
-  explicit user request, not hand-copied: area labels come from changed paths,
-  type and breaking-change labels come from the PR title via
-  `scripts/pr-metadata.py`.
+- Metadata (labels, reviewers, milestone) is set only on explicit request; this
+  repository has no label automation, so nothing is mirrored by hand.
 - CI state is watched (`gh pr checks` / `gh run watch`) and recorded as
   observed. A failing required check blocks the merge; it does not force the
   PR back to draft.

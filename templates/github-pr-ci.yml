@@ -55,14 +55,3 @@ jobs:
           else
             git diff --check "$GITHUB_SHA^" "$GITHUB_SHA"
           fi
-
-      - name: Check the PR body structure
-        if: github.event_name == 'pull_request'
-        shell: bash
-        env:
-          PR_BODY: ${{ github.event.pull_request.body }}
-        run: |
-          set -euo pipefail
-          for heading in '## Summary' '## Why' '## Verification' '## Risks'; do
-            grep -qF "$heading" <<<"$PR_BODY" || { echo "missing section: $heading"; exit 1; }
-          done

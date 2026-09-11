@@ -77,11 +77,8 @@ behavior (steer outcomes, not behavior).
 
 ## When to use
 
-Apply these when implementing, reviewing, or committing code. For a **topic
-index** (naming, docs, Git, AI, performance) load `coding-best-practices` first,
-then return here for scope and verification. They complement
-`agent-code-quality-gate` (completion review) and `test-generation` (how to
-write tests and exact gates that catch).
+Apply these when implementing, reviewing, or committing code. They complement
+`test-generation` (how to write tests and exact gates that catch).
 
 ## Red Flags
 
@@ -92,8 +89,3 @@ write tests and exact gates that catch).
 - Committing or shipping without a delivery request.
 - Competing sources of truth for the same fact.
 - Repeated business logic with no clear canonical owner.
-
-
-## References
-
-- `coding-best-practices`, topic router (naming, docs, Git, AI, performance) when the question is broader than discipline alone.

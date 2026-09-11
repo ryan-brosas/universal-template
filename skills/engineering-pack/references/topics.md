@@ -3,13 +3,11 @@
 Choose one matching procedure; its summary and body own the detailed contract.
 This is a routing index, not a reading list. Known procedure paths can be opened directly.
 
-- [agent-code-quality-gate](../../../knowledge/playbooks/agent-code-quality-gate/README.md)
 - [api-and-interface-design](../../../knowledge/playbooks/api-and-interface-design/README.md)
 - [brainstorming](../../../knowledge/playbooks/brainstorming/README.md)
 - [code-cleanup](../../../knowledge/playbooks/code-cleanup/README.md)
 - [code-discipline](../../../knowledge/playbooks/code-discipline/README.md)
 - [code-review-and-quality](../../../knowledge/playbooks/code-review-and-quality/README.md)
-- [coding-best-practices](../../../knowledge/playbooks/coding-best-practices/README.md)
 - [debugging-and-error-recovery](../../../knowledge/playbooks/debugging-and-error-recovery/README.md)
 - [deep-module-design](../../../knowledge/playbooks/deep-module-design/README.md)
 - [defense-in-depth](../../../knowledge/playbooks/defense-in-depth/README.md)
@@ -22,7 +20,6 @@ This is a routing index, not a reading list. Known procedure paths can be opened
 - [performance-optimization](../../../knowledge/playbooks/performance-optimization/README.md)
 - [practices-to-ci](../../../knowledge/playbooks/practices-to-ci/README.md)
 - [project-bootstrap](../../../knowledge/playbooks/project-bootstrap/README.md)
-- [quality-gate-methodology](../../../knowledge/playbooks/quality-gate-methodology/README.md)
 - [root-cause-tracing](../../../knowledge/playbooks/root-cause-tracing/README.md)
 - [security-and-hardening](../../../knowledge/playbooks/security-and-hardening/README.md)
 - [source-driven-development](../../../knowledge/playbooks/source-driven-development/README.md)

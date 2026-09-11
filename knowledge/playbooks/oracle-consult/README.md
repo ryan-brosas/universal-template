@@ -19,9 +19,8 @@ provider key, and finished answers land in session artifacts, not stdout.
 - **Use when:** the user asks to consult Oracle, ChatGPT, or an external model;
   a plan or diff needs a second opinion from a stronger model; multi-model
   fan-out is requested.
-- **NOT when:** the task fits local tools (routing decisions still belong to
-  you); Veda lanes are requested (`veda-lane` owns that CLI); web research
-  alone suffices (web-search tools own that).
+- **NOT when:** the task fits local tools; web research alone suffices
+  (web-search tools own that).
 
 ## Approach
 

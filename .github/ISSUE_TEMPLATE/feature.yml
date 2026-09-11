@@ -1,6 +1,5 @@
 name: Feature request
-description: A new capability or improvement for the catalog or its tooling
-labels: ["type:feature"]
+description: A new capability or improvement for reusable instructions or tooling
 body:
   - type: textarea
     id: problem
