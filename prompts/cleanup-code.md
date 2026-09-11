@@ -8,5 +8,4 @@ Establish the relevant behavior before editing. Use your judgment to choose wort
 
 Implement the cleanup, then run targeted tests and behavioral probes and inspect the resulting diff. If a valuable improvement requires a behavior change, report the boundary instead of hiding the change inside cleanup.
 
-Scope:
-$ARGUMENTS
+Apply the procedure above to the user's current request in this conversation; ask for scope if it is not already clear.

@@ -8,5 +8,4 @@ Inspect the applicable instructions, current structure, and relevant execution p
 
 Use your judgment to select and implement worthwhile improvements when implementation is requested. Verify the result with targeted tests and direct behavioral probes, then report the evidence and remaining risk.
 
-Request:
-$ARGUMENTS
+Apply the procedure above to the user's current request in this conversation; ask for scope if it is not already clear.

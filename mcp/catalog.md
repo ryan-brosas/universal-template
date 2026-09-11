@@ -9,12 +9,10 @@ host is required to connect every entry.
 
 - Servers are declared ONCE, in the canonical registry; per-CLI host configs are
   derived copies written only when the user requests a specific server.
-- To wire a server, preview `configure.py --server NAME --target PATH`; pass
-  `--apply` only after reviewing the change summary. `profiles.json` provides
-  bounded selections; switching profiles replaces only this tool’s managed set.
-  `minimal` removes that managed set, not independently configured servers.
-- Prefer a dry-run-style preview before writing, and back up a host config
-  before its first write.
+- To wire a server, use the host's own MCP command where one exists, otherwise
+  edit its config file directly. `profiles.json` provides bounded selections; the
+  `minimal` profile activates nothing. Back up a host config before its first
+  write and preserve unrelated settings.
 - Preserve unmanaged servers. Registry entries use env var **names**, never token
   values (`${EXA_API_KEY}`, `${CONTEXT7_API_KEY}`, `bearerTokenEnv`). Previews show
   names and actions, not config values. Exact local backups may contain existing
@@ -68,63 +66,28 @@ two-server design profile:
 there is no ambiguous `code` compatibility alias. Profiles are explicit
 selections, not always-on policy.
 
-### Managed ownership and migration
+### Existing host configuration
 
-- `--profile NAME` replaces the previously managed set with that profile.
-  `--profile minimal --apply` removes all unchanged managed entries; unmanaged
-  servers remain, so it does not promise an empty host configuration.
-- `--server NAME` adds or updates one entry without removing other managed entries.
-  `--deactivate` removes only selected entries whose fingerprints still match;
-  `--profile minimal --deactivate` also removes the whole managed set.
-- Same-name unmanaged entries conflict even when identical to the registry.
-  Inspect before using `--replace-unmanaged` to replace and adopt the selected
-  entries. This flag cannot authorize unmanaged deletion with `--deactivate`.
-- Modified managed entries become unmanaged: preserve them when switching away,
-  or report a conflict when selecting them again. Missing entries lose ownership.
-- Configs created by older versions have no ownership evidence. Do not infer it
-  from names. Adopt selected entries explicitly only after reviewing their values.
-  Replaced unmanaged values are not restored by `minimal`; recovery uses the backup.
+Profiles describe useful selections; they do not manage installed servers or
+remove anything. Selecting `minimal` does not clear an existing host config.
+Inspect the host's current configuration before adding, changing, or removing
+servers, and preserve unrelated entries.
 
-For target `settings.json`, the adjacent
-`settings.json.universal-template-mcp.json` sidecar stores the target path and
-per-entry SHA-256 fingerprints, not config values. Keep it with the target;
-a missing sidecar makes all existing entries unmanaged. A malformed or foreign
-sidecar blocks mutation rather than guessing ownership.
+Older installations may have `settings.json.universal-template-mcp.json`
+ownership sidecars, backups, locks, or pending journals. These are legacy local
+artifacts, not an active management protocol. Preserve them until any interrupted
+write is understood; do not infer permission to remove servers from their names
+or fingerprints. Recovery or cleanup requires review of the actual host state
+and user authorization before destructive changes.
 
 ### Write safety and recovery
 
-Preview is the default and writes nothing, including sidecars or directories.
-An empty apply also creates nothing. Plans requiring writes are recomputed under
-the exclusive lock before mutation. `--apply` preserves unrelated JSON values,
-but may reformat the file. Before the
-first change to an existing target, it saves the exact bytes as
-`settings.json.before-universal-template-mcp`; an existing backup is never replaced.
-New configs, backups, sidecars, and locks are private (mode `0600` on POSIX);
-Linux config replacements preserve owner, group, mode, and extended attributes
-(including POSIX ACLs), with verification before replacement and after read-back.
-If metadata cannot be preserved, replacement fails rather than dropping access.
-Existing-file replacement on other platforms is refused because Python’s standard
-library cannot inspect their native ACLs reliably; use host-native tooling there.
-Final-component symlinks are rejected.
-
-Each file write uses a same-directory temporary file, flush, atomic replacement,
-and read-back validation. The config and sidecar are not jointly atomic: a pending
-journal records before/after config digests and ownership. On retry, a matching
-before or after digest selects the correct ownership state; any other state blocks
-mutation for manual inspection. Do not delete the journal to bypass this check.
-
-An exclusive `settings.json.universal-template-mcp.lock` serializes this helper's
-writers. After an abrupt process exit, inspect its recorded PID and remove the
-lock only after confirming no writer remains, then preview again. Stop concurrent
-host/editor writes while applying; the helper detects changes at transaction
-boundaries but cannot lock unrelated applications. Inspect target, backup, and
-sidecar together before manual recovery. Restoring a backup is a separate,
-user-authorized action; never restore it over later unrelated edits blindly.
-
-Prime translation remains available through `configure.py --format prime`, which
-enforces the same ownership rules and requires `--server` or `--profile`. All tests
-run in temporary directories via `python3 mcp/configure.py --selftest`; no live host
-config is changed.
+This repository ships declarations and verified host shapes. It does not write
+host configuration. Apply the selection yourself with the host's documented MCP
+command where one exists, otherwise edit its config file directly: preview the
+change, preserve unrelated settings and unmanaged servers, and back up the file
+before its first write. A config, backup, or sidecar that may contain existing
+credentials stays private and is never published.
 
 Measured tool-contract costs and the 81,429-byte all-versus-minimal reduction
 are recorded in `../docs/context-surfaces.md` and
@@ -141,8 +104,8 @@ are recorded in `../docs/context-surfaces.md` and
 | DSH web profile | `~/.dsh/cordis.patch.yml` | `@monotykamary/dsh-mcp-client` inserts (codebase-memory, openviking, context7, deepwiki, exa, mcp-steroid) |
 
 Wire the requested selection using the host’s verified format; preserve unrelated
-settings and unmanaged servers. `configure.py` supports JSON `mcpServers` shapes
-(generic or Prime), not the other host-specific formats listed above.
+settings and unmanaged servers. Each host has its own MCP command or config file;
+this repository supplies no shared writer.
 
 When unsure whether a CLI accepts a server scheme, skip that CLI (do not
 write anything); report it as "not wired (unsupported)".
@@ -157,9 +120,8 @@ both sides blindly:
   the full registry by default.
 - `~/.mcporter/mcporter.json` — the pi-mcp-adapter layer (subset; env values
   support `${VAR}` expansion — never store literal keys there; use env vars).
-- `~/.prime/agent/settings.json` — scoped writes only through
-  `python3 mcp/configure.py --format prime --target ~/.prime/agent/settings.json
-  --server NAME --apply` or an explicit profile.
+- `~/.prime/agent/settings.json` — scoped writes only: add one server or an
+  explicit profile, never by regenerating the full registry.
 - The IntelliJ **built-in** MCP server (`http://localhost:64442`) is a
   separate transport from mcp-steroid; it needs `JETBRAINS_MCP_TOKEN` exported
   or it fails auth (401) — wire the token or treat the entry as dormant.

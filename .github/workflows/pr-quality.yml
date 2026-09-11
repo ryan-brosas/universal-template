@@ -1,4 +1,4 @@
-# Objective publication contracts for universal-template.
+# Focused repository checks for universal-template.
 # The required-check API is the job name: quality / required.
 name: Project quality
 
@@ -27,30 +27,18 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Install structured-data checker
-        run: pip install --user -r requirements-dev.txt
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '24'
 
-      - name: Check repository contracts
+      - name: Test published helpers
         shell: bash
         run: |
           set -euo pipefail
           {
-            SKILLS_ROOT="$GITHUB_WORKSPACE/skills" python3 scripts/skill-validator.py
-            python3 scripts/skill-validator.py --selftest
             python3 skills/pencil/scripts/test-verify-fidelity-manifest.py
-            python3 scripts/install-prompts.py --check-repo
-            python3 scripts/install-prompts.py --selftest
-            python3 scripts/render-prompt.py --selftest
-            python3 scripts/skill-catalog.py selftest
-            python3 scripts/skill-catalog.py fixture-test
-            python3 scripts/skill-catalog.py context
-            python3 scripts/skill-catalog.py generate --check
-            python3 scripts/repo-hygiene.py --selftest
-            python3 scripts/repo-hygiene.py
-            python3 scripts/repo-hygiene.py --fixture-test
-            python3 mcp/configure.py --selftest
             node --test skills/cdp/sdk/recording-privacy.test.ts
-            python3 scripts/web-reference-manifest.py --selftest
             python3 scripts/pr-metadata.py --selftest
           } 2>&1 | tee /tmp/repository-contracts.log
 
@@ -58,6 +46,7 @@ jobs:
         shell: bash
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          GITHUB_EVENT_BEFORE: ${{ github.event.before }}
         run: |
           set -euo pipefail
           zero_sha=0000000000000000000000000000000000000000

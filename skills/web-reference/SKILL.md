@@ -31,8 +31,7 @@ question, preserve provenance, and separate observed facts from adoption choices
    `manifest.json`; keep `REFERENCE.md` concise and evidence-linked.
 5. Inspect the manifest with native JSON and filesystem tools. Confirm exact
    field types, enum values, path containment, referenced files, and credential
-   hygiene. The optional `web-reference-manifest.py` maintainer tool checks only
-   these hard contracts.
+   hygiene against `references/storage.md`.
 6. Judge coverage and trust from the actual question and evidence. Record ADOPT,
    ADAPT, or OMIT only when implementation makes that decision.
 7. Verify resulting work in the browser and against project tests.

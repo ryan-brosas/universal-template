@@ -65,6 +65,4 @@ Present each candidate in this form:
 If the user later explicitly requests promotion, the installed `leverage-capture` skill
 owns representation choice. Do not invoke capture as part of this read-only reflection.
 
-Focus:
-
-$ARGUMENTS
+Apply the procedure above to the user's current request in this conversation; ask for scope if it is not already clear.

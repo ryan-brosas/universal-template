@@ -29,7 +29,7 @@ Update README **after** behavior works — documents describe what IS, not promi
 
 ## Mechanical gates
 
-- Template catalog: model review for relevance and prose; `repo-hygiene.py` only for exact publication contracts.
+- Template content: review relevance, prose, metadata, references, and callers directly.
 - Projects: spellcheck/codespell in CI optional; required only when it caught real issues before.
 
 ## Leaf skills

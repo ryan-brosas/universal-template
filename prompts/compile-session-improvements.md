@@ -5,7 +5,7 @@ Run the full session-improvement compiler so the user does not need to restate t
 ## Contract
 
 1. Load `skills/session-improvement-compiler/SKILL.md` and follow it end to end.
-2. Use the current project/current session unless `$ARGUMENTS` names another bounded scope.
+2. Use the current project/current session unless the current request names another bounded scope.
 3. Treat raw session events and current source as authority. Use Fabric recall to locate evidence and Hindsight recall/reflect to propose patterns; verify projection claims against their provenance.
 4. Build the evidence ledger, search for contradictions, and classify every candidate through `leverage-capture`.
 5. Prefer improving an existing skill, gate, prompt, or implementation. Create a new skill only when the procedure has distinct ownership and qualifies under `writing-skills`.
@@ -24,6 +24,4 @@ Run the full session-improvement compiler so the user does not need to restate t
     Verification:
     Material deliberately omitted:
 
-Focus:
-
-$ARGUMENTS
+Apply the procedure above to the user's current request in this conversation; ask for scope if it is not already clear.

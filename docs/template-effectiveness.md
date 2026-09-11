@@ -8,6 +8,14 @@ fixtures, invocation diagnostics and native-discovery improvements were retained
 Host counts and model trials below describe the earlier local investigation, not
 a fresh benchmark of the rebased publication tree.
 
+## Subsequent simplification
+
+The publication validators, catalog generator, static-budget configuration,
+prompt installation/rendering, and MCP configuration scripts described below
+have since been removed. Their fixes and test results are historical evidence,
+not current commands or requirements. Current maintenance is direct content
+review plus focused tests for retained helpers; see `../CONTRIBUTING.md`.
+
 ## What became easier
 
 - `AGENTS.md` keeps authority, safety and verification, while saying that skills
@@ -93,22 +101,22 @@ this proves body-loading selection, not zero filesystem traversal. Intentional
 host extras must be preserved when applying such a filter. On hosts without
 verified native filtering, the filtered symlink-view fallback remains available.
 
-Read-only mount inspection and `install-prompts.py --check` also found:
+Read-only mount inspection of the host prompt surfaces also found:
 
 - Claude and Codex still link the unfiltered canonical skill root. Their current
   payloads were not captured; visibility behavior remains unverified here.
 - The Pi `style-guard.ts` extension link points to a retired, missing target.
-- Gemini's generated `compile-skill` and `inspo` adapters were stale. This work's
-  changed `implement-work` and `plan-work` sources also need adapter regeneration.
+- Gemini's generated `compile-skill` and `inspo` adapters were stale while the
+  adapter tooling existed. That tooling is now removed, so those copies are
+  orphaned host files to delete rather than regenerate.
 - The local, untracked `coderabbit` prompt was not mounted across the audited
   global prompt surfaces. The repo-scoped Pi loader nevertheless found a
   `coderabbit` prompt; a local loader result is not proof of global installation.
 
-Applying native skill filters, removing the provably owned broken extension link,
-and reconciling owned prompt adapters would affect user-wide future sessions.
-Those live changes were not authorized or performed. Markdown symlinks already
-follow repository body edits; generated adapters do not. Repository correctness
-alone does not close this deployment gap.
+Applying native skill filters and removing the provably owned broken extension
+link would affect user-wide future sessions. Those live changes were not
+authorized or performed. Repository correctness alone does not close this
+deployment gap.
 
 ## Representative model tasks
 
@@ -144,7 +152,7 @@ repaired capsule in both arms. Task completion and easier retrieval are observed
 broad skill lift, other models, full extension stacks and other hosts remain
 uncertain. No permanent evaluation framework or score gate was introduced.
 
-## Helpers that still earn their place
+## Historical helper assessment (superseded)
 
 - Strict metadata/reference validation and tracked-file hygiene protect objective
   publication boundaries, including the repaired error and byte-handling cases.
@@ -157,7 +165,7 @@ uncertain. No permanent evaluation framework or score gate was introduced.
   PR metadata parsing serves the actual release protocol. None is an ordinary
   project-entry requirement.
 
-## Validation scope
+## Historical validation scope
 
 Relevant checks: strict skill validation and selftest; catalog selftest and CLI
 fixtures; context budget and generated parity; hygiene selftest, committed

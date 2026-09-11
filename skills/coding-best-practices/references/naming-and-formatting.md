@@ -21,7 +21,7 @@
 
 | Check | Typical tool |
 |---|---|
-| Trailing whitespace, EOF newline | `repo-hygiene.py` (catalog), pre-commit |
+| Trailing whitespace, EOF newline | `git diff --check`, project formatter |
 | Formatting | `ruff format`, `prettier`, `gofmt`, project CI |
 | Import order / unused symbols | language linter |
 

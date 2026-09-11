@@ -1,87 +1,33 @@
 # Contributing
 
-Repository-specific checks for `~/.agents` (universal-template). They are not
-universal requirements for other projects. Ordinary use of the baseline does
-not require Python.
+This repository publishes knowledge for coding agents, not an agent runtime.
+Read and edit the relevant Markdown directly. There is no installation,
+generation, catalog-validation, or custom publication pipeline to run.
 
-## Responsibility boundary
+## Review changes
 
-Models review policy meaning, prose quality, skill relevance and overlap, model
-choice, evidence sufficiency, and engineering tradeoffs. Source, Git, host
-inventories, tests, and runtime output supply current facts. Required checks are
-limited to answers that follow exactly from bytes or filesystem state.
+Check that instructions help the task without imposing a model, provider, or
+workflow. Keep tool-specific procedures scoped to that tool. Inspect changed
+references, preserve useful source provenance, and avoid publishing credentials,
+private configuration, or session artifacts. Test executable skill examples when
+the change affects their behavior; use their existing focused tests.
 
-Use the hidden `template-maintenance` skill for semantic review. It selects only
-the checks relevant to the change and reports judgment calls separately from
-hard failures.
-
-## Before pushing
-
-Maintainers need Python and the CI-pinned PyYAML version only for the current
-deterministic publication helpers. Run the consolidated contract suite used by
-CI:
-
-```bash
-SKILLS_ROOT="$PWD/skills" python3 scripts/skill-validator.py
-python3 scripts/skill-validator.py --selftest
-python3 scripts/install-prompts.py --check-repo
-python3 scripts/install-prompts.py --selftest
-python3 scripts/render-prompt.py --selftest
-python3 scripts/skill-catalog.py selftest
-python3 scripts/skill-catalog.py fixture-test
-python3 scripts/skill-catalog.py context
-python3 scripts/skill-catalog.py generate --check
-python3 scripts/repo-hygiene.py --selftest
-python3 scripts/repo-hygiene.py
-python3 scripts/repo-hygiene.py --fixture-test
-python3 mcp/configure.py --selftest
-node --test skills/cdp/sdk/recording-privacy.test.ts
-python3 scripts/web-reference-manifest.py --selftest
-python3 scripts/pr-metadata.py --selftest
-git diff --check
-```
-
-These commands check strict YAML metadata and types, names, references, disjoint
-hot/cold sets and the hot budget, tracked publication files, portable scoped MCP
-activation, secret, private-key, and private-path patterns, generated parity, atomic
-prompt-adapter mutation, CDP recording privacy, title protocol parsing,
-changed-line whitespace, and committed publication fixtures. They do not approve
-policy, prose, routing, or usefulness.
-
-Catalog `generate`, `context`, and `list --tracked-only` parse only Git-tracked
-skill paths, using current working-tree content. The plain `list` command retains
-valid local results and reports incomplete drafts on stderr.
-Publication fails when Git tracking is unavailable; selftests use isolated inputs.
-
-## Tool classification
-
-| Classification | Scripts | Ownership |
-| --- | --- | --- |
-| REQUIRED HARD CONTRACT | `skill-validator.py`, `repo-hygiene.py`, `web-reference-manifest.py`, `pr-metadata.py` | Exact metadata, tracked files, paths, schemas, secrets, context limits, and automation protocols. |
-| OPTIONAL COMPATIBILITY TOOL | `install-prompts.py`, `render-prompt.py` | Legacy host installation and prompt rendering; never canonical. |
-| GENERATED-ARTIFACT TOOL | `skill-catalog.py` | Derives the optional human catalog from skill frontmatter. |
-
-See `docs/maintainer-tooling.md` for retired-script rationale.
+Skill names and descriptions should make selection clear. Keep names consistent
+with their directory, references resolvable, and host-specific metadata valid for
+the host that reads it. Search the skill files directly; generated catalogs and
+static context budgets are not publication requirements.
 
 ## Pull requests
 
-- Use small PRs against `main` with a conventional title such as
-  `refactor(core): make the template model-first and runtime-independent`.
-  The exact title protocol drives release labels.
-- `area:*` and `type:*` labels are derived automatically.
-- Follow `.github/pull_request_template.md` and report only verification that
-  actually ran.
-- Required checks are `quality / required` and `pr-title`.
+Describe the outcome, why it helps, checks actually performed, and compatibility
+risks using `.github/pull_request_template.md`. Check changed-line whitespace with
+`git diff --check` against the PR base. Do not claim model-routing improvements
+were measured unless a comparison actually ran.
 
-## Skills
+The remaining `scripts/pr-metadata.py` is repository automation: it parses PR
+titles for the existing title check, labels, and release-note categories. It is
+not used to consume this template. Its focused check is
+`python3 scripts/pr-metadata.py --selftest`.
 
-Every `skills/<name>/SKILL.md` has local `invocation` metadata. The `name`
-equals the directory, references resolve within the skill, and host visibility
-remains expressed by `disable-model-invocation`. Cold `*-foundation` leaves live
-in the same tree with `kind: foundation`, manual invocation, hidden visibility,
-and a complete `references/index.md` inventory. They remain outside operational
-catalog and startup counts. Internal, manual, and vendor operational skills are
-cold too. The generic hot set contains only tracked, visible `invocation: entry`
-metadata. The context gate
-reads all limits from `config/context-budget.json` and measures that metadata
-with `AGENTS.md` as the complete static baseline.
+Required GitHub check names remain `quality / required` and `pr-title`; labels
+are applied by repository automation. Workflow security is checked separately.

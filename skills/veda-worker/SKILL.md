@@ -1,6 +1,6 @@
 ---
 name: veda-worker
-description: "Use when you want a full plan, implement, verify cycle delegated to the Veda worker agent: orchestrate and author the plan yourself, hand the whole design to one worker run that implements with write access, read its report, then run the reviewer. You never implement; branch on report status and escalate after capped retries."
+description: "Use when the user explicitly asks to delegate a full plan, implement, verify cycle to the Veda worker agent: orchestrate and author the plan yourself, hand the whole design to one worker run that implements with write access, read its report, then run the reviewer. You never implement; branch on report status and escalate after capped retries."
 invocation: vendor
 argument-hint: "[veda-flags]"
 ---
@@ -23,16 +23,16 @@ You orchestrate AND you plan; the worker implements. Two hard rules: you never i
 5. Reviewer pass on the diff vs `design.json`; route P0/P1 fixes back to the worker. Stop at `review: pass`.
 
 
-## Model routing (authoritative, do not substitute)
+## Model choice
 
-- Load-bearing planning / architecture / high-risk review → `agy --model claude-opus-4-6-thinking --mode plan` (direct `agy` CLI, NOT veda/gemini).
-- Critique / follow-up → `agy --model claude-sonnet-4-6 --mode plan`.
-- Cheap discovery / context curation → `veda` + gemini (`gemini-3.7-flash-*`, `gemini-3.1-pro-low`).
-- `veda deep` (parallel solvers) runs on gemini and is only for "N independent attempts"; the final architecture decision still comes from claude-opus.
+Which backend and model to use is a live decision owned by
+`../model-resolution/SKILL.md` and the active host's own inventory; this skill
+mandates no provider. Author the design with a capable reasoning seat, run the
+worker on a seat that fits the task, and probe the lane before trusting it.
 
 ## Invocation, veda CLI worker (confirmed working)
 
-Use the veda CLI with a **positional** prompt. Default backend/model now fixed in `~/.config/veda/config` (`BACKEND="agy"`, `MODEL="gemini-3.7-flash-high"`):
+Use the veda CLI with a **positional** prompt. Default backend/model come from your own `~/.config/veda/config` (observed here as `BACKEND="agy"`, `MODEL="gemini-3.7-flash-high"`):
 
 ```bash
 veda -S worker-<task> -p worker 'Implement the design in <abs path to design.json>. Read it first — it is the contract. Run the named verification. End with <worker_report>.'

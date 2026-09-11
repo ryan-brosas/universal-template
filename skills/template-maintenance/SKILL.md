@@ -26,10 +26,9 @@ from source bytes, filesystem state, Git state, or runtime output.
    whether each instruction still earns its place.
 3. Ground factual claims in current source, Git, host inventory, and runtime
    output. Treat session history as evidence, never current truth.
-4. Run only checks that prove an affected exact contract, such as strict YAML
-   and metadata types, names, references, tracked-file ownership, disjoint
-   hot/cold context and its budget, path containment, generated parity, secret
-   patterns, or safe atomic filesystem mutation.
+4. Inspect metadata, names, references, intended host visibility, paths, and
+   credential hygiene directly. Use existing focused tests when executable
+   helpers change; no catalog generation or custom publication gate is required.
 5. Separate hard failures from judgment calls. Fix objective failures; explain
    semantic tradeoffs with evidence instead of inventing a regex proxy.
 6. Preserve unrelated files and report the commands that actually ran and their
@@ -56,5 +55,4 @@ uncertainty. Never claim a pass that was not observed.
 
 ## References
 
-- `../../CONTRIBUTING.md`, current publication contract and tool classes.
-- `../../docs/maintainer-tooling.md`, retained and retired script ownership.
+- `../../CONTRIBUTING.md`, content review and retained helper checks.

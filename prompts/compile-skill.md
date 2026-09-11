@@ -65,6 +65,4 @@ user supplies an explicit destination.
     Verification:
     Material deliberately omitted:
 
-Request:
-
-$ARGUMENTS
+Apply the procedure above to the user's current request in this conversation; ask for scope if it is not already clear.

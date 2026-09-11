@@ -20,7 +20,7 @@
 
 **Flow:** run formatter → `tsc --noEmit` → eslint on changed paths → manual capsule checklist on review.
 **Invariant:** style probes run on **source** `.ts`/`.tsx`, not emitted JS.
-**Probe:** all commands exit 0; P0 skill-validator clean after skill wiring.
+**Probe:** all commands exit 0; skill metadata, references, and callers reviewed after skill wiring.
 
 ## Review seam (human or agent)
 - [ ] Named exports; no namespace/require

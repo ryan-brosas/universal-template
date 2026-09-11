@@ -1,6 +1,6 @@
 ---
 name: veda-plan-implement
-description: "Use when planning a refactor, debugging approach, research, analysis, writing, or any course of action before implementing, plan work by collaborating with the Veda Navigator model. Drives `veda -S plan-TASKNAME -m flash -p navigator-plan` to align on a plan; does not execute. Invoke when the user says plan, discuss, align, or wants to iterate on a plan before coding."
+description: "Use when the user explicitly asks to plan and implement with the Veda Navigator model. Drives `veda -S plan-TASKNAME -m flash -p navigator-plan` to align; you then implement with native tools. Not a general planning substitute: when the user asks to plan and has not asked for Veda, plan with native capabilities instead."
 invocation: vendor
 argument-hint: "[veda-flags]"
 ---
@@ -16,22 +16,27 @@ Align with Navigator before executing: Navigator advises (no tool access), the D
 
 ## Workflow
 
+An explicit planning-only or do-not-implement request stops after the aligned
+plan. Agreement with a plan alone does not authorize implementation. This
+boundary overrides the execution steps and completion reminders below.
+
 1. `veda -S plan-TASKNAME sel clear` + `sel add` (full files first; slice only above 125k).
 2. `veda -S plan-TASKNAME -m flash -p navigator-plan` once, commit to a position, carry the user's ask verbatim.
 3. Continue via `resume` / `-p navigator-chat` until aligned; involve the user on scope/cost/direction.
 4. Execute with native tools, checkpointing at plan-step boundaries with evidence. Stop when the task is complete or blocked on input only the user can provide.
 
 
-## Model routing (authoritative, do not substitute)
+## Model choice
 
-- Load-bearing planning / architecture / high-risk review → `agy --model claude-opus-4-6-thinking --mode plan` (direct `agy` CLI, NOT veda/gemini).
-- Critique / follow-up → `agy --model claude-sonnet-4-6 --mode plan`.
-- Cheap discovery / context curation → `veda` + gemini (`gemini-3.7-flash-*`, `gemini-3.1-pro-low`).
-- `veda deep` (parallel solvers) runs on gemini and is only for "N independent attempts"; the final architecture decision still comes from claude-opus.
+Which backend and model to use is a live decision owned by
+`../model-resolution/SKILL.md` and the active host's own inventory; this skill
+mandates no provider. Pick a capable reasoning seat for load-bearing planning or
+high-risk review, a cheaper seat for discovery and context curation, and probe
+the lane before trusting it.
 
 ## Invocation, veda CLI (confirmed working)
 
-Use the veda CLI with a **positional** prompt. The default backend/model are now fixed in `~/.config/veda/config` (`BACKEND="agy"`, `MODEL="gemini-3.7-flash-high"`), no flags needed:
+Use the veda CLI with a **positional** prompt. The default backend/model come from your own `~/.config/veda/config` (observed here as `BACKEND="agy"`, `MODEL="gemini-3.7-flash-high"`), so no flags are needed when that is what you want:
 
 ```bash
 veda -S plan-<task> -p navigator-plan '<your prompt — inline ALL relevant file contents; veda sees only what you paste>'
@@ -186,7 +191,7 @@ Key commands:
 - `veda -S plan-TASKNAME -m flash resume` to continue a conversation (session-scoped)
 - Output goes to stdout; use `-o file.md` to save response
 
-Do not execute yet; all we want to do is iterate on a solid plan.
+During alignment, iterate on the plan only. Proceed to implementation only when the user's request authorizes it.
 
 ## Red Flags
 

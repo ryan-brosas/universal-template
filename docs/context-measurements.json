@@ -88,6 +88,7 @@
     "observed_checkout_commit": "673eb938e3a450452a225e7519ad8d5e815418f2",
     "observed_at": "2026-09-05T03:04:22Z",
     "command": "SKILLS_ROOT=\"$PWD/skills\" python3 scripts/skill-catalog.py context --json",
+    "tooling": "Historical. The catalog script and context-budget configuration were later removed from the repository; this command no longer runs and the recorded max_* values were not publication gates.",
     "scope": "Tracked repository static context only. The clean observed checkout and published commit have identical Git trees. No host payload or MCP schema capture was performed.",
     "result": {
       "global_instructions": {

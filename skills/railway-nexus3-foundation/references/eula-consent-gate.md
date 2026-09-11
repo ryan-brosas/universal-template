@@ -30,4 +30,4 @@ await mcp.codebase_memory.search_graph({ project: "railway-template-nexus3", que
 ## Verdict
 Adopt the read→check→refuse-unless-opt-in→echo-disclaimer ladder for ANY gated legal/consent surface (works beyond Nexus). Adapt the endpoint and disclaimer text per product/license. Omit nothing behavioral — the fail-toward-refusal default is the portable core.
 
-> ERRATUM pass 5 (deepening-B lane): scripts/smoke.py:11 carries TYPOGRAPHIC quotes around accepted:false / accepted:true (U+2018/U+2019); this excerpt renders them as ASCII apostrophes because repo-hygiene enforces ASCII in this tree — a porter copying legal text must take it from source bytes, not from any capsule.
+> ERRATUM pass 5 (deepening-B lane): scripts/smoke.py:11 carries TYPOGRAPHIC quotes around accepted:false / accepted:true (U+2018/U+2019); this excerpt renders them as ASCII apostrophes because the historical publication tooling enforced ASCII in this tree — a porter copying legal text must take it from source bytes, not from any capsule.

@@ -1,6 +1,6 @@
 ---
 name: veda-plan
-description: "Use when the user wants a plan/design produced, not code written: an implementation-ready Architect plan + program design (design.json), then a self-contained HTML design doc (designs/) as the driver-facing deliverable. Uses navigator-plan for architect inputs. No implementation, no review."
+description: "Use when the user explicitly asks for a Veda-driven plan artifact: an implementation-ready Architect plan + program design (design.json), then a self-contained HTML design doc (designs/) as the driver-facing deliverable. Uses navigator-plan for architect inputs. No implementation, no review. Not a general planning substitute; plan with native capabilities when Veda is not requested or is unavailable."
 invocation: vendor
 argument-hint: "[veda-flags]"
 ---

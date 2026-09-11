@@ -21,5 +21,4 @@ claims, while an existing useful index is an optional retrieval accelerator.
    graph readiness, coverage probes, and architecture dumps are not applicable,
    not missing prerequisites. Stop when the question is answered.
 
-Request:
-$ARGUMENTS
+Apply the procedure above to the user's current request in this conversation; ask for scope if it is not already clear.
