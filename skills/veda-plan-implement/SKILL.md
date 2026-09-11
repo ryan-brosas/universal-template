@@ -1,6 +1,6 @@
 ---
 name: veda-plan-implement
-description: "Use when the user explicitly asks to align on a plan with the Veda Navigator model. Drives `veda -S plan-TASKNAME -m flash -p navigator-plan` to align; you then implement with native tools. Not a general planning substitute: when the user asks to plan and has not asked for Veda, plan with native capabilities instead."
+description: "Use when the user explicitly asks to plan and implement with the Veda Navigator model. Drives `veda -S plan-TASKNAME -m flash -p navigator-plan` to align; you then implement with native tools. Not a general planning substitute: when the user asks to plan and has not asked for Veda, plan with native capabilities instead."
 invocation: vendor
 argument-hint: "[veda-flags]"
 ---
@@ -15,6 +15,10 @@ Align with Navigator before executing: Navigator advises (no tool access), the D
 - NOT when the user wants immediate execution without an alignment pass.
 
 ## Workflow
+
+An explicit planning-only or do-not-implement request stops after the aligned
+plan. Agreement with a plan alone does not authorize implementation. This
+boundary overrides the execution steps and completion reminders below.
 
 1. `veda -S plan-TASKNAME sel clear` + `sel add` (full files first; slice only above 125k).
 2. `veda -S plan-TASKNAME -m flash -p navigator-plan` once, commit to a position, carry the user's ask verbatim.
@@ -187,7 +191,7 @@ Key commands:
 - `veda -S plan-TASKNAME -m flash resume` to continue a conversation (session-scoped)
 - Output goes to stdout; use `-o file.md` to save response
 
-Do not execute yet; all we want to do is iterate on a solid plan.
+During alignment, iterate on the plan only. Proceed to implementation only when the user's request authorizes it.
 
 ## Red Flags
 

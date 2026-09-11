@@ -21,8 +21,8 @@ Converge on the hardest problems with k parallel solvers (default 6), a judge, a
 3. Build context: `veda -S deep-TASKNAME sel clear`, then `sel add` full files (line-range slices only over the 125k budget); check the token count with `sel ls`, 75k–125k acceptable (Setting Context).
 4. Run `veda -S deep-TASKNAME -m flash deep '...'` with an opening message that commits to a position, goal, proposed approach, evidence anchors, constraints, 1–2 specific questions; use single quotes for prompts containing backticks (Running Deep Mode, Escaping Backticks).
 5. Read the output: each solver's candidate → the judge's selection (your plan) → the verifier's verdict if verification ran; read verifier objections before acting (Reading the output).
-6. Confirm alignment with the user; follow up on the same `-S` session with `navigator-chat` (cheaper than re-running deep mode) (Execution).
-7. Do not execute, converge on the plan only; execution happens after alignment, by you with native tools.
+6. Confirm alignment with the user; follow up on the same `-S` session with `navigator-chat` (cheaper than re-running deep mode) (Completion).
+7. Stop with the plan, evidence, open decisions, and verification approach. Alignment is not permission to implement; execution requires a separate user request.
 
 ## Model choice
 
@@ -177,22 +177,17 @@ veda -S deep-sync-arch --solver-models sol,k3,fable deep '...'
 
 Deep mode prints each solver's candidate, then the judge's selection, then (if verification ran) the verifier's verdict. The **judge's selected answer** is your plan. If the verifier flagged the result, read its objections before acting, they are the "second opinion" that earns the token cost.
 
-Confirm alignment before you start executing. **Once aligned, you (the Driver) proceed to execution.** The solvers, judge, and verifier do not execute; you do.
+Confirm alignment on the plan, then stop. Neither the deep-mode participants nor the Driver implement under this planning-only skill.
 
 ---
 
-## Execution
+## Completion
 
-After deep mode converges on a plan:
-- Carry out the plan using your native tools; keep it scoped to what was agreed
-- For follow-up questions mid-execution, use a **single** `navigator-chat` call (cheaper than re-running deep mode):
-  ```bash
-  veda -S deep-sync-arch -m flash -p navigator-chat "Quick question: should X handle Y this way?"
-  ```
-- Re-run deep mode only if a mid-execution surprise changes the approach (not for routine questions)
-- Escalate to the user (via `ask_user`) per the rule above: scope, cost, or direction changes, or input only they can provide
-
-Before ending your turn, check your last paragraph. If it is a plan, a list of next steps, or a promise about work you have not done ("I'll...", "let me know when..."), do that work now. End your turn only when the task is complete or you are blocked on input only the user can provide.
+Return the selected plan, supporting evidence, unresolved decisions, and proposed
+verification. Planning is the completed deliverable, not unfinished execution.
+Use `navigator-chat` in the same session for follow-up planning questions; rerun
+deep mode only when new evidence materially changes the approach. Do not modify
+project implementation files. A later request to implement is a separate task.
 
 When you write your final summary, write it for a reader who did not see any of the working thread. Lead with the outcome in one sentence, then the supporting detail. Drop the working shorthand: write complete sentences, spell out terms, and don't use arrow chains or labels you made up earlier. If you have to choose between short and clear, choose clear.
 
@@ -221,7 +216,7 @@ Do not execute yet; all we want to do is converge on a solid plan.
 - Using `agents.run({ runner: "veda", ... })`, broken with veda-ts 0.75.8; use the CLI (Invocation).
 - Sending prompts without `veda sel add` first, solvers and judge see only what you share (Setting Context).
 - Open-ended questions instead of a committed position in the opening message (Running Deep Mode).
-- Re-running deep mode for routine mid-execution questions, use a single `navigator-chat` call (Execution).
+- Re-running deep mode for routine mid-execution questions, use a single `navigator-chat` call (Completion).
 - Treating this skill as the default route for architecture decisions or any
   hard problem, or importing another tool's model mandate into it.
 - Generic `-S` session names under multi-agent concurrency (Session Naming).
