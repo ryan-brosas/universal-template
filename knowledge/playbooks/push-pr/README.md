@@ -78,3 +78,15 @@ secrets/unrelated files, or use `pull_request_target` for untrusted branch code.
 Stop at the requested operation: the PR exists or is updated, evidence matches
 observed checks, and review feedback is handled or explicitly blocked. Report
 remaining gaps; do not expand an individual operation into an unrequested merge.
+
+A `gh pr merge` refusal immediately after a push is not evidence of a policy cause.
+Observed twice on `ryan-brosas/universal-template`: `gh pr merge` answered "the base
+branch policy prohibits the merge" while `mergeable_state` already read `clean`, every
+required check had passed, no approval was required, and no thread was open. On the
+second PR the branch had never been rewritten, and retrying the unchanged head about a
+minute later merged it with no push in between - so a rewrite, a missing approval, and a
+failing check were each ruled out by observation rather than by argument. Re-read
+`gh api repos/OWNER/REPO/pulls/N --jq .mergeable_state` and retry, or let `--auto` wait
+for the state to settle; do not infer a missing requirement from the refusal, do not add
+an approval to satisfy a rule that did not fire, and do not reach for `--admin`, which
+bypasses a real requirement whenever one exists.
