@@ -85,6 +85,7 @@ historical audit reports or host runtimes. Git preserves retired material.
 Add content for demonstrated reuse, not merely because a repository was studied.
 
 See `CONTRIBUTING.md`, `SECURITY.md` and `LICENSING.md` for review, reporting and
-licensing. `scripts/pr-metadata.py` supports GitHub title/label/release automation;
-it is not required to use the template. Changes here can immediately affect
+licensing. `scripts/pr-metadata.py` supports GitHub title/label/release automation
+and `scripts/check-retired-paths.py` guards the retired context systems; neither
+is required to use the template. Changes here can immediately affect
 hosts linked to this checkout.
