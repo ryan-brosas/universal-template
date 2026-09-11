@@ -20,6 +20,13 @@ not exceptions to these rules. Surface conflicts for clarification.
 - Run focused tests and integration probes; inspect output before claiming completion. Add deterministic regression coverage for reproducible failures where valuable.
 - Maintain useful documentation and durable progress or issue records. Be concise; preserve exact commands, identifiers and evidence.
 
+## Asset-first design
+
+- Before designing or rebuilding UI, inspect existing Assets, libraries, templates, components, variants, styles and variable collections. Search beyond the current canvas; an empty published-component search does not establish that templates are absent.
+- Compose the actual deliverable from existing assets and templates. Preserve linked component instances and variable bindings; prefer existing variants and exposed properties. Make only necessary content, layout and sizing adjustments. Do not invent sections, visual assets, components, design tokens or replacement primitives unless explicitly authorized. Layout-only containers are allowed, not a loophole for drawing new UI.
+- Reuse/import source variables, including modes and aliases. If linking is unavailable, copy the source variables faithfully and bind the result, preserving a source mapping; do not invent values or silently flatten bindings. If no suitable source exists or access is blocked, report the gap and ask rather than fabricate.
+- Verify asset provenance and variable bindings in the finished deliverable, alongside visual inspection. A separate asset demo, a recreated local component or a screenshot is not proof that the deliverable uses library assets.
+
 ## Never / Avoid
 
 - Duplicate logic, speculative abstractions, unnecessary customization, hard-coded environment assumptions, band-aids or unrelated cleanup.
