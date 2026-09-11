@@ -59,7 +59,6 @@ high-cost failure; fewer calls do not excuse lower quality.
 | Procedure | Equal or better work with fewer turns or errors |
 | Guardrail | Expensive failure prevented without blocking legitimate work |
 | Router | Correct destination with less context and no harmful collisions |
-| Foundation | Faster source-grounded answer without unsupported claims |
 | Simple reference | Relevant information found and used; current links and facts |
 | Deterministic helper | Fixture/unit/integration execution, including its caller |
 

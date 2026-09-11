@@ -6,7 +6,7 @@ kind: playbook
 
 #.NET Coding Practices
 
-Cross-cutting application skill for Framework Design Guidelines + secure coding (from the archived `awesome-guidelines` style capsules). For language syntax, load `csharp-coding-practices`, `vb-coding-practices`, or `fsharp-coding-practices`.
+Cross-cutting application skill for Framework Design Guidelines + secure coding. For language syntax, load `csharp-coding-practices`, `vb-coding-practices`, or `fsharp-coding-practices`.
 
 ## Core Principle
 
@@ -25,10 +25,10 @@ Cross-cutting application skill for Framework Design Guidelines + secure coding 
 
 ## Workflow
 
-1. **Naming**, Pascal/camel, affixes, namespaces (`dotnet-style-naming-framework.md`).
-2. **API design**, scenarios, aggregates, collections (`dotnet-style-api-design.md`).
-3. **Exceptions/events**, throw/catch, dispose (`dotnet-style-exceptions-events.md`).
-4. **Security/verify**, CAS ban, input hardening, analyzers (`dotnet-style-security-verify.md`).
+1. **Naming**, Pascal/camel, affixes, namespaces.
+2. **API design**, scenarios, aggregates, collections.
+3. **Exceptions/events**, throw/catch, dispose.
+4. **Security/verify**, CAS ban, input hardening, analyzers.
 5. **Language pass**, route to C#/VB/F# skill for syntax/layout.
 6. **Verify**, analyzers, CLS, build/tests on changed assemblies.
 
@@ -61,16 +61,7 @@ Cross-cutting application skill for Framework Design Guidelines + secure coding 
 - Scenario sample code uses intended aggregate type
 - Banned API grep clean on new code
 - `dotnet build` + tests on touched projects
-- Capsule checklist on public API additions
 
-
-## References
-
-- `awesome-guidelines/references/dotnet-style-learning-note.md`
-- `awesome-guidelines/references/dotnet-style-naming-framework.md`
-- `awesome-guidelines/references/dotnet-style-api-design.md`
-- `awesome-guidelines/references/dotnet-style-exceptions-events.md`
-- `awesome-guidelines/references/dotnet-style-security-verify.md`
 
 ## Language routing
 

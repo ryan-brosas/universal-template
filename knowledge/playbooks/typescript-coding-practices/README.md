@@ -1,6 +1,6 @@
 ---
 title: typescript-coding-practices
-summary: Use when reviewing TypeScript style, modules, imports, nullability, or compiler/linter configuration; follow project conventions and consult Google TypeScript guidance as optional source-specific practice.
+summary: Use when reviewing TypeScript style, modules, imports, nullability, or compiler/linter configuration; follow project conventions; use Google TypeScript guidance only where adopted.
 kind: playbook
 ---
 
@@ -12,9 +12,9 @@ For domain models, runtime validation, or failure semantics, select
 their source or generator instead of hand-editing them.
 
 Start with the project's TypeScript version, `tsconfig`, lint rules, framework,
-and representative files. The archived Google-style capsules below are prior art,
-not language restrictions. Apply them where adopted or where they close a named
-gap; do not migrate a project's style during an unrelated change.
+and representative files. Google TypeScript guidance is prior art, not a language restriction: apply it
+where adopted or where it closes a named gap; do not migrate a project's style
+during an unrelated change.
 
 ## Review the relevant surface
 
@@ -31,14 +31,3 @@ gap; do not migrate a project's style during an unrelated change.
 - **Verification:** run the project's typecheck and lint commands on the affected
   surface. Use `tsc --noEmit` only when appropriate for its build configuration.
   Check module output or a consuming build when resolution/export behavior changes.
-
-## Focused source references
-
-Load only a capsule relevant to the active question. These describe the source's
-conventions; the project decides whether to adopt them.
-
-- `../awesome-guidelines/references/typescript-style-learning-note.md`
-- `../awesome-guidelines/references/typescript-style-modules-imports.md`
-- `../awesome-guidelines/references/typescript-style-types-nullability.md`
-- `../awesome-guidelines/references/typescript-style-classes-api.md`
-- `../awesome-guidelines/references/typescript-style-verify.md`

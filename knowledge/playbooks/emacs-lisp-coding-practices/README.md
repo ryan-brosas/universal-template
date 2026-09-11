@@ -6,7 +6,7 @@ kind: playbook
 
 # Emacs Lisp Coding Practices
 
-Application skill for Emacs Lisp style learning (from the archived `awesome-guidelines` style capsules). For major/minor mode APIs and key-binding policy details, combine with stack-specific foundations.
+Application skill for Emacs Lisp style. For major/minor mode APIs and key-binding policy details, consult the framework's own source or docs.
 
 ## Core Principle
 
@@ -24,10 +24,10 @@ Emacs Lisp quality is **namespace-safe, load-safe regularity**, lexical scoping,
 
 ## Workflow
 
-1. **Layout**, lexical-binding, indent, parens (`emacs-lisp-style-formatting-layout.md`).
-2. **Names**, prefixes, private `--`, predicates (`emacs-lisp-style-naming-prefixes.md`).
-3. **Functions**, when/unless, quotes, macros (`emacs-lisp-style-functions-macros.md`).
-4. **Packages**, header, require/provide/autoload, docs (`emacs-lisp-style-packages-docs.md`).
+1. **Layout**, lexical-binding, indent, parens.
+2. **Names**, prefixes, private `--`, predicates.
+3. **Functions**, when/unless, quotes, macros.
+4. **Packages**, header, require/provide/autoload, docs.
 5. **Verify**, `checkdoc-file`, `package-lint`, `byte-compile-file` on changed `.el` files.
 
 ## Red Flags
@@ -50,13 +50,3 @@ Emacs Lisp quality is **namespace-safe, load-safe regularity**, lexical scoping,
 - `emacs -batch -l checkdoc.el -f checkdoc-file -- FILE.el`
 - `package-lint` (MELPA-bound packages)
 - `byte-compile-file` with warnings treated as errors (project policy)
-- Capsule checklist on public `defun` docstrings
-
-
-## References
-
-- `awesome-guidelines/references/emacs-lisp-style-learning-note.md`
-- `awesome-guidelines/references/emacs-lisp-style-formatting-layout.md`
-- `awesome-guidelines/references/emacs-lisp-style-naming-prefixes.md`
-- `awesome-guidelines/references/emacs-lisp-style-functions-macros.md`
-- `awesome-guidelines/references/emacs-lisp-style-packages-docs.md`

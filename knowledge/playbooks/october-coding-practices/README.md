@@ -6,7 +6,7 @@ kind: playbook
 
 # October CMS Coding Practices
 
-Application skill for October CMS developer guidelines ingest (`awesome-guidelines`). Generic PHP: `php-coding-practices`. Sibling CMS: `magento-coding-practices`, `drupal-coding-practices`, `wordpress-coding-practices`.
+Application skill for October CMS developer guidelines. Generic PHP: `php-coding-practices`. Sibling CMS: `magento-coding-practices`, `drupal-coding-practices`, `wordpress-coding-practices`.
 
 ## Core Principle
 
@@ -27,10 +27,10 @@ October maintainability is **PSR layout plus marketplace naming discipline**, ca
 
 ## Workflow
 
-1. **PHP/PSR**, PSR base, camelCase/snake_case, AJAX carve-outs (`october-style-php-psr.md`).
-2. **Naming**, vendor, DB, MVC, views, events (`october-style-naming-patterns.md`).
-3. **Classes/exceptions**, visibility, Rain exceptions (`october-style-class-exceptions.md`).
-4. **Packages/verify**, composer, semver, MySQL strict (`october-style-packages-verify.md`).
+1. **PHP/PSR**, PSR base, camelCase/snake_case, AJAX carve-outs.
+2. **Naming**, vendor, DB, MVC, views, events.
+3. **Classes/exceptions**, visibility, Rain exceptions.
+4. **Packages/verify**, composer, semver, MySQL strict.
 
 ## Red Flags
 
@@ -57,14 +57,6 @@ October maintainability is **PSR layout plus marketplace naming discipline**, ca
 - MySQL `STRICT_TRANS_TABLES` enabled in dev environment
 - Exception type spot-check on new throw sites
 
-
-## References
-
-- `awesome-guidelines/references/october-style-learning-note.md`
-- `awesome-guidelines/references/october-style-php-psr.md`
-- `awesome-guidelines/references/october-style-naming-patterns.md`
-- `awesome-guidelines/references/october-style-class-exceptions.md`
-- `awesome-guidelines/references/october-style-packages-verify.md`
 
 ## Related skills
 

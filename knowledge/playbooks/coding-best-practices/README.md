@@ -14,8 +14,8 @@ instructions, tests, and runtime behavior remain authoritative.
 1. A named language or framework routes to an existing matching
    `*-coding-practices` leaf. When a framework has no practices leaf of its own
    (FastAPI, Flask), route style questions to its underlying language leaf
-   (`python-coding-practices`) and route to `../../../skills/foundation-pack/SKILL.md` only
-   when the request needs that project's internals rather than general style.
+   (`python-coding-practices`); for that framework's internal behavior, inspect
+   its own source or docs rather than general style.
    TypeScript domain modeling may additionally need
    `typescript-coding-standards`; do not load both by default.
 2. Scope control, maintainability, verification discipline, or design judgment

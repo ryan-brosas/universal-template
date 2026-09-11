@@ -6,7 +6,7 @@ kind: playbook
 
 # Erlang Coding Practices
 
-Application skill for Erlang style learning (from the archived `awesome-guidelines` style capsules). For supervision trees and release tooling, combine with OTP stack capsules in `knowledge/foundations`.
+Application skill for Erlang style. For supervision trees and release tooling, consult OTP's own source or docs.
 
 ## Core Principle
 
@@ -24,10 +24,10 @@ Erlang quality is **pattern-visible modules + crash-loud bugs**, explicit export
 
 ## Workflow
 
-1. **Layout**, indent, types/records, grouping (`erlang-style-formatting-modules.md`).
-2. **Names & types**, snake/CamelCase, specs, opaque state (`erlang-style-naming-types.md`).
-3. **Control flow**, clauses, try/catch, no if (`erlang-style-control-flow.md`).
-4. **OTP & security**, exports, API wrap, input safety (`erlang-style-otp-security.md`).
+1. **Layout**, indent, types/records, grouping.
+2. **Names & types**, snake/CamelCase, specs, opaque state.
+3. **Control flow**, clauses, try/catch, no if.
+4. **OTP & security**, exports, API wrap, input safety.
 5. **Verify**, Elvis, Dialyzer, xref, rebar3 test on changed modules.
 
 ## Red Flags
@@ -52,13 +52,3 @@ Erlang quality is **pattern-visible modules + crash-loud bugs**, explicit export
 - Elvis (Inaka rules or project config)
 - `xref` / cross-reference check where configured
 - `rebar3 eunit` or Common Test on changed modules
-- Capsule checklist on exported `-spec` list
-
-
-## References
-
-- `awesome-guidelines/references/erlang-style-learning-note.md`
-- `awesome-guidelines/references/erlang-style-formatting-modules.md`
-- `awesome-guidelines/references/erlang-style-naming-types.md`
-- `awesome-guidelines/references/erlang-style-control-flow.md`
-- `awesome-guidelines/references/erlang-style-otp-security.md`

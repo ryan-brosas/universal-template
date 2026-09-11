@@ -6,7 +6,7 @@ kind: playbook
 
 # Dart Coding Practices
 
-Application skill for Dart style learning (from the archived `awesome-guidelines` style capsules). For Flutter UI patterns, combine with stack-specific foundations.
+Application skill for Dart style. For Flutter UI patterns, consult the framework's own source or docs.
 
 ## Core Principle
 
@@ -24,10 +24,10 @@ Dart quality is **Effective Dart consistency**, formatted mechanically, document
 
 ## Workflow
 
-1. **Format & names**, dart format, imports, casing (`dart-style-formatting-names.md`).
-2. **Docs**, `///` summaries, dart doc (`dart-style-documentation.md`).
-3. **Usage**, null, collections, async, errors (`dart-style-usage-idioms.md`).
-4. **Design**, types, classes, equality (`dart-style-design-api.md`).
+1. **Format & names**, dart format, imports, casing.
+2. **Docs**, `///` summaries, dart doc.
+3. **Usage**, null, collections, async, errors.
+4. **Design**, types, classes, equality.
 5. **Verify**, `dart format`, `dart analyze`, `dart test` on changed packages.
 
 ## Red Flags
@@ -50,13 +50,3 @@ Dart quality is **Effective Dart consistency**, formatted mechanically, document
 - `dart analyze` (project strictness)
 - `dart test` for changed packages
 - `dart doc` or doc coverage review
-- Capsule checklist on public API
-
-
-## References
-
-- `awesome-guidelines/references/dart-style-learning-note.md`
-- `awesome-guidelines/references/dart-style-formatting-names.md`
-- `awesome-guidelines/references/dart-style-documentation.md`
-- `awesome-guidelines/references/dart-style-usage-idioms.md`
-- `awesome-guidelines/references/dart-style-design-api.md`

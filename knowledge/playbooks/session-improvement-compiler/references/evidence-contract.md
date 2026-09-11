@@ -31,7 +31,6 @@ Keep this ledger in the working response or temporary files. Do not create anoth
 - **GATE:** objective, low-false-positive regression belongs in a test, validator, lint, or CI check.
 - **SKILL:** repeated procedure with meaningful judgment changes agent behavior.
 - **PROJECT NOTE:** expensive rationale specific to one project.
-- **FOUNDATION:** cold, revision-pinned external architecture evidence after explicit qualification.
 - **NOT WORTH SAVING:** cheap to rediscover, unstable, duplicated, or one-off.
 
 A candidate may split: procedure into a skill, objective invariant into a gate, and invocation ergonomics into a prompt.
@@ -41,7 +40,7 @@ A candidate may split: procedure into a skill, objective invariant into a gate, 
 Search before creating. Prefer, in order:
 
 1. strengthen the existing deterministic gate
-2. improve the existing skill capsule
+2. improve the existing skill owner
 3. update its reusable prompt
 4. create a new narrowly triggered skill only when ownership is genuinely distinct
 

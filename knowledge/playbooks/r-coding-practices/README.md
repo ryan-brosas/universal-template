@@ -6,7 +6,7 @@ kind: playbook
 
 # R Coding Practices
 
-Application skill for R style learning (from the archived `awesome-guidelines` style capsules). Default to tidyverse + styler/lintr; when project declares Google R guide, apply BigCamelCase functions, explicit `return()`, and `pkg::fun()` qualification.
+Application skill for R style. Default to tidyverse + styler/lintr; when project declares Google R guide, apply BigCamelCase functions, explicit `return()`, and `pkg::fun()` qualification.
 
 ## Core Principle
 
@@ -24,10 +24,10 @@ R analysis quality is **consistent formatting + pipe-clear data flow**, `<-` and
 
 ## Workflow
 
-1. **Syntax**, spacing, braces, `<-` (`r-style-formatting-syntax.md`).
-2. **Naming/files**, snake_case vs BigCamelCase policy (`r-style-naming-files.md`).
-3. **Functions/pipes**, `|>`, returns, control (`r-style-functions-pipes.md`).
-4. **Docs/verify**, roxygen, styler, lintr (`r-style-docs-verify.md`).
+1. **Syntax**, spacing, braces, `<-`.
+2. **Naming/files**, snake_case vs BigCamelCase policy.
+3. **Functions/pipes**, `|>`, returns, control.
+4. **Docs/verify**, roxygen, styler, lintr.
 5. **Verify**, styler, lintr, tests on changed files.
 
 ## Red Flags
@@ -68,13 +68,3 @@ R analysis quality is **consistent formatting + pipe-clear data flow**, `<-` and
 - `lintr::lint()` with project `.lintr` config
 - `devtools::test()` / `R CMD check` for packages
 - Roxygen coverage on new exports
-- Capsule checklist on declared baseline (tidyverse vs Google)
-
-
-## References
-
-- `awesome-guidelines/references/r-style-learning-note.md`
-- `awesome-guidelines/references/r-style-formatting-syntax.md`
-- `awesome-guidelines/references/r-style-naming-files.md`
-- `awesome-guidelines/references/r-style-functions-pipes.md`
-- `awesome-guidelines/references/r-style-docs-verify.md`

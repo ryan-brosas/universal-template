@@ -6,7 +6,7 @@ kind: playbook
 
 # Lua Coding Practices
 
-Application skill for Lua style learning (from the archived `awesome-guidelines` style capsules). For Luau/Roblox or OpenResty-specific rules, after current project code and any project-local references, consult applicable stack capsules in `knowledge/foundations`.
+Application skill for Lua style. For Luau/Roblox or OpenResty-specific rules, after current project code and any project-local references, consult the framework's own source or docs.
 
 ## Core Principle
 
@@ -24,10 +24,10 @@ Lua quality is **local scope + explicit modules**, return a table, require into 
 
 ## Workflow
 
-1. **Layout**, indent, spacing, blocks (`lua-style-formatting-layout.md`).
-2. **Modules**, names, return M (`lua-style-naming-modules.md`).
-3. **Functions**, local, guards, calls (`lua-style-functions-scope.md`).
-4. **Tables/docs**, literals, LDoc (`lua-style-tables-docs.md`).
+1. **Layout**, indent, spacing, blocks.
+2. **Modules**, names, return M.
+3. **Functions**, local, guards, calls.
+4. **Tables/docs**, literals, LDoc.
 5. **Verify**, luacheck, LDoc (if applicable), tests on changed modules.
 
 ## Red Flags
@@ -52,13 +52,3 @@ Lua quality is **local scope + explicit modules**, return a table, require into 
 - `luacheck .` (project `.luacheckrc`)
 - LDoc build for documented modules
 - busted/luaunit test run (project harness)
-- Capsule checklist on `return M` module pattern
-
-
-## References
-
-- `awesome-guidelines/references/lua-style-learning-note.md`
-- `awesome-guidelines/references/lua-style-formatting-layout.md`
-- `awesome-guidelines/references/lua-style-naming-modules.md`
-- `awesome-guidelines/references/lua-style-functions-scope.md`
-- `awesome-guidelines/references/lua-style-tables-docs.md`

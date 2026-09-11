@@ -6,7 +6,7 @@ kind: playbook
 
 # MDN Code Examples Practices
 
-Application skill for MDN Web Docs code style hub (archived `awesome-guidelines` capsules). For application JS/HTML/CSS, load `javascript-coding-practices` and `frontend-markup-practices`. For repo Markdown structure, load `markdown-writing-practices`.
+Application skill for MDN Web Docs code style hub. For application JS/HTML/CSS, load `javascript-coding-practices` and `frontend-markup-practices`. For repo Markdown structure, load `markdown-writing-practices`.
 
 ## Core Principle
 
@@ -25,10 +25,10 @@ MDN example quality is **copy-paste-safe teaching code**, short vanilla snippets
 
 ## Workflow
 
-1. **Principles**, size, vanilla, fences, Prettier (`mdn-style-examples-principles.md`).
-2. **JavaScript**, const/let, loops, DOM, comments (`mdn-style-javascript-examples.md`).
-3. **HTML**, doctype, attrs, casing (`mdn-style-html-examples.md`).
-4. **CSS**, vanilla, selectors, color/media (`mdn-style-css-examples.md`).
+1. **Principles**, size, vanilla, fences, Prettier.
+2. **JavaScript**, const/let, loops, DOM, comments.
+3. **HTML**, doctype, attrs, casing.
+4. **CSS**, vanilla, selectors, color/media.
 5. **Verify**, Prettier MDN config; correct fence language; `example-good`/`example-bad` when contrasting.
 
 ## Red Flags
@@ -55,17 +55,8 @@ MDN example quality is **copy-paste-safe teaching code**, short vanilla snippets
 - Prettier with MDN project config on changed examples
 - Fence language matches block content (`plain` for pseudocode)
 - Line-count and horizontal-scroll check
-- Capsule probes on new JS DOM insertion and CSS validity
 - Optional: MDN yari/build or repo lint scripts if present in target repo
 
-
-## References
-
-- `awesome-guidelines/references/mdn-style-learning-note.md`
-- `awesome-guidelines/references/mdn-style-examples-principles.md`
-- `awesome-guidelines/references/mdn-style-javascript-examples.md`
-- `awesome-guidelines/references/mdn-style-html-examples.md`
-- `awesome-guidelines/references/mdn-style-css-examples.md`
 
 ## Related skills
 

@@ -1,11 +1,11 @@
 # Messaging, Positioning, and Awareness
 
-Load this capsule for segmentation decisions, One Reader selection, positioning,
+Load this reference for segmentation decisions, One Reader selection, positioning,
 category framing, value propositions, awareness, sophistication, message
 hierarchy, or multi-audience routing. Load `research-voc.md` first when accepted
 customer evidence and a message bank do not exist.
 
-This capsule decides the canonical meaning. Channel capsules decide section
+This reference decides the canonical meaning. Channel references decide section
 order, copy expression, and interface placement. Frameworks organize the final
 argument; validation tests it.
 

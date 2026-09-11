@@ -6,7 +6,7 @@ kind: playbook
 
 # C++ Coding Practices
 
-Application skill for C++ style learning (from the archived `awesome-guidelines` style capsules). When project uses LLVM/Chromium/Mozilla variants, follow local baseline first.
+Application skill for C++ style. When project uses LLVM/Chromium/Mozilla variants, follow local baseline first.
 
 ## Core Principle
 
@@ -19,15 +19,15 @@ C++ quality is **header discipline + explicit ownership + readable names**, powe
 
 **NOT when:**
 
-- C code, use C-specific guides when ingested.
+- C code, use C-specific guides.
 - Generated protobuf/grpc stubs, validate generators, not hand-edits.
 
 ## Workflow
 
-1. **Headers & format**, guards, IWYU, 2-space layout (`cpp-style-formatting-headers.md`).
-2. **Naming**, PascalCase types/functions, snake_case data, `k` constants (`cpp-style-naming-types.md`).
-3. **Ownership**, `unique_ptr`, RAII, no naked new/delete (`cpp-style-ownership-raii.md`).
-4. **Classes/API**, explicit ctors, struct vs class, short functions (`cpp-style-classes-api.md`).
+1. **Headers & format**, guards, IWYU, 2-space layout.
+2. **Naming**, PascalCase types/functions, snake_case data, `k` constants.
+3. **Ownership**, `unique_ptr`, RAII, no naked new/delete.
+4. **Classes/API**, explicit ctors, struct vs class, short functions.
 5. **Verify**, clang-format, IWYU, cpplint/clang-tidy on changed translation units.
 
 ## Red Flags
@@ -45,13 +45,3 @@ C++ quality is **header discipline + explicit ownership + readable names**, powe
 - `clang-format --dry-run` / project formatter check
 - IWYU fix or include-fixer clean
 - cpplint / clang-tidy on changed files
-- Capsule checklist on API review
-
-
-## References
-
-- `awesome-guidelines/references/cpp-style-learning-note.md`
-- `awesome-guidelines/references/cpp-style-formatting-headers.md`
-- `awesome-guidelines/references/cpp-style-naming-types.md`
-- `awesome-guidelines/references/cpp-style-ownership-raii.md`
-- `awesome-guidelines/references/cpp-style-classes-api.md`

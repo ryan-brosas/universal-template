@@ -28,7 +28,7 @@ the selected procedure's directory, never from this router.
 - Simplifying working code:
   [code-cleanup](../../knowledge/playbooks/code-cleanup/README.md).
 - Language/framework standards: choose one [language or platform](references/languages.md).
-  FastAPI/Flask style routes to Python; source internals go to foundation-pack.
+  FastAPI/Flask style routes to Python; framework internals come from that framework's own source or docs.
 
 For planning, design scrutiny, migrations, performance, external-service tests,
 bootstrap or other engineering questions, choose one [topic](references/topics.md).

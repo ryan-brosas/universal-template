@@ -27,5 +27,5 @@
 
 ## Leaf skills
 
-- Stack-specific: relevant `knowledge/foundations` leaves (e.g. DuckDB, data pipelines)
+- Stack-specific: the library's own source or docs (e.g. DuckDB, data pipelines)
 - Review scope creep from "optimization" PRs: `code-review-and-quality`

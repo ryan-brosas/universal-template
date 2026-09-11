@@ -6,7 +6,7 @@ kind: playbook
 
 # Swift Coding Practices
 
-Application skill for Swift style learning (from the archived `awesome-guidelines` style capsules). For SwiftUI/UIKit/SPM layout, load stack capsules in `knowledge/foundations`.
+Application skill for Swift style. For SwiftUI/UIKit/SPM layout, load the framework's own source or docs.
 
 ## Core Principle
 
@@ -21,14 +21,14 @@ Swift readability is **clarity at the point of use**, safe bindings, fluent name
 
 - Non-Swift code.
 - Generated Xcode project stubs, validate generators instead.
-- Apple platform HIG-only UI, use platform foundation.
+- Apple platform HIG-only UI, follow Apple’s platform documentation.
 
 ## Workflow
 
-1. **Safety & access**, let, guard, optionals, struct/final (`swift-style-formatting-safety.md`).
-2. **Naming**, roles, fluency, mutating pairs (`swift-style-naming-api.md`).
-3. **Labels**, argument labels, defaults (`swift-style-argument-labels.md`).
-4. **Docs & types**, summaries, methods vs functions (`swift-style-documentation-types.md`).
+1. **Safety & access**, let, guard, optionals, struct/final.
+2. **Naming**, roles, fluency, mutating pairs.
+3. **Labels**, argument labels, defaults.
+4. **Docs & types**, summaries, methods vs functions.
 5. **Verify**, SwiftLint/SwiftFormat + `swift build` / `xcodebuild test` on changed targets.
 
 ## Red Flags
@@ -46,13 +46,3 @@ Swift readability is **clarity at the point of use**, safe bindings, fluent name
 
 - SwiftLint/SwiftFormat on changed files
 - Build + tests for touched modules
-- Capsule checklist on public API review
-
-
-## References
-
-- `awesome-guidelines/references/swift-style-learning-note.md`
-- `awesome-guidelines/references/swift-style-formatting-safety.md`
-- `awesome-guidelines/references/swift-style-naming-api.md`
-- `awesome-guidelines/references/swift-style-argument-labels.md`
-- `awesome-guidelines/references/swift-style-documentation-types.md`

@@ -6,7 +6,7 @@ kind: playbook
 
 # Angular Coding Practices
 
-Application skill for angular.dev Style Guide (2025) ingest (`awesome-guidelines`). TypeScript style: `typescript-coding-practices`; domain modeling: `typescript-coding-standards`. SPA compare: `vue-coding-practices`.
+Application skill for angular.dev Style Guide (2025). TypeScript style: `typescript-coding-practices`; domain modeling: `typescript-coding-standards`. SPA compare: `vue-coding-practices`.
 
 ## Core Principle
 
@@ -29,10 +29,10 @@ Treat the review prompts below as contextual checks, not automatic defects.
 
 ## Workflow
 
-1. **Naming/files**, kebab-case, specs, triplets (`angular-style-naming-files.md`).
-2. **Structure**, src, features, one concept (`angular-style-project-structure.md`).
-3. **Components**, inject, templates, lifecycle (`angular-style-components-templates.md`).
-4. **Selectors/verify**, selectors, I/O, lint (`angular-style-selectors-verify.md`).
+1. **Naming/files**, kebab-case, specs, triplets.
+2. **Structure**, src, features, one concept.
+3. **Components**, inject, templates, lifecycle.
+4. **Selectors/verify**, selectors, I/O, lint.
 
 ## Red Flags
 
@@ -57,16 +57,7 @@ Treat the review prompts below as contextual checks, not automatic defects.
 - `ng test` for colocated `.spec.ts`
 - `ng build` or `tsc` strict template check
 - Selector hyphen + app prefix audit on new components
-- Capsule probes in review notes
 
-
-## References
-
-- `awesome-guidelines/references/angular-style-learning-note.md`
-- `awesome-guidelines/references/angular-style-naming-files.md`
-- `awesome-guidelines/references/angular-style-project-structure.md`
-- `awesome-guidelines/references/angular-style-components-templates.md`
-- `awesome-guidelines/references/angular-style-selectors-verify.md`
 
 ## Related skills
 

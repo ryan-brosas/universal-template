@@ -6,7 +6,7 @@ kind: playbook
 
 # Julia Coding Practices
 
-Application skill for Julia BlueStyle learning (from the archived `awesome-guidelines` style capsules). When project sets SciMLStyle or custom `.JuliaFormatter.toml`, follow that formatter config first.
+Application skill for Julia BlueStyle. When project sets SciMLStyle or custom `.JuliaFormatter.toml`, follow that formatter config first.
 
 ## Core Principle
 
@@ -24,10 +24,10 @@ Julia package quality is **formatter-enforced consistency + explicit module APIs
 
 ## Workflow
 
-1. **Layout**, JuliaFormatter blue, 92 cols (`julia-style-formatting-layout.md`).
-2. **Modules**, using, exports (`julia-style-modules-imports.md`).
-3. **Methods**, return, kwargs, types (`julia-style-functions-methods.md`).
-4. **Docs/tests**, docstrings, testset (`julia-style-docs-tests.md`).
+1. **Layout**, JuliaFormatter blue, 92 cols.
+2. **Modules**, using, exports.
+3. **Methods**, return, kwargs, types.
+4. **Docs/tests**, docstrings, testset.
 5. **Verify**, `JuliaFormatter.format`, `Pkg.test()`, docstring audit on exports.
 
 ## Red Flags
@@ -55,13 +55,3 @@ Julia package quality is **formatter-enforced consistency + explicit module APIs
 - `JuliaFormatter.format(".")` with `style = "blue"`
 - `julia --project -e 'using Pkg; Pkg.test()'`
 - Exported names have docstrings (manual or tool-assisted)
-- Capsule checklist on main module exports
-
-
-## References
-
-- `awesome-guidelines/references/julia-style-learning-note.md`
-- `awesome-guidelines/references/julia-style-formatting-layout.md`
-- `awesome-guidelines/references/julia-style-modules-imports.md`
-- `awesome-guidelines/references/julia-style-functions-methods.md`
-- `awesome-guidelines/references/julia-style-docs-tests.md`

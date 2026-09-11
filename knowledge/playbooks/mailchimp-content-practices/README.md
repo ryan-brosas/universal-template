@@ -6,7 +6,7 @@ kind: playbook
 
 # Mailchimp Content Practices
 
-Application skill for Mailchimp Content Style Guide (archived `awesome-guidelines` capsules). For repo Markdown structure (H1, fences, wrap), load `markdown-writing-practices` first; apply this skill to user-facing voice, UI microcopy, and inclusive language.
+Application skill for Mailchimp Content Style Guide. For repo Markdown structure (H1, fences, wrap), load `markdown-writing-practices` first; apply this skill to user-facing voice, UI microcopy, and inclusive language.
 
 ## Core Principle
 
@@ -25,10 +25,10 @@ Product copy quality is **clear, person-first, and scannable**, plainspoken voic
 
 ## Workflow
 
-1. **Voice/tone**, plainspoken, active, positive (`mailchimp-style-voice-tone.md`).
-2. **Grammar/structure**, hierarchy, numbers, punctuation (`mailchimp-style-grammar-structure.md`).
-3. **Inclusive people**, they/them, bias-free terms (`mailchimp-style-inclusive-people.md`).
-4. **Web/a11y/i18n**, headings, links, forms, translation (`mailchimp-style-web-accessibility-i18n.md`).
+1. **Voice/tone**, plainspoken, active, positive.
+2. **Grammar/structure**, hierarchy, numbers, punctuation.
+3. **Inclusive people**, they/them, bias-free terms.
+4. **Web/a11y/i18n**, headings, links, forms, translation.
 5. **Verify**, read aloud; heading outline; link/descriptive text scan; word-list grep for banned terms.
 
 ## Red Flags
@@ -62,14 +62,6 @@ Product copy quality is **clear, person-first, and scannable**, plainspoken voic
 - For localized strings: translation checklist (SVO, repeated parallel verbs, ambiguity scan)
 - Optional: accessibility review (alt text, form labels, no direction-only instructions)
 
-
-## References
-
-- `awesome-guidelines/references/mailchimp-style-learning-note.md`
-- `awesome-guidelines/references/mailchimp-style-voice-tone.md`
-- `awesome-guidelines/references/mailchimp-style-grammar-structure.md`
-- `awesome-guidelines/references/mailchimp-style-inclusive-people.md`
-- `awesome-guidelines/references/mailchimp-style-web-accessibility-i18n.md`
 
 ## Related skills
 

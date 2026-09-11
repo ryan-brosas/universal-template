@@ -6,7 +6,7 @@ kind: playbook
 
 # GNU C Coding Practices
 
-Application skill for GNU Coding Standards (archived `awesome-guidelines` capsules). For generic portable C without GNU layout, load `c-coding-practices`. Apache httpd: `httpd-c-coding-practices`. Linux kernel: kernel coding-style, not this skill.
+Application skill for GNU Coding Standards. For generic portable C without GNU layout, load `c-coding-practices`. Apache httpd: `httpd-c-coding-practices`. Linux kernel: kernel coding-style, not this skill.
 
 ## Core Principle
 
@@ -25,10 +25,10 @@ GNU C quality is **tool-friendly layout plus explicit documentation and checked 
 
 ## Workflow
 
-1. **Format**, 79 cols, defun braces, GNU indent (`gnu-style-formatting-layout.md`).
-2. **Naming**, identifiers, flags, files (`gnu-style-naming-files.md`).
-3. **Comments**, English, `#endif` sense (`gnu-style-comments-conditionals.md`).
-4. **Constructs/portability**, types, braces, Gnulib, errors (`gnu-style-constructs-portability.md`).
+1. **Format**, 79 cols, defun braces, GNU indent.
+2. **Naming**, identifiers, flags, files.
+3. **Comments**, English, `#endif` sense.
+4. **Constructs/portability**, types, braces, Gnulib, errors.
 5. **Verify**, `./configure && make && make check`; optional GNU `indent` on touched C.
 
 ## Red Flags
@@ -54,17 +54,8 @@ GNU C quality is **tool-friendly layout plus explicit documentation and checked 
 - GNU `indent` with standards flags on changed files (optional separate commit)
 - `grep -E '.{80}'` on touched lines
 - `./configure && make check` (or project test target)
-- Capsule probes on new conditionals and error paths
 - Cross-check: not mixing httpd 4-space or kernel tab style
 
-
-## References
-
-- `awesome-guidelines/references/gnu-style-learning-note.md`
-- `awesome-guidelines/references/gnu-style-formatting-layout.md`
-- `awesome-guidelines/references/gnu-style-naming-files.md`
-- `awesome-guidelines/references/gnu-style-comments-conditionals.md`
-- `awesome-guidelines/references/gnu-style-constructs-portability.md`
 
 ## Related skills
 

@@ -64,5 +64,5 @@ mandatory evaluation framework is required.
 
 Verify paths, coverage, host discovery, relevant helper callers and routing.
 For material routing changes, compare representative tasks before and after;
-report unmeasured behavior honestly. Source evidence belongs in foundations,
-not a procedural playbook; see the authoring guide's `references/foundation-kind.md`.
+report unmeasured behavior honestly. Read source evidence directly when a procedure needs it; do not create a
+permanent source summary.

@@ -1,9 +1,9 @@
 # Email and Sequences
 
-Load this capsule for campaign, lifecycle, onboarding, launch, nurture,
+Load this reference for campaign, lifecycle, onboarding, launch, nurture,
 abandoned-cart, reactivation, cold-outbound, or sales emails. Load
 `messaging-positioning.md` first when the reader, dominant value, or belief
-inventory is undecided. This capsule owns channel expression and flow design.
+inventory is undecided. This reference owns channel expression and flow design.
 `editing-validation.md` owns test methodology.
 
 ## Scope and handoffs

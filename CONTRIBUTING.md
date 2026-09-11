@@ -43,6 +43,10 @@ The remaining `scripts/pr-metadata.py` is repository automation: it parses PR
 titles for the existing title check, labels, and release-note categories. It is
 not used to consume this template. Its focused check is
 `python3 scripts/pr-metadata.py --selftest`.
+`scripts/check-retired-paths.py` guards the removed context systems (Codebase
+Memory, DeepWiki, foundations, the capsule library, the `api-design-practices`
+alias, OpenViking); run `python3 scripts/check-retired-paths.py` before
+completing a change here.
 
 Required GitHub check names remain `quality / required` and `pr-title`; labels
 are applied by repository automation. Workflow security is checked separately.

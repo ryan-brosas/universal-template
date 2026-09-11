@@ -1,8 +1,8 @@
 # Pages, Ads, Onboarding, and UX Copy
 
-Load this capsule for web pages, ads, onboarding, and conversion microcopy. Load
+Load this reference for web pages, ads, onboarding, and conversion microcopy. Load
 messaging first when positioning, audience, awareness, or hierarchy is unsettled.
-This capsule decides where messages appear, what evidence sits beside them, and
+This reference decides where messages appear, what evidence sits beside them, and
 when the next action has been earned.
 
 ## Scope and handoffs

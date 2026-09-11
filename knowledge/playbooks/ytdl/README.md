@@ -185,4 +185,4 @@ Output file exists at the target path; `ffprobe` shows the expected streams (vid
 
 ## References
 
-No reference capsules, the skill is self-contained.
+No separate references; the skill is self-contained.

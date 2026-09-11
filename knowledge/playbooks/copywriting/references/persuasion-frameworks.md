@@ -7,13 +7,13 @@ argument's shape and local mechanics.
 
 ## Scope and handoffs
 
-This capsule decides structure, headline mechanics, body-copy units, proof
+This reference decides structure, headline mechanics, body-copy units, proof
 placement, objection treatment, and CTA craft. `messaging-positioning.md` owns
 positioning, awareness, and the belief inventory. `pages.md` owns page sections
-and asset layout. `email.md` owns sequences. This capsule does not pick the
+and asset layout. `email.md` owns sequences. This reference does not pick the
 position or the page plan; it picks the persuasive move.
 
-Load this capsule when the task involves a named formula (AIDA, PAS), headline
+Load this reference when the task involves a named formula (AIDA, PAS), headline
 construction, body-copy paragraphs, proof blocks, objection rebuttals, or CTA
 wording. Load `messaging-positioning.md` first if awareness, dominant value, or
 hierarchy is unresolved.

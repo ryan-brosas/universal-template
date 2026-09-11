@@ -204,4 +204,4 @@ Alignment confirmed before execution starts; every checkpoint cites evidence ("s
 
 ## References
 
-No reference capsules, the skill is self-contained.
+No separate references; the skill is self-contained.

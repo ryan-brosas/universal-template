@@ -8,6 +8,8 @@ not exceptions to these rules. Surface conflicts for clarification.
 - Apply DRY, KISS, YAGNI and separation of concerns. Favor correctness, simplicity, reliability and useful modularity.
 - Inspect before editing. Treat current requirements, source, tests and runtime evidence as authority over summaries or model opinion. Verify assumptions; state uncertainty.
 - Keep one source of truth per fact or responsibility. Reuse shared logic, tests and configuration; derive secondary views.
+- Resolve code questions from current source and tests. Use direct source, Git and normal development tools for the current repository; Sourcebot for code across intentionally indexed repositories; GitHub to discover unknown implementations; official docs or Context7 for library documentation. Choose the cheapest sufficient evidence; no tool is a mandatory first step.
+- Retain knowledge only when it changes future behavior or preserves costly-to-reconstruct rationale. Do not accumulate repository summaries or duplicate facts available from source, tests, documentation or tooling.
 - Fix root causes at the lowest owning boundary. Refactor and clean the affected area fully; preserve unrelated behavior and user changes.
 - Verify affected components work together and satisfy product goals. Evaluate workflow and application gaps; act within scope, clarify scope changes.
 - Assess every finding, including low-impact ones: reproduce when practical, then fix, defer or reject with a reason.

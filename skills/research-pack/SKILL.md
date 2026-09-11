@@ -1,6 +1,6 @@
 ---
 name: research-pack
-description: "Use when investigating source or documentation, finding external facts, navigating code graphs or IDEs, browsing/extracting web or PDF content, consulting Oracle explicitly, or researching mathematics. Historical implementation evidence belongs to foundation-pack; agent runtime setup belongs to agent-tooling-pack."
+description: "Use when investigating source or documentation, finding external facts, navigating indexed source or IDEs, browsing/extracting web or PDF content, consulting Oracle explicitly, or researching mathematics. Agent runtime setup belongs to agent-tooling-pack."
 invocation: entry
 ---
 
@@ -10,10 +10,10 @@ Use the nearest sufficient evidence. Known source paths can be read directly;
 research is not a prerequisite for every task. Read one relevant procedure and
 resolve its references and helpers relative to its own directory.
 
-- Choose source, graph, IDE or external evidence:
+- Choose source, index, IDE or external evidence:
   [evidence-router](../../knowledge/playbooks/evidence-router/README.md).
-- Navigate retained code graphs:
-  [codebase-memory](../../knowledge/playbooks/codebase-memory/README.md).
+- Retrieve code across indexed or external repositories:
+  [cross-repo-source](../../knowledge/playbooks/cross-repo-source/README.md).
 - Study a reference repository or adapt prior art:
   [reference-driven-development](../../knowledge/playbooks/reference-driven-development/README.md).
 - Explicit Oracle consultation:
@@ -28,4 +28,3 @@ resolve its references and helpers relative to its own directory.
 Choose one [specialist](references/topics.md) for search services, financial data,
 IDE tooling, document-backed scrutiny, media or source acquisition. Native tool
 discovery owns live schemas; these procedures do not guarantee tool availability.
-For historical source internals use foundation-pack, not a generic research loop.

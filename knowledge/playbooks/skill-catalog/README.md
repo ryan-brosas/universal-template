@@ -20,9 +20,9 @@ owns the request wins. The canonical specialist inventory is the parent
    references and helpers from the selected playbook directory. If no procedure
    adds useful context, continue from project source instead of forcing a match.
 
-For source-specific implementation evidence, read
-`../../../skills/foundation-pack/SKILL.md` and choose one category, foundation and
-capsule. The capsule's source pin and current source outrank historical summaries.
+For a source-specific implementation question, read the relevant repository's
+current source directly, or retrieve an indexed or external implementation with
+`../cross-repo-source/README.md`. Source and tests outrank any summary.
 
 Missing usage telemetry is not evidence of disuse. Verify changed callers and
 actual host discovery; new specialists remain playbooks linked from one existing

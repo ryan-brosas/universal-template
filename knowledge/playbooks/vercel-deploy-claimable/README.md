@@ -147,4 +147,4 @@ Output contains a `Preview URL` and a `Claim URL`; the stdout JSON parses with `
 
 ## References
 
-No reference capsules, the skill is self-contained.
+No separate references; the skill is self-contained.

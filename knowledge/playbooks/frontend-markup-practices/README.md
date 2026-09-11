@@ -6,7 +6,7 @@ kind: playbook
 
 # Frontend Markup Practices
 
-Application skill for HTML/CSS learning (from the archived `awesome-guidelines` style capsules). For React/TS component patterns, inspect current project frontend code and any project-local `reference/` or `reference/web/` assets first; then load applicable stack capsules in `knowledge/foundations`.
+Application skill for HTML/CSS. For React/TS component patterns, inspect current project frontend code and any project-local `reference/` or `reference/web/` assets first; then consult the framework's own source or docs.
 
 ## Core Principle
 
@@ -19,7 +19,7 @@ Application skill for HTML/CSS learning (from the archived `awesome-guidelines` 
 
 **NOT when:**
 
-- TypeScript/React implementation: inspect current project components/tokens, then relevant `reference/web/` or code references, then `typescript-coding-standards` and applicable `knowledge/foundations`.
+- TypeScript/React implementation: inspect current project components/tokens, then relevant `reference/web/` or code references, then `typescript-coding-standards`, or the framework's own source or docs.
 - Stack-specific UI kit already owns conventions, project wins.
 
 ## Workflow
@@ -42,14 +42,5 @@ Application skill for HTML/CSS learning (from the archived `awesome-guidelines` 
 
 - W3C HTML/CSS validator (or CI equivalent) on changed templates.
 - Lighthouse/axe on representative pages.
-- Stylelint rules aligned with capsules.
+- Stylelint rules aligned with the project config.
 - Grep: `.js-` absent from CSS; `@import` absent from production entry CSS.
-
-
-## References
-
-- `awesome-guidelines/references/frontend-style-learning-note.md`
-- `awesome-guidelines/references/frontend-html-semantics-accessibility.md`
-- `awesome-guidelines/references/frontend-css-naming-selectors.md`
-- `awesome-guidelines/references/frontend-css-structure-formatting.md`
-- `awesome-guidelines/references/frontend-assets-delivery.md`

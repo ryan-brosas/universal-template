@@ -6,7 +6,7 @@ kind: playbook
 
 # Scala Coding Practices
 
-Application skill for Scala style learning (from the archived `awesome-guidelines` style capsules). For Spark/Akka/ZIO stack patterns, load stack capsules under `knowledge/foundations`.
+Application skill for Scala style. For Spark/Akka/ZIO stack patterns, load the framework's own source or docs.
 
 ## Core Principle
 
@@ -21,14 +21,14 @@ Scala readability is **official layout/naming plus functional safety**, immutabl
 
 - Non-Scala code.
 - Generated boilerplate, validate generators instead.
-- Spark-internal perf micro-optimizations, use the Databricks guide in stack capsules under `knowledge/foundations`.
+- Spark-internal perf micro-optimizations, use the Databricks guide.
 
 ## Workflow
 
-1. **Format & layout**, 2-space, wraps, control spacing (`scala-style-formatting-layout.md`).
-2. **Naming**, packages, accessors, parentheses (`scala-style-naming-packages.md`).
-3. **Types**, inference rules, immutability, Option (`scala-style-types-immutability.md`).
-4. **Control & docs**, return, for, Scaladoc, errors (`scala-style-control-api.md`).
+1. **Format & layout**, 2-space, wraps, control spacing.
+2. **Naming**, packages, accessors, parentheses.
+3. **Types**, inference rules, immutability, Option.
+4. **Control & docs**, return, for, Scaladoc, errors.
 5. **Verify**, Scalafmt/Scalafix + `sbt test` / `sbt compile` on changed modules.
 
 ## Red Flags
@@ -48,13 +48,3 @@ Scala readability is **official layout/naming plus functional safety**, immutabl
 
 - Scalafmt/Scalafix on changed files
 - Compile + tests for touched projects
-- Capsule checklist on public API review
-
-
-## References
-
-- `awesome-guidelines/references/scala-style-learning-note.md`
-- `awesome-guidelines/references/scala-style-formatting-layout.md`
-- `awesome-guidelines/references/scala-style-naming-packages.md`
-- `awesome-guidelines/references/scala-style-types-immutability.md`
-- `awesome-guidelines/references/scala-style-control-api.md`

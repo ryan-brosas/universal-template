@@ -6,7 +6,7 @@ kind: playbook
 
 # MongoDB Data Practices
 
-Application skill for jsoendermann MongoStyleGuide + MongoDB official data-modeling ingest (`awesome-guidelines`). Application-layer JS/Node: also `node-coding-practices` / `javascript-coding-practices`.
+Application skill for jsoendermann MongoStyleGuide + MongoDB official data-modeling. Application-layer JS/Node: also `node-coding-practices` / `javascript-coding-practices`.
 
 ## Core Principle
 
@@ -26,10 +26,10 @@ Mongo schema quality is **self-documenting BSON aligned to read patterns**, expl
 
 ## Workflow
 
-1. **Enums/booleans**, UPPERCASE strings, prefixes, merge flags (`mongo-style-enums-booleans.md`).
-2. **Dates/null/types**, Date vs day string, homogeneous columns (`mongo-style-dates-null-types.md`).
-3. **Names/IDs**, camelCase, collections, string `_id` (`mongo-style-names-ids.md`).
-4. **Modeling**, nesting, embed/reference, validation, indexes (`mongo-style-modelling-verify.md`).
+1. **Enums/booleans**, UPPERCASE strings, prefixes, merge flags.
+2. **Dates/null/types**, Date vs day string, homogeneous columns.
+3. **Names/IDs**, camelCase, collections, string `_id`.
+4. **Modeling**, nesting, embed/reference, validation, indexes.
 5. **Verify**, `$jsonSchema`, index explain, sample doc audit.
 
 ## Red Flags
@@ -61,16 +61,7 @@ Mongo schema quality is **self-documenting BSON aligned to read patterns**, expl
 - `$type` / sample audit on enum and date fields
 - Embed/reference checklist vs MongoDB official table
 - `explain()` on primary read paths; index list matches filters/sorts
-- Capsule probes cited in review notes
 
-
-## References
-
-- `awesome-guidelines/references/mongo-style-learning-note.md`
-- `awesome-guidelines/references/mongo-style-enums-booleans.md`
-- `awesome-guidelines/references/mongo-style-dates-null-types.md`
-- `awesome-guidelines/references/mongo-style-names-ids.md`
-- `awesome-guidelines/references/mongo-style-modelling-verify.md`
 
 ## Related skills
 

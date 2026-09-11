@@ -39,8 +39,8 @@ cannot answer. Return to setup when decisions are sufficient; if blocked, name
 what remains undecided rather than fabricating context or scaffolding around it.
 
 If `reference/` or `reference/web/` exists, a top-level listing can reveal prior art
-without ingesting it. Use graph tools or `../skill-catalog/README.md` only to close
-a real knowledge gap, not to build a complete inventory.
+without ingesting it. Use `../skill-catalog/README.md` only to close a real knowledge gap, not to
+build a complete inventory.
 
 ## Persistent setup, when requested
 

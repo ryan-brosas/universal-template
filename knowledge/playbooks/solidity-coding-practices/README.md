@@ -6,7 +6,7 @@ kind: playbook
 
 # Solidity Coding Practices
 
-Application skill for official Solidity style + Solcurity (archived `awesome-guidelines` capsules). Project-specific guides override when stricter.
+Application skill for official Solidity style + Solcurity. Project-specific guides override when stricter.
 
 ## Core Principle
 
@@ -24,10 +24,10 @@ Solidity quality is **consistent layout + documented public API + security-aware
 
 ## Workflow
 
-1. **Formatting**, indent, wraps, braces (`solidity-style-formatting-layout.md`).
-2. **Naming/NatSpec**, CapWords/mixedCase, public docs (`solidity-style-naming-natspec.md`).
-3. **Structure**, file/contract order, visibility ladder (`solidity-style-contract-structure.md`).
-4. **Security**, Solcurity CEI/calls/events (`solidity-style-security-verify.md`).
+1. **Formatting**, indent, wraps, braces.
+2. **Naming/NatSpec**, CapWords/mixedCase, public docs.
+3. **Structure**, file/contract order, visibility ladder.
+4. **Security**, Solcurity CEI/calls/events.
 5. **Verify**, `forge fmt`/`forge test`, Slither on changed contracts.
 
 ## Red Flags
@@ -67,13 +67,3 @@ Solidity quality is **consistent layout + documented public API + security-aware
 - NatSpec coverage spot-check on new externals
 - Visibility-order and import-group walk
 - Slither (or Solhint) on PR diff
-- Capsule checklist: CEI on value-moving functions
-
-
-## References
-
-- `awesome-guidelines/references/solidity-style-learning-note.md`
-- `awesome-guidelines/references/solidity-style-formatting-layout.md`
-- `awesome-guidelines/references/solidity-style-naming-natspec.md`
-- `awesome-guidelines/references/solidity-style-contract-structure.md`
-- `awesome-guidelines/references/solidity-style-security-verify.md`

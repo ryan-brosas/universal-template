@@ -6,7 +6,7 @@ kind: playbook
 
 # WCAG Accessibility Practices
 
-Application skill for W3C WCAG 2.1 Level AA ingest (`awesome-guidelines`). Semantic HTML baseline: `frontend-markup-practices`. Copy/docs a11y: `mailchimp-content-practices`, `google-devdocs-practices`.
+Application skill for W3C WCAG 2.1 Level AA. Semantic HTML baseline: `frontend-markup-practices`. Copy/docs a11y: `mailchimp-content-practices`, `google-devdocs-practices`.
 
 ## Core Principle
 
@@ -59,14 +59,6 @@ Accessible web content satisfies **WCAG 2.1 Level AA**, perceivable without visi
 - Screen reader sample (NVDA/VoiceOver) on new widgets
 - Failures mapped to WCAG 2.1 SC ids in review notes
 
-
-## References
-
-- `awesome-guidelines/references/wcag-accessibility-learning-note.md`
-- `awesome-guidelines/references/wcag-perceivable-media-text.md`
-- `awesome-guidelines/references/wcag-operable-keyboard-focus.md`
-- `awesome-guidelines/references/wcag-understandable-forms-language.md`
-- `awesome-guidelines/references/wcag-robust-verify.md`
 
 ## Related skills
 

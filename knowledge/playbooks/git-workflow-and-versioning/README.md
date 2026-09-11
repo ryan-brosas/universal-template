@@ -124,14 +124,3 @@ may contain no work upstream lacks. Reconcile by content before rebasing:
 - `git log --format=%s origin/main..HEAD` matches the repository's documented commit convention when one applies.
 - Release: the tag points at the intended commit; `gh release view` shows the
  published release with generated notes present.
-
-## References
-
-Prior-art capsules (optional reading, when the why matters):
-
-- `awesome-guidelines/references/semver-public-api-and-bumps.md`
-- `awesome-guidelines/references/semver-precedence-and-prerelease.md`
-- `awesome-guidelines/references/git-style-branches.md`
-- `awesome-guidelines/references/git-style-commit-messages.md`
-- `awesome-guidelines/references/git-style-history-and-merge.md`
-- `awesome-guidelines/references/changelog-style-learning-note.md`

@@ -1,6 +1,6 @@
 # Evidence Foundations, Standards, and Misuse Boundaries
 
-Use this capsule when a psychology claim, numerical rule, accessibility assertion, or causal conclusion carries design weight. Prefer current standards and direct product evidence; do not turn a memorable law into fake precision.
+Use this reference when a psychology claim, numerical rule, accessibility assertion, or causal conclusion carries design weight. Prefer current standards and direct product evidence; do not turn a memorable law into fake precision.
 
 ## Authority, relevance, and inference
 
@@ -58,7 +58,7 @@ These anchors establish provenance, not automatic applicability:
 - Deci & Ryan, 2000, “The ‘What’ and ‘Why’ of Goal Pursuits,” DOI `10.1207/S15327965PLI1104_01`.
 - Gray et al., 2018, “The Dark (Patterns) Side of UX Design,” DOI `10.1145/3173574.3174108`.
 
-Citation metadata was verified; this capsule does not claim a new systematic review of each literature. The supplied PDF and NN/g study guide remain secondary synthesis inputs. Product decisions still require evidence in the actual task and population.
+Citation metadata was verified; this reference does not claim a new systematic review of each literature. The supplied PDF and NN/g study guide remain secondary synthesis inputs. Product decisions still require evidence in the actual task and population.
 
 ## Claim check
 

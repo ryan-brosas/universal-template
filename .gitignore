@@ -4,9 +4,10 @@
 /devdocs/
 /config/pi-crew/
 .pytest_cache/
-# Only the GitHub metadata helper is published; other root scripts stay local.
+# Only the published repository helpers are tracked; other root scripts stay local.
 /scripts/*
 !/scripts/pr-metadata.py
+!/scripts/check-retired-paths.py
 # Generated runtime capability state (machine-local, never committed).
 /state/
 # Local helpers stay local except the published fidelity gate and tests.

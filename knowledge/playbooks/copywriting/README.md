@@ -30,7 +30,7 @@ prove it in language they recognize.
 3. Load `references/messaging-positioning.md` for positioning, value propositions,
    awareness, differentiation, or message hierarchy. Select one reader, one
    dominant value, and the belief sequence.
-4. Load only the channel capsule: `references/pages.md` for web, ads, onboarding,
+4. Load only the channel reference: `references/pages.md` for web, ads, onboarding,
    or UX copy; `references/email.md` for emails and sequences.
 5. Load `references/persuasion-frameworks.md` only when choosing a structure,
    headline, proof pattern, objection treatment, or CTA. Frameworks generate

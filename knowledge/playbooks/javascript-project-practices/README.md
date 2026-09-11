@@ -6,7 +6,7 @@ kind: playbook
 
 # JavaScript Project Practices
 
-Application skill for elsewhencode/project-guidelines ingest (`awesome-guidelines`). Line-level JS: `javascript-coding-practices`, `node-coding-practices`. Git detail: `git-workflow-and-versioning`. REST depth: `api-design-practices`. WCAG depth: `wcag-accessibility-practices`.
+Application skill for elsewhencode/project-guidelines. Line-level JS: `javascript-coding-practices`, `node-coding-practices`. Git detail: `git-workflow-and-versioning`. REST depth: `api-and-interface-design`. WCAG depth: `wcag-accessibility-practices`.
 
 ## Core Principle
 
@@ -61,17 +61,9 @@ Maintainable JS projects combine **feature-branch discipline**, **env-driven con
 - lighthouse/axe or jsx-a11y in CI for UI projects
 
 
-## References
-
-- `awesome-guidelines/references/js-project-learning-note.md`
-- `awesome-guidelines/references/js-project-git-docs.md`
-- `awesome-guidelines/references/js-project-env-deps-test.md`
-- `awesome-guidelines/references/js-project-structure-style.md`
-- `awesome-guidelines/references/js-project-api-a11y-verify.md`
-
 ## Related skills
 
 - `git-workflow-and-versioning`, commit/branch conventions
-- `api-design-practices`, REST contract patterns
+- `api-and-interface-design`, REST contract patterns
 - `webappsec-coding-practices`, web security depth
 - `wcag-accessibility-practices`, WCAG 2.1 AA

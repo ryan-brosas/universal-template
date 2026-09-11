@@ -6,9 +6,8 @@ kind: playbook
 
 # API and Interface Design
 
-This is the canonical API-design owner. `api-design-practices` remains a cold
-compatibility entry, not a second rule set. Internal implementation changes with
-no consumer-facing contract usually need only the normal engineering loop.
+This is the canonical API-design owner. Internal implementation changes with no
+consumer-facing contract usually need only the normal engineering loop.
 
 ## Establish the contract that matters
 
@@ -44,9 +43,9 @@ no consumer-facing contract usually need only the normal engineering loop.
 - Compatibility assessment, version selection, and migration:
   `references/compatibility.md`.
 
-Azure and Google API conventions are useful prior art, not interchangeable
-universal standards. Their retained source capsules are linked from the REST
-reference; load only those relevant to the chosen contract.
+Azure, Google, and JSON:API conventions are useful prior art, not interchangeable
+universal standards; consult their official documentation when a project adopts
+one of them.
 
 ## Verify the consumer experience
 

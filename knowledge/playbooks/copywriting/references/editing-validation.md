@@ -1,8 +1,8 @@
 # Editing, Audits, and Validation
 
-Load this capsule for diagnosis, rewrites, final review, or experiments. It
+Load this reference for diagnosis, rewrites, final review, or experiments. It
 owns the why-is-this-weak pass and the proof behind “does it work”. Channel
-capsules own the expression; this capsule owns the judgment.
+references own the expression; this reference owns the judgment.
 
 ## Diagnose before rewriting
 

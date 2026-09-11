@@ -2,7 +2,7 @@
 
 The canonical Paper docs guide is now `../../paper-design/README.md`, with the
 complete official source map and review date in
-`../../paper-design/references/index.md`. Load only the relevant capsule:
+`../../paper-design/references/index.md`. Load only the relevant reference:
 
 - `../../paper-design/references/themes-and-tokens.md`: Theme UI, CSS variables,
   aliases, copy to code/files, current mode/library boundaries.

@@ -6,7 +6,7 @@ kind: playbook
 
 # Perl Coding Practices
 
-Application skill for Perl style learning (from the archived `awesome-guidelines` style capsules). When project adopts PBP/perltidy profile, follow that formatter config first.
+Application skill for Perl style. When project adopts PBP/perltidy profile, follow that formatter config first.
 
 ## Core Principle
 
@@ -19,15 +19,15 @@ Perl maintainability is **lexical scope + checked I/O**, strict warnings on, 3-a
 
 **NOT when:**
 
-- Raku (Perl 6), different language foundations.
+- Raku (Perl 6), a different language.
 - Generated `.pm` stubs, validate generators.
 
 ## Workflow
 
-1. **Layout**, indent, braces, alignment (`perl-style-formatting-layout.md`).
-2. **Scope**, v5.36, my, naming (`perl-style-strict-scoping.md`).
-3. **Subs/I/O**, open, args, returns (`perl-style-subs-io.md`).
-4. **Anti-patterns**, OO, loops, regex (`perl-style-anti-patterns.md`).
+1. **Layout**, indent, braces, alignment.
+2. **Scope**, v5.36, my, naming.
+3. **Subs/I/O**, open, args, returns.
+4. **Anti-patterns**, OO, loops, regex.
 5. **Verify**, perlcritic, perltidy, prove on changed files.
 
 ## Red Flags
@@ -72,13 +72,3 @@ Perl maintainability is **lexical scope + checked I/O**, strict warnings on, 3-a
 - `perltidy -b -bext='/'` or project profile dry-run
 - `prove -l t/` or project test harness
 - Head-of-file strict/v5.36 audit
-- Capsule checklist on open-or-die and indirect-object grep
-
-
-## References
-
-- `awesome-guidelines/references/perl-style-learning-note.md`
-- `awesome-guidelines/references/perl-style-formatting-layout.md`
-- `awesome-guidelines/references/perl-style-strict-scoping.md`
-- `awesome-guidelines/references/perl-style-subs-io.md`
-- `awesome-guidelines/references/perl-style-anti-patterns.md`

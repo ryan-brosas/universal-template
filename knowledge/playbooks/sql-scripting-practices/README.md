@@ -6,7 +6,7 @@ kind: playbook
 
 # SQL Scripting Practices
 
-Application skill for SQL style learning (from the archived `awesome-guidelines` style capsules). For ORM-specific patterns (Django, Prisma, SQLAlchemy), load stack capsules in `knowledge/foundations`.
+Application skill for SQL style. For ORM-specific patterns (Django, Prisma, SQLAlchemy), consult the ORM's own source or docs.
 
 ## Core Principle
 
@@ -24,10 +24,10 @@ SQL readability is **consistent relational naming plus scannable layout**, river
 
 ## Workflow
 
-1. **Naming**, tables, columns, aliases, suffixes (`sql-style-naming-schema.md`).
-2. **Layout**, keywords, river, joins, subqueries (`sql-style-query-layout.md`).
-3. **DDL**, CREATE, types, constraints (`sql-style-ddl-types.md`).
-4. **Patterns**, BETWEEN/IN/CASE, comments, parameters (`sql-style-query-patterns.md`).
+1. **Naming**, tables, columns, aliases, suffixes.
+2. **Layout**, keywords, river, joins, subqueries.
+3. **DDL**, CREATE, types, constraints.
+4. **Patterns**, BETWEEN/IN/CASE, comments, parameters.
 5. **Verify**, sqlfluff/SQLFluff or project linter + migration apply/dry-run on changed files.
 
 ## Red Flags
@@ -45,13 +45,3 @@ SQL readability is **consistent relational naming plus scannable layout**, river
 
 - sqlfluff/sql-formatter on changed `.sql` files
 - migration apply or `EXPLAIN` on touched queries
-- Capsule checklist on schema/query review
-
-
-## References
-
-- `awesome-guidelines/references/sql-style-learning-note.md`
-- `awesome-guidelines/references/sql-style-naming-schema.md`
-- `awesome-guidelines/references/sql-style-query-layout.md`
-- `awesome-guidelines/references/sql-style-ddl-types.md`
-- `awesome-guidelines/references/sql-style-query-patterns.md`

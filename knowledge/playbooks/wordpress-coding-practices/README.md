@@ -6,7 +6,7 @@ kind: playbook
 
 # WordPress Coding Practices
 
-Application skill for WordPress official coding standards ingest (`awesome-guidelines`). Generic PHP: `php-coding-practices`. Accessibility: `wcag-accessibility-practices`. HTML/CSS baseline: `frontend-markup-practices`.
+Application skill for WordPress official coding standards. Generic PHP: `php-coding-practices`. Accessibility: `wcag-accessibility-practices`. HTML/CSS baseline: `frontend-markup-practices`.
 
 ## Core Principle
 
@@ -22,14 +22,14 @@ WordPress maintainability is **ecosystem-safe PHP plus late escaping**, snake_ca
 
 - Non-WordPress PHP, `php-coding-practices`.
 - Vendored third-party libraries inside a plugin, exempt from WPCS per handbook.
-- Full plugin architecture (CPT, REST, blocks), WordPress foundation docs.
+- Full plugin architecture (CPT, REST, blocks), WordPress core source or docs.
 
 ## Workflow
 
-1. **PHP naming/layout**, snake_case, Yoda, files, hooks (`wordpress-style-php-naming.md`).
-2. **Security/escape**, late output escaping per context (`wordpress-style-security-escape.md`).
-3. **Database/i18n**, prepare SQL, gettext strings (`wordpress-style-database-i18n.md`).
-4. **Assets/verify**, HTML/CSS/JS + PHPCS + a11y (`wordpress-style-assets-verify.md`).
+1. **PHP naming/layout**, snake_case, Yoda, files, hooks.
+2. **Security/escape**, late output escaping per context.
+3. **Database/i18n**, prepare SQL, gettext strings.
+4. **Assets/verify**, HTML/CSS/JS + PHPCS + a11y.
 
 ## Red Flags
 
@@ -55,14 +55,6 @@ WordPress maintainability is **ecosystem-safe PHP plus late escaping**, snake_ca
 - i18n grep: new user strings use text domain + translator comments
 - WCAG AA checklist on changed UI (`wcag-accessibility-practices`)
 
-
-## References
-
-- `awesome-guidelines/references/wordpress-style-learning-note.md`
-- `awesome-guidelines/references/wordpress-style-php-naming.md`
-- `awesome-guidelines/references/wordpress-style-security-escape.md`
-- `awesome-guidelines/references/wordpress-style-database-i18n.md`
-- `awesome-guidelines/references/wordpress-style-assets-verify.md`
 
 ## Related skills
 

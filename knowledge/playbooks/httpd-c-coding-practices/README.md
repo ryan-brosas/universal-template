@@ -6,7 +6,7 @@ kind: playbook
 
 # Apache httpd C Coding Practices
 
-Application skill for Apache httpd C style (archived `awesome-guidelines` capsules). For non-httpd portable C, load `c-coding-practices`. Kernel/GNU tab-based trees follow their own docs.
+Application skill for Apache httpd C style. For non-httpd portable C, load `c-coding-practices`. Kernel/GNU tab-based trees follow their own docs.
 
 ## Core Principle
 
@@ -24,11 +24,11 @@ httpd C quality is **reviewer-readable layout plus generic C safety**, ANSI sign
 
 ## Workflow
 
-1. **Format**, indent, 80 cols, braces (`httpd-style-formatting-indent.md`).
-2. **Functions/flow**, ANSI, if/switch (`httpd-style-functions-flow.md`).
-3. **Expressions**, operators, casts, wraps (`httpd-style-expressions-casts.md`).
-4. **Comments/verify**, rationale, build (`httpd-style-comments-verify.md`).
-5. **Safety pass**, also apply `c-coding-practices` capsules for headers/errors/macros.
+1. **Format**, indent, 80 cols, braces.
+2. **Functions/flow**, ANSI, if/switch.
+3. **Expressions**, operators, casts, wraps.
+4. **Comments/verify**, rationale, build.
+5. **Safety pass**, also apply `c-coding-practices` for headers/errors/macros.
 
 ## Red Flags
 
@@ -52,16 +52,7 @@ httpd C quality is **reviewer-readable layout plus generic C safety**, ANSI sign
 - `grep $'\t'` clean on touched files
 - httpd/module build + relevant tests
 - `-Wall`/project warning flags on changed translation units
-- Capsule checklist on cast/flow samples
 
-
-## References
-
-- `awesome-guidelines/references/httpd-style-learning-note.md`
-- `awesome-guidelines/references/httpd-style-formatting-indent.md`
-- `awesome-guidelines/references/httpd-style-functions-flow.md`
-- `awesome-guidelines/references/httpd-style-expressions-casts.md`
-- `awesome-guidelines/references/httpd-style-comments-verify.md`
 
 ## Related skills
 

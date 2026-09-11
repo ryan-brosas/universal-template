@@ -22,7 +22,7 @@ Good docs and types answer; behavior is standard and obvious; "I just want to us
 ## Investigation Workflow
 
 1. **State the question.** "How does X work?", "Why does Y happen?", "What is the actual behavior of Z?"
-2. **Locate the source.** When the library is already indexed, call `codebase-memory_list_projects`, query one project with `codebase-memory_search_graph` or `codebase-memory_search_code`, check coverage, then confirm exact source through JetBrains or `codebase-memory_get_code_snippet`. Otherwise use the GitHub repo, package archive, or IDE-resolved dependency source; the repository is usually the most readable.
+2. **Locate the source.** Read the IDE-resolved dependency source or the package archive first; use an indexed repository (`../cross-repo-source/README.md`) when it covers the library, or the GitHub repository. The repository is usually the most readable.
 3. **Read the README + docs first.** 30 seconds can save 30 minutes.
 4. **Navigate the code.** Find the entry point. Follow the call graph for the specific behavior.
 5. **Read the test file.** Tests document the intended behavior. Often clearer than the impl.

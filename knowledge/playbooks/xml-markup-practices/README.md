@@ -6,7 +6,7 @@ kind: playbook
 
 # XML Markup Practices
 
-Application skill for Google XML Document Format Style Guide (archived `awesome-guidelines` capsules). For XHTML/HTML page markup, load `frontend-markup-practices`. For ODF/protobuf-generated XML, follow those format rules.
+Application skill for Google XML Document Format Style Guide. For XHTML/HTML page markup, load `frontend-markup-practices`. For ODF/protobuf-generated XML, follow those format rules.
 
 ## Core Principle
 
@@ -25,10 +25,10 @@ Machine XML quality is **schema-first reuse with lowerCamelCase names and elemen
 
 ## Workflow
 
-1. **Schema/namespaces**, reuse, RELAX NG, xmlns (`xml-style-schema-namespaces.md`).
-2. **Naming/values**, lowerCamelCase, dates, key-value (`xml-style-naming-values.md`).
-3. **Elements/attributes**, mixed-content ban, tradeoffs (`xml-style-elements-attributes.md`).
-4. **Instances/verify**, UTF-8, pretty-print, validate (`xml-style-instances-verify.md`).
+1. **Schema/namespaces**, reuse, RELAX NG, xmlns.
+2. **Naming/values**, lowerCamelCase, dates, key-value.
+3. **Elements/attributes**, mixed-content ban, tradeoffs.
+4. **Instances/verify**, UTF-8, pretty-print, validate.
 5. **Verify**, `xmllint --relaxng` (or project validator) on changed schema/samples.
 
 ## Red Flags
@@ -61,13 +61,3 @@ Machine XML quality is **schema-first reuse with lowerCamelCase names and elemen
 - `xmllint --noout` on changed `.xml`
 - Root default namespace + stable prefix map check
 - lowerCamelCase name audit on new symbols
-- Capsule checklist on element-vs-attribute choices
-
-
-## References
-
-- `awesome-guidelines/references/xml-style-learning-note.md`
-- `awesome-guidelines/references/xml-style-schema-namespaces.md`
-- `awesome-guidelines/references/xml-style-naming-values.md`
-- `awesome-guidelines/references/xml-style-elements-attributes.md`
-- `awesome-guidelines/references/xml-style-instances-verify.md`

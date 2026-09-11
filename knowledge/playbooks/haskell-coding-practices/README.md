@@ -6,7 +6,7 @@ kind: playbook
 
 # Haskell Coding Practices
 
-Application skill for Haskell style learning (from the archived `awesome-guidelines` style capsules). For GHC internals or specific linters (fourmolu vs stylish-haskell), follow project config first.
+Application skill for Haskell style. For GHC internals or specific linters (fourmolu vs stylish-haskell), follow project config first.
 
 ## Core Principle
 
@@ -24,10 +24,10 @@ Haskell quality is **explicit equational modules**, typed total functions in pur
 
 ## Workflow
 
-1. **Layout**, indent, cols, case (`haskell-style-formatting-layout.md`).
-2. **Modules**, names, imports, Haddock (`haskell-style-naming-imports.md`).
-3. **Functions**, sigs, totality, guards (`haskell-style-functions-control.md`).
-4. **Types/IO**, strict data, boundaries (`haskell-style-types-io.md`).
+1. **Layout**, indent, cols, case.
+2. **Modules**, names, imports, Haddock.
+3. **Functions**, sigs, totality, guards.
+4. **Types/IO**, strict data, boundaries.
 5. **Verify**, formatter, HLint, `cabal build`/`stack test`, Haddock on changed modules.
 
 ## Red Flags
@@ -57,13 +57,3 @@ Haskell quality is **explicit equational modules**, typed total functions in pur
 - HLint with project rules
 - `cabal build --ghc-options=-Wall` or `-Werror` policy
 - Haddock build for libraries
-- Capsule checklist on export list + signatures
-
-
-## References
-
-- `awesome-guidelines/references/haskell-style-learning-note.md`
-- `awesome-guidelines/references/haskell-style-formatting-layout.md`
-- `awesome-guidelines/references/haskell-style-naming-imports.md`
-- `awesome-guidelines/references/haskell-style-functions-control.md`
-- `awesome-guidelines/references/haskell-style-types-io.md`

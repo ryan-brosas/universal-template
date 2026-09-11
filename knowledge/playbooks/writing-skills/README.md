@@ -45,8 +45,8 @@ scoring engine.
   share the same procedure, never copies. New visible packs require demonstrated
   routing need; useful specialists do not automatically earn startup exposure.
 - Keep helpers/assets with their procedure. Resolve all paths from that directory,
-  not the router. Source evidence stays in `../../foundations/`; follow
-  `references/foundation-kind.md`.
+  not the router. Read source evidence directly when a procedure needs it rather
+  than adding a permanent source summary.
 - Parse strict YAML with appropriate scalar types. Package-owned and private
   skills are separate: preserve them and use supported host filters rather than
   changing installed packages or copying their instructions.
@@ -72,7 +72,7 @@ tree to validate an unrelated external skill.
 
 Confirm referenced files exist, intended host discovery works, and changed callers
 still work. Only pack routers belong in the template skill-discovery tree;
-playbooks and foundations stay outside it. Check diff hygiene. Review
+playbooks stay outside it. Check diff hygiene. Review
 prose using `../house-writing-style/README.md`; models review
 meaning, scripts check exact contracts. Report evidence, unmeasured claims, and
 remaining limitations separately.
