@@ -17,6 +17,12 @@ project contracts and advisories to choose the relevant defenses.
   request URLs and nested causes can contain secrets. Prefer safe error classes
   and locations; test a synthetic sensitive value through stdout, stderr and
   public error responses. Pattern-based redaction alone misses unknown secrets.
+  When inspecting credential-bearing configuration, extract only allowlisted non-secret
+  fields or presence booleans before output reaches the tool transcript; never print
+  matching credential lines with `grep`, dump the environment, or enable shell tracing.
+  Pass credentials directly to the consumer and report only the probe result. If a
+  value escapes, disclose the exposure without repeating it and arrange authorized
+  rotation; later redaction does not undo transcript exposure.
 - **Classification can bypass validation.** A text file containing binary bytes,
   an unexpected content type or a decoder fallback must not silently skip a
   required safety check. Reject unsupported input at its owner; distinguish
