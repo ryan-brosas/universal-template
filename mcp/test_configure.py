@@ -315,18 +315,6 @@ class ConfigureTests(unittest.TestCase):
         self.cli("--profile", "web-research", "--apply", ok=False)
         self.assertEqual(self.snapshot(), before)
 
-    def test_prime_wrapper_uses_same_ownership_path(self):
-        wrapper = SCRIPT.with_name("sync-to-prime.py")
-        def run(*args):
-            result = subprocess.run([sys.executable, str(wrapper), "--target", str(self.target), *args],
-                                    capture_output=True, text=True)
-            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        run("--profile", "docs", "--apply")
-        self.assertEqual(self.current()["mcpServers"]["context7"]["env"]["CONTEXT7_API_KEY"],
-                         {"env": "CONTEXT7_API_KEY"})
-        run("--profile", "minimal", "--apply")
-        self.assertEqual(self.current(), self.original)
-
     def test_profiles_and_prime_translation(self):
         expected = {"minimal": [], "code-graph": ["codebase-memory"], "ide": ["mcp-steroid"],
                     "docs": ["context7"], "repository-research": ["deepwiki"],

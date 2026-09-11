@@ -31,7 +31,7 @@ project-bootstrap               scaffold or onboard (the local project exists fi
 github-repo-setup               setup | full at the class-derived profile below
 github-actions-engineering      CI that proves the project's real gates
 git-workflow-and-versioning     only when the project is versioned
-github audit                    github-audit.py re-run plus ruleset read-back
+github audit                    gh repo view + gh api read-back, rulesets included
 ```
 
 Requests that authorize the baseline: "create this repo with our standard

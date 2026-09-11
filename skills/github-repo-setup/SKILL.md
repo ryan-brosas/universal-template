@@ -18,7 +18,7 @@ Inspect first, pick the smallest governance level that fits the project, change 
 
 ## Workflow
 
-0. **Mode.** `audit` (read-only, zero mutation; inspect current state with `gh repo view` and `gh api`, with `scripts/github-audit.py` available as an optional aggregate diagnostic), `setup` (additive/reconciliatory), `minimal`, `team`, or `full` (only on explicit request, e.g. "full setup"). Default: "set up" → `setup`; "audit" → `audit`.
+0. **Mode.** `audit` (read-only, zero mutation; inspect current state with `gh repo view` and `gh api`), `setup` (additive/reconciliatory), `minimal`, `team`, or `full` (only on explicit request, e.g. "full setup"). Default: "set up" → `setup`; "audit" → `audit`.
    `full` means: inspect every GitHub surface that can earn its place for THIS project, configure the ones that do, delegate CI/version work to their owners, read back, then close with the per-surface report and decision log (`references/setup-matrix.md`). It never means turning every feature on.
 
    Baseline requests ("standard setup", "our baseline", "make this production-ready", "OSS-ready") select the mode from the maturity class in `references/setup-matrix.md` and compose the standard baseline: `project-bootstrap` first, then this skill, then `github-actions-engineering`, then `git-workflow-and-versioning` only when the project is versioned, then the audit re-run. A plain "start a new project" requests none of this and stays with `project-bootstrap`.

@@ -48,9 +48,9 @@ prompt-adapter mutation, CDP recording privacy, title protocol parsing,
 changed-line whitespace, and committed publication fixtures. They do not approve
 policy, prose, routing, or usefulness.
 
-Catalog `generate`, `context`, `stats`, and `list --tracked-only` parse only
-Git-tracked skill paths, using current working-tree content. Other discovery
-commands retain valid local results and report incomplete drafts on stderr.
+Catalog `generate`, `context`, and `list --tracked-only` parse only Git-tracked
+skill paths, using current working-tree content. The plain `list` command retains
+valid local results and reports incomplete drafts on stderr.
 Publication fails when Git tracking is unavailable; selftests use isolated inputs.
 
 ## Tool classification
@@ -59,7 +59,6 @@ Publication fails when Git tracking is unavailable; selftests use isolated input
 | --- | --- | --- |
 | REQUIRED HARD CONTRACT | `skill-validator.py`, `repo-hygiene.py`, `web-reference-manifest.py`, `pr-metadata.py` | Exact metadata, tracked files, paths, schemas, secrets, context limits, and automation protocols. |
 | OPTIONAL COMPATIBILITY TOOL | `install-prompts.py`, `render-prompt.py` | Legacy host installation and prompt rendering; never canonical. |
-| OPTIONAL DIAGNOSTIC | `github-audit.py`, `runtime-capabilities.py` | Read-only environment reports; current native output remains authoritative. |
 | GENERATED-ARTIFACT TOOL | `skill-catalog.py` | Derives the optional human catalog from skill frontmatter. |
 
 See `docs/maintainer-tooling.md` for retired-script rationale.
