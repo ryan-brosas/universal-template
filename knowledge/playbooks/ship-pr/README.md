@@ -34,11 +34,12 @@ inventing CI or claiming a clean full cycle.
    and every review thread resolved. Use a repository-allowed merge method;
    never bypass protections. Auto-merge is not implied by repository capability.
 6. Delete the merged task branch and sync the local base without discarding user
-   work. Before deleting, confirm nothing landed on it after the merge
-   (`git log --oneline <merged-head>..origin/<branch>`): a concurrent session can push
-   commits whose PR is already merged, so they carry no PR at all. Land those through a
-   fresh PR or report them explicitly. If local changes prevent safe cleanup, report
-   the remaining cleanup rather than reset them.
+   work. Before deleting, fetch and compare (`git fetch origin <branch> && git log
+   --oneline <merged-head>..FETCH_HEAD`): a concurrent session can push commits whose PR
+   is already merged, so they carry no PR at all, and a stale remote-tracking ref makes
+   the log look empty. Land those through a fresh PR or report them explicitly. If
+   local changes prevent safe cleanup, report the remaining cleanup rather than reset
+   them.
 
 Verify completion with `gh pr view <n> --json state,mergedAt,mergeCommit,statusCheckRollup`
 (`MERGED`, a merge SHA, and the newest run of each check passing — superseded runs

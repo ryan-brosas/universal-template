@@ -28,8 +28,9 @@ authority and keep it:
 
 1. **Tag + GitHub generated notes (default for GitHub-native projects).**
  Choose the version, push the `vX.Y.Z` tag, and let release CI verify the
- tree and publish with generated notes (categories driven by labels in
- `.github/release.yml`). No manual changelog to drift.
+ tree and publish with generated notes. Add a `.github/release.yml` only when the
+ project wants label-driven categories; without one, GitHub applies its default
+ taxonomy. No manual changelog to drift.
 2. **Curated CHANGELOG.** When the project intentionally maintains one: move
  `[Unreleased]` to `[x.y.z] - date`, list `Deprecated` before `Removed`, tag
  after the changelog lands.
@@ -89,7 +90,7 @@ change users must react to is at least minor.
 A squash merge creates new commit SHAs, so a local branch "ahead" of upstream
 may contain no work upstream lacks. Reconcile by content before rebasing:
 
-1. Compare content, not counts: `git diff origin/main...<branch> --stat` and
+1. Compare content, not counts: `git diff origin/main <branch> --stat` and
    `git log --oneline origin/main..<branch>`.
 2. Treat a local commit whose change already exists upstream (typically
    refined) as stale, not extra. During rebase, git may drop it with "patch
@@ -99,7 +100,7 @@ may contain no work upstream lacks. Reconcile by content before rebasing:
    with `GIT_EDITOR=true git rebase --continue`.
 4. Keep staging by path through conflict resolution (Process 1); a bare
    `git add -A` sweeps unrelated untracked scratch into the rebased commit.
-5. Verify the residual diff (`git diff origin/main...<branch> --stat`) contains
+5. Verify the residual diff (`git diff origin/main <branch> --stat`) contains
    only intended work, and run affected tests from the directory their runner
    expects.
 
@@ -110,17 +111,20 @@ Two comparisons answer different questions; do not substitute one for the other:
 - `git diff <base>...HEAD` (three-dot, measured from the merge base) is what the PR
   shows and what a merge preserves: only the branch's own changes. Use it for pre-PR
   review, `git diff --check`, and gate ranges.
-- `git diff <base>..HEAD` (two-dot, tip to tip) additionally reports everything the
-  base gained while the branch was open, as deletions. A stale base therefore looks
-  like a regression the merge would never cause.
+- `git diff <base>..HEAD` (two-dot, tip to tip) compares the two trees directly. It
+  reports everything the base gained while the branch was open as deletions, so a stale
+  base looks like a regression the merge would never cause - but it is the correct
+  comparison when the question is whether the trees differ, as when deciding whether a
+  squash-merged change is already upstream (see above).
 
 Test drift directly with `git merge-base --is-ancestor <base-tip> HEAD`. A stale base
 is a conflict-hygiene reason to rebase, not evidence that the merge discards base work:
 keep the base's newer content, and rebase only when the same files are touched.
 
-After a merge, re-read the branch's remote ref before reporting the work finished. A
-concurrent session can push to the merged branch, leaving commits that no PR covers
-(`git log --oneline <merged-head>..origin/<branch>`).
+After a merge, fetch the branch before concluding that nothing else landed on it. A
+concurrent session can push to a merged branch, leaving commits no PR covers
+(`git fetch origin <branch> && git log --oneline <merged-head>..FETCH_HEAD`), and a
+stale remote-tracking ref makes that log look empty.
 
 ## Common Rationalizations
 

@@ -10,8 +10,9 @@ Use one evidence path: local checks verify the branch, CI verifies the pushed
 commit, and the PR body records scope, proof, and limitations. This skill owns
 individual PR and review operations; `../ship-pr/README.md` owns a requested full
 lifecycle through merge. An existing PR is updated, not duplicated: before creating
-one, check `gh pr list --state open` for a PR that already covers the change, including
-one opened by a concurrent session or agent.
+one, check `gh pr list --state all --search "<head branch or title>"` and stop or
+rescope when the base already contains the change. A concurrent session may have
+opened - or already merged - a PR for the same work, and an open-only query misses both.
 
 ## Workflow
 
