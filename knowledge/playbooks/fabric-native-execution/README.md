@@ -40,6 +40,4 @@ A model naming a file proves neither that it read the file nor that it followed
 its instructions. Report prompt inclusion, tool execution, and behavioral
 compliance separately; stop when the requested claim has sufficient evidence.
 
-Use `../execution-router/README.md` or `../model-resolution/README.md` only when
-the execution shape or model choice is a genuine open question. Verify any
-load-bearing delegated claim against current source and tests.
+Verify any load-bearing delegated claim against current source and tests.

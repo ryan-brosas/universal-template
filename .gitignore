@@ -1,28 +1,19 @@
+# Machine-local runtime, experiments and test caches are not template content.
 .pi/
-# Local experiments and test caches are not template content.
 /tool-smoke-test/
 /devdocs/
-/config/pi-crew/
 .pytest_cache/
-# Only the published repository helpers are tracked; other root scripts stay local.
-/scripts/*
-!/scripts/pr-metadata.py
-!/scripts/check-retired-paths.py
-# Generated runtime capability state (machine-local, never committed).
 /state/
-# Local helpers stay local except the published fidelity gate and tests.
+.idea/
+skills/omarchy
+# Host/vendor-managed runtime skills stay installed locally, never published.
+/skills/.system/
+# Local helpers stay local except the published fidelity gate and its test.
 skills/*/scripts/
 knowledge/playbooks/*/scripts/
 !/knowledge/playbooks/pencil/scripts/
 /knowledge/playbooks/pencil/scripts/*
 !/knowledge/playbooks/pencil/scripts/verify-fidelity-manifest.py
 !/knowledge/playbooks/pencil/scripts/test-verify-fidelity-manifest.py
-# Host/vendor-managed runtime skills stay installed locally, never published.
-/skills/.system/
-# Optional machine-local model preferences.
-/config/model-profiles.local.yaml
 *.pyc
 __pycache__/
-skills/omarchy
-.idea/
-.veda/

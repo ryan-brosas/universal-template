@@ -1,6 +1,6 @@
 ---
 title: cross-repo-source
-summary: Use when a code question spans repositories or needs an implementation not available locally — retrieve it with the indexed source capability (Sourcebot), then read the real source instead of a summary.
+summary: Use when a code question spans repositories or needs an implementation not available locally — retrieve it from indexed source (Sourcebot), then read the real source and tests instead of a summary.
 kind: playbook
 ---
 
@@ -14,19 +14,24 @@ confirm findings in source before editing or claiming absence. Sourcebot is the
 single indexed cross-repository source: never co-load a second code-graph server
 for the same question.
 
+Retrieval and reasoning belong to the coding agent. Search, read the decisive
+source and tests, and reason directly; do not route the question through a
+delegated "ask the codebase" step that produces another model's interpretation.
+
 ## Corpus
 
 Sourcebot indexes a small deliberate corpus, not the public GitHub universe. The
-corpus is declared once as an explicit repository list in the deployment's
-config (on this machine `~/sourcebot/config.json`); the deployment,
-its index and its database live outside this template.
+corpus is an explicit repository list in the deployment's own configuration,
+which lives outside this template together with the index and database.
 
 - Default branches only. Add a long-lived branch explicitly, and only while a
   specific comparison needs it.
-- Forked and archived repositories are excluded; an owned repository is listed
-  under its canonical upstream when the local fork carries no unique work.
 - Admission is earned: a repository joins after it repeatedly proves useful in
-  cross-repository work, never automatically because one task touched it.
+  cross-repository work, never automatically because one task touched it. Do not
+  ingest every repository read during research.
+- Group the corpus so it stays understandable: keep owned/core repositories
+  distinct from inspiration repositories, and organize project-specific
+  inspiration around the projects or domains that need it.
 - A miss is the normal boundary, not a failure: discover the repository with
   GitHub, read the real source and tests, then decide about admission.
 
@@ -42,12 +47,8 @@ its index and its database live outside this template.
 
 ## Workflow
 
-1. `list_repos` (optionally with `query`) to confirm the repository name; note its
-   default branch and whether the branch is indexed. Match the exact branch across
-   pagination or a filtered query; never substitute the first returned branch.
-   For readiness probes, require actual result records/counts, not a substring such
-   as `match` (which also accepts “no matches”). Searchability and freshness are
-   separate checks; a successful search does not prove a recent sync succeeded.
+1. Confirm the repository name and its default branch with `list_repos`
+   (optionally with `query`); note whether that exact branch is indexed.
 2. Narrow with `grep` (`groupByRepo: true` across many repos, `include` to filter
    file types) or `glob`; use `list_tree` to orient in an unfamiliar repository.
 3. For a symbol, prefer `find_symbol_definitions` / `find_symbol_references` over
@@ -63,15 +64,8 @@ its index and its database live outside this template.
 Use one strong implementation per question. Compare it with the current project's
 constraints and decide ADOPT / ADAPT / OMIT per concern; never blind-copy.
 Provenance and licensing live in `../reference-driven-development/README.md`.
-Delegated research (`ask_codebase`) is opt-in and blocking: its contract forbids the
-call unless the user's prompt asks for it, so a broad question is a reason to offer it, not
-to invoke it. Once asked, bound the assignment with
-[the brief](references/research-brief.md), then read the decisive source yourself.
 
 ## Verification
 
 The claim names the file(s) read and the revision; symbol or call-graph claims are
 confirmed by reading source; absence claims state the search scope and index limits.
-After the MCP deployment was restarted, query from a fresh session: a pooled session
-created before the restart fails with `Server not initialized`, which is a stale
-session rather than a missing index.

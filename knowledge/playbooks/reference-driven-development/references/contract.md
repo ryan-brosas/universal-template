@@ -1,9 +1,8 @@
 # Reference Contract: prior art as evidence
 
 The single contract for using external evidence as prior art. Procedures live in
-`knowledge/playbooks/reference-driven-development`; this file owns the rules. Tool
-selection (`evidence-router`) and acquisition mechanics (`web-reference`) live in
-their owners.
+`knowledge/playbooks/reference-driven-development`; this file owns the rules.
+Acquisition mechanics (`web-reference`) live in their owner.
 
 ## Reference kinds
 

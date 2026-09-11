@@ -78,8 +78,8 @@ failure modes, and the user-visible signal of success or failure.
 
 Turn the map into questions: what does the user need at each stage, what
 breaks the flow, what would make them abandon, and what recovery they expect
-after each failure. Use the research pack's `evidence-router` methods (or describe the interview/survey/ticket-analysis approach directly)
-for interviews, surveys, and ticket analysis.
+after each failure. Describe the interview, survey, and ticket-analysis approach
+directly, and read the project's real sources for evidence.
 
 ## Outputs
 

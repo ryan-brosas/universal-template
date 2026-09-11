@@ -1,57 +1,54 @@
 # universal-template
 
-Shared rules and reusable playbooks for coding agents. Keep instructions small,
-load procedures when needed, and answer code questions from current source—not
-stored repository summaries.
+Reusable engineering principles and procedures for capable coding agents.
+The host chooses the model and provides tools; this template teaches how to work.
 
 ## Get started
 
-Clone into an unused directory:
+Clone this repository into an unused directory. Configure your agent to read
+[AGENTS.md](AGENTS.md) and discover the task routers in `skills/`.
+Cloning alone does not configure your agent. Expose only `skills/` to skill
+discovery, and load a playbook only when it helps the task.
 
-```sh
-git clone https://github.com/ryan-brosas/universal-template.git
-```
+## Work from evidence
 
-Configure your agent to read [AGENTS.md](AGENTS.md) and discover skills from
-`skills/`. Setup depends on your agent; cloning alone does not enable anything.
-Expose only `skills/` to skill discovery, not `knowledge/`.
+1. Inspect the current project's source, Git history, tests and development tools.
+2. Identify what is unknown and retrieve only the evidence needed.
+3. Use Sourcebot for intentionally indexed cross-repository source. Use GitHub
+   to discover implementations outside that corpus, and installed source,
+   official documentation or Context7 for library questions.
+4. Read decisive source and tests. The coding agent reasons about the evidence,
+   compares constraints, and chooses what to adopt, adapt or omit.
+5. Implement locally and verify with the project's tests, compiler, runtime and CI.
 
-Choose a pack for the task. It points to the relevant playbook and references;
-read only what you need. Simple tasks do not require a playbook.
+Local work stays local; a known file needs a direct read, not an external search.
+Sourcebot's deployment, credentials, repository configuration and indexes live
+outside this template. Add inspiration repositories only when real project needs
+show repeated usefulness or strategic value—not automatically after research.
 
-| Pack | Use for |
+## Find a procedure
+
+| Pack | Task |
 | --- | --- |
-| [Engineering](skills/engineering-pack/SKILL.md) | Code, debugging, tests and architecture |
+| [Engineering](skills/engineering-pack/SKILL.md) | Implementation, debugging, testing and architecture |
 | [Design](skills/design-pack/SKILL.md) | UI/UX, accessibility and visual design |
-| [Delivery](skills/delivery-pack/SKILL.md) | Git, PRs, CI, deployments and releases |
-| [Research](skills/research-pack/SKILL.md) | Source, documentation and web research |
-| [Writing](skills/writing-pack/SKILL.md) | Prose, copy and documentation |
-| [Agent tooling](skills/agent-tooling-pack/SKILL.md) | Pi, Fabric, providers and models |
-| [Maintenance](skills/maintenance-pack/SKILL.md) | Updating this template and its playbooks |
+| [Delivery](skills/delivery-pack/SKILL.md) | Git, PRs, CI, deployment and releases |
+| [Research](skills/research-pack/SKILL.md) | Source, documentation and web investigation |
+| [Writing](skills/writing-pack/SKILL.md) | Prose and documentation |
+| [Agent tooling](skills/agent-tooling-pack/SKILL.md) | Agent integrations and tool troubleshooting |
+| [Maintenance](skills/maintenance-pack/SKILL.md) | Maintaining reusable instructions |
 
-## How context works
+## Layout
 
-Use local source, tests and development tools for the current repository.
-Use Sourcebot for code across intentionally indexed repositories, GitHub to
-find unknown implementations, and official docs or Context7 for library questions.
-Verify behavior with tests and runtime evidence.
+- `AGENTS.md` — durable engineering principles.
+- `skills/` — small task-oriented routers.
+- `knowledge/playbooks/` — reusable ways of working.
+- `mcp/` — optional capability declarations and connection guidance.
+- `prompts/` — reusable task starters.
+- `templates/` — reusable project and output shapes.
 
-Keep reusable procedures here—not copies or summaries of other repositories.
-See the [evidence guide](knowledge/playbooks/evidence-router/README.md) for details.
-
-## Repository layout
-
-- [AGENTS.md](AGENTS.md) — shared rules.
-- [skills/](skills/) — task routers.
-- [knowledge/playbooks/](knowledge/playbooks/) — procedures, references and helpers.
-- [prompts/](prompts/) and [templates/](templates/) — optional starting points.
-- [mcp/](mcp/catalog.md) — optional tool registry and profiles; configure connections
-  in your agent. The `minimal` profile enables nothing.
-- [config/model-profiles.yaml](config/model-profiles.yaml) — optional task requirements.
-
-No installer, specific model or MCP server is required.
-
-## Contributing
+Keep procedures here; retrieve repository knowledge from its source.
+No particular model or MCP server is required for ordinary local work.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md) and
 [LICENSING.md](LICENSING.md).

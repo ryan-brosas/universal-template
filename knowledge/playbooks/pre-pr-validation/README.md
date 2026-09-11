@@ -25,8 +25,8 @@ the whole catalog or copy its rules into a new checklist.
 
 ## Gather complementary evidence
 
-- **Behavior and gates:** use `../agent-code-quality-gate/README.md`. Run project
-  checks and focused behavioral probes; inspect command output and exit status.
+- **Behavior and gates:** run project checks and focused behavioral probes;
+  inspect command output and exit status.
   A build or graph trace alone does not prove behavior. Check whitespace across
   the branch diff and local changes, not only the unstaged diff.
 - **IDE semantics:** for nontrivial symbol/API changes, discover available IDE

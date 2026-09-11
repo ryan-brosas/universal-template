@@ -26,5 +26,4 @@ Useful shortcuts:
   path is still a misleading report.
 
 Cite the evidence that carries the consequential claim and distinguish it from
-inference. `../evidence-router/README.md` is an optional capability map when you
-do not know where to look, not a prerequisite before using a known source.
+inference. Pick the nearest sufficient source; global rules own where to look.

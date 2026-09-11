@@ -35,7 +35,6 @@ jobs:
           set -euo pipefail
           python3 knowledge/playbooks/pencil/scripts/test-verify-fidelity-manifest.py
           node --test knowledge/playbooks/cdp/sdk/recording-privacy.test.ts
-          python3 scripts/pr-metadata.py --selftest
           git diff --check "$GITHUB_SHA^" "$GITHUB_SHA"
 
   publish:

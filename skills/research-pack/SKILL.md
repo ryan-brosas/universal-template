@@ -10,8 +10,6 @@ Use the nearest sufficient evidence. Known source paths can be read directly;
 research is not a prerequisite for every task. Read one relevant procedure and
 resolve its references and helpers relative to its own directory.
 
-- Choose source, index, IDE or external evidence:
-  [evidence-router](../../knowledge/playbooks/evidence-router/README.md).
 - Retrieve code across indexed or external repositories:
   [cross-repo-source](../../knowledge/playbooks/cross-repo-source/README.md).
 - Study a reference repository or adapt prior art:
