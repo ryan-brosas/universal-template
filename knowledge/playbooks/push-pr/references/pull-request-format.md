@@ -17,6 +17,21 @@ category each section must carry. Current template sections:
    Model review is not rendered proof.
 7. Breaking Changes / Migration: what breaks and how to migrate; else N/A
 
+### CI-enforced subset
+
+`.github/workflows/pr-quality.yml` checks the body by literal substring and fails
+the required `quality / required` check when one is absent:
+
+- the body is at least 30 characters;
+- it contains `## Summary`, `## Why`, `## Verification` and `## Risks` exactly as
+  written — `## What`, `## Changes` or `## Summary of changes` do not match;
+- it contains no `TODO` or `TBD`, including inside a checklist.
+
+The remaining template sections are house format, not machine-checked. A body
+edited after the PR opened re-runs the check; the failing step names the missing
+literal (`missing section: ## Risks`). Add the missing heading instead of renaming
+a section that already exists.
+
 ## Rules
 
 - Every claim traces to real evidence: a diff, a command with its exit status,
