@@ -37,6 +37,10 @@ behavior (steer outcomes, not behavior).
  defect by reproducing it.
 - Change a shared abstraction only when the shared defect is confirmed and that
   abstraction owns the behavior.
+- Treat an explicit removal or rejected design as an acceptance constraint:
+  report a verified consequence once, then stop. Do not restore the behavior
+  through a renamed file, alternate location, or substitute mechanism without
+  approval; a continuation or compaction is not new authorization.
 
 ## Leave behavior unchanged for others
 
