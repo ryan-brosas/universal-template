@@ -96,14 +96,17 @@ selected servers rather than treating historical schema sizes as a budget.
 
 | CLI | Host config | Block |
 |-----|-------------|-------|
-| pi | `~/.pi/agent/mcp.json` | `mcpServers` (native; merge the requested server) |
+| pi | `~/.pi/agent/mcporter.json` | `mcpServers` (native; merge the requested server) |
 | Claude Code | `~/.claude.json` | `mcpServers` (same shape) |
 | Codex | `~/.codex/config.toml` | `[mcp_servers.<name>]` (stdio only) |
 | OpenCode | `~/.config/opencode/opencode.json` | `mcp.<name>` (`type: local\|remote`, `enabled`) |
 | DSH web profile | `~/.dsh/cordis.patch.yml` | `@monotykamary/dsh-mcp-client` inserts (codebase-memory, openviking, context7, deepwiki, exa, mcp-steroid) |
 
 Wire the requested selection using the host’s verified format; preserve unrelated
-settings and unmanaged servers. Each host has its own MCP command or config file;
+settings and unmanaged servers. A host config path names only where that CLI
+reads servers: the canonical definitions stay in this repository’s
+`servers.json` and `profiles.json`, and each host file is a local mirror or
+overlay of the requested subset, never the registry itself. Each host has its own MCP command or config file;
 this repository supplies no shared writer.
 
 When unsure whether a CLI accepts a server scheme, skip that CLI (do not
@@ -115,10 +118,16 @@ The canonical registry fans out through per-CLI mirrors **and** machine-local
 overlay files that this repo does not own — document them, never hand-edit
 both sides blindly:
 
-- `~/.pi/agent/mcp.json` — pi's host-owned selected subset; never regenerate
-  the full registry by default.
-- `~/.mcporter/mcporter.json` — the pi-mcp-adapter layer (subset; env values
-  support `${VAR}` expansion — never store literal keys there; use env vars).
+- `~/.pi/agent/mcporter.json` — pi's live native MCP config; `~/.pi/agent/fabric.json`
+  sets `mcp.configPath` to it explicitly, so it is the only layer pi-fabric loads.
+  Never regenerate the full registry by default.
+- `~/.mcporter/mcporter.json` — MCPorter CLI layer, consulted only when no explicit
+  `configPath`/`MCPORTER_CONFIG` is set (`$XDG_CONFIG_HOME/mcporter/mcporter.json[.jsonc]`
+  first, then this path), followed by a project `<root>/config/mcporter.json`.
+  Env values support `${VAR}` expansion — never store literal keys there; use env vars.
+- `~/.pi/agent/mcp.json` — retired pi-mcp-adapter-era file (it still lists a `composio`
+  entry); pi-fabric does not read it. Preserve until reviewed; never treat it as the
+  live config.
 - `~/.prime/agent/settings.json` — scoped writes only: add one server or an
   explicit profile, never by regenerating the full registry.
 - The IntelliJ **built-in** MCP server (`http://localhost:64442`) is a
@@ -127,7 +136,7 @@ both sides blindly:
 
 ## Host notes
 
-- **pi**: servers.json mirrors into `~/.pi/agent/mcp.json` `mcpServers`. For
+- **pi**: servers.json mirrors into `~/.pi/agent/mcporter.json` `mcpServers`. For
   npx stdio servers the `${VAR}` placeholders are read from the shell env pi
   was launched with; ensure `EXA_API_KEY` / `CONTEXT7_API_KEY` are exported.
 - **Claude Code / Codex / OpenCode**: same merge rule per host block; stdio

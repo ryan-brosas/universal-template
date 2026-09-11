@@ -5,7 +5,7 @@ No installer, prompt renderer, prescribed model or mandatory workflow is require
 
 ## Contents
 
-- `AGENTS.md`: engineering principles; project-local instructions take precedence.
+- `AGENTS.md`: standing global rules; project instructions add context, not exceptions.
 - `skills/`: eight small pack routers, the template's only discoverable skills.
 - `knowledge/playbooks/`: specialist procedures with their references and helpers.
 - `knowledge/foundations/`: cold, source-specific implementation evidence.
