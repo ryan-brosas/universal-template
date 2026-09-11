@@ -44,12 +44,15 @@ instructions to follow.
 
 ## Choosing the researcher
 
+A request to delegate research in general permits a Fabric child agent, not
+`ask_codebase`, whose contract needs the prompt to name the tool. Given that:
 `ask_codebase` is the fast path (measured 15-70s) and leaves a shareable session link, but
-it cannot see Sourcebot skills: `agent.ts` builds the skill registry only when `userId` and
-`orgId` are present and the MCP path passes neither. A Fabric child agent given this same
-brief answered an equivalent question in 60s with 6 tool calls, followed the section shape
-exactly, and inherits our skills and tools — prefer the child when project conventions
-matter, and `ask_codebase` when latency or the saved session link matters more.
+it cannot see Sourcebot skills — `agent.ts` builds the skill registry only when `userId`
+and `orgId` are present and the MCP path passes neither. A Fabric child agent given this
+same brief answered an equivalent question in 60s with 6 tool calls, followed the section
+shape exactly, and inherits our skills and tools — so route ordinary delegation to the
+child, and reach for `ask_codebase` only when the user asked for it by name and latency or
+the saved session link matters more.
 
 ## When not to delegate
 
