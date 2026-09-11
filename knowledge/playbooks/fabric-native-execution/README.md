@@ -36,6 +36,9 @@ saying it has no tools.
 
 After a failed probe, change one evidence-backed assumption before retrying.
 Use a harmless read through the actual exposed route and inspect its tool result.
+A newly configured server can register while reporting no tools until first use;
+prove the connection and its credential with one read-only call that requires
+the credential, not with a registration listing.
 A model naming a file proves neither that it read the file nor that it followed
 its instructions. Report prompt inclusion, tool execution, and behavioral
 compliance separately; stop when the requested claim has sufficient evidence.
