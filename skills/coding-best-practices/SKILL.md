@@ -1,76 +1,48 @@
 ---
 name: coding-best-practices
-description: "Use when the user explicitly asks for engineering standards, coding best practices, quality guidance, or help selecting a quality procedure or leaf skill, routes the topic to the right leaf or mechanical gate instead of restating rules."
+description: "Use when the user asks for engineering standards, coding best practices, quality guidance, or the applicable quality procedure. Route to the narrowest language/framework leaf or gate; not for ordinary implementation."
 invocation: entry
 ---
 
-# Coding Best Practices, topic router
+# Coding best-practices router
 
-## Core Principle
+This is a selection map, not a general implementation phase. Project source,
+instructions, tests, and runtime behavior remain authoritative.
 
-General coding guidance is a **map**, not a monolith. Route each topic to one leaf skill or one mechanical gate; steer outcomes with checks, not walls of prose.
+## Route narrowly
 
-## When to Use / NOT
+1. A named language or framework routes to an existing matching
+   `*-coding-practices` leaf. When a framework has no practices leaf of its own
+   (FastAPI, Flask), route style questions to its underlying language leaf
+   (`python-coding-practices`) and use `../skill-catalog/SKILL.md` to find a
+   `<technology>-foundation` only when the request needs that project's
+   internals rather than general style. TypeScript domain modeling may
+   additionally need `typescript-coding-standards`; do not load both by
+   default.
+2. Scope control, maintainability, verification discipline, or design judgment
+   routes to `../code-discipline/SKILL.md`.
+3. Test design routes to `../test-generation/SKILL.md`,
+   `../test-driven-development/SKILL.md`, or
+   `../testing-anti-patterns/SKILL.md` according to the request.
+4. Security review routes to `../security-and-hardening/SKILL.md`. Turning a
+   stable exact practice into automation routes to `../practices-to-ci/SKILL.md`.
+5. Completion evidence routes to `../agent-code-quality-gate/SKILL.md`; PR
+   delivery routes to `../push-pr/SKILL.md`. Neither is implied by a general
+   standards question.
+6. Skill authoring routes to `../writing-skills/SKILL.md`; template-repository
+   maintenance also loads `../template-maintenance/SKILL.md`.
 
-- **Use when:** the user explicitly asks for best practices, standards, or quality guidance ("what are best practices for X?"), onboarding someone to how this catalog expects work to flow, or choosing which quality skill to load next.
-- **Use when:** the question spans naming, docs, Git, testing, security, or AI-generated code and you need the right pointer fast.
-- **NOT when:** a normal implementation task starts, the ordinary loop (inspect, implement, verify) needs no router; load this only when standards guidance is the actual request.
-- **NOT when:** the task is TypeScript-only, load `typescript-coding-practices` (style/modules) and `typescript-coding-standards` (domain modeling) instead of this router alone.
-- **NOT when:** declaring work complete, load `agent-code-quality-gate` and the
-  project's verification commands from its `AGENTS.md` or contributor docs.
-- **NOT when:** opening or updating a PR, load `push-pr`.
-- **NOT when:** deep Git conventions from community guides, load `awesome-guidelines`.
-- **NOT when:** authoring a new skill, load `writing-skills`.
+If the topic is broader or ambiguous, open
+`references/topic-index.md`, choose one row, and load only its cited leaf or
+focused reference. The index covers naming and formatting, documentation,
+error handling, Git collaboration, AI-assisted code, performance, and security.
+Do not paste the entire guide into the task or restate DRY/KISS/YAGNI as rigid
+rules.
 
-## Workflow
+## Verify and stop
 
-1. **Classify the topic** using `references/topic-index.md` (naming, docs, errors, Git, AI, performance, principles).
-2. **Load the leaf** cited on that row, never paste the whole guide inline.
-3. **Implement** under `code-discipline` (scope, verification, one source of truth).
-4. **Test** under `test-generation`, `test-driven-development`, or
-   `testing-anti-patterns` as appropriate.
-5. **Review** under `code-review-and-quality` before merge when human or agent review is in scope.
-6. **Enforce** recurring exact contracts via `practices-to-ci` when the value
-   exceeds maintenance and false-positive cost.
-7. **Ship** via `push-pr` only when delivery is requested and the branch is ready.
-8. Stop when the topic is answered by the loaded leaf and any applicable gate has exit 0 evidence.
-
-## Topic → leaf (quick map)
-
-| Topic | Load first | Mechanical gate |
-|---|---|---|
-| Scope, verification, design taste | `code-discipline` | project CI + `agent-code-quality-gate` |
-| Naming, formatting, readability | `references/naming-and-formatting.md` | linter/formatter + `typescript-coding-practices` / `javascript-coding-practices` when stack-specific |
-| README, docstrings, comments | `references/documentation-and-readme.md` | `repo-hygiene` (catalog) |
-| Errors, resilience | `references/error-handling-and-resilience.md` | behavior tests |
-| Git, branches, PRs | `references/git-and-collaboration.md` | `push-pr`, conventional commits |
-| AI-generated code | `references/ai-assisted-coding.md` | `agent-code-quality-gate` |
-| Performance / data efficiency | `references/performance-and-data-efficiency.md` | profile-first; benchmark in CI when stable |
-| Security | `security-and-hardening` | secret scan, dependency audit |
-| Turn practice into CI | `practices-to-ci` | the project's PR quality workflow |
-
-## Red Flags
-
-- Repeatedly prompting for an exact, valuable invariant that should be owned by
-  a maintained CI check (`practices-to-ci`).
-- Loading this router and then ignoring the cited leaf, the router has no rules of its own beyond routing.
-- Treating DRY/KISS/YAGNI/SOLID as behavioral walls; use them as decision hints, then verify with project gates.
-
-## Verification
-
-- The chosen topic row from `references/topic-index.md` names a leaf skill or reference file you opened.
-- For implementation work: `agent-code-quality-gate` five checks recorded before claiming done.
-- For template catalog edits: inspect local skill metadata and run the relevant hard-contract checks documented by that repository.
-
-
-## References
-
-- `references/topic-index.md`, full topic-to-skill and gate table.
-- `references/naming-and-formatting.md`, names, conventions, comments, whitespace.
-- `references/documentation-and-readme.md`, README, docstrings, why-not-what comments.
-- `references/error-handling-and-resilience.md`, errors at boundaries, tests over try/except alone.
-- `references/git-and-collaboration.md`, Git, branches, commits, PRs.
-- `references/ai-assisted-coding.md`, reviewing generated code, context files, no blind trust.
-- `references/performance-and-data-efficiency.md`, profile first, vectorize/chunk when measured.
-- `awesome-guidelines`, archived cold library; its `references/` capsules feed the `*-coding-practices` leaves (no new ingestion).
-- `deep-module-design`, structural quality review when the topic is module boundaries or interface complexity.
+A routing answer names the selected owner and why close alternatives do not own
+the request. Implementation work uses that project's real checks; recurring
+objective invariants may earn a maintained CI gate when its benefit exceeds
+maintenance and false-positive cost. Stop when the question is answered or the
+selected gate has produced the evidence actually requested.

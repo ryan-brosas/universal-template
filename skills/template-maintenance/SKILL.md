@@ -1,6 +1,6 @@
 ---
 name: template-maintenance
-description: "Use when maintaining universal-template policy, prompts, skills, templates, MCP declarations, or publication tooling; review semantic coherence and select only relevant exact checks."
+description: "Use when auditing or maintaining this .agents/universal-template repository—especially failed or wrong skill selection, AGENTS.md, prompts, skills, templates, MCP declarations, or publication tooling; review semantics and run only relevant exact checks."
 invocation: manual
 disable-model-invocation: true
 ---

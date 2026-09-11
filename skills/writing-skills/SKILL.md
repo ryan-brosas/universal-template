@@ -1,6 +1,6 @@
 ---
 name: writing-skills
-description: "Use when authoring, editing, or verifying a SKILL.md, or promoting a demonstrated procedure into a skill; select evidence of task lift and preserve the catalog contract."
+description: "Use when creating, editing, auditing, or verifying a skill or SKILL.md—including trigger descriptions and routing overlap—or promoting a demonstrated procedure; preserve the catalog contract and require evidence of task lift for material hot changes."
 invocation: manual
 disable-model-invocation: true
 ---

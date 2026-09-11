@@ -1,14 +1,16 @@
 ---
 name: project-bootstrap
-description: "Use when entering a new or unfamiliar repository, initializing a greenfield project workspace, or intentionally establishing lightweight persistent project-level agent context."
+description: "Use when the user asks to initialize or scaffold a project, refresh project-level agent context, or get repository orientation. Not for ordinary tasks in an unfamiliar repository."
 invocation: entry
 ---
 
 # Enter a project
 
-Orient just enough to do the requested work. For an existing repository, local
+This skill owns requested setup or orientation, not routine context gathering.
+For an ordinary task, inspect only what that task needs without treating repository
+unfamiliarity as a separate bootstrap phase. When orientation is requested, local
 instructions, dirty state, entrypoints, manifests, tests and CI usually answer
-what it is, where to change it and how to verify. A complete inventory or an
+what the project is, where to change it and how to verify. A complete inventory or an
 onboarding report is not a prerequisite for implementation. Distinguish commands
 found in source from commands actually run; do not run every build merely to
 learn the repository.
