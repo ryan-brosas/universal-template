@@ -1,9 +1,7 @@
 ---
-name: twenty-crm-foundation
+name: twenty-crm
 description: "Use when building a multi-tenant application or CRM with dynamic schema — upgrade-aware repository proxies and cursor-driven metadata adapters, RLS predicate rewriting, normalized Postgres error taxonomies with duplicate-key diagnostics, workspace DDL managers, SQL identifier escaping, generation-stamped promise memoizers, integer-gap record ordering, metadata-driven upsert engine, tool-facing CRUD validation envelopes, ORM update-event fidelity contracts (id-keyed pairing, authoritative timestamps, snapshot clone discipline), timeline activity routing/coalescing kernel (hash-keyed routing plans, dual-emission junction repoints, sorted advisory-lock funnels), the GraphQL record-filter compiler (bracket-composition walker, where/andWhere first-entry semantics, permission-gated field parsing, depth-capped join-based MANY_TO_ONE sub-filters, composite sub-field flattening, ~18-operator parameterized SQL ladder with randomized param namespacing, null-equivalent widening vs strict eqStrict/isStrictly…"
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # twenty-crm: Multi-Tenant CRM & Dynamic Schema Foundation
 

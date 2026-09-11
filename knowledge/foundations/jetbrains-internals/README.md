@@ -1,9 +1,7 @@
 ---
-name: jetbrains-internals-foundation
+name: jetbrains-internals
 description: "Use when porting IntelliJ-platform extension-point/plugin.xml manifest patterns, file-type/language registration, inspection catalogs, or settings/registry wiring from JetBrains IDE distributions."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # JetBrains IDE distributions: platform & plugin manifest internals
 

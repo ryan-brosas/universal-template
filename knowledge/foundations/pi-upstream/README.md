@@ -1,9 +1,7 @@
 ---
-name: pi-upstream-foundation
+name: pi-upstream
 description: "Use when building a coding-agent harness: agent loop modes, tool-execution ordering, compaction cut points and iterative summaries, branch summarization, lane-record session durability, LLM boundary conversion, and streaming-TUI seams."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Pi Upstream Foundation
 

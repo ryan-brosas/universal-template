@@ -1,9 +1,7 @@
 ---
-name: isso-foundation
+name: isso
 description: "Use when porting Isso's self-hosted comment-server internals: SQLite comment/thread storage, moderation modes, guard rate limits, signed edit/moderation tokens, notification fanout, sanitizer pipeline, or the multi-mixin WSGI deployment core."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Isso: lightweight comment server — storage, moderation, and embedding kernel
 

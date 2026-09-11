@@ -1,10 +1,8 @@
 ---
-name: geoready-foundation
+name: geoready
 description: 'Use when building GEO/AI-visibility tooling: site audits scored 0-100, llms.txt generation, citation checks against answer engines, anti-SSRF fetching, plugin registries, or AI-crawler analytics — port the mined GeoReady (geo-optimizer-skill) contracts.'
 license: MIT
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # GeoReady (aeo-geo-optimizer-skill): GEO Audit & AI-Visibility Foundation
 

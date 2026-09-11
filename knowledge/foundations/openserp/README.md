@@ -1,9 +1,7 @@
 ---
-name: openserp-foundation
+name: openserp
 description: "Use when building a SERP API or rank tracker over headless browsers or raw TLS-fingerprinted HTTP: engine adapter contract, ad-safe rank normalization, captcha/block error taxonomy, retry+circuit-breaker+proxy-pool resilience, mega-search merge/clustering, and llms.txt-aware page extraction."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # OpenSERP Foundation
 

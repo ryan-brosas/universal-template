@@ -1,9 +1,7 @@
 ---
-name: qodana-action-foundation
+name: qodana-action
 description: "Use when porting Qodana's CI-integration suite — single-binary docker/native transport contract, dual-format arg parsing with deprecation ladder, native-mode cache-key partitioning, checksum-gated CLI provisioning with divergent mismatch postures, SARIF→three-platform output projection plus side-channel extraction, report-artifact publication triples, name-keyed check-run upsert, quick-fixes git choreography, tag-keyed comment upsert, reaction swap protocol, host cache-compensation mirrors, and the shared-core/duplicated-adapters fan-out pattern."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # qodana-action: CI-integration suite foundation
 

@@ -1,9 +1,7 @@
 ---
-name: mcp-spec-and-servers-foundation
+name: mcp-spec-and-servers
 description: "Use when building MCP servers or clients: modern-era stateless lifecycle, per-request _meta, Streamable HTTP + stdio transports, MRTR, subscriptions, OAuth 2.1 authorization, resource/prompt/completion surfaces, client features (elicitation/sampling/roots), dual-era dispatch, the Tasks extension plus task-based tool authoring and bidirectional task clients, cancellation/progress/ping patterns, structured tool outputs, URL-elicitation error paths, bounded fetches, and canonical reference-server patterns."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # MCP Spec & Servers Foundation
 

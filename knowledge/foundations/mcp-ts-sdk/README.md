@@ -1,9 +1,7 @@
 ---
-name: mcp-ts-sdk-foundation
+name: mcp-ts-sdk
 description: "Use when building MCP servers/clients: dual-era wire codecs, inbound validation ladders, era negotiation probes, per-request transports, response caching, and HMAC state tokens."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # MCP TS SDK Foundation
 

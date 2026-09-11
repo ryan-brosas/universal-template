@@ -1,9 +1,7 @@
 ---
-name: celery-foundation
+name: celery
 description: "Use when building a distributed task queue or job worker: at-least-once ack/reject semantics across early/late modes, retry ladders (manual Task.retry, autoretry wrapper, exponential backoff with full jitter), prefork pool with event-loop time limits, bootstep blueprint startup/shutdown graphs, broker reconnect loops, ETA/countdown timers, beat's reentrant heap scheduler with crontab DST math, gossip worker elections, and mailbox-based remote control."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Celery: Distributed Task Queue Foundation
 

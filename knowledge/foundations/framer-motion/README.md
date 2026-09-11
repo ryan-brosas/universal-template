@@ -1,9 +1,7 @@
 ---
-name: framer-motion-foundation
+name: framer-motion
 description: "Use when porting Motion/framer-motion animation internals: spring physics + duration/visualDuration resolution, follow-value velocity handoff, frameloop step ordering, JSAnimation repeat/pause/reverse machine, inertia boundary springs, derived-value graphs."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # framer-motion (Motion): animation engine contracts
 

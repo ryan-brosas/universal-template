@@ -1,9 +1,7 @@
 ---
-name: browser-use-foundation
+name: browser-use
 description: "Use when building an LLM-driven browser agent: event-bus sessions, watchdog self-healing, DOM serialization to stable indices, schema-enforced action registries with secret redaction, and cache-friendly prompt assembly."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Browser Agent Foundation
 

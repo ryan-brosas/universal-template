@@ -1,9 +1,7 @@
 ---
-name: playwright-foundation
+name: playwright
 description: "Use when porting Playwright's client RPC architecture (GUID object trees, channel proxies, async emitters, Waiter/Progress cancellation, timeout ladders, typed error round-trips) or its child-process lifecycle kernel (spawn fd layout, graceful-close ladders, signal refcounting, cross-platform tree kill, length-prefixed pipe framing, launch readiness races)."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Playwright (microsoft/playwright): Client RPC & Cancellation Foundation
 

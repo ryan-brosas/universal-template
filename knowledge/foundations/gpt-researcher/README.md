@@ -1,9 +1,7 @@
 ---
-name: gpt-researcher-foundation
+name: gpt-researcher
 description: "Use when porting autonomous research pipelines: query fan-out with LLM planners, MCP tool routing, context compression, deep iterative descent, and honest cost ledgers."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # gpt-researcher: Autonomous Research Pipeline Foundation
 

@@ -1,9 +1,7 @@
 ---
-name: zep-foundation
+name: zep
 description: "Use when porting Zep's bulk graph-ingestion engine: streaming pipelines, batch/sequential submission, retry safety, entity canonicalization, or memory-backfill validation."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Zep (getzep/zep): Graph Memory Ingestion Foundation
 

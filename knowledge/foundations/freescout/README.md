@@ -1,9 +1,7 @@
 ---
-name: freescout-foundation
+name: freescout
 description: "Use when porting helpdesk email pipelines: IMAP fetch paging with count-driven pagination, hash-witnessed Message-ID threading, reply-separation ladders, bounce detection, per-mailbox SMTP driver swaps, schedule self-healing supervisors, deferred notification buses, and SSRF-guarded URL imports."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # FreeScout Foundation
 

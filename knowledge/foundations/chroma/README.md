@@ -1,13 +1,11 @@
 ---
-name: chroma-foundation
+name: chroma
 description: 'Use when porting Chroma embedded vector database internals — HNSW segment engine, layered brute-force batches, SQL metadata filter planner, SQLite WAL queue, and the Rust MaxScore/SPANN/HNSW-provider engine.'
 license: Apache-2.0
 metadata:
   hermes:
     tags: [vector-database, hnsw, metadata-filtering, wal, sparse-retrieval, chroma]
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Chroma: Vector Database Foundation
 

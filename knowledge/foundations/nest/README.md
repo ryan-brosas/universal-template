@@ -1,9 +1,7 @@
 ---
-name: nest-foundation
+name: nest
 description: "Use when building or porting a DI container, module system, provider lifecycle, bootstrap pipeline, request-scoped injection, route registration/URL composition, validation pipes, or a boot log buffer — NestJS's core injector + router + pipe kernel as source-confirmed contracts."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # nest: Dependency-injection container, router & pipe foundation
 

@@ -1,9 +1,7 @@
 ---
-name: roo-foundation
+name: roo
 description: "Use when building an agent harness's safety layer AND context plane: pure approval classification with timeout auto-answer, budget-window spend caps, tool repetition breakers, model-driven persona routing, promise-gated late config, stack-driven request loops, shadow-git checkpoints, non-destructive condense/truncate history management, dual-log persistence with rewind reconciliation, execution-time tool gating, native tool-call stream parsing with fail-fast validation, fuzzy SEARCH/REPLACE diff application, .rooignore access control, mention-to-context pipelines, multi-instance task history stores, budgeted prompt-cache breakpoint placement, bounded ripgrep search transport, tree-sitter definition-outline extraction over a lazy WASM grammar loader, AND a whole-file-mined workspace→Qdrant code-index RAG pipeline (scanner/parser/watcher/orchestrator, 8-embedder batching kernel, pathSegments filter grammar, in-collection indexing markers, dimension-mismatch recreation)."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Roo-Code Foundation
 

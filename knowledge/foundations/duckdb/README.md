@@ -1,9 +1,7 @@
 ---
-name: duckdb-foundation
+name: duckdb
 description: "Use when porting analytical-database internals — DPhyp join ordering, cardinality estimation, and adaptive-radix-tree index machinery. Source code and direct tests are ground truth."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # duckdb: Join-Order Optimizer + ART Index Foundation
 

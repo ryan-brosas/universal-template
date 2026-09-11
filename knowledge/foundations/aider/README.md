@@ -1,9 +1,7 @@
 ---
-name: aider-foundation
+name: aider
 description: "Use when building AI pair-programming harnesses: token-bounded repository context, repairable edits, explicit file and consent gates, plan-to-edit handoff, diagnostic feedback, provider policy, and scoped Git safety."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Aider: AI Pair-Programming Foundation
 

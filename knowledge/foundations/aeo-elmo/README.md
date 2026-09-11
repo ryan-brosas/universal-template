@@ -1,9 +1,7 @@
 ---
-name: aeo-elmo-foundation
+name: aeo-elmo
 description: "Use when building AI-visibility (AEO/GEO) tracking: multi-provider answer-engine adapters, citation extraction from raw LLM/scraper payloads, mention-based Share of Voice, history-metered per-target scheduling with failure backoff + maintenance self-healing, and encrypted credential storage."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Elmo (aeo-elmo) Foundation
 

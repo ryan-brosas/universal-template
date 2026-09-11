@@ -1,9 +1,7 @@
 ---
-name: opencode-foundation
+name: opencode
 description: "Use when building client/server coding-agent harnesses: shadow-git snapshot undo, deferred-suspension permission models, protocol-first API codegen, and multi-surface clients."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # OpenCode Foundation
 

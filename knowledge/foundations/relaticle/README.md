@@ -1,9 +1,7 @@
 ---
-name: relaticle-foundation
+name: relaticle
 description: "Use when porting Relaticle CRM contracts — per-import throwaway SQLite stores, set-based match resolution, serialized AI chat turns with classified retries, human-approval pending-action protocol, anchor-reserved context ledgers, journal-first credit metering, sysadmin Stripe-customer workspace transfer with refusal halts, provider-enforced sequential agent writes with batch proposal envelopes, shared label→id custom-field bridges, availability-and-plan-gated model resolution ladders, rename-safe async conversation titling, key-rewrite orphan reservation sweeps, double-validated client-URL page-context binding, write-suppressed follow-up chips, DST-safe per-user task severity, locked pre-approval proposal editing, timezone-banded daily digest sends, deferred diff-based assignee fan-out, kanban boards over EAV columns with atomic moveCard, scheduled-deletion interstitial gates, webhook listener silent early-returns with release-not-drop retries, and EAV-aware activity-log exclusion lists."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Relaticle: multi-tenant CRM + AI-assistant foundation
 

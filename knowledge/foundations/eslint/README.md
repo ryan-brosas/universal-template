@@ -1,9 +1,7 @@
 ---
-name: eslint-foundation
+name: eslint
 description: "Use when building a lint rule engine or flat-config linter: the verify pipeline, config loading/validation and schema-driven cross-config merge algebra, worker-scaled file discovery, RuleTester harness, AST rule primitives, the code-path-analysis kernel, TokenStore cursor/location-index algebra, offset⇄line-column conversion, the verify-tail suppression split, the one-shot engine-bundle constructor with raw-options-vs-module-URL worker transport, fail-loud results-instance binding, the single run-tail result-cache reconcile, the typed warning-service dedup plane with worker-side channel muting, and the default-config lazy rules proxy."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # ESLint Foundation
 

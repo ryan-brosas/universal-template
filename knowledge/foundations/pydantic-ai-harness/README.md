@@ -1,9 +1,7 @@
 ---
-name: pydantic-ai-harness-foundation
+name: pydantic-ai-harness
 description: "Use when building a pydantic-ai agent harness: capability/toolset abstractions, context-window compaction, spend budgets, planning stores, subagent model menus, tool-output size bands, browser-use delegation plus Playwright browser and You.com web-research capabilities, sandboxed filesystem/shell hardening, runtime-authored capabilities, code-execution REPL driving, and exposing an agent over the Agent Client Protocol (ACP) to editors — turn commit/cancel discipline, approval scopes, byte-bounded streaming, session persistence, editor-native fs/terminal tools."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Pydantic AI Harness Foundation
 

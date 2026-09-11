@@ -1,5 +1,5 @@
 ---
-name: weaviate-foundation
+name: weaviate
 description: 'Use when porting or operating Weaviate-style vector-engine internals: HNSW filtered search (ACORN/SWEEPING/RRE), tombstone deletion, commit-log WAL rotation, and LSMKV memtable flush/compaction/recovery.'
 license: BSD-3-Clause
 metadata:
@@ -7,8 +7,6 @@ metadata:
   pin: main@adcffc5432aa797c60e3c4e479514054254fae2a
   graph-project: ext-weaviate
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Weaviate Foundation
 

@@ -1,9 +1,7 @@
 ---
-name: arbor-foundation
+name: arbor
 description: "Use when explicitly consulting pinned Arbor evidence for terminal input, follow-output, bounded scrollback eviction and alternate-screen history ownership."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Arbor foundation
 

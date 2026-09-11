@@ -1,9 +1,7 @@
 ---
-name: awaithumans-foundation
+name: awaithumans
 description: "Use when building human-in-the-loop (HITL) async agent workflows: long-poll reconnect loop, schema-driven form inference, magic-link action tokens, HKDF key separation, and idempotent task lifecycle."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # AwaitHumans Foundation: Human-in-the-Loop Async Task Platform
 

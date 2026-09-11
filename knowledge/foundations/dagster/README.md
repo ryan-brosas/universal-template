@@ -1,9 +1,7 @@
 ---
-name: dagster-foundation
+name: dagster
 description: "Use when building a workflow/DAG scheduler daemon: generator-driven daemon loops with heartbeat liveness, queued-run admission with priority+tag concurrency, cron catch-up windows, sensor/tick crash recovery, declarative-automation asset scheduling with versioned cursors, run monitoring timeout ladders, and auto-retry idempotence."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Dagster: Workflow Scheduler & Automation Daemon Foundation
 

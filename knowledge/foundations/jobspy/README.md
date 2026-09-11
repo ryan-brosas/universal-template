@@ -1,9 +1,7 @@
 ---
-name: jobspy-foundation
+name: jobspy
 description: "Use when scraping job listings across sites (LinkedIn, Indeed, Glassdoor, ZipRecruiter, Google, Naukri, Bayt, BDJobs): a unified Scraper abstraction, proxy rotation, salary/number parsing, and per-site adapter patterns."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # JobSpy Foundation
 

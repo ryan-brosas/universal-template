@@ -1,9 +1,7 @@
 ---
-name: crawl4ai-foundation
+name: crawl4ai
 description: Use when building or porting async web crawlers - anti-bot retry/detection tiers, smart cache validation, memory-adaptive dispatch, deep-crawl traversal guards, sitemap/Common-Crawl seeding, and recycled browser fleets - capsule-v2 source maps with decisive excerpts and graph retrieval.
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # crawl4ai: async crawler foundations
 

@@ -1,9 +1,7 @@
 ---
-name: listmonk-foundation
+name: listmonk
 description: "Use when porting double-opt-in subscriber lifecycles, side-effecting campaign dispatch scans, waitgroup-drained send pipes, multi-provider bounce webhooks, or dry-run-guarded arbitrary-query bulk operations — listmonk newsletter/campaign dispatch kernel."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # listmonk: campaign dispatch & subscriber lifecycle foundation
 

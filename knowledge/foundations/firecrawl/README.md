@@ -1,9 +1,7 @@
 ---
-name: firecrawl-foundation
+name: firecrawl
 description: "Use when porting web-scraping platform kernels: multi-engine waterfall orchestration, feature-flag retry ladders, tiered cancellation, credit pricing, crawl dedup state, and signed webhook delivery."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Firecrawl: Web-Scraping Platform Kernel Foundation
 

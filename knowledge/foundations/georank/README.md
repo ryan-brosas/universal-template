@@ -1,9 +1,7 @@
 ---
-name: georank-foundation
+name: georank
 description: "Use when building AI-visibility (GEO/SEO) platforms: token-reservation metering for LLM spend with principal merge + stage idempotency, BYOK header contracts with SSRF-pinned provider HTTP, deterministic GEO page scoring (schema/meta/content/citations), Celery pipeline stage claims with reservation-scoped writes, and profiled keyword expansion with offline fallback."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # GEOrank (aeo-georank) Foundation
 

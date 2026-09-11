@@ -1,9 +1,7 @@
 ---
-name: open-interpreter-foundation
+name: open-interpreter
 description: "Use when porting open-interpreter's V8 code-action loop (exec tool), sandboxed host process, yield/wait cell lifecycle, or code-mode protocol."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # open-interpreter: Code-Mode Foundation
 

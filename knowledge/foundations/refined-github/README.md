@@ -1,9 +1,7 @@
 ---
-name: refined-github-foundation
+name: refined-github
 description: "Use when building browser extensions/userscripts that overlay SPAs: feature lifecycle with per-run abort, CSS-animation element observation, API wrappers with write guards, hotfix kill-switches, and DOM-safe dedup."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Refined GitHub: SPA-Overlay Extension Foundation
 

@@ -1,9 +1,7 @@
 ---
-name: openai-agents-foundation
+name: openai-agents
 description: "Use when building multi-agent frameworks: guardrail tripwires running parallel to generation, typed handoffs with history filtering, serializable human-in-the-loop run state, and the turn-resolution ladder that turns model output into action."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # OpenAI Agents Foundation
 

@@ -1,9 +1,7 @@
 ---
-name: omarchy-foundation
+name: omarchy
 description: "Use when consulting pinned Omarchy evidence for staged theme activation and independent palette-reader failure boundaries."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Omarchy foundation
 

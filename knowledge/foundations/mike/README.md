@@ -1,9 +1,7 @@
 ---
-name: mike-foundation
+name: mike
 description: "Use when porting MikeOSS legal-AI platform contracts: nonce-fenced prompt-injection spotlighting, server-side quote verification, HMAC download tokens, shared-project access ladders, or SSE tool-stream choreography."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Mike (MikeOSS): Legal-AI Chat & Document Foundation
 

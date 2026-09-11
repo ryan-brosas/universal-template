@@ -1,9 +1,7 @@
 ---
-name: localterm-foundation
+name: localterm
 description: "Use when building terminal UIs, terminal rendering, pi bash-tool security, daemon power keep-awake, multi-user auth/identity planes (trusted-proxy headers, WebAuthn passkeys, OIDC authorization-code+PKCE, HMAC session cookies), git worktree lifecycle management (porcelain listing, fresh-ref/PR creation, stale sweeps, PTY-occupied delete guards), or scheduled-automation/cron systems: streaming secret redactor, spawn-side env scrub, localterm terminal stack, caffeinate decision machine, Vixie-cron kernel with lossless preset recognition, minute-ticker scheduler, run handoff/claim, downtime reconciliation, and CDP terminal-use."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # LocalTerm Foundation
 

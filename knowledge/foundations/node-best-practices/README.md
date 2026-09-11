@@ -1,9 +1,7 @@
 ---
-name: node-best-practices-foundation
+name: node-best-practices
 description: "Use when porting Node.js production practice contracts: error-handling and crash predicates, project structure, testing patterns, Docker/ops choreography, and the security plane (headers, sessions, password KDFs, JWT revocation, injection/ReDoS guards, brute-force limiters, secret hygiene, sandbox ladders, OWASP checklist)."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Node.js Best Practices Foundation
 

@@ -1,9 +1,7 @@
 ---
-name: nexus-public-foundation
+name: nexus-public
 description: "Use when porting Nexus Repository infrastructure contracts: freeze-aware task scheduling over Quartz, thread-scoped transactions with retry/backoff semantics, the capability lifecycle framework for plugin objects, blob-store location/soft-delete/S3 multipart mechanics, JWT-cookie sessions, double-submit CSRF, sandboxed JEXL/CSEL content selectors with parameterized SQL push-down, the repository view handler chain, and the plugin/boot/UI-extension system (descriptors, lifecycle phases, edition selection, script gating, state polling)."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Nexus Repository Foundation
 

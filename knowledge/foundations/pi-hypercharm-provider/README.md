@@ -1,9 +1,7 @@
 ---
-name: pi-hypercharm-provider-foundation
+name: pi-hypercharm-provider
 description: "Use when building a pi provider extension: stale-while-revalidate model catalogs with hot-swap, merge precedence over patch/custom/deprecated layers, teed-stream usage capture with settle barriers, agent_settled polling gates, never-throw account fetch ladders, slash-command/interactive settings over one config object, ANSI-aware width math, progressive-tier status widgets, magnitude-tiered number formatting, runtime API-key plumbing behind provider registration, streamSimple delegation adapters, offline catalog-sync choreography, and overlay-list promotion pruning."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Pi-Hypercharm-Provider: Provider Extension Foundation (SWR Catalog + Telemetry Status Line)
 

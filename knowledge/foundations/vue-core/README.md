@@ -1,9 +1,7 @@
 ---
-name: vue-core-foundation
+name: vue-core
 description: "Use when porting or building a proxy-based fine-grained reactivity kernel: Dep/Link dependency graph, pull-based computed ladder, effect lifecycle & scope disposal, reactive/readonly/collection proxies, array instrumentations, trigger fan-out, refs, and base watch."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Vue Core (@vue/reactivity): Proxy Reactivity Kernel Foundation
 

@@ -1,10 +1,8 @@
 ---
-name: qdrant-foundation
+name: qdrant
 description: "Use when porting or re-implementing filtered vector-search machinery: filterable HNSW builds, ACORN/graph dispatch decisions, cardinality-driven prefilter-vs-index planning, WAL durability, hybrid RRF fusion, prefetch-tree query planning, or flush-ordered post-optimize cleanup. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
 
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Qdrant: vector-engine foundations
 

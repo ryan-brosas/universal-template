@@ -1,9 +1,7 @@
 ---
-name: vitest-foundation
+name: vitest
 description: "Use when building a test runner or harness driver: single-flight run lifecycle, worker pool scheduling, retry/hook execution order, snapshot state, vi.mock hoisting, bail failure budgets, only/skip mode interpretation, each-title templating, expect.poll, fake timers, console interception, and spyOn restore semantics."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Vitest: Test-Runner Harness Foundation
 

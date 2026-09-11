@@ -1,9 +1,7 @@
 ---
-name: graphiti-foundation
+name: graphiti
 description: "Use when building agent memory over knowledge graphs: bi-temporal fact edges, arithmetic contradiction invalidation, hybrid-search resolution pipelines, and multi-driver graph abstractions."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Graphiti Foundation
 

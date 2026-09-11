@@ -1,9 +1,7 @@
 ---
-name: lancedb-foundation
+name: lancedb
 description: "Use when porting LanceDB SDK patterns: hybrid search fusion (RRF/rank/normalize), MemWAL LSM read routing + shard-writer writes, IVF/HNSW index build params, compaction/optimize ordering, and query plan/stream wrappers."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # LanceDB: embedded vector database SDK foundation
 

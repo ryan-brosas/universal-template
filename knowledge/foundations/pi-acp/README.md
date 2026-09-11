@@ -1,9 +1,7 @@
 ---
-name: pi-acp-foundation
+name: pi-acp
 description: "Use when building an Agent Client Protocol (ACP) adapter that bridges an external ACP client (JetBrains IntelliJ, Zed) to a single-session coding agent (pi): stdio NDJSON ACP server wiring, 1:1 session-to-subprocess mapping, pi RPC transport, turn state machine with agent_settled completion, monotonic tool-call statuses, ordered update emission, slash-command expansion, structured edit diffs, and an authenticated IPC bridge that exposes remote MCP tools as pi extension tools."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Pi-ACP-Jetbrain: ACP Adapter for a Single-Session Coding Agent
 

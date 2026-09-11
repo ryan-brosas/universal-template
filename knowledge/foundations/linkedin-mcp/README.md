@@ -1,9 +1,7 @@
 ---
-name: linkedin-mcp-foundation
+name: linkedin-mcp
 description: "Use when building a browser-automation MCP server over one logged-in profile: session-state persistence, multi-process daemon ownership (lock/lease/election), descriptor trust, container preflights, auth repair ladders, idle handoff, and tool serialization."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # LinkedIn MCP Foundation
 

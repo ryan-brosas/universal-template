@@ -1,9 +1,7 @@
 ---
-name: dsh-template-foundation
+name: dsh-template
 description: "Use when building a DeepSeek Harness (DSH) coding-agent template or harness: a dependency-free canonical check gate, a command-plugin that turns prompt files into slash-commands, a CDP browser-automation toolset, a profile patch layer, home config templates, and DSH workflow orchestration."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # dsh-template: DeepSeek Harness Coding-Agent Template Foundation
 

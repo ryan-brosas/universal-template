@@ -1,9 +1,7 @@
 ---
-name: agency-swarm-foundation
+name: agency-swarm
 description: "Use when porting multi-agent orchestration machinery from agency-swarm: synchronous send-message bus, per-agent tool concurrency guards, flow-wiring validation, runtime subagent registries, flat thread stores with pair-scoped history, guardrail retry loops, handoff reminders, deferred OAuth MCP activation, loop-affine proxies, fake-id stream normalization."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Agency-Swarm Foundation
 

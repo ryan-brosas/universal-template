@@ -1,9 +1,7 @@
 ---
-name: oh-my-pi-foundation
+name: oh-my-pi
 description: "Use when building or hardening an LLM agent harness: steering, compaction and context reduction; memory, patch editing, telemetry; plan handoff, durable workers, fanout, experiments, or advisor delivery."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Oh My Pi: Agent Harness Foundation
 

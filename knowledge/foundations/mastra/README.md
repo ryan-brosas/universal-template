@@ -1,9 +1,7 @@
 ---
-name: mastra-foundation
+name: mastra
 description: "Use when building a TypeScript agent framework or workflow engine — snapshot-persisted suspend/resume workflow DAGs, state-reader nested path navigation, agent-loop snapshot pruning, run-scope serialization boundary, resumable stream replay caching, agent tool memory isolation, Graph RAG serialization, LLM relevance scoring, ACP tool adapters, and the control-flow execution kernel (parallel/conditional/loop/foreach handlers with durable-engine hooks)."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # mastra: TypeScript Agent Framework Foundation
 

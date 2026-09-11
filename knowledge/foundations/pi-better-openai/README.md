@@ -1,9 +1,7 @@
 ---
-name: pi-better-openai-foundation
+name: pi-better-openai
 description: "Use when building a pi/OpenAI extension or any realtime-voice/terminal-image agent surface: layered config resolution with clamping, fast-mode payload injection, Codex OAuth credentials, usage polling with generation guards, cross-process floor arbitration for hardware ownership, mode-1004 terminal focus, barge-in echo gating, bounded web fetch, workspace-jailed image inputs, kitty frame animation, and diagnostic secret redaction."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # pi-better-openai: OpenAI Subscription Extension Foundation
 

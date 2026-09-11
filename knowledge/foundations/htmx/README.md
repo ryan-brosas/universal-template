@@ -1,9 +1,7 @@
 ---
-name: htmx-foundation
+name: htmx
 description: "Use when porting or embedding a hypermedia-driven AJAX/DOM kernel: attribute-inheritance ladder, trigger-spec grammar and dispatch FSM, extended selector engine, priority FormData collection with live proxy, request lifecycle with hx-sync queueing, response-handling table with HX-* control headers, swap/settle choreography with OOB + preserve pantry, hash-gated node processing, history cache LRU, boost/security gates."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # htmx: Hypermedia Interaction Kernel Foundation
 

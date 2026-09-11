@@ -1,9 +1,7 @@
 ---
-name: graphrag-foundation
+name: graphrag
 description: "Use when building knowledge-graph RAG: Map-Reduce global search over community reports, vector-seeded local mixed context, DRIFT expand-and-specialize querying, and monorepo storage/llm abstraction splits."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # GraphRAG Foundation
 

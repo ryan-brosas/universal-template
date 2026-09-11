@@ -1,9 +1,7 @@
 ---
-name: zendriver-foundation
+name: zendriver
 description: "Use when porting Python CDP (Chrome DevTools Protocol) automation code — websocket command correlation, stealth browser launching, element finding across shadow roots, React-safe input injection, network interception, or Cloudflare-challenge handling — without selenium or a code-generated client."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # zendriver: zero-dependency undetected Chrome automation foundation
 

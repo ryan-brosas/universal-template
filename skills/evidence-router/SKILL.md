@@ -8,9 +8,9 @@ disable-model-invocation: true
 # Evidence capability map
 
 Cold reference. **Evidence priority:** current project source/tests → project
-`reference/` / `reference/web/` when relevant → one applicable cold-foundation
-capsule or operational skill on a named gap → external source/docs/web only for
-that gap. No fixed tool chain.
+`reference/` / `reference/web/` when relevant → one applicable capsule reached
+through `../foundation-pack/SKILL.md`, or an operational skill on a named gap →
+external source/docs/web only for that gap. No fixed tool chain.
 
 | Need | Capability |
 |---|---|

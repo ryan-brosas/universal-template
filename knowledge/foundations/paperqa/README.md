@@ -1,9 +1,7 @@
 ---
-name: paperqa-foundation
+name: paperqa
 description: "Use when porting citation-grounded RAG machinery from paper-qa: evidence contexts, pqac keys, metadata ladders."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # paper-qa: Citation-Grounded RAG Foundation
 

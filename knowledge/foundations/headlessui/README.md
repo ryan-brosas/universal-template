@@ -1,9 +1,7 @@
 ---
-name: headlessui-foundation
+name: headlessui
 description: "Use when porting headless UI primitives: focus trap/tab-lock, focusable enumeration, outside-click, top-layer stacking, inert siblings, scroll lock + iOS touch locking, portal nesting, listbox state machine, form-field hoisting."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Headless UI: headless primitive contracts
 

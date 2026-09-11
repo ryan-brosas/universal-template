@@ -1,9 +1,7 @@
 ---
-name: storm-foundation
+name: storm
 description: "Use when porting STORM-style research pipelines: multi-perspective question asking, citation-grounded writing, reference unification."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # storm (Stanford STORM): Grounded Article Generation Foundation
 

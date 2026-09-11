@@ -1,9 +1,7 @@
 ---
-name: omarchist-foundation
+name: omarchist
 description: "Use when consulting pinned Omarchist evidence for theme-name polling and render-time palette invalidation limits."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Omarchist foundation
 

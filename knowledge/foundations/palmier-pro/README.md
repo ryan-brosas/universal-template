@@ -1,9 +1,7 @@
 ---
-name: palmier-pro-foundation
+name: palmier-pro
 description: "Use when porting an embedded agent runtime that drives a host app through tools — bounded tool-use run loops with orphan tool-result repair, provider-neutral SSE stream folding into UI snapshots, hostile-input tool-argument decoding, short-id round-trips between LLM and internal UUIDs, dual-origin (in-app + MCP) tool dispatch over one executor, and progressive-disclosure skill injection. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # PalmierPro: in-app agent runtime foundation
 

@@ -1,9 +1,7 @@
 ---
-name: locoagent-foundation
+name: locoagent
 description: "Use when building an autonomous browser-operating agent: registry-driven CDP Chrome lifecycle, workflow state machines with per-platform locking, check-before-act operation dedup, daemon/orchestrator scheduling, and agent-facing state injection."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # LocoAgent: Browser-Operating Agent Foundation
 

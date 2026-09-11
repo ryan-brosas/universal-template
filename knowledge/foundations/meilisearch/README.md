@@ -1,9 +1,7 @@
 ---
-name: meilisearch-foundation
+name: meilisearch
 description: Use when porting or debugging typo-tolerant full-text search internals — query-term derivation, query-graph construction, graph-based ranking rules, bucket execution, posting-list caching, or phrase resolution from meilisearch/milli.
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Meilisearch (milli): typo-tolerant search engine foundation
 

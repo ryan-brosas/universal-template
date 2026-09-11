@@ -1,9 +1,7 @@
 ---
-name: easyappointments-foundation
+name: easyappointments
 description: "Use when building appointment/scheduling backends: interval-subtraction availability ladders, multi-attendant group-slot capacity checks, provider-conflict gates with dual overlap grammars, any-provider resolution, action-matching webhook dispatchers, dual-mode API auth, relationship-scoped customer access, permission bitmasks, and best-effort calendar sync fan-out."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Easy!Appointments Foundation
 

@@ -1,9 +1,7 @@
 ---
-name: teable-foundation
+name: teable
 description: "Use when building multi-tenant data platforms on Postgres: computed-field outbox workers, fractional record ordering, DB-trigger undo capture, field dependency graphs, Result-style domain errors, command-replay undo/redo, dual-DB unit of work, fail-open distributed locks, schema-operation ledgers, realtime submit gates, managed full-text/substring search indexes (advisor→executor→reconciler, catalog-derived inventory, HypoPG plan validation, provider capability probing, n-gram semantics comparison), per-cell-type search predicates, computed recompute planning/backfill, enforce-grouped plugin pipelines, transactional computed orchestration with impact-closure fixpoints, and a durable BullMQ outbox trigger bridge with per-base lease admission."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Teable Foundation
 

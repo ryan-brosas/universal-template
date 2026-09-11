@@ -1,9 +1,7 @@
 ---
-name: theagenticbrowser-foundation
+name: theagenticbrowser
 description: "Use when building a Playwright browser agent: mmid↔accessibility-tree DOM representation with prune/unravel minimization, mutation-observer action feedback, JS-click degradation, planner→browser→critique loops with DOM-scrubbed critique input, unified OpenAI transcript synthesis, and pre/post screenshot VLM verification."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # TheAgenticBrowser: Browser-Agent Foundation
 

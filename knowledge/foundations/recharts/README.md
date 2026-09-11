@@ -1,9 +1,7 @@
 ---
-name: recharts-foundation
+name: recharts
 description: 'Use when porting or reimplementing axis tick generation: nice-number step algorithms (adaptive/snap125), fixed vs extending domain strategies, value→pixel tick mapping with band offsets, collision-aware label filtering, categorical pixel inversion, and immutable d3-scale wrapping.'
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Recharts: chart scale & tick pipeline foundation
 

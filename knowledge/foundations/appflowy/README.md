@@ -1,9 +1,7 @@
 ---
-name: appflowy-foundation
+name: appflowy
 description: "Use when porting AppFlowy's offline-first sync kernels — assembling CRDT objects with disk persistence and cloud sync, routing typed events across an FFI boundary, running QoS background task queues, reconnecting realtime sockets, or implementing a local server that satisfies cloud traits without a backend."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # AppFlowy: local-first collaborative workspace foundation
 

@@ -1,9 +1,7 @@
 ---
-name: biome-foundation
+name: biome
 description: "Use when building linters/formatters/language tooling: lossless CSTs with green/red splits, flat formatter IRs with best-fitting printing, rule engines with lazy diagnostics and positional suppressions, and event-stream parser drivers with buffered lookahead, speculative disambiguation, and marker-surgery recovery."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Biome Foundation
 

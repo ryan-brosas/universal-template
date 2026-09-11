@@ -1,9 +1,7 @@
 ---
-name: veda-foundation
+name: veda
 description: "Use when building a coding-agent oracle/verifier: factored verification checks, model/backend resolution with aliases and personas, parallel ensemble retries, resumable checkpoints, context slicing/token budgeting, worker-report handoff protocol, and rating-grade judging stats."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Veda: Coding-Agent Oracle Foundation
 

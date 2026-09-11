@@ -1,9 +1,7 @@
 ---
-name: camel-foundation
+name: camel
 description: "Use when porting CAMEL-AI multi-agent workforce orchestration foundation — supervisor decomposition, task bus, coordinator routing, agent pooling, quality gates."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # CAMEL-AI Workforce: multi-agent workforce orchestration
 

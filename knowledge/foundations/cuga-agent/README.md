@@ -1,9 +1,7 @@
 ---
-name: cuga-agent-foundation
+name: cuga-agent
 description: "Use when building LangGraph policy layers for agents: intent guards, playbooks, tool guides, tool approval HITL, output formatters, ToolGuard runtime enforcement plus its build-time code generation, policy storage/sync, agent-state reducers, decision observability, and the shared agent-loop kernel (CoreGraphAdapter, call_model routing, fenced-code extraction, approval interrupt/resume, execution-backend resolution, runtime tool injection), plus the provider-dialect structured-output chain factory, the three-tier tool-call budget, and the code-execution plane (unified charging entry, timeout/exit evidence recovery, two-tier AST security, JSON-safe variable capture, monotonic-safe clock freeze, remote sandbox transport, shell workspace isolation, sandbox session caching) — plus the platform-infra plane: total-context-aware summarization with hard-truncation fallback, slash-command soft dispatch with four-pass arg substitution, never-raise secret resolution/seeding, multi-issuer JWT/IAM validation, hybrid RAG…"
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Cuga Agent Foundation
 

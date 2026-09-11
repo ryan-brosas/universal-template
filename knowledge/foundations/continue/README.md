@@ -1,9 +1,7 @@
 ---
-name: continue-foundation
+name: continue
 description: "Use when building IDE autocomplete/inline-suggestion engines or their config layer: FIM prompt templating with token pruning, generator reuse across keystrokes, stream-filter heuristics, prefix-keyed LRU caching, next-edit edit-prediction, the YAML→runtime config compilation ladder plus its lifecycle plumbing, and the tool plane: gating/serialization boundary, never-reject dispatch funnel, four-family permission taxonomy with monotone clamping, terminal-security veto, MCP manager diff-reconcile and connect state machine, SSE OAuth token attach, login-shell PATH resolution for stdio servers, and a markdown-fence tool-call grammar for models without native tool calling."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Continue: Autocomplete & Next-Edit Foundation
 

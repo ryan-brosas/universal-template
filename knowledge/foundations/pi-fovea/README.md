@@ -1,9 +1,7 @@
 ---
-name: pi-fovea-foundation
+name: pi-fovea
 description: "Use when building a repo-mapping / code-graph context engine for coding agents: Chebyshev heat-diffusion relevance fields, foveated token-budget rendering with overflow artifacts, cross-language literal joins, declarative + statistically-discovered route anchors, honest incremental fact caches, turn-sync steering with a per-node surprise ledger, mutation-provenance journals attributing drift to sessions, progressive nested-repo disclosure, and hybrid grep routing."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Pi-Fovea: Foveated Repo-Mapping Extension (Heat-Diffusion Context Engine)
 

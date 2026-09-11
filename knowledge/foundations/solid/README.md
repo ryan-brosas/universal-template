@@ -1,9 +1,7 @@
 ---
-name: solid-foundation
+name: solid
 description: "Use when porting or building a fine-grained reactive UI framework: signal/memo kernel, pull-based topological updates, ownership & disposal tree, store proxies with keyed reconciliation, control flow, Suspense ladder, SSR shadow kernel + streaming hydration."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # SolidJS: Fine-Grained Reactivity Foundation
 

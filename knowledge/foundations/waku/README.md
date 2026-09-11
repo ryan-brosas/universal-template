@@ -1,9 +1,7 @@
 ---
-name: waku-foundation
+name: waku
 description: "Use when consulting pinned Waku evidence for signed archive staging, extraction validation order and cleanup ownership."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Waku foundation
 

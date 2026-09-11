@@ -1,9 +1,7 @@
 ---
-name: smolagents-foundation
+name: smolagents
 description: "Use when porting smolagents' code-action agent loop, AST Python sandbox, remote execution sandboxes, or minimal-agent ReAct patterns."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # smolagents: Code-Action Agent Foundation
 

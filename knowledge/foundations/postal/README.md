@@ -1,9 +1,7 @@
 ---
-name: postal-foundation
+name: postal
 description: "Use when building SMTP mail-server delivery engines: DB-backed message queues with atomic claim locks, worker processes with role election, guard-chain message processing ladders, SMTP session reuse across batches, SSRF-guarded webhook delivery, per-server sharded message databases."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Postal Foundation
 

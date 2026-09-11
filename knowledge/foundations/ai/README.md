@@ -1,9 +1,7 @@
 ---
-name: ai-foundation
+name: ai
 description: "Use when building LLM abstractions or chat/agent UIs: agent step loops with approval replay, typed output envelopes, history round-tripping, tool-drift fingerprints, stream shims, useChat/useObject hook state machines, RSC streamable value/UI protocols, and schema normalization."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # AI SDK Foundation
 

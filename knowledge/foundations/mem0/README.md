@@ -1,9 +1,7 @@
 ---
-name: mem0-foundation
+name: mem0
 description: "Use when building agent memory: memory add/extract/update/delete, scoped retrieval with metadata filters and reranking, vector-store backends, and SQLite history."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Mem0 Foundation
 

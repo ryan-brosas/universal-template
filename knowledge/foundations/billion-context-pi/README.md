@@ -1,9 +1,7 @@
 ---
-name: billion-context-pi-foundation
+name: billion-context-pi
 description: "Use when building long-context agent delegation and context management: per-turn context transforms, message-range compression, async subagent delegation, watchdogs, tool guardrails."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Billion-Context-Pi Foundation
 

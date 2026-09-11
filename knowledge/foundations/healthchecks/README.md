@@ -1,9 +1,7 @@
 ---
-name: healthchecks-foundation
+name: healthchecks
 description: "Use when building a dead-man's-switch heartbeat monitor or cron-watchdog service: grace-deadline state machines across simple/cron/OnCalendar schedules, alert_after partial-index polling, ping ingest transactions with run-ID duration matching, flip outboxes, DB token-bucket rate limiting with an S3 circuit breaker, inverted-prefix S3 pruning, SSRF-guarded egress, signed bounce ingestion, and uwsgi attach-daemon deployment."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # healthchecks: Heartbeat Watchdog Foundation
 

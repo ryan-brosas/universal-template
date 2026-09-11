@@ -1,9 +1,7 @@
 ---
-name: browser-harness-js-foundation
+name: browser-harness-js
 description: "Use when building a thin CDP/WebSocket bridge for browser agents: persistent eval daemon, target routing, a11y-tree compression and locators, consent-gated privacy-scrubbed action recording, hash-sealed evidence videos, and zero-dependency skill CLIs."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Browser Harness JS Foundation
 

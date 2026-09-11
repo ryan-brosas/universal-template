@@ -1,9 +1,7 @@
 ---
-name: codebase-memory-mcp-foundation
+name: codebase-memory-mcp
 description: "Use when porting codebase-memory-mcp's C internals: SQLite graph store pragmas/integrity/quarantine, atomic publish pipeline, incremental closure routing, MCP server surface (TOON, profiles, cancellation), daemon rendezvous/version-cohort IPC, watcher/supervisor resilience, or the foundation allocator/lock/log primitives."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # codebase-memory-mcp: code-graph engine — store, pipeline, MCP, and daemon kernel
 

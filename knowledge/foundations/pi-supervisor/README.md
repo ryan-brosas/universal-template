@@ -1,10 +1,8 @@
 ---
-name: pi-supervisor-foundation
+name: pi-supervisor
 description: "Use when porting a supervisor/steering loop over an LLM coding agent — LLM-judged done/steer/continue decisions at settled checkpoints, deterministic mid-run stuck signals, algorithmic conversation compaction for judge context, ineffective-steering escalation tiers, session-entry state persistence across compaction/restart, model-locked tool activation, or live streaming-reasoning widgets. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval."
 
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # pi-supervisor: agent supervision + steering foundation
 

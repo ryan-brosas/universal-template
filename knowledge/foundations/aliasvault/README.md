@@ -1,9 +1,7 @@
 ---
-name: aliasvault-foundation
+name: aliasvault
 description: Use when porting AliasVault's E2E-encrypted vault patterns — SRP wire-format auth, LWW merge-to-SQL core, append-only vault revisions, and zero-knowledge client planes.
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # AliasVault: E2E vault crypto & sync foundation
 

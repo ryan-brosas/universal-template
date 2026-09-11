@@ -1,9 +1,7 @@
 ---
-name: pi-fabric-foundation
+name: pi-fabric
 description: "Use when porting Pi Fabric internals: multi-host actor supervision, registered-tool capture and active-set ownership, capability advisories, memory indexing/lineage/search, agent transport/retry machinery, one-shot headless runner contracts with call-time capability rejection and protocol-gate error laundering, prewalk boundary execution choreography, per-backend terminal transport protocols (tmux/screen twins, herdr socket client, localterm pid liveness), spawned-worker argv/run-record contracts, byte-budgeted summary and write-diff renderers, sandboxed validWhile predicates, QuickJS guest embedding, risk-gated approvals, evidence-backed verification, durable residency, execution-trace audit planes, multi-host participant presence, exactly-once control commands and lifecycle subscriptions, the action registry invoke/catalog kernels, fabric_exec boundary repairs and result assembly, nested skill rewiring, the deterministic compaction engine, the agents-provider action surface (participant routing ladder,…"
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Pi Fabric Foundation
 

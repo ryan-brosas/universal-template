@@ -1,9 +1,7 @@
 ---
-name: django-foundation
+name: django
 description: Use when porting Django's WSGI/ASGI handler pipeline, sync/async middleware chain, URL resolver/reverse engine, or request/response primitives — capsule-v2 source maps with decisive excerpts and graph retrieval.
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Django: HTTP-core foundations
 

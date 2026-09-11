@@ -1,9 +1,7 @@
 ---
-name: agent-s-foundation
+name: agent-s
 description: "Use when porting screenshot-driven computer-use agents — grounding-model coordinate generation, eval-based grounded-action execution, code-agent delegation with step budgets, behavior-narrator trajectory annotation, or Best-of-N comparative judging."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Agent-S (gui_agents/s3): AgentS3 minimal GUI-agent loop foundations
 

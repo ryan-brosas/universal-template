@@ -1,9 +1,7 @@
 ---
-name: pipeshub-ai-foundation
+name: pipeshub-ai
 description: "Use when porting agent-loop machinery from pipeshub-ai: fixed step primitive, loop strategies, parallel tool dispatch, dependency-aware sub-agent spawning, context compaction, hook middleware kernel, control-plane wiring, coding-sandbox lifecycle."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Pipeshub-AI Foundation
 

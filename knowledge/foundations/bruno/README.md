@@ -1,9 +1,7 @@
 ---
-name: bruno-foundation
+name: bruno
 description: "Use when building API-client cores: TLS agent caching with LRU eviction, OAuth2 grant ladders + encrypted token vaults, PAC/system proxy resolution, cookie-jar wrappers, WebSocket connection FSMs, sandboxed expression interpolation."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Bruno Foundation
 

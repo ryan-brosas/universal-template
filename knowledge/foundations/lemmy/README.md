@@ -1,9 +1,7 @@
 ---
-name: lemmy-foundation
+name: lemmy
 description: "Use when building federation/dispatch engines: per-peer DB-backed activity queues with exactly-once cursors, exponential backoff shared across concurrent senders, modulo-sharded worker fleets, community inbox fan-out maps, Announce wrapping, signed inbound receive gates with dedup, and cross-vendor object round-trips."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Lemmy: federation protocol & dispatch engine
 

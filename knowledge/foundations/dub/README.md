@@ -1,9 +1,7 @@
 ---
-name: dub-foundation
+name: dub
 description: "Use when building background-job dispatch on a hosted queue, webhook delivery with failure escalation, short-link redirect middleware (geo/device/AB/bot), bulk CRUD APIs that preserve order and report per-item errors, API error envelopes, cursor+offset pagination, policy rate limiting, Redis locks, or multi-rail partner payout processing (Stripe Connect/stablecoin/PayPal/gift-card) with commission aggregation, referral rewards, and partner postbacks."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Dub Foundation
 

@@ -1,9 +1,7 @@
 ---
-name: cap-foundation
+name: cap
 description: "Use when building a screen-recording pipeline: multi-track studio recording actor (pause/resume segmented), crash-safe fragmented MP4 recovery with manifest ladders, browser MediaRecorder spooling, streaming multipart upload with uncertain-completion semantics, getDisplayMedia retry ladders, and VFR-safe duration/sync invariants."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Cap Foundation
 

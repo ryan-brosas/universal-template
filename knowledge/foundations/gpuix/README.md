@@ -1,9 +1,7 @@
 ---
-name: gpuix-foundation
+name: gpuix
 description: "Use when consulting pinned GPUIX evidence for window-option normalization, queued-event destruction, or render-driven native cleanup."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # GPUIX foundation
 

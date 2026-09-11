@@ -1,9 +1,7 @@
 ---
-name: browser-harness-foundation
+name: browser-harness
 description: "Use when building browser automation tooling: a CDP daemon that attaches to a real browser, high-level page helpers, action recording, and video composition — plus the IPC/auth/telemetry/self-heal plumbing around such a daemon."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Browser Harness Foundation
 

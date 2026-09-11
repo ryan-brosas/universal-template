@@ -1,9 +1,7 @@
 ---
-name: docmost-foundation
+name: docmost
 description: 'Use when porting docmost''s realtime collaboration kernel: Redis-synced multi-instance Yjs routing, WS auth ladders, debounced CRDT-to-SQL persistence, and page-tree permissions.'
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # docmost: realtime collaboration kernel
 

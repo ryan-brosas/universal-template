@@ -1,9 +1,7 @@
 ---
-name: zed-gpui-foundation
+name: zed-gpui
 description: "Use when consulting pinned Zed GPUI evidence for deferred appearance observer delivery and subscription ownership."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Zed GPUI foundation
 

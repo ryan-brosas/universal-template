@@ -1,9 +1,7 @@
 ---
-name: praisonai-foundation
+name: praisonai
 description: Use when porting PraisonAI agent-runtime machinery — LLM completion recovery ladders (classify → compress-context / fallback-model chain / bounded backoff), hard cost-budget guards, fail-closed BEFORE_LLM hook gates, streaming-first fallback routing that never double-executes tools, tool retry policies with denial-key short-circuits and non-idempotent guards, per-agent-instance circuit breakers with GC finalizers, hash-keyed tool-loop detectors, and guardrail regeneration with fail-closed LLM judges.
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # praisonai: Agent chat-and-tool-execution kernel
 

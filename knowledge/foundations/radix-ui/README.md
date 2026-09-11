@@ -1,9 +1,7 @@
 ---
-name: radix-ui-foundation
+name: radix-ui
 description: "Use when porting headless React primitive kernels: focus traps/roving tab stops, dismissable layer stacks, exit-animation presence FSMs, item-aligned select positioning, floating-ui middleware assembly, document-order collections."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Radix UI Primitives Foundation
 

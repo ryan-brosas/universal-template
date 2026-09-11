@@ -1,13 +1,11 @@
 ---
-name: open-computer-use-foundation
+name: open-computer-use
 description: "Use when porting minimal computer-use agent loops: sandbox tool dispatch, grounding clicks, multi-provider LLM shims, and keep-alive streaming."
 metadata:
   hermes:
     tags: [computer-use, agents, llm-providers, grounding, e2b, foundations]
     category: autonomous-ai-agents
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # open-computer-use: Minimal computer-use agent foundation
 

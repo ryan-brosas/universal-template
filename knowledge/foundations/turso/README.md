@@ -1,9 +1,7 @@
 ---
-name: turso-foundation
+name: turso
 description: "Use when building a SQLite-compatible storage engine: bi-temporal MVCC with Hekaton-style commit dependencies, checksum-chained WAL framing with three-phase commit, b-tree rebalancing, and pin-count durability."
 kind: foundation
-invocation: manual
-disable-model-invocation: true
 ---
 # Turso Foundation
 
