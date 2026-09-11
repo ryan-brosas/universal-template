@@ -49,7 +49,7 @@ Pass-7 quality-only closure pass (2026-08-26) @ UNCHANGED pin `18e177a65634…`:
 Revalidate `railway-template-nexus3` before porting: run `index_status`, `check_index_coverage`, `search_graph`, `trace_path`, and `get_code_snippet`. Record the graph root, branch, commit, mode, node/edge counts, freshness, and any coverage caveats; source and direct tests decide shipped claims.
 
 ## Boundaries
-Adopt the template-engineering contracts (bootstrap-once gate, consent gating, matched liveness budgets, static literal pins, fail-fast errexit budget, loopback-only privileged surface); adapt paths, UIDs, ports, and REST endpoints per product; omit Railway-specific wiring and the upstream Nexus product behavior itself (covered by `nexus-public-foundation`).
+Adopt the template-engineering contracts (bootstrap-once gate, consent gating, matched liveness budgets, static literal pins, fail-fast errexit budget, loopback-only privileged surface); adapt paths, UIDs, ports, and REST endpoints per product; omit Railway-specific wiring and the upstream Nexus product behavior itself (covered by `nexus-public`).
 
 ## Reference-file inventory
 

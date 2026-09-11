@@ -1,4 +1,4 @@
-# crewai-foundation — union reconciliation record (2026-08-24, commit ddc2c6a3)
+# crewai — union reconciliation record (2026-08-24, commit ddc2c6a3)
 
 ## What happened (concurrent-lane same-seam authoring, resolved as union)
 

@@ -1,6 +1,6 @@
 <!-- Preserved from the pre-foundation-skill-v1 loader. Detail remains historical and revision-pinned. -->
 
-# Meetily: meetily-foundation
+# Meetily
 
 ## Use this for
 Use when building local-first meeting-transcription summarizers, multi-provider LLM summary pipelines (chunk → combine → template → translate), English-canonical translation flows with result caching, or SQLite-backed regeneration with backup/restore. Source code and direct tests are ground truth; references carry decisive excerpts and graph retrieval.

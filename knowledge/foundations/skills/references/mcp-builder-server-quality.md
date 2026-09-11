@@ -37,4 +37,4 @@ await mcp.codebase_memory.search_graph({ project: "skills", query: "MCPConnectio
 ```
 
 ## Verdict
-Adopt: coverage-first tool design, annotation honesty, actionable-error rule, and the 6-property eval-question bar — all protocol-level and host-independent. Adapt language guides to your SDK version (protocol itself already covered by mcp-spec-and-servers-foundation). Omit Anthropic's doc-fetch mechanics. Caveat: reference/*.md guides are external-fetch dependent; scripts are the executable surface.
+Adopt: coverage-first tool design, annotation honesty, actionable-error rule, and the 6-property eval-question bar — all protocol-level and host-independent. Adapt language guides to your SDK version (protocol itself already covered by mcp-spec-and-servers). Omit Anthropic's doc-fetch mechanics. Caveat: reference/*.md guides are external-fetch dependent; scripts are the executable surface.
