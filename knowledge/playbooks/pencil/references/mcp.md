@@ -40,6 +40,33 @@ a layout-only frame — detaching an artboard to hold content destroys the libra
 component whose font is absent locally cannot be instantiated at all (`unloaded font`);
 report that gap instead of substituting a lookalike.
 
+## Customize assets and verify the visible result
+
+For original website composition (not exact reproduction), first use
+[Website visual direction](../../ui-ux-iteration-loop/references/loop-variants-and-gates.md#website-visual-direction).
+
+Library defaults are starting points, not requirements. Within the approved brief,
+mix suitable assets and adapt variants, text, typography, color, spacing, and optional
+slots. Inspect exposed properties first: remove irrelevant navigation icons, emojis,
+secondary labels, and actions through component properties rather than detaching.
+Inspect the resulting render; successful property writes can leave nested overrides
+unchanged. Correct remaining range-level text/paint overrides at their owning node.
+
+When project-specific token customization is authorized, derive an editable project
+collection from source variables and record source keys and intentional changes.
+Preserve mode and alias meaning; document any deliberate simplification rather than
+silently flattening it. Test resolved values on actual consumers, not token names:
+a plausible typography token can resolve to the wrong size or mode. Bind customized
+values instead of scattering raw overrides, and verify fonts actually render.
+
+Keep provenance and presentation checks separate. Resolve component masters and
+bindings, but report visible deliverable coverage separately from hidden/archive
+content and nested-instance totals. Hundreds of linked instances are not evidence
+of a well-designed page. Take a fresh render after the final fix; check optional
+content, text contrast, wrapping, clipping, alignment, and section duplication.
+A single inspected image or canvas search does not exhaust enabled libraries or
+user-owned marketplace assets. State the search boundary before declaring a gap.
+
 ## Screenshots
 
 - `save_screenshots` paths must sit inside the Figma bridge working directory (often the user home). `/tmp` is rejected.

@@ -12,7 +12,9 @@ recursively or treat a visual request as permission for unrelated redesign.
 
 - Frontend typography, spacing, forms, responsive behavior and states:
   [frontend-ui-implementation](../../knowledge/playbooks/frontend-ui-implementation/README.md).
-- Improve task flow or respond to vague usability feedback:
+- Original website/landing-page composition or visual art direction:
+  [Website visual direction](../../knowledge/playbooks/ui-ux-iteration-loop/references/loop-variants-and-gates.md#website-visual-direction).
+- Task-flow improvements or diagnosing usability feedback:
   [ui-ux-iteration-loop](../../knowledge/playbooks/ui-ux-iteration-loop/README.md).
 - Copy a Figma frame into Paper:
   [pencil](../../knowledge/playbooks/pencil/README.md).

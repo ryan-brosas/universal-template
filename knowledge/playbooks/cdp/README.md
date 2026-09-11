@@ -27,7 +27,7 @@ One persistent CDP `Session` held by a long-lived Node HTTP server, every `brows
 2. Connect with `session.connect()` (auto-detects a running browser) or resolve a WS URL explicitly.
 3. Pick a target (tab) and call typed CDP methods (`session.Page.navigate(...)`, `session.Runtime.evaluate(...)`).
 4. For multi-statement snippets, pass them via stdin heredoc and write `return X` explicitly.
-5. Check exit code and stderr for errors; use `--status` for health.
+5. Check exit code and stderr for errors; use `--status` for health. For missing sessions or uncertainty about visible progress, use [Connection: health versus task progress](interaction-skills/connection.md#health-versus-task-progress).
 
 ## How to use
 
