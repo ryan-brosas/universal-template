@@ -8,9 +8,9 @@ disable-model-invocation: true
 # Evidence capability map
 
 Cold reference. **Evidence priority:** current project source/tests → project
-`reference/` / `reference/web/` when relevant → one applicable cold-foundation
-capsule or operational skill on a named gap → external source/docs/web only for
-that gap. No fixed tool chain.
+`reference/` / `reference/web/` when relevant → one applicable capsule reached
+through `../foundation-pack/SKILL.md`, or an operational skill on a named gap →
+external source/docs/web only for that gap. No fixed tool chain.
 
 | Need | Capability |
 |---|---|
@@ -19,7 +19,7 @@ that gap. No fixed tool chain.
 | Runtime behavior | tests, debugger, runtime output |
 | Named inspiration repo | project `reference/<repo>/` + source/tests |
 | Live site capture | `reference/web/<site>/` or `web-reference` |
-| Stack patterns from prior implementations | `skills/*-foundation` + cited source |
+| Stack patterns from prior implementations | `knowledge/foundations` + cited source |
 | Code graph / cross-repo pattern index | `code-graph` profile: Codebase Memory → verify candidate in source |
 | Past attempts / lessons | Project-scoped session history (`/recall-session`); OpenViking only as an optional rebuildable cache |
 | Current library docs | official docs / Context7 |

@@ -45,8 +45,8 @@ scoring engine.
   skills require `disable-model-invocation: true`; vendor visibility follows
   its integration. Hot promotion needs recurring use and distinct demonstrated
   lift, not automatic publication of every useful skill.
-- `kind: foundation`: only for cold source evidence; follow
-  `references/foundation-kind.md` when authoring one.
+- Source evidence is not a skill: foundations live outside this tree under
+  `../../knowledge/foundations/`; follow `references/foundation-kind.md`.
 - Parse strict YAML: known scalar fields are strings; visibility flags are real
   booleans. Quote values containing colon-space or hash syntax.
 
@@ -70,7 +70,8 @@ generator or custom skill-validation pipeline. Do not modify the global skill
 tree to validate an unrelated external skill.
 
 Confirm referenced files exist, intended host discovery works, and changed callers
-still work. Keep foundation and hidden skills out of the intended hot host
-surface. Check diff hygiene. Review prose using `../house-writing-style/SKILL.md`; models review
+still work. Keep hidden skills out of the intended hot host surface;
+foundations live outside the skill tree entirely. Check diff hygiene. Review
+prose using `../house-writing-style/SKILL.md`; models review
 meaning, scripts check exact contracts. Report evidence, unmeasured claims, and
 remaining limitations separately.

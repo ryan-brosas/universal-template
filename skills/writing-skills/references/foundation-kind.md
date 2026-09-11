@@ -4,23 +4,27 @@
 
 A foundation is source-specific evidence distilled from one identified upstream
 or explicitly promoted owned source. It is not an operational procedure and is
-never model-visible by default.
+never model-visible: it lives outside host skill discovery.
 
-Its exact shape is:
+Its exact shape is a directory under `knowledge/foundations/`:
 
-```yaml
-kind: foundation
-invocation: manual
-disable-model-invocation: true
+```text
+knowledge/foundations/<name>/
+  README.md            provenance, recorded revision, topic map, retrieval rule
+  references/index.md  full inventory, provenance record, capsule map
+  references/*.md      capsules, the actual evidence
 ```
 
-The name and directory end in `-foundation`. The loader identifies provenance
-and the recorded revision, states that current project source, tests,
-requirements, and runtime behavior outrank the projection, and points to a
-preserved `references/index.md`. Treat every claim as historical rather than
-timeless. Search explicitly, open the index, choose one capsule matching the
-active question, and load only that capsule. Revalidate its cited source and
-revision before relying on it.
+`README.md` keeps frontmatter with `name`, `description`, and
+`kind: foundation` so the pack index can show a cue; invocation fields are not
+used. Register the new directory in the one matching file under
+`knowledge/foundations/categories/`. The README identifies provenance and the
+recorded revision, states that current project source, tests, requirements, and
+runtime behavior outrank the projection, and points to a preserved
+`references/index.md`. Treat every claim as historical rather than timeless.
+Search explicitly, open the index, choose one capsule matching the active
+question, and load only that capsule. Revalidate its cited source and revision
+before relying on it.
 
 A source study, `/learn`, repository index, summary, or completed project does
 not create or expand a foundation automatically. Foundation promotion requires

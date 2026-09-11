@@ -4,6 +4,12 @@ Evidence captured 2026-09-04 on `refactor/foundation-skills`. This is a
 migration/probe record, not a timeless host compatibility promise. Re-probe
 installed host versions before changing setup guidance.
 
+> Superseded layout: foundations no longer live under `skills/`. They moved to
+> `knowledge/foundations/`, reached through `skills/foundation-pack/SKILL.md`.
+> The counts and per-loader measurements below remain historical evidence for the
+> earlier skill-leaf layout; the host discovery measurements still describe how
+> hidden operational skills behave.
+
 ## Corpus result
 
 All 194 `*-foundation` directories moved from the retired top-level foundation

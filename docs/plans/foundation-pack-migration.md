@@ -29,7 +29,7 @@ Review metadata, references, and source evidence directly in future passes; neve
 
 ## Source and evidence
 
-- Foundation claims: `skills/*-foundation/`
+- Foundation claims: `knowledge/foundations/` (earlier snapshot: `skills/*-foundation/`)
 - Historical structural verification used the now-retired skill validator.
 - Snapshot triage bank: `foundation-pack-migration-triage-2026-09-02`
 - Retention/deferral based on direct source, tests, recorded pins, index coverage, and bounded probes. Codebase Memory stays a retrieval surface, never the source of truth.

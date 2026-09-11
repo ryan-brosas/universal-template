@@ -53,7 +53,7 @@ never become foundations (see the reference contract).
 1. **Examples beat specs**, 1–2 concrete examples from the reference one-shot what a spec takes pages to describe.
 2. **The reference is prior art, not authority**, the current project's requirements and gates decide.
 3. **One code reference at a time**; frontend synthesis may read several web references, each for a named quality.
-4. **A reference repository is never converted** into a foundation skill, index, or corpus by default.
+4. **A reference repository is never converted** into a foundation, index, or corpus by default.
 5. **Licensing obligations** are recorded when materially copying.
 
 ## Red Flags

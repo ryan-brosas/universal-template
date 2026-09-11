@@ -35,8 +35,9 @@ assess impact, then fix, defer, document, or reject with a reason.
 
 Skills supply context and shortcuts; the model owns the approach. Choose,
 combine, skip or adapt methods to the task. Ordinary work needs no prerequisite
-template infrastructure. Load only relevant context; cold skills and foundations
-are searchable beside this file under `skills/` (`skill-catalog` helps on a gap).
+template infrastructure. Load only relevant context; cold skills are searchable
+under `skills/`, and source evidence under `knowledge/foundations/` through
+`skills/foundation-pack/` (`skill-catalog` helps on a gap).
 Use helpers when they remove work or protect a real boundary.
 
 Delegate only when it materially improves parallelism, specialization, or context
