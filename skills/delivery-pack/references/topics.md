@@ -10,6 +10,7 @@ This is a routing index, not a reading list. Known procedure paths can be opened
 - [github-actions-engineering](../../../knowledge/playbooks/github-actions-engineering/README.md)
 - [github-contribution-opportunities](../../../knowledge/playbooks/github-contribution-opportunities/README.md)
 - [github-repo-setup](../../../knowledge/playbooks/github-repo-setup/README.md)
+- [local-service-durability](../../../knowledge/playbooks/local-service-durability/README.md)
 - [npm-trusted-publishing](../../../knowledge/playbooks/npm-trusted-publishing/README.md)
 - [pre-pr-validation](../../../knowledge/playbooks/pre-pr-validation/README.md)
 - [push-pr](../../../knowledge/playbooks/push-pr/README.md)

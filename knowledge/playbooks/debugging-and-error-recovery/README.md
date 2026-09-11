@@ -58,4 +58,5 @@ Original failure reproduced or documented as non-reproducible; root cause stated
 
 ## References
 
-N/A, no reference files; this skill is self-contained.
+- `../local-service-durability/README.md`, when the failure is a supervised local
+  service that crashes, restarts, or will not start.
