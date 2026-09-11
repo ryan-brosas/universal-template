@@ -1,6 +1,6 @@
 ---
 title: fabric-native-execution
-summary: Use when choosing an optional Pi Fabric execution capability or recovering from stale Fabric guidance; installed host schemas and package skills own the API.
+summary: Use when choosing an optional Pi Fabric execution capability, diagnosing unavailable tools, or recovering from stale Fabric guidance; installed host schemas and package skills own the API.
 kind: playbook
 ---
 
