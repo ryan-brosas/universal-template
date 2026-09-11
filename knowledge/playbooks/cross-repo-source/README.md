@@ -14,10 +14,6 @@ confirm findings in source before editing or claiming absence. Sourcebot is the
 single indexed cross-repository source: never co-load a second code-graph server
 for the same question.
 
-Retrieval and reasoning belong to the coding agent. Search, read the decisive
-source and tests, and reason directly; do not route the question through a
-delegated "ask the codebase" step that produces another model's interpretation.
-
 ## Corpus
 
 Sourcebot indexes a small deliberate corpus, not the public GitHub universe. The
@@ -64,6 +60,10 @@ which lives outside this template together with the index and database.
 Use one strong implementation per question. Compare it with the current project's
 constraints and decide ADOPT / ADAPT / OMIT per concern; never blind-copy.
 Provenance and licensing live in `../reference-driven-development/README.md`.
+Delegated research (`ask_codebase`) is opt-in and blocking: its contract forbids the
+call unless the user's prompt asks for it, so a broad question is a reason to offer it, not
+to invoke it. Once asked, bound the assignment with
+[the brief](references/research-brief.md), then read the decisive source yourself.
 
 ## Verification
 
