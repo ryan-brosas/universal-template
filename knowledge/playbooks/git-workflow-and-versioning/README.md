@@ -126,30 +126,6 @@ concurrent session can push to a merged branch, leaving commits no PR covers
 (`git fetch origin <branch> && git log --oneline <merged-head>..FETCH_HEAD`), and a
 stale remote-tracking ref makes that log look empty.
 
-## Rewriting an open PR branch on a protected base
-
-Rewriting an open PR branch can leave the PR reading unmergeable for a while. Observed:
-rebasing an open PR onto `main` (ruleset `21868040`, `ryan-brosas/universal-template`)
-left `mergeable_state` at `blocked` - "the base branch policy prohibits the merge" -
-for minutes, and it read `clean` again shortly after the next push, with no content
-change.
-
-The cause is unresolved, which is the reason to record it. Ruled out by direct checks:
-all commits authored and committed by the PR author, push actor the same author,
-`quality / required` green from app `15368`, `bypass_actors` empty - so no approval
-existed that could satisfy a requirement, and `require_extra_approval_for_unattributed_changes`
-does not apply here (it targets *Copilot* PRs opened without person attribution; see
-`github-repo-setup`). Treat `blocked` after a rewrite as a state to re-read rather than
-a verdict, and never as a reason to add an approval that cannot exist.
-
-- After rewriting an open PR branch, re-read `mergeable_state`
- (`gh api repos/OWNER/REPO/pulls/N --jq .mergeable_state`) once the required checks have
- reported, before calling the PR mergeable or blocked.
-- Do not reach for `--admin`: a ruleset with `bypass_actors: []` grants no bypass, and
- bypassing a genuine requirement is not the same as fixing a stale evaluation.
-- Prefer a new commit over `--amend`/rebase while the PR is open; a squash merge discards
- it anyway, and the rewrite is what puts the state in question.
-
 ## Common Rationalizations
 
 | Rationalization | Rebuttal |
@@ -170,8 +146,6 @@ a verdict, and never as a reason to add an approval that cannot exist.
 - Breaking change shipped as PATCH.
 - Force-push of shared history without explicit approval.
 - Rebasing a diverged branch without checking whether upstream already contains the work.
-- Rewrote an open PR branch (`--amend`, rebase) while it was open, then reported the PR
- mergeable without re-reading `mergeable_state`.
 
 ## Verification
 

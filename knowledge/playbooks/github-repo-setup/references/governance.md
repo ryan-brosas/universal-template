@@ -58,7 +58,7 @@ Solo baseline example (`ruleset.json`), applied and then read back:
 
 `integration_id: 15368` is the GitHub Actions app. For team repositories raise `required_approving_review_count` to 1+, set `required_review_thread_resolution: true`, and add CODEOWNERS-driven review only where ownership is real.
 
-`require_extra_approval_for_unattributed_changes` is the public-preview rule *Additional approval for unattributed Copilot pull requests*: it is enabled by default and adds one approval only when Copilot opens a PR under its own app identity instead of on behalf of a person. It does not add a requirement for a human author's own PR, so it is not a reason to expect a force-pushed branch to be blocked, nor to raise the solo baseline's zero approvals (see `git-workflow-and-versioning` for the unresolved post-rewrite `blocked` observation).
+`require_extra_approval_for_unattributed_changes` is the public-preview rule *Additional approval for unattributed Copilot pull requests*: it is enabled by default and adds one approval only when Copilot opens a PR under its own app identity instead of on behalf of a person. It does not add a requirement for a human author's own PR, so it is not a reason to expect a merge refusal, nor to raise the solo baseline's zero approvals (see `push-pr` for a post-push merge refusal that was first misattributed to this rule).
 
 Reconcile, do not blindly create. A POST always creates a new ruleset — repeated setup would stack duplicate protections instead of reaching the idempotent no-op. Always reconcile:
 
