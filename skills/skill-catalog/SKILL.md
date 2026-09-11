@@ -43,5 +43,6 @@ Frontmatter owns names, descriptions, invocation, and visibility. Hot promotion
 requires recurring need, reliable selection, and distinct demonstrated lift;
 missing telemetry is unknown, not evidence of disuse. After metadata changes,
 check explicit callers and host visibility, then run this checkout's publication
-checks. `../../scripts/skill-catalog.py` remains an optional diagnostic for list,
-search, context, and invocation-size reports; it is not a runtime prerequisite.
+checks. `../../scripts/skill-catalog.py` remains an optional maintainer diagnostic
+for the tracked-surface listing and the static hot/cold context gate; it is not a
+runtime prerequisite.
