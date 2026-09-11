@@ -18,7 +18,8 @@
     ],
     "design": [
       "paper",
-      "figma-bridge"
+      "figma-bridge",
+      "figma-console"
     ]
   }
 }
