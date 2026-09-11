@@ -6,7 +6,12 @@ selections. This is a declaration of capabilities, not an activation list.
 Connect a server only when a task needs it, using your host's documented MCP
 command or config file. Preserve unrelated settings, keep credentials in
 environment variables or a private host config, and never commit secret values.
-The `minimal` profile enables nothing.
+Read such a config by field name instead of printing it: a credential echoed
+into a transcript or command line is exposed even though the file is private
+(`knowledge/playbooks/security-and-hardening/README.md`).
+The `minimal` profile enables nothing. When a host enables or drops a declared
+server, update `servers.json` and the table below in the same change — the host
+config is private and local, this registry is not.
 
 ## Capabilities
 

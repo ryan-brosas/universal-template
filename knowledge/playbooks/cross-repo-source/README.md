@@ -54,6 +54,11 @@ which lives outside this template together with the index and database.
    or history matters.
 5. Report the repository, revision, and any coverage caveat. Results come from
    the index's snapshot, not live, and a search miss is not proof of absence.
+   The index advances on its own schedule, so before treating an answer as the
+   current revision — above all for a repository just changed — compare the
+   indexed commit with the repository head (`list_commits`). Otherwise the
+   answer can quote a superseded revision with confident, plausible line
+   numbers.
 
 ## Inspiration and adaptation
 
