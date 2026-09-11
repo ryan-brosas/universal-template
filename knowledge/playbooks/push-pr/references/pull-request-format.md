@@ -21,6 +21,10 @@ category each section must carry. Current template sections:
 
 - Every claim traces to real evidence: a diff, a command with its exit status,
   or a run link. Absent values are `None` or N/A, never fabricated.
+- The body describes the final commit, not an earlier revision: when a fix lands
+  after the PR opened, re-derive the affected sections from the current range in
+  the same pass. A claim that was true only of a superseded commit is stale
+  evidence a reviewer reads as current.
 - Visual changes need actual before/after rendered evidence; text-only changes
   state N/A.
 - Metadata (labels, reviewers, milestone) is set by repository automation or
