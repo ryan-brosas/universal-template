@@ -1,49 +1,55 @@
-# Evidence Contract
+# Evidence, explanation, and scope
 
-## Authority ladder
+## Establish what happened
 
-1. Current source, tests, runtime behavior, and explicit user requirements establish what is true now.
-2. Raw current-session events, session JSONL, and supplied transcripts establish what happened.
-3. Fabric recall is a locator over session evidence.
-4. Hindsight recall and reflection are rebuildable projections that suggest patterns.
+Raw session events, actual tool output, supplied transcripts, user corrections,
+and real changes establish the work performed. Current source, tests, requirements,
+and runtime behavior establish what is true now. A historical success may no longer
+apply after the implementation changes; retain both the result and its conditions.
 
-Never promote a projection-only claim. Follow its provenance to raw events or label it unresolved.
+History search, recall, or reflection services are optional locators and pattern
+suggesters. Fabric, Hindsight, and other providers are not prerequisites, and their
+summaries are not independent corroboration. Retrieve the smallest supporting
+range. If raw evidence is unavailable, qualify or defer the claim rather than
+inventing provenance. Do not duplicate session history in a permanent artifact.
 
-## Minimum evidence ledger
+## Explain the useful experience
 
-For each candidate record:
+For each meaningful candidate, consider naturally:
 
-- lesson
-- authoritative event/tool-output references
-- projection references, if used
-- counter-evidence and contradictions
-- recurrence and affected scopes
-- present-source check
-- failure cost
-- proposed owner and disposition
-- confidence
+- What action, decision, correction, or sequence led to which observed outcome?
+- Which evidence supports the explanation? What else could explain it?
+- Was a success due to the technique, the input, environment, or constraints?
+- What is demonstrated, what is plausible, and what would distinguish them?
+- When could future work reuse the lesson? What boundaries or counterexamples matter?
+- What owner could change the outcome, and what would show the change helped?
 
-Keep this ledger in the working response or temporary files. Do not create another permanent session summary; raw history already owns that evidence.
+These are reasoning questions, not required fields, a schema, or a scoring rubric.
+A temporary comparison can help complex work, but needs no durable learning ledger.
+A successful recovery proves a usable recovery path under those conditions, not
+necessarily the cause of the original failure. Keep useful observations even when
+the causal explanation remains open; scope adoption to what was demonstrated.
 
-## Classification rules
+## Retain experience, not an inventory
 
-- **CODE:** reusable implementation belongs in a source module.
-- **GATE:** objective, low-false-positive regression belongs in a test, validator, lint, or CI check.
-- **SKILL:** repeated procedure with meaningful judgment changes agent behavior.
-- **PROJECT NOTE:** expensive rationale specific to one project.
-- **NOT WORTH SAVING:** cheap to rediscover, unstable, duplicated, or one-off.
+An answer to “where is this implemented?” normally belongs to source retrieval,
+Sourcebot, GitHub, tests, docs, or Git history. A diagnostic order that eliminated
+repeated investigation may be hard to recover from source alone. Preserve that
+order and its decision points, not a repository summary.
 
-A candidate may split: procedure into a skill, objective invariant into a gate, and invocation ergonomics into a prompt.
+One strong session may justify adoption: an expensive demonstrated failure, an
+explicit durable correction, or a clearly useful method need not recur first.
+Conversely, repeated preference does not establish a universal rule. A local
+constraint remains local unless evidence supports broader applicability.
 
-## Existing-owner rule
+After understanding the lesson, use [owner selection](../../leverage-capture/README.md).
+There is no priority order placing gates or skills ahead of code, configuration,
+project ownership, or no change. Split a lesson only where distinct responsibilities
+need distinct changes; keep a single source of truth for each.
 
-Search before creating. Prefer, in order:
+## Privacy
 
-1. strengthen the existing deterministic gate
-2. improve the existing skill owner
-3. update its reusable prompt
-4. create a new narrowly triggered skill only when ownership is genuinely distinct
-
-## Privacy and portability
-
-Operational skills and prompts must exclude raw transcripts, secrets, credentials, client identifiers, machine-specific session IDs, current repository inventories, and temporary file paths. Evidence paths may appear in the compilation report, not in the generalized procedure.
+Shared procedures retain the method and its conditions, not credentials, private
+client details, raw transcripts, machine-specific IDs, or temporary file paths.
+Use existing task/PR history for necessary evidence references. Do not save another
+session summary merely to prove that reflection occurred.

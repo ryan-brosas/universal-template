@@ -1,47 +1,65 @@
 ---
 title: session-improvement-compiler
-summary: Use when the user explicitly asks to turn current or historical session lessons, Fabric history, Hindsight memory, or a retrospective into durable improvements; triangulates evidence, improves the existing owner first, and routes outcomes to skills, gates, code, notes, or nothing.
+summary: 'Use for explicit requests to improve future work from session experience: understand successes and failures, choose the right owner, adopt within scope, and verify the benefit. Reflection alone does not authorize changes.'
 kind: playbook
 ---
 
-# Session Improvement Compiler
+# Learn from session experience
 
-## Core Principle
+Source retrieval recovers code knowledge. Sessions supply experience. Reflection
+helps explain it; improvement adopts valuable lessons into the correct owner.
+Skills and playbooks are only one possible destination.
 
-Compile evidence, not anecdotes. Raw session events and current source establish truth; Fabric recall locates evidence, while Hindsight recall/reflect proposes patterns. Every durable promotion must remain traceable to authoritative evidence.
+## Intent and scope
 
-## When to Use / NOT
+Recall answers a historical question. Reflection explains lessons without changing
+anything. An explicit improvement request (including `compile-session-improvements`)
+authorizes in-scope adoption. `compile-session-skill` specifically asks for a reusable
+method; it does not make every observation suitable for a skill.
 
-- **Use when:** the user explicitly requests continual improvement, session-to-skill compilation, or improvement from Fabric/Hindsight memory.
-- **NOT when:** merely recalling or reflecting, at every session end, or when no promotion was requested.
+A learning request does not authorize changes to other projects, external systems,
+or shared machine configuration. Name a concrete scope/access blocker rather than
+replacing a needed repair with global advice. Continue with authorized work.
 
-## Workflow
+## From experience to adoption
 
-1. **Bound the evidence.** Default to the current project and current session. Record named sessions, user-provided transcripts, and exact questions. Cross-project/global evidence requires explicit scope.
-2. **Triangulate cheaply.** Read the smallest sufficient raw event ranges. Use Fabric recall to locate ranges and Hindsight recall/reflect to surface candidate patterns. Projection output is a lead, never independent proof. If a projection provider fails, continue from accessible raw evidence rather than inventing its conclusion.
-3. **Build an evidence ledger.** For each candidate, record supporting events/tool outputs, counter-evidence, recurrence, current-source status, confidence, and scope. Preserve user corrections and failed rationalizations verbatim where useful (`references/evidence-contract.md`).
-4. **Classify before writing.** Apply `leverage-capture`: CODE, GATE, SKILL, PROJECT NOTE, REFERENCE, or NOT WORTH SAVING. Objective regression classes prefer deterministic gates. Repeated operational judgment may earn a skill. Project facts do not become global skills.
-5. **Find the owner.** Search existing skills, prompts, tests, validators, and docs. Improve the narrowest existing owner before creating another skill. Reject additions that create trigger collisions or duplicate truth.
-6. **Promote deliberately.** This invocation is an explicit promotion request. Carry forward confirmed, in-scope defects from earlier passes: fixing an easier neighbor or documenting the gap does not dispose of them. Implement each qualified repair or name a concrete blocker (missing authority, dependency, evidence, or unsafe scope); do not silently reclassify unfinished work as nothing worth saving. Follow `writing-skills` for skill changes; preserve canonical prompt/skill separation; keep raw transcripts and private identifiers out of operational instructions.
-7. **Verify end to end.** Run affected validators, catalog/collision checks, deterministic gates, prompt installation checks, and behavior pressure tests. RED may come from the selected real session; GREEN must demonstrate that the revised workflow rejects the same rationalization twice.
-8. **Report disposition.** Reconcile the report against every ledger candidate, including prior deferrals; a previous completion report is not closure evidence. List evidence used, files changed, checks, unresolved uncertainty, and material deliberately not saved. Stop when promotions are verified or no candidate qualifies.
+1. **Inspect the work.** Bound the session and relevant task. Use selected events,
+   tool results, user corrections, changes, tests, and runtime evidence. Inspect
+   successes as carefully as failures: a useful comparison, shortcut, implementation
+   pattern, or recovery can matter more than another prohibition. Any available
+   history service may help locate evidence; none is required. Follow summaries
+   back to supporting evidence, not whole-history dumps.
+2. **Understand the lesson.** Explain what happened, what seems to have caused it,
+   what is demonstrated versus plausible, and the conditions and exceptions. Check
+   current source before prescribing a repair. Consider counter-evidence and
+   alternative explanations. Use [evidence guidance](references/evidence-contract.md)
+   when attribution or scope is uncertain. Reason naturally; no mandatory ledger.
+3. **Decide what should change.** Separate retrievable repository facts from judgment
+   gained through using them. Ask what future work could reuse and whether retaining
+   it is worth maintaining. One strong result or durable user correction can justify
+   adoption; recurrence strengthens evidence but is not required. Use
+   [owner selection](../leverage-capture/README.md) to choose the kind of improvement
+   before searching for its narrowest existing owner. Nothing permanent is valid.
+4. **Adopt at that owner.** Fix code or configuration where they own the problem;
+   add regression coverage when useful. Preserve project rationale locally. For a
+   reusable method, retain its concrete technique, decision sequence, boundary, or
+   shortcut and make it discoverable from the task that needs it. Use
+   [writing-skills](../writing-skills/README.md) only for that destination. Prefer a
+   fitting existing owner, not an unrelated skill. Do not create a transcript digest
+   or another memory artifact. Keep private session details out of shared guidance.
+5. **Verify the effect.** Test changed code, exercise changed integration, or try a
+   representative task through the actual procedure/routing entry point. Check
+   important exceptions. A file write or rule quotation is not task success. Use
+   [representative cases](references/behavior-tests.md) to select relevant checks,
+   not a fixed ritual. No new catalog generator, custom skill validator, scoring
+   system, or mandatory report is needed.
+6. **Close honestly.** Explain the adoption, owner, evidence, and what future work
+   should do differently. Distinguish **saved** (written), **adopted** (the correct
+   owner/consumer now behaves differently), and **shown useful** (representative
+   work demonstrates benefit). State untested explanations and blocked candidates.
+   Do not lose an unfinished qualified repair because an easier document was edited.
 
-## Red Flags
-
-- Treating Hindsight or a summary as primary evidence.
-- Dumping entire session logs into model context or skill files.
-- Creating a new skill before searching for an existing owner.
-- Encoding deterministic requirements only as prose.
-- Promoting a one-off preference, stale fact, or project inventory.
-- Saying “learned” without a verified behavioral or mechanical change.
-
-## Verification
-
-The skill validator and catalog pass; prompt references resolve; objective gates catch the observed regression; behavior tests pass twice; every promotion cites authoritative evidence; the not-saved list is explicit.
-
-## References
-
-- `references/evidence-contract.md`, source authority, ledger, classification, and privacy rules.
-- `references/behavior-tests.md`, real RED cases and GREEN acceptance.
-- `../leverage-capture/README.md`, cheapest durable representation.
-- `../writing-skills/README.md`, skill authoring and validation.
+Evaluation should match consequence. Important workflow changes can justify a
+bounded outcome comparison with comparable starting conditions; do not invent a
+failing baseline. Existing traces may suffice for narrower repairs, with their
+limits stated. No change is complete merely because more instructions exist.
