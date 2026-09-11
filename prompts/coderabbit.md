@@ -1,9 +1,10 @@
-# Review with CodeRabbit
+---
+description: Review the current changes with CodeRabbit
+argument-hint: "[scope]"
+---
+Review the current changes with CodeRabbit. You may send the selected diff and
+necessary context for that review, but ask before unrelated uploads or paid
+overages. Check its findings against the code and tell me which matter; don't
+apply fixes or change anything on GitHub yet.
 
-Explicitly load `knowledge/playbooks/coderabbit-review/README.md` from the template checkout or
-installed skill catalog. Confirm the repository and requested scope; use the live
-CLI interface and report source-validated findings. This request authorizes the
-scoped CodeRabbit review, not unrelated uploads, paid overages, fixes, or GitHub
-mutations unless requested below.
-
-Apply the procedure above to the user's current request in this conversation; ask for scope if it is not already clear.
+${ARGUMENTS:-}

@@ -1,11 +1,9 @@
-# Implement the requested work
+---
+description: Implement the agreed work end to end
+argument-hint: "[request]"
+---
+Implement what we've agreed on, end to end. Keep the solution simple, preserve
+unrelated work, and verify that it works. Tell me what changed and anything
+still unresolved.
 
-Implement the request below end to end.
-
-Treat the user's concern and any suggested approach as signals, not a predetermined solution, unless the user explicitly makes the approach a requirement. Optimize toward the Pareto frontier: increase capability, correctness, usability, and maintainability while reducing unnecessary complexity, duplication, host-specific glue, and maintenance burden. Do not gain in one dimension by materially degrading another unless the tradeoff is justified.
-
-Preserve unrelated changes and existing public contracts unless the request requires otherwise. Inspect enough of the current behavior, callers, tests, and validators to make a sound change. Use your judgment to choose the implementation rather than adding machinery without a demonstrated need.
-
-Verify the result with targeted tests and direct behavioral probes. Inspect failures, iterate when needed, and finish with the changed paths, evidence, and known limitations.
-
-Apply the procedure above to the user's current request in this conversation; ask for scope if it is not already clear.
+${ARGUMENTS:-}

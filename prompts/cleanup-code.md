@@ -1,11 +1,9 @@
-# Clean up code without changing behavior
+---
+description: Clean up code without changing behavior
+argument-hint: "[scope]"
+---
+Clean up this code so it is easier to understand and maintain without changing
+its behavior. Leave unrelated work alone and check that it still works. If a real
+improvement would change behavior, tell me instead of hiding it in the cleanup.
 
-Clean up the code in the scope below while preserving behavior.
-
-Treat the user's concern as a signal, not a predetermined refactor. Optimize for greater clarity, maintainability, and consistency with less duplication, accidental complexity, and maintenance burden. Do not improve those qualities by materially degrading capability, correctness, performance, public behavior, data formats, or error semantics.
-
-Establish the relevant behavior before editing. Use your judgment to choose worthwhile simplifications and leave code alone when change would not produce a clear net improvement. Preserve unrelated files.
-
-Implement the cleanup, then run targeted tests and behavioral probes and inspect the resulting diff. If a valuable improvement requires a behavior change, report the boundary instead of hiding the change inside cleanup.
-
-Apply the procedure above to the user's current request in this conversation; ask for scope if it is not already clear.
+${ARGUMENTS:-}
