@@ -10,7 +10,8 @@ Use the nearest sufficient evidence. Known source paths can be read directly;
 research is not a prerequisite for every task. Read one relevant procedure and
 resolve its references and helpers relative to its own directory.
 
-- Retrieve code across indexed or external repositories:
+- Investigate indexed code (including broad questions in the current repository)
+  or retrieve external implementations:
   [cross-repo-source](../../knowledge/playbooks/cross-repo-source/README.md).
 - Study a reference repository or adapt prior art:
   [reference-driven-development](../../knowledge/playbooks/reference-driven-development/README.md).
