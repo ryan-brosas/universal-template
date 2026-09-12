@@ -36,13 +36,14 @@ this architecture. Its deployment, credentials, indexes, database and repository
 configuration live outside this template. This repository describes when to use
 it, not how it is deployed.
 
-Sourcebot is retrieval, never reasoning: search it, read the decisive source and
-tests, and let the coding agent interpret the evidence. Do not require it for
-local work, and do not add a knowledge layer in front of it. The host may
-configure a language model for Sourcebot's own chat and delegated-research
-features; that is a deployment decision and not this architecture's, so do not
-remove it on architectural grounds. Either way, do not delegate interpretation
-to `ask_codebase`: retrieve the evidence and read the source yourself.
+Sourcebot supports direct indexed retrieval and delegated investigation through
+`ask_codebase`. Prefer direct retrieval for narrow lookups and Code Ask for broad
+indexed-code questions; the coding agent owns decisions, edits and verification.
+Routing, bounded requests, revision caveats and fallback behavior belong to the
+[cross-repository source playbook](../knowledge/playbooks/cross-repo-source/README.md).
+Language-model configuration and tool-description restrictions belong to the
+host/deployment; do not add a second knowledge layer or require Sourcebot for
+every task.
 
 ## Repository hosting
 
