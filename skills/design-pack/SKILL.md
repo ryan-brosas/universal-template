@@ -14,6 +14,10 @@ recursively or treat a visual request as permission for unrelated redesign.
   [frontend-ui-implementation](../../knowledge/playbooks/frontend-ui-implementation/README.md).
 - Original website/landing-page composition or visual art direction:
   [Website visual direction](../../knowledge/playbooks/ui-ux-iteration-loop/references/loop-variants-and-gates.md#website-visual-direction).
+- A host, harness, or backend signal on the wrong surface or in the wrong position
+  (notification stack vs inline status, badge vs transcript annotation):
+  [authoritative-signal-surfacing](../../knowledge/playbooks/authoritative-signal-surfacing/README.md)
+  (engineering-pack owns the specialist).
 - Task-flow improvements or diagnosing usability feedback:
   [ui-ux-iteration-loop](../../knowledge/playbooks/ui-ux-iteration-loop/README.md).
 - Copy a Figma frame into Paper:
