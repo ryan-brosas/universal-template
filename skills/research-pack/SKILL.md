@@ -12,9 +12,6 @@ planning, implementation, verification and review when a code question would
 change the decision. Read one relevant procedure and resolve its references and
 helpers relative to its own directory.
 
-- A native app that does not feel adopted on a desktop flavor is an engineering
-  feel/lag question, not a flavor-integration survey:
-  [native-desktop-feel](../../knowledge/playbooks/native-desktop-feel/README.md).
 - Investigate indexed code across all four phases (including an indexed current
   repository) with Sourcebot's `ask_codebase`, or retrieve external
   implementations:
