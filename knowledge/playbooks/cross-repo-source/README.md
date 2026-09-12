@@ -72,8 +72,9 @@ Do not first complete the investigation and then ask Code Ask to repeat it.
    relevant tests, likely change points and unresolved questions. Distinguish
    source-backed findings from inference. Ask for the revision used if available;
    do not imply freshness it cannot establish. Do not request a full transcript.
-   In the current schema, revision and length requests are prompt instructions,
-   not enforced controls: there is no dedicated ref or output-length argument.
+   Use revision and output-length controls when the live deployment schema
+   exposes them. When those arguments are absent, requests for a specific
+   revision or answer length are prompt instructions, not enforced controls.
 5. Inspect only the decision-critical source and tests, check relevant local
    differences, then implement and verify locally. A citation makes a claim
    inspectable; it does not establish its correctness or freshness. Do not
