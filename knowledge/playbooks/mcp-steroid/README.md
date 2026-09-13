@@ -91,6 +91,9 @@ broken file costs one file:
   inline (PSI dumps of the offending expression). Crash isolation survives it, and
   the file often inspects cleanly on a retry, but later lines can fall outside a
   bounded output view: re-read the tail before concluding a path was skipped.
+- **Tag your own output and filter it.** Prefix every line the script prints (`SW|…`)
+  and keep only those lines before reading the result. An inline exception dump then
+  costs nothing, because it cannot crowd out findings inside a bounded view.
 
 ### Reading TypeScript unused-symbol findings
 
@@ -101,7 +104,10 @@ modules substituted by bundler aliases (grepping the import path will not see th
 read the alias map), guard stubs written to throw if called, methods invoked through
 a `#private` holder field (`this.#dialogs.hideVisible()` reads as unused), and
 constructor parameter properties (`private readonly intervalMs`) read only inside
-private methods.
+private methods, type-erased adapters (`asTerminalSessionService(...)`, where call
+sites resolve to the interface instead of the concrete class), and `await expect(x)
+.resolves/.rejects` chains (`ES6RedundantAwait` resolves only the sync `expect` type;
+dropping that `await` loses the assertion).
 
 Grep the symbol across `src` and `tests` before deleting anything, and keep the
 measurement honest:
@@ -113,6 +119,10 @@ measurement honest:
   capped list is an artifact. Count first, then read the hits.
 - A single hit repo-wide is the reliable signal (that is how a truly dead interface
   is distinguished from an aliased or dispatched one).
+- Confirm the tree did not move under you. On a shared branch `git log <base>..HEAD`
+  may list commits you did not author; a changed test count is explained by diffing
+  normalized test names between runs (strip per-test timings) before blaming your own
+  edit, and files those commits touched need a re-sweep before claiming coverage.
 
 ## Red Flags
 
