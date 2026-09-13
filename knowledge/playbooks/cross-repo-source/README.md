@@ -10,12 +10,13 @@ kind: playbook
 
 Delegate exploration and synthesis; retain responsibility for decisions, edits
 and proof. `ask_codebase` suits non-trivial planning, implementation,
-verification and review whenever the active request permits it: the standing
-prompts in `prompts/` name it, so invoking one satisfies its explicit-request
-gate. It keeps search trails and dead ends out of the main context. Use direct
-retrieval for narrow lookups, or whenever a 60-second delegated call would cost
-more than it saves. Read only the decisive source needed to act on its findings,
-not every file it investigated.
+verification and review whenever the active request permits it: these standing
+instructions and the `prompts/` adapters name it, so its explicit-request gate
+is already satisfied, and a broad indexed-code question should not fall back
+to manual search. It keeps search trails and dead ends out of the main
+context. Use direct retrieval for narrow lookups, or whenever a 60-second
+delegated call would cost more than it saves. Read only the decisive source
+needed to act on its findings, not every file it investigated.
 
 Optimize the whole task: main-context consumption, total work, latency and error
 risk. Delegation can save context without saving total inference cost or time.
@@ -45,7 +46,7 @@ which lives outside this template together with the index and database.
 | Question | Route |
 | --- | --- |
 | Narrow lookup: known path, precise symbol or small factual question | Direct read, grep or symbol lookup |
-| Non-trivial planning, implementation, verification or review of indexed code, including the current repository when revision coverage fits | Code Ask (`ask_codebase`) when the active request permits it; the standing prompts in `prompts/` name it, so invoking one satisfies its gate |
+| Non-trivial planning, implementation, verification or review of indexed code, including the current repository when revision coverage fits | Code Ask (`ask_codebase`) — these standing instructions name it, so its explicit-request gate is met |
 | Broad question depending on uncommitted changes or an unindexed branch | Local research agent when available; otherwise bounded local retrieval |
 | Implementation outside the corpus | GitHub discovery and direct source, or a scoped research agent |
 | Editing or proving working-tree behavior | Local source, Git, tests and focused probes |
@@ -73,13 +74,15 @@ new uncertainty. The compact brief, revalidation and cost controls live in
    admits `ask_codebase` only when the prompt names that tool, and the text is
    compiled into the server (upstream
    `packages/web/src/ee/features/mcp/server.ts`) rather than exposed as
-   configuration, so editing this playbook cannot relax it. The condition is met
-   when the active request names `ask_codebase`: a standing prompt in `prompts/`
-   counts once it is in effect for the turn, since it is then the user's own
-   instruction, while a template merely present in the repository is not.
-   Otherwise honor the restriction and use direct retrieval or a local agent.
-   Model configuration and any supported description override belong to the
-   deployment/host, not a speculative adapter in this template.
+   configuration, so editing this playbook cannot relax it. The condition is
+   met when the instruction in effect names `ask_codebase`: this playbook,
+   `AGENTS.md` and the host's standing guidance all do, and a `prompts/`
+   adapter counts once invoked, since it is then the user's own instruction. A
+   template merely present in the repository does not. Do not treat the
+   compiled descriptor as a prohibition on proactive delegation; only a
+   genuine capability limit — authorization, coverage, connectivity — changes
+   the route. Changing the descriptor itself is a deployment/host decision,
+   not a task for this template.
 3. Give Code Ask a bounded research contract: the decision to inform, explicit
    `repos`, relevant subsystem, specific questions and exclusions, plus the
    current goal, constraints and relevant revisions. Set `visibility: PRIVATE`;
