@@ -29,10 +29,13 @@ the whole catalog or copy its rules into a new checklist.
   inspect command output and exit status.
   A build or graph trace alone does not prove behavior. Check whitespace across
   the branch diff and local changes, not only the unstaged diff.
-- **IDE semantics:** for nontrivial symbol/API changes, discover available IDE
-  tools and use `../mcp-steroid/README.md`. Confirm the correct project and ready
-  index, inspect changed symbols and consumers, and review targeted diagnostics.
-  Do not silently apply broad quick-fixes or treat inspections as tests.
+- **IDE semantics:** for nontrivial symbol/API changes, call
+  `steroid_list_projects` and route only to the project matching the repository
+  under validation (`../mcp-steroid/README.md`). If no open project matches,
+  record `IDE semantics: N/A — no IntelliJ project for this repo` instead of
+  skipping silently. Confirm a ready index, inspect changed symbols and
+  consumers, and review targeted diagnostics. Do not silently apply broad
+  quick-fixes or treat inspections as tests.
 - **Cross-repo source:** when the change affects a seam shared with another
   repository, use `../cross-repo-source/README.md` to locate the counterpart and
   trace affected callers or dependencies, then confirm findings in current
@@ -60,7 +63,8 @@ Use the existing task record or PR-body draft for one compact record:
 
 - Scope: base/HEAD, local changes, acceptance checks and selected skills.
 - Evidence: command/probe, scope, result/exit status and decisive output or link.
-- Semantics: IDE/graph observations, source anchors, coverage and fallback limits.
+- Semantics: IDE/graph observations or a recorded `N/A` with its reason, source
+  anchors, coverage and fallback limits.
 - Findings: severity, location, resolution or remaining blocker.
 - Context: why the change exists, decisions, relevant documentation updates.
 - Verdict: READY or BLOCKED, with gaps and explicit exceptions.
