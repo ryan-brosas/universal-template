@@ -14,7 +14,7 @@ Skills and playbooks are only one possible destination.
 
 Recall answers a historical question. Reflection explains lessons without changing
 anything. An explicit improvement request (including `compile-session-improvements`)
-authorizes in-scope adoption. `compile-session-skill` specifically asks for a reusable
+authorizes in-scope adoption. `compile-skill` specifically asks for a reusable
 method; it does not make every observation suitable for a skill.
 
 A learning request does not authorize changes to other projects, external systems,
