@@ -1,90 +1,73 @@
 ---
 title: leverage-capture
-summary: Use when capture is explicitly requested, a hard procedure recurs, or an expensive failure or milestone yields a concrete reusable candidate; classify it into code, references, gates, skills, project notes, or nothing.
+summary: 'Use when a concrete lesson may improve future work: choose its natural owner or no permanent change after understanding the evidence. Not an automatic session-closing ritual.'
 kind: playbook
 ---
 
-# Capture Reusable Value
+# Choose where experience should change work
 
-## Core Principle
+## Qualification before destination
 
-Preserve reusable value in its cheapest appropriate representation, not everything,
-and not always a skill. "Nothing worth saving" is a valid, common outcome. This
-replaces the old capture-after-every-session ritual.
+Start with the lesson, not an artifact. What future action or outcome should change,
+under which conditions, and why does the experience support that change? Consider
+successful techniques as well as failures. A one-time observation may be disposable;
+a single expensive failure, durable user correction, or strong success may be enough.
+Recurrence is evidence, not an admission requirement.
 
-Knowledge about how we work may deserve to persist. Precomputed descriptions of
-code an agent can cheaply retrieve again do not: source, tests, and Git already
-hold that truth, so do not duplicate it.
+Do not preserve retrievable code inventories. Source, tests, documentation, Git,
+Sourcebot, and GitHub can recover repository facts. Experience can preserve judgment
+those facts alone do not reproduce: diagnostic order, comparison strategy, recovery,
+implementation tradeoffs, and verification techniques.
 
-## When to Use / NOT
+This procedure selects a destination for an understood candidate. For full session
+learning, use [session improvement](../session-improvement-compiler/README.md).
+Reflection can recommend changes but does not authorize mutation. Adopt only within
+the task's granted scope; explicit learning permission is not machine-wide permission.
 
-- **Use when:** the same hard procedure recurred; a failure was expensive to
-  diagnose; a non-obvious edge case will likely recur; a deterministic regression
-  should become a gate; a reusable implementation is worth extracting; an
-  architectural decision should be remembered; the user asks to capture the
-  session's reusable value.
-- **NOT when:** routine sessions, standard PR summaries, generic framework
-  knowledge, anything already obvious from source, or a capture ritual after every
-  session. HARD-GATE.
+## Match responsibility, then find its owner
 
-## Classification (per candidate)
+The following are alternatives, not a ranking:
 
-| Class | Test | Where it lands |
-|---|---|---|
-| **CODE** | Reusable implementation? | Actual code / library / project template |
-| **REFERENCE** | Upstream implementation or website worth keeping? | `reference/<repo>/` checkout or `reference/web/<site>/` capture per the `reference-driven-development` contract |
-| **GATE** | Deterministic regression class with low false positives? | Test / lint / CI check / validator script |
-| **SKILL** | Repeated procedure or hard-won operational method? | Skill leaf in the catalog (follows `writing-skills`) |
-| **PROJECT NOTE** | Critical rationale, operational constraint, or unresolved decision, expensive to reconstruct and not obvious from source, tests, Git, configuration, or session recall? | Smallest project-appropriate tracked location |
-| **NOT WORTH SAVING** | Cheap to rediscover, one-off, temporary | Nothing, explicitly record the decision |
+| Desired change | Natural owner and useful check |
+|---|---|
+| Implementation handles a case correctly or removes repeated work | Owning code/module; test its consumer and relevant behavior |
+| Integration uses the right setting or registration | Owning configuration; exercise the integration, not just parsing |
+| A deterministic regression is prevented | Relevant test/check with useful signal and acceptable false positives; fix implementation too when needed |
+| Future reasoning can reuse a technique, sequence, or boundary | Fitting playbook/skill; test discovery and application from the actual task |
+| Invocation reliably communicates intent or scope | Existing prompt/router; try a fresh representative request |
+| A local decision or constraint would otherwise be lost | Existing project decision/docs/configuration owner; verify its affected workflow can find and respect it |
+| A task needs a source reference or design capture | Existing reference contract, only for an actual reuse need, not to archive the session |
+| Evidence is weak, value small, transient, or already retained | No permanent change; explain a material uncertainty or deferral without creating a tracking artifact |
 
-Route each candidate to the *cheapest* class that preserves it. Do not force a
-skill when a gate, a line of code, or a project note does the job. Aesthetic
-preferences are not gates; only demonstrated regression classes with acceptable
-false-positive cost become gates.
+Search for the narrowest existing owner *after* choosing the responsibility. Reuse
+one that genuinely fits. If none fits and the lesson merits adoption, create a small
+owner discoverable from the relevant task; do not cram it into an unrelated skill.
+A candidate can require complementary code, configuration, and tests rather than
+one forced classification. Do not substitute a global prohibition for a local fix.
 
-## Threshold questions (all must roughly hold for SKILL or GATE)
+## Retain only enough
 
-1. Would this be re-derived at real cost without it?
-2. Is it stable enough to document (not mid-flip)?
-3. Is the representation cheaper than the re-derivation?
+The maintenance cost should justify the avoided rediscovery or improved outcome.
+Preserve concrete decisions and exceptions, not generic advice. Project-specific
+choices stay with the project. Speculative explanations remain qualified; a safe,
+observed technique can be adopted without pretending its cause is settled.
 
-A repository summary fails these tests: source is retrievable on demand and a
-summary only drifts from it. Do not add one because a repository was studied.
+Skill/playbook candidates follow [writing-skills](../writing-skills/README.md).
+References follow [the reference contract](../reference-driven-development/references/contract.md).
+Necessary project recovery state follows [goal-setup](../goal-setup/README.md), not a
+new session-memory system. No permanent change can be the correct outcome, but it
+must not conceal an unfinished qualified repair. Name concrete blockers and continue
+with authorized changes.
 
-## Workflow
+## Verify adoption
 
-1. Recall evidence from diffs, source, tests, and selected session events. Raw
-   session JSONL already owns history; never re-artifact it.
-2. Classify possible durable promotions. A reflection may recommend a SKILL
-   candidate, but only explicit `/compile-skill`, `/compile-session-improvements`,
-   or an equivalent direct user request may create it.
-3. Explicitly drop cheap or one-off material.
-4. Promote only survivors. Skill candidates follow the catalog authoring rules;
-   gate candidates need a demonstrated regression and a low-false-positive check;
-   references follow `../reference-driven-development/references/contract.md`;
-   project notes land in the smallest project-appropriate tracked location.
-5. Report what was deliberately not saved.
+Exercise the owning behavior and consumer with checks appropriate to the change.
+For procedures, start from the future task, find the method, and apply it; an orphan
+file is only saved. Test important boundaries without fixed pass counts or invented
+baseline failures. Use existing tests where they fit; do not create validation
+machinery to justify writing guidance.
 
-## Red Flags
-
-- Capture ritual after every session, PR, or subagent opinion. HARD-GATE.
-- Forcing everything into a skill.
-- Adding a repository summary, architecture digest, or source index to the template
-  because a repository was studied.
-- Aesthetic code-taste rules promoted to gates without demonstrated regressions.
-- Saving what source/Git/manifests already say.
-- Storing historical evidence in a new memory artifact; raw session JSONL already owns history. HARD-GATE.
-
-## Verification
-
-Each survivor exists in its claimed form (code compiles/used; gate fails on the
-regression class and passes clean cases; skill passes the validator; reference
-follows the contract; project note exists in its tracked location). The not-saved
-list is explicit.
-
-## References
-
-- `../writing-skills/README.md`, skill authoring grammar
-- `../reference-driven-development/references/contract.md`, reference rules
-- `../goal-setup/README.md`, where earned recovery or handoff state may live
+Report saved, adopted, and shown useful separately where the distinction matters.
+A working implementation or a successful representative task is stronger evidence
+than a file's existence. No speed or quality improvement is measured unless it was
+actually compared.

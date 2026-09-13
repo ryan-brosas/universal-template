@@ -6,7 +6,66 @@
 2. Paper Desktop must have the target file open. MCP talks to that file. Confirm with `get_basic_info`. Long agent sessions go stale ([docs/mcp](https://paper.design/docs/mcp), [docs/support](https://paper.design/docs/support)): restart the session, do not keep retrying dead tools.
 3. Paper: `get_guide` topic `figma-import` once per session, then `create_tokens`, `create_artboard`, `write_html`, `duplicate_nodes`, `get_screenshot`, `finish_working_on_nodes`.
 4. Figma: `figma-bridge` `get_variable_defs` (before tokens; select a node that has the variable assigned), `save_screenshots`, `get_node`, `get_metadata`. Official `get_design_context` if it authorizes. If it returns Unauthorized, stay on the bridge; do not invent.
-5. Large or deep Figma trees error. Split by frame or variant. Figma MCP often returns SVG fills as images and drops spacer frames; screenshot is still ground truth.
+5. Assets and library reuse: `figma-console` (Southleft, local mode) reaches what the bridge cannot — published-library components and variables over the Figma REST API, plus plugin-side console telemetry. Two prerequisites: the Desktop Bridge plugin running from `~/.figma-console-mcp/plugin/manifest.json` for live-document tools (without it, calls report `transport.active: none` rather than failing loudly), and `FIGMA_ACCESS_TOKEN` in the host config for the REST path. `figma_get_library_variables` stays plugin-only.
+   - Discover, then place. `figma_search_components` / `figma_get_library_components` with a `libraryFileKey` return keys for that library's component sets. A readable file with nothing published answers with an empty `totalComponentSets`; a 404 means the key is not readable at all. Neither is a broken token, so read the error shape before blaming credentials.
+   - Place with `figma_instantiate_component`, or inside `figma_execute` with `figma.importComponentSetByKeyAsync(key)` followed by `variant.createInstance()`. Prefer instantiating a real library component over redrawing it from primitives, and confirm `mainComponent.remote === true` with a resolvable key before calling the asset linked.
+6. Large or deep Figma trees error. Split by frame or variant. Figma MCP often returns SVG fills as images and drops spacer frames; screenshot is still ground truth.
+
+## Published libraries
+
+A file's Assets panel, not its canvas, is the source of truth: a canvas can hold zero
+components while three libraries are enabled. `figma_get_library_variables` names every
+enabled library and its collections, which shows who owns the system in play before any
+node is placed.
+
+No tool lists libraries, their file keys, or a team's files. Recover a missing key from the
+desktop client's own state — its recent-tabs setting and the browser or shell history that
+opened the library — then verify each candidate with
+`figma_get_library_components({ libraryFileKey })`: a readable library answers with its
+component count, while a wrong key answers `0` with `apiErrors` rather than throwing.
+
+Identify the owning library before composing. Resolve a placed instance's bound variables
+(`node.boundVariables` → `figma.variables.getVariableByIdAsync` → `variableCollectionId` →
+collection name) and match that name against
+`getAvailableLibraryVariableCollectionsAsync()`. An instance bound to `📐 Space`,
+`🟢 Radius` and `🌈 Theme` belongs to Atomize PRO whatever the file is called. Bind new
+containers to those same collections via `figma.variables.importVariableByKeyAsync(key)` so
+the tokens stay linked instead of copied.
+
+Cold imports from a large library are slow: a first `importComponentByKeyAsync` can pass
+30s, and the bridge then reports a timeout for work that never happened. Warm it once, then
+batch; `importComponentSetByKeyAsync` on the set key is the reliable route to a variant
+instance. Instances reject new children, so compose by placing instances as siblings inside
+a layout-only frame — detaching an artboard to hold content destroys the library link. A
+component whose font is absent locally cannot be instantiated at all (`unloaded font`);
+report that gap instead of substituting a lookalike.
+
+## Customize assets and verify the visible result
+
+For original website composition (not exact reproduction), first use
+[Website visual direction](../../ui-ux-iteration-loop/references/loop-variants-and-gates.md#website-visual-direction).
+
+Library defaults are starting points, not requirements. Within the approved brief,
+mix suitable assets and adapt variants, text, typography, color, spacing, and optional
+slots. Inspect exposed properties first: remove irrelevant navigation icons, emojis,
+secondary labels, and actions through component properties rather than detaching.
+Inspect the resulting render; successful property writes can leave nested overrides
+unchanged. Correct remaining range-level text/paint overrides at their owning node.
+
+When project-specific token customization is authorized, derive an editable project
+collection from source variables and record source keys and intentional changes.
+Preserve mode and alias meaning; document any deliberate simplification rather than
+silently flattening it. Test resolved values on actual consumers, not token names:
+a plausible typography token can resolve to the wrong size or mode. Bind customized
+values instead of scattering raw overrides, and verify fonts actually render.
+
+Keep provenance and presentation checks separate. Resolve component masters and
+bindings, but report visible deliverable coverage separately from hidden/archive
+content and nested-instance totals. Hundreds of linked instances are not evidence
+of a well-designed page. Take a fresh render after the final fix; check optional
+content, text contrast, wrapping, clipping, alignment, and section duplication.
+A single inspected image or canvas search does not exhaust enabled libraries or
+user-owned marketplace assets. State the search boundary before declaring a gap.
 
 ## Screenshots
 

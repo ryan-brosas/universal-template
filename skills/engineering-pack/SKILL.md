@@ -18,6 +18,9 @@ the selected procedure's directory, never from this router.
   [debugging-and-error-recovery](../../knowledge/playbooks/debugging-and-error-recovery/README.md).
 - Tests and regression coverage:
   [test-generation](../../knowledge/playbooks/test-generation/README.md).
+- A host/harness signal on the wrong surface or in the wrong position (durable
+  notification vs inline status, badge vs transcript annotation):
+  [authoritative-signal-surfacing](../../knowledge/playbooks/authoritative-signal-surfacing/README.md).
 - Green checks without evidence:
   [false-green-gates](../../knowledge/playbooks/false-green-gates/README.md).
 - Architecture or API contracts:

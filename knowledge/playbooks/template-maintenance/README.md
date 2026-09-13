@@ -60,6 +60,12 @@ verify propagation to those consumers by content, not by filename or path:
 alternate names (`CLAUDE.md`, `GEMINI.md`) and moved paths escape a name-based
 sweep, and a copied file goes stale where a symlink stays live.
 
+Host prompt linkage is selective, not automatic: a file in `prompts/` is
+unreachable until the host links it, so confirm the specific prompt resolves in
+the host prompt directory and report an unlinked one instead of treating the repo
+file as adopted. Because any prompt may be absent from a given host, a prompt must
+direct the reader to an in-repo playbook rather than to another prompt.
+
 ## References
 
 - `../../../CONTRIBUTING.md`, content review and retained helper checks.

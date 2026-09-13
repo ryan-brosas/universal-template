@@ -7,11 +7,14 @@ invocation: entry
 # Research pack
 
 Use the nearest sufficient evidence. Known source paths can be read directly;
-research is not a prerequisite for every task. Read one relevant procedure and
-resolve its references and helpers relative to its own directory.
+research is not a prerequisite for every task. Keep it available during
+planning, implementation, verification and review when a code question would
+change the decision. Read one relevant procedure and resolve its references and
+helpers relative to its own directory.
 
-- Investigate indexed code (including broad questions in the current repository)
-  or retrieve external implementations:
+- Investigate indexed code across all four phases (including an indexed current
+  repository) with Sourcebot's `ask_codebase`, or retrieve external
+  implementations:
   [cross-repo-source](../../knowledge/playbooks/cross-repo-source/README.md).
 - Study a reference repository or adapt prior art:
   [reference-driven-development](../../knowledge/playbooks/reference-driven-development/README.md).

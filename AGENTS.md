@@ -8,7 +8,7 @@ not exceptions to these rules. Surface conflicts for clarification.
 - Apply DRY, KISS, YAGNI and separation of concerns. Favor correctness, simplicity, reliability and useful modularity.
 - Inspect before editing. Treat current requirements, source, tests and runtime evidence as authority over summaries or model opinion. Verify assumptions; state uncertainty.
 - Keep one source of truth per fact or responsibility. Reuse shared logic, tests and configuration; derive secondary views.
-- Resolve code questions from authoritative source and tests. Prefer direct retrieval for narrow lookups and delegated research for broad investigations to keep exploration out of the main context. Use Sourcebot for intentionally indexed code, including the current repository when revision coverage fits; local tools or agents for working-tree-specific questions; GitHub to discover unknown implementations; official docs or Context7 for library documentation. Verify decision-critical findings against relevant source and runtime evidence. Optimize whole-task context, latency and correctness; no tool is a mandatory first step.
+- Resolve code questions from authoritative source and tests. Prefer direct retrieval for narrow lookups, and Sourcebot's `ask_codebase` across planning, implementation, verification and review for non-trivial indexed code, to keep exploration out of the main context. Use Sourcebot for intentionally indexed code, including the current repository when revision coverage fits; local tools or agents for working-tree-specific questions; GitHub to discover unknown implementations; official docs or Context7 for library documentation. Verify decision-critical findings against relevant source and runtime evidence. Optimize whole-task context, latency and correctness; no tool is a mandatory first step.
 - Retain knowledge only when it changes future behavior or preserves costly-to-reconstruct rationale. Do not accumulate repository summaries or duplicate facts available from source, tests, documentation or tooling.
 - Fix root causes at the lowest owning boundary. Refactor and clean the affected area fully; preserve unrelated behavior and user changes.
 - Verify affected components work together and satisfy product goals. Evaluate workflow and application gaps; act within scope, clarify scope changes.
@@ -19,6 +19,13 @@ not exceptions to these rules. Surface conflicts for clarification.
 - Expose configuration, signals and actions where requirements justify them; keep environment-specific values configurable.
 - Run focused tests and integration probes; inspect output before claiming completion. Add deterministic regression coverage for reproducible failures where valuable.
 - Maintain useful documentation and durable progress or issue records. Be concise; preserve exact commands, identifiers and evidence.
+
+## Asset-first design
+
+- Before designing or rebuilding UI, inspect existing Assets, libraries, templates, components, variants, styles and variable collections. Search beyond the current canvas; an empty published-component search does not establish that templates are absent.
+- Compose the actual deliverable from existing assets and templates. Preserve linked component instances and variable bindings; prefer existing variants and exposed properties. Make only necessary content, layout and sizing adjustments. Do not invent sections, visual assets, components, design tokens or replacement primitives unless explicitly authorized. Layout-only containers are allowed, not a loophole for drawing new UI.
+- Reuse/import source variables, including modes and aliases. If linking is unavailable, copy the source variables faithfully and bind the result, preserving a source mapping; do not invent values or silently flatten bindings. If no suitable source exists or access is blocked, report the gap and ask rather than fabricate.
+- Verify asset provenance and variable bindings in the finished deliverable, alongside visual inspection. A separate asset demo, a recreated local component or a screenshot is not proof that the deliverable uses library assets.
 
 ## Never / Avoid
 

@@ -71,9 +71,41 @@ await session.use(targetId)
 
 1. `await session.connect()` — auto-detect the running browser.
 2. `const tabs = await listPageTargets()` — see what real pages exist.
-3. `await session.use(tabs[0].targetId)` — route Page/DOM/Runtime/Network calls to that target.
-4. `await session.Target.activateTarget({ targetId: tabs[0].targetId })` — bring the tab visually to front.
+3. Match the intended tab by URL/title, then `await session.use(targetId)` — route Page/DOM/Runtime/Network calls to that target.
+4. If visible interaction is needed, `await session.Target.activateTarget({ targetId })` — bring that tab to front.
 5. Enable the domains you need: `await session.Page.enable()`, `await session.Network.enable({})`, etc.
+
+## Health versus task progress
+
+`--version` establishes the installed version; `--status` establishes daemon health.
+Neither proves useful browser work. When the complaint is lack of progress, inspect
+the current target and perform the next requested task, not an arbitrary scroll or
+activation of an already-open tab. Background DOM reads are useful for extraction;
+use rendered previews for visual judgments. Bring the browser forward when the task
+requires visible interaction, not as a substitute for an outcome.
+
+A successful CDP action acknowledges dispatch, not necessarily its rendered effect.
+Verify the relevant postcondition (URL, content, screenshot, or scroll position);
+an immediate read can precede the update. Use bounded readiness checks rather than
+interpreting that first read as failure or claiming success from dispatch alone.
+
+### Missing flat session
+
+For `CDP -32001: Session with given id not found`, do not infer an installation
+failure or a specific cause. Rediscover page targets on the connected browser:
+
+```js
+const tabs = await listPageTargets()
+return { count: tabs.length, tabs: tabs.map(t => ({ id: t.targetId, url: t.url, title: t.title })) }
+```
+
+The object wrapper makes an empty result explicit; the CLI prints bare `[]` as no
+output. Match the intended target by URL/title, then `await session.use(targetId)`
+to attach a new flat session. If the target is gone, create a research tab only if
+continuing that navigation is in scope; do not overwrite an unrelated user tab.
+Recheck its URL/content before resuming. Reconnect if the browser connection itself
+is lost. Daemon restart is for daemon problems, not the first response to a missing
+tab session; it discards persistent state.
 
 ## CDP target order ≠ visible tab-strip order
 
@@ -130,7 +162,7 @@ Two rules to stay under the limit:
    - `DOM.getDocument({ depth: 1 })` and drill with `querySelector`/`requestNode` instead of a deep dump.
    - `Network.getResponseBody` only when you need the body; otherwise read headers/length.
 
-If a call does close the socket (`CDP socket closed`), the **next call auto-heals** — `_call` detects the dead socket, reconnects once, and retries, so the daemon no longer needs a manual `await session.connect()`. What does *not* survive a drop is the **flat session**: the browser tears down `Target.attachToTarget` sessions when the WS closes, so the next call on the old `sessionId` rejects with `CDP -32001: Session with given id not found` — a clean signal to **re-`attachToTarget`** (the target itself persists). `globalThis.*` you set survive (they live in the daemon, not the socket). So after a drop: re-attach to your target, re-`use()` it, and continue. If you'd rather force a fresh connection, `await session.connect()` still works.
+If a call does close the socket (`CDP socket closed`), the **next call auto-heals** — `_call` detects the dead socket, reconnects once, and retries, so the daemon no longer needs a manual `await session.connect()`. What does *not* survive a drop is the **flat session**: the browser tears down `Target.attachToTarget` sessions when the WS closes, so the next call on the old `sessionId` rejects with `CDP -32001: Session with given id not found` — a clean signal to **re-`attachToTarget`** if the target still exists; rediscover targets before reattaching (see [Missing flat session](#missing-flat-session)). `globalThis.*` you set survive (they live in the daemon, not the socket). So after a drop: re-attach to your target, re-`use()` it, and continue. If you'd rather force a fresh connection, `await session.connect()` still works.
 
 ## Stale daemon — the running REPL lags the installed files
 

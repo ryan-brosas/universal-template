@@ -28,13 +28,19 @@ fixture encoding correct behavior failed inexplicably.
 1. **Read the counts, not the exit code.** `0 pass / N skip / 0 fail` means the
    suite did not run. Record pass/skip/fail by name; skip-on-green is an open
    question, never closure.
-2. **Triage the skip cause.** Environmental (missing build profile, flag,
-   checkout artifact) is fixed by changing the lane. Structural (a platform
-   `cfg!`, an upstream limitation such as a test renderer gated to other OSes by
-   the pinned runtime) is not fixable at this boundary: under explicit
-   enforcement, hard-fail on capable platforms and emit a loud named skip where
-   the platform cannot provide the capability, recording the structural reason
-   durably where the plan lives.
+2. **Triage the skip cause.** Distinguish environmental from structural before
+   changing the install. Find the skip predicate (`describe.skip`, `hasX()`, an
+   env flag) and evaluate it in the same runtime the suite uses. A missing
+   module, file, or symlink is environmental: fix the lane. An export that loads
+   while `hasX()` is false is structural — the class existing is not the
+   capability (for example a test renderer compiled only for other OSes). Read
+   the probe in the pin or binary you actually loaded (often a compile-time
+   `cfg!` or OS/feature gate). Confirm with indexed source whether any branch
+   enables this platform; if not, stop. Do not reinstall, rebuild, or open a
+   native-feature change at this boundary. Under explicit enforcement, hard-fail
+   on capable platforms and emit a loud named skip where the platform cannot
+   provide the capability, recording the structural reason durably where the
+   plan lives.
 3. **An inexplicably failing fixture means suspect the path is dead.** When a
    fixture encodes correct behavior and the code reads correct, the production
    path under test may never execute. Do not adjust the fixture to match

@@ -14,12 +14,17 @@ discovery, and load a playbook only when it helps the task.
 
 1. Inspect the current project's source, Git history, tests and development tools.
 2. Identify what is unknown and retrieve only the evidence needed.
-3. Use Sourcebot for intentionally indexed cross-repository source. Use GitHub
-   to discover implementations outside that corpus, and installed source,
-   official documentation or Context7 for library questions.
+3. For non-trivial work, use Sourcebot's `ask_codebase` across planning,
+   implementation, verification and review to trace flows and compare indexed
+   implementations; the standing prompts name it. Use GitHub to discover
+   implementations outside that corpus — discovering a repository does not mean
+   it is indexed — and installed source, official documentation or Context7 for
+   library questions.
 4. Read decisive source and tests. The coding agent reasons about the evidence,
    compares constraints, and chooses what to adopt, adapt or omit.
-5. Implement locally and verify with the project's tests, compiler, runtime and CI.
+5. Implement locally and verify with the project's tests, compiler, runtime and
+   CI. Consult code again whenever a phase exposes a new uncertainty. The
+   working tree and actual patch outrank an indexed snapshot.
 
 Local work stays local; a known file needs a direct read, not an external search.
 Sourcebot's deployment, credentials, repository configuration and indexes live

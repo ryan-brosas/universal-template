@@ -16,7 +16,7 @@ Test, lint, typecheck, build, or runtime failure; user-reported bug or unexpecte
 
 ## When NOT to Use
 
-Feature work with no failure signal (source-first implementation); pure research (`source-driven-development`).
+Feature work with no failure signal (source-first implementation); pure research (`source-driven-development`); a passing suite whose only signal is skips (`../false-green-gates/README.md`).
 
 ## Workflow
 

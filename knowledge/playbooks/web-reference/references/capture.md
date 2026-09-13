@@ -78,6 +78,12 @@ Extraction expressions for CSSOM, computed styles, and custom properties live in
 - **deep**: site evidence plus tokens, typography, spacing, shadows, breakpoints, motion, patterns, interaction states. Earned by the request, not the default.
 - **refresh**: capture into a new dated directory, then compare (`references/storage.md`).
 
+An asset list names candidate files; it does not judge whether artwork is usable. When
+the question is perceptual (source artwork, hero art, illustration sets), use the
+inspect-candidates-at-full-resolution technique owned by
+[website visual direction](../../ui-ux-iteration-loop/references/loop-variants-and-gates.md#website-visual-direction).
+Keep text reading for specs, pricing, and license terms.
+
 ## One-page fallback
 
 ```bash

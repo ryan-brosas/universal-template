@@ -29,6 +29,80 @@ Choose the loop from the decision at hand. Do not force an optimization experime
 3. Compare alternatives against the same tasks. Counterbalance order when learning could favor the later variant.
 4. Select by task evidence and constraints, not votes or visual preference. Then converge into the design system and run the full state matrix.
 
+## Website visual direction
+
+Before composing a website or landing page, inspect relevant visual references, not
+just search snippets. Keep the brief stable: page type, audience, primary action,
+required section order, available assets, and explicit unknowns. A request for a
+stronger hero does not authorize turning a homepage into a dashboard. Keep sample
+copy separate from real product claims; do not invent pricing or endorsements.
+
+Match research to the request. For live-site research, inspect the rendered site;
+static gallery captures cannot establish current behavior, motion, or responsive
+layouts. For asset scouting, inspect marketplace previews and list exact product,
+author, format, reusable parts, and limitations. Public availability does not prove
+ownership. If the user will check purchases and import files, continue public
+research rather than requiring login. Do not infer Figma variables from a listing
+that only promises styles or components.
+
+For import-oriented scouting, separate three kinds of evidence:
+- **Observed:** what the rendered preview actually shows.
+- **Advertised:** file formats, responsive screens, editable vectors, components,
+  or Auto Layout promised by the listing.
+- **Unverified until import:** actual masters, variable modes/aliases, bindings,
+  bundled assets and applicable reuse rights. Editable vectors are not proof of
+  components; components are not proof of variables.
+
+Inspect useful full-resolution preview sheets rather than only laptop mockups or
+cover thumbnails. A bounded DOM query for image URLs and dimensions can locate
+larger artwork; dimensions only identify candidates, so open the images and check
+that they depict the intended product. For very tall sheets, inspect readable
+sections. An avatar or unrelated recommendation can also be a large image.
+If the title, preview, and description disagree, identify the discrepancy and
+keep the affected inventory claim provisional instead of discarding all evidence.
+
+Rank imports by role and adaptation cost: a website foundation, supporting artwork,
+or optional product visual. Assign each candidate a concrete use and rejection
+reason; do not introduce a product capability just to use an attractive asset.
+Prefer one coherent foundation over mixing whole kits, while allowing compatible
+supporting assets. Obtain editable source files and their system pages, then verify
+real consumers and bindings through the
+[asset-reuse procedure](../../pencil/references/mcp.md#customize-assets-and-verify-the-visible-result)
+before calling the result drop-in ready.
+
+Choose references for specific decisions: hero focal point, typography, logo-strip
+treatment, section progression, and footer. State what to adapt and what to reject.
+Use one coherent direction rather than mixing fashionable features. A shortlist of
+URLs without visual inspection is discovery, not a visual teardown.
+
+Use a short pre-edit checkpoint in the conversation, not a new planning document:
+- **Brief:** page type, audience, primary action, required sequence, and unresolved
+  product facts. Inspect available context first; ask only questions that materially
+  change the design. If proceeding with a concept, label assumptions and preserve scope.
+- **Direction:** inspected reference, the specific visual decision it informs, and
+  what not to copy. More URLs do not substitute for deeper inspection.
+- **Asset map:** actual components/artwork for each section, intended customizations,
+  token sources, and gaps. Do not force already-loaded UI cards into every role.
+- **Acceptance:** coherent whole-page hierarchy, distinct section purposes, relevant
+  visuals, deliberate defaults, and legible type; verify the requested viewports and
+  state what interactions are actually implemented. Linkage is a separate check.
+
+Once those decisions are supported, build a coherent pass rather than waiting for
+the user to request every obvious cleanup. This is a working checkpoint, not an
+approval gate for every edit. For a small correction, inspect and fix the affected
+area without restarting discovery; exact reproduction follows its fidelity brief.
+Before editing, map each section to a distinct purpose and asset. Keep a product
+preview inside the homepage story; repeating the hero's chart below it is not new
+information. Background-color changes alone do not create section variety. Logo
+placeholders may reserve layout, but are neither customer proof nor a finished
+carousel; distinguish a static rail from configured interaction.
+
+Review the whole page after changes, then affected details: hierarchy, imagery,
+font suitability and legibility, transitions, redundant content, and footer.
+Linkage checks do not establish visual quality or user validation. If feedback
+repeatedly rejects the direction, stop patching and revisit references and the
+composition before another edit.
+
 ## Diagnostic loop: explain the earliest break
 
 1. Validate events and reproduce the flow before interpreting metrics.
