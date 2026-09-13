@@ -16,6 +16,8 @@ the selected procedure's directory, never from this router.
   [prototype](../../knowledge/playbooks/prototype/README.md) (shared with design-pack).
 - Failure, broken tests or unexpected behavior:
   [debugging-and-error-recovery](../../knowledge/playbooks/debugging-and-error-recovery/README.md).
+- Installing, updating, hardening, or recovering a supervised local service:
+  [local-service-durability](../../knowledge/playbooks/local-service-durability/README.md).
 - Tests and regression coverage:
   [test-generation](../../knowledge/playbooks/test-generation/README.md).
 - A host/harness signal on the wrong surface or in the wrong position (durable

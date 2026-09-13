@@ -16,6 +16,53 @@ Properties are printed in systemd's own order, not the order requested, and an
 empty property prints as a blank line, so match on the `Key=` prefix when
 parsing instead of counting lines.
 
+## Update the tree the unit actually runs
+
+One host commonly holds several runtime installs (`mise`, a bundled IDE runtime,
+`nvm`), each with its own global package tree. The caller's `PATH` decides which
+tree `npm install -g` and a tool's self-updater touch, and it is often not the
+tree named in `ExecStart`.
+
+`ExecStart` is a list property: `-p ExecStart --value` prints
+`{ path=... ; argv[]=... ; ; }`, so taking the first space-separated token yields
+`{` and a bogus `PATH`. Parse a field, not a token.
+
+```sh
+unit=myservice.service
+ExecStart=$(systemctl --user show "$unit" -p ExecStart --value)
+node_bin=$(printf '%s' "$ExecStart" | sed -n 's/.*path=\([^ ;]*\).*/\1/p')
+prefix=$(PATH="$(dirname "$node_bin"):$PATH" npm prefix -g)   # confirm, do not assume
+echo "unit runs:   $node_bin"
+echo "target tree: $prefix"
+```
+
+`argv[]=` in the same string carries the entry script when that path is needed.
+For the running process, `readlink -f /proc/<MainPID>/exe` reports the interpreter,
+while `/proc/<MainPID>/cmdline` may be rewritten by the daemon's process title and
+so is not a reliable source.
+
+The CLI that ran the updater and the tree `ExecStart` names often disagree, and
+the updater's version check reads its own tree, so it can report *already on the
+latest version* while the service-owned tree stays old. On a real host the
+interactive `command -v` and `npm root -g` resolved to a JetBrains-bundled
+runtime while the unit ran a `mise` install; the updater upgraded the bundled
+copy and left the unit's tree untouched. Replacing the service-owned tree
+directly:
+
+```sh
+systemctl --user stop "$unit"
+PATH="$(dirname "$node_bin"):$PATH" npm install -g pkg@<version>
+systemctl --user start "$unit"        # also on install failure: do not leave it down
+```
+
+Confirm the update landed at the service-owned tree, then probe the service:
+
+```sh
+"$node_bin" -p "require('$prefix/lib/node_modules/<scope>/<pkg>/package.json').version"
+systemctl --user show "$unit" -p MainPID -p ExecStart --value   # new pid, unchanged command
+command -v pkgdir-or-cli                                        # may still name the other tree
+```
+
 ## Local overrides in a drop-in
 
 `~/.config/systemd/user/myservice.service.d/override.conf`
