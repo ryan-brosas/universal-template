@@ -3,6 +3,7 @@
 Choose one matching procedure; its summary and body own the detailed contract.
 This is a routing index, not a reading list. Known procedure paths can be opened directly.
 
+- [case-study-pages](../../../knowledge/playbooks/case-study-pages/README.md)
 - [copywriting](../../../knowledge/playbooks/copywriting/README.md)
 - [documentation-and-adrs](../../../knowledge/playbooks/documentation-and-adrs/README.md)
 - [google-devdocs-practices](../../../knowledge/playbooks/google-devdocs-practices/README.md)

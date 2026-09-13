@@ -9,8 +9,11 @@ invocation: entry
 Read the procedure for the requested writing outcome, not every stylistic guide.
 Resolve relative references from the selected procedure's directory.
 
-- Conversion-focused copy, positioning, headlines, CTAs or onboarding text:
-  [copywriting](../../knowledge/playbooks/copywriting/README.md).
+- Case-study, customer-story, success-story or portfolio proof pages:
+  [case-study-pages](../../knowledge/playbooks/case-study-pages/README.md). This
+  specific procedure takes precedence over general page copywriting.
+- Other conversion-focused copy, positioning, headlines, CTAs or onboarding
+  text: [copywriting](../../knowledge/playbooks/copywriting/README.md).
 - Polish prose in the house style:
   [house-writing-style](../../knowledge/playbooks/house-writing-style/README.md).
 - Technical documentation and architecture decisions:
