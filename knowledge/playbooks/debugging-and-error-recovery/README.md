@@ -63,5 +63,7 @@ Original failure reproduced or documented as non-reproducible; root cause stated
 
 ## References
 
+- `references/ui-state-ownership.md`, when a filter, tab, selection, sort, or draft
+  changes after an action that should not edit it.
 - `../local-service-durability/README.md`, when the failure is a supervised local
   service that crashes, restarts, or will not start.
