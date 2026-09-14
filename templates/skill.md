@@ -47,7 +47,7 @@ Create `skills/<name>-pack/SKILL.md`:
 ```markdown
 ---
 name: <name>-pack
-description: "Use when <task family>; owns <decision boundary> and may compose with other relevant packs."
+description: "Use when <task family>; owns <specific decisions> and may compose with other relevant packs."
 invocation: entry
 ---
 
@@ -60,7 +60,7 @@ and paths from each procedure's directory, not this router.
 - <Specific intent>: [procedure](../../knowledge/playbooks/<name>/README.md).
 ```
 
-A task may load multiple packs; keep this router scoped to its decision boundary.
+A task may load multiple packs; keep this router scoped to the decisions it owns.
 Canonical playbook ownership remains singular even when another pack cross-links
 it. Keep routers small; large branches use a plain Markdown topic index. Never
 load a whole index recursively. No global workflow, installer, generated catalog

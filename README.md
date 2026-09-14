@@ -8,8 +8,9 @@ The host chooses the model and provides tools; this template teaches how to work
 Clone this repository into an unused directory. Configure your agent to read
 [AGENTS.md](AGENTS.md) and discover the task routers in `skills/`.
 Cloning alone does not configure your agent. Expose only `skills/` to skill
-discovery. For each task, load the smallest set of packs and playbooks that
-covers its active decision surfaces; this may be zero, one, or several.
+discovery. For each task, load zero, one, or several packs and playbooks: the
+smallest set that covers its independent subproblems, with each selected for work
+it owns.
 
 ## Work from evidence
 

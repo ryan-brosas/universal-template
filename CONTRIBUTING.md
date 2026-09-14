@@ -13,8 +13,9 @@ instead of storing summaries. Avoid publishing credentials, private
 configuration, or session artifacts.
 
 Pack descriptions should make selection and legitimate composition clear. Packs
-may overlap across distinct decision surfaces, but each must state the boundary it
-owns; do not encode a fixed one-pack limit or an exhaustive pairwise matrix.
+may compose when independent subproblems have different owners; each description
+must state what that pack owns. Do not encode a fixed one-pack limit or an
+exhaustive pairwise matrix.
 Specialists live in `knowledge/playbooks/<name>/README.md` with `title`, `summary`,
 and `kind: playbook` front matter, linked from one canonical pack index. Other
 pack indexes may cross-link the same playbook; label those entries with the owning

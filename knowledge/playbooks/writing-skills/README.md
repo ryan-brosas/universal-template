@@ -37,8 +37,8 @@ scoring engine.
 
 - Visible routers live at `../../../skills/<name>-pack/SKILL.md`. Use a
   directory-matching `name`, trigger-first `description` under 1024 characters
-  (aim for 512 or fewer), and `invocation: entry`. State the pack's decision
-  boundary and whether overlap composes or delegates; matching one pack must not
+  (aim for 512 or fewer), and `invocation: entry`. State the decisions the pack
+  owns and whether overlap composes or delegates; matching one pack must not
   imply that other materially relevant packs are excluded. Avoid exhaustive
   pairwise routing matrices.
 - Specialists live at `../<name>/README.md` with `title`, `summary`, and

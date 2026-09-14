@@ -7,10 +7,10 @@ kind: playbook
 # Find the missing specialists
 
 This is a fallback, not a phase before every task. Load a visible pack directly
-when it clearly owns part of the request. For compound work, split the active
-decision surfaces and select the smallest set of packs and procedures that covers
-them. The canonical specialist inventory is the parent `knowledge/playbooks/`
-directory, not a generated catalog.
+when it clearly owns part of the request. For compound work, separate the active
+subproblems by operational owner and select the smallest set of packs and
+procedures that covers them. The canonical specialist inventory is the parent
+`knowledge/playbooks/` directory, not a generated catalog.
 
 1. For this template, read `../template-maintenance/README.md`; for authoring or
    auditing packs and playbooks, also read `../writing-skills/README.md`.
@@ -27,8 +27,8 @@ directory, not a generated catalog.
 
 Selection cardinality and ownership are separate: zero, one, or several packs
 and procedures may be active, while each playbook remains linked from one
-canonical cold index. When packs overlap, use each for its named decision boundary;
-the narrower procedure governs decisions inside its scope.
+canonical cold index. When packs overlap, use each only for the decisions it
+owns; the narrower procedure governs decisions inside its scope.
 
 For a source-specific implementation question, read the relevant repository's
 current source directly, or retrieve an indexed or external implementation with
