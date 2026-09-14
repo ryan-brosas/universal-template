@@ -1,14 +1,15 @@
 ---
 name: design-pack
-description: "Use when designing or improving UI/UX, implementing frontend presentation, exploring visual prototypes, working in Paper/Figma, copying a design, checking pixel fidelity, or auditing accessibility. General code, data-model prototypes and tests belong to engineering-pack."
+description: "Use when designing or improving UI/UX, implementing frontend presentation, exploring visual prototypes, working in Paper/Figma, copying a design, checking pixel fidelity, or auditing accessibility. This pack owns visual and interaction decisions; combine it with engineering when implementing or testing them."
 invocation: entry
 ---
 
 # Design pack
 
-Read the matching procedure, then only the references needed for the design task.
-Resolve paths and helpers from that procedure's directory. Do not load the pack
-recursively or treat a visual request as permission for unrelated redesign.
+Start with the narrowest matching procedure and add another only for a distinct
+active design problem. Read only the references each needs and resolve paths and
+helpers from that procedure's directory. Do not load the pack recursively or treat
+a visual request as permission for unrelated redesign.
 
 - Frontend typography, spacing, forms, responsive behavior and states:
   [frontend-ui-implementation](../../knowledge/playbooks/frontend-ui-implementation/README.md).
@@ -32,6 +33,7 @@ recursively or treat a visual request as permission for unrelated redesign.
   [wcag-accessibility-practices](../../knowledge/playbooks/wcag-accessibility-practices/README.md).
 
 For Paper component systems, branding, markup, experience mapping or black-box
-reviews, select one [design topic](references/topics.md). Implementation logic
-and language conventions stay in engineering-pack; persuasive copy belongs to
-writing-pack. Known procedure paths can be read directly.
+reviews, select additional [design topics](references/topics.md) only for distinct
+active problems. Implementation logic and language conventions stay in
+engineering-pack; persuasive copy stays in writing-pack. Known procedure paths can
+be read directly.

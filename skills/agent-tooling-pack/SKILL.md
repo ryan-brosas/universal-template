@@ -1,13 +1,14 @@
 ---
 name: agent-tooling-pack
-description: "Use when building or troubleshooting agent integrations: Pi packages and extensions, provider authentication and model catalogs, or Fabric execution surface. Ordinary planning uses engineering-pack; external model consultation uses research-pack."
+description: "Use when building or troubleshooting agent integrations: Pi packages and extensions, provider authentication and model catalogs, or Fabric execution surfaces. This pack owns agent-runtime and integration contracts; combine it with engineering for implementation or research for external evidence. Ordinary planning alone does not trigger it."
 invocation: entry
 ---
 
 # Agent tooling pack
 
 These are optional tool-specific procedures, not the default engineering workflow.
-Read only the matching procedure. Resolve its helpers and references relative to
+Start with the narrowest matching procedure and add another only for a distinct
+active integration problem. Resolve each procedure's helpers and references from
 its own directory. Installed runtime guidance and live tool schemas own the
 current API; do not load a different kernel's instructions.
 

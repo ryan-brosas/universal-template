@@ -15,7 +15,7 @@ not exceptions to these rules. Surface conflicts for clarification.
 - Assess every finding, including low-impact ones: reproduce when practical, then fix, defer or reject with a reason.
 - Research uncertain or high-impact facts using authoritative sources and available tools; use research agents when helpful.
 - Delegate when it improves parallelism or context isolation. Keep one writer per ownership area; parallelize independent readers.
-- Load only relevant skills and references, never the whole library. Skills guide judgment; procedures belong in their owning playbooks.
+- Load the smallest set of skills and references that covers the task; this may be zero, one, or several skills when independent subproblems have different owners. Add a skill only for a subproblem it owns instead of forcing one pack or preloading the whole library. Skills guide judgment; each procedure keeps one canonical playbook file and one owning pack index even when other packs cross-link it.
 - Expose configuration, signals and actions where requirements justify them; keep environment-specific values configurable.
 - Run focused tests and integration probes; inspect output before claiming completion. Add deterministic regression coverage for reproducible failures where valuable.
 - Maintain useful documentation and durable progress or issue records. Be concise; preserve exact commands, identifiers and evidence.

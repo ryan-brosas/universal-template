@@ -1,14 +1,15 @@
 ---
 name: delivery-pack
-description: "Use when committing or reconciling Git, pushing, opening or reviewing PRs, shipping through merge, configuring GitHub or Actions CI, deploying, or publishing releases and npm packages. Local code/test failures belong to engineering-pack."
+description: "Use when committing or reconciling Git, pushing, opening or reviewing PRs, shipping through merge, configuring GitHub or Actions CI, deploying, or publishing releases and npm packages. This pack owns delivery state; combine it with the pack responsible for the artifact. Local code/test diagnosis remains engineering's boundary."
 invocation: entry
 ---
 
 # Delivery pack
 
-Choose the requested operation, not a larger lifecycle. Read its procedure and
-only the references needed. Paths and helper commands belong to the selected
-procedure's directory, not this router.
+Choose only the requested delivery operations, not a larger lifecycle. Start with
+the narrowest matching procedure and add another only when the requested workflow
+crosses delivery stages. Read only the references needed; paths and helpers belong
+to each selected procedure's directory, not this router.
 
 - Commit, branch, reconcile squash merges, version or tag:
   [git-workflow-and-versioning](../../knowledge/playbooks/git-workflow-and-versioning/README.md).
@@ -25,6 +26,7 @@ procedure's directory, not this router.
 - npm publishing from Actions:
   [npm-trusted-publishing](../../knowledge/playbooks/npm-trusted-publishing/README.md).
 
-For deployment, launch, contribution discovery or review-specific tooling, choose
-one entry in [other delivery procedures](references/topics.md). A push request
-never implies permission to merge. Trivial work needs no procedure ritual.
+For deployment, launch, contribution discovery or review-specific tooling, select
+additional [delivery procedures](references/topics.md) only for distinct active
+operations. A push request never implies permission to merge. Trivial work needs
+no procedure ritual.

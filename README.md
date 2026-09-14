@@ -8,7 +8,9 @@ The host chooses the model and provides tools; this template teaches how to work
 Clone this repository into an unused directory. Configure your agent to read
 [AGENTS.md](AGENTS.md) and discover the task routers in `skills/`.
 Cloning alone does not configure your agent. Expose only `skills/` to skill
-discovery, and load a playbook only when it helps the task.
+discovery. For each task, load zero, one, or several packs and playbooks: the
+smallest set that covers its independent subproblems, with each selected for work
+it owns.
 
 ## Work from evidence
 
@@ -35,7 +37,7 @@ configuration and indexes live outside this template. Add inspiration
 repositories only when real project needs show repeated usefulness or strategic
 value—not automatically after research.
 
-## Find a procedure
+## Find procedures
 
 | Pack | Task |
 | --- | --- |
@@ -46,6 +48,10 @@ value—not automatically after research.
 | [Writing](skills/writing-pack/SKILL.md) | Prose and documentation |
 | [Agent tooling](skills/agent-tooling-pack/SKILL.md) | Agent integrations and tool troubleshooting |
 | [Maintenance](skills/maintenance-pack/SKILL.md) | Maintaining reusable instructions |
+
+Packs compose when a task spans rows. Implementing a designed UI can load design
+and engineering; shipping it can add delivery. Use the smallest sufficient set,
+not a fixed one-pack choice or the whole library.
 
 ## Layout
 

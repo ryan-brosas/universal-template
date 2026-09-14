@@ -1,14 +1,15 @@
 ---
 name: maintenance-pack
-description: "Use when maintaining .agents/universal-template, writing or auditing packs/playbooks, fixing skill selection, finding a missing specialist, or turning session experience into the right improvement (code, configuration, tests, project decisions, prompts, or reusable methods). Not a prerequisite for ordinary project work."
+description: "Use when maintaining .agents/universal-template, writing or auditing packs/playbooks, fixing skill selection, finding a missing specialist, or turning session experience into the right improvement. This pack owns reusable-instruction maintenance and may combine with other relevant packs; it is not a prerequisite for ordinary project work."
 invocation: entry
 ---
 
 # Maintenance pack
 
-Use one procedure for the actual maintenance need. Resolve relative paths from
-that procedure's directory, not this router. Do not rebuild catalogs or create
-planning infrastructure as a prerequisite.
+Start with the narrowest procedure for the active maintenance need and add another
+only for a distinct maintenance subproblem. Resolve relative paths from each
+selected procedure's directory, not this router. Do not rebuild catalogs or
+create planning infrastructure as a prerequisite.
 
 - This template, instructions, prompts, MCP declarations or publication checks:
   [template-maintenance](../../knowledge/playbooks/template-maintenance/README.md).

@@ -3,7 +3,7 @@
 How future Claude finds your skill:
 
 1. **Encounters problem** ("tests are flaky")
-2. **Finds SKILL** (description matches)
+2. **Finds matching skills** (description matches one or more)
 3. **Scans overview** (is this relevant?)
 4. **Reads patterns** (quick reference table)
 5. **Loads example** (only when implementing)

@@ -34,10 +34,11 @@ Name evidence of the actual task outcome, not compliance with this document.
 ```
 
 Keep assets, references and helpers beside the playbook; resolve paths from that
-directory. Link the playbook from exactly one pack's cold index. Other packs may
-cross-link it, but do not copy its instructions. Preserve attribution and license
-metadata. Do not add `name`, `description`, invocation fields or `SKILL.md` to the
-playbook: those can turn ordinary content back into discovered skills.
+directory. Link the playbook from exactly one pack's cold index. Other pack indexes
+may cross-link it; label those entries with the owning pack, and do not copy its
+instructions. Preserve attribution and license metadata. Do not add `name`,
+`description`, invocation fields or `SKILL.md` to the playbook: those can turn
+ordinary content back into discovered skills.
 
 ## Visible router (only when justified)
 
@@ -46,21 +47,24 @@ Create `skills/<name>-pack/SKILL.md`:
 ```markdown
 ---
 name: <name>-pack
-description: "Use when <task family>; close alternatives belong to <other pack>."
+description: "Use when <task family>; owns <specific decisions> and may compose with other relevant packs."
 invocation: entry
 ---
 
 # <Name> pack
 
-Read one matching procedure and only its needed references. Resolve helpers and
-paths from that procedure's directory, not this router.
+Start with the narrowest matching procedure. Load additional procedures only for
+distinct active subproblems, and only the references each needs. Resolve helpers
+and paths from each procedure's directory, not this router.
 
 - <Specific intent>: [procedure](../../knowledge/playbooks/<name>/README.md).
 ```
 
-Keep routers small; large branches use a plain Markdown topic index. Never load
-a whole index recursively. No global workflow, installer, generated catalog or
-mandatory evaluation framework is required.
+A task may load multiple packs; keep this router scoped to the decisions it owns.
+Canonical playbook ownership remains singular even when another pack cross-links
+it. Keep routers small; large branches use a plain Markdown topic index. Never
+load a whole index recursively. No global workflow, installer, generated catalog
+or mandatory evaluation framework is required.
 
 Verify paths, coverage, host discovery, relevant helper callers and routing.
 For material routing changes, compare representative tasks before and after;

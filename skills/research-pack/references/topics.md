@@ -1,6 +1,7 @@
 # Research topics
 
-Choose one matching procedure; its summary and body own the detailed contract.
+Start with the narrowest matching procedure. Load additional procedures only for
+distinct active subproblems; each summary and body owns its detailed contract.
 This is a routing index, not a reading list. Known procedure paths can be opened directly.
 
 - [cdp](../../../knowledge/playbooks/cdp/README.md)
