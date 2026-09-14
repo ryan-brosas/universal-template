@@ -45,16 +45,14 @@ configuration live outside this template. This repository describes when to use
 it, not how it is deployed.
 
 Sourcebot supports direct indexed retrieval and delegated investigation through
-`ask_codebase`. Code Ask suits non-trivial planning, implementation, verification
-and review whenever the active request permits it; these standing instructions
-and the `prompts/` adapters name it, so its explicit-request gate is already
-satisfied and manual search is not the fallback. Direct
-retrieval serves narrow lookups. The coding agent owns decisions, edits and
-verification. Routing, bounded requests, revision caveats and fallback behavior belong to the
+`ask_codebase`, with no second knowledge layer in front of it. These standing
+instructions and the `prompts/` adapters name the tool, so its explicit-request
+gate is already satisfied; the coding agent still owns decisions, edits and
+verification against the live working tree. When to call it, how to scope and
+bound a request, revision caveats and fallback reporting belong to the
 [cross-repository source playbook](../knowledge/playbooks/cross-repo-source/README.md).
 Language-model configuration and tool-description restrictions belong to the
-host/deployment; do not add a second knowledge layer or require Sourcebot for
-every task.
+host/deployment.
 
 ## Repository hosting
 
