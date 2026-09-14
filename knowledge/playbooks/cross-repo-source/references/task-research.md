@@ -1,13 +1,17 @@
 # Research throughout a task
 
-Consult relevant code whenever it would materially change a planning,
-implementation, verification or review decision. Research is not a phase gate
-and not a prerequisite for every edit.
+Start every repository work session with a bounded `ask_codebase` kickoff when
+Sourcebot is available and relevant coverage exists: that one call is the
+default, not a phase gate to be negotiated. Beyond it, consult relevant code
+whenever it would materially change a planning, implementation, verification or
+review decision, rather than because a phase began.
 
 ## When
 
-- **Planning:** establish the flow, ownership and acceptance checks for
-  non-trivial work.
+- **Session kickoff:** before broad manual exploration, establish the layout,
+  entrypoints and relevant flows for the task, scoped to the current repository
+  when it is indexed.
+- **Planning:** establish the flow, ownership and acceptance checks.
 - **Implementation:** trace callers and compare indexed implementations before
   committing to a pattern, instead of guessing.
 - **Verification:** independently challenge whether the implementation and its
@@ -15,9 +19,9 @@ and not a prerequisite for every edit.
 - **Review:** ground findings beyond the diff in the indexed baseline and
   comparable implementations.
 
-Skip when a known local file, the current patch, or an already-valid brief
-settles the question. Do not send a trivial lookup through a second reasoning
-agent.
+After the kickoff, skip a follow-up when a known local file, the current patch,
+or an already-valid brief settles the question. Do not send a trivial lookup
+through a second reasoning agent.
 
 ## Scope
 
@@ -53,8 +57,10 @@ passed unless they were executed.
 
 ## Controls
 
-- Reuse a still-valid brief for the same seam and decision; do not repeat Code
-  Ask.
+- Reuse a still-valid brief for the same seam and decision; the kickoff counts
+  as a valid brief, so do not repeat it per phase.
+- Repeat Code Ask only when the phase changes the decision surface, a conflict
+  or missing revision remains, or earlier context was invalidated.
 - Parallelize only independent questions.
 - Allow a deeper follow-up when a conflict, missing revision, or new
   uncertainty remains.

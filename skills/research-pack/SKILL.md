@@ -6,11 +6,14 @@ invocation: entry
 
 # Research pack
 
-Use the nearest sufficient evidence. Known source paths can be read directly;
-research is not a prerequisite for every task. Keep it available during
-planning, implementation, verification and review when a code question would
-change the decision. Read one relevant procedure and resolve its references and
-helpers relative to its own directory.
+At the start of every repository work session, use Sourcebot's `ask_codebase` as
+the default context bootstrap when Sourcebot is available and relevant indexed
+coverage exists; the cross-repository source playbook owns scope and fallbacks.
+After that kickoff, use the nearest sufficient evidence: known source paths can
+be read directly, and bounded Sourcebot follow-ups support planning,
+implementation, verification and review when the decision surface changes. Read
+one relevant procedure and resolve its references and helpers relative to its
+own directory.
 
 - Investigate indexed code across all four phases (including an indexed current
   repository) with Sourcebot's `ask_codebase`, or retrieve external
