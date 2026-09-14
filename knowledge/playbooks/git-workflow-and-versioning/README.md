@@ -51,7 +51,13 @@ change users must react to is at least minor.
  `--stat`: a whole-file diff of a shared file also picks up lines another writer
  added to it since your last read. An unexpected path or hunk is a stop signal,
  not something to audit after pushing. Unstage unrelated changes without
- changing their working-tree content.
+ changing their working-tree content. A merge or rebase that must touch a file
+ holding another writer's uncommitted lines will not start while it is dirty:
+ stage only your hunks (`git add -p`, editing a hunk when their lines share it)
+ and commit the index, so their lines stay unstaged and your commit does not
+ publish theirs. A shared file can also carry their *reference* to a path that
+ is not in the repository - your tree resolves it, a clone does not (see
+ Verification).
 2. **Branch** - short lowercase hyphenated name; project caps live in
  `AGENTS.md`.
 3. **Commit unit** - one logical change; feature + tests together; `git add -p`
@@ -163,11 +169,20 @@ stale remote-tracking ref makes that log look empty.
 - `Deprecated` missing before `Removed` in a major release.
 - Breaking change shipped as PATCH.
 - Force-push of shared history without explicit approval.
+- A committed reference to a path that is untracked in your working tree.
 - Rebasing a diverged branch without checking whether upstream already contains the work.
 
 ## Verification
 
 - `git status --short` and the diff/staged summary cited.
+- Documentation references resolve in the committed revision, not just the
+ working tree: extract the Markdown link targets from `git show HEAD:<file>`,
+ resolve each against that file's directory, and require
+ `git cat-file -e HEAD:<resolved>` to succeed. A link to an untracked path
+ passes every local check and dangles for every reader. Run it over the files
+ you changed, not the tree: illustrative sample paths, template placeholders
+ (`<name>`, a starter `package.json`) and deliberate bad-link examples in style
+ guidance are expected misses, so a repo-wide sweep is noise rather than a gate.
 - `git log --format=%s origin/main..HEAD` matches the repository's documented commit convention when one applies.
 - Release: the tag points at the intended commit; `gh release view` shows the
  published release with generated notes present.
