@@ -37,13 +37,18 @@ scoring engine.
 
 - Visible routers live at `../../../skills/<name>-pack/SKILL.md`. Use a
   directory-matching `name`, trigger-first `description` under 1024 characters
-  (aim for 512 or fewer), and `invocation: entry`. State precedence for overlap.
+  (aim for 512 or fewer), and `invocation: entry`. State the pack's decision
+  boundary and whether overlap composes or delegates; matching one pack must not
+  imply that other materially relevant packs are excluded. Avoid exhaustive
+  pairwise routing matrices.
 - Specialists live at `../<name>/README.md` with `title`, `summary`, and
   `kind: playbook`. Omit skill-discovery fields and `SKILL.md`; merely hiding a
   description does not prevent discovery. Preserve attribution and license data.
 - Link each specialist from one existing pack's cold index. Cross-pack links may
-  share the same procedure, never copies. New visible packs require demonstrated
-  routing need; useful specialists do not automatically earn startup exposure.
+  share the same procedure, never copies. This canonical ownership rule does not
+  limit how many packs or procedures a task may load. New visible packs require
+  demonstrated routing need; useful specialists do not automatically earn startup
+  exposure.
 - Keep helpers/assets with their procedure. Resolve all paths from that directory,
   not the router. Read source evidence directly when a procedure needs it rather
   than adding a permanent source summary.

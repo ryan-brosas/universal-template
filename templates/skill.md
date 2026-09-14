@@ -46,21 +46,24 @@ Create `skills/<name>-pack/SKILL.md`:
 ```markdown
 ---
 name: <name>-pack
-description: "Use when <task family>; close alternatives belong to <other pack>."
+description: "Use when <task family>; owns <decision boundary> and may compose with other relevant packs."
 invocation: entry
 ---
 
 # <Name> pack
 
-Read one matching procedure and only its needed references. Resolve helpers and
-paths from that procedure's directory, not this router.
+Start with the narrowest matching procedure. Load additional procedures only for
+distinct active subproblems, and only the references each needs. Resolve helpers
+and paths from each procedure's directory, not this router.
 
 - <Specific intent>: [procedure](../../knowledge/playbooks/<name>/README.md).
 ```
 
-Keep routers small; large branches use a plain Markdown topic index. Never load
-a whole index recursively. No global workflow, installer, generated catalog or
-mandatory evaluation framework is required.
+A task may load multiple packs; keep this router scoped to its decision boundary.
+Canonical playbook ownership remains singular even when another pack cross-links
+it. Keep routers small; large branches use a plain Markdown topic index. Never
+load a whole index recursively. No global workflow, installer, generated catalog
+or mandatory evaluation framework is required.
 
 Verify paths, coverage, host discovery, relevant helper callers and routing.
 For material routing changes, compare representative tasks before and after;

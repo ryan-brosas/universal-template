@@ -1,14 +1,15 @@
 ---
 name: engineering-pack
-description: "Use when implementing or reviewing code, debugging failures, designing APIs or architecture, choosing language/framework practices, testing, refactoring, optimizing, or securing software. Git/CI delivery belongs to delivery-pack; visual design belongs to design-pack. Skip procedures for trivial edits."
+description: "Use when implementing or reviewing code, debugging failures, designing APIs or architecture, choosing language/framework practices, testing, refactoring, optimizing, or securing software. This pack owns implementation and code-quality decisions; combine it with relevant domain or delivery packs. Skip procedures for trivial edits."
 invocation: entry
 ---
 
 # Engineering pack
 
-Choose one procedure for the actual problem; do not impose a workflow on trivial
-edits. Read only its needed references. Resolve paths and helper commands from
-the selected procedure's directory, never from this router.
+Start with the narrowest procedure for the active engineering problem and add
+another only for a distinct engineering subproblem; do not impose a workflow on
+trivial edits. Read only the references each needs. Resolve paths and helper
+commands from each selected procedure's directory, never from this router.
 
 - Clarify an idea before implementation:
   [brainstorming](../../knowledge/playbooks/brainstorming/README.md).
@@ -32,9 +33,11 @@ the selected procedure's directory, never from this router.
   [security-and-hardening](../../knowledge/playbooks/security-and-hardening/README.md).
 - Simplifying working code:
   [code-cleanup](../../knowledge/playbooks/code-cleanup/README.md).
-- Language/framework standards: choose one [language or platform](references/languages.md).
-  FastAPI/Flask style routes to Python; framework internals come from that framework's own source or docs.
+- Language/framework standards: select each materially applicable
+  [language or platform](references/languages.md). FastAPI/Flask style routes to
+  Python; framework internals come from that framework's own source or docs.
 
 For planning, design scrutiny, migrations, performance, external-service tests,
-bootstrap or other engineering questions, choose one [topic](references/topics.md).
-A named tool does not automatically justify loading its entire methodology.
+bootstrap or other engineering questions, select additional
+[topics](references/topics.md) only for distinct active decisions. A named tool
+does not automatically justify loading its entire methodology.
