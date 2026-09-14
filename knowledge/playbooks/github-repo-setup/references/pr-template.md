@@ -97,4 +97,4 @@ Never require word counts, prose in every optional section, or LLM grading. `Ris
 
 ## Existing contracts win
 
-If the target repository's CI already validates a specific PR-body contract, preserve it and generate bodies in that shape. Example: universal-template's own `pr-quality.yml` requires eight fixed sections — a repo-level contract overrides this canonical template. The commit-side counterpart lives in `git-workflow-and-versioning`.
+If the target repository's CI already validates a specific PR-body contract, preserve it and generate bodies in that shape; a repo-level contract overrides this canonical template. Example: universal-template's own `pr-quality.yml` deliberately does not parse PR bodies — it runs the published helper tests and `git diff --check` only — so its seven house sections are convention, documented in `../../push-pr/references/pull-request-format.md`. The commit-side counterpart lives in `git-workflow-and-versioning`.
