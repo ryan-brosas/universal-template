@@ -38,9 +38,18 @@ node_bin=$(readlink -f "/proc/$main_pid/exe")
 case "$(basename "$node_bin")" in node|nodejs) ;;
   *) echo "service process is not Node: $node_bin" >&2; exit 1 ;;
 esac
-prefix=$(PATH="$(dirname "$node_bin"):$PATH" npm prefix -g)   # confirm, do not assume
+node_dir=$(dirname "$node_bin")
+npm_bin="$node_dir/npm"                     # the runtime's own npm, not PATH's
+[ -x "$npm_bin" ] || { echo "no npm beside $node_bin" >&2; exit 1; }
+# The unit's environment lacks your shell's npm variables, and an ambient
+# npm_config_prefix overrides derivation outright: on one host the same two
+# npm binaries reported /usr and the IDE runtime until these were cleared.
+npm_env=(env -u npm_config_prefix -u npm_config_global_prefix \
+  -u npm_config_userconfig -u npm_config_globalconfig)
+prefix=$("${npm_env[@]}" PATH="$node_dir:$PATH" "$npm_bin" prefix -g)
 echo "effective:   $ExecStart"
 echo "unit runs:   $node_bin"
+echo "npm:         $npm_bin"
 echo "target tree: $prefix"
 ```
 
@@ -61,7 +70,7 @@ directly:
 (
   systemctl --user stop "$unit" || exit $?
   install_status=0
-  PATH="$(dirname "$node_bin"):$PATH" npm install -g pkg@<version> || install_status=$?
+  "${npm_env[@]}" PATH="$node_dir:$PATH" "$npm_bin" install -g pkg@<version> || install_status=$?
   start_status=0
   systemctl --user start "$unit" || start_status=$?
   [ "$install_status" -eq 0 ] || exit "$install_status"
@@ -74,6 +83,10 @@ Confirm the update landed at the service-owned tree, then probe the service:
 ```sh
 "$node_bin" -p "require('$prefix/lib/node_modules/<scope>/<pkg>/package.json').version"
 systemctl --user show "$unit" -p MainPID -p ExecStart --value   # new pid, unchanged command
+curl -fsS --max-time 5 http://127.0.0.1:<port>/health          # readiness, when exposed
+<one representative request the service exists to serve>        # the operation itself
+pgrep -af '<entry-script>'                                      # exactly one process
+ss -ltnp | grep <port>                                          # one listener, that pid
 command -v pkgdir-or-cli                                        # may still name the other tree
 ```
 
