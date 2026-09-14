@@ -42,11 +42,15 @@ node_dir=$(dirname "$node_bin")
 npm_bin="$node_dir/npm"                     # the runtime's own npm, not PATH's
 [ -x "$npm_bin" ] || { echo "no npm beside $node_bin" >&2; exit 1; }
 # The unit's environment lacks your shell's npm variables, and an ambient
-# npm_config_prefix overrides derivation outright: on one host the same two
-# npm binaries reported /usr and the IDE runtime until these were cleared.
-npm_env=(env -u npm_config_prefix -u npm_config_global_prefix \
-  -u npm_config_userconfig -u npm_config_globalconfig)
-prefix=$("${npm_env[@]}" PATH="$node_dir:$PATH" "$npm_bin" prefix -g)
+# npm_config_prefix overrides derivation outright: measured on one host,
+# /usr/bin/node, an IDE runtime and a mise install all reported the same
+# IDE prefix until these were cleared, then each its own tree.
+npm_clean() { env -u npm_config_prefix -u npm_config_global_prefix \
+  -u npm_config_userconfig -u npm_config_globalconfig PATH="$node_dir:$PATH" "$@"; }
+prefix=$(npm_clean "$npm_bin" prefix -g)
+case "$node_dir" in "$prefix"/*) ;;                   # prefix owns this runtime
+  *) echo "prefix $prefix does not own $node_dir" >&2; exit 1 ;;
+esac
 echo "effective:   $ExecStart"
 echo "unit runs:   $node_bin"
 echo "npm:         $npm_bin"
@@ -70,7 +74,7 @@ directly:
 (
   systemctl --user stop "$unit" || exit $?
   install_status=0
-  "${npm_env[@]}" PATH="$node_dir:$PATH" "$npm_bin" install -g pkg@<version> || install_status=$?
+  npm_clean "$npm_bin" install -g 'pkg@<version>' || install_status=$?
   start_status=0
   systemctl --user start "$unit" || start_status=$?
   [ "$install_status" -eq 0 ] || exit "$install_status"
@@ -83,10 +87,10 @@ Confirm the update landed at the service-owned tree, then probe the service:
 ```sh
 "$node_bin" -p "require('$prefix/lib/node_modules/<scope>/<pkg>/package.json').version"
 systemctl --user show "$unit" -p MainPID -p ExecStart --value   # new pid, unchanged command
-curl -fsS --max-time 5 http://127.0.0.1:<port>/health          # readiness, when exposed
-<one representative request the service exists to serve>        # the operation itself
+curl -fsS --max-time 5 'http://127.0.0.1:<port>/health'        # readiness, when exposed
+# then exercise one representative request the service exists to serve
+ss -ltnp | grep '<port>'                                        # one listener, that pid
 pgrep -af '<entry-script>'                                      # exactly one process
-ss -ltnp | grep <port>                                          # one listener, that pid
 command -v pkgdir-or-cli                                        # may still name the other tree
 ```
 
@@ -180,7 +184,7 @@ systemctl --user is-active myservice.service        # must be active again
 ```sh
 tailscale serve status    # reverse-proxy / tailnet mappings
 tailscale funnel status   # public mappings
-ss -ltnp | grep <port>
+ss -ltnp | grep '<port>'
 ```
 
 Revert a mapping the installer created but nobody asked for, for example
