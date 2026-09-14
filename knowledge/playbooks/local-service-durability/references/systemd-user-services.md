@@ -25,21 +25,29 @@ tree named in `ExecStart`.
 
 `ExecStart` is a list property: `-p ExecStart --value` prints
 `{ path=... ; argv[]=... ; ; }`, so taking the first space-separated token yields
-`{` and a bogus `PATH`. Parse a field, not a token.
+`{` and a bogus `PATH`. Its `path=` can also name a wrapper such as `/usr/bin/env`,
+not the interpreter. For a running Node service, resolve the supervised process
+before stopping it and retain `ExecStart` only as audit evidence:
 
 ```sh
 unit=myservice.service
 ExecStart=$(systemctl --user show "$unit" -p ExecStart --value)
-node_bin=$(printf '%s' "$ExecStart" | sed -n 's/.*path=\([^ ;]*\).*/\1/p')
+main_pid=$(systemctl --user show "$unit" -p MainPID --value)
+[ "${main_pid:-0}" -gt 0 ] || { echo "unit is not running" >&2; exit 1; }
+node_bin=$(readlink -f "/proc/$main_pid/exe")
+case "$(basename "$node_bin")" in node|nodejs) ;;
+  *) echo "service process is not Node: $node_bin" >&2; exit 1 ;;
+esac
 prefix=$(PATH="$(dirname "$node_bin"):$PATH" npm prefix -g)   # confirm, do not assume
+echo "effective:   $ExecStart"
 echo "unit runs:   $node_bin"
 echo "target tree: $prefix"
 ```
 
 `argv[]=` in the same string carries the entry script when that path is needed.
-For the running process, `readlink -f /proc/<MainPID>/exe` reports the interpreter,
-while `/proc/<MainPID>/cmdline` may be rewritten by the daemon's process title and
-so is not a reliable source.
+For a stopped unit, fully resolve wrapper arguments and the script interpreter
+before selecting a package tree. `/proc/<MainPID>/cmdline` may be rewritten by the
+daemon's process title, so it is not a reliable source.
 
 The CLI that ran the updater and the tree `ExecStart` names often disagree, and
 the updater's version check reads its own tree, so it can report *already on the
@@ -50,9 +58,15 @@ copy and left the unit's tree untouched. Replacing the service-owned tree
 directly:
 
 ```sh
-systemctl --user stop "$unit"
-PATH="$(dirname "$node_bin"):$PATH" npm install -g pkg@<version>
-systemctl --user start "$unit"        # also on install failure: do not leave it down
+(
+  systemctl --user stop "$unit" || exit $?
+  install_status=0
+  PATH="$(dirname "$node_bin"):$PATH" npm install -g pkg@<version> || install_status=$?
+  start_status=0
+  systemctl --user start "$unit" || start_status=$?
+  [ "$install_status" -eq 0 ] || exit "$install_status"
+  exit "$start_status"
+)
 ```
 
 Confirm the update landed at the service-owned tree, then probe the service:
