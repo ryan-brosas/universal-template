@@ -2,7 +2,7 @@
 
 ## CI evidence
 
-The `github-actions-engineering` skill authors/reviews the project workflow. The workflow runs on branch pushes, pull requests, and manual dispatch; least-privilege read access; checks the project gate, changed-line whitespace, and (when the project uses a PR body contract) the body headings.
+The `github-actions-engineering` skill authors/reviews the project workflow. The workflow runs on branch pushes, pull requests, and manual dispatch; least-privilege read access; checks the project gate and changed-line whitespace. It does not parse the PR body; `pull-request-format.md` owns that contract.
 
 - Find runs: `gh run list --branch <branch>`; watch to a terminal state before filing or updating the PR.
 - Record run links and final states in the PR body — never a claimed state you did not watch.
@@ -22,7 +22,7 @@ rollup. A partial page is not evidence that all checks passed.
 
 ## Structural observation (conditional)
 
-Structural observation is **evidence-driven, not mandatory**. Use the active project's IDE/LSP or Fovea (`fovea_impact`) for precise local symbol and type questions. Use the indexed source capability (`../cross-repo-source/README.md`) when a change crosses repositories and a blast-radius claim adds value. Skip silently when the change is small or direct reading settles it — a skip needs no justification line.
+Structural observation is **evidence-driven, not mandatory**. Use the active project's IDE/LSP or Fovea (`fovea_impact`) for precise local symbol and type questions. Use the indexed source capability (`../../cross-repo-source/README.md`) when a change crosses repositories and a blast-radius claim adds value. Skip silently when the change is small or direct reading settles it — a skip needs no justification line.
 
 Source and tests confirm every structural claim. Record the repository, revision, and covered paths; do not turn a search miss into an exhaustive claim.
 
