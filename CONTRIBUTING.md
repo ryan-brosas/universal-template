@@ -17,8 +17,9 @@ may overlap across distinct decision surfaces, but each must state the boundary 
 owns; do not encode a fixed one-pack limit or an exhaustive pairwise matrix.
 Specialists live in `knowledge/playbooks/<name>/README.md` with `title`, `summary`,
 and `kind: playbook` front matter, linked from one canonical pack index. Other
-packs may cross-link that owner. Only routers use `skills/<name>-pack/SKILL.md`.
-Keep references and helper callers resolvable.
+pack indexes may cross-link the same playbook; label those entries with the owning
+pack. Only routers use `skills/<name>-pack/SKILL.md`. Keep references and helper
+callers resolvable.
 
 ## Keep the template lean
 

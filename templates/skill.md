@@ -34,10 +34,11 @@ Name evidence of the actual task outcome, not compliance with this document.
 ```
 
 Keep assets, references and helpers beside the playbook; resolve paths from that
-directory. Link the playbook from exactly one pack's cold index. Other packs may
-cross-link it, but do not copy its instructions. Preserve attribution and license
-metadata. Do not add `name`, `description`, invocation fields or `SKILL.md` to the
-playbook: those can turn ordinary content back into discovered skills.
+directory. Link the playbook from exactly one pack's cold index. Other pack indexes
+may cross-link it; label those entries with the owning pack, and do not copy its
+instructions. Preserve attribution and license metadata. Do not add `name`,
+`description`, invocation fields or `SKILL.md` to the playbook: those can turn
+ordinary content back into discovered skills.
 
 ## Visible router (only when justified)
 

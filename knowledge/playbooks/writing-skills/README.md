@@ -44,11 +44,11 @@ scoring engine.
 - Specialists live at `../<name>/README.md` with `title`, `summary`, and
   `kind: playbook`. Omit skill-discovery fields and `SKILL.md`; merely hiding a
   description does not prevent discovery. Preserve attribution and license data.
-- Link each specialist from one existing pack's cold index. Cross-pack links may
-  share the same procedure, never copies. This canonical ownership rule does not
-  limit how many packs or procedures a task may load. New visible packs require
-  demonstrated routing need; useful specialists do not automatically earn startup
-  exposure.
+- Link each specialist from one existing pack's cold index. Label cross-pack
+  cold-index links with that owning pack; all links share the same procedure, never
+  copies. This canonical ownership rule does not limit how many packs or procedures
+  a task may load. New visible packs require demonstrated routing need; useful
+  specialists do not automatically earn startup exposure.
 - Keep helpers/assets with their procedure. Resolve all paths from that directory,
   not the router. Read source evidence directly when a procedure needs it rather
   than adding a permanent source summary.
