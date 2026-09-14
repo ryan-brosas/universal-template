@@ -46,8 +46,9 @@ it, not how it is deployed.
 
 Sourcebot supports direct indexed retrieval and delegated investigation through
 `ask_codebase`. Code Ask suits non-trivial planning, implementation, verification
-and review whenever the active request permits it; the standing prompts in
-`prompts/` name it, so invoking one satisfies its explicit-request gate. Direct
+and review whenever the active request permits it; these standing instructions
+and the `prompts/` adapters name it, so its explicit-request gate is already
+satisfied and manual search is not the fallback. Direct
 retrieval serves narrow lookups. The coding agent owns decisions, edits and
 verification. Routing, bounded requests, revision caveats and fallback behavior belong to the
 [cross-repository source playbook](../knowledge/playbooks/cross-repo-source/README.md).

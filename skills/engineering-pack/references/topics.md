@@ -18,6 +18,7 @@ This is a routing index, not a reading list. Known procedure paths can be opened
 - [farmed-test-harness](../../../knowledge/playbooks/farmed-test-harness/README.md)
 - [grill-me](../../../knowledge/playbooks/grill-me/README.md)
 - [improve-codebase-architecture](../../../knowledge/playbooks/improve-codebase-architecture/README.md)
+- [local-service-durability](../../../knowledge/playbooks/local-service-durability/README.md)
 - [performance-optimization](../../../knowledge/playbooks/performance-optimization/README.md)
 - [practices-to-ci](../../../knowledge/playbooks/practices-to-ci/README.md)
 - [project-bootstrap](../../../knowledge/playbooks/project-bootstrap/README.md)

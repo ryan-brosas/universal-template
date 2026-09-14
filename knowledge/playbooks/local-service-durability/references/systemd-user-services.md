@@ -16,6 +16,84 @@ Properties are printed in systemd's own order, not the order requested, and an
 empty property prints as a blank line, so match on the `Key=` prefix when
 parsing instead of counting lines.
 
+## Update the tree the unit actually runs
+
+One host commonly holds several runtime installs (`mise`, a bundled IDE runtime,
+`nvm`), each with its own global package tree. The caller's `PATH` decides which
+tree `npm install -g` and a tool's self-updater touch, and it is often not the
+tree named in `ExecStart`.
+
+`ExecStart` is a list property: `-p ExecStart --value` prints
+`{ path=... ; argv[]=... ; ; }`, so taking the first space-separated token yields
+`{` and a bogus `PATH`. Its `path=` can also name a wrapper such as `/usr/bin/env`,
+not the interpreter. For a running Node service, resolve the supervised process
+before stopping it and retain `ExecStart` only as audit evidence:
+
+```sh
+unit=myservice.service
+ExecStart=$(systemctl --user show "$unit" -p ExecStart --value)
+main_pid=$(systemctl --user show "$unit" -p MainPID --value)
+[ "${main_pid:-0}" -gt 0 ] || { echo "unit is not running" >&2; exit 1; }
+node_bin=$(readlink -f "/proc/$main_pid/exe")
+case "$(basename "$node_bin")" in node|nodejs) ;;
+  *) echo "service process is not Node: $node_bin" >&2; exit 1 ;;
+esac
+node_dir=$(dirname "$node_bin")
+npm_bin="$node_dir/npm"                     # the runtime's own npm, not PATH's
+[ -x "$npm_bin" ] || { echo "no npm beside $node_bin" >&2; exit 1; }
+# The unit's environment lacks your shell's npm variables, and an ambient
+# npm_config_prefix overrides derivation outright: measured on one host,
+# /usr/bin/node, an IDE runtime and a mise install all reported the same
+# IDE prefix until these were cleared, then each its own tree.
+npm_clean() { env -u npm_config_prefix -u npm_config_global_prefix \
+  -u npm_config_userconfig -u npm_config_globalconfig PATH="$node_dir:$PATH" "$@"; }
+prefix=$(npm_clean "$npm_bin" prefix -g)
+case "$node_dir" in "$prefix"/*) ;;                   # prefix owns this runtime
+  *) echo "prefix $prefix does not own $node_dir" >&2; exit 1 ;;
+esac
+echo "effective:   $ExecStart"
+echo "unit runs:   $node_bin"
+echo "npm:         $npm_bin"
+echo "target tree: $prefix"
+```
+
+`argv[]=` in the same string carries the entry script when that path is needed.
+For a stopped unit, fully resolve wrapper arguments and the script interpreter
+before selecting a package tree. `/proc/<MainPID>/cmdline` may be rewritten by the
+daemon's process title, so it is not a reliable source.
+
+The CLI that ran the updater and the tree `ExecStart` names often disagree, and
+the updater's version check reads its own tree, so it can report *already on the
+latest version* while the service-owned tree stays old. On a real host the
+interactive `command -v` and `npm root -g` resolved to a JetBrains-bundled
+runtime while the unit ran a `mise` install; the updater upgraded the bundled
+copy and left the unit's tree untouched. Replacing the service-owned tree
+directly:
+
+```sh
+(
+  systemctl --user stop "$unit" || exit $?
+  install_status=0
+  npm_clean "$npm_bin" install -g --prefix "$prefix" 'pkg@<version>' || install_status=$?
+  start_status=0
+  systemctl --user start "$unit" || start_status=$?
+  [ "$install_status" -eq 0 ] || exit "$install_status"
+  exit "$start_status"
+)
+```
+
+Confirm the update landed at the service-owned tree, then probe the service:
+
+```sh
+"$node_bin" -p "require('$prefix/lib/node_modules/<scope>/<pkg>/package.json').version"
+systemctl --user show "$unit" -p MainPID -p ExecStart --value   # new pid, unchanged command
+curl -fsS --max-time 5 'http://127.0.0.1:<port>/health'        # readiness, when exposed
+# then exercise one representative request the service exists to serve
+ss -ltnp | grep '<port>'                                        # one listener, that pid
+pgrep -af '<entry-script>'                                      # exactly one process
+command -v pkgdir-or-cli                                        # may still name the other tree
+```
+
 ## Local overrides in a drop-in
 
 `~/.config/systemd/user/myservice.service.d/override.conf`
@@ -106,7 +184,7 @@ systemctl --user is-active myservice.service        # must be active again
 ```sh
 tailscale serve status    # reverse-proxy / tailnet mappings
 tailscale funnel status   # public mappings
-ss -ltnp | grep <port>
+ss -ltnp | grep '<port>'
 ```
 
 Revert a mapping the installer created but nobody asked for, for example

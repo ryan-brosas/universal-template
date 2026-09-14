@@ -9,8 +9,8 @@ kind: playbook
 ## Core Principle
 
 Exactly one thing must own the process lifecycle. Decide the owner once, keep the
-installed artifact and the local configuration in different places, and prove
-recovery by killing the process, never by reading the unit.
+installed artifact and local configuration separate, and verify the behavior that
+changed. Use fault injection for recovery guarantees; reading the unit is not proof.
 
 ## When to Use / NOT
 
@@ -24,13 +24,16 @@ orchestrator already owns restart and health (`shipping-and-launch`).
 
 ## Workflow
 
-1. **Name the owner** from observed state (`systemctl --user show`, process
-   parentage, pidfile), not from documentation.
-2. **Update under the supervisor.** Change the installed artifact with its
-   package manager and restart the unit. Never use the tool's self-update or
-   install path while a supervisor owns the daemon: it stops the tracked pid and
-   spawns a detached replacement that races the restart policy, leaving two
-   instances and a stale pidfile.
+1. **Name the owner and its artifact** from observed state (`systemctl --user
+   show`, process parentage, pidfile), not from documentation. Resolve the exact
+   runtime, package root, and package-manager prefix from the effective unit and
+   running process. The caller's `command -v` or package-manager prefix may select
+   a different installation.
+2. **Update the service-owned artifact.** When files can be replaced in place,
+   stop the unit, invoke the exact runtime or package-manager prefix, then start
+   the unit. A tool self-updater is safe only after confirming that it targets the
+   same artifact and delegates restart to the supervisor. Otherwise it can update
+   a dormant copy or spawn an untracked replacement.
 3. **Keep local edits in drop-ins**, never in a file the installer generates
    (`<unit>.service.d/override.conf`). After any regeneration, re-check the
    effective properties with `systemctl show -p ExecStart -p ExecStartPre -p Restart`:
@@ -60,7 +63,7 @@ anything that was not requested.
 
 ## Red Flags
 
-- The tool's own update command used while a supervisor owns the daemon.
+- A tool self-update used without confirming its artifact target and supervisor integration.
 - A healthcheck whose only action is `try-restart`.
 - Local tuning written into an installer-generated unit file.
 - "Durable" claimed without a kill test or a real stop/revive cycle.
@@ -68,9 +71,10 @@ anything that was not requested.
 
 ## Verification
 
-Evidence is fault-injection output (pid change window, restart counters), the
-effective `systemctl show` values, a healthy readiness endpoint, and confirmation
-that nothing extra was exposed or left running.
+For an update, evidence is the version at the service-owned artifact, effective
+`ExecStart`, a new supervised pid, a healthy readiness endpoint, a representative
+operation, and confirmation that no extra instance remains. For recovery changes,
+add fault-injection output and restart counters.
 
 ## References
 

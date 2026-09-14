@@ -18,6 +18,9 @@ prove it in language they recognize.
   positioning, or diagnose why existing copy does not persuade.
 - **NOT when:** the task is neutral documentation, editorial content without a
   conversion goal, or a brand-voice-only polish. Use the relevant writing skill.
+- **Case-study pages:** a customer story, success story, or portfolio project
+  page belongs to `../case-study-pages/README.md`, which owns that page variant
+  and reuses these references for general conversion practice.
 
 ## Workflow
 
