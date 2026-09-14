@@ -74,7 +74,7 @@ directly:
 (
   systemctl --user stop "$unit" || exit $?
   install_status=0
-  npm_clean "$npm_bin" install -g 'pkg@<version>' || install_status=$?
+  npm_clean "$npm_bin" install -g --prefix "$prefix" 'pkg@<version>' || install_status=$?
   start_status=0
   systemctl --user start "$unit" || start_status=$?
   [ "$install_status" -eq 0 ] || exit "$install_status"

@@ -109,16 +109,19 @@ sites resolve to the interface instead of the concrete class), and `await expect
 .resolves/.rejects` chains (`ES6RedundantAwait` resolves only the sync `expect` type;
 dropping that `await` loses the assertion).
 
-Grep the symbol across `src` and `tests` before deleting anything, and keep the
-measurement honest:
+Grep the symbol across every build-relevant root - `src`, `tests`, scripts,
+workspace packages, examples, generated entrypoints - before deleting anything,
+or ask a symbol-aware query instead of text. Keep the measurement honest:
 
 - Do not exclude the owning module from the count. The heaviest caller of an
   exported class member is usually the class's own consumer in the same feature,
   and an exclusion like `grep -v controller.ts` turns five call sites into zero.
 - Do not truncate the reference list with `head`; a "0 references" verdict from a
   capped list is an artifact. Count first, then read the hits.
-- A single hit repo-wide is the reliable signal (that is how a truly dead interface
-  is distinguished from an aliased or dispatched one).
+- A single hit repo-wide means nothing else names the symbol textually - which is
+  what a dead symbol looks like, not proof that it is one. Rule out the classes
+  above first: dispatched by name, structural interface, type-erased adapter,
+  alias or shim.
 - Confirm the tree did not move under you. On a shared branch `git log <base>..HEAD`
   may list commits you did not author; a changed test count is explained by diffing
   normalized test names between runs (strip per-test timings) before blaming your own
