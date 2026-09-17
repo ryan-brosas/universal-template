@@ -61,9 +61,10 @@ Fix actionable findings, then rerun affected checks. When a check asserts an abs
 (no contradictory rule, no remaining call site, no stale reference), scope the pattern
 so it cannot match the text you just introduced; observed 2026-09-17, a contradiction
 grep matched the sentence written seconds earlier. Before reporting absence, also
-confirm the check can see a known-present instance: a link-reachability sweep that
-followed only markdown links reported gaps for instructions that reference their
-target as an inline path (same day). New changes invalidate the
+confirm the check can see a known-present instance: a reachability sweep that
+followed only Markdown links reported gaps for instructions that reference their
+target as an inline path (same day), so resolve inline and root-relative path
+references too. New changes invalidate the
 relevant earlier evidence; confirm the final revision and working-tree scope
 before handoff. Do not rerun unchanged passing checks without a reason.
 
