@@ -23,6 +23,8 @@ Optional capabilities have different jobs:
   files or require repository-side sync artifacts.
 - A child or alternate model can isolate context or supply missing capability.
   A persistent observer needs actual runner support, not just a model name.
+  [Prove activation, not transport](references/durable-actors.md) before claiming
+  an automatic observer works.
 - Transactional mutation modes are deliberate host policy, not prerequisites
   for ordinary edits and not replacements for behavioral tests.
 
@@ -36,6 +38,17 @@ saying it has no tools.
 
 After a failed probe, change one evidence-backed assumption before retrying.
 Use a harmless read through the actual exposed route and inspect its tool result.
+An unreachable server can hang until the program deadline instead of failing fast,
+and the harness then discards sibling results that had already completed. Observed
+2026-09-17: a down Sourcebot endpoint exceeded the 120 s `fabric_exec` deadline and an
+already-finished `pi.bash` read was lost, so the same reads had to be repeated. Run
+local reads first and return them before probing a suspect remote endpoint, and give
+that probe its own bounded program; a settled rejection carrying an empty reason is
+likewise not evidence of the cause, so probe the transport directly.
+A handoff digest can likewise arrive in place of a read result for calls that did
+complete; re-issue the harmless read rather than inferring failure from the missing
+return. This does not authorize replaying mutations without checking their effects.
+
 A newly configured server can register while reporting no tools until first use;
 prove the connection and its credential with one read-only call that requires
 the credential, not with a registration listing.

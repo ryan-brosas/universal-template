@@ -27,8 +27,11 @@ replacing a needed repair with global advice. Continue with authorized work.
    tool results, user corrections, changes, tests, and runtime evidence. Inspect
    successes as carefully as failures: a useful comparison, shortcut, implementation
    pattern, or recovery can matter more than another prohibition. Any available
-   history service may help locate evidence; none is required. Follow summaries
-   back to supporting evidence, not whole-history dumps.
+   history service may help locate evidence; none is required. Use the bounded
+   evidence lane in [evidence guidance](references/evidence-contract.md) — this
+   project's Hindsight recall and its stored reflection records — before asking the
+   user to restate history, cite the overlap it returns, and follow summaries back
+   to supporting evidence rather than whole-history dumps.
 2. **Understand the lesson.** Explain what happened, what seems to have caused it,
    what is demonstrated versus plausible, and the conditions and exceptions. Check
    current source before prescribing a repair. Consider counter-evidence and
@@ -47,6 +50,11 @@ replacing a needed repair with global advice. Continue with authorized work.
    [writing-skills](../writing-skills/README.md) only for that destination. Prefer a
    fitting existing owner, not an unrelated skill. Do not create a transcript digest
    or another memory artifact. Keep private session details out of shared guidance.
+   Memory and reflection records locate and hand off experience; they own no lesson.
+   When Hindsight is configured and retention is authorized, retain a compact pointer
+   (`hindsight_retain`) after adopting a lesson that should outlive the session,
+   tagged so later sessions dedupe by recall. Report degraded retention when
+   `hindsight_status` shows sync is not ready; it does not block adoption.
 5. **Verify the effect.** Test changed code, exercise changed integration, or try a
    representative task through the actual procedure/routing entry point. Check
    important exceptions. A file write or rule quotation is not task success. Use
