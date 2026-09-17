@@ -176,10 +176,12 @@ stale remote-tracking ref makes that log look empty.
 
 - `git status --short` and the diff/staged summary cited.
 - Documentation references resolve in the committed revision, not just the
- working tree: extract the Markdown link targets from `git show HEAD:<file>`,
+ working tree: extract the Markdown link targets from `git show HEAD:<file>` and
+ the inline and root-relative `.md` paths instructions use to name a target,
  skip external HTTP(S) URLs, `mailto:` links and fragment-only targets, drop any
  trailing `#fragment` from what remains, then resolve each local target against
- that file's directory and require `git cat-file -e HEAD:<resolved>` to succeed.
+ that file's directory (the repository root for a root-relative target) and require
+ `git cat-file -e HEAD:<resolved>` to succeed.
  An untracked target passes a working-tree check and fails this committed-revision
  check, so it dangles for every reader. Run it over the files
  you changed, not the tree: illustrative sample paths, template placeholders
