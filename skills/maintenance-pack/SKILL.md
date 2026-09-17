@@ -17,8 +17,10 @@ create planning infrastructure as a prerequisite.
   [writing-skills](../../knowledge/playbooks/writing-skills/README.md).
 - No visible pack clearly owns a task, or a specialist seems missing:
   [skill-catalog](../../knowledge/playbooks/skill-catalog/README.md).
-- Understand what a session taught, or answer a history question (no changes):
-  the `reflect-session` and `recall-session` prompts.
+- Understand what a session taught, or answer a history question (read-only, no
+  changes): the `reflect-session` and `recall-session` prompts, whose bounded
+  history lane (project Hindsight recall plus stored reflection records) is owned by
+  [evidence guidance](../../knowledge/playbooks/session-improvement-compiler/references/evidence-contract.md).
 - Adopt valuable session experience into its correct owner, not only a skill:
   [session-improvement-compiler](../../knowledge/playbooks/session-improvement-compiler/README.md).
 - Choose the kind of improvement a lesson calls for:
