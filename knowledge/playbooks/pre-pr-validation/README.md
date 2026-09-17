@@ -38,10 +38,13 @@ the whole catalog or copy its rules into a new checklist.
   skipping silently. Confirm a ready index, inspect changed symbols and
   consumers, and review targeted diagnostics. Do not silently apply broad
   quick-fixes or treat inspections as tests.
-- **Cross-repo source:** when the change affects a seam shared with another
-  repository, use `../cross-repo-source/README.md` to locate the counterpart and
-  trace affected callers or dependencies, then confirm findings in current
-  source. An index snapshot is not live, so a search miss cannot prove absence
+- **Indexed source, when applicable:** use Sourcebot's `ask_codebase` through
+  `../cross-repo-source/README.md` for broad unresolved code questions when indexed
+  evidence can inform correctness, or when the user explicitly requests it.
+  Challenge the baseline and comparable implementations, then confirm findings in
+  current source. Known local questions and documentation- or design-only work
+  use direct evidence instead; record that applicability reason without forcing
+  a call. An index snapshot is not live, so a search miss cannot prove absence
   of callers. The active project's source, IDE and tests remain the primary
   evidence.
 - **AI-slop rejection:** run the project's objective artifact gate when present.
@@ -65,8 +68,9 @@ Use the existing task record or PR-body draft for one compact record:
 
 - Scope: base/HEAD, local changes, acceptance checks and selected skills.
 - Evidence: command/probe, scope, result/exit status and decisive output or link.
-- Semantics: IDE/graph observations or a recorded `N/A` with its reason, source
-  anchors, coverage and fallback limits.
+- Semantics: IDE/graph observations or a recorded `N/A` with its reason; the
+  Sourcebot baseline challenge where applicable, with the applicability reason
+  or access blocker; source anchors, coverage and fallback limits.
 - Findings: severity, location, resolution or remaining blocker.
 - Context: why the change exists, decisions, relevant documentation updates.
 - Verdict: READY or BLOCKED, with gaps and explicit exceptions.

@@ -11,6 +11,7 @@
 <!-- only checks actually run, with results -->
 
 - Review changed instructions, metadata, references, and callers; report focused tests when executable helpers change.
+- Sourcebot baseline challenge (when applicable; otherwise record the reason).
 - `git diff --check`
 
 ## Risks

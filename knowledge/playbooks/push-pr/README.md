@@ -27,6 +27,8 @@ opened - or already merged - a PR for the same work, and an open-only query miss
    behavior. If no quality gate exists, run the strongest applicable
    checks and report the gap rather than inventing CI. Use
    `../pre-pr-validation/README.md` for local readiness and revision-bound evidence.
+   That procedure owns the Sourcebot baseline challenge where applicable; a push
+   or PR phase alone does not require indexed research.
    A blocked local verdict stops delivery unless the user requests a draft/WIP PR;
    carry the blockers honestly into that draft.
 2. For PR creation or body updates, load `references/pull-request-format.md`.

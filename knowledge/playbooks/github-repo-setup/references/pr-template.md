@@ -33,6 +33,7 @@ List only checks actually run, with results:
 - unit / integration tests
 - compiler / typecheck / lint / build
 - JetBrains inspections or MCP Steroid semantic verification
+- Sourcebot baseline challenge (when applicable; otherwise record the reason)
 - manual runtime verification, benchmark, CI
 
 Local verification: state what PASSED. CI: PENDING until it runs.

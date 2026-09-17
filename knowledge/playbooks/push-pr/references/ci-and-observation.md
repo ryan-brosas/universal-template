@@ -45,7 +45,15 @@ before the required jobs register. Bind the verdict to the revision being delive
 
 ## Structural observation (conditional)
 
-Structural observation is **evidence-driven, not mandatory**. Use the active project's IDE/LSP or Fovea (`fovea_impact`) for precise local symbol and type questions. Use the indexed source capability (`../../cross-repo-source/README.md`) when a change crosses repositories and a blast-radius claim adds value. Skip silently when the change is small or direct reading settles it — a skip needs no justification line.
+Structural observation is **evidence-driven, not mandatory**. Use the active
+project's IDE/LSP or Fovea (`fovea_impact`) for precise local symbol and type
+questions; skip these optional tools when direct reading settles the question.
+Use Sourcebot's `ask_codebase` through `../../cross-repo-source/README.md` for broad
+unresolved code questions when indexed evidence can inform correctness, or when
+the user explicitly requests it. The Sourcebot applicability decision belongs to
+`../../pre-pr-validation/README.md`: record why it applies or does not, rather
+than forcing a call because a delivery phase began. Figma/Paper-only work uses
+live design evidence instead.
 
 Source and tests confirm every structural claim. Record the repository, revision, and covered paths; do not turn a search miss into an exhaustive claim.
 
