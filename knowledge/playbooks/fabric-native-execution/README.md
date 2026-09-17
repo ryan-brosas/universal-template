@@ -50,3 +50,22 @@ its instructions. Report prompt inclusion, tool execution, and behavioral
 compliance separately; stop when the requested claim has sufficient evidence.
 
 Verify any load-bearing delegated claim against current source and tests.
+
+## Escape patterns for the shell deliberately
+
+Account for the TypeScript string, shell quoting and regex dialect separately.
+In a TypeScript string, `"alpha\|beta"` loses the backslash and becomes `alpha|beta`.
+Quoted as the pattern for basic `grep`, that matches a literal pipe; it is not
+alternation. `"alpha\\|beta"` preserves the backslash for GNU basic `grep`.
+Extended regex (`grep -E`) and `pi.grep` instead use plain `alpha|beta` for
+alternation. Prefer `pi.grep` to avoid the shell layer, and `literal: true` when
+searching exact text. Verify surprising empty results before claiming absence.
+
+## After a rejected program
+
+`Type errors; code was not executed` means no call in that program ran, including
+mutations before the bad line. Correct the type error before retrying; do not
+report the planned effect as applied. A runtime failure can instead leave earlier
+calls applied: inspect affected files and returned results before resuming, and
+retry only unfinished work. Never compensate for a mutation merely assumed to
+have happened.
