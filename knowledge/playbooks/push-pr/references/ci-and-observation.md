@@ -32,8 +32,11 @@ before the required jobs register. Bind the verdict to the revision being delive
   unavailable, establish the [CI contract](../../github-actions-engineering/references/required-checks.md)
   before declaring success. An intentionally CI-free project must be reported as
   such, with its applicable local gates, not as having passed CI.
-- Read states with `gh pr checks <n> --json name,state,bucket,link`. Pending checks
-  are not success (`gh pr checks` exits `8` while pending). Wait for every expected
+- Read states with `gh pr checks <n> --json name,state,bucket,link`; pending checks are
+  not success and the command exits `8` while pending. That output carries no provider
+  identity, so when a name is shared across providers confirm the expected one from the
+  paginated rollup or the check-runs API (`app.slug`) and match name and provider. Wait
+  for every expected
   check to be present and terminal on that head, then require a passing verdict;
   failed, cancelled or unexpectedly skipped checks are not green. Apply the
   superseded-run rule above rather than accepting an older success over a new run.
