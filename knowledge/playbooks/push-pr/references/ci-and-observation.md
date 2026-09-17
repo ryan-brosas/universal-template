@@ -20,6 +20,26 @@ When reading raw GraphQL `statusCheckRollup.contexts`, follow
 `pageInfo.hasNextPage` and `endCursor` through every page before evaluating the
 rollup. A partial page is not evidence that all checks passed.
 
+## A fresh head has no verdict yet
+
+An empty or partial rollup is not a pass. `mergeStateStatus: CLEAN` can appear
+before the required jobs register. Bind the verdict to the revision being delivered:
+
+- Compare `gh pr view <n> --json headRefOid,statusCheckRollup` with the pushed SHA.
+  A changed head invalidates the previous verdict; do not merge an unchecked head.
+- Derive expected check names and providers from the project workflows and branch
+  rules, not from whichever checks currently appear. If that set is empty or
+  unavailable, establish the [CI contract](../../github-actions-engineering/references/required-checks.md)
+  before declaring success. An intentionally CI-free project must be reported as
+  such, with its applicable local gates, not as having passed CI.
+- Read states with `gh pr checks <n> --json name,state,bucket,link`. Pending checks
+  are not success (`gh pr checks` exits `8` while pending). Wait for every expected
+  check to be present and terminal on that head, then require a passing verdict;
+  failed, cancelled or unexpectedly skipped checks are not green. Apply the
+  superseded-run rule above rather than accepting an older success over a new run.
+- Bound the wait. A missing check may never run: report the missing names and
+  investigate triggers or policy instead of declaring success or polling forever.
+
 ## Structural observation (conditional)
 
 Structural observation is **evidence-driven, not mandatory**. Use the active project's IDE/LSP or Fovea (`fovea_impact`) for precise local symbol and type questions. Use the indexed source capability (`../../cross-repo-source/README.md`) when a change crosses repositories and a blast-radius claim adds value. Skip silently when the change is small or direct reading settles it — a skip needs no justification line.

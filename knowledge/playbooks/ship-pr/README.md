@@ -31,7 +31,9 @@ inventing CI or claiming a clean full cycle.
    Repeat verification after every fix; stop and report findings requiring a
    human decision.
 5. Merge only with `mergeStateStatus: CLEAN`, green local gates and required CI,
-   and every review thread resolved. Use a repository-allowed merge method;
+   and every review thread resolved. `CLEAN` alone is not proof of passing CI;
+   verify the expected checks on the head being merged through
+   `../push-pr/references/ci-and-observation.md`. Use a repository-allowed merge method;
    never bypass protections. Auto-merge is not implied by repository capability.
 6. Delete the merged task branch and sync the local base without discarding user
    work. Before deleting, fetch and compare (`git fetch origin <branch> && git log

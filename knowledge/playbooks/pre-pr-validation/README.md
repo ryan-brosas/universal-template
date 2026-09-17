@@ -26,7 +26,9 @@ the whole catalog or copy its rules into a new checklist.
 ## Gather complementary evidence
 
 - **Behavior and gates:** run project checks and focused behavioral probes;
-  inspect command output and exit status.
+  inspect command output and the verifier's own exit status. A pipeline can report
+  the filter's success while hiding the verifier's error; use the status-handling
+  procedure in `../shell-scripting-practices/README.md`.
   A build or graph trace alone does not prove behavior. Check whitespace across
   the branch diff and local changes, not only the unstaged diff.
 - **IDE semantics:** for nontrivial symbol/API changes, call
