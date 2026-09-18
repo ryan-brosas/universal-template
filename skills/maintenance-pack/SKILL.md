@@ -19,7 +19,7 @@ create planning infrastructure as a prerequisite.
   [skill-catalog](../../knowledge/playbooks/skill-catalog/README.md).
 - Understand what a session taught, or answer a history question (no changes):
   the `reflect-session` and `recall-session` prompts.
-- Adopt valuable session experience into its correct owner, not only a skill:
+- Compile session experience into a reusable, discoverable method:
   [session-improvement-compiler](../../knowledge/playbooks/session-improvement-compiler/README.md).
 - Choose the kind of improvement a lesson calls for:
   [leverage-capture](../../knowledge/playbooks/leverage-capture/README.md).

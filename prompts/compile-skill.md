@@ -12,8 +12,10 @@ When the raw material is session experience whose lesson is not yet understood,
 establish it first with `knowledge/playbooks/session-improvement-compiler/README.md`.
 When the procedure and its owner are already settled, check
 `knowledge/playbooks/writing-skills/README.md` and write it directly. If we
-haven't chosen where it belongs, draft it here first. Do not force code fixes or
-project-only choices into a skill; if no reusable method qualifies, explain that.
+haven't chosen where it belongs, draft it here first. Compiling a method is not
+authorization to repair the original session's implementation; report that
+separately. Do not force code fixes or project-only choices into a skill; if no
+reusable method qualifies, explain that.
 Verify that a representative future task can find and use the result.
 
 ${ARGUMENTS:-}
