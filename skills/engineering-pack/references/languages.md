@@ -7,6 +7,7 @@ This is a routing index, not a reading list. Known procedure paths can be opened
 - [android-coding-practices](../../../knowledge/playbooks/android-coding-practices/README.md)
 - [angular-coding-practices](../../../knowledge/playbooks/angular-coding-practices/README.md)
 - [arduino-coding-practices](../../../knowledge/playbooks/arduino-coding-practices/README.md)
+- [bend-coding-practices](../../../knowledge/playbooks/bend-coding-practices/README.md) — Proactive Bend 2 stack assessment, reusable verified foundations, JS/TS interop and native parallel computation.
 - [c-coding-practices](../../../knowledge/playbooks/c-coding-practices/README.md)
 - [clojure-coding-practices](../../../knowledge/playbooks/clojure-coding-practices/README.md)
 - [common-lisp-coding-practices](../../../knowledge/playbooks/common-lisp-coding-practices/README.md)
