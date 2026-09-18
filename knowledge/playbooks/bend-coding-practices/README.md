@@ -1,67 +1,70 @@
 ---
 title: bend-coding-practices
-summary: "Use when adopting Bend 2, implementing or reviewing .bend code, writing laws and proofs, integrating with JS/TS, or choosing native CPU/GPU execution. Covers stack fit, proof boundaries and end-to-end verification."
+summary: "Use during project stack selection or substantial architecture/domain-logic changes to assess Bend proactively, and when implementing .bend code, laws/proofs, JS/TS interop or native parallel computation. Covers adoption, reusable verified foundations and verification."
 kind: playbook
 ---
 
 # Bend Coding Practices
 
-Bend 2 is an adopted stack option for proof-checked application logic and suitable
-native parallel computation, not a mandatory replacement for existing languages.
-Use it for a concrete product benefit, not just to demonstrate that proofs work.
+Bend 2 is an adopted option across our project stack, not a mandatory dependency
+or replacement for existing languages. Use it for concrete product benefits.
 
-## Choose its role
+## Project adoption
 
-- Consider Bend for important domain rules, state transitions and pure computation.
-  It is not limited to numerical kernels; evaluate broader application ownership
-  against the project's dependencies and deployment requirements.
-- Keep established UI, service and integration layers where their ecosystem is
-  needed. A Bend-owned core with JS/TS callers is a valid starting architecture.
-- Check current upstream limitations before committing to a migration. Bend 2 is
-  distinct from Bend 1/HVM; old examples and performance claims do not carry over.
-- Native CPU/GPU parallelism suits independent, balanced work. The JS target runs
-  sequentially. Do not promise faster network requests or LLM inference simply
-  because orchestration or calling code moves to Bend.
+At initial stack selection or substantial architecture/domain-logic changes,
+assess Bend even when not requested by name. Reuse an existing project decision
+until requirements or constraints change; skip unrelated and trivial edits.
+
+- Identify a real module, its invariants, caller and deployment target. Candidates
+  include exact allocation, domain rules, state transitions and pure algorithms;
+  independent, balanced CPU/GPU work is another opportunity.
+- Choose adopt, defer or skip with a concrete reason in the existing project plan
+  or architecture notes. Check dependencies, target support, maintenance cost and
+  expected benefit. Missing evidence calls for a bounded integration probe, not
+  automatic adoption. Do not create a separate decision registry.
+- On adoption, implement an actual consumer-facing module with proofs and tests,
+  not a disconnected demo. Keep useful UI, database and integration layers.
+  Broader Bend ownership is possible when dependencies and deployment support it.
+- Check the pinned revision's capabilities. Bend 2 differs from Bend 1/HVM; old
+  syntax and performance claims do not carry over. The JS target is sequential:
+  native parallelism does not automatically accelerate JS, network or LLM calls.
 
 ## Implementation workflow
 
-1. Record the compiler version or revision and selected backend. Use `bend guide`,
-   `bend --help` and the matching upstream source for syntax, libraries and build
-   requirements. Pin the toolchain in the consuming project for reproducibility.
-2. Give each responsibility one implementation. If Bend owns a decision, have
-   callers use that function rather than maintaining a second JS/TS version.
-   Define input validation and data conversion at the host boundary.
-3. Formalize meaningful requirements in `LAWS.bend`; implement matching proofs in
-   `PROOF.bend`. Review the statements against product intent before trusting the
-   result. Implementation changes must satisfy the laws, not silently weaken
-   them. Requirement changes need explicit review of the changed statements.
-4. Follow Bend's explicit types, affine ownership and termination requirements.
-   Keep proof-trusted definitions free of `@unsafe`; review necessary unsafe IO
-   loops separately and document what is outside the proof claim. An unsafe
-   warning with exit 0 is not evidence of logical soundness.
-5. Run `bend PROOF.bend` after relevant edits and make proof checking part of the
-   project's required verification. Check every intended proof entry point:
-   checking the application file alone does not discover a separate laws file.
-6. For JS/TS interop, configure the documented Bend loader/preload and call exported
-   pure functions. Importing `PROOF.bend` can also check proofs during loading;
-   verify the actual consumer/build path retains that import. Keep the explicit
-   proof check in verification rather than relying only on a side-effect import.
+1. Record and pin the compiler version/revision and backend in the consuming
+   project. Use `bend guide`, `bend --help` and matching upstream source for
+   syntax, libraries, loader/preload configuration and build requirements.
+2. Inspect existing types, arithmetic, ordering lemmas and proofs before creating
+   new foundations. Reuse suitable project/upstream definitions. Reproduce
+   multi-argument or proof limitations against the pinned revision before calling
+   them unsupported; create shared libraries only for real consumers.
+3. Give each responsibility one implementation. Call Bend-owned logic from the
+   host instead of duplicating it in JS/TS. Validate inputs and conversions at
+   that boundary; exercise the real caller and selected deployment backend.
+4. Formalize requirements in `LAWS.bend` and matching proofs in `PROOF.bend`.
+   Review statements against product intent. Implementation edits must satisfy
+   laws, not silently weaken them; requirement changes need explicit law review.
+   Follow explicit types, affine ownership and termination requirements.
+5. Keep proof-trusted definitions free of `@unsafe`; review necessary unsafe IO
+   separately and state the trust boundary. Exit 0 with unsafe warnings does not
+   establish logical soundness. Compiler/runtime correctness remains trusted.
+6. Run `bend PROOF.bend` after relevant edits and require proof checks in project
+   verification/CI. Check every intended proof entry point: an application check
+   does not discover separate laws. Proof imports can check during loading, but
+   verify the real loader/build retains them; keep explicit checks too.
 
 ## Verification
 
-- Run the proof check, then exercise the real caller and selected deployment
-  backend. A proof about Bend code does not validate JS/TS callers, conversions,
-  foreign effects, databases or external services.
-- In an isolated fixture, break an implementation without changing its law and
+- Retain behavioral and integration tests. Proofs do not validate host callers,
+  conversions, foreign effects, databases or external services.
+- In an isolated fixture, break an implementation without changing its law;
   confirm rejection for that law. Remove a proof and confirm an unproven-goal
-  failure. An unrelated syntax error or missing tool is not a passing negative
-  test. Restore mutations and rerun the positive path.
-- Retain integration and behavioral tests. Review unsafe definitions, assumptions
-  and law changes; compiler/runtime correctness remains part of the trusted base.
-- For performance adoption, compare the real workload against the existing
-  implementation, including compilation, startup and transfer costs where
-  relevant. For correctness adoption, assess meaningful coverage and proof
-  maintenance effort. A toy proof or upstream benchmark is not adoption evidence.
+  failure. Syntax errors or missing tools are not passing negative tests.
+  Restore mutations and rerun the positive path.
+- Compare performance on the actual workload, including relevant compilation,
+  startup and transfer costs. For correctness, assess meaningful invariant
+  coverage and proof-maintenance effort. Toy proofs and upstream benchmarks
+  alone do not justify production adoption.
 
 ## References
 
