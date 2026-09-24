@@ -34,10 +34,14 @@ Run the executable helper tests:
 
 ```sh
 python3 knowledge/playbooks/pencil/scripts/test-verify-fidelity-manifest.py
-node --test knowledge/playbooks/cdp/sdk/recording-privacy.test.ts
+node --test knowledge/playbooks/cdp/sdk/*.test.ts
 ```
 
 Check changed-line whitespace with `git diff --check` against the PR base.
+
+Every PR runs the review lanes in `knowledge/playbooks/pre-pr-validation/README.md`
+(project gates, CodeRabbit, IDE semantics, baseline and impact analysis, AI-slop
+rejection). A lane that cannot run is a recorded blocker, not a skip.
 
 ## Pull requests
 

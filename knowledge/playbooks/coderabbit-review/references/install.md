@@ -1,7 +1,9 @@
-# Install the optional CodeRabbit integration
+# Install the CodeRabbit integration
 
-The CLI and agent skills are separate. An installed, authenticated CLI needs no
-second installation. Check live help before choosing setup or review commands.
+The CLI is required for the mandatory pre-PR review lane (`../README.md`); the
+agent skills remain optional. The CLI and agent skills are separate. An installed,
+authenticated CLI needs no second installation. Check live help before choosing
+setup or review commands.
 See [official CLI documentation](https://docs.coderabbit.ai/cli) for supported
 installation and authentication; do not print tokens or install silently.
 

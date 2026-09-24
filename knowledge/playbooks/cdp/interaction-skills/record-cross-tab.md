@@ -1,5 +1,7 @@
 # Record User Actions (Cross-Tab)
 
+For a consented DOM tape of the session (all tabs, user + agent input), use `startRecording()` / `stopRecording()` — see [make-video.md](make-video.md). This recipe is the primitive underneath: a tiny listener + `Runtime` binding, no rrweb.
+
 Capture real clicks / keystrokes / changes the user makes, across every tab — including tabs they open later. CDP's `Input.*` domain is **send-only** (it injects input, it does not observe it), so the mechanic is: inject a tiny JS listener into each page that phones home through a `Runtime` binding, then funnel every binding call into one event stream tagged by `sessionId`.
 
 ## Shortest version: record clicks from tabs you already know

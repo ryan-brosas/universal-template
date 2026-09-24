@@ -23,6 +23,9 @@ This procedure selects a destination for an understood candidate. For full sessi
 learning, use [session improvement](../session-improvement-compiler/README.md).
 Reflection can recommend changes but does not authorize mutation. Adopt only within
 the task's granted scope; explicit learning permission is not machine-wide permission.
+When session compilation invokes owner selection, its deliverable is the reusable
+method; a code or configuration repair the lesson also suggests is a separate
+finding that needs its own authorization.
 
 ## Match responsibility, then find its owner
 

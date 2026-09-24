@@ -237,7 +237,7 @@ function ctxForTool(): Record<string, unknown> {
   const g = globalThis as any;
   return {
     session: g.session, cdp: g.cdp, axView: g.axView, axClick: g.axClick, axType: g.axType,
-    listPageTargets: g.listPageTargets, parseAxRefs: g.parseAxRefs, parseAxLocators: g.parseAxLocators,
+    listPageTargets: g.listPageTargets, ext: g.ext, parseAxRefs: g.parseAxRefs, parseAxLocators: g.parseAxLocators,
     drainSignals, attachSignals, detachSignals, pageInfo, help, listLearnings, learnings,
   };
 }
@@ -289,7 +289,8 @@ const HELP: Record<string, string> = {
   detachSignals: 'detachSignals(). Stop buffering; clear dialog state.',
   pageInfo: 'pageInfo(opts?) -> {url,title,w,h,sx,sy,pw,ph} | {dialog:{type,message,...}} | {unresponsive:true, hint:string}. opts.timeoutMs default 2000. {dialog} when a modal blocks page JS; {unresponsive} if eval hung with no dialog.',
   help: 'help(name?) -> string. This. Call with no arg to list all helpers.',
-  listPageTargets: 'listPageTargets() -> PageTarget[]. Filters chrome:// / devtools:// from Target.getTargets.',
+  listPageTargets: 'listPageTargets() -> PageTarget[]. Filters chrome:// / devtools:// from Target.getTargets. Extension transport also fills index/windowId/groupId/pinned/muted/active.',
+  ext: 'ext.* Chrome-extension commands (extension transport only): ext.group({tabIds}), ext.ungroup, ext.getTabGroups, ext.updateTabGroup, ext.moveTabGroup, ext.updateTab, ext.moveTabs, ext.discardTab, ext.reloadTab, ext.duplicateTab, ext.highlight, ext.getWindows, ext.createWindow, ext.updateWindow, ext.removeWindow. Also session.Browser.getWindowForTarget / getWindowBounds / setWindowBounds.',
   listLearnings: 'listLearnings() -> string[]. Domains under knowledge/playbooks/cdp/learnings/.',
   learnings: 'learnings(domain, tool?, args?) -> any. learnings("site") -> {nodeTools, browserTools, notes}. learnings("site", "toolName", args) calls the registered node/browser tool; the tool function receives (ctx, args) where ctx carries session/cdp/axView/axClick/axType/listPageTargets/parseAxRefs/parseAxLocators/drainSignals/pageInfo/help.',
 };

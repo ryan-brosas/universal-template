@@ -1,6 +1,6 @@
 ---
 title: performance-optimization
-summary: Use when profiling, optimizing, or adding performance budgets to applications, covers measure-first workflow, Core Web Vitals, common anti-patterns, and performance regression prevention
+summary: "Use when an application is slow or a performance budget regresses; measures the real bottleneck, including recurring work across runtime boundaries, before optimizing."
 kind: playbook
 ---
 
@@ -25,7 +25,7 @@ micro-optimizations; and speed never justifies breaking correctness.
 
 ## When to Use
 
-Real-world slowness; Core Web Vitals failing; high p99; user "feels slow"; capacity planning; before a perf task without a number.
+Real-world slowness; platform-specific desktop lag; recurring polling or streaming; Core Web Vitals failing; high p99; capacity planning; before a performance task without a number. If the complaint is that the app does not feel native or adopted, disambiguate first with [native-desktop-feel](../native-desktop-feel/README.md).
 
 ## When NOT to Use
 
@@ -34,8 +34,8 @@ Premature optimization; "I think this is slow"; "make it faster" without target;
 ## Workflow
 
 1. **Define the target.** p99 < 200ms. LCP < 2.5s. Number, not "feels faster."
-2. **Measure baseline.** Profile, capture traces. Record the number.
-3. **Identify the bottleneck.** The slow part is usually obvious once you see it.
+2. **Measure baseline.** Profile, capture traces. Record the number. For an end-to-end comparison of production behavior, use a [controlled dogfood benchmark](references/controlled-dogfood-benchmarks.md).
+3. **Identify the bottleneck.** Let the profile select it. For recurring polling, streamed updates or native/process/worker/plugin calls, build the [cross-boundary work budget](references/recurring-cross-boundary-work.md).
 4. **Hypothesize.** "X is slow because Y." Testable.
 5. **One change.** Smallest change targeting the bottleneck.
 6. **Re-measure.** Compare to baseline. Keep or revert.
@@ -100,4 +100,5 @@ covered with a regression test?
 
 ## References
 
-N/A, no reference files; tools, targets, and bottlenecks are fully covered by the tables in this file.
+- [Recurring cross-boundary work](references/recurring-cross-boundary-work.md): use when timers, subscriptions, streamed updates or native/IPC calls multiply across consumers or differ by platform.
+- [Controlled dogfood benchmarks](references/controlled-dogfood-benchmarks.md): use when comparing a real end-to-end pipeline, agent or service against a control and local orchestration overhead must not be mistaken for production latency, quality or cost.

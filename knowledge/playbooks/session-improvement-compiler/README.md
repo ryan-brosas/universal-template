@@ -1,65 +1,49 @@
 ---
 title: session-improvement-compiler
-summary: 'Use for explicit requests to improve future work from session experience: understand successes and failures, choose the right owner, adopt within scope, and verify the benefit. Reflection alone does not authorize changes.'
+summary: 'Use when turning session experience or an identified method into durable guidance for future agents: judge what is worth keeping, place it where it belongs, and check the result. Reflection alone does not authorize changes. A judgment aid, not a required pipeline.'
 kind: playbook
 ---
 
 # Learn from session experience
 
-Source retrieval recovers code knowledge. Sessions supply experience. Reflection
-helps explain it; improvement adopts valuable lessons into the correct owner.
-Skills and playbooks are only one possible destination.
+Sessions supply experience; source and tests supply facts. Turning one into durable
+guidance is a judgment task, not a procedure to complete. Do the parts that fit the
+request and skip the rest.
 
-## Intent and scope
+## What is worth keeping
 
-Recall answers a historical question. Reflection explains lessons without changing
-anything. An explicit improvement request (including `compile-session-improvements`)
-authorizes in-scope adoption. `compile-skill` specifically asks for a reusable
-method; it does not make every observation suitable for a skill.
+Look at what actually happened - successes, failures, corrections, shortcuts, and
+what verified them. Ask whether a future agent would otherwise rediscover it, and
+whether it is judgment rather than something source, tests, or Git already answer.
+One clear correction or expensive failure can be enough; recurrence is not required.
+Check current source before treating a remembered cause as true, and keep what is
+demonstrated separate from what is only plausible.
 
-A learning request does not authorize changes to other projects, external systems,
-or shared machine configuration. Name a concrete scope/access blocker rather than
-replacing a needed repair with global advice. Continue with authorized work.
+A deep or whole-session retrospective samples the beginning, middle and end of the
+session rather than only the most recent work, and marks periods left uninspected.
+Coverage stays proportional: a narrowly requested lesson needs only its own
+evidence. Check the owners that earlier lessons already reached before adding
+another, so a late discovery extends existing guidance instead of compiling it
+twice.
 
-## From experience to adoption
+## Where it belongs
 
-1. **Inspect the work.** Bound the session and relevant task. Use selected events,
-   tool results, user corrections, changes, tests, and runtime evidence. Inspect
-   successes as carefully as failures: a useful comparison, shortcut, implementation
-   pattern, or recovery can matter more than another prohibition. Any available
-   history service may help locate evidence; none is required. Follow summaries
-   back to supporting evidence, not whole-history dumps.
-2. **Understand the lesson.** Explain what happened, what seems to have caused it,
-   what is demonstrated versus plausible, and the conditions and exceptions. Check
-   current source before prescribing a repair. Consider counter-evidence and
-   alternative explanations. Use [evidence guidance](references/evidence-contract.md)
-   when attribution or scope is uncertain. Reason naturally; no mandatory ledger.
-3. **Decide what should change.** Separate retrievable repository facts from judgment
-   gained through using them. Ask what future work could reuse and whether retaining
-   it is worth maintaining. One strong result or durable user correction can justify
-   adoption; recurrence strengthens evidence but is not required. Use
-   [owner selection](../leverage-capture/README.md) to choose the kind of improvement
-   before searching for its narrowest existing owner. Nothing permanent is valid.
-4. **Adopt at that owner.** Fix code or configuration where they own the problem;
-   add regression coverage when useful. Preserve project rationale locally. For a
-   reusable method, retain its concrete technique, decision sequence, boundary, or
-   shortcut and make it discoverable from the task that needs it. Use
-   [writing-skills](../writing-skills/README.md) only for that destination. Prefer a
-   fitting existing owner, not an unrelated skill. Do not create a transcript digest
-   or another memory artifact. Keep private session details out of shared guidance.
-5. **Verify the effect.** Test changed code, exercise changed integration, or try a
-   representative task through the actual procedure/routing entry point. Check
-   important exceptions. A file write or rule quotation is not task success. Use
-   [representative cases](references/behavior-tests.md) to select relevant checks,
-   not a fixed ritual. No new catalog generator, custom skill validator, scoring
-   system, or mandatory report is needed.
-6. **Close honestly.** Explain the adoption, owner, evidence, and what future work
-   should do differently. Distinguish **saved** (written), **adopted** (the correct
-   owner/consumer now behaves differently), and **shown useful** (representative
-   work demonstrates benefit). State untested explanations and blocked candidates.
-   Do not lose an unfinished qualified repair because an easier document was edited.
+Compilation produces reusable guidance, not a repair. A defect or unfinished
+implementation you notice is a finding to report, not something to fix without its
+own authorization.
 
-Evaluation should match consequence. Important workflow changes can justify a
-bounded outcome comparison with comparable starting conditions; do not invent a
-failing baseline. Existing traces may suffice for narrower repairs, with their
-limits stated. No change is complete merely because more instructions exist.
+Prefer an existing owner that already covers the task family; update it rather than
+adding a parallel skill. When nothing fits, add one small specialist and link it from
+the cold index of the pack that owns that family. Leave out project-only choices,
+private details, and transcript digests.
+
+## Checking the result
+
+Match the check to the consequence. For guidance, a representative future task
+should find and use it. For a separately authorized code or config fix, run the
+relevant test. A file write is not evidence of benefit. When there is nothing worth
+keeping, saying so is a valid outcome.
+
+Relevant history can locate evidence, but no memory system is required to learn from
+what the session already supplies. Depth, when wanted:
+[evidence note](references/evidence-contract.md), [examples](references/behavior-tests.md).

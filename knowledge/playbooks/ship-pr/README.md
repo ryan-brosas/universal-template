@@ -17,8 +17,9 @@ inventing CI or claiming a clean full cycle.
 1. Inspect authored scope and the requested/default base. Create a branch and
    scoped conventional commits without unrelated changes. Run the repository's
    gates on the committed tree and `git diff --check <base>...HEAD` (merge base; the
-   comparison rule lives in `../git-workflow-and-versioning/README.md`). A red local
-   gate blocks push.
+   comparison rule lives in `../git-workflow-and-versioning/README.md`). The pre-PR
+   lane (`../pre-pr-validation/README.md`) runs before every push. A red local gate
+   or a BLOCKED verdict blocks push.
 2. Load `../push-pr/README.md` and use its evidence, template, PR creation/update,
    and metadata procedure. Do not duplicate endpoint mechanics here.
 3. Watch required CI to a final state. Read review findings, not just review-bot
@@ -31,7 +32,9 @@ inventing CI or claiming a clean full cycle.
    Repeat verification after every fix; stop and report findings requiring a
    human decision.
 5. Merge only with `mergeStateStatus: CLEAN`, green local gates and required CI,
-   and every review thread resolved. Use a repository-allowed merge method;
+   and every review thread resolved. `CLEAN` alone is not proof of passing CI;
+   verify the expected checks on the head being merged through
+   `../push-pr/references/ci-and-observation.md`. Use a repository-allowed merge method;
    never bypass protections. Auto-merge is not implied by repository capability.
 6. Delete the merged task branch and sync the local base without discarding user
    work. Before deleting, fetch and compare (`git fetch origin <branch> && git log

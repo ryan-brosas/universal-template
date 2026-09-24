@@ -13,6 +13,8 @@ to each selected procedure's directory, not this router.
 
 - Commit, branch, reconcile squash merges, version or tag:
   [git-workflow-and-versioning](../../knowledge/playbooks/git-workflow-and-versioning/README.md).
+- Validate finished changes before a PR — required for every PR:
+  [pre-pr-validation](../../knowledge/playbooks/pre-pr-validation/README.md).
 - Push, open/update a PR, handle review threads, or merge an existing PR:
   [push-pr](../../knowledge/playbooks/push-pr/README.md).
 - Explicitly ship end to end through CI, reviews and merge:
@@ -28,5 +30,5 @@ to each selected procedure's directory, not this router.
 
 For deployment, launch, contribution discovery or review-specific tooling, select
 additional [delivery procedures](references/topics.md) only for distinct active
-operations. A push request never implies permission to merge. Trivial work needs
-no procedure ritual.
+operations. A push request never implies permission to merge. A trivial change
+needs no procedure ritual, but every PR still runs pre-pr-validation.

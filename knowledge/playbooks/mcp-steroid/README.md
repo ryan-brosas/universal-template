@@ -1,6 +1,6 @@
 ---
 title: mcp-steroid
-summary: Use when an MCP-capable coding agent needs native JetBrains IntelliJ APIs, semantic navigation, refactoring, inspections, tests, debugging, or a live-file witness — including when the user is not in the IntelliJ UI.
+summary: Use for the mandatory pre-PR IDE quality lane, or when an MCP-capable coding agent needs JetBrains semantic navigation, refactoring, inspections, tests, debugging, or a live-file witness.
 kind: playbook
 ---
 
@@ -17,20 +17,24 @@ compiler/tests/runtime) intact.
 
 ## When to Use / NOT
 
+- **Use when:** validating any PR through `../pre-pr-validation/README.md`; inspect
+ every changed path even when the diff is small or contains only prose/configuration.
 - **Use when:** the question involves symbol resolution, types, usages,
  inheritance, overrides, call hierarchy, rename/move, change signature,
- inspections, project model, or debugger evidence; or when the change is
- non-trivial and the IDE is open on the project.
+ inspections, project model, or debugger evidence.
 - **Use when:** IDE UI control or automated refactoring is needed. The user does
   **not** need IntelliJ focused; a routed backend is enough.
 - **Use when:** Sourcebot's indexed revision is behind HEAD (or the PR branch is
   unindexed) and you need a **live file witness** — read the bytes, do not treat
   Steroid as a second code-graph. Freshness rules live in
   [cross-repo-source](../cross-repo-source/README.md).
-- **NOT when:** the change is trivial (a rename in one file, a comment, a
- config tweak), the compiler and tests cover it.
-- **NOT when:** the IDE/backend is unavailable, proceed with source,
- compiler, and tests; JetBrains is optional.
+- **NOT when:** the change is trivial and direct source, compiler and tests settle
+ it, and you are not validating a PR.
+- **NOT when:** the IDE or backend is unavailable. Outside pre-PR validation, proceed
+ with source, compiler and tests. During pre-PR validation, if no routed project path
+ matches the repository, immediately notify the user of the exact repository path to
+ open in IntelliJ (or a compatible JetBrains IDE with Steroid connected), then relist
+ projects. The lane remains a recorded Blocker until the matching route is available.
 - **NOT when:** you need execution or orchestration, that is Fabric/agents;
  MCP Steroid is the semantic/IDE lane only.
 
@@ -45,9 +49,10 @@ compiler/tests/runtime) intact.
  - run inspections over the target range to surface latent issues.
  Use it to steer the edit, not to skip reading the code.
 3. **Implement** the change with normal tools.
-4. **Targeted JetBrains semantic check (when useful)**, re-run usages,
- references, or inspections on the changed symbols; confirm no surprise
- callers and that the intended contract holds.
+4. **Targeted JetBrains semantic check**, inspect every changed path before a PR.
+ For code, re-run usages, references or inspections on changed symbols and confirm
+ no surprise callers. For prose/configuration, run applicable changed-file
+ inspections and capture a live-file witness.
 5. **Compiler/tests/runtime**, compile, run the relevant test suite, and any
  runtime probe; this is the finish gate.
 6. **Finish**, report results; the compiler/tests/runtime verdict wins.
@@ -149,9 +154,10 @@ or ask a symbol-aware query instead of text. Keep the measurement honest:
 
 ## Verification
 
-- Open/verify the target project: `steroid_list_projects` shows the path.
-  Frontendless backends skip the window gate. Do not wait on
-  `steroid_list_windows` for a clean-code audit. Then await Maven/Gradle
+- Open/verify the target project: `steroid_list_projects` shows the path. If it does
+  not, notify the user to open that exact repository in IntelliJ, then relist; do not
+  silently substitute another project. Frontendless backends skip the window gate. Do
+  not wait on `steroid_list_windows` for a clean-code audit. Then await Maven/Gradle
   import only when the next call needs the index (`smartReadAction`, Java/Kotlin
   PSI). For TS/JS file bytes, VFS read is enough.
 - After `steroid_execute_code`, read the printed results, output is the only

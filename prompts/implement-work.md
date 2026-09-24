@@ -3,13 +3,14 @@ description: Implement the agreed work end to end
 argument-hint: "[request]"
 ---
 Implement what we've agreed on, end to end. Keep the solution simple and
-preserve unrelated work. Use Sourcebot's ask_codebase tool during implementation
-to trace callers, confirm semantics, and compare indexed implementations before
-committing to a pattern. Reuse the session brief when it still covers the
-decision; ask a bounded follow-up when implementation changes the affected flow.
-If Sourcebot is unavailable or no relevant repository is indexed, say so rather
-than pretending the lane ran. The working tree and actual patch are
-authoritative; verify decision-critical findings against them. Tell me what
-changed and anything still unresolved.
+preserve unrelated work. Use Sourcebot's ask_codebase tool when a broad unresolved
+codebase question would change the implementation, such as tracing callers,
+confirming semantics or comparing indexed implementations; reuse a valid brief,
+and skip it when a known local file or the current patch settles the question.
+Figma/Paper-only work stays with live design evidence. If relevant or explicitly
+requested Sourcebot research is unavailable, say so rather than pretending the
+lane ran. The working tree and actual patch are authoritative; verify
+decision-critical findings against them. Tell me what changed and anything still
+unresolved.
 
 ${ARGUMENTS:-}

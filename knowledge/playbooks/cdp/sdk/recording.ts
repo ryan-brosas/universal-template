@@ -1,66 +1,62 @@
 /**
- * Consent-based browser action recording.
+ * Consent-based rrweb session recording.
  *
- * Recording is off by default. A recording contains one privacy-scrubbed JSON
- * line and one viewport screenshot per meaningful raw CDP action. The active
- * marker is on disk so explicit recordings survive daemon restarts.
+ * Recording is off by default. startRecording() downloads a pinned rrweb UMD
+ * into ~/.browser-harness-js (checksummed, cached) and injects rrweb.record
+ * into every page target, then appends one JSON line per rrweb event. Replay
+ * is the rrweb Replayer, not a screenshot video compiler.
  */
 
-import { appendFile, chmod, mkdir, open, readFile, readdir, rename, stat, unlink, writeFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import { appendFile, chmod, mkdir, readFile, readdir, rename, stat, unlink, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
+import { createServer } from 'node:http';
 import { homedir } from 'node:os';
-import { basename, isAbsolute, join, relative, resolve, sep } from 'node:path';
+import { basename, dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import type { CdpCallObservation, Session } from './session.ts';
+import type { Session } from './session.ts';
 
 type JsonObject = Record<string, unknown>;
-
-type PageContext = {
-  url?: string;
-  title?: string;
-  w?: number;
-  h?: number;
-  sx?: number;
-  sy?: number;
-  dpr?: number;
-  box?: { x: number; y: number; w: number; h: number };
-  input?: string;
-};
-
-type SemanticAction = {
-  helper: string;
-  delayMs: number;
-  details: JsonObject;
-};
 
 type RecordingMeta = {
   name: string;
   title: string | null;
   started: number;
-  auto?: boolean;
+  engine: 'rrweb';
 };
 
-const TEXT_LIMIT = 500;
-const DEFAULT_IDLE_SECONDS = 180;
-const URL_SECRETS = /([?&#](?:code|access_token|id_token|refresh_token|token|assertion|client_secret|client_info|session_state|api_?key|sig|signature|auth|authorization|password|secret)=)[^&#]+/gi;
-const CONTEXT_EXPRESSION = String.raw`(() => {
-  const out = {
-    url: location.href,
-    title: document.title,
-    w: innerWidth,
-    h: innerHeight,
-    sx: scrollX,
-    sy: scrollY,
-    dpr: devicePixelRatio,
-  };
-  const element = document.activeElement;
-  if (element && element !== document.body && element !== document.documentElement) {
-    const rect = element.getBoundingClientRect();
-    if (rect.width || rect.height) out.box = { x: rect.x, y: rect.y, w: rect.width, h: rect.height };
-    out.input = String(element.type || element.tagName || '').toLowerCase();
-  }
-  return out;
-})()`;
+type ChunkMessage = {
+  id: string;
+  i: number;
+  n: number;
+  d: string;
+};
+
+type StoredEvent = {
+  sid: string;
+  e: JsonObject;
+};
+
+type PageTargetInfo = {
+  targetId?: string;
+  type?: string;
+  url?: string;
+  title?: string;
+};
+
+export const BINDING = '__bh_rrweb';
+export const EVENTS_FILE = 'rrweb.jsonl';
+export const RRWEB_VERSION = '2.1.1';
+export const RRWEB_URL = `https://cdn.jsdelivr.net/npm/rrweb@${RRWEB_VERSION}/dist/rrweb.umd.min.cjs`;
+export const RRWEB_SHA256 = '26dcba7afcf8b8ab08281acbb788b55c64103a511004769ba03539ee16cd2ecc';
+const CHUNK_LIMIT = 24 * 1024;
+const MAX_CHUNKS = 512;
+const SKIP_URL = /^(chrome|devtools|chrome-extension):/i;
+
+const REPLAY_URL = new URL('./rrweb-replay.html', import.meta.url);
+
+let pageScriptCache: string | undefined;
+let pageScriptInFlight: Promise<string> | undefined;
 
 export function recordingHome(): string {
   const configured = process.env.BROWSER_HARNESS_JS_HOME;
@@ -80,18 +76,8 @@ function markerPath(): string {
   return join(recordingsRoot(), `.active-${port}`);
 }
 
-function textCaptureEnabled(): boolean {
-  return process.env.CDP_RECORD_TEXT?.trim() === '1';
-}
-
-export function recordedText(value: string, input: string | undefined, allowText: boolean): JsonObject {
-  if (allowText && input && input !== 'password') return { text: value };
-  return {
-    text: '••••••',
-    textLength: value.length,
-    textRedacted: true,
-    ...(input === 'password' ? { password: true } : {}),
-  };
+function eventsPath(directory: string): string {
+  return join(directory, EVENTS_FILE);
 }
 
 function envOverride(): boolean | undefined {
@@ -124,10 +110,6 @@ export async function setAutoRecording(enabled: boolean): Promise<void> {
   await writeFile(temporary, JSON.stringify({ enabled }) + '\n', { mode: 0o600 });
   await rename(temporary, target);
   if (process.platform !== 'win32') await chmod(target, 0o600);
-  if (!enabled) {
-    const active = await activeRecording();
-    if (active && await isAutomatic(active)) await unlink(markerPath()).catch(() => {});
-  }
 }
 
 export async function activeRecording(): Promise<string | undefined> {
@@ -152,7 +134,7 @@ export async function listRecordings(): Promise<string[]> {
     const path = join(root, name);
     try {
       if (!(await stat(path)).isDirectory()) return;
-      const evidence = join(path, 'events.jsonl');
+      const evidence = join(path, EVENTS_FILE);
       const modified = await stat(existsSync(evidence) ? evidence : path);
       if (existsSync(join(path, 'meta.json')) || existsSync(evidence)) {
         found.push({ path, modified: modified.mtimeMs });
@@ -166,31 +148,6 @@ export async function latestRecording(): Promise<string | undefined> {
   return (await listRecordings())[0];
 }
 
-async function isAutomatic(directory: string): Promise<boolean> {
-  try {
-    const meta = JSON.parse(await readFile(join(directory, 'meta.json'), 'utf8')) as RecordingMeta;
-    return meta.auto === true;
-  } catch {
-    return false;
-  }
-}
-
-function scrubUrl(value: unknown): string {
-  const scrubbed = String(value ?? '').replace(URL_SECRETS, '$1REDACTED');
-  try {
-    const url = new URL(scrubbed);
-    if (url.username) url.username = 'REDACTED';
-    if (url.password) url.password = 'REDACTED';
-    url.pathname = url.pathname.replace(/\/(token|secret|password|passcode|api[_-]?key)\/[^/]+/gi, '/$1/REDACTED');
-    // Fragments frequently contain OAuth state or SPA session material and are
-    // never needed by the video compiler.
-    url.hash = '';
-    return url.toString();
-  } catch {
-    return scrubbed;
-  }
-}
-
 function safeName(name?: string): string {
   const fallback = new Date().toISOString().replace(/[-:]/g, '').replace(/\..+/, '').replace('T', '-');
   const value = (name || `rec-${fallback}`).trim();
@@ -202,75 +159,11 @@ function safeName(name?: string): string {
   return normalized;
 }
 
-function idleSeconds(): number {
-  const value = Number(process.env.CDP_RECORD_IDLE_SECONDS ?? DEFAULT_IDLE_SECONDS);
-  return Number.isFinite(value) && value >= 0 ? value : DEFAULT_IDLE_SECONDS;
-}
-
-function objectParams(value: unknown): JsonObject {
-  return value && typeof value === 'object' && !Array.isArray(value) ? value as JsonObject : {};
-}
-
-function numeric(value: unknown): number | undefined {
-  return typeof value === 'number' && Number.isFinite(value) ? value : undefined;
-}
-
-function namedKey(value: unknown): string | undefined {
-  const key = typeof value === 'string' ? value : '';
-  if (!key) return undefined;
-  return key.length === 1 ? '<character>' : key.slice(0, 80);
-}
-
-function classify(call: CdpCallObservation): SemanticAction | undefined {
-  const params = objectParams(call.params);
-  if (call.method === 'Page.navigate') {
-    return { helper: 'goto_url', delayMs: 500, details: { to: scrubUrl(params.url) } };
-  }
-  if (call.method === 'Page.reload' || call.method === 'Page.navigateToHistoryEntry') {
-    return { helper: 'goto_url', delayMs: 500, details: {} };
-  }
-  if (call.method === 'Input.dispatchMouseEvent') {
-    const type = String(params.type || '');
-    if (type === 'mouseReleased') {
-      return {
-        helper: 'click_at_xy',
-        delayMs: 180,
-        details: { x: numeric(params.x), y: numeric(params.y), button: params.button || 'left' },
-      };
-    }
-    if (type === 'mouseWheel') {
-      return {
-        helper: 'scroll',
-        delayMs: 180,
-        details: {
-          x: numeric(params.x), y: numeric(params.y),
-          dx: numeric(params.deltaX), dy: numeric(params.deltaY),
-        },
-      };
-    }
-    return undefined;
-  }
-  if (call.method === 'Input.dispatchTouchEvent' && objectParams(call.params).type === 'touchEnd') {
-    return { helper: 'click_at_xy', delayMs: 180, details: {} };
-  }
-  if (call.method === 'Input.insertText') {
-    return { helper: 'type_text', delayMs: 90, details: { text: String(params.text ?? '').slice(0, TEXT_LIMIT) } };
-  }
-  if (call.method === 'Input.dispatchKeyEvent' && params.type === 'keyUp') {
-    return { helper: 'press_key', delayMs: 180, details: { key: namedKey(params.key || params.code) } };
-  }
-  if (call.method === 'DOM.setFileInputFiles') {
-    const files = Array.isArray(params.files) ? params.files : [];
-    return { helper: 'upload_file', delayMs: 250, details: { fileCount: files.length } };
-  }
-  return undefined;
-}
-
 async function writePrivateJson(path: string, value: unknown): Promise<void> {
   await writeFile(path, JSON.stringify(value, null, 2) + '\n', { mode: 0o600 });
 }
 
-async function createRecording(name: string, title: string | undefined, automatic: boolean): Promise<string> {
+async function createRecording(name: string, title: string | undefined): Promise<string> {
   const root = recordingsRoot();
   await mkdir(root, { recursive: true, mode: 0o700 });
   let candidate = safeName(name);
@@ -284,199 +177,393 @@ async function createRecording(name: string, title: string | undefined, automati
   const meta: RecordingMeta = {
     name: basename(directory),
     title: title?.trim() || null,
-    started: Math.round(Date.now()) / 1000,
-    ...(automatic ? { auto: true } : {}),
+    started: Date.now() / 1000,
+    engine: 'rrweb',
   };
   await writePrivateJson(join(directory, 'meta.json'), meta);
   await writeFile(markerPath(), directory, { mode: 0o600 });
   return directory;
 }
 
-async function autoRecordingStale(directory: string): Promise<boolean> {
-  if (!await isAutomatic(directory)) return false;
-  try {
-    const evidence = await stat(join(directory, 'events.jsonl'));
-    return Date.now() - evidence.mtimeMs > idleSeconds() * 1000;
-  } catch {
-    return false;
+function isRrwebEvent(value: unknown): value is JsonObject {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
+  const event = value as JsonObject;
+  return typeof event.type === 'number' && typeof event.timestamp === 'number';
+}
+
+export class ChunkAssembler {
+  private pending = new Map<string, { n: number; parts: Array<string | undefined>; got: number }>();
+
+  push(payload: string): JsonObject | undefined {
+    let message: ChunkMessage;
+    try {
+      const value: unknown = JSON.parse(payload);
+      if (!value || typeof value !== 'object' || Array.isArray(value)) return undefined;
+      const raw = value as JsonObject;
+      if (typeof raw.id !== 'string' || typeof raw.i !== 'number' || typeof raw.n !== 'number' || typeof raw.d !== 'string') {
+        return undefined;
+      }
+      message = { id: raw.id, i: raw.i, n: raw.n, d: raw.d };
+    } catch {
+      return undefined;
+    }
+    if (!Number.isInteger(message.i) || !Number.isInteger(message.n)) return undefined;
+    if (message.n < 1 || message.n > MAX_CHUNKS || message.i < 0 || message.i >= message.n) return undefined;
+    if (message.d.length > CHUNK_LIMIT + 1024) return undefined;
+    if (message.n === 1) return parseEventJson(message.d);
+    let entry = this.pending.get(message.id);
+    if (!entry) {
+      entry = { n: message.n, parts: Array.from({ length: message.n }), got: 0 };
+      this.pending.set(message.id, entry);
+    } else if (entry.n !== message.n) {
+      this.pending.delete(message.id);
+      return undefined;
+    }
+    if (entry.parts[message.i] != null) return undefined;
+    entry.parts[message.i] = message.d;
+    entry.got += 1;
+    if (entry.got !== entry.n) return undefined;
+    this.pending.delete(message.id);
+    return parseEventJson(entry.parts.join(''));
   }
 }
 
+function parseEventJson(json: string): JsonObject | undefined {
+  try {
+    const value: unknown = JSON.parse(json);
+    return isRrwebEvent(value) ? value : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+export function buildPageScript(vendorSource: string): string {
+  return `;(function () {
+  if (window.__bh_rrweb_on) return;
+  ${vendorSource}
+  var rrweb = window.rrweb || rrweb;
+  if (!rrweb || typeof rrweb.record !== 'function') return;
+  if (typeof window.${BINDING} !== 'function') return;
+  window.__bh_rrweb_on = 1;
+  var seq = 0;
+  var CHUNK = ${CHUNK_LIMIT};
+  function emit(event) {
+    try {
+      var json = JSON.stringify(event);
+      var id = (++seq).toString(36) + '-' + Date.now().toString(36);
+      var n = Math.max(1, Math.ceil(json.length / CHUNK));
+      for (var i = 0; i < n; i++) {
+        window.${BINDING}(JSON.stringify({
+          id: id,
+          i: i,
+          n: n,
+          d: json.slice(i * CHUNK, (i + 1) * CHUNK)
+        }));
+      }
+    } catch (err) {}
+  }
+  try {
+    window.__bh_rrweb_stop = rrweb.record({
+      emit: emit,
+      maskAllInputs: true,
+      maskInputOptions: { password: true },
+      recordCanvas: false,
+      collectFonts: false,
+      sampling: { mousemove: 50, scroll: 150, input: 'last' }
+    });
+  } catch (err) {
+    window.__bh_rrweb_on = 0;
+  }
+})();`;
+}
+
+function rrwebCachePath(): string {
+  return join(recordingHome(), 'cache', `rrweb-${RRWEB_VERSION}.min.js`);
+}
+
+function sha256Hex(value: string | Buffer): string {
+  return createHash('sha256').update(value).digest('hex');
+}
+
+export function resetRrwebSourceCache(): void {
+  pageScriptCache = undefined;
+  pageScriptInFlight = undefined;
+}
+
+export async function loadRrwebSource(): Promise<string> {
+  const override = process.env.CDP_RRWEB_JS;
+  if (override) return await readFile(resolve(override), 'utf8');
+  const cached = rrwebCachePath();
+  try {
+    const existing = await readFile(cached);
+    if (sha256Hex(existing) === RRWEB_SHA256) return existing.toString('utf8');
+  } catch { /* miss or unreadable */ }
+  let body: Buffer;
+  try {
+    const response = await fetch(RRWEB_URL);
+    if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+    body = Buffer.from(await response.arrayBuffer());
+  } catch (error) {
+    throw new Error(
+      `rrweb ${RRWEB_VERSION} is not cached at ${cached} and download failed: ${error instanceof Error ? error.message : String(error)}`,
+    );
+  }
+  if (sha256Hex(body) !== RRWEB_SHA256) {
+    throw new Error(`rrweb ${RRWEB_VERSION} checksum mismatch (expected ${RRWEB_SHA256})`);
+  }
+  await mkdir(dirname(cached), { recursive: true, mode: 0o700 });
+  const temporary = `${cached}.${process.pid}.tmp`;
+  await writeFile(temporary, body, { mode: 0o600 });
+  await rename(temporary, cached);
+  if (process.platform !== 'win32') await chmod(cached, 0o600);
+  return body.toString('utf8');
+}
+
+async function pageScript(): Promise<string> {
+  if (pageScriptCache) return pageScriptCache;
+  if (!pageScriptInFlight) {
+    pageScriptInFlight = loadRrwebSource().then(source => {
+      pageScriptCache = buildPageScript(source);
+      return pageScriptCache;
+    }).finally(() => { pageScriptInFlight = undefined; });
+  }
+  return pageScriptInFlight;
+}
+
+function skipUrl(url: string | undefined): boolean {
+  return !!url && SKIP_URL.test(url);
+}
+
+export async function loadRrwebEvents(directory: string): Promise<Map<string, JsonObject[]>> {
+  const grouped = new Map<string, JsonObject[]>();
+  let text = '';
+  try { text = await readFile(eventsPath(directory), 'utf8'); } catch { return grouped; }
+  for (const line of text.split('\n')) {
+    if (!line.trim()) continue;
+    try {
+      const value: unknown = JSON.parse(line);
+      if (!value || typeof value !== 'object' || Array.isArray(value)) continue;
+      const row = value as StoredEvent;
+      if (typeof row.sid !== 'string' || !isRrwebEvent(row.e)) continue;
+      const list = grouped.get(row.sid) ?? [];
+      list.push(row.e);
+      grouped.set(row.sid, list);
+    } catch { /* skip malformed lines */ }
+  }
+  return grouped;
+}
+
 export class RecordingManager {
-  private queue: Promise<void> = Promise.resolve();
-  private frameNumbers = new Map<string, number>();
-  private lastFrames = new Map<string, string>();
-  private startInFlight = false;
   private session: Session;
+  private directory: string | undefined;
+  private unsub: (() => void) | undefined;
+  private instrumented = new Set<string>();
+  private assembler = new ChunkAssembler();
+  private queue: Promise<void> = Promise.resolve();
+  private instrumentQueue: Promise<void> = Promise.resolve();
+  private startInFlight = false;
 
   constructor(session: Session) {
     this.session = session;
   }
 
-  observe = async (call: CdpCallObservation): Promise<void> => {
-    const action = classify(call);
-    if (!action || !call.sessionId) return;
-    const operation = this.queue.then(() => this.observeAction(call, action), () => this.observeAction(call, action)).catch(() => {});
-    this.queue = operation;
-    if (!await this.waitForQueue(operation) && this.queue === operation) {
-      // A wedged screenshot must not impose the timeout on every later action.
-      // The old best-effort operation may still finish independently.
-      this.queue = Promise.resolve();
-    }
-  };
-
   async start(name?: string, title?: string): Promise<string> {
     if (envOverride() === false) throw new Error('recording disabled by CDP_RECORD=0');
     if (this.startInFlight) throw new Error('another recording start is already in progress');
+    if (!this.session.isConnected()) throw new Error('not connected. Call session.connect() first');
+    if (this.unsub) throw new Error(`recording already active: ${this.directory}`);
     this.startInFlight = true;
     try {
-      await this.flushQueue();
-      const active = await activeRecording();
-      if (active) throw new Error(`recording already active: ${active}`);
-      const directory = await createRecording(safeName(name), title, false);
-      const sessionId = this.session.getActiveSession();
-      if (sessionId) {
-        this.queue = this.queue.then(() => this.capture(directory, sessionId, 'start_recording', {}, 0)).catch(() => {});
-        await this.flushQueue();
-      }
+      await pageScript();
+      const stale = await activeRecording();
+      if (stale) await unlink(markerPath()).catch(() => {});
+      const directory = await createRecording(safeName(name), title);
+      this.directory = directory;
+      this.instrumented.clear();
+      this.assembler = new ChunkAssembler();
+      this.unsub = this.session.onEvent(this.onCdpEvent);
+      await this.session._call('Target.setDiscoverTargets', { discover: true });
+      await this.session._call('Target.setAutoAttach', {
+        autoAttach: true,
+        waitForDebuggerOnStart: false,
+        flatten: true,
+      });
+      await this.attachExisting();
       return directory;
+    } catch (error) {
+      this.unsub?.();
+      this.unsub = undefined;
+      this.directory = undefined;
+      await unlink(markerPath()).catch(() => {});
+      throw error;
     } finally {
       this.startInFlight = false;
     }
   }
 
   async stop(): Promise<string | undefined> {
-    await this.flushQueue();
-    const directory = await activeRecording();
-    if (!directory) return undefined;
-    const sessionId = this.session.getActiveSession();
-    if (sessionId) {
-      this.queue = this.queue.then(() => this.capture(directory, sessionId, 'stop_recording', {}, 0)).catch(() => {});
-      await this.flushQueue();
-    }
+    const directory = this.directory ?? await activeRecording();
+    this.unsub?.();
+    this.unsub = undefined;
+    const sessionIds = [...this.instrumented];
+    this.instrumented.clear();
+    await Promise.all(sessionIds.map(sessionId => this.session._call('Runtime.evaluate', {
+      expression: 'try { if (typeof window.__bh_rrweb_stop === "function") window.__bh_rrweb_stop(); window.__bh_rrweb_on = 0; } catch (e) {}',
+    }, { sessionId }).catch(() => {})));
+    await this.flush();
     await unlink(markerPath()).catch(() => {});
+    this.directory = undefined;
     return directory;
   }
 
-  async status(): Promise<{ enabled: boolean; source: string; active?: string; latest?: string }> {
+  async status(): Promise<{ enabled: boolean; source: string; active?: string; latest?: string; engine: 'rrweb' }> {
     const setting = await autoRecordingSetting();
     return {
       ...setting,
-      active: await activeRecording(),
+      active: this.directory ?? await activeRecording(),
       latest: await latestRecording(),
+      engine: 'rrweb',
     };
   }
 
-  private async flushQueue(): Promise<void> {
-    const queued = this.queue;
-    if (!await this.waitForQueue(queued) && this.queue === queued) this.queue = Promise.resolve();
+  private onCdpEvent = (method: string, params: unknown, sessionId?: string): void => {
+    if (!this.directory) return;
+    if (method === 'Runtime.bindingCalled') {
+      const body = params && typeof params === 'object' ? params as JsonObject : {};
+      if (body.name !== BINDING || typeof body.payload !== 'string' || !sessionId) return;
+      const event = this.assembler.push(body.payload);
+      if (!event) return;
+      const directory = this.directory;
+      this.queue = this.queue.then(() => this.append(directory, sessionId, event)).catch(() => {});
+      return;
+    }
+    if (method === 'Target.attachedToTarget') {
+      const body = params && typeof params === 'object' ? params as JsonObject : {};
+      const info = body.targetInfo && typeof body.targetInfo === 'object' ? body.targetInfo as PageTargetInfo : {};
+      const sid = typeof body.sessionId === 'string' ? body.sessionId : undefined;
+      if (!sid || info.type !== 'page' || skipUrl(info.url)) return;
+      this.enqueueInstrument(sid);
+      return;
+    }
+    if (method === 'Target.detachedFromTarget') {
+      const body = params && typeof params === 'object' ? params as JsonObject : {};
+      const sid = typeof body.sessionId === 'string' ? body.sessionId : sessionId;
+      if (sid) this.instrumented.delete(sid);
+    }
+  };
+
+  private enqueueInstrument(sessionId: string): void {
+    this.instrumentQueue = this.instrumentQueue.then(() => this.instrument(sessionId), () => this.instrument(sessionId));
   }
 
-  private async waitForQueue(queue: Promise<void>, timeoutMs = 4_500): Promise<boolean> {
-    return new Promise(resolveWait => {
-      const timer = setTimeout(() => resolveWait(false), timeoutMs);
-      queue.then(
-        () => { clearTimeout(timer); resolveWait(true); },
-        () => { clearTimeout(timer); resolveWait(true); },
-      );
-    });
+  private async attachExisting(): Promise<void> {
+    let infos: PageTargetInfo[] = [];
+    try {
+      const result = await this.session._call('Target.getTargets', {}) as { targetInfos?: PageTargetInfo[] };
+      infos = Array.isArray(result.targetInfos) ? result.targetInfos : [];
+    } catch { return; }
+    for (const info of infos) {
+      if (info.type !== 'page' || !info.targetId || skipUrl(info.url)) continue;
+      try {
+        const attached = await this.session._call('Target.attachToTarget', {
+          targetId: info.targetId,
+          flatten: true,
+        }) as { sessionId?: string };
+        if (typeof attached.sessionId === 'string') await this.instrument(attached.sessionId);
+      } catch { /* Target may have closed. */ }
+    }
   }
 
-  private async observeAction(call: CdpCallObservation, action: SemanticAction): Promise<void> {
-    if (envOverride() === false) return;
-    let directory = await activeRecording();
-    const setting = await autoRecordingSetting();
-    if (directory && await isAutomatic(directory) && !setting.enabled) {
-      await unlink(markerPath()).catch(() => {});
-      directory = undefined;
+  private async instrument(sessionId: string): Promise<void> {
+    if (!this.directory || this.instrumented.has(sessionId)) return;
+    this.instrumented.add(sessionId);
+    const script = await pageScript();
+    try {
+      await this.session._call('Runtime.enable', {}, { sessionId });
+      await this.session._call('Page.enable', {}, { sessionId });
+      try {
+        await this.session._call('Runtime.addBinding', { name: BINDING }, { sessionId });
+      } catch { /* Binding may already exist on a reused target. */ }
+      await this.session._call('Page.addScriptToEvaluateOnNewDocument', { source: script }, { sessionId });
+      await this.session._call('Runtime.evaluate', { expression: script }, { sessionId });
+    } catch {
+      this.instrumented.delete(sessionId);
     }
-    if (directory && await autoRecordingStale(directory)) {
-      await unlink(markerPath()).catch(() => {});
-      directory = undefined;
-    }
-    if (!directory) {
-      if (!setting.enabled) return;
-      const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\..+/, '').replace('T', '-');
-      directory = await createRecording(`session-${stamp}`, undefined, true);
-    }
-    await this.capture(directory, call.sessionId!, action.helper, {
-      ...action.details,
-      method: call.method,
-      durationMs: Math.round(call.durationMs),
-    }, action.delayMs);
   }
 
-  private async nextFrameNumber(directory: string): Promise<number> {
-    const cached = this.frameNumbers.get(directory);
-    if (cached != null) {
-      this.frameNumbers.set(directory, cached + 1);
-      return cached;
-    }
-    const names = await readdir(directory);
-    const maximum = names.reduce((current, name) => {
-      const match = /^(\d+)\.jpg$/.exec(name);
-      return match ? Math.max(current, Number(match[1])) : current;
-    }, 0);
-    this.frameNumbers.set(directory, maximum + 2);
-    return maximum + 1;
+  private async append(directory: string, sessionId: string, event: JsonObject): Promise<void> {
+    const row: StoredEvent = { sid: sessionId, e: event };
+    await appendFile(eventsPath(directory), JSON.stringify(row) + '\n', { mode: 0o600 });
   }
 
-  private async capture(
-    directory: string,
-    sessionId: string,
-    helper: string,
-    details: JsonObject,
-    delayMs: number,
-  ): Promise<void> {
-    if (delayMs) await new Promise(resolveDelay => setTimeout(resolveDelay, delayMs));
-    const privateText = helper === 'type_text' && typeof details.text === 'string' ? details.text : undefined;
-    const publicDetails = { ...details };
-    if (helper === 'type_text') delete publicDetails.text;
-    const event: JsonObject = {
-      ts: Math.round(Date.now()) / 1000,
-      helper,
-      sessionId,
-      ...publicDetails,
+  private async flush(): Promise<void> {
+    await this.instrumentQueue.catch(() => {});
+    await this.queue.catch(() => {});
+  }
+}
+
+async function resolveRecordingArg(arg?: string): Promise<string> {
+  if (arg) {
+    const candidate = resolve(arg);
+    if (!(await stat(candidate)).isDirectory()) throw new Error(`not a recording directory: ${arg}`);
+    return candidate;
+  }
+  const latest = await latestRecording();
+  if (!latest) throw new Error('no recordings found');
+  return latest;
+}
+
+async function serveReplay(directory: string): Promise<void> {
+  const html = await readFile(REPLAY_URL);
+  const vendor = await loadRrwebSource();
+  const grouped = await loadRrwebEvents(directory);
+  const sessions = [...grouped.entries()]
+    .map(([sid, events]) => ({ sid, count: events.length }))
+    .sort((a, b) => b.count - a.count);
+
+  const server = createServer((req, res) => {
+    const url = new URL(req.url || '/', 'http://127.0.0.1');
+    if (url.pathname === '/' || url.pathname === '/index.html') {
+      res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' });
+      res.end(html);
+      return;
+    }
+    if (url.pathname === '/rrweb.min.js' || url.pathname === '/vendor/rrweb.min.js') {
+      res.writeHead(200, { 'content-type': 'text/javascript; charset=utf-8' });
+      res.end(vendor);
+      return;
+    }
+    if (url.pathname === '/sessions.json') {
+      res.writeHead(200, { 'content-type': 'application/json' });
+      res.end(JSON.stringify(sessions));
+      return;
+    }
+    if (url.pathname === '/events.json') {
+      const sid = url.searchParams.get('sid') || sessions[0]?.sid || '';
+      res.writeHead(200, { 'content-type': 'application/json' });
+      res.end(JSON.stringify(grouped.get(sid) ?? []));
+      return;
+    }
+    res.writeHead(404);
+    res.end('not found');
+  });
+
+  await new Promise<void>((resolveListen, reject) => {
+    server.listen(0, '127.0.0.1', () => resolveListen());
+    server.on('error', reject);
+  });
+  const address = server.address();
+  const port = address && typeof address === 'object' ? address.port : 0;
+  console.log(`replay: http://127.0.0.1:${port}/`);
+  console.log(`recording: ${directory}`);
+  console.log('Ctrl+C to stop');
+  await new Promise<void>(resolveStop => {
+    const stop = () => {
+      server.close(() => resolveStop());
     };
-    let context: PageContext = {};
-    try {
-      const response = await this.session._call('Runtime.evaluate', {
-        expression: CONTEXT_EXPRESSION,
-        returnByValue: true,
-      }, { sessionId }) as { result?: { value?: PageContext } };
-      context = response.result?.value ?? {};
-      Object.assign(event, context);
-    } catch { /* The target may be navigating or closing. */ }
-
-    if (typeof event.url === 'string') event.url = scrubUrl(event.url);
-    if (typeof event.to === 'string') event.to = scrubUrl(event.to);
-    if (privateText !== undefined) {
-      // Persist no typed content by default. Explicit CDP_RECORD_TEXT=1 is still
-      // refused for passwords and requires video review/showTyping to display.
-      Object.assign(event, recordedText(privateText, context.input, textCaptureEnabled()));
-    }
-
-    try {
-      const shot = await this.session._call('Page.captureScreenshot', {
-        format: 'jpeg',
-        quality: 80,
-        captureBeyondViewport: false,
-      }, { sessionId }) as { data?: string };
-      if (shot.data) {
-        const number = await this.nextFrameNumber(directory);
-        const frame = `${String(number).padStart(4, '0')}.jpg`;
-        const file = await open(join(directory, frame), 'wx', 0o600);
-        try { await file.writeFile(Buffer.from(shot.data, 'base64')); } finally { await file.close(); }
-        const key = `${directory}:${sessionId}`;
-        const before = this.lastFrames.get(key);
-        if (before) event.beforeFrame = before;
-        event.frame = frame;
-        this.lastFrames.set(key, frame);
-      }
-    } catch { /* Keep action metadata even when a screenshot is unavailable. */ }
-
-    await appendFile(join(directory, 'events.jsonl'), JSON.stringify(event) + '\n', { mode: 0o600 });
-  }
+    process.once('SIGINT', stop);
+    process.once('SIGTERM', stop);
+  });
 }
 
 async function runRecordingsCli(args: string[]): Promise<number> {
@@ -495,14 +582,20 @@ async function runRecordingsCli(args: string[]): Promise<number> {
     console.log(`auto-recording preference ${enabled ? 'enabled' : 'disabled'}`);
     return 0;
   }
+  if (args[0] === 'replay') {
+    const directory = await resolveRecordingArg(args[1]);
+    await serveReplay(directory);
+    return 0;
+  }
   if (args.length) {
-    console.error('usage: browser-harness-js recordings [--latest|enable|disable]');
+    console.error('usage: browser-harness-js recordings [--latest|enable|disable|replay [dir]]');
     return 2;
   }
   const setting = await autoRecordingSetting();
   const active = await activeRecording();
   const latest = await latestRecording();
   console.log(`auto-recording: ${setting.enabled ? 'on' : 'off'} (${setting.source})`);
+  console.log('engine: rrweb');
   console.log(`active: ${active || 'none'}`);
   console.log(`latest: ${latest || 'none'}`);
   return 0;

@@ -11,6 +11,7 @@
 <!-- only checks actually run, with results -->
 
 - Review changed instructions, metadata, references, and callers; report focused tests when executable helpers change.
+- Review lanes: CodeRabbit status and finding dispositions; JetBrains/Steroid semantic check; Sourcebot baseline (when applicable) and code-graph impact; AI-slop review of the diff.
 - `git diff --check`
 
 ## Risks

@@ -1,8 +1,8 @@
 ---
 setup: bash scripts/setup
-compatibility: Requires `node` on PATH (the REPL server is Node-native, TypeScript type stripping from Node 23.6) and a Chromium-based browser with remote debugging (chrome://inspect or --remote-debugging-port).
+compatibility: Requires `node` on PATH (the REPL server is Node-native, TypeScript type stripping from Node 23.6) and a Chromium-based browser. Preferred: load the unpacked extension at `$SKILL_DIR/extension`. Fallback: remote debugging (chrome://inspect or --remote-debugging-port).
 title: cdp
-summary: 'Use when the user wants to automate, script, or inspect a Chromium-based browser through the DevTools Protocol. Runs JS snippets through the browser-harness-js CLI against a persistent CDP session: session, targets, and globals survive across calls; attach to a running browser or launch one with --remote-debugging-port.'
+summary: 'Use when the user wants to automate, script, or inspect a Chromium-based browser through the DevTools Protocol. Runs JS snippets through the browser-harness-js CLI against a persistent CDP session: session, targets, and globals survive across calls. Prefers the unpacked Chrome extension relay; falls back to remote debugging (chrome://inspect or --remote-debugging-port).'
 kind: playbook
 ---
 
@@ -18,20 +18,20 @@ One persistent CDP `Session` held by a long-lived Node HTTP server, every `brows
 
 ## When to Use / NOT
 
-- **Use when:** automating, scripting, or inspecting a Chromium-based browser via CDP, single tab or multi-tab, attach to an existing browser or launch a new one with --remote-debugging-port.
-- **NOT when:** N/A, no explicit exclusion stated; requires `node` on PATH and a Chromium-based browser with remote debugging (see compatibility).
+- **Use when:** automating, scripting, or inspecting a Chromium-based browser via CDP, single tab or multi-tab, attach to an existing browser or launch a new one with --remote-debugging-port (the unpacked extension relay is preferred when it is loaded).
+- **NOT when:** N/A, no explicit exclusion stated; requires `node` on PATH and a Chromium-based browser, via the extension relay or remote debugging (see compatibility).
 
 ## Workflow
 
-1. Run `browser-harness-js '<JS>'`, the first call spawns the server; subsequent calls reuse the same session, WebSocket, and globals.
-2. Connect with `session.connect()` (auto-detects a running browser) or resolve a WS URL explicitly.
+1. Run `browser-harness-js '<JS>'`, the first call spawns the server; subsequent calls reuse the same session, wire, and globals.
+2. Connect with `session.connect()` (extension relay first, then auto-detected remote debugging) or resolve a WS URL explicitly.
 3. Pick a target (tab) and call typed CDP methods (`session.Page.navigate(...)`, `session.Runtime.evaluate(...)`).
 4. For multi-statement snippets, pass them via stdin heredoc and write `return X` explicitly.
 5. Check exit code and stderr for errors; use `--status` for health. For missing sessions or uncertainty about visible progress, use [Connection: health versus task progress](interaction-skills/connection.md#health-versus-task-progress).
 
 ## How to use
 
-Just run `browser-harness-js '<JS>'`. The first call spawns the server in the background; subsequent calls hit the same process and so reuse the same `session`, the same WebSocket to the browser, and any globals you set.
+Just run `browser-harness-js '<JS>'`. The first call spawns the server in the background; subsequent calls hit the same process and so reuse the same `session`, the same wire to the browser (extension relay or remote-debugging WebSocket), and any globals you set.
 
 ```bash
 browser-harness-js 'await session.connect()'
@@ -73,25 +73,24 @@ EOF
 |---|---|
 | `browser-harness-js '<js>'` | Auto-start server if needed, eval the JS, print result. |
 | `browser-harness-js <<EOF…EOF` | Same, code from stdin. |
-| `browser-harness-js --status` | Print health JSON (version, uptime, connected, sessionId) or exit 1 if down. |
+| `browser-harness-js --status` | Print health JSON (version, uptime, connected, transport, extension, sessionId) or exit 1 if down. |
 | `browser-harness-js --version` | Print the SDK version from the on-disk files (no daemon needed). |
 | `browser-harness-js --start` | Explicit start (no-op if already running). |
 | `browser-harness-js --stop` | Graceful shutdown. Drops session state. |
 | `browser-harness-js --restart` | Stop + start fresh. |
 | `browser-harness-js --logs` | `tail -f` the server log (`/tmp/browser-harness-js.log`). |
-| `browser-harness-js recordings [--latest\|enable\|disable]` | Show recording status, select the latest trace, or persist local recording consent. |
-| `browser-harness-js video init\|review\|export <recording>` | Prepare, review, and export a concise evidence-based browser video. |
+| `browser-harness-js recordings [--latest\|enable\|disable\|replay [dir]]` | Show recording status, persist local consent, or replay an rrweb recording. |
 | `browser-harness-js --no-auto-allow '<js>'` | Set `session.autoAllow = false` on the daemon, then eval the JS. Opts out of auto-dismissing Dia's "Allow debugging connection?" prompt (on by default, macOS). |
 
-Env vars: `CDP_REPL_PORT` (default `9876`), `CDP_REPL_LOG` (default `/tmp/browser-harness-js.log`), `CDP_RECORD` (`1`/`0` preference override), `CDP_RECORD_TEXT` (`1` only when
-the user explicitly permits plaintext typing to be persisted), `CDP_RECORD_IDLE_SECONDS` (automatic recording rollover, default `180`), `CDP_RECORDINGS_DIR` (storage override), `BROWSER_HARNESS_JS_HOME` (state root, default `~/.browser-harness-js`).
+Env vars: `CDP_REPL_PORT` (default `9876`; the extension worker hardcodes 9876, keep them in sync), `CDP_REPL_LOG` (default `/tmp/browser-harness-js.log`), `CDP_RECORD` (`1`/`0` preference override), `CDP_RECORDINGS_DIR` (storage override), `BROWSER_HARNESS_JS_HOME` (state root, default `~/.browser-harness-js`).
 
 ## API surface inside snippets
 
 These globals are pre-loaded, no imports needed:
 
 - `session`, the persistent `Session`. Has every CDP domain mounted: `session.Page`, `session.DOM`, `session.Runtime`, `session.Network`, … 56 domains, 652 methods total.
-- `listPageTargets()`, list real page targets via CDP's `Target.getTargets` (works on Chrome 144+ too), with `chrome://` and `devtools://` URLs filtered out. No args, uses the connected session.
+- `listPageTargets()`, list real page targets via CDP's `Target.getTargets` (works on Chrome 144+ too), with `chrome://` and `devtools://` URLs filtered out. No args, uses the connected session. Over the extension, entries also include strip `index`, `windowId`, `groupId`, `pinned`, `muted`, `active`.
+- `ext`, Chrome-extension commands (extension transport only): tab groups, pin/mute/move/discard/reload/duplicate, windows. See [connection.md](interaction-skills/connection.md). `session.Browser.getWindowForTarget` / `getWindowBounds` / `setWindowBounds` / `grantPermissions` work over the extension too. OOPIF and worker targets use UUID `targetId`s from `Target.getTargets`.
 - `detectBrowsers()`, scan OS-specific profile dirs for running Chromium-based browsers with remote debugging on. Returns `[{name, profileDir, port, wsPath, wsUrl, mtimeMs}]`, sorted by most recently launched.
 - `resolveWsUrl(opts)`, resolve a WS URL from `{wsUrl}` | `{port, host?}` | `{profileDir}`. For the no-args auto-detect flow, call `session.connect()` directly instead.
 - `CDP`, the generated namespaces (`CDP.Page`, `CDP.Runtime`, …) for type-name reference.
@@ -104,23 +103,21 @@ These globals are pre-loaded, no imports needed:
 - `listLearnings()` / `learnings(domain, tool?, args?)`, per-site recipe registry over `knowledge/playbooks/cdp/learnings/<domain>/manifest.json` (`nodeTools` and `browserTools` declared per manifest). See `learnings/README.md`.
 - `cdp(sessionId, method, params)`, call any CDP method on an **explicit** `sessionId` without touching the active-session pointer: `cdp(sid, 'Page.enable', {})`. The multi-tab primitive: the one-tab-per-call skills route every call this way so concurrent tabs never race `session.use`. Equivalent to `session._call(method, params, { sessionId })`.
 - `session.closeTab(targetId, sessionId?)`, close a tab and detach: `window.close()` on the session, then `Target.closeTarget`. Fire-and-forget in a `finally` (`.catch(() => {})`) so cleanup is guaranteed and never blocks the return. Closes are serialized.
-- `startRecording(name?, title?)` / `stopRecording()` / `recordingStatus()`, consent-based local screenshots and action traces for explanatory videos. Snake-case `start_recording` / `stop_recording` aliases are also available. See `interaction-skills/make-video.md`.
+- `startRecording(name?, title?)` / `stopRecording()` / `recordingStatus()`, consent-based rrweb DOM recording (not screenshots). Snake-case `start_recording` / `stop_recording` aliases are also available. See `interaction-skills/make-video.md`.
 
-### Recordings and videos
+### Recordings
 
-Fresh installs do **not** record. A natural request to record, show, demo, or make a video opts in for that task; ordinary browser work does not. Start before browser work, retain the exact returned directory, and stop only after verifying the outcome:
+Fresh installs do **not** record. A natural request to record, show, demo, or replay opts in for that task; ordinary browser work does not. Connect first, start before the work, retain the exact returned directory, and stop after the outcome:
 
 ```js
+await session.connect()
 const recordingDir = await startRecording('demo', 'Verify the account settings')
-// Use raw Page.* and Input.* calls to perform and verify the task.
+// Drive the page (or let the user). rrweb records DOM mutations in-page.
 await stopRecording()
 return recordingDir
 ```
 
-Recording observes successful raw CDP calls, so it preserves the protocol API instead of replacing it with click/navigation helpers. Use `Input.*` for visible interactions: arbitrary `Runtime.evaluate` expressions such as `element.click()` cannot be classified as action beats. All typed text is masked on disk by default. Plaintext non-password typing is
-persisted only with explicit `CDP_RECORD_TEXT=1`, and remains hidden from video
-compositions unless `showTyping: true` is separately reviewed and enabled.
-Passwords and unknown focused fields always fail closed. Never reenact a completed task to manufacture missing footage. Video review and export must run in a fresh detached Chromium profile, never in the user's interactive browser. Follow [`make-video.md`](interaction-skills/make-video.md) for consent, edit briefs, isolated rendering, full-resolution privacy review, provenance hashes, and verified MP4 export.
+There is no screenshot / edit-brief / MP4 pipeline. Replay with `browser-harness-js recordings replay <dir>`. Input values are masked during capture; the rest of the DOM is stored as-is under `~/.browser-harness-js` and requires consent. Never reenact a completed task to manufacture missing footage. See [`make-video.md`](interaction-skills/make-video.md).
 
 ### Calling a CDP method
 
@@ -146,7 +143,7 @@ const { nodeId } = await session.DOM.querySelector({ nodeId: root.nodeId, select
 
 `interaction-skills/` holds pure-CDP recipes for mechanics that aren't obvious from the method list alone, dropdowns, drag-and-drop, OOPIFs, network waits, screenshots, recording cross-tab user actions, navigating + waiting for load, reading a JSON URL, recording media. The set grows, so **look, don't recall**: when a task isn't a straight method call (a framework that swallows clicks, a shadow-DOM trap, a wait-with-timeout, multi-tab anything), browse before improvising.
 
-Start here for the patterns every skill shares: [`lifecycle-readiness.md`](interaction-skills/lifecycle-readiness.md) (navigate + wait for load, the one-tab-per-call shape), [`json-navigation.md`](interaction-skills/json-navigation.md) (read a JSON URL), [`media-capture.md`](interaction-skills/media-capture.md) (record `MediaSource` / hook a native API before navigate), [`make-video.md`](interaction-skills/make-video.md) (turn consented action evidence into a short explanatory video).
+Start here for the patterns every skill shares: [`lifecycle-readiness.md`](interaction-skills/lifecycle-readiness.md) (navigate + wait for load, the one-tab-per-call shape), [`json-navigation.md`](interaction-skills/json-navigation.md) (read a JSON URL), [`media-capture.md`](interaction-skills/media-capture.md) (record `MediaSource` / hook a native API before navigate), [`make-video.md`](interaction-skills/make-video.md) (consent-based rrweb recording + replay).
 
 ```bash
 ls $SKILL_DIR/interaction-skills/
@@ -178,13 +175,17 @@ Use DOM queries (`DOM.querySelector`, `Runtime.evaluate` with `querySelector`) f
 
 ### Connecting
 
-**Preferred: just call `session.connect()` with no args.** It auto-detects the browser, the port, and the host, no hardcoded port to keep in sync, no guessing which browser. Always try this first:
+**Preferred: just call `session.connect()` with no args.** It uses the unpacked browser-harness-js extension if that worker is connected to the daemon (`ws://127.0.0.1:9876/extension`), otherwise it auto-detects a remote-debugging browser. Always try this first:
 
 ```js
-await session.connect()   // auto-detect: browser + port + host (loopback)
+await session.connect()   // extension first, then remote-debugging auto-detect
+await session.connect({ transport: 'extension' }) // fail if the extension is absent
+await session.connect({ transport: 'cdp' })       // skip the extension
 ```
 
-Auto-detect scans OS-specific browser-data dirs for running Chromium-based browsers (Chrome, Chromium, Edge, Brave, Arc, Vivaldi, Opera, Comet, Canary, Dia, Helium, Aside, and any other Chromium fork) by looking for a `DevToolsActivePort` file. Each browser picks its own debug port (Chrome often 9222, but Aside uses an ephemeral one like 52860, etc.), auto-detect reads the actual port from that file instead of assuming 9222. The host is always loopback (`127.0.0.1`) for a locally-running browser. Candidates are ordered by most-recently-launched, and the first one whose WebSocket accepts wins. OS-agnostic, works on macOS, Linux, Windows.
+`/health` reports `transport: "extension" | "cdp" | null` and `extension: true` when the worker is attached. Pin remote debugging with `{ wsUrl | profileDir | port }`.
+
+Auto-detect (fallback) scans OS-specific browser-data dirs for running Chromium-based browsers (Chrome, Chromium, Edge, Brave, Arc, Vivaldi, Opera, Comet, Canary, Dia, Helium, Aside, and any other Chromium fork) by looking for a `DevToolsActivePort` file. Each browser picks its own debug port (Chrome often 9222, but Aside uses an ephemeral one like 52860, etc.), auto-detect reads the actual port from that file instead of assuming 9222. The host is always loopback (`127.0.0.1`) for a locally-running browser. Candidates are ordered by most-recently-launched, and the first one whose WebSocket accepts wins. OS-agnostic, works on macOS, Linux, Windows.
 
 Use `detectBrowsers()` first if you want to see what's available (or let the user pick) before connecting:
 
@@ -310,7 +311,7 @@ When attaching to the user's already-running browser:
    # Windows (PowerShell)
    Start-Process <browser-binary> 'chrome://inspect/#remote-debugging'
    ```
- Only macOS's AppleScript path auto-detects the running browser and avoids the profile picker; Linux/Windows need the binary name and may prompt the user to pick a profile first.
+   Only macOS's AppleScript path auto-detects the running browser and avoids the profile picker; Linux/Windows need the binary name and may prompt the user to pick a profile first.
 2. **Tick "Discover network targets"** in the browser's inspect page, then click **Allow** when the browser prompts.
 3. Retry `await session.connect()`. If it picks the wrong browser, use `detectBrowsers()` + `{ profileDir }`; if it's still waiting on the Allow click, pass `timeoutMs: 30000`, see [Connecting](#connecting).
 
@@ -345,9 +346,8 @@ All paths are relative to `$SKILL_DIR` (the install path, see top of this doc).
 - `sdk/repl.ts`, HTTP server (`node:http` on `127.0.0.1:9876`)
 - `sdk/session.ts`, `Session` class (transport, connect, target routing, events)
 - `sdk/axview.ts`, `axView` / `axDiff` / `parseAxRefs`: compressed accessibility-tree projection + helpers, injected as globals (see `interaction-skills/snapshot.md`)
-- `sdk/recording.ts`, consent preferences, privacy-safe raw-CDP action observation, screenshots, and trace storage
-- `sdk/video.ts`, recording initialization, provenance hashes, edit-brief validation, pacing, and composition compiler
-- `sdk/video-render.ts` / `sdk/video-template.html`, Chromium review renderer, redaction review, WebM capture, verified MP4 export
+- `sdk/recording.ts`, consent preferences, pinned rrweb fetch/cache, injection, event storage, local replay server
+- `sdk/rrweb-replay.html`, local player UI served by `recordings replay`
 - `sdk/generated.ts`, codegen output: every CDP method as a typed wrapper
 - `sdk/gen.ts`, codegen script
 - `sdk/{browser,js}_protocol.json`, upstream protocol (vendored)
@@ -358,17 +358,17 @@ All paths are relative to `$SKILL_DIR` (the install path, see top of this doc).
 - Multi-statement snippet without an explicit `return X` (the last expression is not auto-returned).
 - Treating stdout as an `{ok,result}` envelope, output is raw result content.
 - Ignoring stderr / exit code 1 for CDP errors.
-- Starting recording without consent (fresh installs do not record).
-- Setting `CDP_RECORD_TEXT=1` without explicit need, or assuming video redaction
-  can undo plaintext already persisted to `events.jsonl`.
+- Starting recording without consent (fresh installs do not record), or mistaking rrweb DOM recording for a screenshot/video pipeline.
 - Reenacting a completed task to manufacture missing footage.
-- Running video review/export in the user's interactive browser instead of a fresh detached profile.
+- Assuming a target list is in visible tab-strip order.
+- Reaching for `browser-harness-js --restart` first when a flat session is missing; rediscover targets instead, because a restart discards persistent state.
 
 ## Verification
 
-`browser-harness-js --status` prints health JSON (version, uptime, connected, sessionId) or exits 1 if down; errors go to stderr with exit code 1, detect failure with `$?`; for recordings, retain the exact returned directory and stop only after verifying the outcome.
-
+`browser-harness-js --status` prints health JSON (version, uptime, connected, transport, extension, sessionId) or exits 1 if down; errors go to stderr with exit code 1, detect failure with `$?`. Compare `--version` (disk) with the daemon-reported `version` to detect a stale daemon and `--restart` after replacing files. For recordings, retain the exact returned directory and stop only after verifying the outcome.
 
 ## References
 
 N/A, no `references/` directory; recipes live in `interaction-skills/` and `learnings/` beside this file.
+
+Vendored from [monotykamary/browser-harness-js](https://github.com/monotykamary/browser-harness-js) at `3377f8f` (2026-09-01), SDK `0.13.0`. Local adaptations kept on re-sync: this `README.md` playbook wrapper replaces upstream `SKILL.md`; paths are rewritten from `skills/cdp/…` to `knowledge/playbooks/cdp/…`; `$SKILL_DIR` replaces upstream absolute install paths; `setup:` stays relative (`bash scripts/setup`). Diff this directory against that revision to re-sync.

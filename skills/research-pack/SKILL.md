@@ -6,18 +6,20 @@ invocation: entry
 
 # Research pack
 
-At the start of every repository work session, use Sourcebot's `ask_codebase` as
-the default context bootstrap when Sourcebot is available and relevant indexed
-coverage exists; the cross-repository source playbook owns scope and fallbacks.
-After that kickoff, use the nearest sufficient evidence: known source paths can
-be read directly, and bounded Sourcebot follow-ups support planning,
-implementation, verification and review when the decision surface changes. Start
-with the narrowest relevant procedure and add another only for a distinct research
-question. Resolve each procedure's references and helpers from its own directory.
+Use the nearest sufficient evidence. Known local questions stay direct; broad
+unresolved codebase questions can use Sourcebot's `ask_codebase` when relevant
+indexed coverage helps. The cross-repository source playbook owns applicability,
+scope and fallbacks. A session or phase change is not a research trigger.
+Figma/Paper-only tasks stay with design-pack and live design evidence; mixed tasks
+select research only for the question it owns. Start with the narrowest relevant
+procedure and resolve its references and helpers from its own directory.
 
-- Investigate indexed code across all four phases (including an indexed current
-  repository) with Sourcebot's `ask_codebase`, or retrieve external
-  implementations:
+- A native app that does not feel adopted on a desktop flavor is an engineering
+  feel/lag question, not a flavor-integration survey:
+  [native-desktop-feel](../../knowledge/playbooks/native-desktop-feel/README.md)
+  (engineering-pack owns the specialist).
+- Investigate broad codebase questions with Sourcebot's `ask_codebase` when
+  indexed coverage is useful, or retrieve external implementations:
   [cross-repo-source](../../knowledge/playbooks/cross-repo-source/README.md).
 - Study a reference repository or adapt prior art:
   [reference-driven-development](../../knowledge/playbooks/reference-driven-development/README.md).

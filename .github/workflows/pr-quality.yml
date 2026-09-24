@@ -38,7 +38,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 knowledge/playbooks/pencil/scripts/test-verify-fidelity-manifest.py
-          node --test knowledge/playbooks/cdp/sdk/recording-privacy.test.ts
+          node --test knowledge/playbooks/cdp/sdk/*.test.ts
 
       - name: Check changed lines
         shell: bash

@@ -28,6 +28,10 @@ checkout or index. Never blind-copy; never mass-.
 
 ## Workflow
 
+For research-only requests, use the discovery and comparison steps, then return
+findings. The implementation steps apply only when implementation is authorized;
+see [research and ingestion scope](../cross-repo-source/README.md#inspiration-and-adaptation).
+
 1. **Ground locally**, inspect the current project and identify the seam; decide
    whether outside code materially reduces uncertainty (if not, stop and
    implement directly).
@@ -39,10 +43,40 @@ checkout or index. Never blind-copy; never mass-.
 3. **Read it as code, not docs**, read the exact source and its direct tests, and
    note the revision the evidence came from.
 4. **Compare boundaries**, local vs reference; decide ADOPT / ADAPT / OMIT per concern.
+   For projected state, trace every writer and the final consumer, not just the
+   reducer helpers. A helper's ordering or equality rule need not match the
+   composed UI/API, and a native-state mirror may also receive local writes.
+   Preserve these observed contracts without prescribing an untested representation.
 5. **Implement** in the current codebase; keep any reference checkout untouched.
 6. **Verify against the CURRENT project's gates**, its tests/compiler/lint/CI, never
    the reference's own tests alone. Record provenance and license obligations in
    the PR's Reference/Prior-Art section.
+
+## Differential comparison
+
+A port's own tests encode the same expectation as the port, so a wrong expectation
+survives both: the tests assert that a tool run keeps its accumulated argument text
+and the port is written to keep it. The reference implementation does not share the
+assumption, so run it.
+
+When the reference is runnable from your toolchain, drive the reference and the port
+with the same inputs, step by step, and compare observable state *after every step*,
+not only the final result. Observed 2026-09-18 while porting a session reducer:
+26 of 36 step comparisons differed on the first run, including a field the reference
+drops when a run starts executing and an event its reducer ignores entirely. The
+port's own tests had asserted the opposite in both cases, and passed.
+
+- Compare the model's distinctions, not a lossy rendering of them. A comparator that
+  renders a missing field as an empty one cannot see a dropped field, which is the
+  class of divergence it exists for.
+- Normalize representational differences explicitly, narrowly and once, in the
+  harness header: a difference you state is a decision, one you collapse silently is
+  a blind spot.
+- Keep one reference/port pair per run when the reference numbers its own records
+  (notice ids, sequence counters); a fresh pair per step compares different counters.
+- Verify the comparator by mutation: make the port differ deliberately, confirm the
+  run turns red, then remove the mutation. A green harness of unknown power is not
+  evidence of parity.
 
 ## Reference sources
 
@@ -81,6 +115,9 @@ and coverage gaps. A partial capture is not complete knowledge.
   required only when a checkout was used.
 - The ADOPT/ADAPT/OMIT decision is stated per concern.
 - Changes verified against the current project's gates (named check + exit code).
+- A differential harness reports its comparison count with no differences, and a
+  temporary mutation of the port or the comparison turns it red before that check is
+  trusted as evidence.
 
 ## References
 

@@ -10,8 +10,28 @@ apply after the implementation changes; retain both the result and its condition
 History search, recall, or reflection services are optional locators and pattern
 suggesters. Fabric, Hindsight, and other providers are not prerequisites, and their
 summaries are not independent corroboration. Retrieve the smallest supporting
-range. If raw evidence is unavailable, qualify or defer the claim rather than
-inventing provenance. Do not duplicate session history in a permanent artifact.
+range. When the visible conversation lacks earlier work, distinguish uninspected
+history from unavailable evidence. If an authorized transcript or history locator
+is available, make a bounded check before asking the user to supply it. In
+this template that bounded check is the project's Hindsight bank (`hindsight_recall`
+for prior lessons, `hindsight_reflect` for a synthesized view) together with the
+stored reflection records under `background/reflections/*` in the project's Fabric
+mesh, which carry earlier sessions' findings, proposals and retained ids; cite the
+overlapping ids and skip what they already establish. `hindsight_status` reports
+whether that lane is ready — unconfigured, unsynced or empty is a stated limitation,
+not a reason to invent provenance or to ask the user for history the session
+already contains. Confirm
+session identity or an explicit continuation link; the same repository or a recent
+timestamp does not establish that another session's work belongs here. If no
+relevant evidence is found, state what was checked and defer unsupported lessons.
+
+A recalled summary is a pointer, not a name service: verify the identifiers it
+returns against the working tree before repeating them. Observed 2026-09-17, a recall
+of this template's own prompts named a file that does not exist
+(`compile-session-skill` for the real `compile-skill`); the repository was
+correct and the recall was not.
+Do not require history access when supplied events suffice, or duplicate session
+history in a permanent artifact.
 
 ## Explain the useful experience
 

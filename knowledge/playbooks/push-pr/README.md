@@ -16,24 +16,21 @@ opened - or already merged - a PR for the same work, and an open-only query miss
 
 ## Workflow
 
-1. Inspect status, the base branch, commit range, and authored diff. Run the
-   project's relevant gates and `git diff --check` on that range, compared from the
-   merge base (`<base>...HEAD`); a tip-to-tip `<base>..HEAD` diff reports the base's
-   own newer work as deletions (`../git-workflow-and-versioning/README.md`). Record
-   commands and exit statuses. Pre-PR, also run `coderabbit review --agent` (add
-   `--light` for large diffs; `--committed` when the tree is clean) and triage the
-   structured findings before opening: fix valid correctness findings, skip the
-   rest with a one-line reason, and note skipped conflicts with prior reviewed
-   behavior. If no quality gate exists, run the strongest applicable
-   checks and report the gap rather than inventing CI. Use
-   `../pre-pr-validation/README.md` for local readiness and revision-bound evidence.
-   A blocked local verdict stops delivery unless the user requests a draft/WIP PR;
-   carry the blockers honestly into that draft.
+1. Inspect status, the base branch, commit range, and authored diff. Before every
+   new PR or update to an existing PR, revalidate through
+   `../pre-pr-validation/README.md`; it owns
+   the project gates, `git diff --check`, CodeRabbit review, Steroid semantics,
+   the Sourcebot baseline challenge where applicable, Fovea impact analysis and
+   revision-bound evidence.
+   Follow its evidence-reuse rule for unchanged revisions and metadata-only
+   updates. If no project quality gate exists, record that blocker rather than
+   inventing CI. A BLOCKED verdict stops normal delivery unless the user requests
+   a draft/WIP PR; carry every blocker honestly into that draft.
 2. For PR creation or body updates, load `references/pull-request-format.md`.
    Use the repository's own template first; fall back to
    `../../../templates/pull-request.md`. Include only evidence actually obtained.
-   Visual changes need rendered proof; structural observations and prior-art
-   provenance follow the change. Mark a reusable lesson as a capture candidate,
+   Visual changes need rendered proof; carry the pre-PR structural evidence and
+   prior-art provenance into the body. Mark a reusable lesson as a capture candidate,
    not an automatic capture task.
 3. Write Markdown to a securely created temporary file (`mktemp`); pass it with
    `--body-file`, never interpolate it into shell code. Before `gh pr create`, run
@@ -42,15 +39,18 @@ opened - or already merged - a PR for the same work, and an open-only query miss
    in any fork checkout pass `--repo` (and `--head` when head and base repos
    differ) explicitly. Push and create with
    `gh pr create --title "..." --body-file <file> --base <base>`, or update the
-   existing PR. Incomplete implementation is draft; ready implementation can
+   existing PR. For fork-based contribution — remote roles, branching from the
+   project's base, branch currency, and a fork PR's base-repository CI — use
+   `references/fork-contribution.md`. Incomplete implementation is draft; ready implementation can
    enter review while CI runs. A failing required check blocks merge, not review.
 4. Apply labels only when explicitly requested; this repository has no label
 automation. Reviewers follow CODEOWNERS or an
    explicit request; milestones/projects follow issue relationships. Link only
-   real issues. If the batch already landed on the base branch, move it to a
-   feature branch first — `git reset --soft` to the pre-batch point keeps the
-   working tree identical so live watchers do not restart — push the branch,
-   then restore the base with `--force-with-lease` before opening the PR.
+   real issues. If the batch accidentally landed on the base branch, preserve
+   its commits and uncommitted work, then agree on recovery through
+   `../git-workflow-and-versioning/README.md`. Do not rewrite a published base
+   or force-push it without explicit approval of the affected history.
+
    Auto-merge requires an explicit user request, not merely repository
    support, and must not be enabled while required checks fail.
 5. Watch required CI to a terminal state with `gh pr checks --watch` (or

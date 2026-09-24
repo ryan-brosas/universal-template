@@ -1,6 +1,6 @@
 ---
 title: git-workflow-and-versioning
-summary: 'Use when preparing a release, choosing a version bump, creating or moving tags, writing changelog or release-note content, or when git hygiene for shared history is in question: commits, branches, base comparison and stale-base rebases, divergence and squash-merge reconciliation, post-merge branch state, recovery, non-interactive continuation.'
+summary: 'Use when preparing a release, choosing a version bump, creating or moving tags, writing changelog or release-note content, or when git hygiene for shared history is in question: commits, branches, base comparison, fork synchronization, fork-to-upstream replication, stale-base rebases, divergence and squash-merge reconciliation, post-merge branch state, recovery, non-interactive continuation.'
 kind: playbook
 ---
 
@@ -149,6 +149,17 @@ After a merge, fetch the branch before concluding that nothing else landed on it
 concurrent session can push to a merged branch, leaving commits no PR covers
 (`git fetch origin <branch> && git log --oneline <merged-head>..FETCH_HEAD`), and a
 stale remote-tracking ref makes that log look empty.
+
+## Fork replication and synchronization
+
+For an already-merged fork feature or a discrepancy between two PRs' changed-file
+counts, use [fork replication and scope comparison](references/fork-replication.md).
+It separates the accepted patch, destination adaptations and independent fixes;
+matching file counts alone does not establish an exact replica.
+
+To update a fork while retaining its work, use
+[fork synchronization](references/fork-sync.md). Check whether an existing
+integration already permits a fast-forward before rebasing or rebuilding it.
 
 ## Common Rationalizations
 
