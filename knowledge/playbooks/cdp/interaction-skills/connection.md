@@ -168,6 +168,43 @@ xdotool search --name '<browser-binary>' windowactivate
 powershell -NoProfile -Command "(New-Object -ComObject WScript.Shell).AppActivate('<browser-binary>')"
 ```
 
+## Parallel work, background tabs, and desktop focus
+
+CDP input is **page-targeted**, not desktop input. `Input.dispatchMouseEvent`,
+`Input.insertText` and `Input.dispatchKeyEvent` are delivered to the attached
+target's renderer; they do not move the physical pointer, and in `input: 'trusted'`
+mode `InteractionController` enables `Emulation.setFocusEmulationEnabled` so
+background tabs still receive focus and keys. Nothing in that path requires the
+browser window to be frontmost.
+
+What actually changes the human's view:
+
+- `Target.activateTarget` and `Page.bringToFront` (Chrome-side tab/window focus).
+- The OS-level helpers above (`osascript`, `wmctrl`, `xdotool`, `AppActivate`).
+- Creating a target **without** `background: true`, which may open in front.
+
+For parallel or unattended work, keep both halves of the isolation:
+
+1. **Route explicitly.** Create with `background: true`, attach with
+   `Target.attachToTarget({targetId, flatten: true})`, and use the returned
+   `sessionId` in `cdp(sessionId, method, params)` or guarded `scope` on every call.
+   The daemon holds a single mutable active-target cursor, so two snippets that
+   call `session.use()` can steal each other's target; avoid it for parallel work.
+2. **Isolate the browser process.** A separate CDP endpoint or profile keeps
+   another agent's tabs out of the human's window group. A new tab, a different
+   service name, or a fresh CDP port is **not** by itself a separate profile;
+   check the actual `--user-data-dir`. A distinct profile on the same desktop can
+   still take visible focus when activation is requested.
+
+Guarded actions use explicit `{scope:{sessionId}}` and never the mutable cursor.
+The controller's per-scope queue serializes mutations inside one Session; it is
+not a browser-wide lock across processes, and raw `cdp()` calls bypass it.
+
+Because it does not need to steal the desktop, this path is the right default for
+long or unattended runs. Verify a task actually landed (read back state or
+screenshot) rather than treating a dispatch receipt, or a `target.activateTarget`
+that a page's own script performs, as proof of an effect.
+
 ## WebSocket payload limits — any large CDP response can close the socket
 
 The CDP WebSocket has a per-message size limit. A single response large enough to exceed it closes the socket — the call rejects with `CDP socket closed`. This is a property of the *connection*, not any one domain: any big-enough response can trigger it. Common culprits:
