@@ -7,9 +7,7 @@ as failures, user corrections, recovery, and verification. Use the available raw
 evidence to explain what happened, why it may have worked or failed, what is
 actually demonstrated, and when the lesson would apply. Separate reusable
 experience from repository facts we can retrieve again. Identify worthwhile
-changes or open questions, but do not save or apply them yet. Recover evidence
-through the lane in
-knowledge/playbooks/session-improvement-compiler/references/evidence-contract.md
-before asking for history, and say when that lane was unavailable.
+changes or open questions, but do not save or apply them yet. Use available history
+when earlier context is needed, and state any gaps.
 
 ${ARGUMENTS:-}

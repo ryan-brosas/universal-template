@@ -63,12 +63,11 @@ observers are not durable workers; reuse existing queues before adding another.
 
 ## Learn without accumulating noise
 
-Review evidence after each task; retain only reusable corrections or methods.
-Use the [session improvement compiler](../session-improvement-compiler/README.md),
-updating an existing owner first. "No reusable lesson" is valid. Read-only roles
-propose changes to the writer; learning does not expand permissions or authorize
-shared-library edits. Put a short disposition in the normal result, not a new
-recursive learning task. This updates instructions, not model weights.
+When experience yields a useful reusable correction or method, update its existing
+owner within the task's granted scope. There is no required learning step after
+every task. Read-only roles propose changes to the writer; learning does not expand
+permissions or authorize shared-library edits. This updates instructions, not
+model weights.
 
 ## Verification and related work
 
