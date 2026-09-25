@@ -29,7 +29,7 @@ procedure and resolve its references and helpers from its own directory.
   [cdp](../../knowledge/playbooks/cdp/README.md).
 - PDF extraction:
   [pdf-extract](../../knowledge/playbooks/pdf-extract/README.md).
-- Conjecture-driven mathematics and Lean proofs:
+- Conjecture-driven mathematics, exact Bend verification, and optional Lean proofs:
   [math-schema](../../knowledge/playbooks/math-schema/README.md).
 
 Select additional [specialists](references/topics.md) only when distinct research
