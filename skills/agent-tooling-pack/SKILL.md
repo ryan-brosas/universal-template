@@ -1,6 +1,6 @@
 ---
 name: agent-tooling-pack
-description: "Use when building or troubleshooting agent integrations: Pi packages and extensions, provider authentication and model catalogs, or Fabric execution surfaces, including inspecting or removing durable actors whose live tools cannot carry a capability. Also use for bounded typed judgment workflows with Jev. This pack owns agent-runtime and integration contracts; combine it with engineering for implementation or research for external evidence. Ordinary planning alone does not trigger it."
+description: "Use for Pi/Fabric agent integrations, provider authentication and model catalogs, durable-actor capability troubleshooting, bounded Jev judgments, or AppFlowy workspace organization, calendars and record updates through CLI/MCP. Owns agent-runtime and tool-integration contracts; combine with engineering for code, writing for content or research for external evidence. Ordinary planning alone does not trigger it."
 invocation: entry
 ---
 
@@ -12,6 +12,8 @@ active integration problem. Resolve each procedure's helpers and references from
 its own directory. Installed runtime guidance and live tool schemas own the
 current API; do not load a different kernel's instructions.
 
+- AppFlowy workspace organization, numbered pages, native calendars, record updates or recovery:
+  [appflowy-workspace](../../knowledge/playbooks/appflowy-workspace/README.md).
 - Pi package manifests, extensions, packaging and delivery:
   [pi-package-development](../../knowledge/playbooks/pi-package-development/README.md).
 - Provider authentication, model catalogs and runtime behavior:

@@ -1,69 +1,48 @@
 ---
 title: appflowy-workspace
-summary: "Use when driving AppFlowy pages, spaces or database rows from the CLI or MCP, building a work or progress tracker in AppFlowy, capturing screenshot evidence, or recovering from AppFlowy auth, upload, page-order or read failures."
+summary: "Use when organizing or numbering AppFlowy pages, creating native calendars, updating existing records, collecting evidence, or recovering from CLI/MCP authentication, document-identity or ordering failures."
 kind: playbook
 ---
 
 # AppFlowy workspace
 
-AppFlowy is a document-plus-database workspace reached by two clients: `appflowy-cli` and the
-`appflowy-mcp` server (FastMCP, stdio). The installed `--help` and live tool schemas own the
-current surface; the contracts below are the non-obvious ones that cost rework.
+Use the installed client, live schemas and matching source. A missing CLI or MCP operation does not establish that AppFlowy lacks the capability. Check supported, authorized alternatives before declaring a limit; do not bypass access controls.
 
-## Treat IDs as identity
+## Start at the right boundary
 
-Page **titles are hand-editable and drift**; `view_id` and `database_id` are stable. Record and
-address those. A cached `tree` can return stale names — prefer `ls`/export for current titles, and
-re-read rather than trusting an earlier listing.
+Inspect the requested subtree and page purposes. Record stable page, view, database and row IDs separately from editable titles. Scope reads to the change: one publication link does not need a workspace-wide investigation.
 
-## The two clients differ
+Organizing navigation is not permission to change task status, ownership or dates, archive old work, or resume a previous campaign. Use the project's current remit and approval rules. Deletion or archival needs its own authorization; a separately approved, backed-up move to trash is still valid.
 
-- `appflowy-cli`: login, workspaces, `use`, `ls`, `tree`, `search`, `export`, `import`, `save`.
-  It cannot read database **rows** or move a page to trash. `export` requires an output path.
-- MCP server adds rows (`list_rows`, `get_row_details`, `create_row`), trash/restore, reorder and
-  upload.
+## Preserve identity before adding structure
 
-So "the CLI cannot" never means "AppFlowy cannot" — check the MCP surface before declaring a limit.
+- Move and rename existing pages rather than copy them into replacement trackers. A database container and its nested native views are not necessarily duplicates.
+- For a new document with an explicit `view_id`, pair `collab_id` with that same ID. Reuse a helper that enforces this contract. Create and open one new parent successfully before moving existing children beneath it.
+- If a section appears in the folder tree but cannot open, check document identity before recreating anything. Repair a confirmed missing document at the existing ID through a supported path; do not recreate a populated parent and risk its children.
 
-## Auth
+## Organize the navigation, not just the labels
 
-The MCP server keeps tokens **in memory only** and reads neither the CLI's `credentials.json` nor a
-password. Supply `APPFLOWY_EMAIL`/`APPFLOWY_PASSWORD`, or call `appflowy_refresh_token` with the
-refresh token from `~/.config/appflowy-cli/credentials.json` at the start of a session. Without
-that, every MCP tool returns "Not authenticated" while the CLI still works. When the host has not
-loaded the MCP tools, the stdio server can be driven directly: initialize (`protocolVersion`
-2025-06-18), send `notifications/initialized`, then one `tools/call` per request — key results by
-call index, because identical tool names overwrite each other in a name-keyed map.
+Use consistent zero-padded prefixes when numbering is requested, then set and read back actual sibling order. Preserve native database tabs and settings unless they are in scope.
 
-## Writing pages
+Make the hub and section indexes link to the existing records. Clearly separate retained historical notes from current navigation. Update maintained path-based references after renaming; ID-based links should keep resolving. Build new page content in one ordered operation. For existing pages, prefer precise edits or verified additive navigation over rebuilding their contents.
 
-- **Build a page whole.** One create call preserves block order; **appending to an existing page
-  can scramble order** (tables reversed, sections rotated). Rebuild instead of appending when
-  order matters.
-- **Import with assets** for text plus local images: `import_markdown_file` with
-  `upload_assets: true` uploads images resolved relative to the Markdown file and creates the page
-  in a single ordered pass.
-- **Uploads need a UUID `parent_dir`** — the destination page's `view_id`, not an arbitrary key.
-  A non-UUID key fails with HTTP 404 "UUID parsing failed". Uploaded blobs survive the source page
-  going to trash.
-- Boards/databases do **not** export as Markdown; read rows through the row tools.
+## Deliver a native calendar
 
-## Track work with evidence tiers
+A Markdown schedule is not a calendar view. Locate or create the actual database view and verify its Date-field binding, dated rows, timezone and all-day behavior. Distinguish container, view and database IDs. Keep the database canonical rather than maintaining a second live table.
 
-A tracker can show progress and still be wrong about it. Label each item **verified** (screenshot,
-export, or receipt attached) or **reported** (a claim with no evidence), and keep `Unknown`
-distinct from `0`. Treat funnel stages as separate facts — exposure, engagement, conversation,
-signup, first successful use, repeat use — because a like is not a signup and a testimonial is not
-usage. Drafts, published work and verified results are three different states.
+Separate publication status from evidence. A user-reported publication may lack a permalink. Saving a supplied URL can be verified by readback; it does not independently verify the live wording, placement or results. A reshare is not another original piece. Unknown is not zero.
 
-## Boundaries
+## Update the existing record
 
-Prefer trash (recoverable) over permanent delete, and export a space before clearing it. Keep
-credentials out of the repository. Write evidence into the tracker with a caption naming the date,
-the source, and the goal it counts toward.
+Do not assume an `upsert` tool targets a row UUID. A `pre_hash` may derive a different row identity. Check the contract and original key before using it; otherwise use a supported stable-ID update or report the specific blocker. Preserve unrelated cells, patch only necessary metadata and confirm row IDs as well as count.
 
-## Verification
+## Verify what the user will open
 
-Confirm a page by exporting it: headings in order, expected image blocks present, and image URLs
-fetching (HTTP 200 with a bearer token). Re-count database rows after any change. A successful
-write is not evidence that the page reads correctly.
+Use fresh hierarchy reads and the application's page-read path, not only successful writes or raw storage. Check requested order, readable indexes, original IDs, linked records and unaffected database settings. Compare structured values rather than encoded CRDT bytes.
+
+If unexpected rows or values change during the work, retain the baseline, investigate and report the difference. Preserve unrelated edits; do not restore a snapshot to force a green check or attribute an author without evidence. Qualify completion claims and logs to match what was actually verified.
+
+## References
+
+- [Client contracts](references/client-contracts.md): authentication, document identity, row updates, block ordering and assets.
+- [Maintainer checks](references/checks.md): synthetic cases for reviewing changes to this procedure, not a required runtime workflow.

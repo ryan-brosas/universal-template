@@ -47,7 +47,24 @@ authorize actions, dismiss a finding, or replace user confirmation.
    the judgment separately from observed results. If the judge is unavailable,
    continue with direct tools/reasoning and disclose the limitation when material.
 
-## Using Jev in Fabric
+## Choose the installed execution surface
+
+Pi Fabric's `jev.*` provider and the standalone `jev-fabric` executable are
+separate tools. A successful call through one does not verify the other. Honor
+an explicit request for either surface rather than silently substituting it.
+
+For native process supervision, detached jobs, bounded log watches or the
+standalone CLI, load the installed **jev-fabric** skill. It owns CLI syntax,
+credential resolution, job storage and session budgets; do not build another
+client or copy credentials into a project. Keep job IDs and their configured
+storage root together, and control only jobs owned by the current task. Detached
+execution is not reboot recovery. Shell hooks may differ across hosts and
+projects, so verify the actual execution path with harmless input.
+
+For a judgment within Pi's active Fabric session, use the provider below. Both
+surfaces follow the same evidence, data-sharing and authorization rules above.
+
+## Using Pi Fabric's Jev provider
 
 Discover `jev.status` and `jev.evaluate`, inspect their live descriptors, and
 consult the installed Fabric `docs/jev.md` for current contracts. Do not assume a
