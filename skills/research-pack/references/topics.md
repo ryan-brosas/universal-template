@@ -4,6 +4,7 @@ Start with the narrowest matching procedure. Load additional procedures only for
 distinct active subproblems; each summary and body owns its detailed contract.
 This is a routing index, not a reading list. Known procedure paths can be opened directly.
 
+- [beacon](../../../knowledge/playbooks/beacon/README.md)
 - [cdp](../../../knowledge/playbooks/cdp/README.md)
 - [codex-websearch](../../../knowledge/playbooks/codex-websearch/README.md)
 - [cross-repo-source](../../../knowledge/playbooks/cross-repo-source/README.md)

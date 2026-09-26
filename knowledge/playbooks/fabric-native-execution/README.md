@@ -1,6 +1,6 @@
 ---
 title: fabric-native-execution
-summary: Use when choosing an optional Pi Fabric execution capability, diagnosing unavailable, skipped or restricted tools, inspecting or removing durable actors, recovering from a prewalk handoff boundary, or recovering from stale Fabric guidance; installed host schemas and package skills own the API.
+summary: Use when choosing optional Pi Fabric execution capabilities, diagnosing unavailable, skipped or restricted tools, inspecting or removing durable actors, recovering from prewalk handoffs or stale guidance, or gating writes to systems the user does not control on typed evidence; installed host schemas and package skills own the API.
 kind: playbook
 ---
 
@@ -33,6 +33,16 @@ Optional capabilities have different jobs:
   and portability; installed Jev documentation and live schemas own execution.
 - Transactional mutation modes are deliberate host policy, not prerequisites
   for ordinary edits and not replacements for behavioral tests.
+- A write to a system the user does not control (a production admin panel, a
+  policy or block list, a third-party service) is an authorization decision
+  before it is a data edit. Gate it on a typed decision over the structured
+  evidence actually held - what was observed, when, from which source - and
+  route low confidence to the human instead of resolving it by intuition. The
+  gate earns its cost by flagging the entries whose evidence is thin (in
+  practice, near-duplicate names that eyeballing had already mislabelled).
+  Collapse the gate to default-apply only when the operator confirms a blanket
+  property of a known family; keep it for outliers that could also belong to a
+  legitimate population, and state the reversibility of the write.
 
 ## Diagnose tool availability before repeating probes
 
@@ -69,7 +79,9 @@ restarting it. Similar server lists can belong to different consumers and
 schemas; follow the runtime's configured path rather than guessing. Observed
 2026-09-27: a correct-looking entry in the wrong file never appeared after
 restarts. Compare required fields with a working entry: an omitted field can
-make a loader drop the entry before any connection is attempted.
+make a loader drop the entry before any connection is attempted. A loaded
+config with no server and no error calls for an entry/schema check before a
+connectivity probe.
 
 Use the host's supported reload path where available, but check its impact
 first. A reload can reconnect every server and discard REPL/session state; the

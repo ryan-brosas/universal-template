@@ -1,6 +1,6 @@
 ---
 title: false-green-gates
-summary: Use when a gate, suite, or check reports green without proving the capability ran - nonzero skip counts on passing runs, budgets enforced without evidence, a fast subset gate that omits phases the enforcing lane runs, a regression fixture failing inexplicably against supposedly-working code, or a completion summary claiming more than its verification results or saved evidence support. Triage skip causes, bisect dead paths with temporary probes, and reconcile verification claims.
+summary: Use when green checks, tool acknowledgements, saved-record claims, filtered counts or completion summaries lack matching evidence - skipped checks, omitted enforcing-lane phases, dead paths, echoed inputs and effects that never happened. Triage skips, bisect dead paths, verify effects through independent observables, and reconcile claims.
 kind: playbook
 ---
 
@@ -92,6 +92,19 @@ in a page dump can likewise be the unchanged input, not a saved record.
    rejected duplicate rather than a lost write. Search before retrying, bound
    any retry, and report silence as unverified instead of applied.
 
+10. **An acknowledgement is not an execution.** A command can report success
+    while performing nothing, and a rejected command can look identical to a
+    no-op when you only check for an exception. Prefer the response payload over
+    the absence of an error: one tool answered a paging call with "Scrolled up"
+    while the view never moved, and separate single-action calls were silently
+    refused with an explicit disabled-code that read as normal when only the
+    exception was inspected. Prove the effect on an observable that only the
+    effect can change (a position, a count, a timestamp), and build the control
+    from the same observable - a control page whose own dynamic content shifts
+    will "prove" a no-op works. The same trap applies to scope: a count read
+    while a filter is still applied is not the population, so clear or record
+    the filter before trusting or reporting it.
+
 ## Boundaries
 
 Probes are temporary instrumentation; remove them before merge and do not
@@ -146,4 +159,5 @@ repair; new timers and watchers have their inverse (dispose/cancel) and are
 rearmed per event; the local gate and the enforcing lane share one aggregate
 command, or every phase present in only one of them is named as a known gap.
 A write claim cites the authority's effect and an independent identity query,
-not the submitted value still sitting in a field.
+not the submitted value still sitting in a field. Command claims name the changed
+observable, and counts record or clear any active filter.

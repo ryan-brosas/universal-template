@@ -1,6 +1,6 @@
 ---
 title: security-and-hardening
-summary: Use when auditing for security vulnerabilities, implementing auth or authz, handling secrets or authenticated sessions, or hardening against OWASP Top 10 - covers input validation, authentication, dependency auditing, and secure defaults.
+summary: Use when auditing for security vulnerabilities, implementing auth or authz, handling secrets, passwords, login credentials or an authenticated session, or hardening against OWASP Top 10 - covers input validation, authentication, dependency auditing, and secure defaults.
 kind: playbook
 ---
 
@@ -22,7 +22,8 @@ project contracts and advisories to choose the relevant defenses.
   matching credential lines with `grep`, dump the environment, or enable shell tracing.
   Pass credentials directly to the consumer and report only the probe result.
   Compare config shapes using field names or presence booleans, not values; a
-  redaction list can miss an unfamiliar secret-bearing field. If a value escapes,
+  redaction list can miss an unfamiliar secret-bearing field. Derive the
+  field-name allowlist from the current schema/entry, not memory. If a value escapes,
   disclose the exposure without repeating it and arrange authorized rotation;
   later redaction does not undo transcript exposure.
 - **Automation is not an auth channel.** Confirm a stored credential's kind and

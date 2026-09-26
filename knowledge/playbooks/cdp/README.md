@@ -14,6 +14,9 @@ The SDK lives in this playbook's `sdk/` directory. `$SKILL_DIR` means the direct
 
 For progress complaints, missing flat sessions, and shared-daemon updates, use [connection guidance](interaction-skills/connection.md#health-versus-task-progress). Raw CDP remains the API; optional guards do not replace known deterministic routes.
 
+For browser-relay MCP workflows instead of this SDK, use [beacon](../beacon/README.md).
+
+
 ## How to use
 
 Just run `browser-harness-js '<JS>'`. The first call spawns the server in the background; subsequent calls hit the same process and so reuse the same `session`, the same wire to the browser (extension relay or remote-debugging WebSocket), and any globals you set.

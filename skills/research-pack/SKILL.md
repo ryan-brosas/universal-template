@@ -23,6 +23,8 @@ procedure and resolve its references and helpers from its own directory.
   [oracle-consult](../../knowledge/playbooks/oracle-consult/README.md).
 - Browser inspection/automation:
   [cdp](../../knowledge/playbooks/cdp/README.md).
+- Drive the user's own logged-in Chrome when no CDP endpoint exists:
+  [beacon](../../knowledge/playbooks/beacon/README.md).
 - PDF extraction:
   [pdf-extract](../../knowledge/playbooks/pdf-extract/README.md).
 - Conjecture-driven mathematics, exact Bend verification, and optional Lean proofs:
