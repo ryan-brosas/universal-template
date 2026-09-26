@@ -7,6 +7,9 @@ as failures, user corrections, recovery, and verification. Use the available raw
 evidence to explain what happened, why it may have worked or failed, what is
 actually demonstrated, and when the lesson would apply. Separate reusable
 experience from repository facts we can retrieve again. Identify worthwhile
-changes or open questions, but do not save or apply them yet.
+changes or open questions, but do not save or apply them yet. Recover evidence
+through this repository's bounded history lane - project Hindsight recall plus
+stored reflection records - before asking for history, and say when that lane was
+unavailable.
 
 ${ARGUMENTS:-}
