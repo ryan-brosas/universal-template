@@ -1,6 +1,6 @@
 ---
 title: push-pr
-summary: Use when finished work needs to be pushed and opened or updated as a GitHub pull request, when PR review feedback must be addressed in its thread, or when an open PR should be auto-merged on request. Runs the project's own gates and builds the PR body from real evidence.
+summary: Use when finished work needs to be pushed and opened or updated as a GitHub pull request, when PR review feedback must be addressed in its thread, when an open PR should be auto-merged on request, or when a merge is refused, blocked, or reported unmergeable and needs triage. Runs the project's own gates and builds the PR body from real evidence.
 kind: playbook
 ---
 

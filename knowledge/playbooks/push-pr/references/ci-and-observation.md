@@ -20,6 +20,17 @@ When reading raw GraphQL `statusCheckRollup.contexts`, follow
 `pageInfo.hasNextPage` and `endCursor` through every page before evaluating the
 rollup. A partial page is not evidence that all checks passed.
 
+## Stale mergeability is not a policy block
+
+Immediately after a PR is created, `gh pr merge` can refuse with "the base branch
+policy prohibits the merge" while `mergeStateStatus` is still `BLOCKED` or
+unknown: GitHub computes mergeability asynchronously, so the first read can
+describe a state that does not exist yet. Re-query the state before concluding a
+policy blocker or reaching for `--admin` - the same PR commonly settles to
+`CLEAN/MERGEABLE` seconds later. Separate the two cases by the message: "policy
+prohibits" plus "add `--auto`" is a computation race, while "resolve the merge
+conflicts locally" is a real conflict to fix.
+
 ## A fresh head has no verdict yet
 
 An empty or partial rollup is not a pass. `mergeStateStatus: CLEAN` can appear

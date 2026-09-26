@@ -127,6 +127,14 @@ may contain no work upstream lacks. Reconcile by content before rebasing:
 5. Verify the residual diff (`git diff origin/main <branch> --stat`) contains
    only intended work, and run affected tests from the directory their runner
    expects.
+6. When the conflict surfaces at the pull request rather than locally - GitHub
+   reports the branch `DIRTY/CONFLICTING` and tells you to resolve locally, even
+   though the content already matches upstream - the new branch was cut from a
+   pre-squash head. Rebase the new work onto the squashed base and force-push
+   (`git rebase --onto origin/main <pre-squash-head>`, then
+   `git push --force-with-lease origin <branch>`); the PR then carries only the new
+   commit. Confirm that with `git log --oneline origin/main..HEAD` and a diff-stat
+   matching the intended scope before merging.
 
 ## Comparing a branch with its base
 

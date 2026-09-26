@@ -1,6 +1,6 @@
 ---
 title: signup-abuse-response
-summary: Use when throwaway, disposable, or bot signups and their domains must be blocked on a product's own hold or block list - harvest the family signature from a notification feed, dedupe into a durable ledger, audit the live list by record rather than by a filtered count, apply one item at a time under an explicit default policy, and verify every write three ways.
+summary: Use when throwaway, disposable, or bot signups and their domains must be blocked on a product's own hold or block list - walk a notification feed's history for the family signature, dedupe into a durable ledger, classify every address-shaped token rather than one known prefix, audit the live list by record rather than by a filtered count, apply one item at a time under an explicit default policy, and verify every write three ways.
 kind: playbook
 ---
 
@@ -26,7 +26,10 @@ family, decide once, write idempotently, verify against the authority.
 - the **feed** that announces the events, and how far back it can be walked
 - the **policy surface**, its reversibility per item, and the authorization to edit it
 - the **family signature** - what makes a new item the same campaign. Expect rotation:
-  local-part shape, TLD and domain stem all drift over time.
+  local-part shape, TLD and domain stem all drift over time. Collect broadly -
+  every address-shaped token in the feed - then classify into the confirmed family,
+  new candidates, and a do-not-hold bucket. Matching only the known prefix silently
+  under-collects the moment the family changes shape.
 - a **default action** for a confirmed family, agreed with the operator, so routine items
   need no per-item adjudication
 - one **reason string** recorded on every write, so the list stays auditable and the next
@@ -39,10 +42,15 @@ family, decide once, write idempotently, verify against the authority.
    between batches, and judge progress on a monotonic observable such as message
    timestamps - never on content or item-set diffs, which move on their own in a live
    feed. Several consecutive batches without progress mean a boundary or a stale anchor,
-   not slowness. On a browser-relay surface, `../beacon/README.md` owns how to observe,
+   not slowness. Keep a fallback progress signal: a surface may render rows without
+   timestamps, in which case a timestamp-only test is blind and "no regression"
+   means "no evidence", not "a stall". Rendered row or item counts, or the growth
+   of node ids, serve as the fallback - and say which signal you used when
+   reporting depth. On a browser-relay surface, `../beacon/README.md` owns how to observe,
    batch acts and walk history.
 2. **Ledger.** Deduplicate into a durable store outside the session, not a temporary path:
-   item, domain, first seen, source batch. The ledger is what makes the next run a diff
+   item, domain, first seen, source batch, and for any candidate outside the
+   confirmed family the verdict and its confidence. The ledger is what makes the next run a diff
    instead of a re-derivation.
 3. **Audit by record.** Query the policy surface per candidate and read the matching row.
    A count read while a filter is still applied is not the population, and a probe typed
@@ -51,7 +59,12 @@ family, decide once, write idempotently, verify against the authority.
 4. **Decide once per family.** A confirmed family takes the default action with no
    adjudication. Escalate genuine outliers - a domain that could host real users, a brand
    lookalike, or a TLD that is not throwaway infrastructure - and record that decision
-   with its evidence rather than silently widening the block.
+   with its evidence rather than silently widening the block. A candidate outside the
+   confirmed signature is exactly where a typed verdict earns its cost: ask for
+   hold / hold_email_only / skip / need_more_evidence over the structured evidence
+   held, treat low confidence as a human decision, and keep the routine family path
+   free of adjudication. Persist the verdict so the next run diffs decisions, not
+   just domains.
 5. **Write idempotently, one item at a time.** Duplicates are commonly rejected without
    surfacing an error, so look for the item before writing it; a control that enables only
    after the field state commits can swallow the first click, so retry once. Budget for a
