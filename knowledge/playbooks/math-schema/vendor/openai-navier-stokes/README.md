@@ -34,10 +34,10 @@ is in [UPSTREAM.json](UPSTREAM.json).
 
 ## Check the copy
 
-From the math-skill repository root, using `shasum` (Perl Digest::SHA):
+From this repository's root, using `shasum` (Perl Digest::SHA):
 
 ```bash
-cd vendor/openai-navier-stokes/upstream
+cd knowledge/playbooks/math-schema/vendor/openai-navier-stokes/upstream
 shasum -a 256 -c ../SHA256SUMS
 ```
 
@@ -54,10 +54,10 @@ skill's learning sandbox in `lean/`, which pins `v4.33.0`. Do not add these
 files to `Frontier` or change the sandbox toolchain to accommodate them.
 
 Review the source and dependencies before execution. With `elan`
-installed, start from the math-skill repository root:
+installed, start again from this repository's root:
 
 ```bash
-cd vendor/openai-navier-stokes/upstream
+cd knowledge/playbooks/math-schema/vendor/openai-navier-stokes/upstream
 lake exe cache get
 lake build NavierStokes
 lake env lean NavierStokes/ComparatorSolution.lean

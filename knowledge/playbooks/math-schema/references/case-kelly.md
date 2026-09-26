@@ -29,7 +29,8 @@ additive.* Fix the representation first (state-versus-representation, rule
 Take logs:
 
 $$
-\log \frac{W\_n}{W\_0} = \sum\_{k=1}^{n} \log(1 + b f)^{X\_k} (1-f)^{1-X\_k},
+\log \frac{W\_n}{W\_0}
+= \sum\_{k=1}^{n} \log\!\left((1 + b f)^{X\_k}(1-f)^{1-X\_k}\right),
 \qquad X\_k \in \lbrace0,1\rbrace \text{ the win indicator.}
 $$
 
@@ -122,8 +123,10 @@ expanding both sides).
 Half-Kelly fixture: $f = f^\*/2 = 0.1$ at $p = 0.6$, $b = 1$:
 $g(0.1) = 0.6\ln 1.1 + 0.4\ln 0.9 = 0.057186 - 0.042144 = 0.015042$ —
 about $75\%$ of the full-Kelly growth for *half* the exposure, and the
-log-variance scales down with the bracket $\log\frac{1+bf}{1-f}$
-($\log 1.375 \to \log 1.222$: $0.3185 \to 0.2007$, ~ $37\%$ less). Status of
+log-return standard deviation is proportional to the bracket $\log\frac{1+bf}{1-f}$,
+while variance is proportional to its square (full Kelly to half Kelly:
+$\log 1.5 \to \log 1.222$: $0.4055 \to 0.2007$, ~ $50\%$ less standard
+deviation and ~ $75\%$ less variance). Status of
 the heuristic: SUPPORTED by this computation; the general rule
 $g(c f^\*) \approx (2c - c^2)\ \max g$ (concavity + Taylor at $f^\*$) is an
 exercise — prove it using $g''(f^\*)$ computed exactly.

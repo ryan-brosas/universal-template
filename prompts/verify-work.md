@@ -13,8 +13,9 @@ for a question that genuinely needs it, say so and rely on local execution
 without implying indexed corroboration. Execution, not the index,
 proves the local patch. Run the relevant checks and tell me what passed, what
 failed, and what remains untested. Judge each check by the status it reported, not
-by the pipeline around it: a command piped through `tail`/`grep`/`head` returns that
-last command's status, so a failing gate can look green (see
+by the pipeline around it: without `pipefail`, a command piped through
+`tail`/`grep`/`head` returns the last command's status, while with `pipefail`
+an earlier command's failure can determine the pipeline status (see
 `knowledge/playbooks/false-green-gates/README.md`). Never report a test as passed
 unless it was executed. Before handing back, use the
 [evidence-reconciliation procedure](../knowledge/playbooks/false-green-gates/README.md#reconcile-verification-claims)

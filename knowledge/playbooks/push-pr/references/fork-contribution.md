@@ -21,9 +21,10 @@ reference owns the fork workflow around them.
 
 ## Branch from the project's base
 
-- Fetch `upstream` and branch from the project's base (`upstream/main`), so the
-  branch starts from the revision the project reviews, not from a fork default
-  branch that may be stale.
+- Identify the PR's verified base branch, keep it as a configurable value, then
+  fetch `upstream` and branch from `upstream/<base>`. The branch should start
+  from the revision the project reviews, not from a fork default branch that may
+  be stale.
 - Keep one branch per contribution. For a contribution-only fork, a sync-only
   default branch simplifies future work. A downstream fork may intentionally keep
   features on its default branch; do not erase them to enforce that convention.

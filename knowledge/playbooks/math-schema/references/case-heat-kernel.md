@@ -34,16 +34,18 @@ $$
 
 $L$ is symmetric:
 $(D^{-1/2} W D^{-1/2})^\top = (D^{-1/2})^\top W^\top (D^{-1/2})^\top = D^{-1/2} W D^{-1/2}$.
-Call $M := D^{-1/2}WD^{-1/2}$ the symmetric normalized adjacency, so
-$L = I - M$ and $M = D^{-1/2}(D^{-1}W) D^{1/2}$: $M$ is *similar* to our
-averaging operator $D^{-1}W$, hence has the same eigenvalues, but real ones
-with an orthonormal eigenbasis (spectral theorem for symmetric matrices —
-machinery cited, proof is a GAP entry unless already committed).
+Call $P := D^{-1}W$ the row-stochastic averaging operator, and call
+$M := D^{-1/2}WD^{-1/2} = D^{1/2} P D^{-1/2}$ the symmetric normalized
+adjacency. Then $L = I - M$. The matrix $M$ is not row-stochastic in
+general; it is symmetric and similar to $P$, hence has the same eigenvalues,
+but real ones with an orthonormal eigenbasis (spectral theorem for symmetric
+matrices — machinery cited, proof is a GAP entry unless already committed).
 
-**Claim 1.** The spectrum of $L$ lies in $[0,2]$. *Proof.* $M$ row-stochastic
-after similarity: $D^{-1}W\ \mathbf{1} = \mathbf{1}$ componentwise by
-definition of $D$, so $1$ is an eigenvalue of $D^{-1}W$, hence of $M$, hence
-$0$ is an eigenvalue of $L$. For the band: $M$'s eigenvalues lie in $[-1,1]$
+**Claim 1.** The spectrum of $L$ lies in $[0,2]$. *Proof.* $P$ is
+row-stochastic: $P\mathbf{1} = D^{-1}W\ \mathbf{1} = \mathbf{1}$
+componentwise by definition of $D$, so $1$ is an eigenvalue of $P$, hence of
+$M$ by similarity, hence $0$ is an eigenvalue of $L$. For the band: $M$'s
+eigenvalues lie in $[-1,1]$
 because $\lVert M\rVert\_2 \le 1$, shown by
 $v^\top M v = \sum\_{ij} W\_{ij}\  (v\_i/\sqrt{D\_{ii}})(v\_j/\sqrt{D\_{jj}})$ with
 $2|xy| \le x^2+y^2$ giving $|v^\top M v| \le \sum\_i v\_i^2 = \lVert v\rVert^2$.
@@ -52,11 +54,12 @@ $\sigma(L) = 1 - \sigma(M) \subseteq [0,2]$. $\blacksquare$
 
 ## 2. From steps to flow
 
-Discrete iteration $v\_{k+1} = Mv\_k$ rewrites as
-$v\_{k+1} - v\_k = -(I-M)v\_k = -L v\_k$: each step moves $v$ down its $L$-gradient
-direction by one unit of step size. Replace the unit step by a limit:
-$k \to \infty$ while step size $\Delta t \to 0$ with $t = k\ \Delta t$ fixed.
-The difference equation becomes the **heat equation on the graph**,
+The one-step averaging iteration $v\_{k+1} = Mv\_k = (I-L)v\_k$ is the
+unit-step Euler case. For a genuine time limit, include the step size:
+$v\_{k+1} = (I-\Delta t\,L)v\_k$, so
+$(v\_{k+1} - v\_k)/\Delta t = -L v\_k$. Let
+$k \to \infty$ while $\Delta t \to 0$ with $t = k\ \Delta t$ fixed. The
+difference equation becomes the **heat equation on the graph**,
 
 $$
 \frac{d}{dt} v(t) = -L\  v(t), \qquad v(0) = s.
@@ -96,7 +99,7 @@ Every mode decays exponentially at rate $\lambda\_j$:
   low-lying spectrum → *heat traces the graph's global skeleton.* The
   $u\_0$ component ($L u\_0 = 0$, i.e. $u\_0 \propto D^{1/2}\mathbf{1}$,
   verify: $LD^{1/2}\mathbf{1} = D^{1/2}\mathbf{1} - D^{-1/2}W\mathbf{1} = 0$)
-  never dies: total heat $\sum\_i (D^{-1/2}v)\_i$... conserved along the flow,
+  never dies: degree-weighted total heat $\sum\_i D\_{ii}^{1/2}v\_i$... conserved along the flow,
   exercises ask you to prove this.
 
 One dial, $t$, interpolates between *local* and *global*. That is the whole
@@ -105,27 +108,28 @@ design idea: **diffusion time is the zoom level.**
 ## 4. Computing $e^{-tL}$ without eigen: Chebyshev
 
 Diagonalizing costs $O(n^3)$. Instead evaluate the *function* $e^{-tL}$ on
-the vector by polynomial expansion. Rescale: $\mu := \lambda - 1 \in [-1,1]$
-(Claim 1), i.e. work with $M = L - I$ whose spectrum lies in $[-1,1]$. On
-$[-1,1]$ expand $e^{-t(1+\mu)}$ in Chebyshev polynomials $T\_k$:
+the vector by polynomial expansion. Rescale by the normalized-adjacency eigenvalue $\nu := 1 - \lambda \in [-1,1]$
+(Claim 1), i.e. work with the same $M = I - L$ whose spectrum lies in
+$[-1,1]$. On $[-1,1]$ expand $e^{-t(1-\nu)}$ in Chebyshev polynomials
+$T\_k$:
 
 $$
-e^{-t(1+\mu)} = I\_0(t)\ T\_0(\mu) + 2\sum\_{k\ge1} (-1)^k I\_k(t)\  T\_k(\mu),
+e^{-t(1-\nu)} = e^{-t}\left[I\_0(t)\ T\_0(\nu) + 2\sum\_{k\ge1} I\_k(t)\  T\_k(\nu)\right],
 $$
 
 where $I\_k$ is the modified Bessel function. (Proof of the expansion:
-substitute $\mu = \cos\theta$, use the Jacobi–Anger identity — GAP entry;
+substitute $\nu = \cos\theta$, use the Jacobi–Anger identity — GAP entry;
 the identity itself is the standard generating function of $I\_k$.)
 
-Then $e^{-tL} = e^{-t}\  e^{-tM}$ inherits the expansion. The win: no
-$k$-th power of $M$ is ever formed. The *vectors* $T\_k(M)s$ obey the
-three-term recurrence
+Then $e^{-tL}$ inherits this expansion with the outside factor $e^{-t}$
+appearing exactly once. The win: no $k$-th power of $M$ is ever formed. The
+*vectors* $T\_k(M)s$ obey the three-term recurrence
 
 $$
 T\_0 s = s, \quad T\_1 s = Ms, \quad T\_k s = 2M(T\_{k-1}s) - T\_{k-2}s,
 $$
 
-provable from $T\_k(\mu) = 2\mu T\_{k-1}(\mu) - T\_{k-2}(\mu)$ (which follows
+provable from $T\_k(\nu) = 2\nu T\_{k-1}(\nu) - T\_{k-2}(\nu)$ (which follows
 from $\cos k\theta = 2\cos\theta\cos(k-1)\theta - \cos(k-2)\theta$, an
 addition-formula identity). So $K$ matrix-vector products — $O(K|E|)$ work
 — approximate the full heat field. A new $t$ needs only new coefficients,
@@ -146,11 +150,11 @@ edge (Gibbs phenomenon). Natural conjecture:
 
 Test the premise, not the authority of tradition. The premise for Jackson
 damping is ringing, which comes from slow coefficient decay. Here the
-expanded function $e^{-t(1+\mu)}$ is $C^\infty$ on $[-1,1]$, and
+expanded function $e^{-t(1-\nu)}$ is $C^\infty$ on $[-1,1]$, and
 Chebyshev coefficients of $C^\infty$ functions decay faster than any
 polynomial rate (SUPPORTED here by the measured $6\times 10^{-9}$ at
 $K = 90$; the theorem itself — repeated integration by parts after
-$\mu = \cos\theta$ — is a documented GAP). Adding a window would convolve
+$\nu = \cos\theta$ — is a documented GAP). Adding a window would convolve
 in new error to cure none.
 
 Verdict: **REFUTED.** The production code carries no damping window, and

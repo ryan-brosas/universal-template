@@ -46,8 +46,9 @@ boundary before calling it a cap:
 ## Run the production owner, matched
 
 Invoke the same production owner, entrypoint and configuration on both sides.
-Toggle only the variant under test; keep model, host, inputs, mounted consumers
-and sampling window equal. Confirm the control reproduces current behavior before
+Toggle only the variant under test. Keep host, inputs, mounted consumers and
+sampling window equal; keep the model equal unless the model itself is the
+treatment variable. Confirm the control reproduces current behavior before
 trusting the canary. When several changes ride together, claim only their combined
 effect unless separate runs attribute them.
 

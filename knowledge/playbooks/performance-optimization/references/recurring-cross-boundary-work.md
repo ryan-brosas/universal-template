@@ -9,12 +9,15 @@ one platform is affected.
 Start with the recurring producer, not the component that looks busy:
 
 ```text
-operations / second = instances × updates / second × operations / update
-blocked time / second = operations / second × duration / operation
+synchronous blocking operations / second = instances × updates / second × blocking operations / update
+aggregate blocked operation-time / second = synchronous blocking operations / second × blocking duration / operation
 ```
 
-Enumerate every caller and expand wrappers far enough to expose hidden work. A
-single hook can issue several boundary calls. Read the implementation for the
+Use this calculation only for synchronous blocking operations. Keep queued
+asynchronous work outside it; when queueing delay matters, measure wall-clock
+delay separately from enqueue to completion. Enumerate every caller and expand
+wrappers far enough to expose hidden work. A single hook can issue several
+boundary calls. Read the implementation for the
 exact runtime revision and target platform, then classify each operation as
 same-thread, queued asynchronous work, a blocking thread/IPC round trip, a
 constant/no-op, or an event-backed value. For implementation outside the app,

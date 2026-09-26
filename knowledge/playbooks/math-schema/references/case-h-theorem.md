@@ -38,8 +38,11 @@ two parts cancel termwise. PROVEN, mass is conserved along the flow.
 ## 2. Entropy and its derivative
 
 $S := -\sum\_i n\_i \ln n\_i$, with $0 \ln 0 := 0$ as in case-gibbs.md
-section 1, where the convention is argued. The chain rule on the
-$t$-derivative (factored in every term shown):
+section 1, where the convention is argued. For the derivative calculation
+first assume the state is interior ($n\_i > 0$ for every cell); the boundary
+convention defines $S$ continuously, not $\ln n\_i$ or the derivative of
+$n\_i\ln n\_i$ at zero. The chain rule on the $t$-derivative (factored in
+every term shown):
 
 $$
 \frac{dS}{dt} = -\sum\_i \frac{dn\_i}{dt} \ln n\_i - \sum\_i \frac{dn\_i}{dt}.
@@ -65,6 +68,13 @@ symmetric as named). Combine:
 $$
 \frac{dS}{dt} = (1/2) \sum\_{i,j} k\_{ij} (n\_j - n\_i)(\ln n\_j - \ln n\_i) \ge 0.
 $$
+
+For boundary initial states, take $n_i^{\varepsilon}=(1-\varepsilon)n_i+\varepsilon/N$
+with $0<\varepsilon<1$. These approximants are positive and retain unit total
+mass. Let $\varepsilon\to0$; the linear flow depends continuously on the initial
+data and $S$ is continuous under the $0\ln 0$ convention, so
+the nondecrease passes to the limit. This is a limiting argument, not an
+evaluation of $\ln 0$.
 
 The inequality: $\ln$ is increasing, so the factors $(n\_j - n\_i)$ and
 $(\ln n\_j - \ln n\_i)$ have the same sign (monotone functions preserve

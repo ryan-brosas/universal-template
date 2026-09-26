@@ -24,7 +24,7 @@ Organizing navigation is not permission to change task status, ownership or date
 
 Use consistent zero-padded prefixes when numbering is requested, then set and read back actual sibling order. Preserve native database tabs and settings unless they are in scope.
 
-Make the hub and section indexes link to the existing records. Clearly separate retained historical notes from current navigation. Update maintained path-based references after renaming; ID-based links should keep resolving. Build new page content in one ordered operation. For existing pages, prefer precise edits or verified additive navigation over rebuilding their contents.
+Make the hub and section indexes link to the existing records. Clearly separate retained historical notes from current navigation. Update maintained path-based references after renaming; ID-based links should keep resolving. Build new page content in one ordered operation when practical. For existing pages, prefer precise edits or verified additive navigation over rebuilding their contents.
 
 ## Deliver a native calendar
 

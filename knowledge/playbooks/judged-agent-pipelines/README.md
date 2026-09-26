@@ -65,8 +65,13 @@ Set gate values against the distribution you measured, and record why. Cite the 
 Run these before calling a supervised agent done:
 
 - Kill its dependency mid-cycle (browser, socket, API). One cycle should fail loudly, the next should recover on a fresh session.
-- Restart the service mid-cycle. It must exit promptly, resume from persisted state, and reprocess nothing. Verify with a duplicate count on the state table.
-- Confirm one writer only. Two workers on one queue double-process and corrupt pacing.
+- Restart the service mid-cycle. It must exit promptly, resume from persisted
+  state, and lose no work or duplicate committed effects. Verify with persisted
+  queue/state counts and an idempotency or duplicate-effect check.
+- Set worker count from the queue's delivery guarantees and shared-state
+  coordination. Use one worker unless the queue provides safe leasing, ack/redelivery
+  semantics and idempotent or locked committed effects; then prove concurrent
+  workers cannot double-commit or corrupt pacing.
 - Confirm the kill switch stops it at a cycle boundary and stays stopped.
 - Confirm no external write path exists unless it was explicitly built and approved.
 

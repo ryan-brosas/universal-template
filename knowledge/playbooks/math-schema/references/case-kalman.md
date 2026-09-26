@@ -132,18 +132,18 @@ property of $x^2 + Qx - RQ$: the constant term). Positive because
 $P^\* = \sqrt{Q^2+4QR}/2 - Q/2$ and $\sqrt{Q^2+4QR} > Q$ when $R > 0$.
 Status: PROVEN.
 
-Claim B (convergence). $F$ is increasing and weakly contractive:
+Claim B (convergence). $F$ is increasing and, for $Q > 0$, contractive on
+the invariant interval $[0,A]$ with $A := \max(P\_0, R)$:
 $F'(P) = R^2/(P+Q+R)^2$, by the quotient rule on $R(P+Q)/(P+Q+R)$ with
-numerator derivative $R$ and denominator derivative 1. Now
-$R^2/(P+Q+R)^2 < 1$ because $P+Q+R > R > 0$ (all variances positive), so
-on any compact interval the map shortens distances (mean value theorem:
-distance between images is at most the sup of the derivative times the
-distance). Starting from $P\_0$, the sequence $P\_k$ stays in the compact
-interval $[0, P\_0 + Q]$ (each step is an average:
-$P\_{k+1} = R(P\_k+Q)/(P\_k+Q+R)$ lies between 0 and $P\_k + Q$ because
-$R/(P\_k+Q+R) < 1$ ). A sequence in a compact interval whose steps are
-contractions has a limit, and the limit is a fixed point because $F$ is
-continuous and $P\_{k+1} - F(P\_k) = 0$ passed to the limit. Status: PROVEN.
+numerator derivative $R$ and denominator derivative 1. Starting from
+$P\_0$, the sequence is in $[0,A]$; and if $0 \le P \le A$, then
+$0 \le F(P) = R(P+Q)/(P+Q+R) < R \le A$, so $F$ maps the interval into
+itself. On this interval,
+$F'(P) \le R^2/(Q+R)^2 < 1$ because the denominator is smallest at
+$P=0$ and $Q>0$. The mean value theorem therefore gives a uniform
+contraction bound on $[0,A]$, so the iterates converge to the unique fixed
+point in that interval; continuity of $F$ identifies the limit as the
+fixed point computed in Claim A. Status: PROVEN.
 
 ## 5. The surprise fixture: Q = R = 1
 

@@ -15,7 +15,7 @@ matches, or cancel falls through to zenity.
 
 | What you observe | Do this |
 |---|---|
-| Portal service active, zenity missing | Portal first, then kdialog, then zenity |
+| Portal service active, zenity missing | Use the portal; only if it is unavailable, try kdialog when installed |
 | User cancelled the portal | Stop. Do not open a CLI fallback |
 | Lingering `dbus-monitor` child of the validated application PID, no chooser window | Inspect the request lifecycle and emitted Response; check for a matcher miss |
 

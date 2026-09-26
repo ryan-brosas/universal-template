@@ -7,10 +7,13 @@ the project's actual triggers, jobs and branch rules; do not assume every projec
 runs the same events or gates. `pull-request-format.md` owns PR presentation.
 
 - Find runs with an explicit repository, branch and event. For a branch push:
-  `gh run list --repo <owner/repo> --branch <branch> --commit <sha> --event push`.
-  Pin workflow/run IDs and attempts; the same SHA in another repository or event
-  is not this push's verdict. PR workflows may test a synthetic merge revision;
-  record that association rather than mistaking it for the branch head.
+  `gh run list --repo <owner/repo> --branch <branch> --commit <sha> --event push --limit 100`.
+  If the result reaches the limit, increase it or enumerate the paginated
+  Actions API with the same filters before claiming completeness. Pin
+  workflow/run IDs and attempts; the same SHA in
+  another repository or event is not this push's verdict. PR workflows may test a
+  synthetic merge revision; record that association rather than mistaking it for
+  the branch head.
 - Watch expected checks to a terminal state before claiming success. A PR may be
   under review while CI runs; follow the parent procedure's delivery boundary.
 - Record run links and observed states in the requested report or PR evidence,

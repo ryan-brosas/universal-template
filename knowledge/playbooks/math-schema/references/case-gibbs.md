@@ -104,13 +104,16 @@ the derivative is a variance, exactly the tilted-variance identity of
 case-large-deviations.md section 3. Variance is nonnegative; it is zero only on
 one-point energy sets (a variance vanishes iff its variable is constant, shown
 there by the same expansion). PROVEN: $U(\beta)$ weakly decreases, strictly
-when energies differ. So the matching $\beta(U)$ exists and is unique on the
-attainable range of $U$ (monotone functions have at most one inverse value by
-definition; existence by continuity of $U$ in $\beta$: $p$ is continuous in
-$\beta$ being a quotient of continuous sums, and the limits
-$\beta \to \pm\infty$ reach the extreme energies $\min E\_i$ and $\max E\_i$;
-tagged SUPPORTED with the limits computed explicitly in section 5; the
-intermediate value theorem is the cited calculus premise).
+when energies differ. For finite $\beta$, every Gibbs weight is positive, so
+when the energies differ $U(\beta)$ lies in the open interval
+$(\min E\_i, \max E\_i)$ as a strict convex combination of the energy values.
+Thus the matching finite inverse $\beta(U)$ exists and is unique on that open
+interval (monotone functions have at most one inverse value by definition;
+existence by continuity of $U$ in $\beta$: $p$ is continuous in $\beta$ being
+a quotient of continuous sums, and the limits $\beta \to +\infty$ and
+$\beta \to -\infty$ reach the endpoint means $\min E\_i$ and $\max E\_i$ only
+as limits; tagged SUPPORTED with the limits computed explicitly in section 5;
+the intermediate value theorem is the cited calculus premise).
 
 ## 5. The tilt is exactly the Gibbs distribution: rate = entropy deficit
 
@@ -180,11 +183,14 @@ distribution). $\beta \to \infty$: $U \to -h$, $H \to 0$ (the ground
 state alone).
 
 Entropy: $H = \beta U + \ln Z = -\beta h \tanh(\beta h) + \ln(2 \cosh(\beta h))$,
-from section 3's identity. The free energy: $F := U - H/\beta$, defined so
-that $F = -(1/\beta) \ln Z$ (one-line check:
+from section 3's identity. The free energy at fixed positive $\beta$:
+$F\_\beta(q) := U(q) - H(q)/\beta$. For the Gibbs distribution,
+$F\_\beta(p\_\beta) = -(1/\beta) \ln Z$ (one-line check:
 $H/\beta = U + (\ln Z)/\beta$ ). This is the Legendre-conjugate face of the
-same object: minimizing $F$ over $\beta$ picks the temperature at which
-energetic preference and entropic spread balance.
+same object, but the minimization is over distributions, not over $\beta$:
+$\beta$ sets the temperature, and at that fixed $\beta$ the Gibbs distribution
+minimizes $F\_\beta$ because
+$F\_\beta(q) = -(1/\beta)\ln Z + (1/\beta)D(q\parallel p\_\beta)$.
 
 ## 7. Numeric fixtures, both routes shown
 

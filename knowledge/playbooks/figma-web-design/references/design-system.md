@@ -89,7 +89,7 @@ system-design task and verify legibility and accessibility.
 | Button text | `l` 16, `m` 16, `s` 14, `xxs` 12 - never larger, buttons do not need display sizes |
 
 - **Line height:** about 100 percent for large display type, 110-125 percent for mid sizes, and up to 150-175 percent for body and buttons. Smaller text takes proportionally more line height.
-- **Buttons:** 150 percent line height as a rule, with centre and middle alignment baked into the text style so every button inherits it.
+- **Buttons:** text styles should specify the 150 percent line height; set centre and middle label alignment on the text node or button component so every button inherits it.
 - **Weights:** 300 light, 400 regular, 500 medium, 600 semibold, 700 bold, 800 extrabold, 900 black. Use at most two families; one is usually enough.
 - Small text often should not shrink on mobile, and is occasionally larger there, because phones are harder to read.
 

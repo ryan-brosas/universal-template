@@ -33,8 +33,9 @@ findings. The implementation steps apply only when implementation is authorized;
 see [research and ingestion scope](../cross-repo-source/README.md#inspiration-and-adaptation).
 
 1. **Ground locally**, inspect the current project and identify the seam; decide
-   whether outside code materially reduces uncertainty (if not, stop and
-   implement directly).
+   whether outside code materially reduces uncertainty. If not, return the local
+   finding for research-only requests; for implementation-authorized requests,
+   implement directly.
 2. **Find the source** with the cheapest sufficient capability: an indexed
    repository via `../cross-repo-source/README.md`, GitHub or equivalent
    discovery for source outside the corpus, or an existing project-local
@@ -115,9 +116,11 @@ and coverage gaps. A partial capture is not complete knowledge.
   required only when a checkout was used.
 - The ADOPT/ADAPT/OMIT decision is stated per concern.
 - Changes verified against the current project's gates (named check + exit code).
-- A differential harness reports its comparison count with no differences, and a
-  temporary mutation of the port or the comparison turns it red before that check is
-  trusted as evidence.
+- When the reference is runnable, a differential harness reports its comparison
+  count with no differences, and a temporary mutation of the port or the
+  comparison turns it red before that check is trusted as evidence. When the
+  reference cannot run, record why, compare the observable contracts from source
+  and tests, and do not claim zero-difference parity.
 
 ## References
 

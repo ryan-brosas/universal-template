@@ -117,13 +117,15 @@ section 4): the stationary heat $W^\*$ is exactly Gaussian with variance
 $V$, matching Claim 2 of section 2 by two routes. PROVEN.
 
 The Chernoff rate: $I(\theta) = \sup\_{t \ge 0} [t \theta - \Lambda(t)]$.
-The sup of a concave quadratic attains at the peak $t^\* = \theta/V$ (the
-same peak algebra as case-large-deviations.md section 4: derivative
-$\theta - V t$ zeroed), value $\theta^2/(2V)$. Because $W^\*$ is a true
-Gaussian, the Mills ratio of case-large-deviations.md section 4 turns the
-Chernoff bound into the same exponent the true tail carries:
-$\log \mathbb{P}(W^\* \ge \theta) = -\theta^2/(2V) + O\text{-ish log correction}$:
-the rate function equals the Gaussian exponent
+For $\theta > 0$, the sup of this concave quadratic attains at the peak
+$t^\* = \theta/V$ (the same peak algebra as case-large-deviations.md
+section 4: derivative $\theta - V t$ zeroed), value $\theta^2/(2V)$. For
+$\theta \le 0$, the constrained optimizer is the boundary $t=0$ and the
+rate is $0$. Because $W^\*$ is a true Gaussian, the Mills ratio of
+case-large-deviations.md section 4 turns the positive-threshold Chernoff
+bound into the same exponent the true tail carries:
+$\log \mathbb{P}(W^\* \ge \theta) = -\theta^2/(2V) + O\text{-ish log correction}$
+for $\theta>0$: the rate function equals the Gaussian exponent
 $\theta^2/(2V) = \theta^2/(2 \sigma^2) \cdot (1+\rho)/(1-\rho)$. Sanity
 limits, each proven from the formula: $\rho \to 0$ recovers
 $V = \sigma^2$ and the plain i.i.d. rate; $\rho \to 1$ forces
