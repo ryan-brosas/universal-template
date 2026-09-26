@@ -59,6 +59,12 @@ endpoint, key and config file; this procedure owns how to use the surface.
   timestamp regressing; content or token diffs move on their own when the page
   is live. Consecutive batches without regression mean the loaded-history
   boundary, not slowness.
+- **Measure the act cost before scheduling writes.** Time one short and one long
+  `type` batch: a healthy surface answers in well under a second, while a degraded
+  one can cost seconds per character (observed ~0.75 s/char), which should change
+  the plan - fewer writes per run, a checkpoint per item, a longer deadline - not
+  the ambition. Reads can stay fast while input is slow, so never infer input
+  health from `observe` latency.
 - **A form write may need a second click.** Controls that enable only after the
   field state commits can swallow the first click while still inert: retry once,
   then confirm by count or status rather than by the value being present.
