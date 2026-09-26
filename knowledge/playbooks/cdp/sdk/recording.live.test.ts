@@ -14,7 +14,11 @@ import { Session } from './session.ts';
 
 const PAGE = 'data:text/html,<html><body><h1 id="probe">hello-rrweb-2-1-1</h1></body></html>';
 
-test('rrweb 2.1.1 records a FullSnapshot of a live tab', async t => {
+// Opt in only with a browser launched for this test on a disposable profile.
+// Never discover the user's browser or fall back to the shared extension.
+test('rrweb 2.1.1 records a FullSnapshot of a live tab', { timeout: 45_000 }, async t => {
+  const profileDir = process.env.CDP_TEST_PROFILE_DIR;
+  if (!profileDir) return t.skip('Set CDP_TEST_PROFILE_DIR to an owned disposable browser profile');
   const home = mkdtempSync(join(tmpdir(), 'browser-harness-js-rrweb-live-'));
   const previousHome = process.env.BROWSER_HARNESS_JS_HOME;
   const previousJs = process.env.CDP_RRWEB_JS;
@@ -26,12 +30,7 @@ test('rrweb 2.1.1 records a FullSnapshot of a live tab', async t => {
   let targetId: string | undefined;
   let sessionId: string | undefined;
   try {
-    try {
-      await session.connect();
-    } catch (error) {
-      t.skip(error instanceof Error ? error.message : String(error));
-      return;
-    }
+    await session.connect({ profileDir, transport: 'cdp', autoAllow: false });
 
     const created = await session.domains.Target.createTarget({ url: PAGE, background: true }) as { targetId: string };
     targetId = created.targetId;

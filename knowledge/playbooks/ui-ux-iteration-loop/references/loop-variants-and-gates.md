@@ -31,6 +31,11 @@ Choose the loop from the decision at hand. Do not force an optimization experime
 
 ## Website visual direction
 
+For inspiration-only requests or deeper page/part/state comparisons, use
+[website inspiration research](website-inspiration-research.md). Finish the
+research decision before applying the composition steps below; a reference
+library is not itself an approved visual direction or design system.
+
 Before composing a website or landing page, inspect relevant visual references, not
 just search snippets. Keep the brief stable: page type, audience, primary action,
 required section order, available assets, and explicit unknowns. A request for a

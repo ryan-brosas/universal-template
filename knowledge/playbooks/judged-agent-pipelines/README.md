@@ -1,6 +1,7 @@
 ---
-name: judged-agent-pipelines
-description: "Use when building, tuning or reviewing a long-running agent whose decisions come from typed judges (Jev, classifiers, scoring calls) rather than from generated text: supervising loops, acquisition through a browser or API, gating, human review queues, and the calibration work that makes the judge trustworthy. Covers calibrating question wording against known samples, moving hard rules into code, critic-driven repair, threshold sourcing, resilience proofs and platform-compliance boundaries."
+title: judged-agent-pipelines
+summary: "Use when building, tuning or reviewing a long-running agent whose decisions come from typed judges (Jev, classifiers, scoring calls) rather than from generated text: supervising loops, acquisition through a browser or API, gating, human review queues, and the calibration work that makes the judge trustworthy. Covers calibrating question wording against known samples, moving hard rules into code, critic-driven repair, threshold sourcing, resilience proofs and platform-compliance boundaries."
+kind: playbook
 ---
 
 # Judged agent pipelines
@@ -15,13 +16,16 @@ A judged pipeline separates four responsibilities. Keep them separate or the age
 | human queue | release of anything external | be bypassed by the agent |
 
 The output of a cycle is a decision plus its evidence, never a side effect nobody approved.
+Use [typed judgment workflows](../typed-judgment-workflows/README.md) for the
+installed execution surface and Choice/Noul/Score contracts; this playbook owns
+pipeline calibration and release boundaries, not another runtime API.
 
 ## Calibrate before you trust
 
 A judge question is a measuring instrument. Test it against samples whose correct verdict you already know, and discard any question that does not separate them.
 
 1. Write four to six samples: one clearly acceptable, and one each for the failure you care about (promotional, stilted, speculative, off-target).
-2. Ask the candidate questions about all samples in one call. Judgments are independent and share state, so batching is free.
+2. Batch independent sample questions when the surface supports it. Shared state can reduce repeated input, but batching is not free; measure latency and usage.
 3. Compare. If a bad sample scores better than a good one, the question is broken, not the sample.
 
 A real example. The question "is the draft plain, conversational, non-templated and free of em dashes" scored a marketing draft 0.66 and a stilted draft 0.79 against a clean draft at 0.68. Useless. Splitting it into narrow defect questions fixed it, on the same samples:
@@ -42,7 +46,7 @@ Rules that fell out of that work:
 
 ## Move hard rules into code
 
-A prompt is a request, not a control. In a live run the model ignored an explicit "never name the employer" instruction and opened with the employer clause anyway. The fix was a transform in code that removes the forbidden clause and any sentence naming the company before review, with the judge as the second check. Prompt rules bias behaviour, code rules guarantee it.
+A prompt is a request, not a control. In a live run the model ignored an explicit "never name the employer" instruction and opened with the employer clause anyway. The fix was a transform in code that removes the forbidden clause and any sentence naming the company before review, with the judge as the second check. Prompt rules guide behaviour; tested code gates enforce the rules they actually encode. Validate the transformed result before release rather than assuming a text rewrite covers every case.
 
 ## Gate what should not be answered
 

@@ -55,15 +55,38 @@ await session.connect({ wsUrl: 'ws://127.0.0.1:9222/devtools/browser/<uuid>' })
 
 ### Timeouts and the Allow popup
 
+An Allow grant may be connection-scoped. On Linux Chrome 154 (2026-09-25),
+each new remote-debugging client prompted again. Keep an authorized connection
+alive across calls instead of repeatedly asking for permission; do not assume
+that an approval survives a browser restart or a new connection.
+
 Per-candidate WS-open timeout defaults to **5s**. A live browser either opens or closes the connection within ~100ms, so 5s is always enough — unless the user has to click **Allow** on Chrome's remote-debugging popup. In that case, pass `timeoutMs: 30000` to give them time:
 
 ```js
 await session.connect({ profileDir, timeoutMs: 30_000 })
 ```
 
-**Dia's Allow prompt is auto-dismissed (macOS, on by default).** Dia shows an `Allow debugging connection?` prompt (Return = Allow) — the only Chromium browser that does. The SDK auto-dismisses it via `osascript` when the WS-open stalls; no-op for every other browser. Opt out with `autoAllow: false` or `--no-auto-allow`. If `connect()` stalls past `timeoutMs`, the user likely needs to grant macOS Accessibility to `node` (see the README).
+**Dia's Allow prompt is auto-dismissed (macOS, on by default).** Dia shows an `Allow debugging connection?` prompt (Return = Allow) on that transport. The SDK auto-dismisses it via `osascript` when the WS-open stalls; no-op for every other browser. Opt out with `autoAllow: false` or `--no-auto-allow`. If `connect()` stalls past `timeoutMs`, the user likely needs to grant macOS Accessibility to `node` (see the README).
 
 If `session.connect()` reports `No detected browser accepted a connection`, it means every browser with `DevToolsActivePort` answered 403 or closed without opening — most likely the user hasn't clicked Allow yet. Ask them to, then retry.
+
+### Attaching to an already-open browser
+
+Choose the extension transport when available, or verify an enabled
+remote-debugging endpoint before attaching. A stale `DevToolsActivePort` file
+is not proof that its port still answers. Launching another process against a
+locked profile may only hand off to the existing browser, ignoring new flags.
+
+If remote debugging requires a relaunch, ask before closing the user's browser.
+Prefer a disposable profile for tests; modern Chrome may reject debugging on
+the default profile. Use the installed browser's documented launch options and
+verify the endpoint afterward rather than assuming a fixed port. Do not use
+broad `pkill -f` patterns: they can match unrelated processes or the invoking
+shell. Stop only the process you own, after preserving any user work.
+
+Own the tabs you create and never navigate another tab without authorization.
+Use the background-input guidance below before concluding that automation must
+activate the user's window.
 
 ## The omnibox popup problem
 

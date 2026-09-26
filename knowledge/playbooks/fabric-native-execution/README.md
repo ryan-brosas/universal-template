@@ -53,13 +53,31 @@ that probe its own bounded program; a settled rejection carrying an empty reason
 likewise not evidence of the cause, so probe the transport directly.
 A newly configured server can register while reporting no tools until first use;
 prove the connection and its credential with one read-only call that requires
-the credential, not with a registration listing.
+the credential, not with a registration listing. A surface declining credential
+entry on a login, 2FA or consent step is enforcing a boundary, not failing; hand
+that step to the user, then resume on the authenticated session
+(`../security-and-hardening/README.md`).
 A long-lived process serves the tool surface it loaded at startup, so a server
 added to the host config afterwards looks absent and a removed server looks
 present until that configuration is reloaded (`mcp.$reload` in Fabric).
 Observed 2026-09-11: `github` gained 47 tools and `deepwiki`/`openviking`
 vanished after one reload. An absent entry is not evidence that a server is
 unavailable; reload and re-list before concluding anything from it.
+
+Identify which config file the consumer actually reads before editing or
+restarting it. Similar server lists can belong to different consumers and
+schemas; follow the runtime's configured path rather than guessing. Observed
+2026-09-27: a correct-looking entry in the wrong file never appeared after
+restarts. Compare required fields with a working entry: an omitted field can
+make a loader drop the entry before any connection is attempted.
+
+Use the host's supported reload path where available, but check its impact
+first. A reload can reconnect every server and discard REPL/session state; the
+observed reload took more than 60 seconds. A hanging registration route does
+not by itself establish a server failure. Inspect credential-bearing config
+only through allowlisted non-secret fields or presence booleans; printing
+entry shapes can still expose bare token values.
+
 A model naming a file proves neither that it read the file nor that it followed
 its instructions. Report prompt inclusion, tool execution, and behavioral
 compliance separately; stop when the requested claim has sufficient evidence.

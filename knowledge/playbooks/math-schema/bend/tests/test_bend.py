@@ -58,7 +58,7 @@ class ProofGate(unittest.TestCase):
                     path.write_text('import Base\n' + body)
                     with self.assertRaises(check.VerificationError):
                         check.run_checker(path)
-            result = subprocess.run(['bend', str(Path(tmp) / 'unsafe.bend')], capture_output=True, text=True)
+            result = subprocess.run(['bend', str(Path(tmp) / 'unsafe.bend')], capture_output=True, text=True, timeout=120)
             self.assertEqual(result.returncode, 0, 'Exercise the warning-with-success-exit regression.')
             self.assertIn('unsafe', result.stdout)
 

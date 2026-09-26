@@ -16,6 +16,6 @@ This is a routing index, not a reading list. Known procedure paths can be opened
 - [pencil](../../../knowledge/playbooks/pencil/README.md)
 - [pixel-perfect](../../../knowledge/playbooks/pixel-perfect/README.md)
 - [prototype](../../../knowledge/playbooks/prototype/README.md)
-- [ui-ux-iteration-loop](../../../knowledge/playbooks/ui-ux-iteration-loop/README.md)
+- [ui-ux-iteration-loop](../../../knowledge/playbooks/ui-ux-iteration-loop/README.md): website inspiration research, task-flow diagnosis and iteration.
 - [visual-asset-iteration](../../../knowledge/playbooks/visual-asset-iteration/README.md) — Editable logo, illustration and lettering revisions; persistent sources, canvas checkpoints and bounded recovery.
 - [wcag-accessibility-practices](../../../knowledge/playbooks/wcag-accessibility-practices/README.md)

@@ -68,6 +68,15 @@ a broad dependency trace; a large visual task may need no code research. The
 compact brief, revalidation and cost controls live in
 `references/task-research.md`.
 
+## Deployment capability
+
+Delegated Code Ask and direct retrieval are separate capabilities. Check the
+deployment's enabled lanes; a plan, licence or authorization refusal is a real
+limit, not a reason to retry through an undocumented route. When permitted, use
+bounded direct retrieval through the host's documented MCP or REST surface.
+Host deployment notes own endpoints and credentials, not this template. Report
+which lane was unavailable and what evidence the fallback actually supplied.
+
 ## Delegated investigation
 
 1. Confirm the repository names and branch coverage with `list_repos` and, when
@@ -91,7 +100,10 @@ compact brief, revalidation and cost controls live in
    deployment/host decision, not a task for this template.
 3. Give Code Ask a bounded research contract: the decision to inform, explicit
    `repos`, relevant subsystem, specific questions and exclusions, plus the
-   current goal, constraints and relevant revisions. Set `visibility: PRIVATE`;
+   current goal, constraints and relevant revisions. For comparison work, name
+   the relevant comparable set explicitly rather than generalizing from one
+   implementation; respect the host's per-call repository limits. Bound the
+   seam and the repository set. Set `visibility: PRIVATE`;
    do not include secrets or unnecessarily upload local source. Use the
    configured model unless the task justifies a supported choice.
 4. Request a concise answer with an execution map, decisive source references,

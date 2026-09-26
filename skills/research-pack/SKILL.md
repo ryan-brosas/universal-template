@@ -14,10 +14,6 @@ Figma/Paper-only tasks stay with design-pack and live design evidence; mixed tas
 select research only for the question it owns. Start with the narrowest relevant
 procedure and resolve its references and helpers from its own directory.
 
-- A native app that does not feel adopted on a desktop flavor is an engineering
-  feel/lag question, not a flavor-integration survey:
-  [native-desktop-feel](../../knowledge/playbooks/native-desktop-feel/README.md)
-  (engineering-pack owns the specialist).
 - Investigate broad codebase questions with Sourcebot's `ask_codebase` when
   indexed coverage is useful, or retrieve external implementations:
   [cross-repo-source](../../knowledge/playbooks/cross-repo-source/README.md).

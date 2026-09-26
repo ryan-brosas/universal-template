@@ -28,6 +28,11 @@ Publish procedures with real consumers. Keep local experiments, session output,
 completed plans, and host runtimes outside the template. Git preserves removed
 material; do not create a replacement archive or generated inventory.
 
+When a checkout supplies a host's live instructions, keep it on `main` and do
+branch work in a separate Git worktree. After review and merge, reconcile the
+live checkout with remote `main` without discarding local work. Switching the
+live checkout to a feature branch changes the prompts the host consumes.
+
 ## Checks
 
 Run the executable helper tests:
@@ -36,6 +41,23 @@ Run the executable helper tests:
 python3 knowledge/playbooks/pencil/scripts/test-verify-fidelity-manifest.py
 node --test knowledge/playbooks/cdp/sdk/*.test.ts
 ```
+
+The recording live test is opt-in: launch a disposable browser with remote
+debugging and set `CDP_TEST_PROFILE_DIR` to its profile. Never point it at a
+user's browser. A configured but unreachable profile fails; no profile reports
+a named skip, not recording coverage.
+
+For changes to the first-party mathematical sandbox, also run its pinned gate
+and behavioral suite (Bend 2.0.27 and Python 3.10+):
+
+```sh
+python3 knowledge/playbooks/math-schema/bend/check.py
+python3 -m unittest discover -s knowledge/playbooks/math-schema/bend/tests -v
+```
+
+The current CI helper job does not provision Bend or run those checks; its green
+status is not proof of the mathematical sandbox. Missing pinned-toolchain
+verification blocks delivery of changes to that sandbox.
 
 Check changed-line whitespace with `git diff --check` against the PR base.
 

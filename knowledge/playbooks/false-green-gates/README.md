@@ -12,7 +12,8 @@ Green is a claim about evidence, not exit codes. Observed failure class: a budge
 suite "passes" with every test skipped, and a whole code path (file-backed
 transcript refresh) ships silently dead because an early-return gate compared
 two differently-scoped counters - reviewed, merged, and only exposed when a new
-fixture encoding correct behavior failed inexplicably.
+fixture encoding correct behavior failed inexplicably. A submitted value found
+in a page dump can likewise be the unchanged input, not a saved record.
 
 ## When to Use / NOT
 
@@ -85,6 +86,12 @@ fixture encoding correct behavior failed inexplicably.
    lane invoke the same command so the two cannot drift. The subset stays useful
    for iteration; it is not the evidence for a push.
 
+9. **Do not read a write back as its own input.** Confirm the effect at the
+   authority (response status or record count), then query the record
+   independently to establish identity. An unchanged count can indicate a
+   rejected duplicate rather than a lost write. Search before retrying, bound
+   any retry, and report silence as unverified instead of applied.
+
 ## Boundaries
 
 Probes are temporary instrumentation; remove them before merge and do not
@@ -138,3 +145,5 @@ removed from the diff; the repaired path has a fixture that failed before the
 repair; new timers and watchers have their inverse (dispose/cancel) and are
 rearmed per event; the local gate and the enforcing lane share one aggregate
 command, or every phase present in only one of them is named as a known gap.
+A write claim cites the authority's effect and an independent identity query,
+not the submitted value still sitting in a field.

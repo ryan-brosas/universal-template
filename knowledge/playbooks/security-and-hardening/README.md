@@ -1,6 +1,6 @@
 ---
 title: security-and-hardening
-summary: Use when auditing for security vulnerabilities, implementing auth or authz, handling secrets, or hardening against OWASP Top 10 - covers input validation, authentication, dependency auditing, and secure defaults.
+summary: Use when auditing for security vulnerabilities, implementing auth or authz, handling secrets or authenticated sessions, or hardening against OWASP Top 10 - covers input validation, authentication, dependency auditing, and secure defaults.
 kind: playbook
 ---
 
@@ -20,9 +20,17 @@ project contracts and advisories to choose the relevant defenses.
   When inspecting credential-bearing configuration, extract only allowlisted non-secret
   fields or presence booleans before output reaches the tool transcript; never print
   matching credential lines with `grep`, dump the environment, or enable shell tracing.
-  Pass credentials directly to the consumer and report only the probe result. If a
-  value escapes, disclose the exposure without repeating it and arrange authorized
-  rotation; later redaction does not undo transcript exposure.
+  Pass credentials directly to the consumer and report only the probe result.
+  Compare config shapes using field names or presence booleans, not values; a
+  redaction list can miss an unfamiliar secret-bearing field. If a value escapes,
+  disclose the exposure without repeating it and arrange authorized rotation;
+  later redaction does not undo transcript exposure.
+- **Automation is not an auth channel.** Confirm a stored credential's kind and
+  scope before planning a sign-in: an API key does not establish an interactive
+  session. If a surface refuses credential entry on a login, 2FA or consent page,
+  respect that boundary. Hand the interactive step to the user and resume only
+  after the authorized callback/session exists; do not route the password
+  through another tool to work around the refusal.
 - **Classification can bypass validation.** A text file containing binary bytes,
   an unexpected content type or a decoder fallback must not silently skip a
   required safety check. Reject unsupported input at its owner; distinguish

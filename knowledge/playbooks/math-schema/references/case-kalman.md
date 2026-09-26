@@ -230,6 +230,8 @@ threshold system implicitly assumes.
   faces when the large-deviations mgf of case-large-deviations.md
   section 7 does not exist.
 
-The unrestricted gain-complement statement remains open in
-`lean/Frontier/Conjectures.lean`. `bend/OPEN.md` records the signed-division
-work needed to close its Bend counterpart.
+The unrestricted real-valued gain-complement statement remains open in
+`lean/Frontier/Conjectures.lean`. The rational counterpart, for `p + r != 0`,
+has a paired `gain_complement` law and proof in `bend/LAWS.bend` and
+`bend/PROOF.bend`. Verification requires the pinned Bend gate; this does not
+close the historical Lean goal.
