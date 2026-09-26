@@ -125,7 +125,8 @@ test('extension reconnect stays extension-only and connection replacement reject
 });
 
 test('real Session exposes a synchronous generation fence without reconnecting or replaying guarded calls', async () => {
-  const session = new Session(); const wire = new FakeWire(); session.adoptExtension(wire);
+  resetExtensionHub(); const session = new Session(); const wire = new FakeWire();
+  setExtensionClient(wire); await session.connect({ transport: 'extension', timeoutMs: 20 });
   const generation = session.getConnectionGeneration();
   await session._call('Runtime.callFunctionOn', { objectId: 'guard', functionDeclaration: 'function() { return this.act(); }' },
     { sessionId: 'scoped', expectedGeneration: generation });
@@ -135,7 +136,7 @@ test('real Session exposes a synchronous generation fence without reconnecting o
   await assert.rejects(session._call('Runtime.callFunctionOn', {}, { sessionId: 'scoped', expectedGeneration: disconnected }), /generation/);
   const replacement = new FakeWire(); session.adoptExtension(replacement);
   await assert.rejects(session._call('Runtime.callFunctionOn', {}, { sessionId: 'scoped', expectedGeneration: generation }), /generation/);
-  assert.equal(wire.sent.length, 1); assert.equal(replacement.sent.length, 0); session.close();
+  assert.equal(wire.sent.length, 1); assert.equal(replacement.sent.length, 0); session.close(); resetExtensionHub();
 });
 
 test('connect({ transport: "extension" }) fails closed when the extension is absent', async () => {
@@ -145,4 +146,64 @@ test('connect({ transport: "extension" }) fails closed when the extension is abs
     session.connect({ transport: 'extension', timeoutMs: 30 }),
     /timed out after 30ms waiting for the browser-harness-js extension/,
   );
+});
+
+test('connected sessions reject conflicting endpoint, transport and policy options', async () => {
+  const session = new Session(); const wire = new FakeWire();
+  const options = { wsUrl: 'ws://authorized.invalid/devtools/browser/a', transport: 'cdp' as const, autoAllow: false };
+  let attempts = 0;
+  (session as any)._connect = async () => { attempts++; (session as any).bindWire(wire, 'cdp'); };
+  try {
+    await session.connect(options);
+    const generation = session.getConnectionGeneration();
+    await session.connect();
+    await session.connect(options);
+    await session.connect({ transport: 'auto' });
+    for (const conflict of [
+      { wsUrl: 'ws://other.invalid/devtools/browser/b' },
+      { transport: 'extension' as const },
+      { port: 9222 },
+      { profileDir: '/different/profile' },
+      { autoAllow: true },
+    ]) await assert.rejects(session.connect(conflict), /Connection options conflict/);
+    assert.equal(attempts, 1);
+    assert.equal(session.getConnectionGeneration(), generation);
+    assert.equal(session.getTransport(), 'cdp');
+    assert.equal(session.autoAllow, false);
+    assert.equal(wire.sent.length, 0);
+  } finally { session.close(); }
+});
+
+test('in-flight connects cannot silently absorb a conflicting endpoint', async () => {
+  const session = new Session(); const wire = new FakeWire();
+  let release!: () => void;
+  const gate = new Promise<void>(resolve => { release = resolve; });
+  (session as any)._connect = async () => { await gate; (session as any).bindWire(wire, 'cdp'); };
+  const first = session.connect({ wsUrl: 'ws://authorized.invalid/devtools/browser/a' });
+  const conflicting = session.connect({ wsUrl: 'ws://other.invalid/devtools/browser/b' });
+  release();
+  try {
+    await assert.rejects(conflicting, /Connection options conflict/);
+    await first;
+    assert.equal(session.getTransport(), 'cdp');
+  } finally { await first; session.close(); }
+});
+
+test('unsolicited extension adoption requires connect and cannot reopen a closed session', async () => {
+  resetExtensionHub(); const session = new Session(); const first = new FakeWire();
+  try {
+    session.adoptExtension(first);
+    assert.equal(session.isConnected(), false);
+    setExtensionClient(first);
+    await session.connect({ transport: 'auto', extensionWaitMs: 20 });
+    assert.equal(session.getTransport(), 'extension');
+    session.close();
+    const replacement = new FakeWire();
+    session.adoptExtension(replacement);
+    assert.equal(session.isConnected(), false);
+    assert.equal(replacement.sent.length, 0);
+    setExtensionClient(replacement);
+    await session.connect({ transport: 'extension', timeoutMs: 20 });
+    assert.equal(session.isConnected(), true);
+  } finally { session.close(); resetExtensionHub(); }
 });

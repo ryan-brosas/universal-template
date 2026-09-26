@@ -95,6 +95,7 @@ export class Session implements Transport {
   private callObserver?: CdpCallObserver;
   private connectPromise?: Promise<void>;
   private connectionOptions?: ConnectOptions;
+  private extensionAdoptionEnabled = false;
   private connectionGeneration = 0;
 
   getConnectionGeneration(): number { return this.connectionGeneration; }
@@ -137,15 +138,26 @@ export class Session implements Transport {
    *
    * With explicit opts ({ wsUrl } | { profileDir } | { port }), connects
    * directly to that remote-debugging URL. `{ transport: 'extension' }` waits
-   * on the extension and does not fall back.
+   * on the extension and does not fall back. An active or pending connection
+   * rejects conflicting options; close it before changing endpoint or policy.
    */
   async connect(opts: ConnectOptions = this.connectionOptions ?? {}): Promise<void> {
-    // Fast path: already connected.
-    if (this.isConnected()) return;
-    // Another connect is in flight — ride on it.
-    if (this.connectPromise) return this.connectPromise;
+    // Reuse only a compatible connection, including while its first open is pending.
+    if (this.isConnected() || this.connectPromise) {
+      const retained = this.connectionOptions ?? {};
+      const transport = this.getTransport() ??
+        (retained.wsUrl || retained.profileDir || retained.port ? 'cdp' : (retained.transport ?? 'auto'));
+      const requestedTransport = opts.wsUrl || opts.profileDir || opts.port ? 'cdp' : (opts.transport ?? 'auto');
+      const otherOptionsDiffer = Object.entries(opts).some(([key, value]) =>
+        key !== 'transport' && value !== undefined && value !== retained[key as keyof ConnectOptions]);
+      if ((requestedTransport !== 'auto' && requestedTransport !== transport) || otherOptionsDiffer) {
+        throw new Error('Connection options conflict with the active or pending session; close it before changing options.');
+      }
+      return this.connectPromise;
+    }
     // Retain the authorized endpoint, transport and timeout policy for reconnect.
     this.connectionOptions = { ...opts };
+    this.extensionAdoptionEnabled = true;
     if (opts.autoAllow !== undefined) this.autoAllow = opts.autoAllow;
     this.connectPromise = this._connect(this.connectionOptions);
     try {
@@ -259,9 +271,11 @@ export class Session implements Transport {
     });
   }
 
-  /** Plug an inbound extension socket unless authorized settings pin CDP.
+  /** Plug an inbound extension socket only after connect selects a compatible mode.
+   *  An explicit close disables unsolicited adoption until the next connect.
    *  Replacing a wire rejects pending calls; effects are never replayed. */
   adoptExtension(wire: Wire): void {
+    if (!this.extensionAdoptionEnabled) return;
     const opts = this.connectionOptions;
     if (opts?.wsUrl || opts?.profileDir || opts?.port || opts?.transport === 'cdp') return;
     this.connectionOptions = { ...opts, transport: 'extension' };
@@ -277,6 +291,7 @@ export class Session implements Transport {
   }
 
   close(): void {
+    this.extensionAdoptionEnabled = false;
     this.connectionChanged();
     this.ws?.close();
   }
