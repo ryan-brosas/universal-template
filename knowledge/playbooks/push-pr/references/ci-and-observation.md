@@ -2,10 +2,22 @@
 
 ## CI evidence
 
-The `github-actions-engineering` skill authors/reviews the project workflow. The workflow runs on branch pushes, pull requests, and manual dispatch; least-privilege read access; checks the project gate and changed-line whitespace. It does not parse the PR body; `pull-request-format.md` owns that contract.
+The `github-actions-engineering` playbook owns workflow authoring and review. Read
+the project's actual triggers, jobs and branch rules; do not assume every project
+runs the same events or gates. `pull-request-format.md` owns PR presentation.
 
-- Find runs: `gh run list --branch <branch>`; watch to a terminal state before filing or updating the PR.
-- Record run links and final states in the PR body — never a claimed state you did not watch.
+- Find runs with an explicit repository, branch and event. For a branch push:
+  `gh run list --repo <owner/repo> --branch <branch> --commit <sha> --event push --limit 100`.
+  If the result reaches the limit, increase it or enumerate the paginated
+  Actions API with the same filters before claiming completeness. Pin
+  workflow/run IDs and attempts; the same SHA in
+  another repository or event is not this push's verdict. PR workflows may test a
+  synthetic merge revision; record that association rather than mistaking it for
+  the branch head.
+- Watch expected checks to a terminal state before claiming success. A PR may be
+  under review while CI runs; follow the parent procedure's delivery boundary.
+- Record run links and observed states in the requested report or PR evidence,
+  without treating a status report as permission to edit an upstream PR.
 - Review the workflow itself as part of the gate: triggers, permission scope, action pins, untrusted code on `pull_request`, secrets kept out of PR jobs.
 
 A check name can carry several runs on one commit. When concurrency cancels
@@ -24,12 +36,12 @@ rollup. A partial page is not evidence that all checks passed.
 
 Immediately after a PR is created, `gh pr merge` can refuse with "the base branch
 policy prohibits the merge" while `mergeStateStatus` is still `BLOCKED` or
-unknown: GitHub computes mergeability asynchronously, so the first read can
-describe a state that does not exist yet. Re-query the state before concluding a
-policy blocker or reaching for `--admin` - the same PR commonly settles to
-`CLEAN/MERGEABLE` seconds later. Separate the two cases by the message: "policy
-prohibits" plus "add `--auto`" is a computation race, while "resolve the merge
-conflicts locally" is a real conflict to fix.
+unknown: GitHub computes mergeability asynchronously, so the first read may be
+provisional. Re-query mergeability, checks, review requirements and branch rules
+before concluding a policy blocker or reaching for `--admin`. A suggestion to
+use `--auto` alone does not distinguish a computation race from a real protection
+requirement. Confirm `CLEAN/MERGEABLE` and the required gates independently;
+reported merge conflicts still need a local resolution.
 
 ## A fresh head has no verdict yet
 
@@ -54,11 +66,39 @@ before the required jobs register. Bind the verdict to the revision being delive
 - Bound the wait. A missing check may never run: report the missing names and
   investigate triggers or policy instead of declaring success or polling forever.
 
-## Structural observation (conditional)
+## Finish the observation
 
-Structural observation is **evidence-driven, not mandatory**. Use the active project's IDE/LSP or Fovea (`fovea_impact`) for precise local symbol and type questions. Use the indexed source capability (`../../cross-repo-source/README.md`) when a change crosses repositories and a blast-radius claim adds value. Skip silently when the change is small or direct reading settles it — a skip needs no justification line.
+Once the expected checks pass and the current head is verified, report that CI
+result and remaining review gaps once, then stop observing. Continue any other
+work the user requested. Reopen observation for a changed head or check state,
+a new failing run, or a genuinely new contradictory user report. A carried or compacted copy of the original complaint is not a new report;
+assistant commentary is not user evidence.
 
-Source and tests confirm every structural claim. Record the repository, revision, and covered paths; do not turn a search miss into an exhaustive claim.
+For a new contradictory report, make one bounded check of the named PR/head/run.
+If it still passes, give that revision's run link and ask which failing run the
+user means instead of repeatedly polling or searching unrelated repositories.
+While checks are pending, use a bounded watch and report meaningful transitions,
+not repeated announcements of the same observation. If a tool detaches a watch or
+a continuation interrupts its return, retain the process/run IDs and log paths.
+Inspect that watch's liveness and output before starting another; a still-running
+shell is not a CI success. Prefer one wait to repeated sleeps and status queries;
+if the host offers no join, use bounded liveness checks without duplicating the
+watch. Replace a dead watch only when the relevant run still needs observation.
+Keep recovery deliberation out of progress messages, and put detailed logs in
+evidence files rather than repeating the execution plan to the user.
+
+## Structural observation
+
+Every PR must carry revision-bound structural evidence from
+`../../pre-pr-validation/README.md`. That procedure owns the required Steroid IDE
+inspection, local Fovea `fovea_impact` analysis and, when the change's correctness
+depends on indexed code evidence or the user requested it, the Sourcebot
+`ask_codebase` baseline challenge; do not skip a required lane because a diff is
+small. A BLOCKED draft/WIP PR records the unavailable lane and its coverage limits
+instead, and is never relabeled READY. Source and tests confirm every structural claim. Record
+the repository, revision and covered paths, and revalidate after the delivered
+revision changes. A search miss is not proof that callers or consequences are
+absent.
 
 ## Learnable rules
 

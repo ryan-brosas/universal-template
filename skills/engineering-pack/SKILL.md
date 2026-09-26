@@ -1,6 +1,6 @@
 ---
 name: engineering-pack
-description: "Use when implementing or reviewing code, debugging failures, designing APIs or architecture, choosing language/framework practices, testing, refactoring, optimizing, or securing software. This pack owns implementation and code-quality decisions; combine it with relevant domain or delivery packs. Skip procedures for trivial edits."
+description: "Use when implementing or reviewing code, debugging failures, designing APIs or architecture, choosing a project stack or language/framework practices, testing, refactoring, optimizing, or securing software. This pack owns implementation and code-quality decisions; combine it with relevant domain or delivery packs. Skip procedures for trivial edits."
 invocation: entry
 ---
 
@@ -26,6 +26,11 @@ commands from each selected procedure's directory, never from this router.
   [authoritative-signal-surfacing](../../knowledge/playbooks/authoritative-signal-surfacing/README.md).
 - Green checks without evidence:
   [false-green-gates](../../knowledge/playbooks/false-green-gates/README.md).
+- Project stack selection or substantial architecture/domain-logic changes:
+  assess [Bend](../../knowledge/playbooks/bend-coding-practices/README.md) even when
+  not named in the request. Reuse an existing project decision while its
+  requirements and constraints hold; skip this assessment for unrelated or
+  trivial edits. Compose with the relevant architecture or language procedure.
 - Architecture or API contracts:
   [improve-codebase-architecture](../../knowledge/playbooks/improve-codebase-architecture/README.md) or
   [api-and-interface-design](../../knowledge/playbooks/api-and-interface-design/README.md).

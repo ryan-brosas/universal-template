@@ -1,6 +1,6 @@
 ---
 title: pi-provider-contracts
-summary: 'Use when building, debugging, or auditing the runtime behavior of a pi provider extension: registerProvider auth and apiKey semantics, refreshModels catalog lifecycle, before_provider_headers ordering, OpenAI SDK header merge, snapshot stores, or when real pi behaves differently from the probes claim. NOT for manifest structure, bundling, or publishing (pi-package-development).'
+summary: 'Use when building, debugging, or auditing the runtime behavior of a pi provider extension or an SDK/MCP consumer reusing existing /login credentials: registerProvider auth and apiKey semantics, refreshModels catalog lifecycle, before_provider_headers ordering, OpenAI SDK header merge, snapshot stores, direct/gateway route choice, or when real pi behaves differently from the probes claim. NOT for manifest structure, bundling, or publishing (pi-package-development).'
 kind: playbook
 ---
 
@@ -11,6 +11,7 @@ Provider extensions are stitched together by ordering-sensitive contracts (auth 
 
 ## When to Use / NOT
 - **Use when:** building or debugging `registerProvider`-based providers; keyless/credential behavior; `refreshModels` lifecycle; header stripping or injection; "passes the probes, differs in real pi".
+- **Use when:** wiring an SDK or MCP consumer to logins the host already manages, or choosing direct versus gateway routes to the same provider: [existing-login integrations](references/existing-login-integrations.md).
 - **NOT when:** manifest structure, bundling, install, or publish (`pi-package-development`); the commit-to-merge loop (`ship-pr`).
 
 ## Workflow

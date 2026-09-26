@@ -1,6 +1,6 @@
-# math-skill
+# math-skill (upstream)
 
-A research-partner skill for deriving mathematics. The partner has the user state falsifiable conjectures before any explanation. It requires complete proofs. It keeps a journal of claims and their status. It seals results in Lean 4.
+A research-partner skill for deriving mathematics. The partner has the user state falsifiable conjectures before any explanation. It requires complete proofs. It keeps a journal of claims and their status. It seals the finite rational results in Bend with exact arithmetic.
 
 ## Install the skill
 
@@ -14,7 +14,7 @@ npx skills add monotykamary/math-skill
 
 ## What's inside
 
-- `SKILL.md`: the covenant, the session loop, the journal format, the Lean loop, and the voice rules.
+- `SKILL.md`: the covenant, the session loop, the journal format, the Bend loop, and the voice rules.
 - `references/case-ewma.md`: exponential accumulation, proved completely. Closed form, fixed point, crossing time, threshold feedback.
 - `references/case-kalman.md`: sequential estimation. Gaussian conditioning, the Riccati fixed point, and the EWMA as its stateless shadow.
 - `references/case-kelly.md`: the Kelly criterion. Log-optimal growth, edge as information.
@@ -29,12 +29,28 @@ npx skills add monotykamary/math-skill
 - `references/case-merton.md`: continuous-time Kelly. The HJB equation, and half-Merton keeping three quarters.
 - `references/case-h-theorem.md`: kinetic theory on a finite grid. Entropy never decreases; the bridge to Boltzmann is staked out.
 - `references/case-kolmogorov.md`: K41 turbulence from units alone, the 4/5 law, and the intermittency anomaly.
+- `references/case-navier-stokes.md`: OpenAI's September 2026 proposed forced breakdown result for Clay (C)/(D). Primary sources, worked energy and concentration calculations, and a pinned Lean audit. The external proof has not been independently checked here.
 - `references/case-extremes.md`: block maxima and the three limit laws. Where heavy tails kill the tilt and what replaces it.
-- `lean/`: a Lean 4 sandbox pinning `leanprover/lean4:v4.33.0` with Mathlib. `Frontier/Proven.lean` certifies the EWMA results. `Frontier/Conjectures.lean` closes the original six conjectures and holds two open watch-list entries.
+- [`bend/`](bend/README.md): the default first-party verifier, pinned to Bend 2.0.27. Eighteen checked public laws cover exact rational EWMA, finite probability in Lean's filtered and maximum forms, the Kalman gain complement, and the rational mixing bound in both square-root-free and certified-root forms. Binary arithmetic has no fixed word-size limit. `python3 bend/check.py` is the certificate gate.
+- `lean/`: the unchanged historical Lean 4 / Mathlib sandbox at `v4.33.0`. Its ten completed rational claims remain available for comparison. The original Kalman gain and real-valued mixing goals still contain `sorry` there. Bend proves the gain complement over the rationals and a rational form of the mixing goal; the Lean files are not changed by either.
+- [`vendor/openai-navier-stokes/`](vendor/openai-navier-stokes/README.md): the complete, unmodified OpenAI Navier–Stokes and Euler Lean source bundle at a pinned revision, with its Apache-2.0 license, retained author credits, and checksum manifest. It is a separate Lean project; its proofs have not been checked locally.
 
-Curriculum order: ewma, kalman, kelly, gibbs, large-deviations, gaertner-ellis, heat-kernel, mixing, max-principle, burgers, black-scholes, merton, h-theorem, kolmogorov, extremes.
+Curriculum order: ewma, kalman, kelly, gibbs, large-deviations, gaertner-ellis, heat-kernel, mixing, max-principle, burgers, black-scholes, merton, h-theorem, kolmogorov, navier-stokes, extremes.
 
-## Lean setup (macOS)
+## Bend setup and verification
+
+Install **Bend 2.0.27** from [Bend upstream](https://bend-lang.com/) and Python 3.10 or newer. The gate checks `bend/bend-version` and refuses other compiler versions.
+
+```bash
+bend version
+bend guide
+python3 bend/check.py
+python3 -m unittest discover -s bend/tests -v
+```
+
+The test suite checks generated-proof reproducibility, rejection of unsafe/open proofs, and exact arithmetic against Python's `Fraction`, including values above 2^80. Native runtime tests require a working clang 14+ and report a skip when it is unavailable. See [`bend/README.md`](bend/README.md) for representations, theorem mappings, and performance limits. The original real-analysis claims remain outside this certificate.
+
+## Optional historical Lean setup (macOS)
 
 ```bash
 # toolchain manager + Lean (already pinned by lean/lean-toolchain)
@@ -44,11 +60,29 @@ export PATH="$HOME/.elan/bin:$PATH"
 cd lean
 lake update          # resolves Mathlib at the pinned toolchain tag
 lake exe cache get   # downloads precompiled Mathlib (one-time, large)
-lake build           # verifies Frontier/ (green, no unexpected sorry)
+lake build           # historical sandbox; two declared sorry goals remain
 ```
 
 Gotcha: `lake clean` invalidates the downloaded Mathlib cache. If a build suddenly recompiles thousands of `Mathlib.*` modules, stop it and run `lake exe cache get && lake build`.
 
+## Third-party proof attribution
+
+The vendored formalizations are credited to OpenAI, with the Formal Conjectures authors credited for adapted statements and definitions. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for attribution and the preserved license. The [vendor README](vendor/openai-navier-stokes/README.md) records the exact revision, copy-integrity checks, and separate build instructions. The full upstream bundle adds about 32 MB of source; downloaded dependencies and compiled caches are excluded.
+
 ## The session in one paragraph
 
-The partner locates the last result the user can prove alone. It frames one target above that floor. The user states a falsifiable conjecture. Small computations promote the conjecture to SUPPORTED. A complete derivation or a green `lake build` promotes it to PROVEN, and the journal records it in his own words. After three strikes on one wall, the partner changes the representation before changing the claim.
+The partner locates the last result the user can prove alone. It frames one target above that floor. The user states a falsifiable conjecture. Small computations promote the conjecture to SUPPORTED. A complete derivation or a clean `python3 bend/check.py` certificate for that claim promotes it to PROVEN, and the journal records it in his own words. After three strikes on one wall, the partner changes the representation before changing the claim.
+
+## Local provenance
+
+Synced from [monotykamary/math-skill](https://github.com/monotykamary/math-skill) at `0409a761b7d7810a735da6194faacc618d8d6713` (commit: *feat(bend): binary magnitudes and the certified-root mixing transfer*), the revision that replaced the Lean-only default with the Bend 2.0.27 verifier.
+
+Local mapping kept on re-sync:
+
+- upstream `SKILL.md` → this playbook's `README.md`, with local `title`/`summary`/`kind: playbook` metadata and a local-layout note.
+- upstream `README.md` (the human install/overview page) → this file. Its install section (`npx skills add`) is for the upstream repository, not for this repo where the playbook is already vendored.
+- upstream `math-journal.md` example is **not** copied; the user's own journal is preserved.
+- `lean/` was byte-identical at this revision and stays untouched.
+- `references/`, `bend/`, `THIRD_PARTY_NOTICES.md`, `.gitattributes` and `vendor/openai-navier-stokes/` are imported verbatim (~1.9 MB of verifier plus a 36 MB pinned third-party Lean snapshot).
+
+Verifier availability on this host, recorded at sync time: the installed `bend` is 2.0.7, so `python3 bend/check.py` refuses the pinned 2.0.27 gate. No Lean toolchain (`lake`/`lean`) is installed. Treat Bend/Lean proof results as **unverified here** until a matching compiler is present; never restate an upstream proof claim as a local result.

@@ -17,8 +17,7 @@
 #   browser-harness-js --restart  # stop + start fresh (drops session state)
 #   browser-harness-js --start    # explicit start (no-op if already running)
 #   browser-harness-js --version  # print the SDK version (from the on-disk files)
-#   browser-harness-js recordings [--latest|enable|disable]
-#   browser-harness-js video init|review|export <recording> [options]
+#   browser-harness-js recordings [--latest|enable|disable|replay [dir]]
 #   browser-harness-js --no-auto-allow 'await session.connect()'  # macOS: opt out of auto-dismissing Dia's "Allow debugging connection?" prompt (on by default)
 
 set -euo pipefail
@@ -134,8 +133,9 @@ case "${1:-}" in
     exec node "$SDK_DIR/recording.ts" "${@:2}"
     ;;
   video)
-    ensure_node || exit 1
-    exec node "$SDK_DIR/video.ts" "${@:2}"
+    echo "browser-harness-js: the screenshot video compiler was removed; recording now uses rrweb." >&2
+    echo "usage: browser-harness-js recordings replay [dir]" >&2
+    exit 2
     ;;
   --help|-h)
     sed -n '2,/^set -euo/p' "$0" | sed 's/^#//; s/^ //; /^set -euo/d'

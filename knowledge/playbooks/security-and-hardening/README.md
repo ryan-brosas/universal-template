@@ -20,21 +20,18 @@ project contracts and advisories to choose the relevant defenses.
   When inspecting credential-bearing configuration, extract only allowlisted non-secret
   fields or presence booleans before output reaches the tool transcript; never print
   matching credential lines with `grep`, dump the environment, or enable shell tracing.
-  Pass credentials directly to the consumer and report only the probe result, and
-  derive the field allowlist from the file itself rather than from memory: a
-  comparison of entry *shapes* across a configuration still prints a value for
-  every secret-bearing key the redaction list omits. If a value escapes, disclose
-  the exposure without repeating it and arrange authorized rotation; later
-  redaction does not undo transcript exposure.
-- **Automation is not an auth channel.** Before planning an automated sign-in,
-  read the stored credential's kind and scope: an API key does not establish an
-  interactive session, and a session cannot be minted by a tool that is not
-  allowed to see the password. When a control surface declines to enter
-  credentials on a login, 2FA, or consent page, that refusal is a boundary -
-  finish the interactive step yourself or hand it to the user, then resume
-  automation on the authenticated session. Do not accept a password into
-  automation or work around the refusal; treat the completed callback as the
-  point where automation resumes.
+  Pass credentials directly to the consumer and report only the probe result.
+  Compare config shapes using field names or presence booleans, not values; a
+  redaction list can miss an unfamiliar secret-bearing field. Derive the
+  field-name allowlist from the current schema/entry, not memory. If a value escapes,
+  disclose the exposure without repeating it and arrange authorized rotation;
+  later redaction does not undo transcript exposure.
+- **Automation is not an auth channel.** Confirm a stored credential's kind and
+  scope before planning a sign-in: an API key does not establish an interactive
+  session. If a surface refuses credential entry on a login, 2FA or consent page,
+  respect that boundary. Hand the interactive step to the user and resume only
+  after the authorized callback/session exists; do not route the password
+  through another tool to work around the refusal.
 - **Classification can bypass validation.** A text file containing binary bytes,
   an unexpected content type or a decoder fallback must not silently skip a
   required safety check. Reject unsupported input at its owner; distinguish

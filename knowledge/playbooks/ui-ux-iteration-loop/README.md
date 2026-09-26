@@ -15,6 +15,11 @@ Optimize a user task, not a screen. Treat every heuristic and psychology princip
 - **Use when:** creating or improving a flow, diagnosing friction, turning “make it better” into evidence, or iterating from prototype through validated UI.
 - **NOT when:** exact source fidelity is the goal (`pixel-perfect`); the question only needs a throwaway mockup (`prototype`); mapping cross-channel journeys precedes design (`app-experience-mapping`); or a finished app needs a broad black-box release audit (`black-box-experience-review`).
 
+For external website inspiration, reference-board organization or “go deeper”
+before design-system work, use
+[website inspiration research](references/website-inspiration-research.md).
+It stops at evidence and pattern decisions, not implementation.
+
 ## Workflow
 
 1. **Choose the loop and frame one task.** Use `references/loop-variants-and-gates.md`; record user/context, entry, outcome, constraints, guardrails, one behavioral measure, and conditional service/channel seams with their recovery owner. Tag claims observed, reported, deterministic, heuristic, or assumed.

@@ -7,7 +7,7 @@ This is a routing index, not a reading list. Known procedure paths can be opened
 - [cloudflare](../../../knowledge/playbooks/cloudflare/README.md)
 - [coderabbit-review](../../../knowledge/playbooks/coderabbit-review/README.md)
 - [gh-repo-target-guard](../../../knowledge/playbooks/gh-repo-target-guard/README.md)
-- [git-workflow-and-versioning](../../../knowledge/playbooks/git-workflow-and-versioning/README.md)
+- [git-workflow-and-versioning](../../../knowledge/playbooks/git-workflow-and-versioning/README.md) — includes fork synchronization, fork-to-upstream replication and PR scope comparison.
 - [github-actions-engineering](../../../knowledge/playbooks/github-actions-engineering/README.md)
 - [github-contribution-opportunities](../../../knowledge/playbooks/github-contribution-opportunities/README.md)
 - [github-repo-setup](../../../knowledge/playbooks/github-repo-setup/README.md)

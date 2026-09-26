@@ -6,6 +6,9 @@
 /state/
 .idea/
 skills/omarchy
+/skills/diagnose-crash
+# Generated export bundles are local distribution artifacts.
+/_export/
 # Host/vendor-managed runtime skills stay installed locally, never published.
 /skills/.system/
 # Local helpers stay local except the published fidelity gate and its test.

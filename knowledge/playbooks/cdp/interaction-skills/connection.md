@@ -2,10 +2,32 @@
 
 ## Just call `session.connect()`
 
-No args required. It scans OS-specific browser-data dirs for every running Chromium-based browser (Chrome, Chromium, Edge, Brave, Arc, Vivaldi, Opera, Comet, Canary, Dia, Helium, Aside — and any other Chromium fork via a bounded fallback scan), reads each one's actual debug port from its `DevToolsActivePort` file, and picks the most-recently-launched one whose WebSocket accepts. No hardcoded port: Chrome often listens on 9222, but Aside and others use ephemeral ports (e.g. 52860), so auto-detect reads the real port instead of assuming. The host is always loopback (`127.0.0.1`) for a local browser. Dead ports and permission-denied (403) candidates fall through in <100ms each, so the loop is fast.
+No args required. **Preferred pipe:** the unpacked `knowledge/playbooks/cdp/extension` MV3 worker. It dials `ws://127.0.0.1:9876/extension` and relays CDP through `chrome.debugger`. If that socket is already up (or appears within 500ms), `connect()` uses it and never touches remote debugging. The worker hardcodes port 9876; if you set `CDP_REPL_PORT`, change `DEFAULT_PORT` in `extension/sw.js` to match.
+
+**Fallback:** scan OS-specific browser-data dirs for every running Chromium-based browser (Chrome, Chromium, Edge, Brave, Arc, Vivaldi, Opera, Comet, Canary, Dia, Helium, Aside — and any other Chromium fork via a bounded fallback scan), read each one's actual debug port from its `DevToolsActivePort` file, and pick the most-recently-launched one whose WebSocket accepts. No hardcoded port: Chrome often listens on 9222, but Aside and others use ephemeral ports (e.g. 52860), so auto-detect reads the real port instead of assuming. The host is always loopback (`127.0.0.1`) for a local browser. Dead ports and permission-denied (403) candidates fall through in <100ms each, so the loop is fast.
 
 ```js
-await session.connect()
+await session.connect()                                 // extension, then remote-debugging auto-detect
+await session.connect({ transport: 'extension' })       // extension only — no fallback
+await session.connect({ transport: 'cdp' })             // skip the extension
+```
+
+`browser-harness-js --status` includes `transport` (`"extension"` | `"cdp"` | `null`) and `extension` (worker attached, even if the session is still on CDP).
+
+The extension emulates browser-level `Target.*` (`createTarget`, `attachToTarget`, `closeTarget`, `getTargets`, `setDiscoverTargets`, `setAutoAttach` which attaches every existing attachable tab plus new ones) and maps `Browser.getWindowForTarget` / `getWindowBounds` / `setWindowBounds` through `chrome.windows`. Page/DOM/Runtime/Network/Input/… still go through `chrome.debugger.sendCommand`. Extra `Chrome.*` commands (also `ext.*` in the REPL) cover tab groups, pin/mute/move/discard/reload/duplicate, and windows. `Target.getTargets` includes strip `index`, `windowId`, `groupId`, `pinned`, `muted`, `active`.
+
+OOPIF/worker/service-worker targets come from `chrome.debugger.getTargets()` (UUID `targetId`; pages stay numeric tab ids). `Browser.grantPermissions` / `setPermission` / `resetPermissions` map through `chrome.contentSettings` for geolocation, notifications, mic, camera, and automaticDownloads.
+
+Limits vs remote debugging: remaining `Browser.*` (download behavior, crash/close browser) are unavailable, cannot attach to `chrome://` / `devtools://` / other-extension pages, one debugger client per target (DevTools on that tab blocks attach), and Chrome shows the extension-debugging infobar. Pin `{ transport: 'cdp' }` or `{ profileDir }` when you need the real browser target. Reload the unpacked extension after a permission change (`tabGroups`, `contentSettings`).
+
+```js
+const tabs = await listPageTargets()
+await ext.group({ tabIds: tabs.map(t => t.targetId), createProperties: { windowId: tabs[0].windowId } })
+const { groups } = await ext.getTabGroups()
+await ext.updateTabGroup({ groupId: groups[0].groupId, title: 'search', color: 'blue' })
+await ext.updateTab({ targetId: tabs[0].targetId, pinned: true })
+const { windowId, bounds } = await session.Browser.getWindowForTarget({ targetId: tabs[0].targetId })
+await session.Browser.setWindowBounds({ windowId, bounds: { windowState: 'maximized' } })
 ```
 
 Inspect what's available (e.g. to let the user choose) with `detectBrowsers()`:
@@ -21,6 +43,8 @@ Use only when auto-detect picks the wrong browser or you already know the destin
 
 | Form | When |
 |---|---|
+| `{ transport: 'extension' }` | Require the extension; do not fall back to remote debugging. |
+| `{ transport: 'cdp' }` | Skip the extension; remote-debugging auto-detect only. |
 | `{ profileDir }` | Target a specific running browser. Reads its `DevToolsActivePort` directly. OS-agnostic. |
 | `{ wsUrl }` | You already have `ws://…/devtools/browser/<uuid>`. |
 
@@ -31,15 +55,38 @@ await session.connect({ wsUrl: 'ws://127.0.0.1:9222/devtools/browser/<uuid>' })
 
 ### Timeouts and the Allow popup
 
+An Allow grant may be connection-scoped. On Linux Chrome 154 (2026-09-25),
+each new remote-debugging client prompted again. Keep an authorized connection
+alive across calls instead of repeatedly asking for permission; do not assume
+that an approval survives a browser restart or a new connection.
+
 Per-candidate WS-open timeout defaults to **5s**. A live browser either opens or closes the connection within ~100ms, so 5s is always enough — unless the user has to click **Allow** on Chrome's remote-debugging popup. In that case, pass `timeoutMs: 30000` to give them time:
 
 ```js
 await session.connect({ profileDir, timeoutMs: 30_000 })
 ```
 
-**Dia's Allow prompt is auto-dismissed (macOS, on by default).** Dia shows an `Allow debugging connection?` prompt (Return = Allow) — the only Chromium browser that does. The SDK auto-dismisses it via `osascript` when the WS-open stalls; no-op for every other browser. Opt out with `autoAllow: false` or `--no-auto-allow`. If `connect()` stalls past `timeoutMs`, the user likely needs to grant macOS Accessibility to `node` (see the README).
+**Dia's Allow prompt is auto-dismissed (macOS, on by default).** Dia shows an `Allow debugging connection?` prompt (Return = Allow) on that transport. The SDK auto-dismisses it via `osascript` when the WS-open stalls; no-op for every other browser. Opt out with `autoAllow: false` or `--no-auto-allow`. If `connect()` stalls past `timeoutMs`, the user likely needs to grant macOS Accessibility to `node` (see the README).
 
 If `session.connect()` reports `No detected browser accepted a connection`, it means every browser with `DevToolsActivePort` answered 403 or closed without opening — most likely the user hasn't clicked Allow yet. Ask them to, then retry.
+
+### Attaching to an already-open browser
+
+Choose the extension transport when available, or verify an enabled
+remote-debugging endpoint before attaching. A stale `DevToolsActivePort` file
+is not proof that its port still answers. Launching another process against a
+locked profile may only hand off to the existing browser, ignoring new flags.
+
+If remote debugging requires a relaunch, ask before closing the user's browser.
+Prefer a disposable profile for tests; modern Chrome may reject debugging on
+the default profile. Use the installed browser's documented launch options and
+verify the endpoint afterward rather than assuming a fixed port. Do not use
+broad `pkill -f` patterns: they can match unrelated processes or the invoking
+shell. Stop only the process you own, after preserving any user work.
+
+Own the tabs you create and never navigate another tab without authorization.
+Use the background-input guidance below before concluding that automation must
+activate the user's window.
 
 ## The omnibox popup problem
 
@@ -144,6 +191,43 @@ xdotool search --name '<browser-binary>' windowactivate
 powershell -NoProfile -Command "(New-Object -ComObject WScript.Shell).AppActivate('<browser-binary>')"
 ```
 
+## Parallel work, background tabs, and desktop focus
+
+CDP input is **page-targeted**, not desktop input. `Input.dispatchMouseEvent`,
+`Input.insertText` and `Input.dispatchKeyEvent` are delivered to the attached
+target's renderer; they do not move the physical pointer, and in `input: 'trusted'`
+mode `InteractionController` enables `Emulation.setFocusEmulationEnabled` so
+background tabs still receive focus and keys. Nothing in that path requires the
+browser window to be frontmost.
+
+What actually changes the human's view:
+
+- `Target.activateTarget` and `Page.bringToFront` (Chrome-side tab/window focus).
+- The OS-level helpers above (`osascript`, `wmctrl`, `xdotool`, `AppActivate`).
+- Creating a target **without** `background: true`, which may open in front.
+
+For parallel or unattended work, keep both halves of the isolation:
+
+1. **Route explicitly.** Create with `background: true`, attach with
+   `Target.attachToTarget({targetId, flatten: true})`, and use the returned
+   `sessionId` in `cdp(sessionId, method, params)` or guarded `scope` on every call.
+   The daemon holds a single mutable active-target cursor, so two snippets that
+   call `session.use()` can steal each other's target; avoid it for parallel work.
+2. **Isolate the browser process.** A separate CDP endpoint or profile keeps
+   another agent's tabs out of the human's window group. A new tab, a different
+   service name, or a fresh CDP port is **not** by itself a separate profile;
+   check the actual `--user-data-dir`. A distinct profile on the same desktop can
+   still take visible focus when activation is requested.
+
+Guarded actions use explicit `{scope:{sessionId}}` and never the mutable cursor.
+The controller's per-scope queue serializes mutations inside one Session; it is
+not a browser-wide lock across processes, and raw `cdp()` calls bypass it.
+
+Because it does not need to steal the desktop, this path is the right default for
+long or unattended runs. Verify a task actually landed (read back state or
+screenshot) rather than treating a dispatch receipt, or a `target.activateTarget`
+that a page's own script performs, as proof of an effect.
+
 ## WebSocket payload limits — any large CDP response can close the socket
 
 The CDP WebSocket has a per-message size limit. A single response large enough to exceed it closes the socket — the call rejects with `CDP socket closed`. This is a property of the *connection*, not any one domain: any big-enough response can trigger it. Common culprits:
@@ -177,7 +261,7 @@ Two tells that the daemon is stale:
    ```bash
    browser-harness-js --version      # on-disk files, e.g. 0.2.0
    browser-harness-js --status       # running daemon's boot version
-   # {"ok":true,"version":"0.2.0","uptime":...,"connected":true,"sessionId":"..."}
+   # {"ok":true,"version":"0.11.0","uptime":...,"connected":true,"transport":"extension","extension":true,"sessionId":"..."}
    ```
 
    If `/health` has **no** `version` field (daemon predates versioning) or a **lower** one than `--version`, the daemon is stale.

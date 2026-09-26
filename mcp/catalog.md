@@ -45,11 +45,16 @@ configuration live outside this template. This repository describes when to use
 it, not how it is deployed.
 
 Sourcebot supports direct indexed retrieval and delegated investigation through
-`ask_codebase`, with no second knowledge layer in front of it. These standing
+`ask_codebase`, with no second knowledge layer in front of it. Enabled lanes and
+plan/licence limits are deployment facts: report a gated capability and use only
+an authorized, documented fallback. These standing
 instructions and the `prompts/` adapters name the tool, so its explicit-request
-gate is already satisfied; the coding agent still owns decisions, edits and
-verification against the live working tree. When to call it, how to scope and
-bound a request, revision caveats and fallback reporting belong to the
+gate is already satisfied. Naming it satisfies that gate without making the call
+mandatory per session or phase: applicability belongs to the task. Use it for broad
+unresolved codebase questions when indexed coverage can inform the decision, and
+keep known local questions direct; the coding agent still owns decisions, edits and
+verification against the live working tree. How to scope and bound a request,
+revision caveats and fallback reporting belong to the
 [cross-repository source playbook](../knowledge/playbooks/cross-repo-source/README.md).
 Language-model configuration and tool-description restrictions belong to the
 host/deployment.

@@ -1,0 +1,4 @@
+# Preserve upstream bytes and identify the copied proof as third-party code.
+# -diff keeps the snapshot out of whitespace and hunks: its bytes are upstream's,
+# not ours to reformat, and any local change belongs in a wrapper instead.
+vendor/openai-navier-stokes/upstream/** -text -diff linguist-vendored

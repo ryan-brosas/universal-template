@@ -1,8 +1,9 @@
 /**
- * CDP Session: one persistent WebSocket to Chrome's browser endpoint.
- * Auto-injects sessionId for the active target on every call.
+ * CDP Session: one persistent wire to Chrome (extension relay preferred,
+ * remote-debugging WebSocket as fallback). Auto-injects sessionId for the
+ * active target on every call.
  *
- * Connect with `flatten: true` so all sessions share one WS (no nested
+ * Connect with `flatten: true` so all sessions share one wire (no nested
  * Target.sendMessageToTarget envelopes).
  */
 
@@ -10,6 +11,8 @@ import { bindDomains, type Domains, type Transport } from './generated.ts';
 import { readFile, readdir, stat } from 'node:fs/promises';
 import { join } from 'node:path';
 import { execFile } from 'node:child_process';
+import { WIRE_OPEN, type Wire } from './wire.ts';
+import { getExtensionClient, waitForExtension } from './extension-hub.ts';
 
 type Pending = {
   resolve: (v: unknown) => void;
@@ -53,7 +56,18 @@ export type ConnectOptions = {
    *  Default 600 — a live WS opens in ~100ms, so "still connecting at 600ms"
    *  means the prompt is up. Measured from WebSocket creation. */
   autoAllowDelayMs?: number;
+  /** Connection pipe. Default `auto`: prefer the unpacked extension
+   *  (inbound WS on `/extension`), then fall back to remote-debugging CDP.
+   *  `extension` fails if the extension is not connected.
+   *  `cdp` skips the extension. Explicit `{ wsUrl | profileDir | port }`
+   *  always uses remote-debugging CDP. */
+  transport?: 'auto' | 'extension' | 'cdp';
+  /** How long auto-connect waits for the extension before falling back
+   *  to remote debugging. Default 500. Ignored when transport is pinned. */
+  extensionWaitMs?: number;
 };
+
+export type SessionTransport = 'extension' | 'cdp';
 
 /** A Chromium-based browser detected as running on this machine. */
 export type DetectedBrowser = {
@@ -72,13 +86,27 @@ export type DetectedBrowser = {
 };
 
 export class Session implements Transport {
-  private ws?: WebSocket;
+  private ws?: Wire;
+  private transportName: SessionTransport | undefined;
   private nextId = 1;
   private pending = new Map<number, Pending>();
   private activeSessionId: string | undefined;
   private eventListeners: Array<(method: string, params: unknown, sessionId?: string) => void> = [];
   private callObserver?: CdpCallObserver;
   private connectPromise?: Promise<void>;
+  private connectionOptions?: ConnectOptions;
+  private extensionAdoptionEnabled = false;
+  private connectionGeneration = 0;
+
+  getConnectionGeneration(): number { return this.connectionGeneration; }
+
+  private connectionChanged(): void {
+    this.connectionGeneration++;
+    this.activeSessionId = undefined;
+    for (const fn of this.eventListeners) {
+      try { fn('Session.connectionChanged', { generation: this.connectionGeneration }); } catch { /* isolate listeners */ }
+    }
+  }
 
   /** On by default: connect()/reconnect auto-dismisses Dia's "Allow
    *  debugging connection?" prompt (macOS, via osascript Return) — a no-op
@@ -100,26 +128,38 @@ export class Session implements Transport {
   }
 
   /**
-   * Connect to Chrome's browser-level WebSocket.
+   * Connect to Chrome.
    *
-   * With no args, runs auto-detect: scans OS-specific profile dirs via
-   * `detectBrowsers()` and tries each candidate (most-recently-launched first)
-   * until a WebSocket open succeeds. Each attempt has a short timeout so
-   * dead ports and permission-denied (403) candidates fail fast and the
-   * loop moves on.
+   * With no args (`auto`): prefer the browser-harness-js extension if it is
+   * already connected (or connects within `extensionWaitMs`), otherwise scan
+   * OS-specific profile dirs via `detectBrowsers()` and try each candidate
+   * (most-recently-launched first) until a remote-debugging WebSocket opens.
+   * Dead ports and permission-denied (403) candidates fail fast.
    *
    * With explicit opts ({ wsUrl } | { profileDir } | { port }), connects
-   * directly to that single URL with a generous timeout.
+   * directly to that remote-debugging URL. `{ transport: 'extension' }` waits
+   * on the extension and does not fall back. An active or pending connection
+   * rejects conflicting options; close it before changing endpoint or policy.
    */
-  async connect(opts: ConnectOptions = {}): Promise<void> {
-    // Fast path: already connected.
-    if (this.isConnected()) return;
-    // Another connect is in flight — ride on it.
-    if (this.connectPromise) return this.connectPromise;
-    // Persist autoAllow so the auto-heal reconnect in _call (no-arg connect)
-    // inherits it.
+  async connect(opts: ConnectOptions = this.connectionOptions ?? {}): Promise<void> {
+    // Reuse only a compatible connection, including while its first open is pending.
+    if (this.isConnected() || this.connectPromise) {
+      const retained = this.connectionOptions ?? {};
+      const transport = this.getTransport() ??
+        (retained.wsUrl || retained.profileDir || retained.port ? 'cdp' : (retained.transport ?? 'auto'));
+      const requestedTransport = opts.wsUrl || opts.profileDir || opts.port ? 'cdp' : (opts.transport ?? 'auto');
+      const otherOptionsDiffer = Object.entries(opts).some(([key, value]) =>
+        key !== 'transport' && value !== undefined && value !== retained[key as keyof ConnectOptions]);
+      if ((requestedTransport !== 'auto' && requestedTransport !== transport) || otherOptionsDiffer) {
+        throw new Error('Connection options conflict with the active or pending session; close it before changing options.');
+      }
+      return this.connectPromise;
+    }
+    // Retain the authorized endpoint, transport and timeout policy for reconnect.
+    this.connectionOptions = { ...opts };
+    this.extensionAdoptionEnabled = true;
     if (opts.autoAllow !== undefined) this.autoAllow = opts.autoAllow;
-    this.connectPromise = this._connect(opts);
+    this.connectPromise = this._connect(this.connectionOptions);
     try {
       await this.connectPromise;
     } catch (e) {
@@ -133,7 +173,26 @@ export class Session implements Transport {
   private async _connect(opts: ConnectOptions = {}): Promise<void> {
     const timeoutMs = opts.timeoutMs ?? 5_000;
     const autoAllowDelayMs = opts.autoAllowDelayMs ?? 600;
-    if (opts.wsUrl || opts.profileDir || opts.port) {
+    const explicitCdp = Boolean(opts.wsUrl || opts.profileDir || opts.port);
+    const transport = explicitCdp ? 'cdp' : (opts.transport ?? 'auto');
+
+    if (transport !== 'cdp' && this.takeExtensionIfPresent()) return;
+    if (transport === 'extension') {
+      const wire = await waitForExtension(timeoutMs);
+      this.bindWire(wire, 'extension');
+      return;
+    }
+    if (transport === 'auto') {
+      try {
+        const wire = await waitForExtension(opts.extensionWaitMs ?? 500);
+        this.bindWire(wire, 'extension');
+        return;
+      } catch {
+        if (this.takeExtensionIfPresent()) return;
+      }
+    }
+
+    if (explicitCdp) {
       const wsUrl = await resolveWsUrl(opts);
       // Only resolve the browser name when auto-allow is on — it gates the
       // Dia-only prompt dismissal and would otherwise add a detectBrowsers() scan
@@ -146,21 +205,23 @@ export class Session implements Transport {
     if (browsers.length === 0) {
       const scanned = getBrowserCandidates().map(c => c.name).join(', ');
       throw new Error(
-        `No running browser with remote debugging detected. Enable it from chrome://inspect > "Discover network targets", or pass { profileDir } / { wsUrl } explicitly. Scanned: ${scanned}.`,
+        `No running browser with remote debugging detected. Load the browser-harness-js extension (knowledge/playbooks/cdp/extension), enable remote debugging from chrome://inspect > "Discover network targets", or pass { profileDir } / { wsUrl } explicitly. Scanned: ${scanned}.`,
       );
     }
     const errors: string[] = [];
     for (const b of browsers) {
+      if (transport === 'auto' && this.takeExtensionIfPresent()) return;
       try {
         await this.openWs(b.wsUrl, timeoutMs, { autoAllow: this.autoAllow, name: b.name, autoAllowDelayMs });
         return;
       } catch (e) {
+        if (this.isConnected() && this.transportName === 'extension') return;
         const msg = e instanceof Error ? e.message : String(e);
         errors.push(`  ${b.name} @ ${b.wsUrl}: ${msg}`);
       }
     }
     throw new Error(
-      `No detected browser accepted a connection. If one of these is the browser you want, click "Allow" on its remote-debugging prompt and retry, or pass { profileDir, timeoutMs: 30000 } to wait for the click:\n${errors.join('\n')}`,
+      `No detected browser accepted a connection. Load the browser-harness-js extension, or click "Allow" on a remote-debugging prompt and retry, or pass { profileDir, timeoutMs: 30000 } to wait for the click:\n${errors.join('\n')}`,
     );
   }
 
@@ -195,29 +256,78 @@ export class Session implements Transport {
               dismissDiaAllowPrompt();
             }, allow.autoAllowDelayMs)
           : null;
-      ws.addEventListener('open', () => finish());
-      ws.addEventListener('error', (e) => finish(new Error(`WS error: ${(e as any)?.message ?? 'connect failed (likely 403, permission not granted, or port closed)'}`)));
-      ws.addEventListener('message', (e) => this.onMessage(String(e.data)));
-      ws.addEventListener('close', () => {
-        // Only reject pending calls that were sent on this WebSocket.
-        // A parallel connect() can create a phantom WS whose close handler
-        // would otherwise nuke pending entries belonging to the active WS.
-        if (this.ws === ws) {
-          for (const [, p] of this.pending) p.reject(new Error('CDP socket closed'));
-          this.pending.clear();
+      ws.addEventListener('open', () => {
+        // Auto-discovery selects once; reconnect never silently chooses another browser.
+        if (!this.connectionOptions?.wsUrl && !this.connectionOptions?.profileDir && !this.connectionOptions?.port) {
+          this.connectionOptions = { ...this.connectionOptions, transport: 'cdp', wsUrl };
         }
+        finish();
+      });
+      ws.addEventListener('error', (e) => finish(new Error(`WS error: ${(e as any)?.message ?? 'connect failed (likely 403, permission not granted, or port closed)'}`)));
+      ws.addEventListener('close', () => {
         finish(new Error('WS closed before open (likely 403 or port closed)'));
       });
-      this.ws = ws;
+      this.bindWire(ws as unknown as Wire, 'cdp');
     });
   }
 
+  /** Plug an inbound extension socket only after connect selects a compatible mode.
+   *  An explicit close disables unsolicited adoption until the next connect.
+   *  Replacing a wire rejects pending calls; effects are never replayed. */
+  adoptExtension(wire: Wire): void {
+    if (!this.extensionAdoptionEnabled) return;
+    const opts = this.connectionOptions;
+    if (opts?.wsUrl || opts?.profileDir || opts?.port || opts?.transport === 'cdp') return;
+    this.connectionOptions = { ...opts, transport: 'extension' };
+    this.bindWire(wire, 'extension');
+  }
+
+  getTransport(): SessionTransport | undefined {
+    return this.isConnected() ? this.transportName : undefined;
+  }
+
   isConnected(): boolean {
-    return this.ws?.readyState === WebSocket.OPEN;
+    return this.ws?.readyState === WIRE_OPEN;
   }
 
   close(): void {
+    this.extensionAdoptionEnabled = false;
+    this.connectionChanged();
     this.ws?.close();
+  }
+
+  private takeExtensionIfPresent(): boolean {
+    const ext = getExtensionClient();
+    if (!ext) return false;
+    this.bindWire(ext, 'extension');
+    return true;
+  }
+
+  private bindWire(wire: Wire, name: SessionTransport): void {
+    if (this.ws === wire) {
+      this.transportName = name;
+      return;
+    }
+    const prev = this.ws;
+    for (const [, pending] of this.pending) pending.reject(new Error('CDP connection replaced'));
+    this.pending.clear();
+    this.ws = wire;
+    this.transportName = name;
+    if (name === 'extension') this.connectionOptions = { ...this.connectionOptions, transport: 'extension' };
+    this.connectionChanged();
+    wire.addEventListener('message', e => {
+      if (this.ws !== wire) return;
+      this.onMessage(String(e.data ?? ''));
+    });
+    wire.addEventListener('close', () => {
+      if (this.ws !== wire) return;
+      this.connectionChanged();
+      for (const [, p] of this.pending) p.reject(new Error('CDP socket closed'));
+      this.pending.clear();
+    });
+    if (prev) {
+      try { prev.close(); } catch { /* ignore */ }
+    }
   }
 
   private closeQueue: Promise<void> = Promise.resolve();
@@ -328,16 +438,21 @@ export class Session implements Transport {
   }
 
   // Transport implementation. Called by the generated domain bindings.
-  _call(method: string, params: unknown = {}, opts?: { sessionId?: string }, reconnected = false): Promise<unknown> {
-    // Self-heal: a giant CDP response (e.g. getFullAXTree on a huge page) or a
-    // browser hiccup can close the WebSocket. Reconnect once and retry rather
-    // than poisoning every subsequent call with `Not connected`. After a
-    // reconnect the active-session pointer / prior flat sessionIds may be stale,
-    // but a stale sessionId surfaces a clean CDP `session not found` (re-attach),
-    // never a wrong-target action.
-    if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
+  _call(method: string, params: unknown = {}, opts?: { sessionId?: string; expectedGeneration?: number }, reconnected = false): Promise<unknown> {
+    // Guarded callers fence dispatch to the observed connection; never reconnect/retry effects.
+    if (opts?.expectedGeneration !== undefined &&
+        (opts.expectedGeneration !== this.connectionGeneration || !this.isConnected())) {
+      return Promise.reject(new Error('CDP connection generation changed'));
+    }
+    // Reconnect only before sending, using retained authorized settings.
+    // Scoped callers must reattach; previously sent requests are never retried.
+    if (!this.ws || this.ws.readyState !== WIRE_OPEN) {
       if (reconnected) return Promise.reject(new Error('Not connected. Call session.connect(...) first.'));
-      return this.connect().then(() => this._call(method, params, opts, true));
+      const wasScoped = !!(opts?.sessionId ?? this.activeSessionId) && !isBrowserLevel(method);
+      return this.connect(this.connectionOptions ?? {}).then(() => {
+        if (wasScoped) throw new Error('CDP connection changed; reattach the target before calling again');
+        return this._call(method, params, opts, true);
+      });
     }
     const id = this.nextId++;
     const msg: Record<string, unknown> = { id, method, params: params ?? {} };
@@ -364,7 +479,7 @@ export class Session implements Transport {
           result,
           durationMs: performance.now() - startedAt,
         }));
-        // Diagnostics may add bounded latency, but a stalled screenshot or disk
+        // Diagnostics may add bounded latency, but a stalled observer
         // must never leave an otherwise successful CDP action unresolved.
         await new Promise<void>(resolveObservation => {
           const timer = setTimeout(resolveObservation, 5_000);
@@ -408,7 +523,7 @@ export class CdpError extends Error {
 
 /** Browser-level methods never take a sessionId. */
 function isBrowserLevel(method: string): boolean {
-  return method.startsWith('Browser.') || method.startsWith('Target.');
+  return method.startsWith('Browser.') || method.startsWith('Target.') || method.startsWith('Chrome.');
 }
 
 /** Best-effort browser name for the Dia-only auto-allow gate. For { profileDir }
@@ -483,9 +598,18 @@ async function resolveWsUrlFromPort(port: number, host: string): Promise<string 
     const resp = await fetch(`http://${host}:${port}/json/version`);
     if (resp.ok) {
       const json: any = await resp.json();
-      if (json.webSocketDebuggerUrl) return json.webSocketDebuggerUrl;
+      if (typeof json.webSocketDebuggerUrl === 'string') {
+        const url = new URL(json.webSocketDebuggerUrl);
+        const requestedHost = new URL(`http://${host}:${port}`).hostname;
+        const loopback = (name: string) => ['localhost', '127.0.0.1', '[::1]'].includes(name);
+        if (['ws:', 'wss:'].includes(url.protocol) && !url.username && !url.password &&
+            (url.hostname === requestedHost || (loopback(url.hostname) && loopback(requestedHost))) &&
+            Number(url.port || (url.protocol === 'wss:' ? 443 : 80)) === port) return url.href;
+      }
     }
   } catch { /* /json/version not served (Chrome 144+, Dia, etc.) */ }
+  // A remote host failure must never fall back to a local browser on the same port.
+  if (!['localhost', '127.0.0.1', '[::1]', '::1'].includes(host)) return undefined;
   const browsers = await detectBrowsers();
   const match = browsers.find(b => b.port === port);
   return match?.wsUrl;
@@ -524,7 +648,21 @@ async function readDevToolsActivePort(profileDir: string): Promise<{ port: numbe
  * including those that do not serve /json). Filters out chrome:// and devtools://
  * internals. Requires the session to be connected already.
  */
-export type PageTarget = { targetId: string; title: string; url: string; type: string };
+export type PageTarget = {
+  targetId: string;
+  title: string;
+  url: string;
+  type: string;
+  windowId?: number;
+  index?: number;
+  groupId?: number;
+  pinned?: boolean;
+  muted?: boolean;
+  discarded?: boolean;
+  audible?: boolean;
+  active?: boolean;
+  openerId?: string;
+};
 export async function listPageTargets(session: Session): Promise<PageTarget[]> {
   const { targetInfos } = await session.domains.Target.getTargets({});
   return (targetInfos as PageTarget[]).filter(

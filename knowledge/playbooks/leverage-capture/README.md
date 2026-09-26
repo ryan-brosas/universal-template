@@ -19,11 +19,9 @@ Sourcebot, and GitHub can recover repository facts. Experience can preserve judg
 those facts alone do not reproduce: diagnostic order, comparison strategy, recovery,
 implementation tradeoffs, and verification techniques.
 
-This procedure selects a destination for an understood candidate. For the wider
-session pass that also decides whether anything should be adopted at all, use the
-`compile-session-improvements` prompt.
-Reflection can recommend changes but does not authorize mutation. Adopt only within
-the task's granted scope; explicit learning permission is not machine-wide permission.
+This procedure selects a destination for an understood candidate. Reflection can
+recommend changes but does not authorize mutation. Adopt only within the task's
+granted scope; explicit learning permission is not machine-wide permission.
 
 ## Match responsibility, then find its owner
 

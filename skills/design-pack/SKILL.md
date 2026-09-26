@@ -1,6 +1,6 @@
 ---
 name: design-pack
-description: "Use when designing or improving UI/UX, implementing frontend presentation, exploring visual prototypes, working in Paper/Figma, copying a design, checking pixel fidelity, or auditing accessibility. This pack owns visual and interaction decisions; combine it with engineering when implementing or testing them."
+description: "Use when designing or improving UI/UX, implementing frontend presentation, iterating logos or illustrations, generating bot icons from images, exploring visual prototypes, working in Paper/Figma/FLORA, copying a design, checking pixel fidelity, or auditing accessibility. This pack owns visual and interaction decisions; combine it with engineering when implementing or testing them."
 invocation: entry
 ---
 
@@ -13,6 +13,10 @@ a visual request as permission for unrelated redesign.
 
 - Frontend typography, spacing, forms, responsive behavior and states:
   [frontend-ui-implementation](../../knowledge/playbooks/frontend-ui-implementation/README.md).
+- Logo, illustration or lettering revisions and canvas checkpoints:
+  [visual-asset-iteration](../../knowledge/playbooks/visual-asset-iteration/README.md).
+- Convert a supplied subject into a minimal bot/Grok icon with black capsule eyes:
+  [bot-icon-generation](../../knowledge/playbooks/bot-icon-generation/README.md).
 - Original website/landing-page composition or visual art direction:
   [Website visual direction](../../knowledge/playbooks/ui-ux-iteration-loop/references/loop-variants-and-gates.md#website-visual-direction).
 - A host, harness, or backend signal on the wrong surface or in the wrong position
@@ -21,6 +25,8 @@ a visual request as permission for unrelated redesign.
   (engineering-pack owns the specialist).
 - Task-flow improvements or diagnosing usability feedback:
   [ui-ux-iteration-loop](../../knowledge/playbooks/ui-ux-iteration-loop/README.md).
+- Inconsistent linked Figma controls, variant/property repairs or variable bindings:
+  [figma-web-design](../../knowledge/playbooks/figma-web-design/README.md).
 - Copy a Figma frame into Paper:
   [pencil](../../knowledge/playbooks/pencil/README.md).
 - Compose from the libraries the file already has enabled instead of redrawing:

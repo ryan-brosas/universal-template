@@ -13,6 +13,8 @@ Use these sections. Include only evidence that exists.
 ## Verification
 
 - `{command or direct probe}`: {actual result}
+- Review lanes: {each lane's status, finding dispositions, covered revision and
+  paths, or the blocker reason}
 
 ## Risks
 

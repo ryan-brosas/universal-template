@@ -32,7 +32,10 @@ List only checks actually run, with results:
 
 - unit / integration tests
 - compiler / typecheck / lint / build
+- CodeRabbit review status and finding dispositions
 - JetBrains inspections or MCP Steroid semantic verification
+- Sourcebot baseline challenge (when applicable) and code-graph impact analysis
+- AI-slop and complexity review of the diff (project artifact gate when present)
 - manual runtime verification, benchmark, CI
 
 Local verification: state what PASSED. CI: PENDING until it runs.

@@ -1,193 +1,70 @@
-# Make a short explanatory video
+# Record a session with rrweb
 
-Use captured browser frames as evidence. Never reenact a finished task or
-fabricate cleaner footage. This workflow compacts a long action trace; it does
-not accelerate a screen recording.
+Recording captures the live DOM with [rrweb](https://github.com/rrweb-io/rrweb),
+not screenshots and not a cinematic edit. Start/stop are the primitives;
+replay is the rrweb Replayer.
 
 ## Capture with consent
 
-Fresh installs do not record. A natural request to “record,” “show,” “demo,” or
-“make a video” opts in for that task; ordinary browser work does not.
-
-Start before browser work and keep the exact returned directory:
+Fresh installs do not record. `startRecording()` is the opt-in for that task.
+The session must already be connected.
 
 ```js
+await session.connect()
 const recordingDir = await startRecording('azure-admin', 'Make Aitor superadmin')
-// Perform and verify the task with raw CDP calls.
+// Drive the browser (or let the user). Clicks, typing, and navigations in
+// instrumented pages become rrweb events — including real user input.
 await stopRecording()
 return recordingDir
 ```
 
-Use real `Input.*` calls for visible clicks and typing. Arbitrary page-side
-`Runtime.evaluate` expressions such as `element.click()` cannot be interpreted
-as user actions and therefore are not recorded as action beats. Recording is
-local, best-effort, and must never be allowed to break the browser task.
+Each recording is a directory under `~/.browser-harness-js/recordings`:
 
-For persistent background consent:
+- `meta.json` — name, title, start time, `engine: "rrweb"`
+- `rrweb.jsonl` — one `{ sid, e }` line per rrweb event (`sid` is the CDP page session)
+
+The first `startRecording()` / `recordings replay` downloads pinned rrweb 2.1.1
+(`dist/rrweb.umd.min.cjs`) from jsDelivr into `~/.browser-harness-js/cache/` and
+verifies `sha256`. Later calls reuse that file (offline).
+`CDP_RRWEB_JS=/path/to/rrweb.umd.min.cjs` overrides the download.
+
+Input values are masked (`maskAllInputs`). Canvas and font collection are off.
+Large snapshots are chunked through `Runtime.addBinding` so they never travel
+as one CDP WebSocket payload. Cross-origin iframes are **not** instrumented
+(same limitation as [record-cross-tab.md](record-cross-tab.md)).
+
+`CDP_RECORD=0` disables start. `recordings enable` / `disable` only persist a
+local preference; they do not start capture by themselves.
 
 ```bash
+browser-harness-js recordings
 browser-harness-js recordings enable
 browser-harness-js recordings disable
-browser-harness-js recordings
+browser-harness-js recordings --latest
 ```
 
-`CDP_RECORD=1` or `CDP_RECORD=0` overrides that preference for the daemon
-process. Typed text fails closed to a fixed mask if focused-element inspection
-fails, so plaintext is never written on an uncertain field. Automatic
-recordings roll over after 180 idle seconds by default
-(`CDP_RECORD_IDLE_SECONDS` changes it).
+A daemon `--restart` drops in-page recorders. The on-disk marker from a previous
+process is treated as stale the next time `startRecording()` runs.
 
-## Produce the video
-
-Use the exact recording selected above. For a post-task request,
-`recordings --latest` is usable only after verifying its timestamps and pages
-match the task. If they do not, say that the work was not captured.
+## Replay
 
 ```bash
-browser-harness-js video init <recording> --require-explicit
-# Write <recording>/edit-brief.json.
-browser-harness-js video review <recording>
-# Inspect video-review-contact-sheet.jpg and every image in .privacy-review/.
-browser-harness-js video export <recording> --reviewed
+browser-harness-js recordings replay <recording>
+# or, after verifying timestamps match the task:
+browser-harness-js recordings replay
 ```
 
-Omit `--require-explicit` only for a verified automatic recording. Never edit
-generated `composition.js` or `video.html`; change the brief or shared SDK.
-Export refuses to overwrite existing output, so use `--output video-v2.mp4`
-for another cut. MP4 export requires `ffmpeg` and `ffprobe`; review and WebM
-rendering use Chromium itself. Review/export jobs are globally serialized and the
-canvas records at 1920×1080, 30 fps to bound GPU/encoder pressure. Do not run
-parallel exports or repeatedly retry one that destabilizes the user's browser.
+Serves the recording on `127.0.0.1` and prints the URL. Pick a tab (`sid`) in
+the bar, then Play / Pause. Ctrl+C stops the server. This is a fidelity replay
+of captured DOM mutations, not an evidence-edited MP4.
 
-### Isolated rendering
+## Traps
 
-Review and export are rendering jobs, not ordinary browser interactions. **Always run them in a fresh detached Chromium profile; never attach rendering to the user's interactive Dia, Chrome, or other daily browser.** Sustained canvas capture and encoding can exhaust memory or crash the browser that owns the tab.
-
-Launch one disposable browser, use it for both review and export, then stop it:
-
-```bash
-ROOT=$(mktemp -d /tmp/browser-harness-video.XXXXXX)
-PROFILE="$ROOT/profile"
-mkdir -p "$PROFILE"
-
-# Set CHROME_BIN to the Chrome/Chromium executable for this machine.
-nohup "$CHROME_BIN" \
-  --headless=new \
-  --remote-debugging-port=0 \
-  --user-data-dir="$PROFILE" \
-  --no-first-run \
-  --disable-background-networking \
-  --disable-sync \
-  --disable-default-apps \
-  --disable-extensions \
-  about:blank >"$ROOT/chrome.log" 2>&1 &
-RENDER_PID=$!
-
-# Wait for "$PROFILE/DevToolsActivePort" before running either command.
-browser-harness-js video review <recording>
-browser-harness-js video export <recording> --reviewed
-
-kill "$RENDER_PID"
-```
-
-Do not rely on automatic browser detection for rendering. Check memory pressure before a long export, run only one review/export job at a time, and stop the disposable browser even after a failed command. If it dies, inspect `chrome.log` and the failed output before retrying; do not retry against the user's browser.
-
-### Production-cut checks
-
-- Watch transitions at real playback speed. A contact sheet proves coverage, not pacing; submissions and dense result states need a readable final hold.
-- Treat title-card copy as responsive UI. Long summaries and plan labels must wrap inside safe horizontal margins; inspect the intro at full 1920×1080, not only as a scaled contact-sheet thumbnail.
-- Inspect every full-resolution privacy frame after review. Automated detection is only a backstop.
-- Any brief, source-frame, composition, or renderer change invalidates the review seal. Run review again before `--reviewed` export.
-- Preserve earlier cuts. Export to a new versioned path, then inspect frames from the encoded MP4 at the intro, densest result, and final outcome.
-- Verify the delivered MP4 itself with `ffprobe`: decoder, 1920×1080 dimensions, duration near the composition, and a stable SHA-256 checksum.
-
-
-## Editorial contract
-
-- Optimize for first-time comprehension. The raw trace remains the debugging
-  artifact. Start with the task and a 2–5 step plan, then end on verified
-  outcomes.
-- Build one causal chain: intent → action → visible result. Remove waits,
-  retries, and repetition that add no understanding, but show every item or
-  state explicitly claimed by the outcome.
-- Narration is optional and sticky. Add a short present-tense thought only when
-  it changes, then omit `narration` while 2–3 screenshots advance underneath.
-- Preserve representative captured clicks, cursor endpoints, typing, and result
-  frames. A recorded click automatically uses its pre-action frame and captured
-  result; override with `frameEvent` or `afterEvent` only when necessary.
-- Keep a useful wrong turn when it changed the approach. Explain it once as
-  Observed → Mistake → Correction; remove failures that teach nothing.
-- Keep raw frames unlabelled. Subtitles and progress stay outside the app. Use
-  semantic routes and let the compiler own timing, camera, motion, and style.
-- The default 22-second budget and 380 WPM cards are deliberately concise and
-  pause-friendly.
-
-## Edit brief
-
-Events are one-based entries in `recording-summary.json`; chapters are
-zero-based plan entries.
-
-```json
-{
-  "task": "Extract the top five stories and comments",
-  "summary": "Collect each discussion and save structured JSON.",
-  "plan": ["Collect stories", "Capture discussions", "Verify JSON"],
-  "actions": [
-    {
-      "event": 3,
-      "chapter": 0,
-      "route": "Hacker News / Front page",
-      "afterRoute": "Hacker News / Discussion",
-      "narration": "Open the first discussion.",
-      "label": "Open discussion"
-    },
-    {
-      "event": 8,
-      "afterEvent": 9,
-      "chapter": 1,
-      "route": "Hacker News / Discussion",
-      "afterRoute": "Hacker News / Next discussion",
-      "label": "Continue in rank order"
-    }
-  ],
-  "explanations": [{
-    "afterAction": 2,
-    "title": "Why the first approach failed",
-    "observed": "Navigation links appeared in the result",
-    "mistake": "Every page link was selected",
-    "correction": "Restrict extraction to story rows"
-  }],
-  "outcomeTitle": "Five discussions captured",
-  "outcomeSummary": "The requested JSON is verified.",
-  "outcomes": ["Five current stories saved", "Comment trees preserved"],
-  "privacy": {
-    "reviewedFrames": ["0002.jpg", "0003.jpg", "0008.jpg", "0009.jpg"],
-    "redact": {"0003.jpg": [{"x": 10, "y": 10, "w": 120, "h": 32}]}
-  }
-}
-```
-
-Each action requires `event`, `chapter`, and a short semantic `route`.
-Optional fields are `frameEvent`, `afterEvent`, `afterRoute`, `narration`,
-`label`, `detour`, `error`, `context`, and `showTyping`. Narration is at
-most seven words. Explanations reveal Observed → Mistake → Correction. Outcomes
-must be verified.
-
-## Privacy and provenance
-
-Typed text is hidden unless its exact non-password event is inspected and
-explicitly enabled with `showTyping: true`. Passwords cannot be revealed.
-Credential-bearing URL parameters are scrubbed during capture. Private app
-URLs, identities, credentials, tokens, tenant data, and unrelated people stay
-private.
-
-Use opaque redaction rectangles in page coordinates and list every used frame
-in `privacy.reviewedFrames` only after inspecting its final full-resolution
-image. Public task evidence such as authors, post text, and link domains may
-remain. Automated sensitive-data detection is a backstop, not a guarantee.
-
-Initialization hashes the trace and every source frame. Review hashes the brief,
-composition, renderer, contact sheet, and every reviewed image, then seals the
-review report itself. Export refuses
-changed evidence or review artifacts, verifies the final duration and decoder,
-and creates a final MP4 contact sheet.
+- **Connect first.** `startRecording()` injects into live page targets; it throws
+  if the CDP session is not connected.
+- **The DOM is the tape.** `Runtime.evaluate('element.click()')` still shows up
+  if it mutates the page. There is no semantic `click_at_xy` / `goto_url` layer.
+- **PII lives in the DOM.** Masked inputs are not a privacy review. Treat the
+  jsonl as sensitive and keep it local.
+- **Do not reenact** a finished task to manufacture a cleaner recording.
+- **OOPIFs are separate targets.** See [record-cross-tab.md](record-cross-tab.md).

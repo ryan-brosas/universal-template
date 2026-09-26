@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "browser-harness-js",
+  "version": "0.13.0",
+  "description": "CDP relay for browser-harness-js. Preferred connect path; remote debugging remains the fallback.",
+  "permissions": ["debugger", "tabs", "tabGroups", "contentSettings", "alarms"],
+  "host_permissions": [
+    "http://127.0.0.1/*",
+    "http://localhost/*"
+  ],
+  "background": {
+    "service_worker": "sw.js"
+  },
+  "action": {
+    "default_title": "browser-harness-js CDP relay"
+  }
+}

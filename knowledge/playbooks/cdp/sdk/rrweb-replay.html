@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>rrweb replay</title>
+  <style>
+    html, body { margin: 0; height: 100%; background: #111; color: #e8e8e8; font: 13px/1.4 ui-sans-serif, system-ui, sans-serif; }
+    #bar { display: flex; gap: 8px; align-items: center; padding: 8px 12px; background: #1b1b1b; border-bottom: 1px solid #333; }
+    #player { height: calc(100% - 41px); background: #000; overflow: hidden; }
+    button, select { background: #2a2a2a; color: inherit; border: 1px solid #444; border-radius: 4px; padding: 4px 8px; }
+    #meta { opacity: 0.75; }
+  </style>
+</head>
+<body>
+  <div id="bar">
+    <select id="sid"></select>
+    <button id="play" type="button">Play</button>
+    <button id="pause" type="button">Pause</button>
+    <span id="meta"></span>
+  </div>
+  <div id="player"></div>
+  <script src="/rrweb.min.js"></script>
+  <script>
+    const sidEl = document.getElementById('sid');
+    const metaEl = document.getElementById('meta');
+    const playerEl = document.getElementById('player');
+    let replayer;
+
+    function clearPlayer() {
+      if (replayer && typeof replayer.pause === 'function') replayer.pause();
+      playerEl.replaceChildren();
+      replayer = undefined;
+    }
+
+    async function load(sid) {
+      clearPlayer();
+      const events = await (await fetch('/events.json?sid=' + encodeURIComponent(sid))).json();
+      metaEl.textContent = events.length + ' events';
+      if (!events.length || typeof rrweb === 'undefined' || typeof rrweb.Replayer !== 'function') return;
+      replayer = new rrweb.Replayer(events, { root: playerEl });
+    }
+
+    async function main() {
+      const sessions = await (await fetch('/sessions.json')).json();
+      sidEl.replaceChildren();
+      for (const session of sessions) {
+        const option = document.createElement('option');
+        option.value = session.sid;
+        option.textContent = session.sid.slice(0, 12) + ' · ' + session.count;
+        sidEl.appendChild(option);
+      }
+      if (!sessions.length) {
+        metaEl.textContent = 'no events';
+        return;
+      }
+      sidEl.onchange = () => load(sidEl.value);
+      document.getElementById('play').onclick = () => replayer && replayer.play();
+      document.getElementById('pause').onclick = () => replayer && replayer.pause();
+      await load(sessions[0].sid);
+    }
+
+    main().catch(error => { metaEl.textContent = String(error); });
+  </script>
+</body>
+</html>

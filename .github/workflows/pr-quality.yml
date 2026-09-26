@@ -32,13 +32,30 @@ jobs:
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '24'
+          package-manager-cache: false
+
+      - name: Install pinned Bend in the temporary runner directory
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash knowledge/playbooks/math-schema/bend/tools/install-linux-x64.sh "$RUNNER_TEMP/bend-toolchain"
+          echo "$RUNNER_TEMP/bend-toolchain/bend/bin" >> "$GITHUB_PATH"
 
       - name: Test published helpers
         shell: bash
         run: |
           set -euo pipefail
           python3 knowledge/playbooks/pencil/scripts/test-verify-fidelity-manifest.py
-          node --test knowledge/playbooks/cdp/sdk/recording-privacy.test.ts
+          node --test knowledge/playbooks/cdp/sdk/*.test.ts
+
+      - name: Verify first-party mathematical certificates and behavior
+        shell: bash
+        env:
+          BEND_NO_TELEMETRY: '1'
+        run: |
+          set -euo pipefail
+          python3 knowledge/playbooks/math-schema/bend/check.py
+          python3 -m unittest discover -s knowledge/playbooks/math-schema/bend/tests -v
 
       - name: Check changed lines
         shell: bash
