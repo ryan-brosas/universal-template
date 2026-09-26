@@ -25,6 +25,7 @@ This is a routing index, not a reading list. Known procedure paths can be opened
 - [project-bootstrap](../../../knowledge/playbooks/project-bootstrap/README.md)
 - [root-cause-tracing](../../../knowledge/playbooks/root-cause-tracing/README.md)
 - [security-and-hardening](../../../knowledge/playbooks/security-and-hardening/README.md)
+- [signup-abuse-response](../../../knowledge/playbooks/signup-abuse-response/README.md)
 - [source-driven-development](../../../knowledge/playbooks/source-driven-development/README.md)
 - [system-design-specification](../../../knowledge/playbooks/system-design-specification/README.md)
 - [test-driven-development](../../../knowledge/playbooks/test-driven-development/README.md)
