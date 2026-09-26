@@ -35,7 +35,9 @@ jobs:
         run: pip install --user zizmor==1.29.0  # pinned; bump deliberately
 
       - name: Audit workflows
+        shell: bash
         run: |
+          set -euo pipefail
           export PATH="$HOME/.local/bin:$PATH"
           zizmor .github/workflows/ 2>&1 | tee /tmp/zizmor.log
 

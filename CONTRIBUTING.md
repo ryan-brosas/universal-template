@@ -55,9 +55,15 @@ python3 knowledge/playbooks/math-schema/bend/check.py
 python3 -m unittest discover -s knowledge/playbooks/math-schema/bend/tests -v
 ```
 
-The current CI helper job does not provision Bend or run those checks; its green
-status is not proof of the mathematical sandbox. Missing pinned-toolchain
-verification blocks delivery of changes to that sandbox.
+The required CI job installs the official pinned Linux x64 Bend archive into
+its temporary runner directory, checks its SHA-256 and runs both checks. For
+an isolated local Linux x64 install, pass a new destination to
+`bash knowledge/playbooks/math-schema/bend/tools/install-linux-x64.sh NEW_DESTINATION`
+and prepend `NEW_DESTINATION/bend/bin` to `PATH`; existing destinations are
+refused. The helper reads `bend-version` and `bend-linux-x64.sha256` from the
+sandbox. Update the digest from the official release metadata when changing
+the pin. It does not replace a host compiler or edit shell configuration.
+Missing pinned-toolchain verification still blocks delivery of sandbox changes.
 
 Check changed-line whitespace with `git diff --check` against the PR base.
 
