@@ -1,6 +1,6 @@
 ---
 title: fabric-native-execution
-summary: Use when choosing an optional Pi Fabric execution capability, diagnosing unavailable tools, or recovering from stale Fabric guidance; installed host schemas and package skills own the API.
+summary: Use when choosing an optional Pi Fabric execution capability, diagnosing unavailable tools, recovering from stale Fabric guidance, or gating a write to a system the user does not control (admin panel, policy list, third-party service) behind a typed decision instead of intuition; installed host schemas and package skills own the API.
 kind: playbook
 ---
 
@@ -25,6 +25,16 @@ Optional capabilities have different jobs:
   A persistent observer needs actual runner support, not just a model name.
 - Transactional mutation modes are deliberate host policy, not prerequisites
   for ordinary edits and not replacements for behavioral tests.
+- A write to a system the user does not control (a production admin panel, a
+  policy or block list, a third-party service) is an authorization decision
+  before it is a data edit. Gate it on a typed decision over the structured
+  evidence actually held - what was observed, when, from which source - and
+  route low confidence to the human instead of resolving it by intuition. The
+  gate earns its cost by flagging the entries whose evidence is thin (in
+  practice, near-duplicate names that eyeballing had already mislabelled).
+  Collapse the gate to default-apply only when the operator confirms a blanket
+  property of a known family; keep it for outliers that could also belong to a
+  legitimate population, and state the reversibility of the write.
 
 ## Diagnose tool availability before repeating probes
 
@@ -38,13 +48,42 @@ After a failed probe, change one evidence-backed assumption before retrying.
 Use a harmless read through the actual exposed route and inspect its tool result.
 A newly configured server can register while reporting no tools until first use;
 prove the connection and its credential with one read-only call that requires
-the credential, not with a registration listing.
+the credential, not with a registration listing. A surface that declines
+credential entry on a login, 2FA or consent step is enforcing a boundary rather
+than failing: complete that step by hand and resume automation on the
+authenticated session (`../security-and-hardening/README.md`).
 A long-lived process serves the tool surface it loaded at startup, so a server
 added to the host config afterwards looks absent and a removed server looks
 present until that configuration is reloaded (`mcp.$reload` in Fabric).
 Observed 2026-09-11: `github` gained 47 tools and `deepwiki`/`openviking`
 vanished after one reload. An absent entry is not evidence that a server is
 unavailable; reload and re-list before concluding anything from it.
+
+Identify which file the consumer of a surface reads before editing one or
+restarting to pick a server up. Several config files can carry the same servers
+for different consumers and different schemas; an edit to the wrong one survives
+any number of restarts as a still-absent server. Resolve the indirection first,
+since a host config can name the path the runtime actually loads. Observed
+2026-09-27: two files listed most of the same servers, the runtime read only the
+one named by its own `configPath`, and a correct-looking entry in the other file
+never appeared no matter how many times the host restarted.
+
+A config that loads can still contribute nothing. An entry missing a field its
+working siblings all carry is dropped with no error and no warning, so compare
+the entry against one known to work rather than the schema you remember. Treat
+"no error, no server" as a validation problem before a connectivity problem.
+
+Prefer reload over restart, and expect reload to be slow and lossy: it
+reconnects every server, the first attempt here exceeded 60 s, and it discards
+live session state held by servers such as a REPL. When a runtime registration or
+dynamic call route hangs instead of failing, treat it as unsupported in that host
+and use the supported reload path; a hang is not evidence that the server is
+broken.
+
+Inspect credential-bearing configuration by allowlisted field or presence
+boolean, never by dumping entry shapes: a shape comparison still prints a bare
+token field, and later redaction does not undo transcript exposure
+(`../security-and-hardening/README.md`).
 A model naming a file proves neither that it read the file nor that it followed
 its instructions. Report prompt inclusion, tool execution, and behavioral
 compliance separately; stop when the requested claim has sufficient evidence.

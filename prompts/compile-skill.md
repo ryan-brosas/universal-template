@@ -8,8 +8,6 @@ genuinely fits. Keep it focused on what the evidence supports. Preserve the
 technique, sequence, decision, or reasoning shortcut another agent would
 otherwise rediscover, not a transcript summary or generic advice.
 
-When the raw material is session experience whose lesson is not yet understood,
-establish it first with `knowledge/playbooks/session-improvement-compiler/README.md`.
 When the procedure and its owner are already settled, check
 `knowledge/playbooks/writing-skills/README.md` and write it directly. If we
 haven't chosen where it belongs, draft it here first. Do not force code fixes or
