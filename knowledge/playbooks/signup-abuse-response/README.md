@@ -1,6 +1,6 @@
 ---
 title: signup-abuse-response
-summary: Use when throwaway, disposable, or bot signups and their domains must be blocked on a product's own hold or block list - walk a notification feed's history for the family signature, dedupe into a durable ledger, classify every address-shaped token rather than one known prefix, audit the live list by record rather than by a filtered count, apply one item at a time under an explicit default policy, and verify every write three ways.
+summary: Use when throwaway, disposable, or bot signups and their domains must be blocked on a product's own hold or block list - walk a notification feed's history for the family signature, dedupe into a durable ledger, classify every address-shaped token by local-part shape rather than one known prefix (families rotate from cb-prefixed tokens to fake-persona names on cheap TLDs), screen out the operator's own domains, consumer providers and institutions before writing, audit the live list by record rather than by a filtered count, apply one item at a time under an explicit default policy, and verify every write three ways.
 kind: playbook
 ---
 
@@ -55,11 +55,21 @@ family, decide once, write idempotently, verify against the authority.
 3. **Audit by record.** Query the policy surface per candidate and read the matching row.
    A count read while a filter is still applied is not the population, and a probe typed
    into a surface that appends returns corrupted values: start each query from clean
-   state, and read the list total from the unfiltered page.
+   state, and read the list total from the unfiltered page. Screen the harvest for
+   domains that must never be held before any bulk write - the operator's own
+   domains, consumer mail providers, and institutions - and check them first, because
+   a feed that reports sign-ins as well as signups will contain them.
 4. **Decide once per family.** A confirmed family takes the default action with no
    adjudication. Escalate genuine outliers - a domain that could host real users, a brand
    lookalike, or a TLD that is not throwaway infrastructure - and record that decision
-   with its evidence rather than silently widening the block. A candidate outside the
+   with its evidence rather than silently widening the block. Read local-part shape as
+   the primary signal: random tokens indicate automation, role addresses (`info@`,
+   `admin@`) and personal names indicate a person, and a template of paired
+   human-looking names spread across unrelated throwaway domains indicates a campaign
+   wearing personas. Structural shape - one naming template across many unrelated
+   domains, one to three addresses each, arriving inside the same burst - outranks any
+   single classification (`../fabric-native-execution/README.md` records why a repeated
+   verdict can disagree with itself). A candidate outside the
    confirmed signature is exactly where a typed verdict earns its cost: ask for
    hold / hold_email_only / skip / need_more_evidence over the structured evidence
    held, treat low confidence as a human decision, and keep the routine family path
