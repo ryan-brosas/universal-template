@@ -19,8 +19,8 @@ create planning infrastructure as a prerequisite.
   [skill-catalog](../../knowledge/playbooks/skill-catalog/README.md).
 - Understand what a session taught, or answer a history question (read-only, no
   changes): the `reflect-session` and `recall-session` prompts, whose bounded
-  history lane (project Hindsight recall plus stored reflection records) is owned by
-  [evidence guidance](../../knowledge/playbooks/session-improvement-compiler/references/evidence-contract.md).
+  history lane (project Hindsight recall plus stored reflection records) those
+  prompts define.
 - Adopt valuable session experience into its correct owner, not only a skill:
   the `compile-session-improvements` prompt.
 - Choose the kind of improvement a lesson calls for:
