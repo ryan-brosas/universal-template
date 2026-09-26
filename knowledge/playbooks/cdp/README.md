@@ -19,7 +19,7 @@ One persistent CDP `Session` held by a long-lived Node HTTP server, every `brows
 ## When to Use / NOT
 
 - **Use when:** automating, scripting, or inspecting a Chromium-based browser via CDP, single tab or multi-tab, attach to an existing browser or launch a new one with --remote-debugging-port.
-- **NOT when:** N/A, no explicit exclusion stated; requires `node` on PATH and a Chromium-based browser with remote debugging (see compatibility).
+- **NOT when:** no CDP endpoint is available or attaching is undesirable, but the user's Chrome is reachable through a browser-relay MCP server - use [beacon](../beacon/README.md). Requires `node` on PATH and a Chromium-based browser with remote debugging (see compatibility).
 
 ## Workflow
 

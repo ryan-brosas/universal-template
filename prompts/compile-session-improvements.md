@@ -2,9 +2,7 @@
 description: Adopt valuable session experience into the right owner
 argument-hint: "[session or focus]"
 ---
-Use this session's experience to improve future work. Follow the experience-to-
-adoption procedure in knowledge/playbooks/session-improvement-compiler/README.md.
-Start with what actually happened, not a search for skills to edit. Study useful
+Use this session's experience to improve future work. Start with what actually happened, not a search for skills to edit. Study useful
 successes, failures, corrections, shortcuts, and verification; distinguish evidence
 from plausible explanations and project-specific boundaries from reusable methods.
 

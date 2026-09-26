@@ -20,7 +20,7 @@ create planning infrastructure as a prerequisite.
 - Understand what a session taught, or answer a history question (no changes):
   the `reflect-session` and `recall-session` prompts.
 - Adopt valuable session experience into its correct owner, not only a skill:
-  [session-improvement-compiler](../../knowledge/playbooks/session-improvement-compiler/README.md).
+  the `compile-session-improvements` prompt.
 - Choose the kind of improvement a lesson calls for:
   [leverage-capture](../../knowledge/playbooks/leverage-capture/README.md).
 - Decide whether recovery/coordination needs a durable work record:
