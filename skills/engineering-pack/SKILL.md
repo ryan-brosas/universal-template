@@ -31,6 +31,8 @@ commands from each selected procedure's directory, never from this router.
   [api-and-interface-design](../../knowledge/playbooks/api-and-interface-design/README.md).
 - Security/authentication boundaries:
   [security-and-hardening](../../knowledge/playbooks/security-and-hardening/README.md).
+- Blocking disposable or bot signups on a product policy list:
+  [signup-abuse-response](../../knowledge/playbooks/signup-abuse-response/README.md).
 - Simplifying working code:
   [code-cleanup](../../knowledge/playbooks/code-cleanup/README.md).
 - Language/framework standards: select each materially applicable

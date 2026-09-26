@@ -69,6 +69,9 @@ endpoint, key and config file; this procedure owns how to use the surface.
 - **Sessions stay human-owned.** The surface refuses credential entry by design:
   complete those steps by hand and resume on the authenticated session
   (`../security-and-hardening/README.md`).
+- **One workflow built on this surface.** Harvesting a disposable-signup family from a
+  notification feed and applying verified policy holds is owned by
+  `../signup-abuse-response/README.md`.
 
 ## Verification
 
