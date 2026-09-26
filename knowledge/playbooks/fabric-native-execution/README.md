@@ -1,6 +1,6 @@
 ---
 title: fabric-native-execution
-summary: Use when choosing an optional Pi Fabric execution capability, diagnosing unavailable tools, recovering from stale Fabric guidance, or gating a write to a system the user does not control (admin panel, policy list, third-party service) behind a typed decision instead of intuition; installed host schemas and package skills own the API.
+summary: Use when choosing an optional Pi Fabric execution capability, diagnosing unavailable tools, recovering from stale Fabric guidance, gating a write to a system the user does not control (admin panel, policy list, third-party service) behind a typed decision, or weighing a typed verdict that disagrees with itself across runs; installed host schemas and package skills own the API.
 kind: playbook
 ---
 
@@ -36,7 +36,13 @@ Optional capabilities have different jobs:
   practice, near-duplicate names that eyeballing had already mislabelled).
   Collapse the gate to default-apply only when the operator confirms a blanket
   property of a known family; keep it for outliers that could also belong to a
-  legitimate population, and state the reversibility of the write.
+  legitimate population, and state the reversibility of the write. Treat the
+  verdict as advisory evidence, not ground truth: the same evidence can score
+  confidently in one run and barely above chance in another, so a verdict that
+  contradicts an earlier run on unchanged input is itself a low-confidence signal.
+  Prefer the structure of the evidence - how many independent sources, whether one
+  shape or naming template spans them, how they cluster in time - and escalate when
+  structure and verdict disagree rather than letting either decide alone.
 
 ## Diagnose tool availability before repeating probes
 
