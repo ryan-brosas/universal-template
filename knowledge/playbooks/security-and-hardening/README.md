@@ -1,6 +1,6 @@
 ---
 title: security-and-hardening
-summary: Use when auditing for security vulnerabilities, implementing auth or authz, handling secrets, or hardening against OWASP Top 10 - covers input validation, authentication, dependency auditing, and secure defaults.
+summary: Use when auditing for security vulnerabilities, implementing auth or authz, handling secrets, passwords, login credentials or an authenticated session, or hardening against OWASP Top 10 - covers input validation, authentication, dependency auditing, and secure defaults.
 kind: playbook
 ---
 
@@ -20,9 +20,21 @@ project contracts and advisories to choose the relevant defenses.
   When inspecting credential-bearing configuration, extract only allowlisted non-secret
   fields or presence booleans before output reaches the tool transcript; never print
   matching credential lines with `grep`, dump the environment, or enable shell tracing.
-  Pass credentials directly to the consumer and report only the probe result. If a
-  value escapes, disclose the exposure without repeating it and arrange authorized
-  rotation; later redaction does not undo transcript exposure.
+  Pass credentials directly to the consumer and report only the probe result, and
+  derive the field allowlist from the file itself rather than from memory: a
+  comparison of entry *shapes* across a configuration still prints a value for
+  every secret-bearing key the redaction list omits. If a value escapes, disclose
+  the exposure without repeating it and arrange authorized rotation; later
+  redaction does not undo transcript exposure.
+- **Automation is not an auth channel.** Before planning an automated sign-in,
+  read the stored credential's kind and scope: an API key does not establish an
+  interactive session, and a session cannot be minted by a tool that is not
+  allowed to see the password. When a control surface declines to enter
+  credentials on a login, 2FA, or consent page, that refusal is a boundary -
+  finish the interactive step yourself or hand it to the user, then resume
+  automation on the authenticated session. Do not accept a password into
+  automation or work around the refusal; treat the completed callback as the
+  point where automation resumes.
 - **Classification can bypass validation.** A text file containing binary bytes,
   an unexpected content type or a decoder fallback must not silently skip a
   required safety check. Reject unsupported input at its owner; distinguish
