@@ -1,0 +1,70 @@
+{
+  "id": "discord-com",
+  "name": "Discord (web app)",
+  "domains": ["discord.com", "discordapp.com"],
+  "notes": ["notes/threaded-reply.md", "notes/reading-surfaces.md"],
+  "nodeTools": {
+    "reply_to_message": {
+      "description": "Post a native threaded reply to one Discord message and return a receipt, or dry-run the same sequence without submitting. Handles scroll-into-view, hover toolbar, Reply control, reply-mode detection, typing, single Enter, persistence scan and permalink verification.",
+      "path": "tools/reply_to_message.mjs",
+      "callable": "replyToMessage",
+      "args": {
+        "channelUrl": { "type": "string", "required": true, "description": "https://discord.com/channels/<guild>/<channel>" },
+        "messageId": { "type": "string", "required": true, "description": "Message id to reply to" },
+        "text": { "type": "string", "required": false, "description": "Reply body; required unless dryRun" },
+        "dryRun": { "type": "boolean", "required": false, "description": "Type and verify, then clear the composer; never submits" },
+        "targetId": { "type": "string", "required": false, "description": "Existing owned tab to reuse. When set, the tool neither creates nor closes a tab and leaves the caller's page in place" }
+      },
+      "returns": { "type": "object", "description": "{ stage, targetId, permalink, sentId, evidence }" }
+    },
+    "list_guild_rail": {
+      "description": "Read the guild rail, separating servers from folder rows: id, name, unread flag, aria-level and position for each server, and each folder with its expansion state and parsed member list.",
+      "path": "tools/read_surfaces.mjs",
+      "callable": "listGuildRail",
+      "args": {},
+      "returns": { "type": "object", "description": "{ servers: [{ id, name, unread, level, pos, size }], folders: [{ id, members, membersTruncated, expanded, level, pos, size }], total }" }
+    },
+    "list_channels": {
+      "description": "Open a guild and read its sidebar: channel id (from href), name and kind parsed from aria-label, with the lazy-load retry and stale-list detection Discord needs.",
+      "path": "tools/read_surfaces.mjs",
+      "callable": "listChannels",
+      "args": {
+        "guildId": { "type": "string", "required": true, "description": "Guild id to open" },
+        "previous": { "type": "array", "required": false, "description": "Channel ids from the previous guild read; a list identical to this is treated as not yet rendered" }
+      },
+      "returns": { "type": "object", "description": "{ guildId, channels: [{ cid, gid, name, kind, label }], attempts, stale }" }
+    },
+    "list_forum_posts": {
+      "description": "Read a forum channel's post list with titles and reply counts from each row's aria-label.",
+      "path": "tools/read_surfaces.mjs",
+      "callable": "listForumPosts",
+      "args": {
+        "guildId": { "type": "string", "required": true },
+        "forumChannelId": { "type": "string", "required": true }
+      },
+      "returns": { "type": "object", "description": "{ forumChannelId, posts: [{ tid, title, messageCount }], attempts }" }
+    },
+    "read_channel_end": {
+      "description": "Navigate to one channel (or post URL) and return the tail of the message list with id, time, author, own text and quoted preview resolved per row.",
+      "path": "tools/read_surfaces.mjs",
+      "callable": "readChannelEnd",
+      "args": {
+        "channelUrl": { "type": "string", "required": true, "description": "https://discord.com/channels/<guild>/<channel>[/<message or thread>]" },
+        "limit": { "type": "integer", "required": false, "description": "Rows to return from the end, default 8" },
+        "mask": { "type": "boolean", "required": false, "description": "Replace @mentions with [mention] for text leaving the workspace" }
+      },
+      "returns": { "type": "object", "description": "{ channelUrl, messages: [{ id, time, author, text, quoted }], attempts }" }
+    },
+    "read_channel_series": {
+      "description": "Read several channels one after another. Use this instead of concurrent calls: overlapping reads into one Discord session return stale channel lists and can strand composer text.",
+      "path": "tools/read_surfaces.mjs",
+      "callable": "readChannelSeries",
+      "args": {
+        "urls": { "type": "array", "required": true, "description": "Channel URLs, read in the given order" },
+        "limit": { "type": "integer", "required": false },
+        "mask": { "type": "boolean", "required": false }
+      },
+      "returns": { "type": "array", "description": "One readChannelEnd result per url, in order" }
+    }
+  }
+}
