@@ -7,6 +7,7 @@ This is a routing index, not a reading list. Known procedure paths can be opened
 - [api-and-interface-design](../../../knowledge/playbooks/api-and-interface-design/README.md)
 - [authoritative-signal-surfacing](../../../knowledge/playbooks/authoritative-signal-surfacing/README.md)
 - [brainstorming](../../../knowledge/playbooks/brainstorming/README.md)
+- [calendly](../../../knowledge/playbooks/calendly/README.md) — API v2, booking, OAuth/PATs, availability, webhooks, embeds, contacts, Notetaker, organization data and MCP
 - [code-cleanup](../../../knowledge/playbooks/code-cleanup/README.md)
 - [code-discipline](../../../knowledge/playbooks/code-discipline/README.md)
 - [code-review-and-quality](../../../knowledge/playbooks/code-review-and-quality/README.md)

@@ -14,6 +14,14 @@ and provider-specific controls deliberately; discover configured models rather
 than guessing IDs. Headers and compatible-provider `queryParams` can use
 strings or secret references. Check the destination before sending private code.
 
+For explicit MCP Ask selection, preserve the discovered model identity, including
+`displayName` when present. In v5.1.13,
+[`getLanguageModelKey`](https://github.com/sourcebot-dev/sourcebot/blob/v5.1.13/packages/web/src/features/chat/utils.ts#L505-L512)
+uses provider, model **and display name**. Sending only provider/model can report
+“not configured” even though discovery lists it; the complete identity succeeded
+in a live check. Diagnose this caller mismatch before changing credentials or
+provider configuration.
+
 | Provider identifier | Setup / diagnostic distinction |
 | --- | --- |
 | `amazon-bedrock` | AWS access key, secret, session token and region can resolve from standard AWS environment variables; check runtime identity/region. |

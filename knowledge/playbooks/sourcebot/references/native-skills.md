@@ -41,6 +41,25 @@ Type `/` at the start of an Ask prompt to choose a command. Sourcebot expands it
 into instructions; file mentions add those files to the chat context. It may also
 load a matching skill automatically; chat details show the loaded name/command.
 
+### Interactive Ask versus programmatic Ask
+
+Do not assume skill-management MCP tools imply that `ask_codebase` loads those
+skills. In the inspected **v5.1.13** implementation, programmatic Ask omits the
+requester context needed to build the skill catalog: it has no `load_skill` tool
+and does not expand a literal `/command` like the interactive UI. This was also
+observed in a scoped invocation. Native skills do not alter direct MCP search,
+file reads or symbol navigation either.
+
+Use the authenticated **Ask UI** and select the slash command to exercise native
+skills. For another release, inspect its actual caller and skill registration
+before promising automatic use in delegated research. A response that did not
+load the candidate is not a with-skill evaluation.
+
+Source: [programmatic caller](https://github.com/sourcebot-dev/sourcebot/blob/v5.1.13/packages/web/src/ee/features/mcp/askCodebase.ts#L179-L207)
+and [catalog/tool gate](https://github.com/sourcebot-dev/sourcebot/blob/v5.1.13/packages/web/src/ee/features/chat/agent.ts#L661-L716).
+
+### Catalog scope and management
+
 Personal skills are private in the workspace. Shared skills enter the workspace
 catalog. Owners can enable Auto for shared skills. Repository-synced skills are
 visible according to source-repository access, with an owner-management exception;
