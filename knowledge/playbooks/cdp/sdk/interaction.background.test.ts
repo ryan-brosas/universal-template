@@ -1,12 +1,9 @@
 import assert from 'node:assert/strict';
-import { spawn, type ChildProcess } from 'node:child_process';
-import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { createServer, type Server } from 'node:http';
-import { tmpdir } from 'node:os';
-import { join } from 'node:path';
 import test, { after, before } from 'node:test';
 import { InteractionController } from './interaction.ts';
 import { Session } from './session.ts';
+import { closeTestBrowser, launchTestBrowser, type TestBrowser } from './test-browser-fixture.ts';
 
 // Local regression: trusted guarded input must work in a background target and
 // must not request Chrome-side activation.
@@ -33,20 +30,8 @@ const PAGE = `<!doctype html>
 <\/script>
 </body></html>`;
 
-function chromePath(): string | undefined {
-  const candidates = [
-    process.env.CHROME_PATH,
-    '/usr/bin/chromium',
-    '/usr/bin/chromium-browser',
-    '/usr/bin/google-chrome',
-    '/Applications/Chromium.app/Contents/MacOS/Chromium',
-  ];
-  return candidates.find(path => path && existsSync(path));
-}
-
-let chrome: ChildProcess | undefined;
+let chrome: TestBrowser | undefined;
 let server: Server | undefined;
-let profile: string | undefined;
 let port = 0;
 let origin = '';
 
@@ -57,30 +42,21 @@ before(async () => {
   });
   await new Promise<void>(resolve => server!.listen(0, '127.0.0.1', resolve));
   origin = `http://127.0.0.1:${(server.address() as { port: number }).port}`;
-  const path = chromePath();
-  if (!path) return;
-  profile = mkdtempSync(join(tmpdir(), 'browser-harness-js-background-'));
-  chrome = spawn(path, [
-    '--headless=new', '--remote-debugging-port=0', `--user-data-dir=${profile}`,
-    '--no-first-run', '--no-default-browser-check', '--window-size=1200,900', 'about:blank',
-  ], { stdio: 'ignore' });
-  const portFile = join(profile, 'DevToolsActivePort');
-  for (let i = 0; i < 100 && !existsSync(portFile); i++) await new Promise(r => setTimeout(r, 100));
-  if (existsSync(portFile)) port = Number(readFileSync(portFile, 'utf8').split('\n')[0]);
+  chrome = await launchTestBrowser({ profilePrefix: 'browser-harness-js-background-' });
+  if (!chrome) return;
+  port = chrome.port;
 });
 
 after(async () => {
-  if (chrome && chrome.exitCode === null) {
-    const exited = new Promise(resolve => chrome!.once('exit', resolve));
-    chrome.kill();
-    await exited;
+  try { await closeTestBrowser(chrome); }
+  finally {
+    server?.closeAllConnections();
+    await new Promise<void>(resolve => server ? server.close(() => resolve()) : resolve());
   }
-  server?.close();
-  if (profile) rmSync(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
 });
 
 test('trusted input reaches a background target without requesting activation', async t => {
-  if (!port) return t.skip('Chrome not found (set CHROME_PATH)');
+  if (!chrome) return t.skip('Chrome not found (set CHROME_PATH)');
   const session = new Session();
   let targetId: string | undefined;
   const methods: string[] = [];

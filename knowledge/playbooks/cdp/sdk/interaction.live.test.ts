@@ -1,12 +1,9 @@
 import assert from 'node:assert/strict';
-import { spawn, type ChildProcess } from 'node:child_process';
-import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { createServer, type Server } from 'node:http';
-import { tmpdir } from 'node:os';
-import { join } from 'node:path';
 import test, { after, before } from 'node:test';
 import { InteractionController, type InteractionObservation } from './interaction.ts';
 import { Session } from './session.ts';
+import { closeTestBrowser, launchTestBrowser, type TestBrowser } from './test-browser-fixture.ts';
 
 // Real headless Chrome against local widgets that a fake DOM cannot model:
 // ARIA naming, pointer-only handlers, autocomplete comboboxes, keyboard
@@ -118,21 +115,8 @@ const PAGE = `<!doctype html>
   nonstop.addEventListener('click', () => nonstop.setAttribute('aria-checked', String(nonstop.getAttribute('aria-checked') !== 'true')));
 </script></body></html>`;
 
-function chromePath(): string | undefined {
-  const candidates = [
-    process.env.CHROME_PATH,
-    '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-    '/Applications/Chromium.app/Contents/MacOS/Chromium',
-    '/usr/bin/google-chrome',
-    '/usr/bin/chromium',
-    '/usr/bin/chromium-browser',
-  ];
-  return candidates.find(path => path && existsSync(path));
-}
-
-let chrome: ChildProcess | undefined;
+let chrome: TestBrowser | undefined;
 let server: Server | undefined;
-let profile: string | undefined;
 let port = 0;
 let origin = '';
 
@@ -143,26 +127,17 @@ before(async () => {
   });
   await new Promise<void>(resolve => server!.listen(0, '127.0.0.1', resolve));
   origin = `http://127.0.0.1:${(server.address() as { port: number }).port}`;
-  const path = chromePath();
-  if (!path) return;
-  profile = mkdtempSync(join(tmpdir(), 'browser-harness-js-guard-'));
-  chrome = spawn(path, [
-    '--headless=new', '--remote-debugging-port=0', `--user-data-dir=${profile}`,
-    '--no-first-run', '--no-default-browser-check', '--window-size=1200,900', 'about:blank',
-  ], { stdio: 'ignore' });
-  const portFile = join(profile, 'DevToolsActivePort');
-  for (let i = 0; i < 100 && !existsSync(portFile); i++) await new Promise(r => setTimeout(r, 100));
-  port = Number(readFileSync(portFile, 'utf8').split('\n')[0]);
+  chrome = await launchTestBrowser({ profilePrefix: 'browser-harness-js-guard-' });
+  if (!chrome) return;
+  port = chrome.port;
 });
 
 after(async () => {
-  if (chrome && chrome.exitCode === null) {
-    const exited = new Promise(resolve => chrome!.once('exit', resolve));
-    chrome.kill();
-    await exited;
+  try { await closeTestBrowser(chrome); }
+  finally {
+    server?.closeAllConnections();
+    await new Promise<void>(resolve => server ? server.close(() => resolve()) : resolve());
   }
-  server?.close();
-  if (profile) rmSync(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
 });
 
 async function open(input: 'synthetic' | 'trusted') {
@@ -200,7 +175,7 @@ const act = (controller: InteractionController, seen: InteractionObservation, la
   controller.act({ scope: seen.scope, observationId: seen.observationId, action: { targetId: find(seen, label).id, operation, ...extra } });
 
 test('ARIA roles, names and states become candidates; synthetic mode keeps DOM activation', async t => {
-  if (!port) return t.skip('Chrome not found (set CHROME_PATH)');
+  if (!chrome) return t.skip('Chrome not found (set CHROME_PATH)');
   const page = await open('synthetic');
   try {
     let seen = await page.controller.observe({ scope: page.scope });
@@ -242,7 +217,7 @@ test('ARIA roles, names and states become candidates; synthetic mode keeps DOM a
 });
 
 test('trusted input drives pointer-only widgets, autocomplete comboboxes, keys and contenteditable', async t => {
-  if (!port) return t.skip('Chrome not found (set CHROME_PATH)');
+  if (!chrome) return t.skip('Chrome not found (set CHROME_PATH)');
   const page = await open('trusted');
   try {
     let seen = await page.controller.observe({ scope: page.scope });
@@ -283,7 +258,7 @@ test('trusted input drives pointer-only widgets, autocomplete comboboxes, keys a
 });
 
 test('names from content, named context, open shadow roots, and page/container scrolling', async t => {
-  if (!port) return t.skip('Chrome not found (set CHROME_PATH)');
+  if (!chrome) return t.skip('Chrome not found (set CHROME_PATH)');
   const page = await open('trusted');
   try {
     let seen = await page.controller.observe({ scope: page.scope, maxElements: 128 });
@@ -330,7 +305,7 @@ test('names from content, named context, open shadow roots, and page/container s
 });
 
 test('pass-through overlay links and partly covered controls are reachable at a clear point', async t => {
-  if (!port) return t.skip('Chrome not found (set CHROME_PATH)');
+  if (!chrome) return t.skip('Chrome not found (set CHROME_PATH)');
   const page = await open('trusted');
   try {
     let seen = await page.controller.observe({ scope: page.scope, maxElements: 128 });
