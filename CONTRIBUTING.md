@@ -38,7 +38,6 @@ live checkout to a feature branch changes the prompts the host consumes.
 Run the executable helper tests:
 
 ```sh
-python3 knowledge/playbooks/pencil/scripts/test-verify-fidelity-manifest.py
 node --test knowledge/playbooks/cdp/sdk/*.test.ts
 ```
 

@@ -34,13 +34,16 @@ opened - or already merged - a PR for the same work, and an open-only query miss
    not an automatic capture task.
 3. Write Markdown to a securely created temporary file (`mktemp`); pass it with
    `--body-file`, never interpolate it into shell code. Before `gh pr create`, run
-   the `../gh-repo-target-guard/README.md` check: gh's default repo
-   (`gh repo set-default --view`) must match the intended base from `git remote -v`;
-   in any fork checkout pass `--repo` (and `--head` when head and base repos
-   differ) explicitly. Push and create with
-   `gh pr create --title "..." --body-file <file> --base <base>`, or update the
-   existing PR. For fork-based contribution — remote roles, branching from the
-   project's base, branch currency, and a fork PR's base-repository CI — use
+   [target guard](../gh-repo-target-guard/README.md): confirm the intended base
+   repository, then target it explicitly. Push separately when authorized and
+   create with `gh pr create --repo <owner/repo> --head <branch-or-user:branch>
+   --base <base> --title "..." --body-file <file>`, or update the existing PR.
+   Explicit `--head` skips automatic pushing/forking; `--dry-run` alone can still
+   push and is not a safe validation command. A default mismatch does not require
+   changing configuration when the explicit target is correct. For shared auth,
+   JSON and API mechanics, use [GitHub CLI](../github-cli/README.md).
+   For fork-based contribution — remote roles, branching from the project's
+   base, branch currency, and a fork PR's base-repository CI — use
    `references/fork-contribution.md`. Incomplete implementation is draft; ready implementation can
    enter review while CI runs. A failing required check blocks merge, not review.
 4. Apply labels only when explicitly requested; this repository has no label
@@ -53,8 +56,10 @@ automation. Reviewers follow CODEOWNERS or an
 
    Auto-merge requires an explicit user request, not merely repository
    support, and must not be enabled while required checks fail.
-5. Watch required CI to a terminal state with `gh pr checks --watch` (or
-   `gh run watch`); do not rely on a single unwatched poll.
+5. Watch required CI to a terminal state with
+   `gh pr checks <n> --repo <owner/repo> --required --watch` (or
+   `gh run watch <run-id> --repo <owner/repo> --exit-status`); do not rely on a
+   single unwatched poll or treat an empty check set as passing.
    Update the PR evidence when results change. For workflow or conditional
    observation details, select `references/ci-and-observation.md`; CI authoring
    belongs to `../github-actions-engineering/README.md`.

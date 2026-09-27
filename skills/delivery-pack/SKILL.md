@@ -1,6 +1,6 @@
 ---
 name: delivery-pack
-description: "Use when committing or reconciling Git, pushing, opening or reviewing PRs, shipping through merge, configuring GitHub or Actions CI, deploying, or publishing releases and npm packages. This pack owns delivery state; combine it with the pack responsible for the artifact. Local code/test diagnosis remains engineering's boundary."
+description: "Use when committing or reconciling Git, pushing, opening or reviewing PRs, shipping through merge, using GitHub CLI, configuring GitHub or Actions CI, deploying, or publishing releases and npm packages. This pack owns delivery state; combine it with the pack responsible for the artifact. Local code/test diagnosis remains engineering's boundary."
 invocation: entry
 ---
 
@@ -19,6 +19,8 @@ to each selected procedure's directory, not this router.
   [push-pr](../../knowledge/playbooks/push-pr/README.md).
 - Explicitly ship end to end through CI, reviews and merge:
   [ship-pr](../../knowledge/playbooks/ship-pr/README.md).
+- GitHub CLI command selection, authentication, JSON output or API requests:
+  [github-cli](../../knowledge/playbooks/github-cli/README.md).
 - Wrong GitHub target or fork ambiguity:
   [gh-repo-target-guard](../../knowledge/playbooks/gh-repo-target-guard/README.md).
 - CI workflow creation, repair or hardening:

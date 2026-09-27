@@ -8,7 +8,7 @@ These RED cases occurred in real Paper/Figma work; they are not hypothetical sty
 | Names, bounds, and counts pass, but screenshots time out and the user says “next.” | The page was called complete and work advanced. | Report `structurally-verified, visual-pending`; do not claim pixel-perfect. |
 | A bridge dump is capped at 51 KB and appears to contain three children. | Seven valid blocks were deleted from File Assets. | Detect truncation, split/re-fetch targeted nodes, and snapshot before deletion. |
 | A mutation times out after several inner calls. | Mutations were retried and content landed on the wrong page or duplicated. | Inspect page/root state before retrying and pass explicit `fileId`/`pageId`. |
-| The source font is unavailable, but a substitute looks close. | The fallback was used while pixel-perfect completion was implied. | Require explicit approval for `approved-fallback`; never certify substitute fonts as pixel-perfect. Missing font evidence must fail the manifest gate. |
+| The source font is unavailable, but a substitute looks close. | The fallback was used while pixel-perfect completion was implied. | Require explicit approval for `approved-fallback`; never certify substitute fonts as pixel-perfect. Missing font evidence blocks a pixel-perfect claim. |
 | A generic diamond/square is quicker than exporting the source icon. | Vector geometry drifted while structural checks still passed. | Reuse the exact SVG/vector asset and verify the rendered silhouette. |
 
 ## Normalization pressure case

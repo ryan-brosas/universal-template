@@ -4,7 +4,8 @@ Sources: [Paste](https://paper.design/docs/paste),
 [Figma](https://paper.design/docs/paste/figma),
 [HTML](https://paper.design/docs/paste/html),
 [MCP](https://paper.design/docs/mcp), and
-[build log](https://paper.design/build-log). Reviewed 2026-09-06.
+[build log](https://paper.design/build-log). Docs and relevant installed guidance
+checked 2026-09-27; release-note history is dated in `index.md`.
 
 ## Pick a transfer path
 
@@ -55,7 +56,7 @@ layouts on the installed version before retaining an old manual workaround.
 
 After paste, inspect counts, hidden nodes, assets, text, bounds, and real bindings.
 Import/reconcile the theme and repair supported properties with `var(--...)`.
-Use `../../pencil/README.md` for exact transfer and its existing manifest gate.
+Use `../../pencil/README.md` for exact transfer and its completion evidence checks.
 
 ## MCP reconstruction caveats
 
@@ -80,8 +81,11 @@ computed appearance. Use the actual source styles and existing Paper token names
   existing patterns. A clone is not proof of structural linkage.
 - `layer-name` names the layer; `data-paper-locked` locks it; `hidden` hides it.
 - `img` and CSS background images are uploaded; public URLs are the documented
-  clipboard path. For MCP local assets, follow its current supported asset scheme
-  or reachable local URLs. Test from Paper's machine, not just the agent's container.
+  clipboard path. The inspected `write_html` descriptor requires local images as
+  absolute `paper-asset:///…` paths in `img` elements. Confirm access from Paper's
+  machine, not just the agent's container. This MCP scheme is not a clipboard URL.
+  `paper-gen://` generates images that consume usage; use only on an explicit
+  generation request after reading the current image-generation guide.
 - All elements use border-box sizing. Inputs become frames with text children,
   not interactive form controls. Hidden/display-none elements remain hidden.
 - Blocks containing only inline children flatten to one Text node. Inline nodes

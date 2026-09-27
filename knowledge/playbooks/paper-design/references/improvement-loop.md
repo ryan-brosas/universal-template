@@ -11,7 +11,8 @@ Discover current tool descriptors and the installed guide only for that operatio
 Keep three labels separate: **documented**, **schema-inspected**, **runtime-tested**.
 Roadmap items and successful transport calls are not runtime proof.
 
-Useful changes found in the reviewed release notes:
+Historical changes from the release notes reviewed on 2026-09-06 (not a current
+feature inventory):
 
 | Release | Opportunity | Small decisive experiment |
 |---|---|---|
@@ -38,8 +39,8 @@ For import-route comparison:
 
 1. Measure the current reconstruction route, or use recent comparable evidence.
 2. Try direct paste plus targeted repairs on the same frame.
-3. Apply the same structural and visual checks to both, using the existing Pencil
-   manifest gate and saved renders rather than introducing another fidelity checker.
+3. Apply the same structural and visual checks to both, using Pencil's completion
+   evidence and inspected source/Paper renders rather than a separate checker.
 4. Count repair edits, tool calls/time where available, missing assets/hidden nodes,
    lost bindings, and remaining visual differences. Compare editability as well as
    pixels. Do not call it faster without comparable measurements.
@@ -74,7 +75,10 @@ only an expensive-to-rediscover limitation. Proposals remain proposals until tes
 ## Skill maintenance acceptance
 
 When refreshing these notes, rediscover `/docs` URLs from the sitemap, hub, and
-`llms.txt`; read changed/new pages and update the coverage table. Keep runtime
-claims tied to actual observations. Check links and the catalog after edits using
+`llms.txt`; read changed/new pages and update the coverage table. If an extractor
+contradicts current UI or prior evidence, check the live origin before treating
+the difference as a regression. The 2026-09-27 refresh found cached token and MCP
+setup pages behind their live versions. Keep runtime claims tied to actual
+observations. Check links and the catalog after edits using
 `../../writing-skills/README.md`. No scheduled poller or automatic skill rewrite is
 installed by this workflow.

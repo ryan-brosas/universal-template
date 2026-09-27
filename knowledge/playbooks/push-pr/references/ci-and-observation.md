@@ -16,6 +16,17 @@ runs the same events or gates. `pull-request-format.md` owns PR presentation.
   the branch head.
 - Watch expected checks to a terminal state before claiming success. A PR may be
   under review while CI runs; follow the parent procedure's delivery boundary.
+- For a specific Actions run, use
+  `gh run watch <run-id> --repo <owner/repo> --exit-status`; without
+  `--exit-status`, completion is not a passing shell gate. After failure, inspect
+  `gh run view <run-id> --repo <owner/repo> --log-failed` and the structured
+  `status,conclusion,headSha,url` fields. Preserve nonzero exits as evidence.
+  The [watch manual](https://cli.github.com/manual/gh_run_watch) documents a
+  fine-grained PAT limitation; if it applies, use bounded `gh run view --json`
+  polling when permitted, or report the access gap instead of broadening scopes.
+- [PR checks](https://cli.github.com/manual/gh_pr_checks) can be scoped with
+  `--required`; `--fail-fast` stops a watch at the first failure, so it does not
+  prove all other checks finished. Pending exit `8` is not an auth failure.
 - Record run links and observed states in the requested report or PR evidence,
   without treating a status report as permission to edit an upstream PR.
 - Review the workflow itself as part of the gate: triggers, permission scope, action pins, untrusted code on `pull_request`, secrets kept out of PR jobs.

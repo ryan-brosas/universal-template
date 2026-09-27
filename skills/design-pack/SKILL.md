@@ -27,6 +27,8 @@ a visual request as permission for unrelated redesign.
   [ui-ux-iteration-loop](../../knowledge/playbooks/ui-ux-iteration-loop/README.md).
 - Inconsistent linked Figma controls, variant/property repairs or variable bindings:
   [figma-web-design](../../knowledge/playbooks/figma-web-design/README.md).
+- Paper platform use, agent connection, tokens, HTML import or Snapshot:
+  [paper-design](../../knowledge/playbooks/paper-design/README.md).
 - Copy a Figma frame into Paper:
   [pencil](../../knowledge/playbooks/pencil/README.md).
 - Compose from the libraries the file already has enabled instead of redrawing:

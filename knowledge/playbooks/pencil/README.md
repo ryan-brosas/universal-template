@@ -67,10 +67,10 @@ Distinguish **built**, **structurally verified**, **visually verified**, and
 **pixel-perfect**. Only passing structural, visual, theme, asset, and font gates
 permits an unqualified exact-transfer completion claim.
 
-For exact transfers, run `scripts/verify-fidelity-manifest.py <manifest.json>` and
-inspect its saved source, Paper, and diff artifacts before advancing. Release
-working indicators. Report exact affected file/page/artboard IDs, reused owners,
-intentional differences, constraints, and actual verification, not assumed linkage.
+For exact transfers, inspect the source, Paper, and comparison artifacts against
+`references/completion-contract.md` before advancing. Release working indicators.
+Report exact affected file/page/artboard IDs, reused owners, intentional differences,
+constraints, and actual verification, not assumed linkage.
 
 ## Focused references
 

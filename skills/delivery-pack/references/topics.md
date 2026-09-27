@@ -9,6 +9,7 @@ This is a routing index, not a reading list. Known procedure paths can be opened
 - [gh-repo-target-guard](../../../knowledge/playbooks/gh-repo-target-guard/README.md)
 - [git-workflow-and-versioning](../../../knowledge/playbooks/git-workflow-and-versioning/README.md) — includes fork synchronization, fork-to-upstream replication and PR scope comparison.
 - [github-actions-engineering](../../../knowledge/playbooks/github-actions-engineering/README.md)
+- [github-cli](../../../knowledge/playbooks/github-cli/README.md) — shared `gh` command, auth, output and API mechanics; delivery policy stays with the operation owner.
 - [github-contribution-opportunities](../../../knowledge/playbooks/github-contribution-opportunities/README.md)
 - [github-repo-setup](../../../knowledge/playbooks/github-repo-setup/README.md)
 - [local-service-durability](../../../knowledge/playbooks/local-service-durability/README.md) (engineering-pack owns the specialist)

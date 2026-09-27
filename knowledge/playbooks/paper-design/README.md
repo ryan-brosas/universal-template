@@ -16,13 +16,13 @@ component-management procedure. Load only the relevant reference.
 |---|---|
 | Theme UI, CSS variables, aliases, code synchronization, modes | `references/themes-and-tokens.md` |
 | Figma clipboard, images, slots, translation losses, HTML | `references/figma-and-html-import.md` |
-| Agent connection, tool selection, safe batching, code handoff | `references/mcp-and-handoff.md` |
+| Agent/CLI connection, tool selection, safe batching, code handoff | `references/mcp-and-handoff.md` |
 | SVG editing, Snapshot/CORS, shortcuts, troubleshooting | `references/canvas-and-support.md` |
 | New capabilities or repeated transfer problems | `references/improvement-loop.md` |
 | Full docs coverage and source freshness | `references/index.md` |
 
 For exact Figma transfer, use `../pencil/README.md`; for reusable Paper composition,
-use `../paper-component-consistency/README.md`. Their ownership and fidelity gates
+use `../paper-component-consistency/README.md`. Their ownership and fidelity checks
 still apply. Application implementation belongs to the project's frontend workflow.
 
 ## Useful defaults
@@ -37,10 +37,11 @@ still apply. Application implementation belongs to the project's frontend workfl
 - **Keep two-way edits deliberate.** Figma, Paper, and code can each supply values;
   choose the authoritative owner for this task. Copying tokens is not continuous
   synchronization, and copying components is not linked instancing.
-- **Check current capabilities at the affected boundary.** These sources were read
-  on 2026-09-06. A release note proves an announcement, a schema proves an exposed
-  operation, and a disposable runtime probe proves behavior. Do not equate them.
-  Installed guides can conflict with token tools; see the documented conflict notes.
+- **Check current capabilities at the affected boundary.** See `references/index.md`
+  for source freshness. A release note proves an announcement, a schema proves an
+  exposed operation, and a disposable runtime probe proves behavior. Do not equate
+  them. Cached pages and installed guides can lag the live docs and token tools;
+  check the nearest source before retaining a limitation.
 - **Improve from evidence.** After a meaningful transfer failure or Paper update,
   compare one representative fixture, keep the smallest improvement, and update
   the existing owner. No daemon, automatic document mutation, or recurring report
@@ -51,5 +52,5 @@ still apply. Application implementation belongs to the project's frontend workfl
 For feature advice, distinguish documented, schema-inspected, and runtime-tested
 claims. For design changes, report destination IDs, inspected bindings and assets,
 actual visual checks, unsupported translations, and untested modes. Use the
-existing Pencil fidelity gate before claiming an exact transfer. A breakpoint
+Pencil completion evidence before claiming an exact transfer. A breakpoint
 token is not responsive behavior; a canvas render is not an accessible application.

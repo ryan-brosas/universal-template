@@ -2,7 +2,7 @@
 
 "Address the PR review comments" authorizes exactly the review workflow, read the threads, implement fixes, reply in-thread, resolve addressed threads, and no other GitHub writes (no unrelated comments, deletions, metadata changes).
 
-1. **Enumerate threads.** REST: `gh api repos/OWNER/REPO/pulls/NUMBER/comments` (review comments). GraphQL: `repository.pullRequest.reviewThreads` for thread state.
+1. **Enumerate threads.** REST: `gh api repos/OWNER/REPO/pulls/NUMBER/comments --paginate` (review comments). GraphQL: `repository.pullRequest.reviewThreads` for thread state. Paginate threads and any truncated nested comment connections before claiming complete review coverage; see [API pagination](../../github-cli/references/api.md). PR conversation comments, review summaries and inline review threads are different collections.
 2. **Distinguish ids.** A top-level review comment has `in_reply_to_id: null`; its **database id** is what replies anchor to. Thread state lives on the GraphQL **review-thread node id** (`PRRT_…`), a different identifier from the REST comment id. Never conflate them.
 3. **Implement and verify** the feedback locally (project gates) before replying.
    Verify a claim about how a tool or API behaves against that tool's own contract - its
