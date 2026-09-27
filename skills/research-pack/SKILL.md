@@ -17,6 +17,8 @@ procedure and resolve its references and helpers from its own directory.
 - Investigate broad codebase questions with Sourcebot's `ask_codebase` when
   indexed coverage is useful, or retrieve external implementations:
   [cross-repo-source](../../knowledge/playbooks/cross-repo-source/README.md).
+- Use or administer Sourcebot: search, indexing, models, APIs, access, deployment or upgrades:
+  [sourcebot](../../knowledge/playbooks/sourcebot/README.md).
 - Study a reference repository or adapt prior art:
   [reference-driven-development](../../knowledge/playbooks/reference-driven-development/README.md).
 - Explicit Oracle consultation:

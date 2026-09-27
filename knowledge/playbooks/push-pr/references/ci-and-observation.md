@@ -59,14 +59,14 @@ reported merge conflicts still need a local resolution.
 An empty or partial rollup is not a pass. `mergeStateStatus: CLEAN` can appear
 before the required jobs register. Bind the verdict to the revision being delivered:
 
-- Compare `gh pr view <n> --json headRefOid,statusCheckRollup` with the pushed SHA.
+- Compare `gh pr view <n> --repo <owner/repo> --json headRefOid,statusCheckRollup` with the pushed SHA.
   A changed head invalidates the previous verdict; do not merge an unchecked head.
 - Derive expected check names and providers from the project workflows and branch
   rules, not from whichever checks currently appear. If that set is empty or
   unavailable, establish the [CI contract](../../github-actions-engineering/references/required-checks.md)
   before declaring success. An intentionally CI-free project must be reported as
   such, with its applicable local gates, not as having passed CI.
-- Read states with `gh pr checks <n> --json name,state,bucket,link`; pending checks are
+- Read states with `gh pr checks <n> --repo <owner/repo> --json name,state,bucket,link`; pending checks are
   not success and the command exits `8` while pending. That output carries no provider
   identity, so when a name is shared across providers confirm the expected one from the
   paginated rollup or the check-runs API (`app.slug`) and match name and provider. Wait

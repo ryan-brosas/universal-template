@@ -19,6 +19,7 @@ This is a routing index, not a reading list. Known procedure paths can be opened
 - [pdf-extract](../../../knowledge/playbooks/pdf-extract/README.md)
 - [reference-driven-development](../../../knowledge/playbooks/reference-driven-development/README.md)
 - [rsearch](../../../knowledge/playbooks/rsearch/README.md)
+- [sourcebot](../../../knowledge/playbooks/sourcebot/README.md) — complete product documentation: search, code hosts, Ask/models/connectors, APIs, identity, operations, licensing and upgrades
 - [ttdl](../../../knowledge/playbooks/ttdl/README.md)
 - [web-reference](../../../knowledge/playbooks/web-reference/README.md)
 - [xsearch](../../../knowledge/playbooks/xsearch/README.md)

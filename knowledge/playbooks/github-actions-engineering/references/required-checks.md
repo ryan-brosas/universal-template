@@ -34,9 +34,7 @@ required:
         esac
 ```
 
-Treat a `skipped` dependency as a failure here too — a skipped test job must not yield a green gate. Test the gate both ways: break a required job → gate red; fix it → gate green. A gate that has never failed is not proven.
-
-Test the gate both ways: break a required job → gate red; fix it → gate green. A gate that never failed is not proven. Never use a required gate with plain `continue-on-error` upstream: a skipped/failed dependency must never yield a green gate. Do not add an aggregator at all when the repository's ruleset already requires stable individual checks cleanly.
+Treat a `skipped` dependency as a failure here too — a skipped test job must not yield a green gate. Test the gate both ways: break a required job → gate red; fix it → gate green. A gate that has never failed is not proven. Never use a required gate with plain `continue-on-error` upstream: a skipped/failed dependency must never yield a green gate. Do not add an aggregator at all when the repository's ruleset already requires stable individual checks cleanly.
 
 Which name GitHub surfaces as the required check (job id vs display name, `workflow / job` format) must be read back from a real run (`gh pr checks`, check-runs API) before reporting the contract — see the handoff below.
 
@@ -75,18 +73,22 @@ If expensive CI skips drafts (`if: github.event.pull_request.draft == false`), v
 
 ## Job naming
 
-- The reported check context is the job's display `name:` (its id when unset), suffixed with matrix values when present, prefixed by the workflow name — e.g. `quality / test (3.12)`. **Rulesets match that exact string, so renaming the workflow OR a job name changes required-check identity** and strands open PRs without the required status.
-- Keep machine ids (`lint`, `test`, `build`) stable; treat both ids and display names of required jobs as frozen API once a ruleset depends on them.
+- Capture the actual check context from a real run; do not construct it from a UI label or assume a workflow prefix. Matrix expansion and display names can affect it. Re-check the contract after renaming or restructuring jobs/workflows.
+- Keep required-check contexts stable once rulesets depend on them. Record the provider as well: identical names from different apps are not interchangeable.
 - No emojis in required check names; they complicate ruleset matching.
 - Validate the actual check strings from a real run (`gh pr checks`, check-runs API) before reporting the contract — never assume id vs name from memory.
 
 ## Governance handoff (github-repo-setup)
 
-This skill **defines and proves** check names; `github-repo-setup` **configures** them as required status checks in rulesets and sets merge policy. The contract this skill reports:
+This skill **defines and proves** check identities; `github-repo-setup`
+**configures** them as required checks and sets merge policy. Use
+[CI observation](../../push-pr/references/ci-and-observation.md) for revision,
+provider and pagination checks. Inspect an existing run when available; an audit
+does not authorize creating a PR or dispatching CI. The handoff includes:
 
 ```
-Required check contract (proven by run <link>):
-  - quality / required        (aggregate gate)
+Required check contract (repository <owner/repo>, tested revision <sha>, run <link>, attempt <n>):
+  - <observed check context>  (provider <app slug/id or status creator>; role <gate>)
 Optional/informational:
   - compat / <matrix entries>
   - security / dependency-review
@@ -94,7 +96,11 @@ Merge queue: yes/no — merge-group trigger present/absent
 Environments to protect: <name> (secrets, reviewers, branch restrictions)
 ```
 
-`github-repo-setup` consumes exactly these strings — never invent check names on either side (its HARD-GATE). Environments, approval rules, and Actions policies are configured by that skill from this spec; do not silently assume environment protection exists.
+`github-repo-setup` consumes the observed contexts and provider identities, not
+example names or a default app ID. `gh pr checks --json` has no provider field;
+use the check-runs API or paginated rollup for that evidence. Environments,
+approval rules and Actions policies are configured by that skill from this spec;
+do not silently assume environment protection exists.
 
 ## Quality levels (infer, don't ask)
 

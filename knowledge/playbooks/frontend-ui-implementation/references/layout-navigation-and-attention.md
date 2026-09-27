@@ -38,6 +38,8 @@
 
 Specify what wraps, stacks, scrolls, condenses, or moves at content-driven breakpoints. Preserve reading/focus order, current location, primary action, context, and task-critical information at narrow width, landscape, zoom, virtual-keyboard display, RTL, and long localization.
 
+When intermediate layouts still feel cramped despite passing bounds checks, use [Responsive layout and typography repair](responsive-typography-repair.md) to distinguish composition failures from typography overrides and test the requested relationships.
+
 ## Verification
 
 Render navigation open/closed/current, every breakpoint, longest labels, 200% zoom, RTL, keyboard focus, touch targets, sticky headers/banners, destructive adjacency, and page/menu continuation. Confirm no control becomes hidden solely to fit and no visual transform changes semantic or tab order unexpectedly.

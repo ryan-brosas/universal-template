@@ -16,17 +16,20 @@ Inspect first, pick the smallest governance level that fits the project, change 
 - **NOT when:** creating or updating a PR for finished work, or handling PR review feedback, `push-pr` owns the PR lifecycle; this skill only wires what GitHub requires (e.g. the required checks that PR's CI must satisfy).
 - **NOT when:** authoring GitHub Actions workflow content (`github-actions-engineering` defines the CI contract and proves the check names; this skill only wires them as required checks); local git hygiene, commits, branches, semver, changelogs (use `git-workflow-and-versioning`); the implementation work itself.
 
+Use [GitHub CLI](../github-cli/README.md) for auth, explicit targets and structured
+API reads; this playbook owns which repository settings to change.
+
 ## Workflow
 
 0. **Mode.** `audit` (read-only, zero mutation; inspect current state with `gh repo view` and `gh api`), `setup` (additive/reconciliatory), `minimal`, `team`, or `full` (only on explicit request, e.g. "full setup"). Default: "set up" → `setup`; "audit" → `audit`.
    `full` means: inspect every GitHub surface that can earn its place for THIS project, configure the ones that do, delegate CI/version work to their owners, read back, then close with the per-surface report and decision log (`references/setup-matrix.md`). It never means turning every feature on.
 
    Baseline requests ("standard setup", "our baseline", "make this production-ready", "OSS-ready") select the mode from the maturity class in `references/setup-matrix.md` and compose the standard baseline: `project-bootstrap` first, then this skill, then `github-actions-engineering`, then `git-workflow-and-versioning` only when the project is versioned, then the audit re-run. A plain "start a new project" requests none of this and stays with `project-bootstrap`.
-1. **Preflight.** `gh --version`, `gh auth status` (record the authenticated account; an auth failure stops the run), `git status`, `git remote -v`. Determine repository existence with `gh repo view` from the repo root. A confirmed not-found is a normal result: continue to step 3 when creation was requested. Any other failure (auth, permission, network) stops and reports. HARD-GATE: if `origin` exists and is not the target repository, stop and report the conflict, never replace it.
+1. **Preflight.** Check `gh --version`, `gh auth status --active --hostname <host>`, `git status` and `git remote -v`. Resolve the intended host/owner/repository through the [target guard](../gh-repo-target-guard/README.md), then read it explicitly with `gh repo view [HOST/]OWNER/REPO`. An error or 404 alone does not establish absence: inaccessible private repositories can appear missing. Create only when absence and creation intent are established; otherwise report the auth, access or network gap. HARD-GATE: if `origin` exists and is not the target repository, stop and report the conflict, never replace it.
 2. **Discover facts.** Name (directory/manifest), one-sentence description candidates (README, manifest), languages and frameworks (manifests), license file, existing `.github/`, CI jobs (`.github/workflows/` + `gh api repos/OWNER/REPO/actions/workflows`), solo vs team (contributors, org teams), existing labels/templates/rulesets. Classify findings KEEP / ADD / UPDATE / REMOVE; preserve everything intentional. HARD-GATE: never choose or change a license for the user, report a missing license.
 3. **New repository** (only absent and requested). Propose the name; ask only when owner or visibility is ambiguous or externally consequential, visibility is never changed silently. `gh repo create OWNER/NAME --public|--private -d "desc"`, then add `origin` only when no conflicting remote exists. Do not push unreviewed work beyond the requested scope.
-4. **Metadata.** Description = one factual sentence (what it is plus its differentiator; no marketing). Topics: 5–10 lowercase, derived from real domain/language/framework/integrations; `gh repo edit --add-topic ...`.
-5. **Labels.** Namespaced `type:` and `area:` (from real paths only), `priority:` only if prioritization exists, a minimal special set. Idempotent upsert: `gh label create <name> --color <hex> --description "..." --force`. See `references/labels.md`.
+4. **Metadata.** Description = one factual sentence (what it is plus its differentiator; no marketing). Topics: 5–10 lowercase, derived from real domain/language/framework/integrations; `gh repo edit OWNER/REPO --add-topic ...`.
+5. **Labels.** Namespaced `type:` and `area:` (from real paths only), `priority:` only if prioritization exists, a minimal special set. Idempotent upsert: `gh label create <name> --repo OWNER/REPO --color <hex> --description "..." --force`. See `references/labels.md`.
 6. **Templates.** PR template from `references/pr-template.md`, unless the repo's CI already enforces its own PR-body contract, then preserve that and skip. Issue forms `bug.yml` / `feature.yml` / `config.yml` sized to the project. CONTRIBUTING only when a contribution surface exists. SECURITY only where a private reporting path matters (never invent an email, report the gap). CODEOWNERS only with real ownership. HARD-GATE for solo repositories: no CODEOWNERS, no required approvals.
 7. **Security and dependencies (full).** Audit, then enable what the project earns: Dependabot alerts, Dependabot security updates, secret scanning and push protection, private vulnerability reporting (SECURITY.md points at it), CodeQL default setup (prefer GitHub-managed default setup over a custom workflow; a custom workflow is `github-actions-engineering` work). Configure Dependabot for every ecosystem present - for SHA-pinned Actions, `package-ecosystem: github-actions` is what keeps the pins maintainable. Report plan-unavailable surfaces as unavailable, never as enabled. See `references/security.md`.
 8. **Releases (full).** Establish the release authority with `git-workflow-and-versioning` (tag + generated notes is the default), wire `.github/release.yml` to the label taxonomy, protect version tags with a ruleset (blocking deletion and update. account for moving major-version tags before restricting creation), and consider immutable releases only when published artifacts must stay fixed. The release workflow itself is `github-actions-engineering` work. See `references/releases.md`.
@@ -49,10 +52,10 @@ Inspect first, pick the smallest governance level that fits the project, change 
 
 ## Verification
 
-- `gh api repos/OWNER/REPO/rulesets` lists the intended ruleset with `enforcement: active` and the expected rules.
+- Enumerate ruleset summaries, then read the intended ruleset by ID as in `references/governance.md`; verify its enforcement, conditions, rules and bypass actors from the detail response.
 - Direct `gh repo view`, `gh api`, workflow, label, and ruleset reads show no unintentional gaps after setup.
-- `gh label list --limit 1000 --json name` matches the intended set exactly, with no duplicates (the default fetches only 30 labels, always pass an explicit limit).
-- `gh repo view --json description,repositoryTopics` reflects the metadata. Caveat: `gh repo view --json` accepts a fixed field allowlist, merge settings are NOT fields; read them via `gh api repos/OWNER/REPO --jq '.allow_squash_merge, .allow_merge_commit, .allow_rebase_merge'` (verified on gh 2.98.0).
+- Compare the complete label collection with the intended changes using `references/labels.md`; a fixed list limit is not proof of completeness.
+- `gh repo view OWNER/REPO --json description,repositoryTopics` reflects the metadata. Caveat: `gh repo view --json` accepts a fixed field allowlist, merge settings are NOT fields; read them via `gh api repos/OWNER/REPO --jq '.allow_squash_merge, .allow_merge_commit, .allow_rebase_merge'` (verified on gh 2.98.0).
 - Local `.github/*.yml` parses as YAML.
 - Re-run the skill: every already-correct item reports "No changes required".
 
@@ -61,7 +64,7 @@ Inspect first, pick the smallest governance level that fits the project, change 
 
 - `references/pr-template.md`, canonical PR template, risk scaling, body validation (PR creation itself is `push-pr`'s; this reference defines what GitHub governance expects of the body)
 - `references/labels.md`, label taxonomy, colors, idempotent sync commands, default-label reconciliation
-- `references/governance.md`, verified gh command inventory, ruleset create and read-back, solo vs team policy, releases, guardrails
+- `references/governance.md`, ruleset discovery, detail reads and reconciliation, solo vs team policy, releases, guardrails
 - `references/setup-matrix.md`, mode and project-type matrix (including `full` and the maturity classes), the standard-baseline composition, final report format, acceptance cases
 - `references/account-defaults.md`, account/organization `.github` default community files, precedence, org-level future path, authorization boundary
 - `references/security.md`, security and dependency surfaces: verified endpoints, enable order, plan-availability caveats

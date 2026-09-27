@@ -10,11 +10,25 @@ Use one evidence path: local checks verify the branch, CI verifies the pushed
 commit, and the PR body records scope, proof, and limitations. This skill owns
 individual PR and review operations; `../ship-pr/README.md` owns a requested full
 lifecycle through merge. An existing PR is updated, not duplicated: before creating
-one, check `gh pr list --state all --search "<head branch or title>"` and stop or
+one, check `gh pr list --repo <owner/repo> --state all --search "<head branch or title>"` and stop or
 rescope when the base already contains the change. A concurrent session may have
 opened - or already merged - a PR for the same work, and an open-only query misses both.
 
-## Workflow
+## Push-only requests
+
+A commit/push request does not authorize a PR or merge. Follow
+[Git workflow](../git-workflow-and-versioning/README.md) for scope and checks, then
+push the validated commit to the agreed remote/ref and verify its remote SHA.
+Skip PR creation, body generation and review setup when no PR was requested.
+
+If branch protection rejects the push, preserve the local commit and report the
+refusal. Do not bypass protection or open a PR against an explicit no-PR request;
+ask for an alternate branch unless that destination is already authorized. Name
+the branch actually published: pushing a feature branch does not update `main`.
+If the working tree is clean and the intended commit is already on that remote
+ref, report up to date rather than creating an empty commit.
+
+## PR and review workflow
 
 1. Inspect status, the base branch, commit range, and authored diff. Before every
    new PR or update to an existing PR, revalidate through

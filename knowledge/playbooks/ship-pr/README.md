@@ -21,7 +21,8 @@ inventing CI or claiming a clean full cycle.
    lane (`../pre-pr-validation/README.md`) runs before every push. A red local gate
    or a BLOCKED verdict blocks push.
 2. Load `../push-pr/README.md` and use its evidence, template, PR creation/update,
-   and metadata procedure. Do not duplicate endpoint mechanics here.
+   and metadata procedure. Shared command/auth mechanics belong to
+   [GitHub CLI](../github-cli/README.md); do not duplicate them here.
 3. Watch required CI to a final state. Read review findings, not just review-bot
    status. For each feedback cycle, use
    `../push-pr/references/review-threads.md`: verify findings against source, fix
@@ -34,8 +35,11 @@ inventing CI or claiming a clean full cycle.
 5. Merge only with `mergeStateStatus: CLEAN`, green local gates and required CI,
    and every review thread resolved. `CLEAN` alone is not proof of passing CI;
    verify the expected checks on the head being merged through
-   `../push-pr/references/ci-and-observation.md`. Use a repository-allowed merge method;
-   never bypass protections. Auto-merge is not implied by repository capability.
+   `../push-pr/references/ci-and-observation.md`. Target the repository explicitly
+   and use `gh pr merge <n> --repo <owner/repo> --match-head-commit <sha>` with the
+   validated head and a repository-allowed merge method. A head mismatch requires fresh verification,
+   not dropping the SHA guard. Never bypass protections; repository capability
+   alone does not authorize auto-merge.
 6. Delete the merged task branch and sync the local base without discarding user
    work. Before deleting, fetch and compare (`git fetch origin <branch> && git log
    --oneline <merged-head>..FETCH_HEAD`): a concurrent session can push commits whose PR
@@ -44,7 +48,7 @@ inventing CI or claiming a clean full cycle.
    local changes prevent safe cleanup, report the remaining cleanup rather than reset
    them.
 
-Verify completion with `gh pr view <n> --json state,mergedAt,mergeCommit,statusCheckRollup`
+Verify completion with `gh pr view <n> --repo <owner/repo> --json state,mergedAt,mergeCommit,statusCheckRollup`
 (`MERGED`, a merge SHA, and the newest run of each check passing — superseded runs
 may appear `cancelled`, see `../push-pr/references/ci-and-observation.md`) plus
 paginated GraphQL `reviewThreads.isResolved` all true. Report the PR link, merge

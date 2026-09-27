@@ -45,6 +45,12 @@ change users must react to is at least minor.
 
 ## Process
 
+Scope follows the request, not authorship. An explicit "all current changes"
+request includes other authors' working-tree edits once inspected; it does not
+automatically restore stashes, publish ignored host artifacts or sweep other
+checkouts. Review changes that arrive during staging before including them, and
+report anything left outside the published snapshot.
+
 1. **Worktree** - re-read `git status --short` immediately before staging;
  stage only owned paths (or owned hunks in shared files), never `git add .` or
  `git add -A` in a mixed tree. Read `git diff --cached` itself, not only its

@@ -66,6 +66,8 @@ Do not ban pure black as a rule. The PDF recommends near-black to soften maximum
 
 Test shortest and longest strings, 200% zoom, narrow width, translated expansion, right-to-left text, mixed scripts, names, unbroken URLs, large numbers, and browser font substitution. Truncate only when task-safe, and provide an accessible way to obtain the full value.
 
+For scattered overrides or text that ignores central roles, use [Responsive layout and typography repair](responsive-typography-repair.md) for the ownership audit, propagation probes and reflow diagnosis.
+
 ## Verification
 
 Capture computed family, available weight, size, unitless line-height, and measure for representative body, heading, caption, link, control, and tabular-number samples. Render at narrow/wide widths, 100%/200% zoom, longest localization, light/dark themes, and fallback font. Check clipping, overlap, hierarchy, line tracking, focus, and contrast—not screenshots at one viewport only.

@@ -70,6 +70,10 @@ compact brief, revalidation and cost controls live in
 
 ## Deployment capability
 
+For query syntax, indexing configuration, MCP access and native Ask skills, use
+[Sourcebot product guidance](../sourcebot/README.md). This playbook retains
+ownership of research routing, corpus admission and freshness checks.
+
 Delegated Code Ask and direct retrieval are separate capabilities. Check the
 deployment's enabled lanes; a plan, licence or authorization refusal is a real
 limit, not a reason to retry through an undocumented route. When permitted, use

@@ -94,10 +94,10 @@ Never require word counts, prose in every optional section, or LLM grading. `Ris
 1. Read the actual branch state: `git diff <base>...HEAD`, `git log <base>..HEAD`.
 2. Verification section = only checks actually run, with outcomes. Never fabricated. Distinguish `Local verification: PASSED` from `CI: PENDING`.
 3. Reference / Prior Art = sources actually consulted; record license obligations when materially porting code.
-4. Push when authorized, then `gh pr create --title <conventional-title> --body-file <file>`.
-5. Labels only on strong evidence (`.github/**` → `area:ci`; docs-only diff → `type:docs`); prefer path-based label automation over model guessing.
+4. When a PR is requested, use [push-pr](../../push-pr/README.md) for the body file, explicit base/head targets and publication. A push-only request stops before PR creation.
+5. Apply labels only when requested, using the project's actual taxonomy and evidence rather than guessing; PR mechanics remain with `push-pr`.
 6. Do not write speculative PR prose before implementation — the PR is the post-code artifact (why, what, reference, verification, risks, migration).
 
 ## Existing contracts win
 
-If the target repository's CI already validates a specific PR-body contract, preserve it and generate bodies in that shape; a repo-level contract overrides this canonical template. Example: universal-template's own `pr-quality.yml` deliberately does not parse PR bodies — it runs the published helper tests and `git diff --check` only — so its seven house sections are convention, documented in `../../push-pr/references/pull-request-format.md`. The commit-side counterpart lives in `git-workflow-and-versioning`.
+If the target repository's CI already validates a specific PR-body contract, preserve it and generate bodies in that shape; a repo-level contract overrides this canonical template. For universal-template, inspect the current `pr-quality.yml` rather than assuming a fixed test list; its house body convention is documented in `../../push-pr/references/pull-request-format.md`. The commit-side counterpart lives in `git-workflow-and-versioning`.
