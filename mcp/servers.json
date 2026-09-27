@@ -67,6 +67,11 @@
       "type": "remote",
       "url": "https://api.githubcopilot.com/mcp/",
       "lifecycle": "lazy"
+    },
+    "beacon": {
+      "type": "remote",
+      "url": "https://mcp.trybeacon.space/mcp",
+      "lifecycle": "lazy"
     }
   }
 }

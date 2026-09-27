@@ -1,37 +1,30 @@
 ---
-setup: bash <skill-dir>/scripts/setup
-compatibility: Requires browser-harness-js on PATH and a running Chromium browser with remote debugging (chrome://inspect or --remote-debugging-port). No API key. All data comes from the live google.com/maps page rendered through your own browser.
+compatibility: "Configured browser MCP for visible Maps UI; optional structured-route CDP CLI requires browser-harness-js and an approved debugging endpoint."
 title: gmaps
-summary: 'Use when the user asks to find local businesses, get directions or travel time between places, or plan a multi-stop visiting order. Keyless Google Maps via CDP: structured business results, live directions in any travel mode, and a best-effort fastest route order. Requires browser-harness-js on PATH and a Chromium browser with remote debugging.'
+summary: "Use to find local businesses, read directions or compare routes. Beacon MCP is the default for Google Maps UI; the existing gmaps CDP CLI is a fallback for structured extraction and its best-effort route-order optimizer."
 kind: playbook
 ---
 
-# gmaps, Google Maps via CDP (search, directions, best-effort TSP)
+# Google Maps
 
-Free, keyless access to Google Maps through CDP, the same data the metered **Google Places** and **Directions** APIs sell, sourced directly from the rendered page. No API key, no quota, no `jq`. Three modes:
+## Default workflow
 
-- **search** (default), local business results for a query.
-- **`--route`**, real driving directions (total time + distance, current traffic) for an *ordered* list of places.
-- **`--optimize`**, best-effort fastest *visiting order* (open-path TSP, fixed start = first place).
+1. Follow [Beacon](../beacon/README.md), verify the Maps tab and operate observed
+   search/directions controls in the approved browser.
+2. Read actual place cards and route details: resolved place names, travel mode,
+   distance, duration and link. Do not infer absent ratings, hours or traffic data.
+3. Re-observe after route or filter changes; label partial results. Ordinary place
+   search and visible directions do not require a debugging port.
+4. If the task needs a structured route matrix, the existing route-order optimizer
+   or another capability the MCP does not expose, name that gap and use the
+   [CDP fallback](../cdp/README.md). Do not invent a Beacon optimization tool.
 
-Every call opens its own background tab and WebSocket session, safe for parallel use.
+## CDP CLI fallback reference
 
-## Core Principle
-
-Free, keyless access to Google Maps through CDP, the same data the metered Google Places and Directions APIs sell, sourced directly from the rendered page in your own browser. No API key, no quota, no `jq`.
-
-## When to Use / NOT
-
-**Use**, when the user asks to find local businesses, get directions/time between places (by any mode), or plan a multi-stop route order.
-
-**NOT**, bulk harvest (this is per-query use: one query, one route of ≤25 places, or one TSP of ≤12 places). when per-leg times for an ordered multi-stop route are needed (Maps shows only the total, open `url` for turn-by-turn). when predictive future-departure times are needed (the page gives current traffic, not a traffic model).
-
-## Workflow
-
-1. Search: `gmaps "<query>" [count] [--json]`, local business results, feed scrolled to load more.
-2. Directions: `gmaps --route "<p0>" "<p1>" … [--mode M] [--json]`, real time + distance for the given order (up to 25 places).
-3. Ordering: `gmaps --optimize "<p0>" … [--mode M] [--json]`, best-effort fastest visiting order (open-path TSP, fixed start, ≤12 places), then one real directions call for that order.
-4. Parallelize independent calls, each opens its own background tab.
+The remaining commands describe the unchanged `gmaps` CLI: business search,
+ordered directions and best-effort visiting order. They are CDP, not MCP commands.
+Run `bash <skill-dir>/scripts/setup` only when this fallback is selected. Its
+per-call tab isolation and concurrency do not describe the shared Beacon browser.
 
 ## Commands
 

@@ -1,30 +1,29 @@
 ---
-setup: bash <skill-dir>/scripts/setup
-compatibility: Requires browser-harness-js on PATH and a running Chromium browser with remote debugging (chrome://inspect or --remote-debugging-port).
+compatibility: "Configured browser MCP for UI browsing; optional CDP CLI requires browser-harness-js and an approved debugging endpoint."
 title: gsearch
-summary: Use when the user asks to search the web, look something up, find a link, or research a topic. Google via CDP returns title, URL, and snippet in about a second; follow a result URL to read page text or JSON. Requires browser-harness-js on PATH and a Chromium browser with remote debugging.
+summary: "Use for Google searches and following result links. Prefer a search tool or plain HTTP when sufficient; for browser UI work use Beacon MCP first. The existing gsearch CDP CLI remains an explicit structured-extraction fallback."
 kind: playbook
 ---
 
 # Google Search
 
-Search Google and extract structured results via CDP. No external dependencies beyond `browser-harness-js` (which provides the CDP session). Each call opens its own tab and WebSocket session, safe for parallel use.
+## Default workflow
 
-## Core Principle
+1. Use an available search tool or HTTP read when it already answers the question.
+2. When browser UI is needed, follow [Beacon](../beacon/README.md): navigate to the
+   Google search URL, verify the returned target, then read observed result cards.
+3. Retain titles, destination links and visible snippets; open the chosen result
+   and inspect that page rather than treating its snippet as the source.
+4. Use a scoped observation and report capped/partial results. Do not enable a
+   debug port or install a CLI merely to search or follow a link.
 
-Search Google and extract structured results via CDP through the user's own browser, no API key, no external dependencies beyond `browser-harness-js`. Each call opens its own tab and WebSocket session, safe for parallel use.
+## CDP CLI fallback reference
 
-## When to Use / NOT
-
-**Use**, when the user asks to search the web, look something up, find a link, or research a topic; also to open a result link with `follow <url>` and read its page text or JSON.
-
-**NOT**, when the target page is behind a login wall or anti-bot challenge the browser session cannot pass (`follow --json` bails early on a `text/html` response); when a guaranteed result count is required (Google may return fewer than requested).
-
-## Workflow
-
-1. Run `gsearch "<query>" [count]` (pretty) or `gsearch --json "<query>" [count]`.
-2. Pick a result and read it with `gsearch follow <url>`, `--selector` for a custom CSS selector, `--settle` for lazy/SPA content, `--wait` to pick the readiness event, `--json` for JSON endpoints.
-3. Parallelize independent queries, each call attaches to its own tab with a per-call `sessionId`.
+The remaining commands are the existing CDP implementation, not MCP tools. Use
+them only for an explicitly requested structured extraction or a named browser-MCP
+capability/approved-connection gap. Choose [CDP](../cdp/README.md) explicitly and
+run `bash <skill-dir>/scripts/setup` only if that fallback needs installation.
+The parallel-tab guarantees below belong to this CLI, not a shared Beacon session.
 
 ## Quick search
 

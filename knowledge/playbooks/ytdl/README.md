@@ -8,6 +8,11 @@ kind: playbook
 
 # ytdl, browser-native YouTube downloader
 
+This is a media-capture-specific [CDP fallback](../cdp/README.md), not the browser
+entrypoint. Use [Beacon](../beacon/README.md) for ordinary page reading or navigation.
+Do not rename this CLI as an MCP tool; its recording and muxing need those actual
+capabilities, an authorized source and any required human-owned login/consent.
+
 A thin `browser-harness-js` heredoc, exactly like `gsearch`/`xsearch`. There is
 **no Bun program, no vendored solver, no HTTP client impersonation**. Every
 hard thing YouTube does to play a video, cookies, poToken, the n-signature,

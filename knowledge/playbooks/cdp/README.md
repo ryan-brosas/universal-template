@@ -1,21 +1,20 @@
 ---
 title: cdp
-summary: 'Drive Chromium through raw typed CDP, with optional explicitly scoped observe-act-verify interactions. Use for browser automation, inspection, and parallel tab work; preserve authorized endpoints and verify effects.'
+summary: 'Use for explicitly requested DevTools Protocol work or a named capability unavailable through the configured browser MCP, such as screenshots, DOM/runtime evaluation, network tracing, uploads or emulation. Ordinary browser UI reading and interaction defaults to Beacon; this persistent CDP SDK is the fallback, not a prerequisite.'
 kind: playbook
 setup: bash scripts/setup
 compatibility: 'Requires Node 23.6+ and a Chromium-based browser. The extension relay is optional; remote debugging supports explicit endpoint or profile selection.'
 ---
 
-# CDP — `browser-harness-js` skill
+# CDP fallback, `browser-harness-js`
+
+For ordinary browser work, start with [Beacon MCP](../beacon/README.md). Do not install this SDK, enable debugging, relaunch a browser or run `session.connect()` merely to read or operate a page. Use this procedure when the user explicitly requests CDP or after naming a real capability/approved-connection gap in the browser MCP. Preserve the same account, approved profile and action permissions; a fallback must not bypass human-owned authentication or consent.
 
 Custom codegen'd CDP SDK (every method from browser_protocol.json + js_protocol.json gets a typed wrapper) plus a tiny HTTP server that holds one persistent CDP `Session`. The `browser-harness-js` CLI auto-starts the server on first use and forwards JS snippets to it.
 
 The SDK lives in this playbook's `sdk/` directory. `$SKILL_DIR` means the directory containing this `README.md`. Resolve it from the loaded playbook, not a host-specific install path. The CLI should be on PATH as `browser-harness-js`.
 
 For progress complaints, missing flat sessions, and shared-daemon updates, use [connection guidance](interaction-skills/connection.md#health-versus-task-progress). Raw CDP remains the API; optional guards do not replace known deterministic routes.
-
-For browser-relay MCP workflows instead of this SDK, use [beacon](../beacon/README.md).
-
 
 ## How to use
 

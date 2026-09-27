@@ -1,44 +1,30 @@
 ---
-setup: bash <skill-dir>/scripts/setup
-compatibility: Requires browser-harness-js on PATH and a running Chromium browser with remote debugging (chrome://inspect or --remote-debugging-port). No Reddit API key or app credentials, the in-page fetch rides the browser's reddit cookies (optional login).
+compatibility: "Configured browser MCP for UI reading; the optional rsearch CDP CLI requires browser-harness-js and an approved debugging endpoint."
 title: rsearch
-summary: Use when the user asks to search Reddit, find discussions or posts, or gauge community sentiment on a topic. Searches Reddit through the browser via CDP and returns title, subreddit, author, score, comments, permalink, and selftext, with optional subreddit and sort filters. No API key; a logged-in session is used automatically if present.
+summary: "Use for Reddit searches, discussions and community context. Use sufficient public feeds/search tools first and Beacon MCP for browser UI; keep the existing same-origin JSON CDP extractor as an explicit fallback, not a browsing prerequisite."
 kind: playbook
 ---
 
 # Reddit Search
 
-Search Reddit posts through the browser: a background tab opens `www.reddit.com`, then a **same-origin** `fetch('/search.json?…', { credentials: 'include' })` hits reddit's own JSON listing endpoint with the browser's cookies, UA, and referer. Adapted from [opencli](https://github.com/jackwener/opencli)'s `clis/reddit/search.js`. No Reddit API key, no OAuth app, no scraping selectors, the response is reddit's canonical listing JSON. Each call opens its own tab and WebSocket session, safe for parallel use.
+## Default workflow
 
-## Core Principle
+1. Use a sufficient public feed or search tool; when browser UI is needed, follow
+   [Beacon](../beacon/README.md) and verify the Reddit search/thread target.
+2. Read visible result cards and follow a permalink for surrounding conversation,
+   not just its title or snippet. Preserve subreddit, author, time, score and
+   comments only when actually observed; missing is Unknown.
+3. Use observed sort/filter controls and re-observe. Respect login, permission and
+   rate-limit boundaries; tool choice grants no posting or account-switching authority.
+4. For a named need for the existing structured JSON extraction, choose the
+   [CDP fallback](../cdp/README.md). Do not require a debug port for ordinary reading.
 
-Ask via the page, not from Node: a background tab opens `www.reddit.com`, then a
-**same-origin** `fetch('/search.json?…', { credentials: 'include' })` hits reddit's own
-JSON listing endpoint with the browser's cookies, UA, and referer. No Reddit API key,
-no OAuth app, no scraping selectors, the response is reddit's canonical listing JSON.
+## CDP CLI fallback reference
 
-## When to Use / NOT
-
-- **Use when:** the user asks to search Reddit, find discussions or posts, or gauge
- community sentiment on a topic, any query, with optional subreddit restriction and
- sort/time filters. Works logged-out; a logged-in reddit session is used automatically
- if present.
-- **NOT when:** the task is anything other than searching (posting, commenting, etc.),
- or no Chromium-based browser with remote debugging is running, the in-page fetch
- needs a committed `reddit.com` origin.
-
-## Workflow
-
-1. Ensure prerequisites: `browser-harness-js` on PATH and a running Chromium-based
- browser with remote debugging (`chrome://inspect` or `--remote-debugging-port`); run
- `bash <skill-dir>/scripts/setup` if not set up.
-2. Run `rsearch "<query>" [count]` with flags before the query: `--json`,
- `--subreddit NAME`, `--sort S`, `--time T`.
-3. Read the structured results (title, subreddit, author, score, comments, permalink
- URL, selftext, media URLs); link posts carry the external target in
- `url_overridden_by_dest`.
-4. On persistent failure after the built-in retries, wait a bit or check the login
- state, it means real rate-limiting.
+The remaining `rsearch` commands implement a same-origin Reddit JSON read in an
+approved browser session, adapted from [opencli](https://github.com/jackwener/opencli)'s
+`clis/reddit/search.js`. They are not MCP tools. Use `bash <skill-dir>/scripts/setup` only when the fallback is selected;
+its separate per-call tabs do not make concurrent Beacon actions safe.
 
 ## Usage
 
