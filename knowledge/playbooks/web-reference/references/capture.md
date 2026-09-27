@@ -1,6 +1,6 @@
 # Capture: tool ladder and verified commands
 
-Probe tool availability at capture time (`browser-harness-js --version`, `npx single-file --help`, `docker image inspect`); do not rely on versions frozen in this document. Commands here describe shape, not pinned releases.
+Discover the configured browser MCP first for UI reading and interaction; [Beacon](../../beacon/README.md) is the default. Probe other tools only for a named capture capability (`browser-harness-js --version`, `npx single-file --help`, `docker image inspect`). Commands below describe optional capture paths, not browser setup prerequisites.
 
 ## Tool ladder (cheapest sufficient)
 
@@ -8,9 +8,10 @@ Probe tool availability at capture time (`browser-harness-js --version`, `npx si
 |---|---|---|
 | Static page, source HTML only | `curl -fsSL <url> -o source.html` | no rendering; fine for server HTML |
 | One page, faithful single-file copy | `npx single-file <url> page.html` | SingleFile CLI (AGPL-3.0, actively maintained); inlines CSS and assets |
-| Rendered truth, any scripted page | `browser-harness-js` (CDP) | rendered DOM, computed styles, screenshots, viewport emulation |
+| Rendered text and visible controls | Beacon/browser MCP | verified target plus scoped observations; not pixel or DOM-style evidence |
+| Pixel/DOM capture unavailable in the browser MCP | `browser-harness-js` (CDP fallback) | rendered DOM, computed styles, screenshots, viewport emulation |
 | Whole-site raw archive | `browsertrix-crawler` (Docker) | WACZ archive; replay in ReplayWeb.page |
-| Interaction flows | `cdp` skill recipes | clicks, hovers, dialogs via CDP |
+| Interaction flows | Beacon/browser MCP first | observe, targeted actions, re-observe and verify; use CDP only for an identified unsupported interaction |
 
 Do not launch a site crawl for one hero. Do not start a browser when `curl` answers the question.
 

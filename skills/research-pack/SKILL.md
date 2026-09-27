@@ -21,10 +21,10 @@ procedure and resolve its references and helpers from its own directory.
   [reference-driven-development](../../knowledge/playbooks/reference-driven-development/README.md).
 - Explicit Oracle consultation:
   [oracle-consult](../../knowledge/playbooks/oracle-consult/README.md).
-- Browser inspection/automation:
-  [cdp](../../knowledge/playbooks/cdp/README.md).
-- Drive the user's own logged-in Chrome when no CDP endpoint exists:
-  [beacon](../../knowledge/playbooks/beacon/README.md).
+- Browser UI reading and interaction (default):
+  [beacon](../../knowledge/playbooks/beacon/README.md), through the configured browser MCP.
+- Explicit protocol work or a named browser-MCP capability/connection gap:
+  [cdp](../../knowledge/playbooks/cdp/README.md), the fallback rather than browser setup.
 - PDF extraction:
   [pdf-extract](../../knowledge/playbooks/pdf-extract/README.md).
 - Conjecture-driven mathematics, exact Bend verification, and optional Lean proofs:

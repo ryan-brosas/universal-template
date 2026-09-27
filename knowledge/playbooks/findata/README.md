@@ -1,12 +1,16 @@
 ---
-setup: bash <skill-dir>/scripts/setup
 compatibility: Requires browser-harness-js on PATH and a running Chromium-based browser with remote debugging (chrome://inspect or --remote-debugging-port). No API key. Statements come from SEC EDGAR (public, free); prices from Yahoo Finance's chart API (rendered through the browser to bypass bot blocks).
 title: findata
-summary: 'Use when the user asks for stock prices, price history, or financial statements without an API key. Keyless via CDP: Yahoo Finance price snapshots and OHLCV history plus SEC EDGAR XBRL statements. Returns structured JSON or tables. Requires browser-harness-js on PATH and a Chromium browser with remote debugging.'
+summary: 'Use for the existing structured financial-data CLI: Yahoo Finance OHLCV and SEC EDGAR XBRL extraction through CDP. This is a capability-specific fallback; ordinary quote-page browsing uses Beacon MCP and public HTTP sources remain valid. Install the CLI only when this structured extraction is needed.'
 kind: playbook
 ---
 
 # findata, free financial data via CDP
+
+For ordinary browser reading, use [Beacon](../beacon/README.md); use sufficient public
+HTTP sources without a browser. The commands below retain the CDP structured-data
+implementation, not MCP equivalents. Choose this fallback for that extraction need
+and run `bash <skill-dir>/scripts/setup` only if installation is required.
 
 Free, keyless financial data scraped/fetched through a real browser via CDP, the same data the paid `financialdatasets.ai` API sells, but sourced directly from the free public origins (SEC EDGAR for statements, Yahoo Finance for prices). Each call opens its own tab and WebSocket session, safe for parallel use.
 

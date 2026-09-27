@@ -20,6 +20,7 @@ config is private and local, this registry is not.
 | `sourcebot` | Indexed cross-repository source retrieval |
 | `context7` | Current library and framework documentation |
 | `exa` | Web research when ordinary web access is insufficient |
+| `beacon` | Default browser UI reading and interaction through the user's approved, connected browser session |
 | `mcp-steroid` | Language-aware local IDE integration where the host needs it |
 | `paper`, `figma-bridge`, `figma-console` | Design workflows, when relevant |
 | `github` | Repository hosting and discovery: browse repositories outside the indexed corpus, inspect their source, issues, pull requests and commits, and perform GitHub operations |
@@ -36,6 +37,20 @@ token import/export and console telemetry, reaching them over the Figma REST API
 with its own access token; its live-document tools need the desktop plugin from
 `~/.figma-console-mcp/plugin/manifest.json`. Neither replaces the other, and a
 third Figma server would still need its own reason.
+
+## Browser automation
+
+Use the configured browser MCP, currently Beacon, for ordinary browser UI work. The
+[Beacon playbook](../knowledge/playbooks/beacon/README.md) owns target verification,
+batched actions, authentication boundaries and failure recovery. Discover live tool
+schemas; a registry entry does not prove a connected browser or successful input.
+Credentials and extension pairing remain in private host configuration.
+
+Keep [CDP](../knowledge/playbooks/cdp/README.md) for explicit protocol work or a named
+capability/approved-connection gap: screenshots, DOM/runtime inspection, tracing,
+emulation, file inputs or media capture. CDP helpers are not MCP tools and must not
+be mechanically renamed as such. Neither transport changes send approval or the
+approved browser profile. Plain HTTP and search tools still own simpler reads.
 
 ## Sourcebot
 
@@ -76,5 +91,5 @@ authenticates with a bearer token in the private host config (MCPorter
 `profiles.json` groups selections by capability rather than by historical
 tooling: `minimal` (nothing), `cross-repo-source` (Sourcebot),
 `repository-host` (GitHub), `docs` (Context7), `web-research` (Exa),
-`ide` (local IDE/LSP), `design` (Paper/Figma).
+`browser` (Beacon), `ide` (local IDE/LSP), `design` (Paper/Figma).
 Profiles describe useful selections; they do not install or remove anything.

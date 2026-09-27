@@ -1,35 +1,28 @@
 ---
-setup: bash <skill-dir>/scripts/setup
-compatibility: Requires browser-harness-js on PATH and a running Chromium browser with remote debugging (chrome://inspect or --remote-debugging-port). No API key, no account.
+compatibility: "Configured browser MCP for UI browsing; optional CDP CLI requires browser-harness-js and an approved debugging endpoint."
 title: gnews
-summary: Use when the user asks for news, headlines, or recent coverage of a topic. Google News via CDP returns title, URL, source, time, and snippet, linking the publisher direct URL. Requires browser-harness-js on PATH and a Chromium browser with remote debugging.
+summary: "Use for news, headlines or recent coverage. Use a search service when sufficient and Beacon MCP for browser UI reading; retain the gnews CDP CLI only as an explicit structured-extraction fallback."
 kind: playbook
 ---
 
 # Google News
 
-Search Google News and extract structured results via CDP. Hits Google Search's
-news tab (`tbm=nws`) through the user's own browser, so the rendered page, not a
-raw fetch, drives the extraction. No external dependencies beyond
-`browser-harness-js` (which provides the CDP session). Each call opens its own
-tab with a per-call `sessionId`, safe for parallel use.
+## Default workflow
 
-## Core Principle
+1. Prefer a sufficient search service; when browser UI is needed, use
+   [Beacon](../beacon/README.md) on Google Search's news tab (`tbm=nws`).
+2. Verify the page and read visible title, publisher, timestamp, snippet and link.
+   Keep missing dates Unknown; distinguish relative UI time from publication time.
+3. Open the publisher's article for its actual content. Do not report a result
+   card as proof that the full article was read, or a capped map as all results.
+4. Do not start CDP or install a browser harness just to inspect headlines.
 
-The rendered page drives extraction: hit Google Search's news tab (`tbm=nws`) through the user's own browser, not a raw fetch. No API key, no account; no external dependencies beyond `browser-harness-js`.
+## CDP CLI fallback reference
 
-## When to Use / NOT
-
-**Use**, when the user asks for news, headlines, or recent coverage of a topic.
-
-**NOT**, when more than ~10–15 results per query are needed (the news tab does not paginate); when the article body is needed (open the result `url` via the "Following a result link" recipe instead).
-
-## Workflow
-
-1. Run `gnews "<query>" [count]` (pretty) or `gnews --json "<query>" [count]`.
-2. Read `{ title, url, source, snippet, time }`, `url` is the publisher's direct link, not a `news.google.com` redirect wrapper.
-3. Parallelize independent queries, each call attaches to its own tab with a per-call `sessionId`.
-4. To read an article, open its `url` with the "Following a result link" recipe.
+The commands below retain the existing CDP extractor and its output schema. They
+are not MCP calls. Use [CDP](../cdp/README.md) for an explicit CLI request or a named
+capability/approved-connection gap; install with `bash <skill-dir>/scripts/setup`
+only when that fallback is chosen. Its parallel-tab behavior does not apply to Beacon.
 
 ## Quick search
 

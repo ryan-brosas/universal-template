@@ -1,6 +1,6 @@
 ---
 title: frontend-ui-implementation
-summary: Use when implementing or reviewing production frontend UI details—typography, font sizing, spacing, forms, validation, navigation, loading and empty states, visual hierarchy, responsive tables, icons, charts, and interaction feedback—from HTML/CSS or component code.
+summary: Use when implementing or reviewing production frontend UI details—typography, font sizing, spacing, forms, validation, navigation, loading and empty states, visual hierarchy, responsive tables, icons, charts, existing-video integration, and interaction feedback—from HTML/CSS or component code.
 kind: playbook
 ---
 
@@ -23,6 +23,7 @@ Translate interface intent into explicit tokens, semantic markup, complete compo
    - `references/forms-and-validation.md`
    - `references/layout-navigation-and-attention.md`
    - `references/visual-system-and-data.md`
+   - [Existing-video integration](references/existing-video-integration.md): reuse a published clip, inspect codecs, derive a poster, and verify playback/fallbacks.
    - `references/async-empty-error-and-success.md`
 3. **Define the contract.** Record tokens and semantic structure, responsive behavior, interaction states, content extremes, accessibility target, and which source tips are applied, adapted, or rejected.
 4. **Implement every applicable state.** Default, hover, focus-visible, active, selected, disabled-with-reason, loading, empty, error, success, narrow/wide, zoom/reflow, reduced motion, long/localized content, keyboard, and assistive semantics.
@@ -43,4 +44,4 @@ Report changed components, reused/added tokens, source tips applied/adapted/reje
 
 ## References
 
-The five branch files above contain the actionable frontend rules. `references/pdf-coverage-matrix.md` maps every PDF page-level tip to its owning branch and verification hook. `references/sources-and-validation.md` records source values, boundaries, coverage proof, and behavioral probes.
+The branch files above contain the actionable frontend rules. `references/pdf-coverage-matrix.md` maps every PDF page-level tip to its owning branch and verification hook. `references/sources-and-validation.md` records source values, boundaries, coverage proof, and behavioral probes.

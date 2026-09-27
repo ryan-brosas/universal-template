@@ -20,6 +20,10 @@ not exceptions to these rules. Surface conflicts for clarification.
 - Run focused tests and integration probes; inspect output before claiming completion. Add deterministic regression coverage for reproducible failures where valuable.
 - Maintain useful documentation and durable progress or issue records. Be concise; preserve exact commands, identifiers and evidence.
 
+## Browser automation
+
+Default browser UI work to the configured browser MCP (Beacon), using research-pack's Beacon procedure. CDP is an explicit fallback for a named missing capability or unavailable approved browser connection, not a setup prerequisite. Preserve project browser-profile restrictions, identity, approvals and task scope when changing transports. Plain HTTP and search tools remain appropriate when no browser interaction is needed. A connected relay is not proof that a write succeeded.
+
 ## Asset-first design
 
 - Before designing or rebuilding UI, inspect existing Assets, libraries, templates, components, variants, styles and variable collections. Search beyond the current canvas; an empty published-component search does not establish that templates are absent.

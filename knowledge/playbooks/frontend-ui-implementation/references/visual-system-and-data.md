@@ -15,6 +15,8 @@ The PDF groups animation durations as **<100ms** (often imperceptible), **100–
 
 ## Images and maps
 
+For replacing a still with a published clip, use [existing-video integration](existing-video-integration.md): source identity, codec compatibility and actual playback need separate evidence.
+
 - Define aspect ratio, object fit, focal point, loading fallback, error fallback, and alt behavior. User-uploaded images may use a subtle inset boundary when edge contrast is unpredictable.
 - Product illustrations should magnify the relevant feature while preserving enough context to remain truthful; do not fabricate capability or hide consequential complexity.
 - Maps should include only the detail required for the task. Optimize payload and visual noise without removing labels, boundaries, or precision users need.

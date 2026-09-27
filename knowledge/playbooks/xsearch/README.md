@@ -1,32 +1,30 @@
 ---
-setup: bash <skill-dir>/scripts/setup
-compatibility: Requires browser-harness-js on PATH, a running Chromium browser with remote debugging (chrome://inspect or --remote-debugging-port), and an active X (Twitter) login in the browser.
+compatibility: "Configured browser MCP and an authorized X login for browser searches; the optional CDP CLI requires browser-harness-js and an approved debugging endpoint."
 title: xsearch
-summary: Use when the user asks to search X (Twitter) for posts, discussions, or an author. Returns author, handle, text, URL, and timestamp per result. Requires browser-harness-js on PATH, a Chromium browser with remote debugging, and an active logged-in X session.
+summary: "Use for X/Twitter searches and reading posts by permalink. Prefer Beacon MCP for the logged-in browser UI; preserve xsearch's CDP extractor as an explicit structured-data or capability fallback."
 kind: playbook
 ---
 
 # X Search
 
-> ⚠️ **You must be logged in to X in the browser.** X's search page does not show results to logged-out visitors, it redirects to a login wall. The browser session used by `browser-harness-js` must have an active X login.
+## Default workflow
 
-Search X (Twitter) and extract structured results via CDP. No external dependencies beyond `browser-harness-js` (which provides the CDP session). Each call opens its own tab and WebSocket session, safe for parallel use.
+1. Use [Beacon](../beacon/README.md) in the approved browser, verify the X search or
+   permalink target and signed-in account. A login wall requires the user, not
+   credential automation, cookie copying or switching accounts.
+2. Read visible results with author, handle, text, URL and timestamp where present.
+   Open a permalink to inspect the actual post and distinguish quoted content.
+3. Keep capped results and unavailable context explicit. Search/read authority
+   does not authorize liking, following, replying or posting.
+4. Do not start CDP just because a debug endpoint exists; use an ordinary search
+   service instead when it supplies sufficient public evidence.
 
-## Core Principle
+## CDP CLI fallback reference
 
-Browser-native search via CDP: the logged-in browser does the auth, `xsearch` only drives a tab and reads the DOM. Each call owns its own tab + per-call `sessionId`, so calls are safe to parallelize.
-
-## When to Use / NOT
-
-- Use when the user asks to search X (Twitter) for posts, discussions, or an author, or to read a post by permalink.
-- NOT when the browser has no active X login (the search page redirects to a login wall) or when plain web search suffices.
-
-## Workflow
-
-1. Run `xsearch "query" [n]` (pretty) or `xsearch --json "query" [n]`.
-2. For a permalink, open it through the `browser-harness-js` flow: arm the `networkIdle` wait BEFORE `Page.navigate`, settle ~4s for React hydration, read `[data-testid="tweet"]`.
-3. Return structured results `{author, handle, text, url, time}`. Stop when results are returned.
-
+The commands and DOM recipes below are the unchanged `xsearch` CDP implementation,
+not MCP calls. Select [CDP](../cdp/README.md) only for an explicit CLI request or a
+named capability/approved-connection gap. Run `bash <skill-dir>/scripts/setup`
+only for that fallback; its parallel-tab guarantees do not apply to Beacon.
 
 ## Quick search
 

@@ -11,3 +11,4 @@ This is a routing index, not a reading list. Known procedure paths can be opened
 - [pi-package-development](../../../knowledge/playbooks/pi-package-development/README.md)
 - [pi-provider-contracts](../../../knowledge/playbooks/pi-provider-contracts/README.md)
 - [typed-judgment-workflows](../../../knowledge/playbooks/typed-judgment-workflows/README.md)
+- [work-time-tracking](../../../knowledge/playbooks/work-time-tracking/README.md) — work-time extension deployment, separate session/activity measures, and user-confirmed hours drafts.

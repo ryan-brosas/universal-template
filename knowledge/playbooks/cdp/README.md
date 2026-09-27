@@ -1,12 +1,14 @@
 ---
 title: cdp
-summary: 'Drive Chromium through raw typed CDP, with optional explicitly scoped observe-act-verify interactions. Use for browser automation, inspection, and parallel tab work; preserve authorized endpoints and verify effects.'
+summary: 'Use for explicitly requested DevTools Protocol work or a named capability unavailable through the configured browser MCP, such as screenshots, DOM/runtime evaluation, network tracing, uploads or emulation. Ordinary browser UI reading and interaction defaults to Beacon; this persistent CDP SDK is the fallback, not a prerequisite.'
 kind: playbook
 setup: bash scripts/setup
 compatibility: 'Requires Node 23.6+ and a Chromium-based browser. The extension relay is optional; remote debugging supports explicit endpoint or profile selection.'
 ---
 
-# CDP — `browser-harness-js` skill
+# CDP fallback, `browser-harness-js`
+
+For ordinary browser work, start with [Beacon MCP](../beacon/README.md). Do not install this SDK, enable debugging, relaunch a browser or run `session.connect()` merely to read or operate a page. Use this procedure when the user explicitly requests CDP or after naming a real capability/approved-connection gap in the browser MCP. Preserve the same account, approved profile and action permissions; a fallback must not bypass human-owned authentication or consent.
 
 Custom codegen'd CDP SDK (every method from browser_protocol.json + js_protocol.json gets a typed wrapper) plus a tiny HTTP server that holds one persistent CDP `Session`. The `browser-harness-js` CLI auto-starts the server on first use and forwards JS snippets to it.
 
@@ -16,6 +18,10 @@ For progress complaints, missing flat sessions, and shared-daemon updates, use [
 
 For browser-relay MCP workflows instead of this SDK, use [beacon](../beacon/README.md).
 
+## When to Use / NOT
+
+- **Use when:** the user requests CDP, or the configured browser MCP lacks the needed protocol capability or cannot reach the approved browser. Examples include screenshots, computed styles/DOM evaluation, network traces, emulation, file inputs and media capture. Name the gap before using this fallback.
+- **NOT when:** ordinary page reading, navigation, form interaction or a supported browser-MCP operation answers the task. An existing debugging port alone does not make CDP preferable. Follow [Beacon](../beacon/README.md) first; do not translate these protocol calls into invented MCP tools.
 
 ## How to use
 
