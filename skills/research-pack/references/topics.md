@@ -9,7 +9,7 @@ Navigation only: open matched procedures, not every link.
 - [findata](../../../knowledge/playbooks/findata/README.md)
 - [gmaps](../../../knowledge/playbooks/gmaps/README.md)
 - [gnews](../../../knowledge/playbooks/gnews/README.md)
-- [grill-with-docs](../../../knowledge/playbooks/grill-with-docs/README.md)
+- [grill-with-docs](../../../knowledge/playbooks/grill-with-docs/README.md) — check a plan against existing glossary terms, ADRs and code; extends engineering's proposal scrutiny.
 - [gsearch](../../../knowledge/playbooks/gsearch/README.md)
 - [math-schema](../../../knowledge/playbooks/math-schema/README.md)
 - [mcp-steroid](../../../knowledge/playbooks/mcp-steroid/README.md)

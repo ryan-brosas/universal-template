@@ -15,7 +15,7 @@ Navigation only: open matched procedures, not every link.
 - [deprecation-and-migration](../../../knowledge/playbooks/deprecation-and-migration/README.md)
 - [fallow](../../../knowledge/playbooks/fallow/README.md)
 - [false-green-gates](../../../knowledge/playbooks/false-green-gates/README.md)
-- [grill-me](../../../knowledge/playbooks/grill-me/README.md)
+- [grill-me](../../../knowledge/playbooks/grill-me/README.md) — stress-test a proposal's assumptions and failure cases before implementation.
 - [gpuix-hit-testing](../../../knowledge/playbooks/gpuix-hit-testing/README.md)
 - [improve-codebase-architecture](../../../knowledge/playbooks/improve-codebase-architecture/README.md)
 - [local-service-durability](../../../knowledge/playbooks/local-service-durability/README.md)

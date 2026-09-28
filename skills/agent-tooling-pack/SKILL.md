@@ -27,6 +27,9 @@ schemas own the API; do not load a different kernel's instructions.
 - Agent-team delegation, durable coordination, task learning, and workspace moves:
   [autonomous-agent-teams](../../knowledge/playbooks/autonomous-agent-teams/README.md).
 
+For judge calibration or other distinct integration questions, select additional
+[agent-tooling topics](references/topics.md); do not load the index recursively.
+
 The host chooses which model runs. This pack does not rank models or route tasks.
 Do not install or configure an external planner just to answer an ordinary
 planning question.

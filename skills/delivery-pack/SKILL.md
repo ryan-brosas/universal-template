@@ -30,5 +30,6 @@ procedure paths from their own directory.
 
 For deployment, launch, contribution discovery or review-specific tooling, select
 additional [delivery procedures](references/topics.md) only for distinct active
-operations. A push request never implies permission to merge. A trivial change
-needs no procedure ritual, but every PR still runs pre-pr-validation.
+operations. A push request never implies permission to merge. PR-bound work
+follows the required pre-pr-validation lanes even for small diffs; a local-only
+task does not acquire a delivery workflow just because files changed.

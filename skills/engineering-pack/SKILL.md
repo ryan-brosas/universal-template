@@ -11,7 +11,7 @@ Choose the matching procedure; resolve its paths from its own directory.
 - Clarify an idea before implementation:
   [brainstorming](../../knowledge/playbooks/brainstorming/README.md).
 - Explore a data model or state machine:
-  [prototype](../../knowledge/playbooks/prototype/README.md) (shared with design-pack).
+  [prototype](../../knowledge/playbooks/prototype/README.md) (design-pack owns this procedure).
 - Failure, broken tests or unexpected behavior:
   [debugging-and-error-recovery](../../knowledge/playbooks/debugging-and-error-recovery/README.md).
 - Installing, updating, hardening, or recovering a supervised local service:
