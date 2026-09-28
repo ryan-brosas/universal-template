@@ -33,13 +33,15 @@ ref, report up to date rather than creating an empty commit.
 1. Inspect status, the base branch, commit range, and authored diff. Before every
    new PR or update to an existing PR, revalidate through
    `../pre-pr-validation/README.md`; it owns
-   the project gates, `git diff --check`, CodeRabbit review, Steroid semantics,
-   the Sourcebot baseline challenge where applicable, Fovea impact analysis and
-   revision-bound evidence.
+   the local project gates, `git diff --check`, Steroid semantics, the Sourcebot
+   baseline challenge where applicable, Fovea impact analysis and revision-bound
+   evidence. Native Sourcebot patch review is a separate post-publication gate.
    Follow its evidence-reuse rule for unchanged revisions and metadata-only
    updates. If no project quality gate exists, record that blocker rather than
-   inventing CI. A BLOCKED verdict stops normal delivery unless the user requests
-   a draft/WIP PR; carry every blocker honestly into that draft.
+   inventing CI. A local BLOCKED verdict stops normal delivery unless the user
+   requests a draft/WIP PR; carry every blocker honestly into that draft. A pending
+   or blocked bot review does not prevent authorized PR creation or pushing fixes
+   needed for review, but it must not be reported as passed.
 2. For PR creation or body updates, load `references/pull-request-format.md`.
    Use the repository's own template first; fall back to
    `../../../templates/pull-request.md`. Include only evidence actually obtained.
@@ -77,7 +79,12 @@ automation. Reviewers follow CODEOWNERS or an
    Update the PR evidence when results change. For workflow or conditional
    observation details, select `references/ci-and-observation.md`; CI authoring
    belongs to `../github-actions-engineering/README.md`.
-6. For review feedback, load `references/review-threads.md` **before replying or
+6. Complete the required [Sourcebot bot review](../sourcebot/references/review-workflow.md)
+   for the published PR revision. Inspect existing evidence; trigger only within
+   the authorized repository/review scope. A missing, failed, partial or stale
+   bot result blocks review completion and merge, not the publication needed to
+   obtain a review. Do not substitute CodeRabbit or indexed Ask answers.
+   For review feedback, load `references/review-threads.md` **before replying or
    resolving**. Read the findings, verify against source, fix and test where
    warranted, reply in-thread, and resolve only addressed or deliberately
    dispositioned findings. Anything needing reviewer confirmation stays open.
@@ -89,9 +96,9 @@ resolution, not unrelated GitHub writes. Replying is not resolution. REST commen
 database IDs and GraphQL review-thread IDs are different; the reference owns
 endpoint and payload mechanics.
 
-Never merge with a failing local gate, failing required check, unresolved thread,
-or pending human decision. A green review-bot check does not mean no findings:
-fetch and read the threads before merging. Do not invent evidence or SHAs, include
+Never merge with a failing local gate, failing required check, incomplete Sourcebot
+patch review, unresolved thread, or pending human decision. A green review-bot
+check does not mean no findings: fetch and read the threads before merging. Do not invent evidence or SHAs, include
 secrets/unrelated files, or use `pull_request_target` for untrusted branch code.
 
 Stop at the requested operation: the PR exists or is updated, evidence matches

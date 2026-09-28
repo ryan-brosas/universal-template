@@ -1,23 +1,24 @@
 ---
 title: coderabbit-review
-summary: Use when CodeRabbit CLI review is explicitly requested or required by pre-PR validation; scope the external review, inspect current CLI capabilities, and validate findings without replacing the project’s PR workflow.
+summary: Use only when CodeRabbit CLI review is explicitly requested; scope the optional external review, inspect current CLI capabilities, and validate findings without replacing Sourcebot verification or the project’s PR workflow.
 kind: playbook
 ---
 
 # CodeRabbit Review
 
-CodeRabbit supplies an additional review, not a replacement for tests or local
-judgment. Every PR runs this review through `../pre-pr-validation/README.md`; a
-generic review outside that workflow still uses the existing review process unless
-the user selects CodeRabbit. Installation does not authorize sending code.
+CodeRabbit is optional, explicit-request tooling, not a verification prerequisite
+or an automatic fallback. The required external patch-review lane uses
+[Sourcebot's review bot](../sourcebot/references/review-workflow.md). A requested
+CodeRabbit review supplements tests and local judgment; it does not satisfy that
+Sourcebot gate. Installation does not authorize sending code.
 
 ## Scope and readiness
 
 Confirm the intended Git repository and diff/base. Explain that a review sends
 selected code to CodeRabbit, and obtain approval for that scope before the first
 submission unless the user requested CodeRabbit or already granted standing
-repository-scoped approval. A mandatory pre-PR lane without upload approval is
-BLOCKED; it is not permission to disclose code.
+repository-scoped approval. Without that approval, the requested CodeRabbit
+review is blocked; it is not permission to disclose code.
 Exclude secrets and unrelated work. An authored path that cannot be uploaded
 safely is recorded as an omitted path, and a review covering only part of the
 authored diff is not a clean result. Do not enable untracked-file submission or

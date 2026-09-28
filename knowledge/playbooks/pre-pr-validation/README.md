@@ -1,6 +1,6 @@
 ---
 title: pre-pr-validation
-summary: 'Use when validating finished changes before pushing a PR: require project gates, CodeRabbit, IDE semantics, graph review, AI-slop rejection, and a revision-bound evidence record. push-pr owns remote delivery.'
+summary: 'Use when validating finished changes before pushing a PR: run local gates, IDE semantics, graph review and AI-slop rejection; track Sourcebot bot review separately after a PR exists. push-pr owns remote delivery.'
 kind: playbook
 ---
 
@@ -8,7 +8,8 @@ kind: playbook
 
 Validate the proposed change, not the agent's confidence. This phase produces a
 local readiness verdict and evidence for `../push-pr/README.md`; it does not push,
-create a PR, merge, or install tools.
+create a PR, merge, or install tools. Sourcebot's native review bot owns external
+patch review after a PR exists; CodeRabbit is no longer a required lane.
 
 ## Establish scope
 
@@ -25,12 +26,12 @@ the whole catalog or copy its rules into a new checklist.
 
 ## Gather complementary evidence
 
-Every PR must complete every quality lane below for every changed path, regardless
-of diff size or file type. A missing tool, authorization, matching project,
-unreported changed path, incomplete result, or required gate is a blocker, not an
-`N/A` or silent skip. A draft/WIP may carry the blocker, but cannot receive a READY
-verdict. Applicability is judged per lane: the Sourcebot baseline challenge applies
-only when the change's correctness depends on indexed code evidence or the user
+Every PR must complete every local quality lane below for every changed path,
+regardless of diff size or file type. A missing tool, authorization, matching
+project, unreported changed path, incomplete result, or required gate blocks
+local readiness; it is not an `N/A` or silent skip. A draft/WIP may carry the
+blocker, but cannot receive a local READY verdict. Applicability is judged per
+lane: the Sourcebot baseline challenge applies only when the change's correctness depends on indexed code evidence or the user
 requested it, and its inapplicability is recorded with that reason instead of
 forcibly calling the tool. The other lanes remain required as written.
 
@@ -40,10 +41,6 @@ forcibly calling the tool. The other lanes remain required as written.
   procedure in `../shell-scripting-practices/README.md`.
   A build or graph trace alone does not prove behavior. Check whitespace across
   the branch diff and local changes, not only the unstaged diff.
-- **Independent patch review:** run CodeRabbit through
-  `../coderabbit-review/README.md` on the complete authored diff. Confirm the
-  repository and external-upload authorization before submission, inspect command
-  status, and triage every structured finding against source and tests.
 - **IDE semantics:** call `steroid_list_projects` and route only to the project
   whose path matches the repository (`../mcp-steroid/README.md`). If none matches,
   immediately tell the user which repository to open in IntelliJ and keep the lane
@@ -67,6 +64,19 @@ forcibly calling the tool. The other lanes remain required as written.
   style preferences or presumed AI authorship are not defects. Use
   `../code-cleanup/README.md` for justified simplification, preserving behavior.
 
+## Sourcebot patch-review handoff
+
+Use [Sourcebot bot review](../sourcebot/references/review-workflow.md) for the
+external patch-review lane. It needs a published PR, so it is not a prerequisite
+for the first push/PR or for pushing a fix that needs re-review. Before then,
+record PENDING with the missing PR or unpublished revision. Existing bot results
+cover only their reviewed PR revision, never additional local edits.
+
+Keep this separate from the indexed `ask_codebase` baseline challenge above.
+Neither an Ask answer nor local readiness satisfies the bot gate. Missing bot
+configuration or unverifiable completion is BLOCKED, not a clean review.
+`push-pr` owns authorized triggering, observation and feedback after publication.
+
 ## Resolve and record
 
 Fix actionable findings, then rerun affected checks. When a check asserts an absence
@@ -88,13 +98,14 @@ Use the existing task record or PR-body draft for one compact record:
 
 - Scope: base/HEAD, local changes, acceptance checks and selected skills.
 - Evidence: command/probe, scope, result/exit status and decisive output or link.
-- Reviews: CodeRabbit status and finding dispositions; Steroid and Fovea
-  observations; the Sourcebot baseline challenge where applicable, with the
-  applicability reason or the access blocker; the AI-slop rejection outcome;
-  source anchors, revisions, covered paths and limits.
+- Reviews: Sourcebot bot status, PR/base/head, completion evidence and finding
+  dispositions; Steroid and Fovea observations; the separate Sourcebot baseline
+  challenge where applicable, with its applicability reason or access blocker;
+  the AI-slop rejection outcome; source anchors, covered paths and limits.
 - Findings: severity, location, resolution or remaining blocker.
 - Context: why the change exists, decisions, relevant documentation updates.
-- Verdict: READY or BLOCKED, with gaps and explicit exceptions.
+- Verdict: local READY or BLOCKED, plus Sourcebot bot PENDING, PASSED or BLOCKED.
+  Name gaps and explicit exceptions; local READY is not complete PR verification.
 
 Update canonical docs when behavior or contracts change; do not dump transcripts,
 secrets, session state or a second architecture inventory into Git. Record durable
@@ -102,8 +113,11 @@ lessons only where they belong, using `../leverage-capture/README.md` when usefu
 
 ## Handoff
 
-READY requires satisfied acceptance checks, an inspected result for every lane
-above, and no unresolved blocking findings. Missing lane evidence means BLOCKED.
-Hand the record to push-pr without implying permission to publish. An explicitly
-requested draft/WIP push may carry a BLOCKED record, but never relabel it READY.
-Remote CI and review remain separate delivery checks.
+Local READY requires satisfied local acceptance checks, an inspected result for
+every applicable local lane, and no unresolved local blocking findings. Missing
+local evidence means local BLOCKED. Hand the record and separate bot status to
+push-pr without implying permission to publish. An explicitly requested draft/WIP
+push may carry local BLOCKED, but never relabel it READY. Local READY permits the
+authorized publication needed for bot review; CI and completed Sourcebot patch
+review still gate merge. A no-PR request stops without creating a PR or claiming
+the bot reviewed the change.

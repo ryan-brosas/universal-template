@@ -28,6 +28,7 @@ It does not authorize deployment, corpus, access-policy or external-write change
 | Configure login/SSO, account linking, SCIM, roles or repository ACLs | [Identity and permissions](references/identity-and-permissions.md) |
 | Configure email, audit retention, licensing, trials or seats | [Administration and licensing](references/administration-and-licensing.md) |
 | Configure models, Ask connectors, sharing or experimental review agents | [Ask, models and agents](references/ask-models-and-agents.md) |
+| Use the native review bot as the PR verification gate | [Review workflow](references/review-workflow.md) |
 | Create/import/update a skill **inside Ask Sourcebot** | [Native skills](references/native-skills.md) |
 | Use REST discovery/search/source/history, scoped tokens or EE administration | [REST API](references/api.md) |
 | Check documentation completeness, aliases, redirects or contradictions | [Documentation map](references/documentation-map.md) |

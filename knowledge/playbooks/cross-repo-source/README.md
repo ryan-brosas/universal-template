@@ -10,9 +10,13 @@ kind: playbook
 
 Match the evidence source to the question before discovering or probing tools.
 Use Sourcebot's `ask_codebase` for broad unresolved codebase questions when
-relevant indexed coverage can inform the decision. Known files, narrow lookups
-and questions settled by the current patch stay local. A session start, lifecycle
-phase or small task is not by itself a reason to call or avoid Sourcebot.
+relevant indexed coverage can inform the decision. Apply this route proactively
+to ordinary task requests: the standing instruction names `ask_codebase`, so no
+workflow prompt or per-task named-tool request is needed. Stay within the task's
+authorized research scope, including any restriction to local-only evidence.
+Known files, narrow lookups and questions settled by the current patch stay
+local. A session start, lifecycle phase or small task is not by itself a reason
+to call or avoid Sourcebot.
 
 Honor explicit user requests for Sourcebot within capability and authorization
 limits. Otherwise apply the routing below, without a ceremonial availability
@@ -58,10 +62,14 @@ which lives outside this template together with the index and database.
 | Editing or proving working-tree behavior | Local source, Git, tests and focused probes |
 | Proving **current** behavior after a local edit, push, or merge | Freshness probe below. If the indexed commit ≠ HEAD, or the PR branch is not listed, Sourcebot is orientation only — prove with local read/grep or a live IDE file read ([mcp-steroid](../mcp-steroid/README.md) when routed) |
 
-Delegate early when breadth is apparent. If a narrow lookup expands into several
-subsystems or competing implementations, hand off the bounded question with the
-useful facts already found instead of continuing an unbounded manual search.
-Do not first complete the investigation and then ask Code Ask to repeat it.
+Delegate as soon as breadth is apparent: an unfamiliar multi-module execution
+path, a cross-repository contract, competing implementations, or unclear callers
+and change impact beyond the current patch. When relevant indexed coverage can
+help, reuse a valid brief or start with one bounded question in the relevant
+repositories. Carry useful facts already found into the request rather than
+continuing unbounded manual exploration. Do not first complete the investigation
+locally and then ask Code Ask to repeat it. Follow up only for unresolved or new
+uncertainty, not to satisfy a phase checklist.
 
 Task relevance, not diff size, determines applicability. A small change may need
 a broad dependency trace; a large visual task may need no code research. The

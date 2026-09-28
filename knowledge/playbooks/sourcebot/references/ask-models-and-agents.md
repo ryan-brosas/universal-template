@@ -88,7 +88,9 @@ are covered in [native skills](native-skills.md). They are not this local skill.
 
 Agents are experimental and may change outside major releases. Review setup is
 an external integration with write effects, not an automatic follow-on to reading
-these docs. Choose the model: `REVIEW_AGENT_MODEL` is a configured model's
+these docs. For PR-gate timing, triggering and completion evidence, follow the
+[review workflow](review-workflow.md); MCP Ask is not the native review bot.
+Choose the model: `REVIEW_AGENT_MODEL` is a configured model's
 **`displayName`**, not provider/model ID; unset selects the first configured model.
 
 | Host | Required integration |
