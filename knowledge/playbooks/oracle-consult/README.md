@@ -1,6 +1,6 @@
 ---
 title: oracle-consult
-summary: 'Use when the user asks to consult Oracle, ChatGPT, or an external model for a second opinion, plan review, or architecture decision - drive the @steipete/oracle MCP bridge or CLI end to end: tool discovery, engine fallback, file attachments, background runs, session polling, and transcript retrieval.'
+summary: 'Use when the user explicitly asks to consult Oracle, ChatGPT, or an external model: discover the installed tools, verify engine/profile behavior, run a bounded consult and retrieve its actual result without taking over the desktop.'
 kind: playbook
 ---
 
@@ -8,65 +8,61 @@ kind: playbook
 
 ## Purpose
 
-An external-model consult that stalls on engine connection errors, missing API
-keys, or unknown session mechanics wastes the review slot the user asked for.
-The expensive parts are invisible until first use: browser mode attaches to a
-debug-enabled Chrome instead of launching one, the API engine needs its own
-provider key, and finished answers land in session artifacts, not stdout.
+Run the external-model consultation the user requested, without confusing a
+background runner with a non-disruptive browser. Preserve the selected model,
+engine, account and data-sharing scope; a connection failure is not authority
+to switch them or copy a signed-in profile.
 
 ## When to Use / NOT
 
-- **Use when:** the user asks to consult Oracle, ChatGPT, or an external model;
-  a plan or diff needs a second opinion from a stronger model; multi-model
-  fan-out is requested.
-- **NOT when:** the task fits local tools; web research alone suffices
-  (web-search tools own that).
+- **Use when:** the user explicitly requests Oracle, ChatGPT or an external-model
+  consultation, including a requested multi-model comparison.
+- **NOT when:** local tools or ordinary web research answer the question, or when
+  an unsolicited second opinion would upload context the user did not authorize.
 
 ## Approach
 
-1. **Discover before calling.** The MCP bridge exposes `oracle_consult`,
-   `oracle_sessions`, and siblings. An invalid call is the cheapest schema
-   probe: the error lists required parameters and accepted enums. Find the
-   server through the MCP server list rather than assuming registration.
-2. **Assemble the consult.** Put the full context in `prompt` (findings,
-   constraints, questions, deliverable shape) and attach real files with
-   `files` — absolute paths survive wrapper path resolution. Give a stable
-   `slug`; it names the session directory for later retrieval.
-3. **Expect engine fallback.** Default resolution is config → `api` when a
-   provider key exists → `browser`. Browser mode needs a debug-enabled Chrome;
-   `api` needs its provider key. On connection refusal, read the error: it
-   names the port or key that is missing. If the oracle config sets
-   `attachRunning: true`, either start Chrome with the debug port or flip that
-   flag off for the run and pass `--copy-profile <user-data-dir>` so a private
-   Chrome launches seeded with the signed-in profile; restore the config
-   afterward. Prefer editing config only with a backup copy.
-4. **Run long consults detached.** Browser consults run ten-plus minutes.
-   Launch via the CLI (`oracle consult -p "$(cat prompt.md)" --file ... --slug
-   ...`) under a supervisor writing a log, then poll the session directory:
-   `meta.json` `status` flips to `completed`; the answer is in
-   `artifacts/transcript.md` under the session slug.
-5. **Deliver the answer, not the transcript.** Summarize the response against
-   the questions asked, cite the conversation URL from the transcript, and note
-   anything the model flagged as unverified. Verify model claims against source
-   before treating them as fact.
+1. **Discover the live schema.** Inspect the configured Oracle MCP tools or the
+   installed CLI's help; do not deliberately submit invalid calls for discovery.
+   Tool names, model labels and browser controls can differ across installations.
+2. **Prepare the bounded question.** Include the decision, useful findings,
+   constraints and desired evidence. Attach only authorized files, never secrets.
+   Use a stable session slug so a retry does not create duplicate consultations.
+3. **Preview the execution boundary.** Use the tool's dry-run capability when
+   available to inspect the resolved engine, model, profile and launch behavior
+   before a real run. API mode needs no browser but still has provider cost and
+   data-sharing implications; do not substitute it for a requested browser/model
+   combination without permission.
+4. **Keep browser mode off the user's desktop.** Prefer the already approved
+   isolated/headless automation profile when the installed workflow supports it.
+   Confirm actual launch/focus behavior; a private profile or detached process
+   alone does not guarantee that no visible window activates. If the flow only
+   supports a visible browser, ask for that specific exception before launching.
+   Missing login, 2FA or debugging consent is `NEEDS_HUMAN`, not permission to
+   copy cookies/profile data, toggle attach settings or relaunch a personal browser.
+5. **Supervise long runs.** Consults may take many minutes. Use the installed
+   session/status facilities or a bounded detached job, retain its identifier and
+   observe completion without repeatedly starting consultations. A client timeout
+   does not prove generation stopped; inspect the existing run before retrying.
+6. **Deliver the result.** Inspect the completed session and actual answer artifact.
+   Summarize it against the requested question, cite its session/conversation when
+   available, and distinguish source-backed findings from model suggestions.
 
 ## Boundaries
 
-- Browser mode drives the user's signed-in ChatGPT and may briefly focus a
-  visible automation window; say so when launching, and never run a consult the
-  user did not request.
-- Config edits (attach toggle, profile copy) are temporary: back up, restore,
-  and verify the restore.
-- Model output is a lead: verify plan claims against source and gates before
-  implementing.
+- A consultation request permits that scoped consultation, not desktop focus,
+  credential copying, provider/model changes or additional unrequested consults.
+- Use a visible browser only with explicit permission. Authentication and consent
+  stay human-owned; never simulate approval keystrokes to make a run unattended.
+- Do not edit host configuration as an automatic fallback. An authorized change
+  needs a private backup, exact scope, verification and a restoration plan.
+- Model output is advisory. Verify decisive claims against current source and tests.
 
 ## Verification
 
-- `meta.json` shows `completed`; `artifacts/transcript.md` exists and contains
-  the answer; the reply cites the session/conversation link and the model used.
-- Any temporary config change is restored and the restore is verified.
-
-## References
-
-- `oracle consult --help` / `oracle --help` for the installed CLI's flags.
-- The MCP bridge's server tool list for wrapper-level discovery.
+- Establish completion through the installed runner's actual status and answer;
+  a launch acknowledgement, quiet log or connected browser is not completion.
+- Report the model/engine used, the answer and any unresolved coverage limits.
+- Verify isolation/focus behavior separately from answer quality. If it could not
+  be established, report that limit rather than promising unattended operation.
+- Restore and verify any separately authorized temporary configuration change.

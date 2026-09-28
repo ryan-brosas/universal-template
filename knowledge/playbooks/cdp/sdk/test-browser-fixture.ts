@@ -11,7 +11,12 @@ const DEFAULT_CLEANUP_TIMEOUT_MS = 5_000;
 const DEFAULT_POLL_INTERVAL_MS = 100;
 const STDERR_LIMIT = 8192;
 
-export type TestBrowserProcess = Pick<ChildProcess, 'exitCode' | 'signalCode' | 'stderr' | 'kill' | 'once' | 'off'>;
+export interface TestBrowserProcess extends Pick<ChildProcess, 'exitCode' | 'signalCode' | 'stderr' | 'kill'> {
+  // Observers do not require the concrete ChildProcess fluent return type.
+  once(event: 'error', listener: (error: Error) => void): void;
+  once(event: 'exit', listener: (code: number | null, signal: NodeJS.Signals | null) => void): void;
+  off(event: 'exit', listener: () => void): void;
+}
 
 export type TestBrowser = {
   executablePath: string;

@@ -44,13 +44,10 @@ export type ConnectOptions = {
    *  The only case that legitimately needs longer is waiting on the Chrome
    *  "Allow" popup — bump to 30000 if you expect the user to click it. */
   timeoutMs?: number;
-  /** Opt OUT of auto-dismissing Dia's "Allow debugging connection?" prompt.
-   *  On by default (macOS, Dia only): when the WS-open stalls the SDK fires a
-   *  Return at the Dia process via osascript, so connect needs no manual
-   *  click — a no-op for every other browser. Set false to disable.
-   *  Persisted on the Session so auto-heal reconnects inherit it. Needs
-   *  macOS Accessibility permission; if missing, the connect just waits on
-   *  timeoutMs (see the README for the one-time grant). */
+  /** Legacy opt-in to Dia prompt dismissal (macOS only). Default false:
+   *  connection attempts must not synthesize OS consent keystrokes.
+   *  An explicit policy is retained across reconnects. Keep false for
+   *  workflows where authentication and consent remain human-owned. */
   autoAllow?: boolean;
   /** ms after the WS-open attempt before auto-dismissing Dia's prompt.
    *  Default 600 — a live WS opens in ~100ms, so "still connecting at 600ms"
@@ -108,12 +105,9 @@ export class Session implements Transport {
     }
   }
 
-  /** On by default: connect()/reconnect auto-dismisses Dia's "Allow
-   *  debugging connection?" prompt (macOS, via osascript Return) — a no-op
-   *  for every other browser. Persisted so the auto-heal reconnect in _call
-   *  inherits it. Set false via connect({ autoAllow: false }) or
-   *  --no-auto-allow to opt out. */
-  autoAllow = true;
+  /** OS consent keystrokes are disabled unless explicitly enabled.
+   *  Retained across reconnects; --no-auto-allow can also clear an opt-in. */
+  autoAllow = false;
 
   // Generated bindings — one per CDP domain.
   // Initialized lazily after construction so `_call` is available.

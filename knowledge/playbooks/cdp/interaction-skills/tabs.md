@@ -1,73 +1,56 @@
 # Tabs
 
-Use **CDP for control** (attach, activate known targets, inspect). Use **UI automation for visible order**.
+Keep automation in task-owned background targets. CDP routing does not require
+visible tab selection. Follow [connection guidance](connection.md#parallel-work-background-tabs-and-desktop-focus)
+for profile isolation and consent; never select the first target just because
+it is listed first.
 
-## Pure CDP
+## Background target with explicit routing
+
+The Session must already be connected to the approved browser. Each concurrent
+workflow owns its target and uses the returned `sessionId`, not `session.use()`'s
+shared mutable cursor:
 
 ```js
-// List page targets (filtered; chrome:// / devtools:// dropped)
-const tabs = await listPageTargets()
-
-// Create a new tab and route subsequent calls to it
-const { targetId } = await session.Target.createTarget({ url: 'https://example.com' })
-await session.use(targetId)
-
-// Switch: route calls to another existing tab
-await session.use(otherTargetId)
-
-// Show this tab visibly in Chrome (different from `session.use` — which is CDP routing only)
-await session.Target.activateTarget({ targetId })
-
-// Close a tab
-await session.Target.closeTarget({ targetId })
-
-// What tab is session.use currently pointing at?
-const { targetInfo } = await session.Target.getTargetInfo({ targetId })
+const { targetId } = await session.Target.createTarget({ url: 'about:blank', background: true })
+const { sessionId } = await session.Target.attachToTarget({ targetId, flatten: true })
+try {
+  await cdp(sessionId, 'Page.enable', {})
+  await Promise.all([
+    session.waitFor({ method: 'Page.loadEventFired', sessionId, timeoutMs: 10000 }),
+    cdp(sessionId, 'Page.navigate', { url: 'https://example.com' }),
+  ])
+  // Read/act through this sessionId and verify the actual result.
+  // A load event is not proof that an application's work completed.
+} finally {
+  await session.closeTab(targetId, sessionId)
+}
 ```
 
-**`session.use` is CDP-side routing; `Target.activateTarget` is Chrome-side focus.** They are independent. If the user expects Chrome to visibly change, call `activateTarget` too.
+For a known existing authorized target, attach by its observed id and keep it
+open afterward unless closing it is part of the task. Single-workflow
+`session.use(targetId)` changes CDP routing, not desktop focus; avoid it when
+other callers share the daemon.
 
-## Two things `Target.createTarget` quietly gets wrong
+## Visible selection is an explicit exception
 
-1. **Race: `{ url }` in `createTarget` can resolve before navigation starts.** If you then poll `document.readyState`, you'll see `'complete'` for about:blank and move on. Safer:
-   ```js
-   const { targetId } = await session.Target.createTarget({ url: 'about:blank' })
-   await session.use(targetId)
-   await session.Page.enable()
-   await session.Page.navigate({ url: 'https://example.com' })
-   // now wait for Page.loadEventFired via session.waitFor
-   ```
+Only when the user asks to see a tab or approves a demonstrated foreground-only
+step, use `Target.activateTarget` or `Page.bringToFront`. OS activation is a
+separate effect and needs the same permission. An automation failure or a
+background tab's existence is not permission to bring it forward.
 
-2. **New tab may open behind the active one.** Add `Target.activateTarget` if the user needs to see it.
+`Target.getTargets` order is not visible tab-strip order. Identify the requested
+target by URL/title, a scoped screenshot, or extension-provided window/index
+metadata. Read-only OS inspection may help when visible ordering is the task;
+do not switch tabs or activate a window just to discover its identity.
 
-## Visible tab-strip order (platform UI)
+## Creation and readiness
 
-CDP's `Target.getTargets` returns an arbitrary order — not left-to-right.
-
-### macOS
-
-```applescript
-tell application "Google Chrome"
-  set out to {}
-  set i to 1
-  repeat with t in every tab of front window
-    set end of out to {tab_index:i, tab_title:(title of t), tab_url:(URL of t)}
-    set i to i + 1
-  end repeat
-  return out
-end tell
-```
-
-```applescript
-tell application "Google Chrome"
-  set active tab index of front window to 2
-  activate
-end tell
-```
-
-### Linux
-
-No AppleScript. Use `xdotool`, `wmctrl`, or desktop-environment scripting. The split is the same — CDP for attach/activate-by-id, window manager for visible ordering.
+Creating a target directly at a URL can return while its document is still
+`about:blank`. Create blank in the background, attach, arm the readiness wait
+and then navigate, as above. Use an application-specific content signal when
+load/network-idle is insufficient. Opening behind the user's tab is intended,
+not an error to fix by activating it.
 
 ## Traps
 
