@@ -66,7 +66,7 @@ Do not ban pure black as a rule. The PDF recommends near-black to soften maximum
 
 Test shortest and longest strings, 200% zoom, narrow width, translated expansion, right-to-left text, mixed scripts, names, unbroken URLs, large numbers, and browser font substitution. Truncate only when task-safe, and provide an accessible way to obtain the full value.
 
-For scattered overrides or text that ignores central roles, use [Responsive layout and typography repair](responsive-typography-repair.md) for the ownership audit, propagation probes and reflow diagnosis.
+For scattered overrides, disconnected text, or cross-page inconsistency despite shared tokens, use [Responsive layout and typography repair](responsive-typography-repair.md) for the independent role map, propagation/assignment checks and reflow diagnosis.
 
 ## Verification
 

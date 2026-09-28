@@ -11,7 +11,7 @@ This is a routing index, not a reading list. Known procedure paths can be opened
 - [frontend-markup-practices](../../../knowledge/playbooks/frontend-markup-practices/README.md)
 - [frontend-ui-implementation](../../../knowledge/playbooks/frontend-ui-implementation/README.md)
 - [paper-component-consistency](../../../knowledge/playbooks/paper-component-consistency/README.md)
-- [paper-design](../../../knowledge/playbooks/paper-design/README.md) — Official-docs guide: MCP/CLI connection, themes and tokens, Figma/HTML import, vectors, Snapshot/CORS and code handoff.
+- [paper-design](../../../knowledge/playbooks/paper-design/README.md) — Live Paper-to-code handoff before visual code edits; MCP/CLI connection, themes and tokens, Figma/HTML import, vectors and Snapshot/CORS.
 - [paper-project-branding](../../../knowledge/playbooks/paper-project-branding/README.md)
 - [pencil](../../../knowledge/playbooks/pencil/README.md)
 - [pixel-perfect](../../../knowledge/playbooks/pixel-perfect/README.md)

@@ -102,17 +102,62 @@ specific destination section. Replace placeholders with real content. Test long
 names, optional fields, and translations against existing component fitting rules.
 Content access does not authorize unrequested edits to the upstream data source.
 
-**Paper → application:** inspect the selected frame's structure, tokens, assets,
-and relevant viewport variants. Flex layouts and containers make intent easier to
-translate. Implement one bounded section in the existing project stack; preserve
-component and token owners instead of generating a parallel app. Use the repository's
-actual commands for preview/testing. A local dev URL is not a deployed website.
-
-Validate responsive behavior using actual narrow/wide layouts and intermediate
-widths, not just breakpoint tokens. Check semantics, keyboard behavior,
-accessibility, and interactions in code; Paper input frames do not supply them.
-Snapshot can bring the rendered implementation back as editable comparison
+**Paper → application:** use the [live-source-first handoff](#paper-to-code-live-source-first)
+below. Snapshot can bring the rendered implementation back as editable comparison
 material, but is not lossless component or theme round-trip synchronization.
+
+## Paper-to-code: live source first
+
+Use for implementing a Paper design or feedback that the agent is ignoring Paper.
+Code-only logic or dependency fixes with no changed visual contract do not need a
+canvas preflight. Application architecture remains the frontend workflow's concern.
+
+### Before visual code edits
+
+1. **Confirm the live target.** Use `get_basic_info` and a bounded tree read to
+   identify the file, page and relevant desktop/mobile viewport frames. A presentation
+   wrapper containing both screens is not an application viewport. Local route maps
+   help locate frames; confirm them through Paper rather than trusting old IDs.
+2. **Read the affected section directly.** Inspect `get_jsx`,
+   `get_computed_styles` and a source `get_screenshot` (or supported equivalents).
+   Read relevant tokens and stored bindings using [themes-and-tokens.md](themes-and-tokens.md);
+   resolved CSS alone does not prove alias or mode provenance. Inspect original
+   images/vectors used by the section through available asset/export tools. Bound reads to the
+   section and its layout context, not the entire file.
+3. **Reconcile intent and ownership.** Map the source section to existing code
+   components, assets and token/style owners. Check current requirements and
+   documented approved differences, including repaired source assets. Do not
+   silently normalize the design or copy known-broken imports back over repairs.
+   If the requested fidelity conflicts with an approved exception, ask which wins
+   before changing the affected property.
+4. **State the handoff before editing.** Briefly report the confirmed file/page/frame
+   IDs, successful live reads and source render, target code owners, and retained
+   exceptions or blockers. Reuse still-valid live reads from this task; refresh
+   affected evidence when the design changes. Token hashes cover tokens, not the
+   whole frame's freshness.
+
+Local documentation, Sourcebot/code search and prior descriptions are navigation
+aids, not substitutes for direct Paper inspection. If a required live read fails,
+name the failed operation and stop source-dependent edits rather than reconstructing
+from memory. An explicitly user-approved snapshot handoff is a valid exception;
+label it snapshot-based, not live-Paper verification. Keep Paper read-only unless
+design-file changes are separately authorized.
+
+### Implement and compare
+
+Translate one bounded section into the existing stack and component/token owners.
+Exported JSX is source evidence, not a drop-in application or permission to generate
+a parallel React app inside an Astro project. Preserve asset provenance and token
+aliases; do not replace them with guessed artwork or a second theme.
+
+Use the project's preview and focused tests. Compare the affected browser render
+with the inspected Paper render at matching viewport widths after fonts and images
+load; check actual font delivery if metrics differ. Inspect geometry, text wrapping,
+crops and responsive reflow, then probe intermediate widths and application-only
+semantics, keyboard behavior and interactions. Explain approved differences instead
+of hiding them in new baselines. Report source IDs, changed code paths, comparisons
+and remaining gaps. Passing tests, exported JSX or a dev URL alone do not prove
+visual fidelity or deployment.
 
 ## Recovery
 

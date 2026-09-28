@@ -1,6 +1,6 @@
 ---
 name: design-pack
-description: "Use when designing or improving UI/UX, implementing frontend presentation, iterating logos or illustrations, generating bot icons from images, exploring visual prototypes, working in Paper/Figma/FLORA, copying a design, checking pixel fidelity, or auditing accessibility. This pack owns visual and interaction decisions; combine it with engineering when implementing or testing them."
+description: "Use when designing or improving UI/UX, implementing frontend presentation, iterating logos or illustrations, generating bot icons from images, exploring visual prototypes, working in Paper/Figma/FLORA, implementing Paper-to-code, copying a design, checking pixel fidelity, or auditing accessibility. This pack owns visual and interaction decisions; combine it with engineering when implementing or testing them."
 invocation: entry
 ---
 
@@ -27,7 +27,8 @@ a visual request as permission for unrelated redesign.
   [ui-ux-iteration-loop](../../knowledge/playbooks/ui-ux-iteration-loop/README.md).
 - Inconsistent linked Figma controls, variant/property repairs or variable bindings:
   [figma-web-design](../../knowledge/playbooks/figma-web-design/README.md).
-- Paper platform use, agent connection, tokens, HTML import or Snapshot:
+- Paper-to-code (live design reads before visual code edits), platform use,
+  agent connection, tokens, HTML import or Snapshot:
   [paper-design](../../knowledge/playbooks/paper-design/README.md).
 - Copy a Figma frame into Paper:
   [pencil](../../knowledge/playbooks/pencil/README.md).
