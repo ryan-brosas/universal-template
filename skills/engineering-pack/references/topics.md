@@ -1,8 +1,6 @@
 # Engineering topics
 
-Start with the narrowest matching procedure. Load additional procedures only for
-distinct active subproblems; each summary and body owns its detailed contract.
-This is a routing index, not a reading list. Known procedure paths can be opened directly.
+Navigation only: open matched procedures, not every link.
 
 - [api-and-interface-design](../../../knowledge/playbooks/api-and-interface-design/README.md)
 - [authoritative-signal-surfacing](../../../knowledge/playbooks/authoritative-signal-surfacing/README.md)

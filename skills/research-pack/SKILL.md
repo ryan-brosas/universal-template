@@ -1,18 +1,18 @@
 ---
 name: research-pack
-description: "Use when investigating source or documentation, finding external facts, navigating indexed source or IDEs, browsing/extracting web or PDF content, consulting Oracle explicitly, or researching mathematics. This pack owns evidence acquisition and may combine with any pack whose decisions depend on that evidence; agent runtime setup remains agent-tooling's boundary."
+description: "Use when resolving broad unfamiliar code flows, researching documentation or external facts, navigating indexed source or IDEs, browsing web/PDF content, consulting Oracle explicitly, or researching mathematics. Owns evidence acquisition; combine with the pack using that evidence. Known local file reads need no research workflow; agent runtime setup belongs to agent-tooling."
 invocation: entry
 ---
 
 # Research pack
 
 Use the nearest sufficient evidence. Known local questions stay direct; broad
-unresolved codebase questions can use Sourcebot's `ask_codebase` when relevant
+unresolved codebase questions use Sourcebot's `ask_codebase` when relevant
 indexed coverage helps. The cross-repository source playbook owns applicability,
 scope and fallbacks. A session or phase change is not a research trigger.
 Figma/Paper-only tasks stay with design-pack and live design evidence; mixed tasks
-select research only for the question it owns. Start with the narrowest relevant
-procedure and resolve its references and helpers from its own directory.
+select research only for the question it owns. Resolve each procedure's paths
+from its own directory.
 
 - Investigate broad codebase questions with Sourcebot's `ask_codebase` when
   indexed coverage is useful, or retrieve external implementations:

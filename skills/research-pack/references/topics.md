@@ -1,8 +1,6 @@
 # Research topics
 
-Start with the narrowest matching procedure. Load additional procedures only for
-distinct active subproblems; each summary and body owns its detailed contract.
-This is a routing index, not a reading list. Known procedure paths can be opened directly.
+Navigation only: open matched procedures, not every link.
 
 - [beacon](../../../knowledge/playbooks/beacon/README.md) — default browser MCP for UI reading and interaction
 - [cdp](../../../knowledge/playbooks/cdp/README.md) — explicit protocol/capability fallback, not the ordinary browser entrypoint

@@ -33,6 +33,23 @@ not universal obedience testing. See `references/lift-evaluation.md` when design
 a comparison. Evaluation is selective authoring work, not mandatory CI or a runtime
 scoring engine.
 
+## Make selection work without named invocation
+
+The description is visible before the body. Write it from ordinary user intent,
+artifacts and failure symptoms, not just the procedure's name. Put triggers there;
+a perfect body cannot help if the model never opens it. Name the responsibility
+and one consequential boundary, not a bag of keywords or a workflow summary.
+Router link labels should likewise explain the task, especially for opaque tool
+names. Keep shared selection rules in `AGENTS.md`, not every loader and index.
+
+Test changed routes with unnamed requests, a paraphrase, a nearby non-match and a
+compound task. Check which files the model actually reads, whether it reaches the
+useful procedure, and whether it loads unrelated guidance. A prose routing answer
+is weaker evidence than a read trace; neither proves the downstream task works.
+If selection fails, distinguish missing host discovery, a weak description and a
+buried router link before expanding instructions. Never solve a miss by requiring
+the whole library on every task.
+
 ## Metadata and discovery
 
 - Visible routers live at `../../../skills/<name>-pack/SKILL.md`. Use a

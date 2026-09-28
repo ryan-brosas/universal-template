@@ -1,8 +1,6 @@
 # Design topics
 
-Start with the narrowest matching procedure. Load additional procedures only for
-distinct active subproblems; each summary and body owns its detailed contract.
-This is a routing index, not a reading list. Known procedure paths can be opened directly.
+Navigation only: open matched procedures, not every link.
 
 - [app-experience-mapping](../../../knowledge/playbooks/app-experience-mapping/README.md)
 - [black-box-experience-review](../../../knowledge/playbooks/black-box-experience-review/README.md)

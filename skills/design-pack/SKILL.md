@@ -6,10 +6,8 @@ invocation: entry
 
 # Design pack
 
-Start with the narrowest matching procedure and add another only for a distinct
-active design problem. Read only the references each needs and resolve paths and
-helpers from that procedure's directory. Do not load the pack recursively or treat
-a visual request as permission for unrelated redesign.
+Choose the matching procedure; resolve its paths from its own directory.
+A visual request is not permission for unrelated redesign.
 
 - Frontend typography, spacing, forms, responsive behavior and states:
   [frontend-ui-implementation](../../knowledge/playbooks/frontend-ui-implementation/README.md).

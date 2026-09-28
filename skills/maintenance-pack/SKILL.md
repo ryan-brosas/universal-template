@@ -1,19 +1,17 @@
 ---
 name: maintenance-pack
-description: "Use when maintaining .agents/universal-template, writing or auditing packs/playbooks, fixing skill selection, finding a missing specialist, or turning session experience into the right improvement. This pack owns reusable-instruction maintenance and may combine with other relevant packs; it is not a prerequisite for ordinary project work."
+description: "Use when agent instructions are bloated, duplicated or ignored; skills need reminders or select the wrong workflow; or maintaining .agents/universal-template, packs and playbooks. Owns reusable-instruction maintenance and lesson capture; combine with other packs for distinct work, not as a prerequisite for ordinary project tasks."
 invocation: entry
 ---
 
 # Maintenance pack
 
-Start with the narrowest procedure for the active maintenance need and add another
-only for a distinct maintenance subproblem. Resolve relative paths from each
-selected procedure's directory, not this router. Do not rebuild catalogs or
-create planning infrastructure as a prerequisite.
+Choose the matching procedure; resolve its paths from its own directory.
+Do not rebuild catalogs or create planning infrastructure as a prerequisite.
 
 - This template, instructions, prompts, MCP declarations or publication checks:
   [template-maintenance](../../knowledge/playbooks/template-maintenance/README.md).
-- Author, audit or verify a pack or playbook:
+- Skills are ignored, need reminders, overlap, or load too much; author or audit them:
   [writing-skills](../../knowledge/playbooks/writing-skills/README.md).
 - No visible pack clearly owns a task, or a specialist seems missing:
   [skill-catalog](../../knowledge/playbooks/skill-catalog/README.md).

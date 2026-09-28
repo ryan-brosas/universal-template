@@ -47,15 +47,13 @@ Create `skills/<name>-pack/SKILL.md`:
 ```markdown
 ---
 name: <name>-pack
-description: "Use when <task family>; owns <specific decisions> and may compose with other relevant packs."
+description: "Use when <ordinary user intent, artifact or failure symptom>; owns <specific decisions>. Combine with <relevant owners> for distinct work; not for <likely near miss>."
 invocation: entry
 ---
 
 # <Name> pack
 
-Start with the narrowest matching procedure. Load additional procedures only for
-distinct active subproblems, and only the references each needs. Resolve helpers
-and paths from each procedure's directory, not this router.
+Choose the matching procedure; resolve its paths from its own directory.
 
 - <Specific intent>: [procedure](../../knowledge/playbooks/<name>/README.md).
 ```
@@ -67,6 +65,7 @@ load a whole index recursively. No global workflow, installer, generated catalog
 or mandatory evaluation framework is required.
 
 Verify paths, coverage, host discovery, relevant helper callers and routing.
-For material routing changes, compare representative tasks before and after;
-report unmeasured behavior honestly. Read source evidence directly when a procedure needs it; do not create a
+For material routing changes, compare unnamed task requests before and after,
+including a near miss and compound task; inspect actual reads and report
+unmeasured behavior honestly. Read source evidence directly when a procedure needs it; do not create a
 permanent source summary.
