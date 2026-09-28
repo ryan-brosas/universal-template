@@ -51,8 +51,9 @@ not handles; use a verified account or plain name rather than guessing a tag.
 For social posts, the applicable author-voice skill owns voice and channel length;
 this procedure supplies the engineering evidence and share structure. Use
 [house-writing-style](../house-writing-style/README.md) only where the user's brief
-and voice guidance leave a choice. Preserve quotations, URLs and code. For feedback like "sounds AI-written," rethink the
-angle and cadence rather than only swapping words. A concrete premise can be a
+and voice guidance leave a choice. Preserve quotations, URLs and code. For feedback
+like "sounds AI-written," rethink the angle and cadence rather than only swapping
+words. A concrete premise can be a
 better hook than a generic question or polished metaphor; judge it in context.
 
 Keep humour close to the user's phrasing rather than forcing a technical pun.
