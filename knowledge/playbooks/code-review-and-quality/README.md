@@ -1,76 +1,50 @@
 ---
 title: code-review-and-quality
-summary: Use when reviewing code or PRs before merge, after subagent work, or when a review is requested. Bloat Review mode hunts over-engineering only, with a delete-list and tagged findings.
+summary: Use when reviewing code, a PR or delegated work; investigate correctness and unnecessary complexity from requirements, source and runtime evidence, without a finding quota.
 kind: playbook
 ---
 
+# Code review and quality
 
-# Code Review & Quality
+Review whether the change solves the stated problem, preserves required behavior
+and introduces avoidable complexity. A sound patch may need no changes. Do not
+invent findings, deletions or simplifications to demonstrate that a review ran.
 
-## Core Principle
+## Scope and evidence
 
-**Bloat is the default failure mode.** Code grows; review subtracts. The goal is a tight, minimal change that solves the stated problem, nothing more. A review that lists nits without identifying deletion candidates has missed the point.
+1. Establish the requested behavior, review scope and applicable project
+   constraints. Separate existing problems from changes introduced by the patch.
+2. Trace affected execution paths, callers and tests. Read enough surrounding
+   source to understand the contract; a diff alone may hide important uses.
+3. Investigate correctness, failure handling, compatibility, security and other
+   risks that apply. Use the project's actual conventions, not a universal
+   language, framework or development-method checklist.
+4. For suspected bloat, ask what would break if it were removed. Check public
+   consumers, runtime registration, side effects and recovery behavior before
+   calling something dead. A single caller does not by itself make an abstraction
+   unnecessary, nor does repetition by itself justify a shared abstraction.
+5. Exercise the affected behavior with focused existing tests or direct probes
+   where practical. Inspect failures and revise the finding; do not treat a green
+   command as proof that the relevant path ran.
 
-## When to Use / NOT
+A review request is not permission for unrelated rewrites. Keep out-of-scope
+findings separate, with evidence and a reason to fix, defer or reject them.
 
-- **Use when:** reviewing code or PRs before merge, after subagent work, or when a review is requested.
-- **NOT when:** style-only review, run the linter instead (see Anti-Patterns).
+## Report useful findings
 
-## Two Review Modes
+For each finding, cite the source, explain the concrete consequence and recommend
+the smallest appropriate fix. Distinguish a reproduced failure from a risk or
+open question. Standard review may use `[blocker]`, `[should-fix]`, `[nit]` and
+`[question]`; severity follows impact, not how strongly a rule is worded.
 
-### 1. Standard Review
-
-Before merge. Findings tagged `[blocker]`, `[should-fix]`, `[nit]`, `[question]`. For `[blocker]`, name the violated invariant and the smallest fix. For `[should-fix]`, name why it matters and the cost of leaving it.
-
-### 2. Bloat Review
-
-For AI-generated code, after a refactor, or when scope may have crept. Output a **delete-list** tagged `[delete]`, `[simplify]`, `[keep-with-reason]`. Default for any line that does not serve the stated problem is `[delete]`.
-
-## Workflow
-
-1. **Scope check**, diff match stated problem? Outside is `[blocker]` (split) or `[delete]`.
-2. **Iron-law scan**, domain-relevant iron law followed? (TDD: failing test first. Effect: typed errors. UI: design taste. Performance: profile first.)
-3. **Read for deletion**, "If I delete this, what breaks?" If nothing, it's bloat.
-4. **Verify behavior**, test pass? Path exercised? `[question]` if unsure.
-5. **Mark dead**, unused exports, dead branches, ownerless TODOs, restating comments.
-6. **Verify in one pass**, typecheck + lint + relevant test.
-
-## Delete-List Categories
-
-| Tag | Meaning | Action |
-|----------------------|------------------------------|--------------------------------|
-| `[delete]` | Unused / dead / speculative | Remove |
-| `[simplify]` | Works but over-engineered | Reduce |
-| `[keep-with-reason]` | Looks bloat, is load-bearing | Justify, or move to `[delete]` |
-
-## Iron Laws by Domain
-
-| Domain | Iron law |
-|----------------------|---------------------------------------------------------------|
-| Any feature / bugfix | Failing test first (`test-driven-development`) |
-| TS / JS with Effect | Typed errors, no `any` (`typescript-coding-standards`) |
-| React / Next.js | Server components, bundle discipline (`react-best-practices`) |
-| UI | Match form to failure (`writing-skills`); design-taste layer |
-| Performance | Measure before optimizing (`performance-optimization`) |
-| Security | Validate at every layer (`defense-in-depth`) |
-
-## Red Flags (Bloat)
-
-Abstraction with one call site. wrapper that does nothing. restating comment. helper "for future use" with no caller. generic name (`helper`, `util`, `manager`) hiding intent. feature flag never toggled. "might need this" branches. AI-shaped comments; `as any` casts. tests that mock the behavior they claim to test.
-
-## Anti-Patterns
-
-LGTM-by-default (review passes when nothing flagged); style nits as review (run the linter); scope creep (fixing unrelated issues, note `[NOTICED BUT NOT TOUCHING]`, don't fix); approving-vibes review ("looks good" without evidence, cite test runs, paths, lines).
-
-## Self-Quiz
-
-Did I find at least one `[delete]` / `[simplify]`? (If not, the review was shallow.) Are all `[blocker]`s named with the violated invariant? Did I run the verification command and see it pass? Are unrelated fixes `[NOTICED BUT NOT TOUCHING]`, not silently merged?
+For a bloat-focused review, use `[delete]` or `[simplify]` only when supported by
+consumer and behavior evidence. Use `[keep-with-reason]` for apparently redundant
+code that protects a real requirement. Do not optimize for a shorter diff at the
+expense of clarity, compatibility or reliability.
 
 ## Verification
 
-Typecheck + lint + relevant test pass in one pass; every `[blocker]` names the violated invariant and the smallest fix; Bloat Review produced at least one `[delete]` or `[simplify]`.
-
-
-## References
-
-N/A, no reference files; this skill is self-contained.
+Report the paths examined, checks actually run, observed results and remaining
+coverage gaps. If no actionable findings remain, say so and identify the review's
+limits. Neither a finding count nor an empty report establishes correctness;
+the supporting investigation does.

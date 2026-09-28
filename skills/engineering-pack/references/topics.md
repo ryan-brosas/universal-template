@@ -15,7 +15,6 @@ Navigation only: open matched procedures, not every link.
 - [deprecation-and-migration](../../../knowledge/playbooks/deprecation-and-migration/README.md)
 - [fallow](../../../knowledge/playbooks/fallow/README.md)
 - [false-green-gates](../../../knowledge/playbooks/false-green-gates/README.md)
-- [farmed-test-harness](../../../knowledge/playbooks/farmed-test-harness/README.md)
 - [grill-me](../../../knowledge/playbooks/grill-me/README.md)
 - [gpuix-hit-testing](../../../knowledge/playbooks/gpuix-hit-testing/README.md)
 - [improve-codebase-architecture](../../../knowledge/playbooks/improve-codebase-architecture/README.md)

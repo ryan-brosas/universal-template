@@ -1,8 +1,9 @@
 # Author a playbook or pack
 
-Follow `knowledge/playbooks/writing-skills/README.md`. Prefer a specialist
-playbook linked from an existing pack; a new visible pack needs evidence that
-existing boundaries cannot route the task clearly.
+Follow [writing-skills](../knowledge/playbooks/writing-skills/README.md). Prefer a
+specialist linked from an existing pack; a new visible pack needs evidence that
+existing boundaries cannot route the task clearly. Creation paths below are
+relative to the repository root.
 
 ## Specialist playbook (default)
 
@@ -17,8 +18,8 @@ kind: playbook
 
 # <Readable title>
 
-State the useful decision, shortcut or non-obvious contract. Omit generic advice
-already supplied by the project or model. Preserve valid implementation choices.
+Explain the task-specific decision and the evidence needed to make it. Omit
+generic advice already supplied by the project or model. Preserve valid approaches.
 
 ## Boundaries
 
@@ -64,8 +65,8 @@ it. Keep routers small; large branches use a plain Markdown topic index. Never
 load a whole index recursively. No global workflow, installer, generated catalog
 or mandatory evaluation framework is required.
 
-Verify paths, coverage, host discovery, relevant helper callers and routing.
-For material routing changes, compare unnamed task requests before and after,
-including a near miss and compound task; inspect actual reads and report
-unmeasured behavior honestly. Read source evidence directly when a procedure needs it; do not create a
-permanent source summary.
+Review paths, coverage, host discovery and callers directly. For material routing
+changes, observe whether ordinary work leads the agent to read and use the right
+guidance; a prompted skill choice does not establish that. Do not add scripted
+routing or instruction-validation machinery. Report unobserved behavior honestly.
+Read source evidence when needed instead of creating a permanent source summary.

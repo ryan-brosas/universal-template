@@ -1,104 +1,64 @@
 ---
 title: fallow
-summary: Use when analyzing code quality, finding dead code, detecting duplication, assessing complexity, checking blast radius, or cleaning up a TS or JS codebase with deterministic static analysis.
+summary: Use when investigating unused files, exports or dependencies, duplication, complexity or change impact in JS/TS; Fallow supplies candidates to inspect, not a verdict on code quality.
 kind: playbook
 ---
 
+# Fallow: static-analysis evidence
 
-# Fallow, Codebase Intelligence
+Use Fallow when a JS/TS cleanup or review needs its analysis. It is not a
+prerequisite for every edit or code-quality claim, and it does not analyze
+Markdown instructions. If it is unavailable, use the project's existing tooling
+and direct source inspection; report the coverage limit rather than installing
+it or inventing output.
 
-Deterministic static analysis for TS/JS. Answers: dead code, duplication, complexity, architecture drift, (optionally) runtime behavior. **Does not generate code**, provides evidence.
+## Choose the relevant analysis
 
-**Always `--format json`** for structured output.
+Confirm the installed version's help and the project's entry points, workspaces
+and configuration. Use JSON when consuming structured results. Run the analysis
+that answers the question, not every command by default:
 
-## Core Principle
-
-Deterministic static analysis provides evidence, not code. Read the JSON, cite the files and line counts, don't paraphrase; the numbers are the evidence.
-
-## When to Use
-
-- **Before cleanup**: find unused files, exports, deps
-- **Before refactor**: complexity hotspots + targets
-- **Before editing**: blast radius via `fallow audit`
-- **After generation**: verify no dead code or new duplication
-- **When reviewing**: did the change land on a hot path?
-
-## When NOT to Use
-
-Non-TS/JS (Fallow is JS/TS only, for Python repos use the project's configured dead-code tooling, e.g. ruff or vulture); one-line edits (overhead); runtime data without the runtime layer set up.
-
-## Core Commands
-
-```bash
-# Dead code: unused exports, files, deps
+```sh
 fallow dead-code --format json
-
-# Duplication: similar code blocks
 fallow dupes --format json
-
-# Health: complexity, size, blast radius per file
 fallow health --format json
-
-# Audit: change impact
-fallow audit --changed-since main --format json
-
-# Combined run (dead code + duplication + complexity)
-fallow --format json
 ```
 
-## Interpreting Output
+For change impact, choose the repository's actual comparison ref and use
+`fallow audit --changed-since <base-ref> --format json`. The placeholder is not a
+literal branch name. Run before and after a cleanup when comparison informs the
+result, keeping the scope and configuration comparable.
 
-```json
-{
-  "dead": {
-    "files": ["src/legacy/foo.ts"],
-    "exports": [{" file": "...", "name": "bar", "used": false }],
-    "deps": ["lodash.debounce"]
-  },
-  "dupes": {
-    "blocks": [{" files": ["a.ts", "b.ts"], "lines": 12, "hash": "..." }]
-  },
-  "health": {
-    "files": [{
-      "path": "src/services/user.ts",
-      "complexity": 23,        // high
-      "blast": 47,            // files affected
-      "lines": 312
-    }]
-  }
-}
-```
+## Investigate before changing code
 
-Read the JSON. Cite the files and line counts. Don't paraphrase, the numbers are the evidence.
+Treat findings as candidates. Inspect the named source and its consumers,
+including public package exports, framework entry points, dynamic imports and
+side effects. Syntactic analysis cannot settle every runtime or external use.
+A local absence of imports is not proof that a published API is unused.
 
-## Workflow
+Explain each proposed deletion or simplification in terms of behavior and
+maintenance cost. Duplication does not automatically justify extraction, and a
+complexity score does not automatically justify splitting a function. Preserve
+load-bearing code and explain false positives instead of changing code just to
+improve a score.
 
-1. **Baseline first.** Run `fallow health` before changes. Save the JSON.
-2. **Make your change.**
-3. **Re-run.** Compare new JSON to baseline. Did complexity go up? New dead code? New dupes?
-4. **Clean up.** If new dead code, delete. If new dupes, extract. If complexity spike, split.
-5. **Verify.** Run typecheck + tests + the diff didn't grow unrelated changes.
+Keep edits within the authorized cleanup. Report-only work stops at findings.
+Do not apply automated fixes without inspecting the proposed changes and their
+consumers; never suppress a real issue merely to make the report green.
 
-## Common Mistakes
+## Verify the outcome
 
-Reading summary without JSON (loses precision). running fallow but not acting on output. treating "low dead code %" as the goal (the goal is fewer bugs). not setting baseline. "delete this unused export" without checking who imports it (might be a public API). running on a 5k LOC project and trying to clean everything at once.
-
-## Red Flags
-
-"Code quality" claim without Fallow output. Fallow ignored because "we know it's bad". dead code deleted without checking consumers. "we'll clean up later" (later never comes). no baseline = no diff = no signal. running once and never again. treating fallow output as a checklist instead of evidence.
-
-## Anti-Patterns
-
-**"I know it's bad"** (run Fallow); **"small project, no need"** (even small projects have dead code); **"delete all dead"** (check public API first); **"summary is enough"** (JSON is the contract); **"fallow said so"** (Fallow is evidence, not authority, use judgment).
-
-## Verification
-
-Run typecheck + tests after cleanup, and confirm the diff didn't grow unrelated changes. Compare the re-run JSON to the saved baseline: complexity down, no new dead code, no new dupes.
-
+Read the final diff and exercise the affected behavior with the project's
+relevant tests and type checks. Re-run applicable analysis to understand changes
+in findings, not to claim the application works. Report the source evidence,
+checks actually run and any unresolved consumers or runtime paths.
 
 ## References
 
-Detailed reference material:
-- `references/cli-reference.md`
-- `references/gotchas.md`
-- `references/patterns.md`
+Load only the relevant section:
+
+- [CLI reference](references/cli-reference.md): command and output details;
+  installed help owns version-specific behavior.
+- [Gotchas](references/gotchas.md): analysis limits, configuration and exit codes.
+- [Patterns](references/patterns.md): a requested integration or larger workflow,
+  not prerequisites for a local investigation.

@@ -1,6 +1,6 @@
 ---
 name: engineering-pack
-description: "Use when implementing or reviewing code, fixing bugs or failing tests, finding unused code or dependencies, refactoring, improving performance or security, or choosing APIs, architecture and language practices. Owns implementation and code quality; combine with domain or delivery packs for their parts. Skip procedures for trivial edits."
+description: "Use when implementing or reviewing code, fixing bugs, testing, finding unused code or dependencies, refactoring, improving performance or security, or choosing APIs, architecture and language practices. Owns implementation and code quality; combine with domain or delivery packs for their parts. Skip procedures for trivial edits."
 invocation: entry
 ---
 
@@ -36,7 +36,10 @@ Choose the matching procedure; resolve its paths from its own directory.
 - Blocking disposable or bot signups on a product policy list:
   [signup-abuse-response](../../knowledge/playbooks/signup-abuse-response/README.md).
 - Unused exports, files, dependencies or duplicate code in JS/TS:
-  [fallow](../../knowledge/playbooks/fallow/README.md) for static-analysis evidence.
+  [fallow](../../knowledge/playbooks/fallow/README.md) when available, alongside
+  source and consumer inspection.
+- Review a patch or investigate over-engineering:
+  [code-review-and-quality](../../knowledge/playbooks/code-review-and-quality/README.md).
 - Simplifying working code:
   [code-cleanup](../../knowledge/playbooks/code-cleanup/README.md).
 - Language/framework standards: select each materially applicable

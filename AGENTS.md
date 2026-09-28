@@ -35,6 +35,7 @@ Default browser UI work to the configured browser MCP (Beacon), using research-p
 
 - Duplicate logic, speculative abstractions, unnecessary customization, hard-coded environment assumptions, band-aids or unrelated cleanup.
 - Claim an unrun check, conceal uncertainty, invent evidence, or expose or commit secrets.
+- Shortcut skill or system-instruction work with scripted routing, compliance checks, persuasion tricks or staged demonstrations. Read and assess the actual guidance and verify its use in real work; temporary artifacts are not an exception.
 - Perform destructive actions affecting user data, shared history, external systems, credentials or machine-wide state without explaining the action and blast radius and obtaining confirmation. Ordinary reversible repository work needs no extra permission.
 
 Apply these principles proactively, proportionately and within the agreed scope.
