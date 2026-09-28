@@ -23,14 +23,40 @@ For browser-relay MCP workflows instead of this SDK, use [beacon](../beacon/READ
 - **Use when:** the user requests CDP, or the configured browser MCP lacks the needed protocol capability or cannot reach the approved browser. Examples include screenshots, computed styles/DOM evaluation, network traces, emulation, file inputs and media capture. Name the gap before using this fallback.
 - **NOT when:** ordinary page reading, navigation, form interaction or a supported browser-MCP operation answers the task. An existing debugging port alone does not make CDP preferable. Follow [Beacon](../beacon/README.md) first; do not translate these protocol calls into invented MCP tools.
 
+## Background-first operation
+
+Use task-owned background targets and explicit per-target `sessionId` routing.
+Page-targeted CDP input and focus emulation do not require desktop activation.
+Do not bring the browser forward, move the OS pointer or copy clipboard/login
+state as a routine workaround. An approved isolated/headless browser is useful
+for unattended jobs, but a different profile is not an implicit permission grant.
+See [connection guidance](interaction-skills/connection.md#parallel-work-background-tabs-and-desktop-focus)
+for isolation and the ask-first exceptions. Disable legacy prompt auto-approval
+with `autoAllow: false`; authentication and consent stay human-owned.
+
 ## How to use
 
 Just run `browser-harness-js '<JS>'`. The first call spawns the server in the background; subsequent calls hit the same process and so reuse the same `session`, the same wire to the browser (extension relay or remote-debugging WebSocket), and any globals you set.
 
+Connect to the approved browser as described in [Connecting](#connecting) first.
+Each snippet can then own a background target without using the shared active-tab
+cursor or leaving a tab open:
+
 ```bash
-browser-harness-js 'await session.connect()'
-browser-harness-js 'await session.Page.navigate({url:"https://example.com"})'
-browser-harness-js '(await session.Runtime.evaluate({expression:"document.title",returnByValue:true})).result.value'
+browser-harness-js '
+const { targetId } = await session.Target.createTarget({ url: "about:blank", background: true });
+const { sessionId } = await session.Target.attachToTarget({ targetId, flatten: true });
+try {
+  await cdp(sessionId, "Page.enable", {});
+  await Promise.all([
+    session.waitFor({ method: "Page.loadEventFired", sessionId, timeoutMs: 10000 }),
+    cdp(sessionId, "Page.navigate", { url: "https://example.com" }),
+  ]);
+  return (await cdp(sessionId, "Runtime.evaluate", { expression: "document.title", returnByValue: true })).result.value;
+} finally {
+  await session.closeTab(targetId, sessionId);
+}
+'
 ```
 
 Output is the **raw result content** — no `{ok,result}` envelope.
@@ -55,9 +81,7 @@ Detect failure with `if browser-harness-js '...'; then ...; else handle_error; f
 ```bash
 browser-harness-js <<'EOF'
 const tabs = await listPageTargets();
-globalThis.tid = tabs[0].targetId;
-await session.use(globalThis.tid);
-return globalThis.tid;
+return { pageCount: tabs.length }; // Read-only example; do not select the first user's tab.
 EOF
 ```
 
@@ -74,7 +98,7 @@ EOF
 | `browser-harness-js --restart`  | Stop + start fresh. |
 | `browser-harness-js --logs`     | `tail -f` the server log (`/tmp/browser-harness-js.log`). |
 | `browser-harness-js recordings [--latest\|enable\|disable\|replay [dir]]` | Show recording status, persist local consent, or replay an rrweb recording. |
-| `browser-harness-js --no-auto-allow '<js>'` | Set `session.autoAllow = false` on the daemon, then eval the JS. Opts out of auto-dismissing Dia's "Allow debugging connection?" prompt (on by default, macOS). |
+| `browser-harness-js --no-auto-allow '<js>'` | Set `session.autoAllow = false` on the daemon, then eval the JS. Clears any explicit opt-in to Dia prompt keystrokes. New sessions already default to `autoAllow: false`. |
 
 Env vars: `CDP_REPL_PORT` (default `9876`; the extension worker hardcodes 9876 — keep them in sync), `CDP_REPL_LOG` (default `/tmp/browser-harness-js.log`), `CDP_RECORD` (`1`/`0` preference override), `CDP_RECORDINGS_DIR` (storage override), `BROWSER_HARNESS_JS_HOME` (state root, default `~/.browser-harness-js`).
 
@@ -283,7 +307,7 @@ These globals are pre-loaded — no imports needed:
 Fresh installs do **not** record. A natural request to record, show, demo, or replay opts in for that task; ordinary browser work does not. Connect first, start before the work, retain the exact returned directory, and stop after the outcome:
 
 ```js
-await session.connect()
+await session.connect({ autoAllow: false })
 const recordingDir = await startRecording('demo', 'Verify the account settings')
 // Drive the page (or let the user). rrweb records DOM mutations in-page.
 await stopRecording()
@@ -348,63 +372,44 @@ Use DOM queries (`DOM.querySelector`, `Runtime.evaluate` with `querySelector`) f
 
 ### Connecting
 
-**Preferred: just call `session.connect()` with no args.** It uses the unpacked browser-harness-js extension if that worker is connected to the daemon (`ws://127.0.0.1:9876/extension`), otherwise it auto-detects a remote-debugging browser. Always try this first:
+Reuse an authorized connection; do not repeatedly reconnect or request desktop
+focus. For a new connection, select the approved endpoint/profile explicitly and
+set `autoAllow: false`. Use the extension only when its browser identity matches
+the approved task. Automatic discovery is a capability, not authority to choose
+whichever browser was launched most recently.
 
 ```js
-await session.connect()   // extension first, then remote-debugging auto-detect
-await session.connect({ transport: 'extension' }) // fail if the extension is absent
-await session.connect({ transport: 'cdp' })       // skip the extension
+// Values come from the task's approved browser, not an arbitrary discovered tab.
+await session.connect({ profileDir: approvedProfileDir, autoAllow: false })
+// Or pin its already verified remote-debugging endpoint:
+await session.connect({ wsUrl: approvedWsUrl, autoAllow: false })
+// Extension-only, after verifying the approved browser identity:
+await session.connect({ transport: 'extension', autoAllow: false })
 ```
 
-`/health` reports `transport: "extension" | "cdp" | null` and `extension: true` when the worker is attached. Pin remote debugging with `{ wsUrl | profileDir | port }`.
+`detectBrowsers()` lists running debugging candidates without selecting one.
+`/health` reports transport/connection state, not permission or task success.
+An existing `DevToolsActivePort` file does not prove the endpoint is live.
+The connection defaults to a 5-second open timeout; when the user has agreed to
+a human-owned Allow step, pass a bounded longer timeout such as `30000`.
 
-Auto-detect (fallback) scans OS-specific browser-data dirs for running Chromium-based browsers (Chrome, Chromium, Edge, Brave, Arc, Vivaldi, Opera, Comet, Canary, Dia, Helium, Aside, and any other Chromium fork) by looking for a `DevToolsActivePort` file. Each browser picks its own debug port (Chrome often 9222, but Aside uses an ephemeral one like 52860, etc.) — auto-detect reads the actual port from that file instead of assuming 9222. The host is always loopback (`127.0.0.1`) for a locally-running browser. Candidates are ordered by most-recently-launched, and the first one whose WebSocket accepts wins. OS-agnostic — works on macOS, Linux, Windows.
-
-Use `detectBrowsers()` first if you want to see what's available (or let the user pick) before connecting:
-
-```js
-const found = await detectBrowsers()
-// [{ name: 'Dia', profileDir, port, wsPath, wsUrl, mtimeMs }, ...]
-```
-
-**Explicit forms** — use these only when auto-detect picks the wrong browser, or when you already know where to connect:
-
-| Form | When to use |
-|---|---|
-| `{ port, host? }` | You launched the browser with a known `--remote-debugging-port`. Default host `127.0.0.1`. |
-| `{ profileDir }` | Target a specific browser when several are running. Reads `<profileDir>/DevToolsActivePort` directly. |
-| `{ wsUrl }` | You already have `ws://…/devtools/browser/<uuid>` (e.g. a remote browser over SSH). |
-
-```js
-await session.connect({ port: 9222 })                                        // a specific port you set
-await session.connect({ profileDir: '/Users/<you>/Library/Application Support/Dia' })
-await session.connect({ wsUrl: 'ws://127.0.0.1:9222/devtools/browser/<uuid>' })
-```
-
-Profile paths by OS — use these with `{ profileDir }`:
-- macOS: `~/Library/Application Support/<Browser>` (e.g. `Dia/User Data`, `Google/Chrome`, `Comet`, `BraveSoftware/Brave-Browser`, `Arc/User Data`, `net.imput.helium`, `Aside`)
-- Linux: `~/.config/<browser>` (e.g. `dia`, `google-chrome`, `chromium`, `BraveSoftware/Brave-Browser`, `net.imput.helium`, `aside`)
-- Windows: `%LOCALAPPDATA%\<Browser>\User Data` (e.g. `Dia\User Data`, `Google\Chrome`, `Microsoft\Edge`, `BraveSoftware\Brave-Browser`, `imput\Helium\User Data`, `Aside`)
-
-Per-candidate WS-open timeout defaults to **5s** — live browsers answer with open/close within ~100ms, so 5s is already generous. The only case where 5s is too short is when the browser is showing the **Allow** popup and waiting for the user to click. If you expect that, pass `timeoutMs: 30000`:
-
-```js
-await session.connect({ timeoutMs: 30_000 })
-```
-
-**Dia's Allow prompt is auto-dismissed (macOS, on by default).** Dia gates the debugging connection behind an `Allow debugging connection?` prompt (Return = Allow) — the only Chromium browser that does. The SDK auto-dismisses it: when the WS-open stalls, it fires a Return at the Dia process via `osascript`, so `connect()` needs no manual click — a no-op for every other browser. Opt out with `autoAllow: false` or `browser-harness-js --no-auto-allow`. If `connect()` stalls past `timeoutMs` against a Dia browser, the user likely needs to grant macOS Accessibility to `node` (see the README). Tunable via `autoAllowDelayMs` (default 600ms).
-
-**If you see `No detected browser accepted a connection`** — the browsers have `DevToolsActivePort` files but none are currently serving WS. Most common cause: remote-debugging is enabled but the user hasn't clicked **Allow** on the prompt yet. Tell them to click Allow, then retry (or bump `timeoutMs`).
+The maintained SDK defaults to `autoAllow: false`; older installations may not.
+Keep the explicit false option for compatibility. The legacy macOS Dia helper
+remains an opt-in API, but this workflow must not automate Allow, login or consent. A refused or missing connection is a blocker, not permission to
+relaunch a personal browser or switch profiles. Detailed transport, discovery
+and recovery mechanics live in [connection.md](interaction-skills/connection.md).
 
 ### Picking a target (tab)
 
 After `connect()`, call `session.use(targetId)` once; subsequent page-level calls (Page/DOM/Runtime/Network/etc.) auto-route to that target's sessionId. `Browser.*` and `Target.*` calls always hit the browser endpoint.
 
 ```js
-const tabs = await listPageTargets()                     // no args; uses the connected session
-const sid  = await session.use(tabs[0].targetId)
-await session.Page.enable()
-await session.Page.navigate({ url: 'https://example.com' })
+// Create a task-owned background target rather than taking the first user tab.
+const { targetId } = await session.Target.createTarget({ url: 'about:blank', background: true })
+const { sessionId } = await session.Target.attachToTarget({ targetId, flatten: true })
+await cdp(sessionId, 'Page.enable', {})
+await cdp(sessionId, 'Page.navigate', { url: 'https://example.com' })
+// Wait for the task's readiness signal and verify the result; close only this owned tab.
 ```
 
 `listPageTargets()` uses CDP's `Target.getTargets` (not `/json`), so it works on Chrome 144+ too. It already filters out `chrome://` and `devtools://` URLs. Equivalent raw call:
@@ -435,58 +440,31 @@ const ev = await session.waitFor(
 
 ### Persisting state across calls
 
-Each snippet runs inside its own async wrapper, so its `let`/`const` declarations vanish when it returns. To carry data forward, attach to `globalThis`:
+Each snippet runs inside its own async wrapper, so its `let`/`const` declarations vanish when it returns. To carry ad-hoc data forward, attach it to `globalThis`:
 
 ```bash
-browser-harness-js '(await listPageTargets()).forEach((t,i)=>globalThis["tab"+i]=t.targetId)'
-browser-harness-js 'await session.use(globalThis.tab0)'
-browser-harness-js 'await session.Page.navigate({url:"https://example.com"})'
+browser-harness-js 'globalThis.exampleNotes = { purpose: "research" }'
+browser-harness-js 'globalThis.exampleNotes'
 ```
+
+Use a caller-owned key for real concurrent workflows; a shared global name is not
+isolation. Keep each task's returned target/session identifiers, rather than
+mapping all user tabs to numbered globals or reusing a shared active-tab cursor.
 
 `session` itself, the active sessionId, and event subscribers are already preserved by the server — globals are only needed for ad-hoc data.
 
 ## Connecting to a running browser (inspect flow)
 
-When attaching to the user's already-running browser:
-
-1. **Try `await session.connect()` first** (see [Connecting](#connecting)). If it fails with `No running browser with remote debugging detected`, turn remote debugging on — open the inspect page in a running Chromium browser:
-   ```bash
-   # macOS — `open location "chrome://..."` alone fails (-10814) when the default
-   # browser isn't a Chromium that registers the chrome:// scheme, and `open -a
-   # <browser>` triggers the profile picker. So target a running Chromium by name
-   # via AppleScript: it picks the frontmost one (the browser you're in) or the
-   # first running candidate, and reuses the active profile. No browser hardcoded.
-   osascript \
-     -e 'set inspectURL to "chrome://inspect/#remote-debugging"' \
-     -e 'set apps to {"Dia","Google Chrome","Chromium","Microsoft Edge","Brave Browser","Arc","Vivaldi","Opera","Comet","Helium","Aside","Google Chrome Canary"}' \
-     -e 'set target to ""' \
-     -e 'tell application "System Events"' \
-     -e 'set frontApp to name of first application process whose frontmost is true' \
-     -e 'if frontApp is in apps then' \
-     -e 'set target to frontApp' \
-     -e 'else' \
-     -e 'repeat with appName in apps' \
-     -e 'if exists process appName then' \
-     -e 'set target to appName' \
-     -e 'exit repeat' \
-     -e 'end if' \
-     -e 'end repeat' \
-     -e 'end if' \
-     -e 'end tell' \
-     -e 'if target is not "" then' \
-     -e 'tell application target to open location inspectURL' \
-     -e 'end if'
-
-   # Linux — replace with the detected browser binary name
-   # e.g. dia, google-chrome, chromium, brave-browser
-   <browser-binary> 'chrome://inspect/#remote-debugging'
-
-   # Windows (PowerShell)
-   Start-Process <browser-binary> 'chrome://inspect/#remote-debugging'
-   ```
-   Only macOS's AppleScript path auto-detects the running browser and avoids the profile picker; Linux/Windows need the binary name and may prompt the user to pick a profile first.
-2. **Tick "Discover network targets"** in the browser's inspect page, then click **Allow** when the browser prompts.
-3. Retry `await session.connect()`. If it picks the wrong browser, use `detectBrowsers()` + `{ profileDir }`; if it's still waiting on the Allow click, pass `timeoutMs: 30000` — see [Connecting](#connecting).
+1. Reuse the approved connection, or connect to the verified endpoint with
+   `autoAllow: false`. No window activation is required for normal CDP work.
+2. If debugging is unavailable, explain the exact connection gap. Enabling
+   debugging, opening browser settings or relaunching the user's browser needs
+   approval; do not perform those steps as an automatic repair.
+3. Login, 2FA, debugging Allow prompts and native consent remain human-owned.
+   Request the required intervention once, then verify the resulting connection.
+4. Preserve the profile and account boundary. A disposable isolated/headless
+   profile is appropriate for authorized tests; it does not inherit permission
+   to copy the user's cookies or run an authenticated task under another identity.
 
 ## Working with targets (tabs)
 
@@ -530,4 +508,5 @@ All paths are relative to `$SKILL_DIR` (the install path — see top of this doc
 ## Upstream
 
 Synced from [Tom's browser-harness-js](https://github.com/monotykamary/browser-harness-js/tree/12620e7e50c5eadc7dc078c210ec38a8d071d6cc/skills/cdp) at `12620e7e50c5eadc7dc078c210ec38a8d071d6cc`, SDK `0.16.0`.
-Local adaptations: upstream `SKILL.md` becomes this playbook `README.md`; setup and repository paths are portable; connection health/task-progress guidance is retained; the operating-loop mechanics match the current controller. The optional Pi connector lives in the upstream repository and is not installed by this sync. Updating these files neither switches a PATH symlink nor restarts an existing daemon.
+Local patch `0.16.1` disables OS consent keystrokes by default and tests that the default survives reconnects.
+Local adaptations: upstream `SKILL.md` becomes this playbook `README.md`; setup and repository paths are portable; connection health/task-progress guidance is retained; background-first routing and human-owned consent qualify the legacy connection/foreground recipes; the operating-loop mechanics match the current controller. The optional Pi connector lives in the upstream repository and is not installed by this sync. Updating these files neither switches a PATH symlink nor restarts an existing daemon.

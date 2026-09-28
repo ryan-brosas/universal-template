@@ -1,20 +1,17 @@
 ---
 name: engineering-pack
-description: "Use when implementing or reviewing code, debugging failures, designing APIs or architecture, choosing a project stack or language/framework practices, testing, refactoring, optimizing, or securing software. This pack owns implementation and code-quality decisions; combine it with relevant domain or delivery packs. Skip procedures for trivial edits."
+description: "Use when implementing or reviewing code, fixing bugs, testing, finding unused code or dependencies, refactoring, improving performance or security, or choosing APIs, architecture and language practices. Owns implementation and code quality; combine with domain or delivery packs for their parts. Skip procedures for trivial edits."
 invocation: entry
 ---
 
 # Engineering pack
 
-Start with the narrowest procedure for the active engineering problem and add
-another only for a distinct engineering subproblem; do not impose a workflow on
-trivial edits. Read only the references each needs. Resolve paths and helper
-commands from each selected procedure's directory, never from this router.
+Choose the matching procedure; resolve its paths from its own directory.
 
 - Clarify an idea before implementation:
   [brainstorming](../../knowledge/playbooks/brainstorming/README.md).
 - Explore a data model or state machine:
-  [prototype](../../knowledge/playbooks/prototype/README.md) (shared with design-pack).
+  [prototype](../../knowledge/playbooks/prototype/README.md) (design-pack owns this procedure).
 - Failure, broken tests or unexpected behavior:
   [debugging-and-error-recovery](../../knowledge/playbooks/debugging-and-error-recovery/README.md).
 - Installing, updating, hardening, or recovering a supervised local service:
@@ -38,6 +35,11 @@ commands from each selected procedure's directory, never from this router.
   [security-and-hardening](../../knowledge/playbooks/security-and-hardening/README.md).
 - Blocking disposable or bot signups on a product policy list:
   [signup-abuse-response](../../knowledge/playbooks/signup-abuse-response/README.md).
+- Unused exports, files, dependencies or duplicate code in JS/TS:
+  [fallow](../../knowledge/playbooks/fallow/README.md) when available, alongside
+  source and consumer inspection.
+- Review a patch or investigate over-engineering:
+  [code-review-and-quality](../../knowledge/playbooks/code-review-and-quality/README.md).
 - Simplifying working code:
   [code-cleanup](../../knowledge/playbooks/code-cleanup/README.md).
 - Language/framework standards: select each materially applicable

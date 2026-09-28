@@ -19,12 +19,14 @@ inventing CI or claiming a clean full cycle.
    gates on the committed tree and `git diff --check <base>...HEAD` (merge base; the
    comparison rule lives in `../git-workflow-and-versioning/README.md`). The pre-PR
    lane (`../pre-pr-validation/README.md`) runs before every push. A red local gate
-   or a BLOCKED verdict blocks push.
+   or a local BLOCKED verdict blocks push. The native Sourcebot review follows
+   publication; a pending bot review must not deadlock the push needed to obtain it.
 2. Load `../push-pr/README.md` and use its evidence, template, PR creation/update,
    and metadata procedure. Shared command/auth mechanics belong to
    [GitHub CLI](../github-cli/README.md); do not duplicate them here.
-3. Watch required CI to a final state. Read review findings, not just review-bot
-   status. For each feedback cycle, use
+3. Watch required CI to a final state and complete Sourcebot patch review through
+   `../sourcebot/references/review-workflow.md`. Read review findings, not just
+   review-bot status. For each feedback cycle, use
    `../push-pr/references/review-threads.md`: verify findings against source, fix
    and test valid issues, commit/push, reply in-thread, then resolve appropriately.
    Rebut invalid findings with evidence in-thread; leave them open for reviewer
@@ -33,7 +35,8 @@ inventing CI or claiming a clean full cycle.
    Repeat verification after every fix; stop and report findings requiring a
    human decision.
 5. Merge only with `mergeStateStatus: CLEAN`, green local gates and required CI,
-   and every review thread resolved. `CLEAN` alone is not proof of passing CI;
+   completed Sourcebot review for the current PR base/head, and every review thread
+   resolved. `CLEAN` alone is not proof of passing CI;
    verify the expected checks on the head being merged through
    `../push-pr/references/ci-and-observation.md`. Target the repository explicitly
    and use `gh pr merge <n> --repo <owner/repo> --match-head-commit <sha>` with the

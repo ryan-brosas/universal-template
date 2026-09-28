@@ -1,126 +1,69 @@
 ---
 title: documentation-and-adrs
-summary: Use when writing technical documentation, Architecture Decision Records (ADRs), API docs, or project READMEs, covers documentation structure, ADR format, and keeping docs in sync with code
+summary: Use when writing technical documentation, ADRs, API docs or project READMEs; choose the audience and document type, preserve project conventions, and verify claims against current behavior.
 kind: playbook
 ---
 
+# Documentation and ADRs
 
-# Documentation & ADRs
+Document what a reader needs to understand, use or maintain the system. Reuse
+existing documents and conventions rather than creating a second inventory.
+Ephemeral discussion belongs in the conversation unless a durable record serves
+a concrete reader or recovery need.
 
-## Core Principle
+## Choose the document
 
-Docs live at one level each and stay in sync with code: doc-as-code, updated in the same PR as the change. Stale doc = no doc; a wrong doc is worse than no doc.
+- **README:** what the project is, who it serves and how to get started.
+- **Architecture:** system boundaries, responsibilities and consequential flows.
+- **Guide or API reference:** completing a task or using a contract.
+- **Runbook:** diagnosing and operating a system, with safe commands and recovery.
+- **ADR:** why a consequential decision was made and when it should be revisited.
 
-## When to Use
+These are responsibilities, not a mandatory directory tree. Keep the project's
+existing locations and formats unless changing them is part of the task.
 
-Project docs (README, contributing, onboarding); real architectural decisions (ADR); API docs; design docs that outlive the conversation; postmortems; runbooks.
+## Record a decision when the rationale matters
 
-## When NOT to Use
+An ADR is useful when genuine alternatives had material trade-offs and future
+maintainers would otherwise lose the rationale. Do not write one for every
+implementation choice or fill a template merely because it exists.
 
-Doc is a code comment; no real decision was made; "let me document this" without audience; ephemeral context (use chat).
-
-## Doc Hierarchy
-
-```
-README.md          ← first thing. What is this, who is it for, how to use it.
-ARCHITECTURE.md    ← system shape, modules, data flow.
-docs/
-  adr/             ← WHY we chose X over Y.
-  api/             ← API reference.
-  guides/          ← task-oriented.
-  runbooks/        ← operational.
-  postmortems/     ← incident retrospectives.
-```
-
-Don't mix levels. A guide is not an ADR. A runbook is not a guide.
-
-## ADR Format
+A structured starting point, when the project has no preferred format:
 
 ```markdown
 # ADR-NNN: Title
 
 **Status:** proposed | accepted | deprecated | superseded by ADR-XXX
 **Date:** YYYY-MM-DD
-**Context:** [What is the situation? What forces are at play?]
-**Decision:** [What did we choose?]
-**Consequences:** [What becomes easier? What becomes harder? What did we give up?]
-**Alternatives considered:** [What else was on the table, and why not?]
+**Context:** Situation, constraints and decision drivers.
+**Decision:** Chosen direction and scope.
+**Consequences:** Benefits, costs and remaining risks.
+**Alternatives considered:** Credible options and why they were not chosen.
 ```
 
-**Context** and **Consequences** are the most-skipped and most-load-bearing. Without them, the next person can't tell if the decision still applies.
+A small decision can use prose instead of headings, but retain enough context,
+consequences and alternatives for a reader to judge whether it still applies.
+Do not mark a proposed decision accepted without agreement.
 
-## When to Write an ADR
+## Write and maintain
 
-- Two+ viable options, with real trade-offs.
-- Hard to reverse.
-- Will be questioned later.
-- Affects system shape, not just implementation detail.
+1. Identify the audience, task and authoritative source. Read the relevant code,
+   current interface or operating evidence before documenting behavior.
+2. Explain the non-obvious parts. Link existing reference material rather than
+   copying facts that will drift. Keep commands, identifiers and quotations exact.
+3. Update affected documentation with the behavior change. Preserve useful
+   rationale when retiring obsolete instructions.
+4. Verify the changed claims and examples using the relevant existing checks or
+   safe execution path. Distinguish tested instructions from untested examples;
+   do not install, reset or publish merely to exercise a document.
 
-## When NOT to Write an ADR
+Age alone does not make a document wrong. Correct or remove content because its
+claims are obsolete, misleading or no longer useful, not because it has gone six
+months without edits.
 
-- One viable option (just the way it is).
-- Implementation detail (variable name, function sig).
-- Easy to reverse (do it; document in code).
-- No real trade-off.
+## Review the result
 
-## Workflow
-
-1. Pick the level first (Doc Hierarchy), a guide is not an ADR, a runbook is not a guide.
-2. Write an ADR only when two+ viable options carry real trade-offs; otherwise document in code or plan.
-3. Update the doc in the same PR as the code change (doc-as-code).
-4. On review, delete or update anything stale, doc rot is 6+ months untouched.
-
-## Keeping Docs in Sync
-
-- Doc-as-code: docs live in the same repo, same review process.
-- Update on the same PR as the code change.
-- Stale doc = no doc. A wrong doc is worse than no doc.
-- Doc rot = 6+ months untouched. Delete or update.
-
-## README Anatomy
-
-```markdown
-# Project Name
-[One sentence: what is this?]
-
-## Why
-[One paragraph: why does this exist? What problem does it solve?]
-
-## Install
-[Exact commands. Tested on a fresh machine.]
-
-## Usage
-[Smallest working example.]
-
-## Architecture
-[One diagram or paragraph. Link to ARCHITECTURE.md for details.]
-
-## Contributing
-[Link to CONTRIBUTING.md. Or inline if small.]
-
-## License
-[SPDX identifier.]
-```
-
-## Common Mistakes
-
-ADR for every choice (noise); doc that's just code comments copy-pasted; doc written once and never updated; "comprehensive" docs no one reads; ADR without alternatives; runbooks that assume context; no table of contents; mixing levels; outdated examples; missing "Why" section.
-
-## Red Flags
-
-Doc rot (> 6 months); ADR without context or consequences; runbook without commands; README without "Why" or "Install"; no link between doc and code; doc only in chat (lost); "we'll document later"; examples that don't run.
-
-## Anti-Patterns
-
-**ADR for trivial**; **doc without audience**; **stale doc**; **"comprehensive" wall**; **no link to code**; **ADR with no alternatives**.
-
-## Verification
-
-- README has "Why" and tested "Install" commands (tested on a fresh machine).
-- ADR carries Context, Decision, Consequences, and Alternatives considered.
-- Docs link to code; examples run; nothing is 6+ months untouched without delete-or-update.
-
-
-## References
-
-N/A, no reference files; all formats and anatomy templates are inline in this skill.
+Can the intended reader complete the task or understand the decision? Are links,
+commands and claims current? Is each fact maintained by one owner? Report
+unverified examples and environmental requirements rather than implying a fresh
+installation or complete workflow was tested when it was not.

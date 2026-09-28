@@ -66,9 +66,13 @@ Missing pinned-toolchain verification still blocks delivery of sandbox changes.
 
 Check changed-line whitespace with `git diff --check` against the PR base.
 
-Every PR runs the review lanes in `knowledge/playbooks/pre-pr-validation/README.md`
-(project gates, CodeRabbit, IDE semantics, baseline and impact analysis, AI-slop
-rejection). A lane that cannot run is a recorded blocker, not a skip.
+Every PR runs the local lanes in `knowledge/playbooks/pre-pr-validation/README.md`
+(project gates, IDE semantics, baseline and impact analysis, AI-slop rejection).
+After publication, Sourcebot's native bot reviews the PR through
+`knowledge/playbooks/sourcebot/references/review-workflow.md`; CodeRabbit is opt-in
+only. Record local readiness and bot status separately: bot review is pending
+before a PR exists, and a missing or failed bot review blocks merge, not the
+authorized publication needed to obtain it.
 
 ## Pull requests
 

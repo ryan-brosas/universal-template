@@ -1,16 +1,26 @@
 # Connection & Tab Visibility
 
-## Just call `session.connect()`
+## Reuse the approved connection
 
-No args required. **Preferred pipe:** the unpacked `knowledge/playbooks/cdp/extension` MV3 worker. It dials `ws://127.0.0.1:9876/extension` and relays CDP through `chrome.debugger`. If that socket is already up (or appears within 500ms), `connect()` uses it and never touches remote debugging. The worker hardcodes port 9876; if you set `CDP_REPL_PORT`, change `DEFAULT_PORT` in `extension/sw.js` to match.
-
-**Fallback:** scan OS-specific browser-data dirs for every running Chromium-based browser (Chrome, Chromium, Edge, Brave, Arc, Vivaldi, Opera, Comet, Canary, Dia, Helium, Aside — and any other Chromium fork via a bounded fallback scan), read each one's actual debug port from its `DevToolsActivePort` file, and pick the most-recently-launched one whose WebSocket accepts. No hardcoded port: Chrome often listens on 9222, but Aside and others use ephemeral ports (e.g. 52860), so auto-detect reads the real port instead of assuming. The host is always loopback (`127.0.0.1`) for a local browser. Dead ports and permission-denied (403) candidates fall through in <100ms each, so the loop is fast.
+Normal CDP work does not need desktop focus. Reuse the authorized connection;
+for a new one, pin the approved profile/endpoint and disable legacy automatic
+consent keystrokes. A discovered browser is not automatically the right account.
 
 ```js
-await session.connect()                                 // extension, then remote-debugging auto-detect
-await session.connect({ transport: 'extension' })       // extension only — no fallback
-await session.connect({ transport: 'cdp' })             // skip the extension
+await session.connect({ profileDir: approvedProfileDir, autoAllow: false })
+// Or use the approved endpoint directly:
+await session.connect({ wsUrl: approvedWsUrl, autoAllow: false })
+// Only after verifying the extension's browser identity:
+await session.connect({ transport: 'extension', autoAllow: false })
 ```
+
+The SDK also supports extension-first auto-detection followed by a scan of
+running Chromium debugging profiles. That scan can select the most recently
+launched candidate; use it only when the task's approved browser is unambiguous.
+`detectBrowsers()` supplies candidate metadata before connecting. The extension
+worker uses `ws://127.0.0.1:9876/extension`; changing a daemon port alone does not
+move that worker. Do not provision or reconfigure a browser just to repair an
+automation connection without approval.
 
 `browser-harness-js --status` includes `transport` (`"extension"` | `"cdp"` | `null`) and `extension` (worker attached, even if the session is still on CDP).
 
@@ -39,7 +49,9 @@ const browsers = await detectBrowsers()
 
 ### Explicit forms (override auto-detect)
 
-Use only when auto-detect picks the wrong browser or you already know the destination.
+Prefer these forms when the approved destination is known, before connecting.
+Do not first attach to an arbitrary browser and discover afterward that its
+profile or account was outside the task.
 
 | Form | When |
 |---|---|
@@ -49,8 +61,8 @@ Use only when auto-detect picks the wrong browser or you already know the destin
 | `{ wsUrl }` | You already have `ws://…/devtools/browser/<uuid>`. |
 
 ```js
-await session.connect({ profileDir: '/Users/<you>/Library/Application Support/Google/Chrome' })
-await session.connect({ wsUrl: 'ws://127.0.0.1:9222/devtools/browser/<uuid>' })
+await session.connect({ profileDir: approvedProfileDir, autoAllow: false })
+await session.connect({ wsUrl: approvedWsUrl, autoAllow: false })
 ```
 
 ### Timeouts and the Allow popup
@@ -63,10 +75,14 @@ that an approval survives a browser restart or a new connection.
 Per-candidate WS-open timeout defaults to **5s**. A live browser either opens or closes the connection within ~100ms, so 5s is always enough — unless the user has to click **Allow** on Chrome's remote-debugging popup. In that case, pass `timeoutMs: 30000` to give them time:
 
 ```js
-await session.connect({ profileDir, timeoutMs: 30_000 })
+await session.connect({ profileDir, autoAllow: false, timeoutMs: 30_000 })
 ```
 
-**Dia's Allow prompt is auto-dismissed (macOS, on by default).** Dia shows an `Allow debugging connection?` prompt (Return = Allow) on that transport. The SDK auto-dismisses it via `osascript` when the WS-open stalls; no-op for every other browser. Opt out with `autoAllow: false` or `--no-auto-allow`. If `connect()` stalls past `timeoutMs`, the user likely needs to grant macOS Accessibility to `node` (see the README).
+**Keep Dia prompt automation disabled.** The maintained SDK defaults to
+`autoAllow: false`. Older installations may enable the legacy macOS `osascript`
+Return-key helper, so retain the explicit false option (or `--no-auto-allow`)
+when connecting. Leave the debugging Allow prompt to the user; do not use OS
+keystrokes or request Accessibility permission to remove human-owned consent.
 
 If `session.connect()` reports `No detected browser accepted a connection`, it means every browser with `DevToolsActivePort` answered 403 or closed without opening — most likely the user hasn't clicked Allow yet. Ask them to, then retry.
 
@@ -103,24 +119,27 @@ const realTabs = targetInfos.filter(t =>
 )
 ```
 
-If no real pages exist yet, create one instead of attaching to nothing:
+When the task needs a new page, create an owned background target rather than
+attaching to an arbitrary first tab or a browser-internal popup:
 
 ```js
-const tabs = await listPageTargets()
-let targetId = tabs[0]?.targetId
-if (!targetId) {
-  ({ targetId } = await session.Target.createTarget({ url: 'about:blank' }))
-}
-await session.use(targetId)
+const { targetId } = await session.Target.createTarget({ url: 'about:blank', background: true })
+const { sessionId } = await session.Target.attachToTarget({ targetId, flatten: true })
+// Route every page call through cdp(sessionId, method, params).
 ```
 
 ## Startup sequence
 
-1. `await session.connect()` — auto-detect the running browser.
-2. `const tabs = await listPageTargets()` — see what real pages exist.
-3. Match the intended tab by URL/title, then `await session.use(targetId)` — route Page/DOM/Runtime/Network calls to that target.
-4. If visible interaction is needed, `await session.Target.activateTarget({ targetId })` — bring that tab to front.
-5. Enable the domains you need: `await session.Page.enable()`, `await session.Network.enable({})`, etc.
+1. Reuse the authorized connection, or select it explicitly with `autoAllow: false`.
+2. Identify the exact task-owned or explicitly authorized target by id/URL/account.
+   If none exists, create an owned target with `background: true`.
+3. Attach with `flatten: true` and keep its `sessionId` on each call. Single-task
+   `session.use()` is routing only; avoid its shared cursor for concurrent work.
+4. Enable only the domains the task needs. For trusted guarded input, the
+   controller enables focus emulation inside the target, not desktop activation.
+5. Perform and verify the requested work without asking the user to hold focus.
+   A proven foreground-only step requires separate permission; auth/consent
+   remains human-owned.
 
 ## Health versus task progress
 
@@ -128,8 +147,10 @@ await session.use(targetId)
 Neither proves useful browser work. When the complaint is lack of progress, inspect
 the current target and perform the next requested task, not an arbitrary scroll or
 activation of an already-open tab. Background DOM reads are useful for extraction;
-use rendered previews for visual judgments. Bring the browser forward when the task
-requires visible interaction, not as a substitute for an outcome.
+use targeted screenshots/rendered previews for visual judgments without assuming
+that desktop activation is necessary. If the workflow truly cannot render or
+interact in the approved background context, explain the evidence and ask for
+the smallest foreground exception; do not steal focus as a progress signal.
 
 A successful CDP action acknowledges dispatch, not necessarily its rendered effect.
 Verify the relevant postcondition (URL, content, screenshot, or scroll position);
@@ -164,32 +185,22 @@ When the user says "the first tab I can see", do NOT trust the order of `Target.
 
 `Target.activateTarget` only switches to a targetId you already know — it cannot resolve "leftmost tab".
 
-## Bringing the browser to front
+## Explicit foreground exception
 
-The `<browser-app>`/`<browser-binary>` is the one `session.connect()` attached to — don't hardcode it. On macOS the app name occasionally differs from the binary (Brave is `Brave Browser`); detect the running Chromium app name first if unsure:
+Only bring a browser forward when the user requests visible presentation or
+authorizes a demonstrated foreground-only step. Match the exact approved browser
+and target first; broad window-name searches and the frontmost browser are not
+reliable identity checks.
 
-```bash
-# macOS — print the running Chromium app name (frontmost, else first running)
-osascript \
-  -e 'set apps to {"Dia","Google Chrome","Chromium","Microsoft Edge","Brave Browser","Arc","Vivaldi","Opera","Comet","Helium","Aside","Google Chrome Canary"}' \
-  -e 'tell application "System Events"' \
-  -e 'set frontApp to name of first application process whose frontmost is true' \
-  -e 'if frontApp is in apps then return frontApp' \
-  -e 'repeat with a in apps' \
-  -e 'if exists process a then return a' \
-  -e 'end repeat' \
-  -e 'end tell'
-
-# macOS — prefer AppleScript over `open -a` (reuses current profile, avoids the profile picker)
-osascript -e 'tell application "<browser-app>" to activate'
-
-# Linux (X11) — use wmctrl or xdotool
-wmctrl -a '<browser-binary>'
-xdotool search --name '<browser-binary>' windowactivate
-
-# Windows (PowerShell)
-powershell -NoProfile -Command "(New-Object -ComObject WScript.Shell).AppActivate('<browser-binary>')"
+```js
+// Only after explicit permission to show this particular target:
+await session.Target.activateTarget({ targetId: approvedTargetId })
 ```
+
+`Page.bringToFront` and OS helpers such as `osascript`, `wmctrl`, `xdotool` or
+`AppActivate` are also foreground effects, not routine connection repairs.
+Never use them to answer a debugging Allow prompt, log in, or approve consent.
+A background-input failure alone is not permission for any of these actions.
 
 ## Parallel work, background tabs, and desktop focus
 
@@ -223,10 +234,12 @@ Guarded actions use explicit `{scope:{sessionId}}` and never the mutable cursor.
 The controller's per-scope queue serializes mutations inside one Session; it is
 not a browser-wide lock across processes, and raw `cdp()` calls bypass it.
 
-Because it does not need to steal the desktop, this path is the right default for
-long or unattended runs. Verify a task actually landed (read back state or
-screenshot) rather than treating a dispatch receipt, or a `target.activateTarget`
-that a page's own script performs, as proof of an effect.
+Use this background pattern whenever CDP is the selected transport, including
+long or unattended runs. It does not replace the normal Beacon routing rule.
+A separate profile does not authorize copying login state, and an isolated
+headed window may still steal focus; use an approved headless browser when
+zero visible-window interaction is required and supported. Verify actual state
+or a targeted screenshot rather than treating dispatch or activation as success.
 
 ## WebSocket payload limits — any large CDP response can close the socket
 

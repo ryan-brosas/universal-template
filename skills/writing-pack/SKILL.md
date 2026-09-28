@@ -6,9 +6,8 @@ invocation: entry
 
 # Writing pack
 
-Start with the narrowest procedure for the requested writing outcome and add
-another only for a distinct content need, not every stylistic guide. Resolve
-relative references from each selected procedure's directory.
+Choose the matching writing outcome, not every stylistic guide. Resolve each
+procedure's paths from its own directory.
 
 - Case-study, customer-story, success-story or portfolio proof pages:
   [case-study-pages](../../knowledge/playbooks/case-study-pages/README.md). This

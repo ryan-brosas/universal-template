@@ -28,7 +28,7 @@ digraph when_flowchart {
 - Linear instructions → Numbered lists
 - Labels without semantic meaning (step1, helper2)
 
-See @graphviz-conventions.dot for graphviz style rules.
+When a flowchart helps, see [diagram conventions](../graphviz-conventions.dot).
 
 ## Code Examples
 

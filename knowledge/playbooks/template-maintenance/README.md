@@ -31,8 +31,10 @@ from source bytes, filesystem state, Git state, or runtime output.
    configs sit outside Git and are unrecoverable once overwritten. Use existing
    focused tests when executable helpers change; no catalog generation or custom
    publication gate is required.
-5. Separate hard failures from judgment calls. Fix objective failures; explain
-   semantic tradeoffs with evidence instead of inventing a regex proxy.
+5. Review skill and system-instruction changes directly. Do not create
+   validation scripts, compliance gates or staged routing demonstrations for
+   this work. Fix observed failures and explain semantic tradeoffs with evidence;
+   metadata checks cannot establish whether the agent uses guidance correctly.
 6. Preserve unrelated files and report the commands that actually ran and their
    real results.
 7. Recommend deleting a check when it duplicates reliable model review and has

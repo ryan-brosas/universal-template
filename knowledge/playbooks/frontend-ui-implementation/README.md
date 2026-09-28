@@ -1,6 +1,6 @@
 ---
 title: frontend-ui-implementation
-summary: Use when implementing or reviewing production frontend UI details—typography, font sizing, spacing, forms, validation, navigation, loading and empty states, visual hierarchy, responsive layout repair, shared typography ownership, tables, icons, charts, existing-video integration, and interaction feedback—from HTML/CSS or component code.
+summary: Use when implementing or reviewing production frontend UI details—typography, font sizing, spacing, forms, validation, navigation, loading and empty states, visual hierarchy, responsive layout repair, shared typography ownership, cross-page semantic consistency, tables, icons, charts, existing-video integration, and interaction feedback—from HTML/CSS or component code.
 kind: playbook
 ---
 
@@ -20,7 +20,7 @@ Translate interface intent into explicit tokens, semantic markup, complete compo
 1. **Inspect project truth.** Identify framework, browser support, tokens, component library, typefaces and available weights, reset styles, breakpoints, themes, localization, and existing component patterns. Reuse them before inventing values.
 2. **Choose the relevant branch.** Load only the needed reference:
    - `references/typography-and-content.md`
-   - [Responsive layout and typography repair](references/responsive-typography-repair.md): cramped tablet/intermediate layouts, scattered type overrides, or text that ignores shared roles despite passing checks.
+   - [Responsive layout and typography repair](references/responsive-typography-repair.md): cramped intermediate layouts, scattered type overrides, or cross-page inconsistencies despite centralized CSS and passing token checks.
    - `references/forms-and-validation.md`
    - `references/layout-navigation-and-attention.md`
    - `references/visual-system-and-data.md`

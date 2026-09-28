@@ -6,11 +6,9 @@ invocation: entry
 
 # Agent tooling pack
 
-These are optional tool-specific procedures, not the default engineering workflow.
-Start with the narrowest matching procedure and add another only for a distinct
-active integration problem. Resolve each procedure's helpers and references from
-its own directory. Installed runtime guidance and live tool schemas own the
-current API; do not load a different kernel's instructions.
+Choose the matching integration procedure, not a default engineering workflow;
+resolve its paths from its own directory. Installed runtime guidance and live
+schemas own the API; do not load a different kernel's instructions.
 
 - AppFlowy workspace organization, numbered pages, native calendars, record updates or recovery:
   [appflowy-workspace](../../knowledge/playbooks/appflowy-workspace/README.md).
@@ -28,6 +26,9 @@ current API; do not load a different kernel's instructions.
   [typed-judgment-workflows](../../knowledge/playbooks/typed-judgment-workflows/README.md).
 - Agent-team delegation, durable coordination, task learning, and workspace moves:
   [autonomous-agent-teams](../../knowledge/playbooks/autonomous-agent-teams/README.md).
+
+For judge calibration or other distinct integration questions, select additional
+[agent-tooling topics](references/topics.md); do not load the index recursively.
 
 The host chooses which model runs. This pack does not rank models or route tasks.
 Do not install or configure an external planner just to answer an ordinary

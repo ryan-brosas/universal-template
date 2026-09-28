@@ -1,6 +1,6 @@
 ---
 title: paper-design
-summary: Use when working with Paper's documented features, themes and CSS-variable tokens, Figma or HTML paste, SVG editing, MCP setup, Snapshot, or checking new Paper capabilities. Supplies platform mechanics; pencil owns exact Figma transfer and paper-component-consistency owns reusable composition.
+summary: Use when implementing Paper designs in code, working with Paper's documented features, themes and CSS-variable tokens, Figma or HTML paste, SVG editing, MCP setup, Snapshot, or checking new Paper capabilities. Owns the live Paper handoff; pencil owns exact Figma transfer and paper-component-consistency owns reusable composition.
 kind: playbook
 ---
 
@@ -16,7 +16,8 @@ component-management procedure. Load only the relevant reference.
 |---|---|
 | Theme UI, CSS variables, aliases, code synchronization, modes | `references/themes-and-tokens.md` |
 | Figma clipboard, images, slots, translation losses, HTML | `references/figma-and-html-import.md` |
-| Agent/CLI connection, tool selection, safe batching, code handoff | `references/mcp-and-handoff.md` |
+| Paper-to-code, agent ignoring the live design, implementation from Paper | [Live-source-first handoff](references/mcp-and-handoff.md#paper-to-code-live-source-first) |
+| Agent/CLI connection, tool selection, safe batching | `references/mcp-and-handoff.md` |
 | SVG editing, Snapshot/CORS, shortcuts, troubleshooting | `references/canvas-and-support.md` |
 | New capabilities or repeated transfer problems | `references/improvement-loop.md` |
 | Full docs coverage and source freshness | `references/index.md` |

@@ -32,13 +32,16 @@ List only checks actually run, with results:
 
 - unit / integration tests
 - compiler / typecheck / lint / build
-- CodeRabbit review status and finding dispositions
+- Sourcebot bot review status, reviewed PR/base/head, completion evidence and finding dispositions
 - JetBrains inspections or MCP Steroid semantic verification
 - Sourcebot baseline challenge (when applicable) and code-graph impact analysis
 - AI-slop and complexity review of the diff (project artifact gate when present)
 - manual runtime verification, benchmark, CI
 
 Local verification: state what PASSED. CI: PENDING until it runs.
+Sourcebot bot review: PENDING until the published PR revision is reviewed; record
+BLOCKED for missing access, failures or unverifiable completion. No comments does
+not prove a completed review.
 
 If nothing applies: N/A
 

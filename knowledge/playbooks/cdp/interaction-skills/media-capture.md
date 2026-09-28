@@ -41,12 +41,22 @@ await session.Page.addScriptToEvaluateOnNewDocument({ source: `
 
 Inject this **before** `Page.navigate`. If you inject after, the player has already created its `SourceBuffer` and you miss the init segment.
 
-## Foreground tab — media needs the page to actually play
+## Media playback — an explicit isolation or focus exception
 
-`{ background: true }` throttles timers and breaks autoplay on some players, and a `MediaSource` the page never feeds captures nothing. Use a foreground tab (omit `background: true`, or `Target.activateTarget` after create). Then nudge the player to play muted so it fetches+appends every segment:
+A `MediaSource` the player never feeds captures nothing. Some players throttle or
+block autoplay in background targets; that does not authorize taking over the
+user's desktop. Prefer a verified approved isolated/headless browser for capture.
+An active target inside a headless browser is not a visible desktop window.
+Do not copy cookies/profile data or change the approved browser to make this work.
+
+The recipe below creates an active target. Run it only after verifying an
+approved non-disruptive browser, or after the user explicitly permits the visible
+foreground step. Otherwise report the limitation and ask; do not silently
+activate an existing user window or tab. Play muted and verify actual appended
+bytes rather than treating `play()` as success:
 
 ```js
-const t = await session.Target.createTarget({ url: 'about:blank' })   // foreground — autoplay needs it
+const t = await session.Target.createTarget({ url: 'about:blank' })   // approved isolated browser or explicit foreground permission only
 const { sessionId } = await session.Target.attachToTarget({ targetId: t.targetId, flatten: true })
 await cdp(sessionId, 'Page.addScriptToEvaluateOnNewDocument', { source: HOOK })
 await cdp(sessionId, 'Page.navigate', { url: WATCH_URL })

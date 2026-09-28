@@ -10,7 +10,8 @@ universal benchmark suite, or a runtime scoring engine.
 Describe the task and the missing capability in a few sentences:
 
 - What does the model repeatedly get wrong or rediscover without this skill?
-- What unique context or shortcut does it supply? What work should disappear?
+- What missing task knowledge does it supply? Which repeated investigation does
+  it make unnecessary without skipping substantive work?
 - Which choices remain with the model and the project?
 - Which constraints address demonstrated expensive failures rather than taste?
 
@@ -58,12 +59,15 @@ high-cost failure; fewer calls do not excuse lower quality.
 | Context | Correct answer with less source exploration |
 | Procedure | Equal or better work with fewer turns or errors |
 | Guardrail | Expensive failure prevented without blocking legitimate work |
-| Router | Correct destination with less context and no harmful collisions |
+| Router | Relevant guidance read and used in an ordinary task, without named invocation or unrelated loads |
 | Simple reference | Relevant information found and used; current links and facts |
 | Deterministic helper | Fixture/unit/integration execution, including its caller |
 
-Simple references and metadata edits need no behavioral A/B ritual. For a
-load-bearing guardrail, `testing-methodology.md` covers targeted pressure tests.
+A prompted list of skill names is not a routing evaluation. Observe actual work
+and inspect the reads and decisions it required; do not substitute a scripted
+selector, compliance check or staged demonstration. Simple references and
+metadata edits need direct review, not a behavioral A/B ritual. For a load-bearing
+guardrail, `testing-methodology.md` covers targeted pressure tests.
 
 ## Decide, do not accumulate rules
 

@@ -1,8 +1,6 @@
 # Engineering topics
 
-Start with the narrowest matching procedure. Load additional procedures only for
-distinct active subproblems; each summary and body owns its detailed contract.
-This is a routing index, not a reading list. Known procedure paths can be opened directly.
+Navigation only: open matched procedures, not every link.
 
 - [api-and-interface-design](../../../knowledge/playbooks/api-and-interface-design/README.md)
 - [authoritative-signal-surfacing](../../../knowledge/playbooks/authoritative-signal-surfacing/README.md)
@@ -17,8 +15,7 @@ This is a routing index, not a reading list. Known procedure paths can be opened
 - [deprecation-and-migration](../../../knowledge/playbooks/deprecation-and-migration/README.md)
 - [fallow](../../../knowledge/playbooks/fallow/README.md)
 - [false-green-gates](../../../knowledge/playbooks/false-green-gates/README.md)
-- [farmed-test-harness](../../../knowledge/playbooks/farmed-test-harness/README.md)
-- [grill-me](../../../knowledge/playbooks/grill-me/README.md)
+- [grill-me](../../../knowledge/playbooks/grill-me/README.md) — stress-test a proposal's assumptions and failure cases before implementation.
 - [gpuix-hit-testing](../../../knowledge/playbooks/gpuix-hit-testing/README.md)
 - [improve-codebase-architecture](../../../knowledge/playbooks/improve-codebase-architecture/README.md)
 - [local-service-durability](../../../knowledge/playbooks/local-service-durability/README.md)
