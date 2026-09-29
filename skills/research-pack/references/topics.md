@@ -12,7 +12,7 @@ Navigation only: open matched procedures, not every link.
 - [grill-with-docs](../../../knowledge/playbooks/grill-with-docs/README.md) — check a plan against existing glossary terms, ADRs and code; extends engineering's proposal scrutiny.
 - [gsearch](../../../knowledge/playbooks/gsearch/README.md)
 - [math-schema](../../../knowledge/playbooks/math-schema/README.md)
-- [mcp-steroid](../../../knowledge/playbooks/mcp-steroid/README.md)
+- [mcp-steroid](../../../knowledge/playbooks/mcp-steroid/README.md) — opt-in JetBrains navigation, refactoring, inspections and debugging
 - [oracle-consult](../../../knowledge/playbooks/oracle-consult/README.md)
 - [pdf-extract](../../../knowledge/playbooks/pdf-extract/README.md)
 - [reference-driven-development](../../../knowledge/playbooks/reference-driven-development/README.md)

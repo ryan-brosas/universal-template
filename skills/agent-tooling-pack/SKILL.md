@@ -1,6 +1,6 @@
 ---
 name: agent-tooling-pack
-description: "Use for Pi/Fabric agent integrations, provider authentication and model catalogs, durable-actor capability troubleshooting, bounded Jev judgments, work-time tracking, or AppFlowy workspace organization, calendars and record updates through CLI/MCP. Owns agent-runtime and tool-integration contracts; combine with engineering for code, writing for content or research for external evidence. Ordinary planning alone does not trigger it."
+description: "Use for Pi/Fabric agent integrations, Pi package publishing or missing pi.dev listings, provider authentication and model catalogs, managed-agent RPC failures, durable-actor capability troubleshooting, bounded Jev judgments, work-time tracking, or AppFlowy workspace organization, calendars and record updates through CLI/MCP. Owns agent-runtime and tool-integration contracts; combine with engineering for code, writing for content or research for external evidence. Ordinary planning alone does not trigger it."
 invocation: entry
 ---
 
@@ -12,10 +12,12 @@ schemas own the API; do not load a different kernel's instructions.
 
 - AppFlowy workspace organization, numbered pages, native calendars, record updates or recovery:
   [appflowy-workspace](../../knowledge/playbooks/appflowy-workspace/README.md).
-- Pi package manifests, extensions, packaging and delivery:
+- Pi package manifests, extensions, packaging or missing pi.dev listings:
   [pi-package-development](../../knowledge/playbooks/pi-package-development/README.md).
 - Work-time extension deployment, interval evidence and confirmed hours drafts:
   [work-time-tracking](../../knowledge/playbooks/work-time-tracking/README.md).
+- Isolated agent workers timing out, truncating replies or rejecting background jobs:
+  [managed-agent-runtime-diagnostics](../../knowledge/playbooks/managed-agent-runtime-diagnostics/README.md).
 - Provider authentication, model catalogs and runtime behavior:
   [pi-provider-contracts](../../knowledge/playbooks/pi-provider-contracts/README.md).
 - Fabric execution, tool availability, durable actors, and transactional

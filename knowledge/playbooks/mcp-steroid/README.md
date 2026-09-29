@@ -1,174 +1,87 @@
 ---
 title: mcp-steroid
-summary: Use for the mandatory pre-PR IDE quality lane, or when an MCP-capable coding agent needs JetBrains semantic navigation, refactoring, inspections, tests, debugging, or a live-file witness.
+summary: Use for explicitly opted-in JetBrains semantic navigation, refactoring, inspections or debugging. Not a default verification dependency or a required pre-PR lane.
 kind: playbook
 ---
 
-# MCP Steroid, JetBrains semantic layer
+# MCP Steroid
 
-## Core Principle
+## Scope
 
-JetBrains is a **semantic quality layer**, not a replacement for source reads,
-the compiler, or tests. The IDE has indexed the project: it answers usages,
-symbol resolution, types, inheritance, overrides, call hierarchy, inspections,
-and project-model questions precisely. Use it as a preflight before editing and
-as a targeted check after; keep the normal loop (inspect → implement →
-compiler/tests/runtime) intact.
+Steroid is an optional IDE integration, not a replacement for source reads,
+compilers or tests. Use it when the project or user opts in and the task needs
+symbol resolution, usages, call hierarchies, rename/move/signature refactoring,
+project-model diagnostics or debugging. A multilingual repository needs coverage
+from its relevant language tools; one IDE index does not establish that coverage.
 
-## When to Use / NOT
-
-- **Use when:** validating any PR through `../pre-pr-validation/README.md`; inspect
- every changed path even when the diff is small or contains only prose/configuration.
-- **Use when:** the question involves symbol resolution, types, usages,
- inheritance, overrides, call hierarchy, rename/move, change signature,
- inspections, project model, or debugger evidence.
-- **Use when:** IDE UI control or automated refactoring is needed. The user does
-  **not** need IntelliJ focused; a routed backend is enough.
-- **Use when:** Sourcebot's indexed revision is behind HEAD (or the PR branch is
-  unindexed) and you need a **live file witness** — read the bytes, do not treat
-  Steroid as a second code-graph. Freshness rules live in
-  [cross-repo-source](../cross-repo-source/README.md).
-- **NOT when:** the change is trivial and direct source, compiler and tests settle
- it, and you are not validating a PR.
-- **NOT when:** the IDE or backend is unavailable. Outside pre-PR validation, proceed
- with source, compiler and tests. During pre-PR validation, if no routed project path
- matches the repository, immediately notify the user of the exact repository path to
- open in IntelliJ (or a compatible JetBrains IDE with Steroid connected), then relist
- projects. The lane remains a recorded Blocker until the matching route is available.
-- **NOT when:** you need execution or orchestration, that is Fabric/agents;
- MCP Steroid is the semantic/IDE lane only.
+Do not activate it for routine edits, prose/configuration validation or merely
+because Sourcebot's index is stale: local file reads establish current bytes.
+If optional IDE evidence is unavailable, continue with sufficient local checks.
+If the task explicitly requires it, report the gap without silently substituting
+another project. [Activation](../../../mcp/catalog.md#optional-ide-integration)
+belongs in project configuration, not a universal PR checklist.
 
 ## Workflow
 
-1. **Inspect** the code: read the file, Fovea the working set, confirm the
- change boundary in source and tests.
-2. **JetBrains semantic preflight (when useful)**, confirm intent and blast
- radius with semantic evidence:
- - resolve symbols and types; walk call hierarchies; list overrides;
- - confirm no hidden callers before rename/move/signature changes;
- - run inspections over the target range to surface latent issues.
- Use it to steer the edit, not to skip reading the code.
-3. **Implement** the change with normal tools.
-4. **Targeted JetBrains semantic check**, inspect every changed path before a PR.
- For code, re-run usages, references or inspections on changed symbols and confirm
- no surprise callers. For prose/configuration, run applicable changed-file
- inspections and capture a live-file witness.
-5. **Compiler/tests/runtime**, compile, run the relevant test suite, and any
- runtime probe; this is the finish gate.
-6. **Finish**, report results; the compiler/tests/runtime verdict wins.
+1. Read the affected source and define the question the IDE should answer.
+2. Call `steroid_list_projects`; match the repository's path and retain its opaque
+   `project_name` routing key. Refresh it after a backend restart. Do not reuse a
+   similarly named project or confuse the display name with the routing key.
+3. If no route matches, report the missing project. Open it only within the
+   authorized IDE task. A routed headless backend is sufficient; do not require
+   desktop focus or a frontend window. Project routing is not proof of indexing:
+   await Maven/Gradle import when the next operation requires its semantic model.
+4. Discover current schemas and load only the relevant `mcp-steroid://` recipe.
+   Keep `smart_non_modal` for semantic work. Respect read/write actions, and use
+   `smartReadAction` for indexed reads. Do not bypass a blocked modal state to force
+   an inspection; pause for user interaction when necessary.
+5. Query or refactor the bounded symbols, then inspect the actual diff. Recheck
+   affected references/diagnostics where useful; no every-file IDE sweep is
+   required. Read the printed results from `steroid_execute_code`: a successful
+   call with no output does not establish the intended result.
+6. Run relevant compiler checks, tests and runtime probes. Report the IDE's actual
+   coverage and limitations separately from behavioral verification.
 
-## Batch inspection sweeps
+Use screenshots and input tools only for an authorized UI problem, not routine
+semantic work. No window-status gate is needed for headless inspections or VFS
+file reads. Repeated timeouts on a trivial script indicate a backend problem;
+stop retrying instead of spending several full request timeouts.
 
-Sweeping many files with `runInspectionsDirectly` is the highest-yield use of this
-lane, and a clean run over a real repository will not happen. Build the loop so one
-broken file costs one file:
+## Batch inspections, when warranted
 
-- **Crash-isolate every file.** A `try/catch` per path that prints `CRASHED: <message>`
-  and continues is the difference between a 142-file sweep finishing and the whole
-  script dying on file 3. Type-resolution faults (`ideGetElementType: Failed to find
-  RemoteNode parent`, `Parent job is Cancelling`) are transport failures, not
-  findings; when several files fail with the same message, treat the environment as
-  flaky and keep going.
-- **Read finding elements inside a read action.** `d.psiElement?.text` needs
-  `readAction { … }` even though it only reads, because inspection results resolve
-  their elements after the computation returns.
-- **Keep batches near 20-25 files.** One call over 43 files exceeded the MCP request
-  timeout; ~24 completed in minutes. Prefer several bounded calls to one maximal one.
-- **Make output findings-only.** Print `clean` per path and cap each path at a few
-  findings; this output is read by a model, not archived.
-- **Refresh the route at call time.** After any IDE restart, calls fail with
-  `project_name … is no longer present`. Read `steroid_list_projects` and pass the
-  key it returns instead of a remembered one; the backend name changes with it.
-- **Probe the channel before a large batch.** Run a trivial script
-  (`println("ok")`) first when the IDE may be restarting or reindexing. Repeated
-  timeouts on trivial code mean the backend is unavailable, not that inspections are
-  slow; resume the sweep later instead of spending several long timeouts.
-- **Expect modal dialogs.** While a modal IDE dialog is open, every remaining file
-  fails with `waitForSmartMode requires a non-modal IDE`. Leading the script with
-  `allowModalDialog()` resolves that (verified against IntelliJ 2026.2); the
-  per-file crash line is the resume point for a tail that still failed.
-- **Do not couple a sweep with evidence you need.** A long call that times out inside
-  a batched program can discard sibling results; run verification greps separately.
-- **Record partial coverage.** When the result carries `failedTools`, some inspections
-  never ran. Check those files another way instead of reading silence as clean.
-- **A ts-go-proxy fault does not end the run but buries the output.** On a type
-  resolution fault the plugin prints a multi-KB `IDE Exception Captured` block
-  inline (PSI dumps of the offending expression). Crash isolation survives it, and
-  the file often inspects cleanly on a retry, but later lines can fall outside a
-  bounded output view: re-read the tail before concluding a path was skipped.
-- **Tag your own output and filter it.** Prefix every line the script prints (`SW|…`)
-  and keep only those lines before reading the result. An inline exception dump then
-  costs nothing, because it cannot crowd out findings inside a bounded view.
+- Isolate failures per path and report them. Transport/type-resolution faults
+  such as `RemoteNode parent` or `Parent job is Cancelling` are not code findings.
+- Keep batches bounded. Prior TS sweeps completed around 20–25 files per call
+  while 43 exceeded the timeout; size for the current backend and file cost.
+- Read finding elements such as `d.psiElement?.text` inside a read action.
+- Tag your printed output (for example `SW|`) so inline plugin exception dumps
+  do not crowd out findings. Report clean paths and cap displayed findings without
+  claiming the cap is complete coverage. Inspect the tail when output is truncated.
+- Treat `failedTools`, crashed files and timeouts as partial coverage, never clean
+  results. Keep independent verification out of a long call whose timeout could
+  discard sibling results.
 
-### Reading TypeScript unused-symbol findings
+## TypeScript unused-symbol findings
 
-Unused-symbol findings over TS/TSX are unreliable without a call-site check. Verified
-false-positive classes: object-literal dependency fakes in tests, command/RPC tables
-dispatched by name, class members reached only through a structural interface, shim
-modules substituted by bundler aliases (grepping the import path will not see them,
-read the alias map), guard stubs written to throw if called, methods invoked through
-a `#private` holder field (`this.#dialogs.hideVisible()` reads as unused), and
-constructor parameter properties (`private readonly intervalMs`) read only inside
-private methods, type-erased adapters (`asTerminalSessionService(...)`, where call
-sites resolve to the interface instead of the concrete class), and `await expect(x)
-.resolves/.rejects` chains (`ES6RedundantAwait` resolves only the sync `expect` type;
-dropping that `await` loses the assertion).
+Confirm call sites before deleting symbols. Known false-positive classes include:
 
-Grep the symbol across every build-relevant root - `src`, `tests`, scripts,
-workspace packages, examples, generated entrypoints - before deleting anything,
-or ask a symbol-aware query instead of text. Keep the measurement honest:
+- test dependency fakes, guard stubs and command/RPC tables dispatched by name;
+- members reached through structural interfaces or type-erased adapters;
+- shim modules selected by bundler aliases;
+- methods invoked through a `#private` holder and constructor parameter properties
+  read only from private methods;
+- `await expect(...).resolves/.rejects`: an `ES6RedundantAwait` finding can resolve
+  only the synchronous `expect` type; dropping the await loses the assertion.
 
-- Do not exclude the owning module from the count. The heaviest caller of an
-  exported class member is usually the class's own consumer in the same feature,
-  and an exclusion like `grep -v controller.ts` turns five call sites into zero.
-- Do not truncate the reference list with `head`; a "0 references" verdict from a
-  capped list is an artifact. Count first, then read the hits.
-- A single hit repo-wide means nothing else names the symbol textually - which is
-  what a dead symbol looks like, not proof that it is one. Rule out the classes
-  above first: dispatched by name, structural interface, type-erased adapter,
-  alias or shim.
-- Confirm the tree did not move under you. On a shared branch `git log <base>..HEAD`
-  may list commits you did not author; a changed test count is explained by diffing
-  normalized test names between runs (strip per-test timings) before blaming your own
-  edit, and files those commits touched need a re-sweep before claiming coverage.
-
-## Red Flags
-
-- Skipping source reads "because the IDE knows", the IDE answers questions;
- source remains the authority.
-- Letting a semantic check replace tests, inspections find style/latent
- issues, not behavioral regressions.
-- Using the heavy endpoints (`steroid_take_screenshot`, `steroid_input`)
- when `steroid_execute_code` would do, save them for debugging UI flows.
-- Trusting `project_name`/`backend_name` cached across IDE restarts,
- re-read `steroid_list_projects`.
-- Retrying a dead routing key after `project_name … is no longer present`
- instead of listing projects again.
-- Declaring Steroid down because `list_windows` or TS
- `runInspectionsDirectly` timed out while `list_projects` still routes.
- Use `modal: unleashed` + VFS bytes for a TS smell scan; `tsc` is the
- type gate.
-- Blocking a `suspend` script with `runBlocking` or mutating PSI outside
- `readAction`/`writeAction`.
-- Asking the user to open IntelliJ when a backend is already routed.
-
-## Verification
-
-- Open/verify the target project: `steroid_list_projects` shows the path. If it does
-  not, notify the user to open that exact repository in IntelliJ, then relist; do not
-  silently substitute another project. Frontendless backends skip the window gate. Do
-  not wait on `steroid_list_windows` for a clean-code audit. Then await Maven/Gradle
-  import only when the next call needs the index (`smartReadAction`, Java/Kotlin
-  PSI). For TS/JS file bytes, VFS read is enough.
-- After `steroid_execute_code`, read the printed results, output is the only
- way to observe the script.
+Search all build-relevant roots, including tests, scripts, workspace packages,
+examples and generated entrypoints; inspect dispatch and alias maps too. Include
+same-file consumers and do not infer a reference count from a truncated list.
+A single textual hit is not proof of dead code. Confirm the working tree has not
+changed since the inspection before reusing its coverage.
 
 ## References
 
-- `references/api-manual.md`, full IntelliJ API manual: tool semantics,
- Kotlin patterns, PSI/VFS recipes, Rider notes, available
- `mcp-steroid://` resources. Load on demand; runtime tool schemas document
- each call.
-- Runtime resources: `mcp-steroid://skill/*` (power-user, debugger,
- test-runner guided recipes), `mcp-steroid://test/overview`,
- `mcp-steroid://ide/overview` for copy-able patterns.
+- [API recipes](references/api-manual.md): read the relevant Kotlin/PSI/VFS or Rider
+  section only. Current runtime schemas and resources own tool contracts.
+- `mcp-steroid://skill/*`, `mcp-steroid://test/overview` and
+  `mcp-steroid://ide/overview`: task-specific execution, debugger and test recipes.

@@ -1,123 +1,87 @@
 ---
 title: pre-pr-validation
-summary: 'Use when validating finished changes before pushing a PR: run local gates, IDE semantics, graph review and AI-slop rejection; track Sourcebot bot review separately after a PR exists. push-pr owns remote delivery.'
+summary: 'Use when validating finished changes before a PR: select checks for the affected surface, verify behavior and dependencies, and review the diff. Track Sourcebot bot review separately after publication; push-pr owns delivery.'
 kind: playbook
 ---
 
 # Pre-PR validation
 
-Validate the proposed change, not the agent's confidence. This phase produces a
-local readiness verdict and evidence for `../push-pr/README.md`; it does not push,
-create a PR, merge, or install tools. Sourcebot's native review bot owns external
-patch review after a PR exists; CodeRabbit is no longer a required lane.
+Produce a local readiness verdict and evidence for `../push-pr/README.md`.
+This procedure does not authorize a push, PR, merge or tool installation.
 
 ## Establish scope
 
-Identify the repository, target branch, merge base, HEAD, staged and unstaged
-changes, and relevant untracked files. Preserve unrelated work. Record acceptance
-checks and trace affected entrypoints, consumers, registrations and configuration
-before judging implementation completeness. Read project instructions and its PR
-template; project-required gates take precedence over generic shortcuts.
+Identify the repository, target branch, merge base, HEAD and relevant staged,
+unstaged and untracked changes. Preserve unrelated work. Define acceptance
+checks and trace affected entrypoints, consumers, registrations and configuration.
+Read project instructions and its PR template; select skills for the changed
+surface rather than loading a general catalog.
 
-Select only skills relevant to the changed surface via
-`../skill-catalog/README.md`: tests, security, frontend, native runtime, migration,
-or CI as applicable. Read project documentation for those systems. Do not load
-the whole catalog or copy its rules into a new checklist.
+## Select sufficient evidence
 
-## Gather complementary evidence
+Cover the changed surface, not a fixed roster of tools. Local source reads,
+compiler/linter checks, tests and focused behavioral probes are the default.
+A missing optional integration does not block readiness. An unmet project gate,
+explicitly required check or unresolved correctness finding does.
 
-Every PR must complete every local quality lane below for every changed path,
-regardless of diff size or file type. A missing tool, authorization, matching
-project, unreported changed path, incomplete result, or required gate blocks
-local readiness; it is not an `N/A` or silent skip. A draft/WIP may carry the
-blocker, but cannot receive a local READY verdict. Applicability is judged per
-lane: the Sourcebot baseline challenge applies only when the change's correctness depends on indexed code evidence or the user
-requested it, and its inapplicability is recorded with that reason instead of
-forcibly calling the tool. The other lanes remain required as written.
+- **Behavior and project gates:** run relevant checks and direct probes. Inspect
+  the verifier's exit status and decisive output, not only a pipeline filter's
+  success (`../shell-scripting-practices/README.md`). A build alone does not prove
+  behavior. Run `git diff --check` across the branch diff and local changes.
+- **Source and dependency review:** trace affected callers and configuration in
+  the working tree. Use a code graph, such as Fovea, when it helps resolve impact;
+  do not require a graph pass for prose or metadata that direct inspection settles.
+  For broad unresolved codebase questions where indexed coverage can help, or an
+  explicit user request, use Sourcebot's `ask_codebase` through
+  `../cross-repo-source/README.md`. Verify indexed findings against current source;
+  neither an index nor a graph miss proves absence.
+- **Diff quality:** review competing owners, unnecessary abstractions, speculative
+  fallbacks, swallowed errors, vacuous tests, unrelated churn and unsupported
+  claims. Run the project's artifact gate when present. Findings need a concrete
+  path and consequence; presumed AI authorship and style preferences are not
+  defects. Use `../code-cleanup/README.md` for justified simplification.
+- **Optional IDE evidence:** use `../mcp-steroid/README.md` only when the project
+  or user opts in and the task benefits from semantic navigation, refactoring,
+  inspections or debugging. Enabling the server alone does not require an IDE
+  check. Do not open an IDE or require a live-file witness for ordinary prose or
+  configuration changes. If an explicitly required IDE check cannot run, report
+  that gap; otherwise continue with sufficient local evidence.
 
-- **Behavior and gates:** run project checks and focused behavioral probes;
-  inspect command output and the verifier's own exit status. A pipeline can report
-  the filter's success while hiding the verifier's error; use the status-handling
-  procedure in `../shell-scripting-practices/README.md`.
-  A build or graph trace alone does not prove behavior. Check whitespace across
-  the branch diff and local changes, not only the unstaged diff.
-- **IDE semantics:** call `steroid_list_projects` and route only to the project
-  whose path matches the repository (`../mcp-steroid/README.md`). If none matches,
-  immediately tell the user which repository to open in IntelliJ and keep the lane
-  BLOCKED until relisting finds it. Inspect every changed path through the IDE; for
-  code, inspect symbols, consumers and targeted diagnostics; for prose or
-  configuration, use changed-file inspections and
-  a live-file witness. Confirm index readiness where semantic APIs require it.
-- **Graph and baseline review:** use the host's code-graph impact tool on the
-  local working tree (`fovea_impact` under Pi) to trace affected callers and
-  dependencies. Use Sourcebot's `ask_codebase` through
-  `../cross-repo-source/README.md` to challenge the approach against the indexed
-  baseline and comparable implementations when the change's correctness depends on
-  code structure or callers, or when the user requested it; documentation- or
-  design-only diffs record that applicability decision rather than forcing a call.
-  Verify both against current source because an index or graph miss cannot prove
-  absence.
-- **AI-slop rejection:** run the project's objective artifact gate when present.
-  Review the actual diff for competing owners, unnecessary abstractions,
-  speculative fallbacks, swallowed errors, vacuous tests, unrelated churn and
-  unsupported documentation claims. Findings need a concrete path and consequence;
-  style preferences or presumed AI authorship are not defects. Use
-  `../code-cleanup/README.md` for justified simplification, preserving behavior.
+## External patch review
 
-## Sourcebot patch-review handoff
+[Sourcebot bot review](../sourcebot/references/review-workflow.md) is separate from
+indexed research and local readiness. It requires a published PR: record PENDING
+before publication or while fixes remain unpublished. Results cover only the
+reviewed revision. Missing configuration, failures or unverifiable completion
+are BLOCKED, not a clean review. Neither an Ask answer nor absence of comments
+satisfies this gate. CodeRabbit remains an optional additional review.
 
-Use [Sourcebot bot review](../sourcebot/references/review-workflow.md) for the
-external patch-review lane. It needs a published PR, so it is not a prerequisite
-for the first push/PR or for pushing a fix that needs re-review. Before then,
-record PENDING with the missing PR or unpublished revision. Existing bot results
-cover only their reviewed PR revision, never additional local edits.
+`push-pr` owns authorized triggering, observation and feedback. Bot review blocks
+merge when incomplete, not the authorized publication needed to obtain it.
 
-Keep this separate from the indexed `ask_codebase` baseline challenge above.
-Neither an Ask answer nor local readiness satisfies the bot gate. Missing bot
-configuration or unverifiable completion is BLOCKED, not a clean review.
-`push-pr` owns authorized triggering, observation and feedback after publication.
+## Resolve and hand off
 
-## Resolve and record
+Fix actionable findings and rerun affected checks. Reuse evidence only while its
+base, HEAD, working-tree scope and acceptance requirements still match. PR metadata
+edits do not invalidate unchanged code evidence; observe any resulting CI
+through `push-pr`. For absence claims, confirm the search covers the relevant
+roots and can find a known-present instance. Include inline path references,
+not just Markdown links, when checking instruction consumers.
 
-Fix actionable findings, then rerun affected checks. When a check asserts an absence
-(no contradictory rule, no remaining call site, no stale reference), scope the pattern
-so it cannot match the text you just introduced; observed 2026-09-17, a contradiction
-grep matched the sentence written seconds earlier. Before reporting absence, also
-confirm the check can see a known-present instance: a reachability sweep that
-followed only Markdown links reported gaps for instructions that reference their
-target as an inline path (same day), so resolve inline and root-relative path
-references too. New changes invalidate the
-relevant earlier evidence; confirm the final revision and working-tree scope
-before handoff. Reuse evidence only when its base, HEAD, working-tree scope and
-acceptance requirements still match. A title/body-only PR edit does not itself
-invalidate local evidence; a changed base, patch or requirement can. Revalidate
-the record and rerun only affected checks. Remote CI triggered by metadata edits
-still needs observation through `../push-pr/README.md`.
+Use the existing task record or PR draft for one compact record:
 
-Use the existing task record or PR-body draft for one compact record:
+- Scope: base/HEAD, local changes and acceptance checks.
+- Evidence: commands/probes, exit status, covered paths and decisive output.
+- Findings: location, consequence, disposition and remaining gaps.
+- Optional tools: relevant observations or a material applicability/access limit;
+  do not create a skipped-tool inventory.
+- Verdict: local READY or BLOCKED; separately, Sourcebot bot PENDING, PASSED or
+  BLOCKED with the reviewed revision and completion evidence when available.
 
-- Scope: base/HEAD, local changes, acceptance checks and selected skills.
-- Evidence: command/probe, scope, result/exit status and decisive output or link.
-- Reviews: Sourcebot bot status, PR/base/head, completion evidence and finding
-  dispositions; Steroid and Fovea observations; the separate Sourcebot baseline
-  challenge where applicable, with its applicability reason or access blocker;
-  the AI-slop rejection outcome; source anchors, covered paths and limits.
-- Findings: severity, location, resolution or remaining blocker.
-- Context: why the change exists, decisions, relevant documentation updates.
-- Verdict: local READY or BLOCKED, plus Sourcebot bot PENDING, PASSED or BLOCKED.
-  Name gaps and explicit exceptions; local READY is not complete PR verification.
+Local READY means applicable checks passed and no local blocking finding remains.
+It does not grant publishing permission or claim complete PR verification. An
+explicitly requested draft/WIP may carry blockers, but is not READY. CI and the
+completed patch review still gate merge. A no-PR request stops locally.
 
-Update canonical docs when behavior or contracts change; do not dump transcripts,
-secrets, session state or a second architecture inventory into Git. Record durable
-lessons only where they belong, using `../leverage-capture/README.md` when useful.
-
-## Handoff
-
-Local READY requires satisfied local acceptance checks, an inspected result for
-every applicable local lane, and no unresolved local blocking findings. Missing
-local evidence means local BLOCKED. Hand the record and separate bot status to
-push-pr without implying permission to publish. An explicitly requested draft/WIP
-push may carry local BLOCKED, but never relabel it READY. Local READY permits the
-authorized publication needed for bot review; CI and completed Sourcebot patch
-review still gate merge. A no-PR request stops without creating a PR or claiming
-the bot reviewed the change.
+Update canonical documentation when contracts change; keep transcripts, secrets
+and duplicate inventories out of Git.

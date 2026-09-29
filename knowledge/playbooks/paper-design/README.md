@@ -1,14 +1,14 @@
 ---
 title: paper-design
-summary: Use when implementing Paper designs in code, working with Paper's documented features, themes and CSS-variable tokens, Figma or HTML paste, SVG editing, MCP setup, Snapshot, or checking new Paper capabilities. Owns the live Paper handoff; pencil owns exact Figma transfer and paper-component-consistency owns reusable composition.
+summary: Use when implementing Paper designs in code, using themes and CSS-variable tokens, Figma or HTML paste, SVG editing, MCP setup, Paper desktop updates or startup/scaling troubleshooting, Snapshot, or checking new capabilities. Owns Paper workflow and runtime guidance; pencil owns exact Figma transfer and paper-component-consistency owns reusable composition.
 kind: playbook
 ---
 
 # Paper Design
 
-Turn Paper's documented capabilities into a working design/code workflow. This is
-an on-demand guide to the complete official docs set, not a second fidelity or
-component-management procedure. Load only the relevant reference.
+Use Paper's documented capabilities and diagnose its desktop runtime. Load only
+the relevant reference; this guide does not replace fidelity or component-management
+procedures. Desktop maintenance does not require a canvas-editing workflow.
 
 ## Choose the work
 
@@ -18,6 +18,7 @@ component-management procedure. Load only the relevant reference.
 | Figma clipboard, images, slots, translation losses, HTML | `references/figma-and-html-import.md` |
 | Paper-to-code, agent ignoring the live design, implementation from Paper | [Live-source-first handoff](references/mcp-and-handoff.md#paper-to-code-live-source-first) |
 | Agent/CLI connection, tool selection, safe batching | `references/mcp-and-handoff.md` |
+| Desktop update/reinstall, Linux AppImage startup, interface scale versus canvas zoom | [Desktop runtime](references/desktop-runtime.md) |
 | SVG editing, Snapshot/CORS, shortcuts, troubleshooting | `references/canvas-and-support.md` |
 | New capabilities or repeated transfer problems | `references/improvement-loop.md` |
 | Full docs coverage and source freshness | `references/index.md` |
@@ -49,6 +50,8 @@ still apply. Application implementation belongs to the project's frontend workfl
   is required.
 
 ## Completion evidence
+
+For desktop maintenance, use the [restart and scaling checks](references/desktop-runtime.md#verify-the-restart).
 
 For feature advice, distinguish documented, schema-inspected, and runtime-tested
 claims. For design changes, report destination IDs, inspected bindings and assets,

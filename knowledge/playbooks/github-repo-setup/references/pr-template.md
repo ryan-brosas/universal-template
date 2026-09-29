@@ -33,8 +33,8 @@ List only checks actually run, with results:
 - unit / integration tests
 - compiler / typecheck / lint / build
 - Sourcebot bot review status, reviewed PR/base/head, completion evidence and finding dispositions
-- JetBrains inspections or MCP Steroid semantic verification
-- Sourcebot baseline challenge (when applicable) and code-graph impact analysis
+- IDE inspections when explicitly requested or required by the project
+- Source/dependency impact analysis; Sourcebot baseline challenge when applicable
 - AI-slop and complexity review of the diff (project artifact gate when present)
 - manual runtime verification, benchmark, CI
 

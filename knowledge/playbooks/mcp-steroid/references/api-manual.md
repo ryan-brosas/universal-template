@@ -1,24 +1,10 @@
 # MCP Steroid — IntelliJ API manual
 
-Full API reference for the MCP Steroid server (jetbrains semantic layer).
-The skill `knowledge/playbooks/mcp-steroid/README.md` owns the workflow; load this manual
-only when you need exact tool semantics, Kotlin patterns, or PSI recipes.
-
-# AGENT-STEROID.md - IntelliJ API Usage Guide for LLM Agents
-
-This document provides instructions for LLM agents (like Claude) on how to effectively use the MCP Steroid server to interact with the IntelliJ Platform API. The goal is to make you a **power user of IntelliJ APIs** - always prefer using IntelliJ's capabilities over manual file operations.
-
-## Core Philosophy
-
-**BE AGGRESSIVE WITH INTELLIJ API USAGE.**
-
-Instead of:
-- Reading files manually with file tools → Use IntelliJ's VFS and PSI
-- Searching with grep → Use IntelliJ's Find Usages, Structural Search
-- Manual refactoring → Use IntelliJ's automated refactorings
-- Guessing code structure → Query the project model directly
-
-The IDE has indexed everything. It knows the code better than any file search. **USE IT.**
+Reference recipes for opted-in Steroid work. [The procedure](../README.md) owns
+scope and verification. Read only the relevant recipe; current runtime schemas
+and `mcp-steroid://` resources take precedence over copied API descriptions.
+IDE navigation complements local source reads, compilers and tests; it does not
+replace them or establish coverage for languages the backend has not indexed.
 
 ## Available MCP Tools
 

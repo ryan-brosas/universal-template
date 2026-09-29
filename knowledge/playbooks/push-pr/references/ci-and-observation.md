@@ -100,16 +100,12 @@ evidence files rather than repeating the execution plan to the user.
 
 ## Structural observation
 
-Every PR must carry revision-bound structural evidence from
-`../../pre-pr-validation/README.md`. That procedure owns the required Steroid IDE
-inspection, local Fovea `fovea_impact` analysis and, when the change's correctness
-depends on indexed code evidence or the user requested it, the Sourcebot
-`ask_codebase` baseline challenge; do not skip a required lane because a diff is
-small. A BLOCKED draft/WIP PR records the unavailable lane and its coverage limits
-instead, and is never relabeled READY. Source and tests confirm every structural claim. Record
-the repository, revision and covered paths, and revalidate after the delivered
-revision changes. A search miss is not proof that callers or consequences are
-absent.
+Use `../../pre-pr-validation/README.md` for applicable checks and evidence
+requirements; do not add a universal IDE or graph-tool gate here. Record the
+repository, revision, covered paths and limitations. Confirm structural claims
+against current source and tests, then revalidate affected evidence when the
+delivered revision changes. A search miss is not proof of absence, and a
+BLOCKED draft/WIP PR is not READY.
 
 ## Learnable rules
 

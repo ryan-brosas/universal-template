@@ -68,6 +68,46 @@ and omissions. If the deployment cannot establish completion and coverage, repor
 BLOCKED and the missing evidence; do not invent a status API or substitute Ask.
 Do not enable sensitive prompt logging just to manufacture a receipt.
 
+## Troubleshoot `/review` silence, failed runs and stuck status
+
+Start from the public PR, then correlate runtime evidence; do not guess from one
+signal. A user-visible `/review` comment followed by a bot `RUNNING`/status
+comment proves trigger delivery and startup only. It is not automatic-review
+completion, and repeated `/review` comments can start duplicate stuck runs.
+Observe the existing run unless logs prove it is terminal or stale.
+
+For a GitHub PR that shows no findings:
+
+1. Read PR issue comments, review comments and reviews. Confirm the exact trigger
+   comment, bot identity, base/head and whether any inline comments are tied to
+   the current `commit_id`. CodeRabbit or another bot's prompt is unrelated to
+   Sourcebot's native review state.
+2. Verify Sourcebot can read at least one changed file at the exact PR head. If
+   the runtime logs show repeated `File "..." not found in repository` for
+   changed paths, the webhook and App may be working while the review agent's
+   local file-context path is racing or missing the PR head. Verify the review's
+   exact-head checkout before a single retrigger, or repair the integration to
+   fetch exact-head GitHub content; readable `main` or working Ask is insufficient.
+3. Inspect bounded Sourcebot/relay logs for the run id/time. `Review agent review
+   command received` plus `Received a pull request event` means the command was
+   accepted. `github_push_pr_reviews` completing with no GitHub review comments
+   can still mean all hunks failed generation or nothing was posted. GitHub
+   security-advisory signature warnings are noise unless the target event failed.
+4. For a status comment stuck on `RUNNING`, check only safe log metadata first:
+   file size/mtime and prompt/response counts, not private prompt contents. Moving
+   mtime shows log activity, not necessarily progress in the target run. Stale
+   mtime with unmatched prompts can suggest a hung model call; matched counts
+   narrow investigation toward posting/status updates or process exit. Correlate
+   these clues with the exact run before diagnosing the cause.
+
+A Sourcebot-only restart can cancel a hung in-process review, but it leaves any
+existing `RUNNING` comment stale unless the implementation has durable cleanup.
+Before retriggering, fix or confirm timeout, duplicate-in-flight and final-status
+behavior: every run should update to `COMPLETE`, `INCOMPLETE`, `FAILED` or
+`SUPERSEDED` for the exact revision. Large/generated diffs may legitimately take
+longer than small PRs, especially when the deployed agent processes hunks serially
+and posts only after generation completes; verify that implementation's behavior.
+
 Report local checks and bot status separately:
 
 - **PENDING:** no published PR/revision yet, or an identified run is still active.

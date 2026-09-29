@@ -99,6 +99,8 @@ keybinding manual. Several shortcuts are context-sensitive; menu labels win.
 
 ## Troubleshooting routes
 
+- **Desktop update, startup failure, or unexpectedly large/small UI:** use
+  [Desktop runtime](desktop-runtime.md); distinguish interface scaling from canvas zoom.
 - **No MCP connection:** identify CLI/plugin versus legacy HTTP setup; open Paper
   Desktop with the intended file before canvas operations. CLI tool discovery can
   work with Desktop closed; it does not prove the canvas is available. Stale
@@ -110,7 +112,9 @@ keybinding manual. Several shortcuts are context-sensitive; menu labels win.
   owner for approval; do not change machine-wide policy automatically.
 - **`paper://` links fail on Linux:** an AppImage may lack desktop/protocol-handler
   integration. The docs list Gear Lever, AppImageLauncher, or AppMan integration.
-  Verify the installed package method before proposing a change.
+  Verify the installed package method first; for extracted images, inspect
+  [AppRun argument handling](desktop-runtime.md#argument-sensitive-apprun) before
+  proposing another integrator.
 - **WSL localhost cannot reach MCP:** the docs suggest WSL networking mode `mirrored`,
   followed by WSL restart. This affects running processes; coordinate before changing.
 - **Images missing:** distinguish Figma extension authorization/rate limits from

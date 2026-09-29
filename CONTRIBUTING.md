@@ -67,7 +67,7 @@ Missing pinned-toolchain verification still blocks delivery of sandbox changes.
 Check changed-line whitespace with `git diff --check` against the PR base.
 
 Every PR runs the local lanes in `knowledge/playbooks/pre-pr-validation/README.md`
-(project gates, IDE semantics, baseline and impact analysis, AI-slop rejection).
+(project gates, source and impact review, diff quality; IDE checks only when opted in).
 After publication, Sourcebot's native bot reviews the PR through
 `knowledge/playbooks/sourcebot/references/review-workflow.md`; CodeRabbit is opt-in
 only. Record local readiness and bot status separately: bot review is pending

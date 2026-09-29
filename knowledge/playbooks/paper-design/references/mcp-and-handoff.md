@@ -164,6 +164,7 @@ visual fidelity or deployment.
 Wrong document: read identity before more writes. Visible tools but failed canvas
 reads: check Desktop and file availability, then transport/host state. For stale
 sessions, rediscover schemas; an agent restart or host MCP toggle may be needed.
-Updated Pro limits may require updating/restarting Desktop. WSL may need mirrored
-networking; see `canvas-and-support.md`. Coordinate disruptive changes and do not
-repeatedly retry a dead screenshot session.
+Updated Pro limits may require updating/restarting Desktop; use
+[desktop runtime guidance](desktop-runtime.md) for an authorized update, restart or
+scaling regression. WSL may need mirrored networking; see `canvas-and-support.md`.
+Coordinate disruptive changes and do not repeatedly retry a dead screenshot session.

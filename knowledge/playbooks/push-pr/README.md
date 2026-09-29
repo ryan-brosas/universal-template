@@ -32,10 +32,9 @@ ref, report up to date rather than creating an empty commit.
 
 1. Inspect status, the base branch, commit range, and authored diff. Before every
    new PR or update to an existing PR, revalidate through
-   `../pre-pr-validation/README.md`; it owns
-   the local project gates, `git diff --check`, Steroid semantics, the Sourcebot
-   baseline challenge where applicable, Fovea impact analysis and revision-bound
-   evidence. Native Sourcebot patch review is a separate post-publication gate.
+   `../pre-pr-validation/README.md`; it owns local checks, tool applicability and
+   revision-bound evidence. Native Sourcebot patch review is a separate
+   post-publication gate.
    Follow its evidence-reuse rule for unchanged revisions and metadata-only
    updates. If no project quality gate exists, record that blocker rather than
    inventing CI. A local BLOCKED verdict stops normal delivery unless the user

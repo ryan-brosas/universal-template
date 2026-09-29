@@ -9,6 +9,8 @@ skills/omarchy
 /skills/diagnose-crash
 # Generated export bundles are local distribution artifacts.
 /_export/
+# Work-time receipts and reports contain local session data.
+/exports/
 # Host/vendor-managed runtime skills stay installed locally, never published.
 /skills/.system/
 # Local helpers stay local.
