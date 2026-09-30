@@ -11,6 +11,12 @@ Prefer it for ordinary browser UI work even when a CDP endpoint already exists.
 The host owns connection configuration and credentials; this procedure owns the
 interaction method. Discover current tools and schemas instead of guessing names.
 
+Keep evidence tied to the host that produced it. An explicitly requested cloud CUA
+test uses that host's documented tools, tab identities and secure authentication
+handoff, not the Beacon call shapes below. Its results do not validate local
+Pi/Beacon or CDP, change the configured default, or authorize switching profiles.
+Transfer supported interaction lessons without treating transports as equivalent.
+
 ## Choose the surface
 
 - Use Beacon for page/channel reading, navigation and supported UI interactions.
@@ -75,6 +81,16 @@ gap may justify CDP under the same account and permission boundaries.
   writes. After timeout, assume the prior action might still be executing: observe
   until settled before a bounded retry; never race new typing against drifting text
   or resubmit an uncertain write. Report blocked rather than claim completion.
+- If a target's screenshot or observation stalls, stop repeating calls against that
+  same handle. Use the active host's supported browser/tab inventory to distinguish
+  a missing target from a responsive browser with an unresponsive page. A remaining
+  desktop window does not prove the tab exists. Rebind a verified owned target or,
+  only while live browser work remains authorized, create a fresh task-owned tab in
+  the same approved session. Recheck account, destination, drafts and uncertain
+  effects before resuming. Do not race recovery against an unsettled call or reopen
+  tabs after a stop/close request. Record requested timeout and observed duration
+  separately; a timeout setting alone does not establish a hard deadline. A later
+  tab closure does not explain an earlier stall without causal evidence.
 - Inspect replacement versus append behavior on the actual control. Do not repair
   a truncated field by typing suffixes when `type` replaces it. Some successful
   runs accepted full strings that timed out in other runs; do not invent a fixed
