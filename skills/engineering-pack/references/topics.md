@@ -27,7 +27,7 @@ Navigation only: open matched procedures, not every link.
 - [practices-to-ci](../../../knowledge/playbooks/practices-to-ci/README.md)
 - [project-bootstrap](../../../knowledge/playbooks/project-bootstrap/README.md)
 - [root-cause-tracing](../../../knowledge/playbooks/root-cause-tracing/README.md)
-- [runtime-artifact-provenance](../../../knowledge/playbooks/runtime-artifact-provenance/README.md)
+- [runtime-artifact-provenance](../../../knowledge/playbooks/runtime-artifact-provenance/README.md) — installed/running artifact identity and vendor desktop-package compatibility checks
 - [security-and-hardening](../../../knowledge/playbooks/security-and-hardening/README.md)
 - [signup-abuse-response](../../../knowledge/playbooks/signup-abuse-response/README.md)
 - [source-driven-development](../../../knowledge/playbooks/source-driven-development/README.md)

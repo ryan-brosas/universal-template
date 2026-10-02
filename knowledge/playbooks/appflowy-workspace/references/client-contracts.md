@@ -26,6 +26,21 @@ Row writes: in the inspected `appflowy-mcp` 0.7.3, `appflowy_create_row` accepts
 
 Two operational traps. After the server environment changes in the host config, a running client can keep the old values until the server process restarts or the session reloads; a direct stdio handshake against the server binary distinguishes bad credentials from a stale client. And the adapter connection is session-local: another agent or host process does not inherit it and needs its own MCP-capable client, the same server entry and the same host-side credentials.
 
+If the current session exposes no named MCP tools, check for an installed native
+client before proposing setup. On the inspected host, the `appflowy-mcp` environment
+already included `fastmcp`, although it was absent from `PATH`. From the directory
+containing the existing `mcp.json`, its `call project:appflowy <tool> ... --json`
+route selected that server and loaded its host-side environment without copying
+credentials or configuration. Use the installed executable and live help; verify
+account and workspace with harmless reads before an authorized write. This local
+route depends on the host and does not establish cloud access.
+
+A raw `appflowy_get_collab` error saying no document collab did not establish that
+the page was missing: `appflowy_get_page` and `appflowy_export_page` still returned
+the existing content. Check those supported page paths before recreating or
+repairing anything. After an additive write, a fresh export can verify the exact
+appended text occurs once and the previous content remains intact.
+
 ## Work-email evidence through local Composio
 
 Missing hosted Composio tools do not establish an OAuth failure. When local access
@@ -36,10 +51,22 @@ from `composio whoami` was not evidence that connected Gmail accounts were unusa
 
 Resolve candidate identities with the supported read-only profile request:
 `composio proxy https://gmail.googleapis.com/gmail/v1/users/me/profile --toolkit gmail --account <observed-selector>`.
-Pin the verified work selector on every subsequent search and fetch; do not search
+Pin the verified work selector on every search, fetch and approved send; do not search
 a personal inbox to infer the work account. Read the live tool schema, search with
 a small metadata-only result set, then fetch full bodies only for selected messages.
 Keep account selectors, addresses and private message contents out of skill examples.
+
+Large CLI results can return `storedInFile` and `outputFilePath` instead of inline
+`data`. Read the returned result artifact before concluding that messages are
+missing; inspect only the selected thread and relevant fields.
+
+For an approved in-thread reply, verify the returned message ID in the original
+thread, its sender and sole intended recipient, any Cc/Bcc, and `SENT` state.
+The inspected reply tool rendered plain input as `text/html` and appended quoted
+history. Compare the new authored portion with the approved body, accounting for
+line-break markup; quoted text is not evidence that the new reply contains it.
+Read back an uncertain send before retrying. `SENT` verifies sending, not receipt
+or acceptance; log the verified event once in the canonical record.
 
 For the AppFlowy note, use sender-confirmed status with dates and source links.
 Keep a listing confirmation distinct from independently inspecting the public page

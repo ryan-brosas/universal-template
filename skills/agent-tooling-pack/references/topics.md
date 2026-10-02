@@ -9,5 +9,6 @@ Navigation only: open matched procedures, not every link.
 - [managed-agent-runtime-diagnostics](../../../knowledge/playbooks/managed-agent-runtime-diagnostics/README.md) — isolated worker RPC timeouts, truncated model replies, transport mismatches and rejected compaction jobs; safe saved-context probes.
 - [pi-package-development](../../../knowledge/playbooks/pi-package-development/README.md): manifests, published tarballs, README links and missing pi.dev catalog listings.
 - [pi-provider-contracts](../../../knowledge/playbooks/pi-provider-contracts/README.md)
+- [product-analytics-measurement](../../../knowledge/playbooks/product-analytics-measurement/README.md) — traffic, session and funnel unit selection, visit-entry attribution, sentinel buckets and reconciling reported totals.
 - [typed-judgment-workflows](../../../knowledge/playbooks/typed-judgment-workflows/README.md)
 - [work-time-tracking](../../../knowledge/playbooks/work-time-tracking/README.md) — work-time extension deployment, separate session/activity measures, and user-confirmed hours drafts.

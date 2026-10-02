@@ -1,6 +1,6 @@
 ---
 title: runtime-artifact-provenance
-summary: "Use when a fix is absent from a running app despite a successful build or install; distinguish the built artifact, installed copy, and loaded runtime before editing again. Includes Linux executable-identity probes and restart boundaries."
+summary: "Use when a fix is absent from a running app despite a successful build or install; distinguish the built artifact, installed copy, and loaded runtime before editing again. Includes vendor-package compatibility installs, Linux executable-identity probes and restart boundaries."
 kind: playbook
 ---
 
@@ -50,6 +50,31 @@ window the user is inspecting.
    Inspect exit status: 0 means found, 1 absent, greater than 1 a probe error.
    A marker's presence does not prove its code executed or that the fix works;
    absence is inconclusive if bundling, stripping, or compression can remove it.
+
+## Verify a vendor package installed outside its listed distribution
+
+Separate vendor support from observed compatibility. Follow the official download
+page to its current artifact, inspect its package version, architecture, payload,
+and installation scripts before running anything. A `.deb` offered for Ubuntu
+does not establish Arch/Omarchy support. A leftover application config directory
+may contain only crash data; inspect filenames and launcher/process evidence
+without opening credentials or session stores.
+
+When the authorized task permits a compatibility installation, an unmodified,
+self-contained payload can be placed under `~/.local/opt/<app>-<version>` with a
+per-user command and desktop entry. Check dependencies for both the launcher and
+any bundled secondary executable. Record the vendor URL, package version and
+local checksum; a locally calculated checksum does not replace a vendor signature.
+Validate the desktop entry, resolve its executable, and match the running PID and
+window to that installed path. A mapped window establishes launch, not successful
+login or operation of an account instance. Report unavailable native UI inspection
+separately from process/window evidence.
+
+Do not carry Debian system-install scripts or updater assumptions into a user-local
+layout. Document its update limitations. Try a normal user launch without adding
+sandbox-disabling flags or changing security controls; a sandbox failure is a
+blocker to diagnose, not permission to weaken the host. Keep account activation,
+autostart and campaigns outside an installation-only request.
 
 ## Match the evidence to what is loaded
 
