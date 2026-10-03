@@ -10,5 +10,7 @@ Navigation only: open matched procedures, not every link.
 - [pi-package-development](../../../knowledge/playbooks/pi-package-development/README.md): manifests, published tarballs, README links and missing pi.dev catalog listings.
 - [pi-provider-contracts](../../../knowledge/playbooks/pi-provider-contracts/README.md)
 - [product-analytics-measurement](../../../knowledge/playbooks/product-analytics-measurement/README.md) — traffic, session and funnel unit selection, visit-entry attribution, sentinel buckets and reconciling reported totals.
+- [prompt-cache-efficiency](../../../knowledge/playbooks/prompt-cache-efficiency/README.md) — cache miss budget, prefix-stability rules, provider routing, and per-model rate checks.
+- [subagent-delegation](../../../knowledge/playbooks/subagent-delegation/README.md) — OpenCode subagent roster, task-to-agent matching, parallel patterns and read-only boundaries.
 - [typed-judgment-workflows](../../../knowledge/playbooks/typed-judgment-workflows/README.md)
 - [work-time-tracking](../../../knowledge/playbooks/work-time-tracking/README.md) — work-time extension deployment, separate session/activity measures, and user-confirmed hours drafts.

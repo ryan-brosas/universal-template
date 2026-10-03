@@ -57,6 +57,7 @@ not a fixed one-pack choice or the whole library.
 - `skills/` — small task-oriented routers.
 - `knowledge/playbooks/` — reusable ways of working.
 - `mcp/` — optional capability declarations and connection guidance.
+- `agents/` — OpenCode subagent definitions for delegation and roster maintenance.
 - `prompts/` — reusable task starters.
 - `templates/` — reusable project and output shapes.
 
