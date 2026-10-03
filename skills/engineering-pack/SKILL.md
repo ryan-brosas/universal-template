@@ -28,6 +28,8 @@ Choose the matching procedure; resolve its paths from its own directory.
   not named in the request. Reuse an existing project decision while its
   requirements and constraints hold; skip this assessment for unrelated or
   trivial edits. Compose with the relevant architecture or language procedure.
+- Calendly integrations, including custom forms and availability:
+  [Calendly](../../knowledge/playbooks/calendly/README.md).
 - Architecture or API contracts:
   [improve-codebase-architecture](../../knowledge/playbooks/improve-codebase-architecture/README.md) or
   [api-and-interface-design](../../knowledge/playbooks/api-and-interface-design/README.md).

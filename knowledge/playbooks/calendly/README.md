@@ -1,6 +1,6 @@
 ---
 title: calendly
-summary: "Use when integrating or troubleshooting Calendly API v2, direct booking, availability, OAuth/PATs, webhooks, embeds, contacts, Notetaker, organization data or Calendly MCP; supplies current contracts and recovery paths where older examples disagree."
+summary: "Use when integrating or troubleshooting Calendly API v2, custom booking interfaces, availability, OAuth/PATs, webhooks, embeds, contacts, Notetaker, organization data or Calendly MCP; covers implementation before credentials, current contracts and uncertain-write recovery."
 kind: playbook
 ---
 
@@ -13,9 +13,11 @@ not an account connection.
 
 ## Start with the required capability
 
-Identify the target user/organization, account plan and role, authentication
-method, and intended reads or writes. Resolve resource URIs from authenticated
-responses rather than guessing them from public scheduling URLs.
+Before connecting, identify the target user/organization, account plan and role,
+authentication method, and intended reads or writes. Resolve resource URIs from
+authenticated responses rather than guessing them from public scheduling URLs.
+Missing account details need not block an authorized offline implementation;
+separate building the integration from connecting and enabling it.
 
 Load only the relevant reference:
 
@@ -23,6 +25,9 @@ Load only the relevant reference:
   versus OAuth, scopes, token rotation, pagination, rate limits and failures.
 - [Scheduling](references/scheduling.md): discover event types, query real slots,
   book, reconcile uncertain writes, cancel, share links or edit availability.
+- [Custom booking UI](references/custom-booking-ui.md): branded forms, replacing
+  an embed, building before credentials, provider-owned questions and separate
+  client/server/runtime acceptance.
 - [Webhooks](references/webhooks.md): subscriptions, signatures, retries,
   reschedules and durable synchronization.
 - [Embeds](references/embeds.md): inline/popup widgets, prefill, tracking and

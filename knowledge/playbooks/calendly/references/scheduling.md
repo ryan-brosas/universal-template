@@ -24,8 +24,10 @@ separate booking budgets in [authentication and requests](authentication-and-req
    fields are `event_type`, `start_time` and `invitee`. Include invitee email,
    IANA timezone, and either full `name` or `first_name` (plus `last_name` where
    appropriate). Do not copy a vendor example that omits the conditional name.
-5. On 201, retain the invitee and scheduled-event URIs and show the returned
-   `cancel_url` and `reschedule_url`. Normal notifications and workflows run.
+5. Require the documented 201 status and validate the returned resource before
+   reporting success; an arbitrary 2xx response is not a booking receipt. Retain
+   the invitee and scheduled-event URIs and show the returned `cancel_url` and
+   `reschedule_url` only after validation. Normal notifications and workflows run.
    Confirm final state with authenticated reads or verified webhooks as needed.
 
 A shape example for a location-free event type with no required custom questions
@@ -69,8 +71,9 @@ A returned slot can disappear before booking. On a clear validation/unavailable
 response, fetch fresh slots and let the user choose; do not silently substitute
 a different time.
 
-The reviewed contract does not document a booking idempotency key. On timeout or
-ambiguous 5xx, keep the attempt pending rather than immediately repeating POST.
+The reviewed contract does not document a booking idempotency key. On timeout,
+ambiguous 5xx, unexpected success status or malformed success payload, keep the
+attempt uncertain rather than immediately repeating POST.
 Correlate event type, UTC start, host and invitee using `GET /scheduled_events`
 with a narrow time window and `GET /scheduled_events/{uuid}/invitees` with an
 email filter. Preserve returned URIs whenever available. Correlation is not a
