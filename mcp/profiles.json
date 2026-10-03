@@ -20,6 +20,9 @@
       "paper",
       "figma-bridge",
       "figma-console"
+    ],
+    "browser": [
+      "beacon"
     ]
   }
 }

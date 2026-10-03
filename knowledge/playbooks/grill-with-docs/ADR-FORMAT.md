@@ -1,8 +1,12 @@
 # ADR Format
 
-ADRs live in `docs/adr/` and use sequential numbering: `0001-slug.md`, `0002-slug.md`, etc.
+For an authorized small decision note, this is an optional minimal format.
+[Documentation and ADRs](../documentation-and-adrs/README.md) owns the general
+procedure; existing project conventions take precedence. Do not create an ADR
+merely because the plan was reviewed.
 
-Create the `docs/adr/` directory lazily — only when the first ADR is needed.
+Where the project uses `docs/adr/`, follow its numbering, such as
+`0001-slug.md`, `0002-slug.md`.
 
 ## Template
 

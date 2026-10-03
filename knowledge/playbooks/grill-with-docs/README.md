@@ -1,125 +1,47 @@
 ---
 title: grill-with-docs
-summary: Use when user wants to stress-test a plan against their project's language and documented decisions.
+summary: Use when a plan must be checked against the project's glossary, ADRs and code; adds documentary evidence to engineering's proposal-scrutiny procedure.
 kind: playbook
 ---
 
+# Stress-test a plan against project evidence
 
-# Grill With Docs
+Use [grill-me](../grill-me/README.md) for the interview and stop rule. This
+procedure owns the documentary part, not a second general grilling workflow.
+It is read-only unless the task includes documentation changes; runtime
+permissions and project instructions still apply. No particular harness or
+Schema mode is a prerequisite for discussing a plan.
 
-## Core Principle
+## Ground the questions
 
-Stress-test the plan against the project's own language and documented decisions: interview relentlessly, one question at a time, until shared understanding is reached. Read-only by default, writing `CONTEXT.md`, `docs/adr/`, or any other file is a mutation behind the Schema loop or explicit approval.
+- Locate the project's existing glossary and decision records. If it uses a
+  `CONTEXT-MAP.md`, follow it to the relevant context; do not assume every project
+  uses these filenames or create them merely because they are absent.
+- Check disputed claims against current code and documents before asking the
+  user. Separate an obsolete document, a code defect and a deliberate change of
+  direction rather than assuming one source always wins.
+- Surface conflicting or overloaded domain terms with the existing definition
+  and a concrete consequence. Offer a recommendation, but do not invent a
+  canonical term or silently replace the project's vocabulary.
+- Use relevant scenarios to expose boundaries and trade-offs. Stop when the
+  consequential decisions are settled or blocked; reviewing every branch of a
+  design tree is not an acceptance requirement.
 
-## When to Use / NOT
+## Record only what the task needs
 
-**Use**, the user wants to stress-test a plan against their project's language and documented decisions.
+For a discussion-only request, return resolved terms, strengthened decisions and
+open questions in the conversation. If documentation updates are authorized,
+reuse the project's existing files and formats. Keep a glossary focused on domain
+language rather than implementation plans or session notes.
 
-**NOT**, when file writes are needed without the Schema loop or explicit approval (this skill is read-only by default); when a question can be answered by exploring the codebase (explore the codebase instead).
+Offer an ADR when the choice is consequential, its rationale would otherwise be
+lost, and genuine alternatives were considered. Follow
+[documentation-and-adrs](../documentation-and-adrs/README.md); do not create a
+parallel decision log.
 
-## Workflow
+## Optional formats
 
-Interview one question at a time, walking down each branch of the design tree and resolving dependencies between decisions one-by-one, with a recommended answer for each. Challenge terms against the `CONTEXT.md` glossary, sharpen fuzzy language, discuss concrete scenarios, and cross-reference claims with the code. Update `CONTEXT.md` inline as each term resolves; offer ADRs sparingly, only when hard to reverse, surprising without context, and the result of a real trade-off.
-
-## Read-only default and mutation boundary
-
-This skill is a research/interview workflow. Writing `CONTEXT.md`, `docs/adr/`, or any other file is a mutation: in this repository it requires the Schema loop (`schema.hypothesize → verify → commit`) or explicit user approval of the exact files before writing. ADR format follows the `documentation-and-adrs` skill (structured ADR); the minimal form in `ADR-FORMAT.md` is only for small, low-stakes entries.
-
-<what-to-do>
-
-Interview me relentlessly about every aspect of this plan until we reach a shared understanding. Walk down each branch of the design tree, resolving dependencies between decisions one-by-one. For each question, provide your recommended answer.
-
-Ask the questions one at a time, waiting for feedback on each question before continuing.
-
-If a question can be answered by exploring the codebase, explore the codebase instead.
-
-</what-to-do>
-
-<supporting-info>
-
-## Domain awareness
-
-During codebase exploration, also look for existing documentation:
-
-### File structure
-
-Most repos have a single context:
-
-```
-/
-├── CONTEXT.md
-├── docs/
-│   └── adr/
-│       ├── 0001-event-sourced-orders.md
-│       └── 0002-postgres-for-write-model.md
-└── src/
-```
-
-If a `CONTEXT-MAP.md` exists at the root, the repo has multiple contexts. The map points to where each one lives:
-
-```
-/
-├── CONTEXT-MAP.md
-├── docs/
-│   └── adr/                          ← system-wide decisions
-├── src/
-│   ├── ordering/
-│   │   ├── CONTEXT.md
-│   │   └── docs/adr/                 ← context-specific decisions
-│   └── billing/
-│       ├── CONTEXT.md
-│       └── docs/adr/
-```
-
-Create files lazily, only when you have something to write. If no `CONTEXT.md` exists, create one when the first term is resolved. If no `docs/adr/` exists, create it when the first ADR is needed.
-
-## During the session
-
-### Challenge against the glossary
-
-When the user uses a term that conflicts with the existing language in `CONTEXT.md`, call it out immediately. "Your glossary defines 'cancellation' as X, but you seem to mean Y, which is it?"
-
-### Sharpen fuzzy language
-
-When the user uses vague or overloaded terms, propose a precise canonical term. "You're saying 'account', do you mean the Customer or the User? Those are different things."
-
-### Discuss concrete scenarios
-
-When domain relationships are being discussed, stress-test them with specific scenarios. Invent scenarios that probe edge cases and force the user to be precise about the boundaries between concepts.
-
-### Cross-reference with code
-
-When the user states how something works, check whether the code agrees. If you find a contradiction, surface it: "Your code cancels entire Orders, but you just said partial cancellation is possible, which is right?"
-
-### Update CONTEXT.md inline
-
-When a term is resolved, update `CONTEXT.md` right there. Don't batch these up, capture them as they happen. Use the format in [CONTEXT-FORMAT.md](./CONTEXT-FORMAT.md).
-
-`CONTEXT.md` should be totally devoid of implementation details. Do not treat `CONTEXT.md` as a spec, a scratch pad, or a repository for implementation decisions. It is a glossary and nothing else.
-
-### Offer ADRs sparingly
-
-Only offer to create an ADR when all three are true:
-
-1. **Hard to reverse**, the cost of changing your mind later is meaningful
-2. **Surprising without context**, a future reader will wonder "why did they do it this way?"
-3. **The result of a real trade-off**, there were genuine alternatives and you picked one for specific reasons
-
-If any of the three is missing, skip the ADR. Use the format in [ADR-FORMAT.md](./ADR-FORMAT.md).
-
-</supporting-info>
-
-## Red Flags
-
-A glossary conflict in `CONTEXT.md` not called out immediately. vague or overloaded terms left unsharpened. a contradiction between stated behavior and the code not surfaced; `CONTEXT.md` accumulating implementation details (it is a glossary and nothing else). CONTEXT.md updates batched instead of captured inline. an ADR offered without all three conditions true.
-
-## Verification
-
-Shared understanding reached, each branch of the design tree resolved one-by-one; `CONTEXT.md` updated inline with every resolved term; any ADR created satisfies all three conditions (hard to reverse, surprising without context, real trade-off).
-
-
-## References
-
-Format references at the skill root:
-- `CONTEXT-FORMAT.md`, the `CONTEXT.md` glossary format used for inline updates
-- `ADR-FORMAT.md`, the minimal ADR form for small, low-stakes entries
+- [CONTEXT-FORMAT.md](CONTEXT-FORMAT.md): a glossary format when the project has
+  chosen this convention, not a required repository structure.
+- [ADR-FORMAT.md](ADR-FORMAT.md): a minimal note for an authorized small decision
+  when the project has no conflicting ADR convention.

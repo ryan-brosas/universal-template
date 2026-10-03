@@ -1,12 +1,11 @@
 # Engineering topics
 
-Start with the narrowest matching procedure. Load additional procedures only for
-distinct active subproblems; each summary and body owns its detailed contract.
-This is a routing index, not a reading list. Known procedure paths can be opened directly.
+Navigation only: open matched procedures, not every link.
 
 - [api-and-interface-design](../../../knowledge/playbooks/api-and-interface-design/README.md)
 - [authoritative-signal-surfacing](../../../knowledge/playbooks/authoritative-signal-surfacing/README.md)
 - [brainstorming](../../../knowledge/playbooks/brainstorming/README.md)
+- [calendly](../../../knowledge/playbooks/calendly/README.md) — API v2, booking, OAuth/PATs, availability, webhooks, embeds, contacts, Notetaker, organization data and MCP
 - [code-cleanup](../../../knowledge/playbooks/code-cleanup/README.md)
 - [code-discipline](../../../knowledge/playbooks/code-discipline/README.md)
 - [code-review-and-quality](../../../knowledge/playbooks/code-review-and-quality/README.md)
@@ -16,8 +15,7 @@ This is a routing index, not a reading list. Known procedure paths can be opened
 - [deprecation-and-migration](../../../knowledge/playbooks/deprecation-and-migration/README.md)
 - [fallow](../../../knowledge/playbooks/fallow/README.md)
 - [false-green-gates](../../../knowledge/playbooks/false-green-gates/README.md)
-- [farmed-test-harness](../../../knowledge/playbooks/farmed-test-harness/README.md)
-- [grill-me](../../../knowledge/playbooks/grill-me/README.md)
+- [grill-me](../../../knowledge/playbooks/grill-me/README.md) — stress-test a proposal's assumptions and failure cases before implementation.
 - [gpuix-hit-testing](../../../knowledge/playbooks/gpuix-hit-testing/README.md)
 - [improve-codebase-architecture](../../../knowledge/playbooks/improve-codebase-architecture/README.md)
 - [local-service-durability](../../../knowledge/playbooks/local-service-durability/README.md)
@@ -29,7 +27,7 @@ This is a routing index, not a reading list. Known procedure paths can be opened
 - [practices-to-ci](../../../knowledge/playbooks/practices-to-ci/README.md)
 - [project-bootstrap](../../../knowledge/playbooks/project-bootstrap/README.md)
 - [root-cause-tracing](../../../knowledge/playbooks/root-cause-tracing/README.md)
-- [runtime-artifact-provenance](../../../knowledge/playbooks/runtime-artifact-provenance/README.md)
+- [runtime-artifact-provenance](../../../knowledge/playbooks/runtime-artifact-provenance/README.md) — installed/running artifact identity and vendor desktop-package compatibility checks
 - [security-and-hardening](../../../knowledge/playbooks/security-and-hardening/README.md)
 - [signup-abuse-response](../../../knowledge/playbooks/signup-abuse-response/README.md)
 - [source-driven-development](../../../knowledge/playbooks/source-driven-development/README.md)

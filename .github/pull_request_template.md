@@ -11,7 +11,8 @@
 <!-- only checks actually run, with results -->
 
 - Review changed instructions, metadata, references, and callers; report focused tests when executable helpers change.
-- Review lanes: CodeRabbit status and finding dispositions; JetBrains/Steroid semantic check; Sourcebot baseline (when applicable) and code-graph impact; AI-slop review of the diff.
+- Local review: source/dependency impact and diff quality; Sourcebot baseline when applicable; IDE checks only when opted in.
+- Sourcebot bot review: PENDING / PASSED / BLOCKED, with PR/base/head, completion evidence and finding dispositions. Local readiness or no comments is not a passed bot review.
 - `git diff --check`
 
 ## Risks

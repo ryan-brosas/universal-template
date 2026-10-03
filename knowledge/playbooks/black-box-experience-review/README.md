@@ -39,8 +39,10 @@ never from source-code assumptions.
 
 Do not infer behavior from code. Drive the app as a user and record what is
 observable: screens, controls, states, timing, messages, and recovery paths.
-Use the platform's browser or runtime tools (browser-tools, playwright,
-chrome-devtools) with no external testing service or credentials.
+Use the configured browser MCP ([Beacon](../beacon/README.md)) first for browser UI
+reading and interaction. Use [CDP](../cdp/README.md), Playwright or platform runtime
+tools only for an identified capability gap such as screenshots or emulation,
+without adding an external testing service or changing account/approval boundaries.
 
 ## Review rounds
 

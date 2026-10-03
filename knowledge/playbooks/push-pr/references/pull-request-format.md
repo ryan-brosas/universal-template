@@ -10,9 +10,11 @@ category each section must carry. Current template sections:
    guessed closure)
 3. Verification: only checks actually run, with results (commands, exit
    codes, run links). `git diff --check` on the branch range. Record the pre-PR
-   review lanes (`../../pre-pr-validation/README.md`): CodeRabbit status and
-   finding dispositions, the IDE semantic check, baseline/impact findings, and the
-   AI-slop review, or the reason a lane is blocked.
+   local review lanes (`../../pre-pr-validation/README.md`): the IDE semantic
+   check, baseline/impact findings and AI-slop review, or each blocker. Separately
+   record Sourcebot bot review status, PR/base/head, completion evidence and
+   finding dispositions (`../../sourcebot/references/review-workflow.md`). Pending
+   review before PR creation is not a pass; local readiness is not bot completion.
 4. Risks: regression / compatibility / migration / performance / security, or
    None identified
 5. Reference / Prior Art: repo, path, revision, ADOPT/ADAPT/INSPIRATION; else N/A

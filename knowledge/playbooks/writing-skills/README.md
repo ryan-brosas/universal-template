@@ -1,83 +1,80 @@
 ---
 title: writing-skills
-summary: Use when creating, editing, auditing, or verifying a skill or SKILL.md—including trigger descriptions and routing overlap—or promoting a demonstrated procedure; preserve the catalog contract and require evidence of task lift for material hot changes.
+summary: Use when creating or auditing skills and playbooks, improving task-based selection, or reducing instruction bloat; review meaning directly and judge usefulness from real work.
 kind: playbook
 ---
 
-# Writing Skills
+# Writing skills
 
-A skill earns its load by improving work, not by making the model obey more rules.
-Use this for pack/playbook authoring, not ordinary project documentation. Start with
-`../../../templates/skill.md`; omit sections that add no task-specific value.
+A skill should supply task-specific knowledge and improve decisions, not engineer
+obedience. Start with `../../../templates/skill.md`. Describe the failure or missing
+context it addresses before adding instructions; omit generic advice already
+owned by the project or another procedure.
 
-## Author for lift
+## Make selection work without named invocation
 
-Identify what the model repeatedly gets wrong or rediscovers, what unique context
-is missing, and what work the candidate should remove. Preserve decisions that
-belong to the model or project. Reusable code and exact recurring checks belong
-in implementation or gates rather than prose.
+The description is visible before the body. Describe ordinary user intent,
+affected artifacts and failure symptoms, the responsibility the skill owns, and
+any consequential boundary. A model should understand why the skill applies
+without knowing its name. Put task labels on router links, especially when the
+procedure has an opaque tool name.
 
-For hot promotion, material changes to load-bearing skills, overlapping owners,
-large loaders, or observed slowdown, compare a representative task without the
-skill and with the smallest candidate. Judge outcome quality, errors, turns,
-tool calls, loaded context, and unintended artifacts or effects. Use the same
-starting conditions; do not force a baseline failure or reward citation of rules.
-Keep, compress, demote, merge, or retire based on the tradeoff. An unmeasured
-candidate is not demonstrated lift.
+Distinguish three failures before editing: the host did not advertise the skill;
+the description did not convey its relevance; or the router did not lead to the
+useful procedure. Read the actual files and the relevant task history. Do not
+respond to every miss by broadening the trigger or adding another rule.
 
-Select the cheapest meaningful evidence by skill type. References need relevant,
-usable information and valid links; routers need reliable selection; deterministic
-helpers need execution tests. Guardrails need evidence that an expensive failure
-is prevented, including legitimate exceptions. Pressure tests serve that purpose,
-not universal obedience testing. See `references/lift-evaluation.md` when designing
-a comparison. Evaluation is selective authoring work, not mandatory CI or a runtime
-scoring engine.
+Keep shared selection policy in `AGENTS.md`. Do not use keyword stuffing,
+persuasion tactics, compulsory announcements, scripted selectors or compliance
+gates. Do not create temporary validation scripts as a substitute for reviewing
+skills or system instructions. Clear scope and useful guidance must do the work.
 
-## Metadata and discovery
+## Keep one owner
 
-- Visible routers live at `../../../skills/<name>-pack/SKILL.md`. Use a
-  directory-matching `name`, trigger-first `description` under 1024 characters
-  (aim for 512 or fewer), and `invocation: entry`. State the decisions the pack
-  owns and whether overlap composes or delegates; matching one pack must not
-  imply that other materially relevant packs are excluded. Avoid exhaustive
-  pairwise routing matrices.
-- Specialists live at `../<name>/README.md` with `title`, `summary`, and
-  `kind: playbook`. Omit skill-discovery fields and `SKILL.md`; merely hiding a
-  description does not prevent discovery. Preserve attribution and license data.
-- Link each specialist from one existing pack's cold index. Label cross-pack
-  cold-index links with that owning pack; all links share the same procedure, never
-  copies. This canonical ownership rule does not limit how many packs or procedures
-  a task may load. New visible packs require demonstrated routing need; useful
-  specialists do not automatically earn startup exposure.
-- Keep helpers/assets with their procedure. Resolve all paths from that directory,
-  not the router. Read source evidence directly when a procedure needs it rather
-  than adding a permanent source summary.
-- Parse strict YAML with appropriate scalar types. Package-owned and private
-  skills are separate: preserve them and use supported host filters rather than
-  changing installed packages or copying their instructions.
+- Visible routers live at `../../../skills/<name>-pack/SKILL.md`, with a
+  directory-matching `name`, a trigger-first `description` no longer than 1024
+  characters, and `invocation: entry`. Keep descriptions concise without losing
+  the distinction from neighboring skills.
+- Specialists live at `../<name>/README.md` with `title`, `summary` and
+  `kind: playbook`. Do not add skill-discovery fields or `SKILL.md` aliases.
+- Link each specialist from one owning pack's cold index. Other packs may
+  cross-link it with the owner identified; share the procedure rather than copy
+  it. A new visible pack needs a routing need existing owners cannot cover.
+- Preserve package-owned and private skills. Use supported host configuration
+  for discovery changes, not edits to installed packages or copies of their
+  instructions. Preserve attribution and license metadata.
 
-## Keep invocation small
+A task may need several owners; a trivial task may need none. Indexes are
+navigation, not instructions to load every entry. Resolve references from the
+file containing them and keep assets and existing helpers with their procedure.
 
-Aim for leaf bodies under about 600 words and routers under about 200. These are
-review targets, not proof of value. Keep the loader usable alone; put deep mechanics
-in focused references loaded only for the active question. Do not duplicate live
-tool schemas, another skill, or the global constitution. Use host-neutral guidance
-and probe optional capabilities. Add structured output only for a real parser.
+## Remove bloat without removing meaning
 
-Prefer choices and evidence over prohibitions. Reserve hard constraints for safety,
-protocol integrity, or demonstrated expensive failures, not architectural taste.
+Keep the entrypoint useful on its own. Move detail to a reference only when it
+serves a separate question; splitting every paragraph merely adds navigation.
+Remove duplicated advice, obsolete procedures, unsupported claims and mandates
+unrelated to the task. Trace callers before removing files. A long document is a
+review candidate, not proof of waste; missing telemetry is not proof of disuse.
 
-## Verify and stop
+Explain the reason for a consequential constraint. Do not turn a preference into
+an absolute rule or require a finding, deletion, tool call or ritual to make the
+work appear successful. Preserve valid approaches and actual safety boundaries.
 
-Choose checks for the destination, not the shell's current directory. Inspect
-metadata, names, links, discovery, and callers in the changed checkout directly.
-Use that project's existing checks where relevant; this template has no catalog
-generator or custom skill-validation pipeline. Do not modify the global skill
-tree to validate an unrelated external skill.
+## Review the work, not compliance
 
-Confirm referenced files exist, intended host discovery works, and changed callers
-still work. Only pack routers belong in the template skill-discovery tree;
-playbooks stay outside it. Check diff hygiene. Review
-prose using `../house-writing-style/README.md`; models review
-meaning, scripts check exact contracts. Report evidence, unmeasured claims, and
-remaining limitations separately.
+Read the changed instructions with their callers, neighboring owners and
+references. Check meaning, metadata, paths and host visibility directly. Use the
+existing [house style](../house-writing-style/README.md) for prose review. Existing
+product tests remain relevant when executable product behavior changes; they do
+not certify skill quality.
+
+For selection changes, inspect an ordinary task's actual reads and subsequent
+work. Did the agent reach and use the relevant guidance without being told its
+name? Did it avoid unrelated procedures and respect the task's boundaries?
+Asking it to list the right skill is not evidence that it would use that skill.
+
+When a material change needs comparison, use
+[task-outcome evidence](references/lift-evaluation.md). Do not manufacture a
+failure, perform unsafe external actions or build a scoring framework to obtain
+a pass. Report direct findings separately from behavioral evidence. If real-task
+behavior has not been observed, say so; text edits alone do not demonstrate lift.

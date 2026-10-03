@@ -80,6 +80,16 @@ Observed 2026-09-11: `github` gained 47 tools and `deepwiki`/`openviking`
 vanished after one reload. An absent entry is not evidence that a server is
 unavailable; reload and re-list before concluding anything from it.
 
+Reload and restart are not interchangeable repairs. When the plugin supplying the
+whole surface is itself unloaded, its own management action disappears while other
+servers keep answering through a different path, and reloading configuration cannot
+restore it. Read the failing probe to separate the cases: one missing server among
+working siblings is a connection question, while a missing adapter whose siblings
+still resolve is a load question. Observed 2026-10-02: an adapter's own action and
+every per-server action it owned answered "Unknown Fabric action" while other
+`mcp.*` servers worked; three configuration reloads and one completed
+re-authentication changed nothing, and one full host restart restored the provider.
+
 Identify which config file the consumer actually reads before editing or
 restarting it. Similar server lists can belong to different consumers and
 schemas; follow the runtime's configured path rather than guessing. Observed
@@ -88,6 +98,12 @@ restarts. Compare required fields with a working entry: an omitted field can
 make a loader drop the entry before any connection is attempted. A loaded
 config with no server and no error calls for an entry/schema check before a
 connectivity probe.
+
+Scope matters as much as path. A server declared only in a project-scoped file
+stays invisible until that project is trusted, while a project entry otherwise
+replaces the user-level entry of the same name. Check both scopes before concluding
+a server is unsupported, and move the entry to the scope that loads without a trust
+step when the procedure must work everywhere.
 
 Use the host's supported reload path where available, but check its impact
 first. A reload can reconnect every server and discard REPL/session state; the

@@ -8,6 +8,19 @@ kind: playbook
 
 # ytdl, browser-native YouTube downloader
 
+This is a media-capture-specific [CDP fallback](../cdp/README.md), not the browser
+entrypoint. Use [Beacon](../beacon/README.md) for ordinary page reading or navigation.
+Do not rename this CLI as an MCP tool; its recording and muxing need those actual
+capabilities, an authorized source and any required human-owned login/consent.
+
+**Foreground-capable exception:** the current script opens an active tab. Before
+invoking it, verify that it will use an approved isolated/headless browser, or
+obtain explicit permission for the visible foreground step. The ordinary
+background-browser policy still applies; a download request alone does not grant
+desktop focus or authorize copying login state. If isolation cannot be verified
+and focus is not approved, report the blocker instead of running it. This is a
+workflow guard, not a claim that the CLI enforces a no-focus mode.
+
 A thin `browser-harness-js` heredoc, exactly like `gsearch`/`xsearch`. There is
 **no Bun program, no vendored solver, no HTTP client impersonation**. Every
 hard thing YouTube does to play a video, cookies, poToken, the n-signature,
@@ -35,7 +48,8 @@ The page plays the video; ytdl records the demuxed media the player feeds to Med
 
 ## Workflow
 
-1. Optionally `ytdl URL --info` for title/duration/qualities.
+1. Complete the isolation/focus check above before any invocation, including
+   optional `ytdl URL --info` for title/duration/qualities.
 2. `ytdl URL [-q 360p|720p|1080p|best|audio] [-o Name -d dir]`.
 3. Confirm the MP4 landed at the output path. Stop when the file exists with the expected streams.
 

@@ -33,32 +33,19 @@ A dead screenshot bridge cannot produce `visually-verified` or `pixel-perfect`. 
 
 A raster audit must classify references. A blanket “zero raster files” rule is wrong when the Figma component genuinely contains an image.
 
-## Fidelity manifest
+## Completion evidence
 
-Save one JSON manifest per completed artboard:
+Record the evidence in the project's existing design notes or task report:
 
-```json
-{
-  "status": "pixel-perfect",
-  "target": { "fileId": "...", "pageId": "...", "nodeId": "..." },
-  "artifacts": {
-    "sourceScreenshot": "/absolute/source.png",
-    "paperScreenshot": "/absolute/paper.png",
-    "diffImage": "/absolute/diff.png",
-    "structuralAudit": "/absolute/structure.json"
-  },
-  "structure": { "nameMismatches": 0, "boundsMismatches": 0, "countMismatches": 0 },
-  "assets": { "flattenedScreenshotRefs": 0, "componentImageRefs": 3 },
-  "fonts": { "unavailable": [], "fallbackApproved": false },
-  "visual": { "status": "passed" },
-  "theme": { "status": "passed" }
-}
-```
+- Source and destination file/page/node identities, with the scope compared.
+- Fresh source and Paper renders plus the inspected comparison or diff.
+- Structural checks for names, counts, bounds, text, and editable asset provenance.
+- Token references, resolved values, and observed theme propagation.
+- Actual source-font availability and rendering; name unavailable fonts and any
+  explicitly approved fallback. Missing font evidence blocks a pixel-perfect claim.
+- Remaining differences, unverified states, and the completion state justified by
+  these observations.
 
-Font evidence is explicit: `fonts.unavailable` is a list of nonempty font names
-(empty only when none are unavailable), and `fonts.fallbackApproved` is a boolean.
-Missing or malformed fields are not proof that fonts are available.
-
-The validator checks evidence completeness. Human inspection still decides whether
-the render actually matches. Test the font boundary with
-`python3 knowledge/playbooks/pencil/scripts/test-verify-fidelity-manifest.py` from the repository root.
+Inspect the artifacts themselves. A list of evidence paths or a stated pass does
+not establish that the render matches. An approved fallback remains a named
+deviation, not pixel-perfect completion.

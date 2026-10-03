@@ -100,6 +100,36 @@ wrangler secret put API_TOKEN
 
 Use `env.SECRET_NAME` in code. NEVER in `wrangler.toml`, NEVER in git.
 
+### Native widget management and private output
+
+Check installed `wrangler turnstile widget --help` before assuming dashboard-only
+setup or requiring another API token. Current Wrangler OAuth may already include
+`challenge-widgets.write`. List and reuse the exact hostname's widget first.
+Native widget `create` and `get` output contains its secret, including in JSON mode:
+capture it privately and disable Wrangler disk logging with
+`WRANGLER_WRITE_LOGS=false` for those calls. Return only public metadata and receipt
+flags, not the raw native response.
+
+### File-based setup without exposing credentials
+
+A request for project-local `.env` configuration is not a request to commit a
+credential or expose it in browser code. Wrangler supports local `.env` files;
+a competing `.dev.vars` takes precedence. Reuse that native loading behavior
+rather than adding another dotenv system or insisting on dashboard-only setup.
+A hosted Worker does not read the developer's local file at runtime.
+
+For an authorized file-to-host sync, select only the intended, nonempty secret
+fields and pass them to native `wrangler secret bulk` through stdin. Do not upload
+a whole development file containing public settings or activation flags. Keep
+those with their existing production configuration owner. Blank local values
+should not silently mean deleting a hosted credential.
+
+Secret updates can publish a new serving version. Confirm the account and existing
+Worker before writing; inspect native secret-name and deployment readback afterward.
+Do not confuse a registered secret with a working provider integration: values
+cannot be read back, and disabled application gates may still be intentional.
+Check the installed CLI contract and [local environment precedence](https://developers.cloudflare.com/workers/local-development/environment-variables/).
+
 ## KV (eventually consistent)
 
 ```ts
@@ -125,6 +155,19 @@ await env.BUCKET.put("file.pdf", data, { httpMetadata: { contentType: "applicati
 ```
 
 S3-like API. No egress fees. Public buckets for static.
+
+## Verify configured I/O in the actual runtime
+
+Bun/Node provider fixtures plus an unconfigured Worker smoke test leave an
+important gap: the native outbound request path never runs. Exercise a configured
+handler in workerd with loopback provider fixtures, retaining native `fetch` and
+its options. Do not replace away the runtime behavior being tested.
+
+For example, the runtime shipped with Wrangler 4.145.0 rejected
+`redirect: "error"` although Bun accepted it and Cloudflare's request docs listed
+it. `manual` plus explicit non-2xx rejection preserved the intended no-forwarding
+boundary. A failing native-runtime regression, then the live read, established
+the fix; token authentication and a successful build did not.
 
 ## Local Dev
 

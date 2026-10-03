@@ -35,7 +35,8 @@
       "args": [
         "mcp"
       ],
-      "lifecycle": "keep-alive"
+      "disabled": true,
+      "lifecycle": "lazy-keep-alive"
     },
     "figma-bridge": {
       "type": "stdio",
@@ -66,6 +67,11 @@
     "github": {
       "type": "remote",
       "url": "https://api.githubcopilot.com/mcp/",
+      "lifecycle": "lazy"
+    },
+    "beacon": {
+      "type": "remote",
+      "url": "https://mcp.trybeacon.space/mcp",
       "lifecycle": "lazy"
     }
   }

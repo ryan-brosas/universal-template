@@ -9,9 +9,9 @@ environment variables or a private host config, and never commit secret values.
 Read such a config by field name instead of printing it: a credential echoed
 into a transcript or command line is exposed even though the file is private
 (`knowledge/playbooks/security-and-hardening/README.md`).
-The `minimal` profile enables nothing. When a host enables or drops a declared
-server, update `servers.json` and the table below in the same change — the host
-config is private and local, this registry is not.
+The `minimal` profile enables nothing. Keep capability additions/removals in
+`servers.json` and the table below consistent. Project activation belongs in
+host configuration, not in this registry.
 
 ## Capabilities
 
@@ -20,7 +20,8 @@ config is private and local, this registry is not.
 | `sourcebot` | Indexed cross-repository source retrieval |
 | `context7` | Current library and framework documentation |
 | `exa` | Web research when ordinary web access is insufficient |
-| `mcp-steroid` | Language-aware local IDE integration where the host needs it |
+| `beacon` | Default browser UI reading and interaction through the user's approved, connected browser session |
+| `mcp-steroid` | Opt-in JetBrains semantic navigation, refactoring, inspections and debugging; disabled by default |
 | `paper`, `figma-bridge`, `figma-console` | Design workflows, when relevant |
 | `github` | Repository hosting and discovery: browse repositories outside the indexed corpus, inspect their source, issues, pull requests and commits, and perform GitHub operations |
 
@@ -36,6 +37,35 @@ token import/export and console telemetry, reaching them over the Figma REST API
 with its own access token; its live-document tools need the desktop plugin from
 `~/.figma-console-mcp/plugin/manifest.json`. Neither replaces the other, and a
 third Figma server would still need its own reason.
+
+## Optional IDE integration
+
+Steroid is disabled by default, including in `servers.json`. The `ide` profile
+identifies the capability; it does not enable it. Keep it installed only where
+useful and opt in for projects or tasks that need IDE semantics. Local source,
+compiler/linter checks and tests remain the default verification path.
+
+With Pi's MCP adapter, retain the global server definition with `disabled: true`.
+From a chosen project's root, run `/mcp enable mcp-steroid`, then `/reload`. The
+command writes only the project override in `.pi/mcp.json`, inheriting the global
+transport without copying credentials. `/mcp disable mcp-steroid` and `/reload`
+turn it off again for that project. Other hosts use their documented project
+configuration. See the [Steroid procedure](../knowledge/playbooks/mcp-steroid/README.md)
+for scoped use; enabling the tool does not make it a required PR check.
+
+## Browser automation
+
+Use the configured browser MCP, currently Beacon, for ordinary browser UI work. The
+[Beacon playbook](../knowledge/playbooks/beacon/README.md) owns target verification,
+batched actions, authentication boundaries and failure recovery. Discover live tool
+schemas; a registry entry does not prove a connected browser or successful input.
+Credentials and extension pairing remain in private host configuration.
+
+Keep [CDP](../knowledge/playbooks/cdp/README.md) for explicit protocol work or a named
+capability/approved-connection gap: screenshots, DOM/runtime inspection, tracing,
+emulation, file inputs or media capture. CDP helpers are not MCP tools and must not
+be mechanically renamed as such. Neither transport changes send approval or the
+approved browser profile. Plain HTTP and search tools still own simpler reads.
 
 ## Sourcebot
 
@@ -76,5 +106,5 @@ authenticates with a bearer token in the private host config (MCPorter
 `profiles.json` groups selections by capability rather than by historical
 tooling: `minimal` (nothing), `cross-repo-source` (Sourcebot),
 `repository-host` (GitHub), `docs` (Context7), `web-research` (Exa),
-`ide` (local IDE/LSP), `design` (Paper/Figma).
+`browser` (Beacon), `ide` (local IDE/LSP), `design` (Paper/Figma).
 Profiles describe useful selections; they do not install or remove anything.

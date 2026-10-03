@@ -16,6 +16,17 @@ runs the same events or gates. `pull-request-format.md` owns PR presentation.
   the branch head.
 - Watch expected checks to a terminal state before claiming success. A PR may be
   under review while CI runs; follow the parent procedure's delivery boundary.
+- For a specific Actions run, use
+  `gh run watch <run-id> --repo <owner/repo> --exit-status`; without
+  `--exit-status`, completion is not a passing shell gate. After failure, inspect
+  `gh run view <run-id> --repo <owner/repo> --log-failed` and the structured
+  `status,conclusion,headSha,url` fields. Preserve nonzero exits as evidence.
+  The [watch manual](https://cli.github.com/manual/gh_run_watch) documents a
+  fine-grained PAT limitation; if it applies, use bounded `gh run view --json`
+  polling when permitted, or report the access gap instead of broadening scopes.
+- [PR checks](https://cli.github.com/manual/gh_pr_checks) can be scoped with
+  `--required`; `--fail-fast` stops a watch at the first failure, so it does not
+  prove all other checks finished. Pending exit `8` is not an auth failure.
 - Record run links and observed states in the requested report or PR evidence,
   without treating a status report as permission to edit an upstream PR.
 - Review the workflow itself as part of the gate: triggers, permission scope, action pins, untrusted code on `pull_request`, secrets kept out of PR jobs.
@@ -48,14 +59,14 @@ reported merge conflicts still need a local resolution.
 An empty or partial rollup is not a pass. `mergeStateStatus: CLEAN` can appear
 before the required jobs register. Bind the verdict to the revision being delivered:
 
-- Compare `gh pr view <n> --json headRefOid,statusCheckRollup` with the pushed SHA.
+- Compare `gh pr view <n> --repo <owner/repo> --json headRefOid,statusCheckRollup` with the pushed SHA.
   A changed head invalidates the previous verdict; do not merge an unchecked head.
 - Derive expected check names and providers from the project workflows and branch
   rules, not from whichever checks currently appear. If that set is empty or
   unavailable, establish the [CI contract](../../github-actions-engineering/references/required-checks.md)
   before declaring success. An intentionally CI-free project must be reported as
   such, with its applicable local gates, not as having passed CI.
-- Read states with `gh pr checks <n> --json name,state,bucket,link`; pending checks are
+- Read states with `gh pr checks <n> --repo <owner/repo> --json name,state,bucket,link`; pending checks are
   not success and the command exits `8` while pending. That output carries no provider
   identity, so when a name is shared across providers confirm the expected one from the
   paginated rollup or the check-runs API (`app.slug`) and match name and provider. Wait
@@ -89,16 +100,12 @@ evidence files rather than repeating the execution plan to the user.
 
 ## Structural observation
 
-Every PR must carry revision-bound structural evidence from
-`../../pre-pr-validation/README.md`. That procedure owns the required Steroid IDE
-inspection, local Fovea `fovea_impact` analysis and, when the change's correctness
-depends on indexed code evidence or the user requested it, the Sourcebot
-`ask_codebase` baseline challenge; do not skip a required lane because a diff is
-small. A BLOCKED draft/WIP PR records the unavailable lane and its coverage limits
-instead, and is never relabeled READY. Source and tests confirm every structural claim. Record
-the repository, revision and covered paths, and revalidate after the delivered
-revision changes. A search miss is not proof that callers or consequences are
-absent.
+Use `../../pre-pr-validation/README.md` for applicable checks and evidence
+requirements; do not add a universal IDE or graph-tool gate here. Record the
+repository, revision, covered paths and limitations. Confirm structural claims
+against current source and tests, then revalidate affected evidence when the
+delivered revision changes. A search miss is not proof of absence, and a
+BLOCKED draft/WIP PR is not READY.
 
 ## Learnable rules
 

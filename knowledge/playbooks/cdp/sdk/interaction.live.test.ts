@@ -143,13 +143,14 @@ after(async () => {
 async function open(input: 'synthetic' | 'trusted') {
   const session = new Session();
   await session.connect({ port });
-  const { targetId } = await session.domains.Target.createTarget({ url: `${origin}/` }) as { targetId: string };
+  const { targetId } = await session.domains.Target.createTarget({ url: 'about:blank' }) as { targetId: string };
   const { sessionId } = await session.domains.Target.attachToTarget({ targetId, flatten: true }) as { sessionId: string };
   await session._call('Page.enable', {}, { sessionId });
-  await session._call('Runtime.evaluate', {
-    expression: 'new Promise(r => document.readyState === "complete" ? r() : addEventListener("load", r))',
-    awaitPromise: true,
-  }, { sessionId });
+  // Subscribe before navigation; readyState could describe the initial blank page.
+  await Promise.all([
+    session.waitFor({ method: 'Page.loadEventFired', sessionId, timeoutMs: 5_000 }),
+    session._call('Page.navigate', { url: `${origin}/` }, { sessionId }),
+  ]);
   const controller = new InteractionController(session, { allowedOrigins: [origin], input });
   const scope = { sessionId };
   const readLog = async () => {

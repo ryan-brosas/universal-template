@@ -2,7 +2,8 @@
 
 Sources: [Tokens](https://paper.design/docs/tokens),
 [MCP](https://paper.design/docs/mcp), and the
-[build log](https://paper.design/build-log). Reviewed 2026-09-06.
+[build log](https://paper.design/build-log). Token/MCP docs and relevant installed
+schemas checked 2026-09-27; release-note history is dated in `index.md`.
 
 For source identity, aliases, inherited Figma modes, consumer scope, and safe
 propagation verification, use `../../pencil/references/tokens.md`. That reference
@@ -12,8 +13,10 @@ owns the transfer policy; this one supplies Paper's concrete mechanics.
 
 Paper tokens are CSS custom properties shared by canvas styles and exported code.
 Supported categories: color, radius, spacing, container, breakpoint, font family,
-font weight, font size, line height, and letter spacing. Inspect current tools for
-accepted names/types and normalization rather than guessing a prefix from a label.
+font weight, font size, line height, and letter spacing. Installed token schemas
+also expose **opacity** (a 0–1 number or percent string), beyond the website's list.
+Inspect current tools for accepted names/types and normalization rather than
+guessing a prefix from a label. This is schema evidence, not a canvas test.
 
 The docs still put these on the roadmap:
 
@@ -66,12 +69,19 @@ Discover the installed tool schemas. At review time these operations were expose
 | `get_tokens` | Filter categories or names; request JSON, CSS, or Tailwind output |
 | `create_tokens` | Create entries; values can alias another token with `var(--name)` |
 | `set_tokens` | Update, rename, or delete by full CSS-variable name |
-| `find_nodes` | Find literal or token usages; page-scoped unless scoped to a subtree |
+| `find_nodes` | Find literal/token usages or text; file-wide by default, narrowed by page or subtree |
 | `update_styles` / `write_html` | Bind properties using CSS variables |
 
-Pass explicit file identity where supported. Inspect **each entry's result**:
-batches can succeed at the transport level while individual entries fail. Inspect
-`ignoredStyles` on style updates. Read back generated CSS names before binding.
+Pass the required file identity. In the inspected schema, omit both `pageId` and
+`nodeId` for a file-wide `find_nodes` search; `nodeId` takes priority over `pageId`.
+Inspect **each entry's result**: batches can succeed at the transport level while
+individual entries fail. Token updates run sequentially. Inspect `ignoredStyles`
+on style updates and read back CSS names before binding.
+
+Read before creating: `create_tokens` permits duplicate names, so rerunning it is
+not an idempotent update. Reuse or update the identified owner with `set_tokens`;
+resolve existing name collisions before mutating them. If a returned token
+`contentHash` changes, re-read tokens before relying on cached values or aliases.
 
 A literal-color search can also return token-bound usages, and a match inside a
 border/gradient is only a fragment. Read the complete property before replacing it.

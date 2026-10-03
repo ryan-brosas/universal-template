@@ -10,22 +10,37 @@ Use one evidence path: local checks verify the branch, CI verifies the pushed
 commit, and the PR body records scope, proof, and limitations. This skill owns
 individual PR and review operations; `../ship-pr/README.md` owns a requested full
 lifecycle through merge. An existing PR is updated, not duplicated: before creating
-one, check `gh pr list --state all --search "<head branch or title>"` and stop or
+one, check `gh pr list --repo <owner/repo> --state all --search "<head branch or title>"` and stop or
 rescope when the base already contains the change. A concurrent session may have
 opened - or already merged - a PR for the same work, and an open-only query misses both.
 
-## Workflow
+## Push-only requests
+
+A commit/push request does not authorize a PR or merge. Follow
+[Git workflow](../git-workflow-and-versioning/README.md) for scope and checks, then
+push the validated commit to the agreed remote/ref and verify its remote SHA.
+Skip PR creation, body generation and review setup when no PR was requested.
+
+If branch protection rejects the push, preserve the local commit and report the
+refusal. Do not bypass protection or open a PR against an explicit no-PR request;
+ask for an alternate branch unless that destination is already authorized. Name
+the branch actually published: pushing a feature branch does not update `main`.
+If the working tree is clean and the intended commit is already on that remote
+ref, report up to date rather than creating an empty commit.
+
+## PR and review workflow
 
 1. Inspect status, the base branch, commit range, and authored diff. Before every
    new PR or update to an existing PR, revalidate through
-   `../pre-pr-validation/README.md`; it owns
-   the project gates, `git diff --check`, CodeRabbit review, Steroid semantics,
-   the Sourcebot baseline challenge where applicable, Fovea impact analysis and
-   revision-bound evidence.
+   `../pre-pr-validation/README.md`; it owns local checks, tool applicability and
+   revision-bound evidence. Native Sourcebot patch review is a separate
+   post-publication gate.
    Follow its evidence-reuse rule for unchanged revisions and metadata-only
    updates. If no project quality gate exists, record that blocker rather than
-   inventing CI. A BLOCKED verdict stops normal delivery unless the user requests
-   a draft/WIP PR; carry every blocker honestly into that draft.
+   inventing CI. A local BLOCKED verdict stops normal delivery unless the user
+   requests a draft/WIP PR; carry every blocker honestly into that draft. A pending
+   or blocked bot review does not prevent authorized PR creation or pushing fixes
+   needed for review, but it must not be reported as passed.
 2. For PR creation or body updates, load `references/pull-request-format.md`.
    Use the repository's own template first; fall back to
    `../../../templates/pull-request.md`. Include only evidence actually obtained.
@@ -34,13 +49,16 @@ opened - or already merged - a PR for the same work, and an open-only query miss
    not an automatic capture task.
 3. Write Markdown to a securely created temporary file (`mktemp`); pass it with
    `--body-file`, never interpolate it into shell code. Before `gh pr create`, run
-   the `../gh-repo-target-guard/README.md` check: gh's default repo
-   (`gh repo set-default --view`) must match the intended base from `git remote -v`;
-   in any fork checkout pass `--repo` (and `--head` when head and base repos
-   differ) explicitly. Push and create with
-   `gh pr create --title "..." --body-file <file> --base <base>`, or update the
-   existing PR. For fork-based contribution — remote roles, branching from the
-   project's base, branch currency, and a fork PR's base-repository CI — use
+   [target guard](../gh-repo-target-guard/README.md): confirm the intended base
+   repository, then target it explicitly. Push separately when authorized and
+   create with `gh pr create --repo <owner/repo> --head <branch-or-user:branch>
+   --base <base> --title "..." --body-file <file>`, or update the existing PR.
+   Explicit `--head` skips automatic pushing/forking; `--dry-run` alone can still
+   push and is not a safe validation command. A default mismatch does not require
+   changing configuration when the explicit target is correct. For shared auth,
+   JSON and API mechanics, use [GitHub CLI](../github-cli/README.md).
+   For fork-based contribution — remote roles, branching from the project's
+   base, branch currency, and a fork PR's base-repository CI — use
    `references/fork-contribution.md`. Incomplete implementation is draft; ready implementation can
    enter review while CI runs. A failing required check blocks merge, not review.
 4. Apply labels only when explicitly requested; this repository has no label
@@ -53,12 +71,19 @@ automation. Reviewers follow CODEOWNERS or an
 
    Auto-merge requires an explicit user request, not merely repository
    support, and must not be enabled while required checks fail.
-5. Watch required CI to a terminal state with `gh pr checks --watch` (or
-   `gh run watch`); do not rely on a single unwatched poll.
+5. Watch required CI to a terminal state with
+   `gh pr checks <n> --repo <owner/repo> --required --watch` (or
+   `gh run watch <run-id> --repo <owner/repo> --exit-status`); do not rely on a
+   single unwatched poll or treat an empty check set as passing.
    Update the PR evidence when results change. For workflow or conditional
    observation details, select `references/ci-and-observation.md`; CI authoring
    belongs to `../github-actions-engineering/README.md`.
-6. For review feedback, load `references/review-threads.md` **before replying or
+6. Complete the required [Sourcebot bot review](../sourcebot/references/review-workflow.md)
+   for the published PR revision. Inspect existing evidence; trigger only within
+   the authorized repository/review scope. A missing, failed, partial or stale
+   bot result blocks review completion and merge, not the publication needed to
+   obtain a review. Do not substitute CodeRabbit or indexed Ask answers.
+   For review feedback, load `references/review-threads.md` **before replying or
    resolving**. Read the findings, verify against source, fix and test where
    warranted, reply in-thread, and resolve only addressed or deliberately
    dispositioned findings. Anything needing reviewer confirmation stays open.
@@ -70,9 +95,9 @@ resolution, not unrelated GitHub writes. Replying is not resolution. REST commen
 database IDs and GraphQL review-thread IDs are different; the reference owns
 endpoint and payload mechanics.
 
-Never merge with a failing local gate, failing required check, unresolved thread,
-or pending human decision. A green review-bot check does not mean no findings:
-fetch and read the threads before merging. Do not invent evidence or SHAs, include
+Never merge with a failing local gate, failing required check, incomplete Sourcebot
+patch review, unresolved thread, or pending human decision. A green review-bot
+check does not mean no findings: fetch and read the threads before merging. Do not invent evidence or SHAs, include
 secrets/unrelated files, or use `pull_request_target` for untrusted branch code.
 
 Stop at the requested operation: the PR exists or is updated, evidence matches

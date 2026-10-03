@@ -28,35 +28,37 @@ Avoid giant catalogs. A tiny CLI may need four labels; that is correct.
 
 `gh label create` picks a random color when omitted — the exact hex is not load-bearing.
 
-## Idempotent sync (verified on gh 2.98.0)
+## Idempotent reconciliation
 
-`gh label create <name> --force` creates missing labels and updates existing ones in one pass, so re-running is a no-op:
+Use [GitHub CLI](../../github-cli/README.md) for targeting and API mechanics.
+Inspect the complete collection before comparing it with the requested taxonomy:
 
-```bash
-# inspect first (--limit: the default fetches only 30 labels)
-diff <(cat <<'WANT'
-type:bug
-type:feature
-area:ci
-WANT
-) <(gh label list --limit 1000 --json name --jq '.[].name' | sort) || true
-
-# reconcile (adjust the set to the discovered project)
-while IFS='|' read -r name color desc; do
-  gh label create "$name" --color "$color" --description "$desc" --force
-done <<'EOF'
-type:bug|d73a4a|Something is broken
-type:feature|1d76db|New capability
-type:docs|0075ca|Documentation only
-type:chore|fef2c0|Maintenance and tooling
-area:ci|bfd4f2|CI, workflows, and repository governance
-EOF
+```sh
+gh api --hostname HOST repos/OWNER/REPO/labels --paginate \
+  --jq '.[] | {name, color, description}'
 ```
+
+An unsuccessful or incomplete read is not an empty label set. A fixed
+`gh label list --limit` is only a bound; do not hide read errors with `|| true`
+or process substitution before deciding what to create. Compare names, colors
+and descriptions, preserving intentional labels and skipping unchanged entries.
+
+For an authorized difference, `--force` creates a missing label or updates an
+existing one's color and description; it does not itself avoid an unchanged write.
+For example, when the requested taxonomy includes this label:
+
+```sh
+gh label create 'type:bug' --repo HOST/OWNER/REPO --color d73a4a \
+  --description 'Something is broken' --force
+```
+
+Read back the complete collection and compare the affected labels. A partial
+failure needs inspection before retrying; do not apply a generic catalog blindly.
 
 ## Default-label reconciliation
 
 - GitHub defaults (`bug`, `enhancement`, `documentation`, `question`, ...) may stay; do not churn a working set.
-- Before retiring a default superseded by a namespaced label, check references: `gh issue list --state open --label <name>` and `gh pr list --state open --label <name>`. Retire only when both are empty.
+- Before retiring a default superseded by a namespaced label, check references: `gh issue list --repo HOST/OWNER/REPO --state open --label <name>` and `gh pr list --repo HOST/OWNER/REPO --state open --label <name>`. Retire only when both are empty.
 - HARD-GATE: never delete a label carrying open issues or PRs without migrating those references first.
 
 ## Optional automation

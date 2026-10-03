@@ -1,13 +1,11 @@
 # Engineering languages
 
-Start with the narrowest matching procedure. Load additional procedures only for
-distinct active subproblems; each summary and body owns its detailed contract.
-This is a routing index, not a reading list. Known procedure paths can be opened directly.
+Navigation only: open matched procedures, not every link.
 
 - [android-coding-practices](../../../knowledge/playbooks/android-coding-practices/README.md)
 - [angular-coding-practices](../../../knowledge/playbooks/angular-coding-practices/README.md)
 - [arduino-coding-practices](../../../knowledge/playbooks/arduino-coding-practices/README.md)
-- [bend-coding-practices](../../../knowledge/playbooks/bend-coding-practices/README.md) — Proactive Bend 2 stack assessment, reusable verified foundations, JS/TS interop, compiler-free JS bundles and native parallel computation.
+- [bend-coding-practices](../../../knowledge/playbooks/bend-coding-practices/README.md) — Learn Bend 2 syntax and laws/proofs; assess stack adoption, reuse verified foundations, integrate JS/TS, ship compiler-free JS bundles and verify native parallel computation.
 - [c-coding-practices](../../../knowledge/playbooks/c-coding-practices/README.md)
 - [clojure-coding-practices](../../../knowledge/playbooks/clojure-coding-practices/README.md)
 - [common-lisp-coding-practices](../../../knowledge/playbooks/common-lisp-coding-practices/README.md)

@@ -16,6 +16,10 @@ Minimum CI that proves the project's actual requirements, with strong security b
 - **Modes:** audit (read-only findings) · create · repair · harden · optimize · reusable · release · deploy · migrate. The request picks the path; audit never mutates.
 - **NOT when:** wiring rulesets/labels/templates or configuring GitHub to *require* a check (`github-repo-setup`, this skill defines and proves the check, that skill requires it). GitHub Agentic Workflows / `gh aw` / `.github/workflows/*.md` + compiled `.lock.yml` (use the current vendor agentic-workflows flow. never hand-edit generated `.lock.yml`). a failing test that fails locally too (fix the project, not CI).
 
+Use [GitHub CLI](../github-cli/README.md) for command, auth and API mechanics, and
+[CI observation](../push-pr/references/ci-and-observation.md) for revision-bound
+run selection and verdicts. This playbook owns workflow design and repair.
+
 ## Workflow
 
 1. **Inspect the project before any YAML.** Manifests, lockfiles, workspaces (`pnpm-workspace.yaml`, `turbo.json`, Cargo workspace, go.work, pyproject/uv/poetry), version sources (`mise.toml`, `.tool-versions`), task runners (Makefile/Justfile/Taskfile), existing scripts, test dirs, release/deploy config. Use the commands the project already declares (`npm run typecheck`, `just verify`, `make ci`), never reinvent them in YAML. Classify the repo type (library/app/CLI/monorepo/service/container/template/experimental/multi-language), it decides how much CI is appropriate.
@@ -25,8 +29,8 @@ Minimum CI that proves the project's actual requirements, with strong security b
 5. **Apply the security baseline** (`references/security.md`): minimal `permissions:` (top-level `contents: read`, per-job writes), full-SHA pins with version comments, no untrusted interpolation into `run:`, `pull_request_target` treated as privileged, fork-safe PR jobs, secrets only at their boundary, OIDC over long-lived keys, self-hosted runners never for untrusted code.
 6. **Implement.** Workflow YAML stays an orchestrator: checkout → setup → install → *project-defined check* → report. Multi-line logic belongs in `scripts/`, repeated step logic in composite actions, repeated job orchestration in reusable workflows, extracted only after real repetition. Start from `templates/github-pr-ci.yml` when the project wants the standard PR-gate shape (replace the gate placeholder; the file fails closed until you do).
 7. **Validate.** YAML parse; `actionlint` when available (detect, don't require); the repository's configured workflow security analysis, `zizmor` locally when installed, and a specialized scanner only when justified; shellcheck via actionlint when present. If a tool is unavailable, say so, never claim it ran. Then run the project's own gates locally.
-8. **Verify remote behavior when GitHub access exists.** `gh run watch`/`gh run view --log-failed` on the real run: workflow parsed, trigger fired, job/check names exactly as contracted, permissions sufficient, cache/artifacts behaving. Local syntax validation does NOT prove remote semantics, report "local validation passes; remote run pending" when accurate.
-9. **Report the governance handoff.** List the exact check names proven by a real run (e.g. `quality / required`), `github-repo-setup` consumes this contract to configure rulesets; never let both skills guess names. Release/deploy environments (name, secrets, restrictions, approvals) are specified here, configured there.
+8. **Verify remote behavior within the requested scope.** Select a real run by repository, event, revision and attempt through CI observation. Use `gh run watch <run-id> --repo <owner/repo> --exit-status`; inspect failures with `gh run view <run-id> --repo <owner/repo> --log-failed`. Verify triggers, check identities, permissions, caches and artifacts. Access alone does not authorize a push or dispatch. Local syntax validation is not remote proof; report a pending or unavailable run when accurate.
+9. **Report the governance handoff.** List the exact check contexts and providers proven by a real run; `github-repo-setup` consumes this contract to configure rulesets, rather than guessing names or app IDs. Release/deploy environments (name, secrets, restrictions, approvals) are specified here, configured there.
 
 **Idempotency:** inspect → compare → reconcile. A second run creates no duplicate workflows, caches, Dependabot entries, or renames of stable checks; it reports "no changes required" per item.
 
@@ -49,7 +53,7 @@ Minimum CI that proves the project's actual requirements, with strong security b
 ## Verification
 
 - Local: YAML parse + `actionlint` (when installed) + `zizmor .github/workflows/` (when installed) + the project's own gates, record which ran.
-- Remote: one real run watched to a terminal state; check names read back from the run (`gh api repos/OWNER/REPO/commits/<sha>/check-runs` or `gh pr checks`) match the reported contract exactly.
+- Remote: the expected checks on the intended revision pass under the CI observation procedure. Read back contexts and providers from the real run; a terminal run alone is not success. Report missing remote evidence explicitly.
 - Audit mode ends with prioritized findings (Critical/High/Medium/Low, each with path, impact, fix, mechanical-verifiability), not a generic checklist dump.
 - Repair mode names the failing layer (parse/environment/dependency/project/permission/secret/policy/external/cancellation/required-check) and fixes that layer, citing the actual run log.
 

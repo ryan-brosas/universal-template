@@ -38,6 +38,25 @@
 
 Specify what wraps, stacks, scrolls, condenses, or moves at content-driven breakpoints. Preserve reading/focus order, current location, primary action, context, and task-critical information at narrow width, landscape, zoom, virtual-keyboard display, RTL, and long localization.
 
+When intermediate layouts still feel cramped despite passing bounds checks, use [Responsive layout and typography repair](responsive-typography-repair.md) to distinguish composition failures from typography overrides and test the requested relationships.
+
+### Breakpoint focus handoff
+
+Do not assume a `matchMedia` change callback runs before CSS hides the old
+navigation surface. Chromium can emit `focusout` first, leaving
+`document.activeElement` as `body` when the handler tries to restore focus.
+When this ordering is observed, preserve the displaced control only while the
+breakpoint is unsettled, clear it on an intentional focus move, and consume it
+when handing focus to the visible counterpart. Keep this in the existing
+navigation controller, not a second resize system.
+
+For an intermittent failure, compare native focus/media-query event order in
+the before and after builds. Reproduce the observed bad ordering explicitly in
+a regression fixture rather than increasing timeouts. Check both breakpoint
+directions and that restoration does not steal focus from outside navigation,
+including a deliberate focus move during the pending transition. A closed panel
+alone does not prove that the focus handoff completed.
+
 ## Verification
 
 Render navigation open/closed/current, every breakpoint, longest labels, 200% zoom, RTL, keyboard focus, touch targets, sticky headers/banners, destructive adjacency, and page/menu continuation. Confirm no control becomes hidden solely to fit and no visual transform changes semantic or tab order unexpectedly.

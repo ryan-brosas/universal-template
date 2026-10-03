@@ -68,15 +68,16 @@ test('trusted input reaches a background target without requesting activation', 
       return (original as any)(method, params, opts, reconnected);
     };
 
-    const created = await session.domains.Target.createTarget({ url: `${origin}/`, background: true }) as { targetId: string };
+    const created = await session.domains.Target.createTarget({ url: 'about:blank', background: true }) as { targetId: string };
     targetId = created.targetId;
     const attached = await session.domains.Target.attachToTarget({ targetId, flatten: true }) as { sessionId: string };
     const scope = { sessionId: attached.sessionId };
     await original('Page.enable', {}, { sessionId: scope.sessionId });
-    await original('Runtime.evaluate', {
-      expression: 'new Promise(r => document.readyState === "complete" ? r() : addEventListener("load", r))',
-      awaitPromise: true,
-    }, { sessionId: scope.sessionId });
+    // Subscribe before navigation; readyState could describe the initial blank page.
+    await Promise.all([
+      session.waitFor({ method: 'Page.loadEventFired', sessionId: scope.sessionId, timeoutMs: 5_000 }),
+      original('Page.navigate', { url: `${origin}/` }, { sessionId: scope.sessionId }),
+    ]);
 
     const guard = new InteractionController(session, { allowedOrigins: [origin], input: 'trusted' });
     const startedAt = methods.length;

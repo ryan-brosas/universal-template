@@ -1,15 +1,13 @@
 ---
 name: design-pack
-description: "Use when designing or improving UI/UX, implementing frontend presentation, iterating logos or illustrations, generating bot icons from images, exploring visual prototypes, working in Paper/Figma/FLORA, copying a design, checking pixel fidelity, or auditing accessibility. This pack owns visual and interaction decisions; combine it with engineering when implementing or testing them."
+description: "Use when designing or improving UI/UX, implementing frontend presentation, iterating logos or illustrations, generating bot icons from images, exploring visual prototypes, working in Paper/Figma/FLORA, updating Paper Desktop or diagnosing its UI scaling, implementing Paper-to-code, copying a design, checking pixel fidelity, or auditing accessibility. Owns visual and interaction decisions and Paper workflows; combine with engineering for code and the installed desktop skill for OS changes."
 invocation: entry
 ---
 
 # Design pack
 
-Start with the narrowest matching procedure and add another only for a distinct
-active design problem. Read only the references each needs and resolve paths and
-helpers from that procedure's directory. Do not load the pack recursively or treat
-a visual request as permission for unrelated redesign.
+Choose the matching procedure; resolve its paths from its own directory.
+A visual request is not permission for unrelated redesign.
 
 - Frontend typography, spacing, forms, responsive behavior and states:
   [frontend-ui-implementation](../../knowledge/playbooks/frontend-ui-implementation/README.md).
@@ -27,6 +25,9 @@ a visual request as permission for unrelated redesign.
   [ui-ux-iteration-loop](../../knowledge/playbooks/ui-ux-iteration-loop/README.md).
 - Inconsistent linked Figma controls, variant/property repairs or variable bindings:
   [figma-web-design](../../knowledge/playbooks/figma-web-design/README.md).
+- Paper-to-code (live design reads before visual code edits), platform use,
+  desktop updates/startup/scaling, agent connection, tokens, HTML import or Snapshot:
+  [paper-design](../../knowledge/playbooks/paper-design/README.md).
 - Copy a Figma frame into Paper:
   [pencil](../../knowledge/playbooks/pencil/README.md).
 - Compose from the libraries the file already has enabled instead of redrawing:

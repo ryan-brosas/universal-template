@@ -8,9 +8,10 @@ The host chooses the model and provides tools; this template teaches how to work
 Clone this repository into an unused directory. Configure your agent to read
 [AGENTS.md](AGENTS.md) and discover the task routers in `skills/`.
 Cloning alone does not configure your agent. Expose only `skills/` to skill
-discovery. For each task, load zero, one, or several packs and playbooks: the
-smallest set that covers its independent subproblems, with each selected for work
-it owns.
+discovery. The agent selects from task intent and reads the matching skill and
+procedure before specialized work; users should not need to name them. Load only
+the packs needed for active subproblems, not the whole library. Verify discovery
+in the host: descriptions support selection but do not guarantee it.
 
 ## Work from evidence
 
@@ -56,6 +57,7 @@ not a fixed one-pack choice or the whole library.
 - `skills/` — small task-oriented routers.
 - `knowledge/playbooks/` — reusable ways of working.
 - `mcp/` — optional capability declarations and connection guidance.
+- `agents/` — OpenCode subagent definitions for delegation and roster maintenance.
 - `prompts/` — reusable task starters.
 - `templates/` — reusable project and output shapes.
 

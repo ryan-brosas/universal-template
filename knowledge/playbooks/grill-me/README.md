@@ -1,83 +1,39 @@
 ---
 title: grill-me
-summary: Use when you have a rough idea, ADR, PRD, or spec that needs to survive scrutiny before code is written.
+summary: Use when a proposal, ADR, PRD or spec needs its assumptions and failure cases challenged before implementation.
 kind: playbook
 ---
 
+# Stress-test a proposal
 
-# Grill Me
-
-## When to Use
-
-You have a plan, spec, ADR, or architecture that you want to stress-test before committing to implementation. You want someone to find the holes.
-
-## Core Principle
-
-**A plan that survives a good grilling is a plan worth implementing.** A plan that falls apart under questions would have fallen apart during implementation, costing more.
+Investigate whether the plan meets its goal and where it could fail. This is
+scrutiny of an existing direction, not a prerequisite for every coding task.
+Use [brainstorming](../brainstorming/README.md) when the direction itself is still
+being formed. For scrutiny centered on project terminology and documented
+choices, use research's [grill-with-docs](../grill-with-docs/README.md) extension.
 
 ## Workflow
 
-Inspect the supplied proposal and available project evidence before asking questions; do not ask for facts the repository already answers. Ask one question at a time and let the person answer fully. Walk only relevant Common Targets. Stop when consequential uncertainty is resolved, the direction needs reconsidering, or questions repeat. No fixed question count is required.
+1. Read the proposal, requirements and relevant project evidence. Answer what
+   source can establish rather than asking the user to repeat it.
+2. Identify consequential assumptions, alternatives and failure cases. Choose
+   the question whose answer most affects the decision; do not walk a checklist
+   of every imaginable risk.
+3. Ask one question at a time when user judgment is needed, explaining the
+   trade-off and a recommendation where evidence supports one. Wait for the
+   answer before pursuing a dependent question. Do not force the user to express
+   uncertainty about facts already established.
+4. Reassess the direction as evidence arrives. Stop when consequential uncertainty
+   is resolved, the plan needs reconsidering, or further questions add no value.
 
-## How to Grill
+Useful questions concern the cost of a mistaken assumption, meaningful scale
+changes, an external dependency's limits, the smallest informative experiment,
+recovery or rollback, and explicit non-goals. Select what applies; neither a
+question count nor finding a flaw proves the review was useful.
 
-Ask:
-- "What assumptions are you making that could be wrong?"
-- "What's the most likely thing to fail?"
-- "What if X is 10x larger / smaller / slower?"
-- "What's the cost of being wrong?"
-- "What's the simplest way to test this?"
-- "What's the hardest part? Why?"
-- "What's the rollback plan?"
-- "What would make this a mistake?"
-- "Who disagrees with this? Why?"
-- "What's the non-goal everyone forgets?"
-- "What are we not talking about?"
+## Outcome
 
-One question at a time. Let the person answer fully before asking another.
-
-## What a Good Grilling Looks Like
-
-- Questions surface assumptions, not opinions.
-- The griller is curious, not confrontational.
-- The grillee answers in "I think" and "I'm assuming", not "it's obvious".
-- Stop when consequential uncertainty is resolved or the direction needs reconsidering; there is no question quota.
-- The griller doesn't need to "win", they need to find the hole.
-
-## Common Targets
-
-| Target | Question |
-|-------------------|-------------------------------------------------|
-| Cost estimate | "What if it takes 3x as long?" |
-| Scale estimate | "What if traffic grows 10x this month?" |
-| One-vendor risk | "What if vendor shuts down?" |
-| "Just use X" | "What does X not do?" |
-| "We'll iterate" | "What's the first working version look like?" |
-| "It's simple" | "Define simple. How many moving parts?" |
-| "Everyone agrees" | "Who did you not ask?" |
-| "No dependencies" | "What do you depend on that you don't control?" |
-
-## When to Stop Grilling
-
-Use the stop rule in Workflow; concrete answers are needed for consequential uncertainties, not every possible question. If the direction needs reconsidering or questions repeat, report the remaining blocked decisions rather than implying they are resolved.
-
-## Common Mistakes
-
-Asking 5 questions in one message; grilling from a position of "I know better" (stifles ideas); stopping too early (first two questions are easy); stopping too late (grilling the trivial parts); letting resolved answers go unrecorded; "grilling as attack" (destroys trust, not plans).
-
-## Red Flags
-
-No assumptions stated. "I'll figure it out later" as a crutch. "everyone agrees" without asking everyone. cost estimate without a range. "it's simple" without definition. no rollback plan. "we'll iterate" before v1 is defined. "no dependencies" without checking. vulnerability mentioned, dismissed. "I'm not worried about X" (X is the thing to worry about).
-
-## Anti-Patterns
-
-**5 questions at once**; **"I know better"** (stifles); **stop too early** (first 2 are easy); **grill the trivial**; **answers go unrecorded**; **attack mode**.
-
-## Verification
-
-End with the strengthened or rejected direction, consequential assumptions resolved, and any decisions still blocked on the user. Summarize answers in the conversation. During project setup, carry agreed durable decisions into the existing project context or the requested bootstrap output; do not create a separate grilling document by default.
-
-
-## References
-
-N/A, no reference files; the question banks and targets are inline in this skill.
+Summarize the strengthened or rejected direction, resolved assumptions and
+remaining blocked decisions in the conversation. Preserve agreed rationale in
+existing project documentation when that is part of the task. Do not create a
+separate grilling document or start implementation without authorization.

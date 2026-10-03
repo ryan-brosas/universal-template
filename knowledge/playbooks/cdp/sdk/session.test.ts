@@ -28,6 +28,25 @@ class FakeWire implements Wire {
   }
 }
 
+test('default connect and reconnect leave OS consent keystrokes disabled', async () => {
+  const session = new Session();
+  assert.equal(session.autoAllow, false);
+  const policies: boolean[] = [];
+  let wire!: FakeWire;
+  (session as any)._connect = async () => {
+    policies.push(session.autoAllow);
+    wire = new FakeWire();
+    (session as any).bindWire(wire, 'cdp');
+  };
+  try {
+    await session.connect({ wsUrl: 'ws://authorized.invalid/devtools/browser/default-policy' });
+    wire.close();
+    await session._call('Target.getTargets', {});
+    assert.deepEqual(policies, [false, false]);
+    assert.equal(session.autoAllow, false);
+  } finally { session.close(); }
+});
+
 test('explicit remote host resolution cannot redirect to another host or local discovery', async () => {
   const original = globalThis.fetch;
   try {

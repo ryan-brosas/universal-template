@@ -8,6 +8,19 @@ kind: playbook
 
 # ttdl, browser-native TikTok downloader
 
+This is a media-capture-specific [CDP fallback](../cdp/README.md), not the browser
+entrypoint. Use [Beacon](../beacon/README.md) for ordinary page reading or navigation.
+Do not rename this CLI as an MCP tool; its recording and muxing need those actual
+capabilities, an authorized source and any required human-owned login/consent.
+
+**Foreground-capable exception:** the current script opens an active tab. Before
+invoking it, verify that it will use an approved isolated/headless browser, or
+obtain explicit permission for the visible foreground step. The ordinary
+background-browser policy still applies; a download request alone does not grant
+desktop focus or authorize copying login state. If isolation cannot be verified
+and focus is not approved, report the blocker instead of running it. This is a
+workflow guard, not a claim that the CLI enforces a no-focus mode.
+
 A thin `browser-harness-js` heredoc, exactly like `gsearch`/`xsearch`/`ytdl`.
 There is **no Bun program, no vendored signer, no HTTP client impersonation**.
 Every hard thing TikTok does to play a video, the signed CDN URL, the adaptive
@@ -27,7 +40,9 @@ The page plays the video, URL signing, CDN tokens, quality selection are all don
 
 ## Workflow
 
-1. Prerequisites: `browser-harness-js` on PATH, a Chromium browser with remote debugging, `ffmpeg` on PATH (always required); run `bash <skill-dir>/scripts/setup` if not set up.
+1. Verify the isolation/focus boundary above, including for `--info`. Prerequisites
+   are `browser-harness-js`, an approved Chromium connection and `ffmpeg`; missing
+   setup is not permission to relaunch or reconfigure the user's browser.
 2. Invoke: `ttdl "<url-or-id>" [-q best|audio] [-o Name] [-d dir]`, or `--info` for title/author/duration/resolution only.
 3. The script connects to the shared CDP session and injects the MSE hook via `Page.addScriptToEvaluateOnNewDocument` before any page JS runs (How it works, step 2).
 4. It opens the watch URL in a foreground tab, waits for `networkIdle`, polls for `<video>`, and bails on a verify/captcha interstitial (step 3).

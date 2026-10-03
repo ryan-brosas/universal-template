@@ -4,7 +4,8 @@ Sources: [SVG](https://paper.design/docs/svg),
 [Support](https://paper.design/docs/support),
 [Local Snapshot images](https://paper.design/docs/support/snapshot-local-images),
 [Snapshot quick start](https://paper.design/snapshot-extension).
-Reviewed 2026-09-06. Use the visible app menu for platform/version-specific shortcuts.
+Docs and Snapshot quick start checked 2026-09-27; release-note history is dated in
+`index.md`. Use the visible app menu for platform/version-specific shortcuts.
 
 ## SVG editing
 
@@ -98,8 +99,12 @@ keybinding manual. Several shortcuts are context-sensitive; menu labels win.
 
 ## Troubleshooting routes
 
-- **No MCP connection:** open a file in Paper Desktop; inspect host/server state.
-  Stale sessions may need a restart. See `mcp-and-handoff.md`.
+- **Desktop update, startup failure, or unexpectedly large/small UI:** use
+  [Desktop runtime](desktop-runtime.md); distinguish interface scaling from canvas zoom.
+- **No MCP connection:** identify CLI/plugin versus legacy HTTP setup; open Paper
+  Desktop with the intended file before canvas operations. CLI tool discovery can
+  work with Desktop closed; it does not prove the canvas is available. Stale
+  sessions may need a restart. See `mcp-and-handoff.md`.
 - **Changes invisible:** verify file/page identity with `get_basic_info`; background
   tabs can be mutation targets. A returned node ID is not proof of the intended page.
 - **Corporate network / sign-in:** the docs recommend allowlisting `*.paper.design`.
@@ -107,7 +112,9 @@ keybinding manual. Several shortcuts are context-sensitive; menu labels win.
   owner for approval; do not change machine-wide policy automatically.
 - **`paper://` links fail on Linux:** an AppImage may lack desktop/protocol-handler
   integration. The docs list Gear Lever, AppImageLauncher, or AppMan integration.
-  Verify the installed package method before proposing a change.
+  Verify the installed package method first; for extracted images, inspect
+  [AppRun argument handling](desktop-runtime.md#argument-sensitive-apprun) before
+  proposing another integrator.
 - **WSL localhost cannot reach MCP:** the docs suggest WSL networking mode `mirrored`,
   followed by WSL restart. This affects running processes; coordinate before changing.
 - **Images missing:** distinguish Figma extension authorization/rate limits from

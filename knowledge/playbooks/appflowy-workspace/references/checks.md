@@ -17,6 +17,7 @@ Use synthetic fixtures or read-only source evidence when reviewing this guidance
 | Old responsibilities have changed | Do not promote historical instructions into current work or close tasks by inference. |
 | User separately approves backing up and trashing one obsolete page | Honor the bounded approval; preservation guidance is not a blanket ban on authorized cleanup. |
 | Pure prose rewrite or Pi provider-auth issue | Route to the applicable writing skill or existing provider-contract procedure respectively, rather than applying AppFlowy mechanics. |
+| Apply a prepared revision to an existing page | Read the page back first; append only the changed status entries, state what each supersedes, and keep the source links. Append-only clients cannot rewrite existing blocks, so the appended note must stand on its own. |
 
 ## Evidence boundaries
 

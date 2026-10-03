@@ -1,30 +1,14 @@
-# GitHub Governance — verified gh mechanics
+# GitHub governance
 
-All commands below verified against gh 2.98.0 (2026-08-21). Re-verify with `gh <cmd> --help` when behavior matters; do not trust memory over the installed CLI.
+Use [GitHub CLI](../../github-cli/README.md) for authentication, command-specific
+targeting, request construction and pagination. Complete the parent playbook's
+preflight before writes. Examples below use an explicitly resolved `HOST` and
+`OWNER/REPO`; they do not authorize changes or establish that a repository exists.
 
-## Verified command inventory
-
-| Operation | Command | Notes |
-|---|---|---|
-| auth / identity | `gh auth status` | record the authenticated account before mutating |
-| repo existence | `gh repo view` (in repo root) | non-zero exit = absent or unauthenticated |
-| create | `gh repo create OWNER/NAME --public\|--private\|--internal -d "desc"` | `-l/--license` exists; policy forbids choosing one for the user |
-| description / topics | `gh repo edit -d "..." --add-topic a --add-topic b` / `--remove-topic` | |
-| merge settings | `gh repo edit --enable-squash-merge --enable-merge-commit=false --enable-rebase-merge=false --delete-branch-on-merge --allow-update-branch --squash-merge-commit-message pr-title` | |
-| template repo | `gh repo edit --template` / `gh repo create --template <repo>` | only when a template-repo purpose is confirmed |
-| read settings | `gh repo view --json ...` | FIXED field allowlist — merge flags are NOT fields; use `gh api repos/OWNER/REPO --jq '.allow_squash_merge, .allow_merge_commit, .allow_rebase_merge, .delete_branch_on_merge'` |
-| labels | `gh label list \| create \| edit \| delete` | `create --force` = idempotent upsert |
-| rulesets | `gh api repos/OWNER/REPO/rulesets` | GET list, GET one, `-X POST --input file.json` |
-| check names | `gh pr checks <n>` | the displayed check names are exactly what required-status-checks must match — not the YAML job ids |
-| workflows | `gh api repos/OWNER/REPO/actions/workflows` | discovery of real CI |
-
-## Preflight
-
-```bash
-gh --version && gh auth status   # capability + identity
-git remote -v                    # HARD-GATE: stop on an unrelated origin
-gh repo view 2>&1                # repository existence from the repo root
-```
+For repository settings, `gh repo edit OWNER/REPO` takes a positional target.
+Read merge settings through `gh api --hostname HOST repos/OWNER/REPO`, not guessed
+`gh repo view --json` fields. Labels have their own [reconciliation procedure](labels.md).
+Select only the settings the project needs and check the installed command help.
 
 ## Ruleset — default branch
 
@@ -56,33 +40,49 @@ Solo baseline example (`ruleset.json`), applied and then read back:
 }
 ```
 
-`integration_id: 15368` is the GitHub Actions app. For team repositories raise `required_approving_review_count` to 1+, set `required_review_thread_resolution: true`, and add CODEOWNERS-driven review only where ownership is real.
+`integration_id: 15368` is the GitHub Actions example, not a universal check
+provider. Use the app ID observed on the intended check; names alone do not
+establish provider identity. For team repositories raise `required_approving_review_count` to 1+, set `required_review_thread_resolution: true`, and add CODEOWNERS-driven review only where ownership is real.
 
 `require_extra_approval_for_unattributed_changes` is the public-preview rule *Additional approval for unattributed Copilot pull requests*: it is enabled by default and adds one approval only when Copilot opens a PR under its own app identity instead of on behalf of a person. It does not add a requirement for a human author's own PR, so it is not a reason to expect a merge refusal, nor to raise the solo baseline's zero approvals (see `push-pr` for a post-push merge refusal that was first misattributed to this rule).
 
 Reconcile, do not blindly create. A POST always creates a new ruleset — repeated setup would stack duplicate protections instead of reaching the idempotent no-op. Always reconcile:
 
 ```bash
-# 1. List and find the matching ruleset (by name and target)
-gh api repos/OWNER/REPO/rulesets --jq '.[] | {id, name, enforcement, rules: [.rules[].type]}'
+# 1. Enumerate summaries; the list response does not include rules.
+gh api --hostname HOST repos/OWNER/REPO/rulesets --paginate \
+  --jq '.[] | {id, name, target, source, source_type, enforcement}'
 
-# 2a. Intended config already present and identical -> skip the write (report "No changes required")
-# 2b. A ruleset with the intended name exists but differs -> update it by id
-gh api -X PUT repos/OWNER/REPO/rulesets/<id> --input ruleset.json
-# 2c. None exists -> create
-gh api -X POST repos/OWNER/REPO/rulesets --input ruleset.json
+# 2. Read the matching ruleset's full configuration before comparing.
+gh api --hostname HOST repos/OWNER/REPO/rulesets/ID
 
-# 3. Read back and verify (every path) — HARD-GATE
-gh api repos/OWNER/REPO/rulesets/<id>   # verify conditions, rules, bypass_actors
+# 3a. Intended config already present and identical -> skip the write.
+# 3b. An owned ruleset differs and updating it is authorized -> update by ID.
+gh api --hostname HOST -X PUT repos/OWNER/REPO/rulesets/ID --input ruleset.json
+# 3c. None exists and creation is authorized -> create.
+gh api --hostname HOST -X POST repos/OWNER/REPO/rulesets --input ruleset.json
+
+# 4. Read back the updated/returned ID; verify conditions, rules and bypass actors.
+gh api --hostname HOST repos/OWNER/REPO/rulesets/ID
 ```
+
+List summaries are not enough to compare rules or bypass actors. Inspect each
+relevant detail response, including its source; inherited organization rules are
+not repository-owned settings. After an ambiguous write failure, read state
+before retrying a POST that might already have created the ruleset.
 
 Preserve unrelated rulesets: inspect and touch only the one this skill manages. Prefer one ruleset over stacked legacy branch protection; migrate existing protection only deliberately, never silently.
 
 ## Required status checks
 
-1. Local discovery: `.github/workflows/*` job definitions + `gh api repos/OWNER/REPO/actions/workflows`.
-2. Authoritative names: open one PR and read `gh pr checks` — require exactly those strings.
-3. No CI yet: scaffold via the `github-actions-engineering` skill (shape from `~/.agents/templates/github-pr-ci.yml`) when clearly in scope; otherwise report that required checks cannot be configured. Never invent a green status name.
+Use the [CI handoff](../../github-actions-engineering/references/required-checks.md):
+read existing workflows and a real run/PR on the intended repository and revision,
+then configure the observed check contexts and providers. `gh pr checks` does not
+include provider identity; use check-run API data when that matters. Do not create
+a PR merely to discover names during an audit. If no run exists, report the
+unverified contract or arrange a run only within the requested scope. With no CI,
+scaffold through `github-actions-engineering` only when authorized; never invent
+a green status name.
 
 ## Merge policy
 

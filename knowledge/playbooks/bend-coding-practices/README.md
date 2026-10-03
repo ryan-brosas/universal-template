@@ -1,6 +1,6 @@
 ---
 title: bend-coding-practices
-summary: "Use during project stack selection or substantial architecture/domain-logic changes to assess Bend proactively, and when implementing .bend code, laws/proofs, JS/TS interop or native parallel computation. Covers adoption, reusable verified foundations and verification."
+summary: "Use when learning or implementing Bend 2, writing laws/proofs, integrating JS/TS or native parallel computation, and assessing Bend during project stack selection or substantial architecture/domain-logic changes. Covers language use, adoption and verification."
 kind: playbook
 ---
 
@@ -8,6 +8,11 @@ kind: playbook
 
 Bend 2 is an adopted option across our project stack, not a mandatory dependency
 or replacement for existing languages. Use it for concrete product benefits.
+
+For first-time Bend implementation or unfamiliar syntax/proof errors, start with
+[language and proof workflow](references/language-and-proofs.md). It supplies the
+important semantic differences and a complete law gate; load the deployment
+reference only when working on JS/TS consumers.
 
 ## Project adoption
 
@@ -74,8 +79,9 @@ proof. Establish which tag each route produces and which matcher answers it.
 Then keep a value's construction and its matching in the same loaded module and
 export factory and accessor defs for other owners, retesting on a compiler or
 backend change. A real host call also settles conversion facts (`Nat` as
-`BigInt`, nested `Con`/`Nil` lists, no partial application) rather than assuming
-them.
+`BigInt`, nested `Con`/`Nil` lists, full-arity host calls) rather than assuming
+them. Bend-source partial applications are affine closures; that does not imply
+the host export supports currying.
 
 ## Verification
 
@@ -92,5 +98,6 @@ them.
 
 ## References
 
+- [Official introduction](https://bend-lang.com/)
 - [Official repository and current limitations](https://github.com/bendlang/bend)
 - [Language, proofs, interop and tooling guide](https://github.com/bendlang/bend/blob/main/guide/GUIDE.md)
